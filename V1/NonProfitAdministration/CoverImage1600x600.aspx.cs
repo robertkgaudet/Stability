@@ -48,7 +48,7 @@ public partial class V1_NonProfitAdministration_CoverImage1600x600 : BaseOrganiz
 							organization.CoverImage = imageNameOriginal;
 							dc.SubmitChanges();
 
-							Response.Redirect("~/V1/NonProfit/NonProfit.aspx?organizationId=" + organizationId);
+							Response.Redirect("~/V1/NonProfit/Default.aspx?organizationId=" + organizationId);
 						}
 					}
 				}

@@ -94,7 +94,7 @@ public partial class Impactoid_CommunityPage : System.Web.UI.Page
 						where oe.OrganizationId == new Guid(organizationId)
 						&& oe.IsActive == true
 						orderby ev.BeginDate descending
-						select new { oe.OrganizationEventId,	Description = ev.Description, disasterDate = ev.BeginDate, oe.DonationURL, oe.VolunteerURL, oe.IsActive, oe.URLFriendlyCampaignName, ev.URLFriendlyName, oe.MissionPurpose, campaignName = oe.CampaignName, disasterName = ev.Name };
+						select new { oe.OrganizationEventId, DisasterDescription = ev.Description, disasterDate = ev.BeginDate, oe.DonationURL, oe.VolunteerURL, oe.IsActive, oe.URLFriendlyCampaignName, ev.URLFriendlyName, oe.MissionPurpose, campaignName = oe.CampaignName, disasterName = ev.Name };
 
 		if(causes.Count() == 0)
 		{

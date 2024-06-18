@@ -34,7 +34,7 @@ public partial class V1_Cajun_Navy_Page_Register : BaseWebForm
 
 			if (userOrganizationOwner != null)
 			{
-				Response.Redirect("/V1/NonProfit/NonProfit.aspx?OrganizationId=" + userOrganizationOwner.OrganizationId.ToString());
+				Response.Redirect("/V1/NonProfit/Default.aspx?OrganizationId=" + userOrganizationOwner.OrganizationId.ToString());
 			}
 		}
 

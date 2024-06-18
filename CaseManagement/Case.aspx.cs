@@ -383,7 +383,7 @@ public partial class CaseManagment_Case : BaseOrganizationWebForm
 
 		foreach(var nonProfit in nonProfits)
 		{
-			nonProfitList += "<a href=\"/V1/NonProfit/NonProfit.aspx?organizationId=" + nonProfit.OrganizationId.ToString() + "\" style=\"text-decoration:underline;\">" + nonProfit.Name + "</a><br/>";
+			nonProfitList += "<a href=\"/V1/NonProfit/Default.aspx?organizationId=" + nonProfit.OrganizationId.ToString() + "\" style=\"text-decoration:underline;\">" + nonProfit.Name + "</a><br/>";
 		}
 
 		return nonProfitList;

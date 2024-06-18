@@ -119,7 +119,7 @@ public partial class V1_MasterPages_SurvivorSurvey : System.Web.UI.MasterPage
 				//Person is owner of a non-profit.
 				lblNonProfitDescription.Visible = false;
                 hypNonProfit.Text = orgUser.Name;
-                hypNonProfit.NavigateUrl = "/V1/NonProfit/NonProfit.aspx?organizationId=" + orgUser.OrganizationId;
+                hypNonProfit.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId;
 				
 				var myDisasterCampaigns = from oe in dc.OrganizationEvents
 										  join ev in dc.Events on oe.EventId equals ev.EventId
@@ -152,7 +152,7 @@ public partial class V1_MasterPages_SurvivorSurvey : System.Web.UI.MasterPage
                 string myDisasterList = string.Empty;
                 foreach(var orgOrgUser in orgOrgUsers)
                 {
-                    myDisasterList += "<li><a href=\"/V1/NonProfit/NonProfit.aspx?organizationId=" + orgUser.OrganizationId + "\">" + orgUser.Name + "</a></li>";
+                    myDisasterList += "<li><a href=\"/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId + "\">" + orgUser.Name + "</a></li>";
                 }
                 litMyCampaigns.Text = myDisasterList;
             }
@@ -168,7 +168,7 @@ public partial class V1_MasterPages_SurvivorSurvey : System.Web.UI.MasterPage
                 string myOrganizationList = string.Empty;
                 foreach (var userOrganization in userOrganizations)
                 {
-                    myOrganizationList += "<li><a href=\"/V1/NonProfit/NonProfit.aspx?organizationId=" + userOrganization.OrganizationId + "\">" + userOrganization.Name + "</a></li>";
+                    myOrganizationList += "<li><a href=\"/V1/NonProfit/Default.aspx?organizationId=" + userOrganization.OrganizationId + "\">" + userOrganization.Name + "</a></li>";
                 }
                 litMyNonProfits.Text = myOrganizationList;
             }

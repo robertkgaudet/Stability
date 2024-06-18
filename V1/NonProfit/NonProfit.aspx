@@ -44,7 +44,7 @@
 			});
 
 			$("#nonProfit.dropdown-menu li").click(function () {
-				window.location.href = "/V1/NonProfit/NonProfit.aspx?organizationId=" + $(this).attr('id');
+				window.location.href = "/V1/NonProfit/Default.aspx?organizationId=" + $(this).attr('id');
 			});
 		});	
 </script>
@@ -356,39 +356,6 @@
                 <div class="panel-footer">
                 </div>
             </div>
-			<div class="hpanel hgreen" id="divPrograms" runat="server" visible="true">
-				<div class="panel-heading hbuilt">
-					<asp:Literal id="litOrgNamePrograms" runat="server"></asp:Literal> Programs
-				</div>
-				<div class="panel-body">
-                    <small>This organization focuses on the following programs.</small>
-                    <asp:Repeater ID="rptPrograms" runat="server" OnItemDataBound="rptPrograms_ItemDataBound">
-						<ItemTemplate>
-                            <div class="m-b-lg">
-						        <p>
-                                    <h4>
-                                        <asp:Literal ID="litProgramName" runat="server"></asp:Literal>
-                                        <small class="pull-right"><asp:HyperLink id="hypEditPrograms" runat="server" Text="Edit This Program" Visible="false"></asp:HyperLink></small>
-                                    </h4>
-                                    <asp:Literal ID="litProgramDescription" runat="server"></asp:Literal>
-						        </p>
-                                <dl class="dl-horizontal">
-							        <dt class="font-normal">Remote Work:</dt> <dd><asp:Literal ID="litRemoteWork" runat="server"></asp:Literal></dd>
-							        <dt class="font-normal">Deployment:</dt> <dd><asp:Literal ID="litRequiresDeployment" runat="server"></asp:Literal></dd>
-							        <dt class="font-normal">Required Training:</dt> <dd><asp:Literal ID="litRequiresTraining" runat="server"></asp:Literal></dd>
-                                </dl>
-                            </div>
-                        </ItemTemplate>
-                        <FooterTemplate>
-                            <asp:Label ID="defaultItem" runat="server" Visible='<%#rptPrograms.Items.Count == 0 %>' Text="No programs found" />
-                        </FooterTemplate>
-                    </asp:Repeater>
-					
-				    <asp:HyperLink id="hypEditPrograms" runat="server" Text="Add a Program" Visible="false"></asp:HyperLink>
-				</div>
-                <div class="panel-footer">
-                </div>
-			</div>
 		</div>
 		<div class="col-lg-4">
 			<div class="hpanel hgreen">

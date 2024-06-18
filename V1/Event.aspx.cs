@@ -763,10 +763,10 @@ public partial class V1_Event : BaseOrganizationWebForm
 			litTeamName.Text = name;
 			litTeamDescription.Text = description;
 			hypViewTeam.Text = "Team Profile Page";
-			hypViewTeam.NavigateUrl = "/V1/NonProfit/NonProfit.aspx?organizationId=" + organizationId;
+			hypViewTeam.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
 
 			hypViewActivities.Text = "Open Team Activity";
-			hypViewActivities.NavigateUrl = "/V1/NonProfit/TakeAction.aspx?organizationId=" + organizationId;
+			hypViewActivities.NavigateUrl = "/V1/NonProfit/ActivityDashboard.aspx?organizationId=" + organizationId;
 			
 		}
 	}

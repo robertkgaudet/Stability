@@ -13,21 +13,13 @@
 		});
 	</script>
 	<style type="text/css">
-			.grid-item								{width:300px;}
-			.panel-body.deploymentPanel				{ background-color:#E8D3FE; color:#5E2E91; height:150px;}
+			.grid-item								{width:320px;}
+			.panel-body.deploymentPanel				{background-color:#E8D3FE; color:#5E2E91; height:150px;}
 			.panel-body.deploymentPanel:hover		{cursor:pointer; background-color:#5E2E91; color:white;}
 	</style>
-
-    <div class="row">
-        <div class="col-lg-12">
-			<div class="content animate-panel" data-child="hpanel" data-effect="fadeInDown">
-			<h3>Deployments</h3>
-				<div class="grid">
-					<asp:Literal ID="litDeployments" runat="server"></asp:Literal>
-				</div>
-			</div>
-        </div>
-    </div>
+	<div class="grid">
+		<asp:Literal ID="litDeployments" runat="server"></asp:Literal>
+	</div>
 	<div class="row">
 		<div class="col-lg-8">
             <div class="content">

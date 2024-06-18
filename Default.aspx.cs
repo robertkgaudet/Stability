@@ -50,7 +50,7 @@ public partial class _Default : BaseOrganizationWebForm
 
 			if(userOrganization != null && !User.IsInRole("Survivor"))
 			{
-				Response.Redirect("/V1/NonProfit/TakeAction.aspx?organizationId=" + userOrganization.OrganizationId);
+				Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + userOrganization.OrganizationId);
 			}
 			else
 			{

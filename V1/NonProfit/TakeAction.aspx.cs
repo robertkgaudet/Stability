@@ -73,7 +73,7 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 		if (organization != null)
 		{
 
-			hypLogo.NavigateUrl = "/V1/NonProfit/NonProfit.aspx?organizationId=" + organizationId;
+			hypLogo.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
 			if (!String.IsNullOrEmpty(organization.Logo))
 			{
 				imgLogo.Visible = true;
@@ -88,7 +88,7 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 			}
 			if ((bool)!organization.IsActive)
 			{
-				Response.Redirect("/V1/NonProfit/NonProfit.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32");
+				Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32");
 			}
 			organizationOwnerId = organization.OwnerId != null ? (Guid)organization.OwnerId : Guid.Empty;
 			userIsOwner = organization.OwnerId == userId ? true : false;
@@ -103,7 +103,7 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 
 			teamName = organization.Name;
 			hypOrgName.Text = organization.Name;
-			hypOrgName.NavigateUrl = "/V1/NonProfit/NonProfit.aspx?organizationId=" + organizationId;
+			hypOrgName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
 			lblFounded.Text = organization.CreatedOn.ToShortDateString();
 			lblLocation.Text = organization.City + ", " + organization.State;
 			hypTeamPointOfContact.Text = organization.PointOfContactName + contactInfo;
@@ -404,6 +404,6 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 							select o).SingleOrDefault();
 
 		SendEmailInvitations(organization.PointOfContactEmail, organizationId, organization.Name);
-		Response.Redirect("/V1/NonProfit/TakeAction.aspx?invite=sent&organizationId=" + organizationId);
+		Response.Redirect("/V1/NonProfit/Default.aspx?invite=sent&organizationId=" + organizationId);
 	}
 }

@@ -64,7 +64,7 @@
 			divErrorMessage.hidden = true;
 
 			$("#nonProfit.dropdown-menu li").click(function () {
-				window.location.href = "/V1/NonProfit/TakeAction.aspx?organizationId=" + $(this).attr('id');
+				window.location.href = "/V1/NonProfit/Default.aspx?organizationId=" + $(this).attr('id');
 			});
 		});
 
@@ -232,7 +232,7 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
-				<div class="hpanel hgreen">
+				<div class="hpanel">
 					<div class="panel-heading hbuilt">
 						<h3 class="m-l-sm">Active Deployments</h3>
 						<small class="font-normal">
@@ -253,8 +253,6 @@
 						<div runat="server" id="divShowInviteAlert" visible="false" class="alert alert-success text-uppercase">
 							<i class="fa fa-envelope"></i> Your invitation to create a deployment has been sent
 						</div>
-					</div>
-					<div class="panel-footer">
 					</div>
 				</div>
 			</div>

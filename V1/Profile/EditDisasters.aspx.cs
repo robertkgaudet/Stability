@@ -16,6 +16,7 @@ public partial class V1_Profile_EditDisasters : BaseOrganizationWebForm
 
 			var events =	from c in dc.Events
 							where c.IsDisaster == true
+							&& c.IsActive == true
 							orderby c.BeginDate descending
 							select new {name = " - " + c.Name, c.EventId };
 			

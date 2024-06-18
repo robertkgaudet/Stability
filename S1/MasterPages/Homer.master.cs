@@ -171,7 +171,7 @@ public partial class S1_MasterPages_Homer : System.Web.UI.MasterPage
             {
                 lblNonProfitDescription.Visible = false;
                 hypNonProfit.Text = orgUser.Name;
-                hypNonProfit.NavigateUrl = "/V1/NonProfit/NonProfit.aspx?organizationId=" + orgUser.OrganizationId;
+                hypNonProfit.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId;
             }
             else
             {
@@ -189,7 +189,7 @@ public partial class S1_MasterPages_Homer : System.Web.UI.MasterPage
                 string myCampaignList = string.Empty;
                 foreach (var orgOrgUser in orgOrgUsers)
                 {
-                    myCampaignList += "<li><a href=\"/V1/NonProfit/NonProfit.aspx?organizationId=" + orgUser.OrganizationId + "\">" + orgUser.Name + "</a></li>";
+                    myCampaignList += "<li><a href=\"/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId + "\">" + orgUser.Name + "</a></li>";
                 }
                 litMyCampaigns.Text = myCampaignList;
             }
@@ -205,7 +205,7 @@ public partial class S1_MasterPages_Homer : System.Web.UI.MasterPage
                 string myOrganizationList = string.Empty;
                 foreach (var userOrganization in userOrganizations)
                 {
-                    myOrganizationList += "<li><a href=\"/V1/NonProfit/NonProfit.aspx?organizationId=" + userOrganization.OrganizationId + "\">" + userOrganization.Name + "</a></li>";
+                    myOrganizationList += "<li><a href=\"/V1/NonProfit/Default.aspx?organizationId=" + userOrganization.OrganizationId + "\">" + userOrganization.Name + "</a></li>";
                 }
                 litMyNonProfits.Text = myOrganizationList;
             }

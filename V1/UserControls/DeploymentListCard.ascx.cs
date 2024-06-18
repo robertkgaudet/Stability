@@ -52,7 +52,8 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 				string beginDate = deployment.BeginDate != null ? Convert.ToDateTime(deployment.BeginDate).ToShortDateString() : string.Empty;
 				string endDate = deployment.EndDate != null ? Convert.ToDateTime(deployment.EndDate).ToShortDateString() : "NA";
 
-				string dateRange = String.IsNullOrEmpty(beginDate) ? "NA" : beginDate + " to " + endDate;
+				string dateRange = String.IsNullOrEmpty(beginDate) ? "Dates Unknown" : beginDate + " to " + endDate;
+				dateRange = dateRange == "NA to NA" ? "Dates Unknown" : dateRange;
 
 				string logo = string.Empty;
 
@@ -95,7 +96,7 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 												"</div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
 											"<div class=\"panel-footer\">" + Environment.NewLine +
-												"<div class=\"row\"><div class=\"col-xs-6\"><small>" + deployment.County + " " + countyTerm + ", " + deployment.State + "</small></div><div class=\"col-xs-6\"><small>" + dateRange + "</small></div></div>" + Environment.NewLine +
+												"<div class=\"row\"><div class=\"col-xs-6 m-s-n5\"><small>" + deployment.County + " " + countyTerm + ", " + deployment.State + "</small></div><div class=\"col-xs-6 m-s-n5\"><small>" + dateRange + "</small></div></div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
 										"</div>" + Environment.NewLine +
 									"</div>" + Environment.NewLine + Environment.NewLine;
@@ -129,7 +130,8 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 				string beginDate = deployment.BeginDate != null ? Convert.ToDateTime(deployment.BeginDate).ToShortDateString() : "NA";
 				string endDate = deployment.EndDate != null ? Convert.ToDateTime(deployment.EndDate).ToShortDateString() : "NA";
 
-				string dateRange = String.IsNullOrEmpty(beginDate) ? "NA" : beginDate + " to " + endDate;
+				string dateRange = String.IsNullOrEmpty(beginDate) ? "Dates Unknown" : beginDate + " to " + endDate;
+				dateRange = dateRange == "NA to NA" ? "Dates Unknown" : dateRange;
 
 				string logo = string.Empty;
 

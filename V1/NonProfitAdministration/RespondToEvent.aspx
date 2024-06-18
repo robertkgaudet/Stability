@@ -51,10 +51,8 @@
 		}
 
 		function updateCountyId() {
-			alert(document.getElementById("<%=ddlCounties.ClientID%>").value);
 			var hiddenField = $("#<%=hidCountyId.ClientID%>");
 			hiddenField.val(document.getElementById("<%=ddlCounties.ClientID%>").value);
-			alert(hiddenField.val());
 		}
 
         function isNumberKey(evt) {

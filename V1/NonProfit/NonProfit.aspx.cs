@@ -36,11 +36,11 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 			{
 				if ((bool)!organization.IsActive)
 				{
-					Response.Redirect("/V1/NonProfit/NonProfit.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32");
+					Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32");
 				}
 			}
 
-			hypLogo.NavigateUrl = "/V1/NonProfit/NonProfit.aspx?organizationId=" + organizationId;
+			hypLogo.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
 			if (!String.IsNullOrEmpty(organization.Logo))
 			{	imgLogo.Visible = true;
 				imgLogo.ImageUrl = "/Impactoid/Images/Logos/" + organization.Logo;
@@ -79,7 +79,6 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 			Master.FbURL = Request.Url.AbsoluteUri;
 
 			litOrganizationName.Text = organization.Name;
-			litOrgNamePrograms.Text = organization.Name;
 			lblOrgName.Text = organization.Name;
 			litMission.Text = organization.PurposeMission;
 			litDescription.Text = organization.Description;
@@ -254,7 +253,7 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 				lbImpactoidWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + organization.OrganizationId;// url;
 			}
 
-			activityPageLink = "/V1/NonProfit/TakeAction.aspx?organizationId=" + organization.OrganizationId;
+			activityPageLink = "/V1/NonProfit/Default.aspx?organizationId=" + organization.OrganizationId;
 			teamMembersLink = "/V1/NonProfitAdministration/VolunteerList.aspx?organizationId=" + organization.OrganizationId;
 		}
 
@@ -279,16 +278,6 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 
 		rpNonProfitPeople.DataSource = peopleList;
 		rpNonProfitPeople.DataBind();
-
-		var programs = from p in dc.Programs
-					   join op in dc.OrganizationPrograms on p.ProgramId equals op.ProgramId
-					   where op.OrganizationId == new Guid(organizationId)
-					   orderby p.Order
-					   select p;
-
-		rptPrograms.DataSource = programs;
-		rptPrograms.DataBind();
-
 
 		bool isOwner = false;
 		if(User.Identity.IsAuthenticated == true)
@@ -319,8 +308,6 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 			btnInviteTeamMembers.Visible = true;
 			hypViewAllVolunteers.Visible = true;
 			hypViewAllVolunteers.NavigateUrl = "/V1/NonProfitAdministration/VolunteerList.aspx?organizationId=" + organizationId;
-			hypEditPrograms.Visible = true;
-			hypEditPrograms.NavigateUrl = "/V1/NonProfitAdministration/EditNonProfitProgram.aspx?organizationId=" + organizationId;
 			hypCause.Visible = true;
 			hypCause.NavigateUrl = "/V1/NonProfitAdministration/RespondToEvent.aspx?organizationId=" + organizationId;
 			divUnpublishedInformation.Visible = true;
@@ -368,40 +355,6 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 		foreach (var nonProfit in nonProfits)
 		{
 			nonProfitDropDown += "<li id=\"" + nonProfit.o.OrganizationId + "\"><a href=\"#\">" + nonProfit.o.Name + "</a></li>" + Environment.NewLine;
-		}
-	}
-	protected void rptPrograms_ItemDataBound(object sender, RepeaterItemEventArgs e)
-	{
-
-		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-		{
-			RepeaterItem dataItem = (RepeaterItem)e.Item;
-			string programName = (string)DataBinder.Eval(dataItem.DataItem, "Name");
-			string programDescription = (string)DataBinder.Eval(dataItem.DataItem, "Description");
-			bool isDeploymentRequired = (bool)DataBinder.Eval(dataItem.DataItem, "IsDeploymentRequired");
-			bool isRemoteOnly = (bool)DataBinder.Eval(dataItem.DataItem, "IsRemoteOnly");
-			bool isTrainingRequired = (bool)DataBinder.Eval(dataItem.DataItem, "IsTrainingRequired");
-			Guid programId = (Guid)DataBinder.Eval(dataItem.DataItem, "ProgramId");
-
-			Literal litProgramName = (Literal)e.Item.FindControl("litProgramName");
-			Literal litProgramDescription = (Literal)e.Item.FindControl("litProgramDescription");
-			Literal litRemoteWork = (Literal)e.Item.FindControl("litRemoteWork");
-			Literal litRequiresDeployment = (Literal)e.Item.FindControl("litRequiresDeployment");
-			Literal litRequiresTraining = (Literal)e.Item.FindControl("litRequiresTraining");
-			HyperLink hypEditPrograms = (HyperLink)e.Item.FindControl("hypEditPrograms");
-
-			litProgramDescription.Text = programDescription;
-			litProgramName.Text = programName;
-			litRemoteWork.Text = isRemoteOnly ? "<b>This is a remote work program.</b>" : "<span class='font-light'>No remote work.</span>";
-			litRequiresDeployment.Text = isDeploymentRequired ? "<b>This program may require deployment.</b>" : "<span class='font-light'>Deployment not required.</span>";
-			litRequiresTraining.Text = isTrainingRequired ? "<b>Specialized training is required for this program.</b>" : "<span class='font-light'>Training not required.</span>";
-
-
-			if (User.IsInRole("Administrator"))
-			{
-				hypEditPrograms.Visible = true;
-				hypEditPrograms.NavigateUrl = "/V1/NonProfitAdministration/EditNonProfitProgram.aspx?organizationId=" + organizationId + "&programId=" + programId;
-			}
 		}
 	}
 

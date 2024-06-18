@@ -145,7 +145,7 @@ public partial class CaseManagement_MasterPage : System.Web.UI.MasterPage
 
 			if (userOrganizations != null)
 			{
-				hypUserOrganizatioName.NavigateUrl = "/V1/NonProfit/NonProfit.aspx?organizationId=" + userOrganizations.OrganizationId;
+				hypUserOrganizatioName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + userOrganizations.OrganizationId;
 				hypUserOrganizatioName.Text = userOrganizations.Name;
 			}
 

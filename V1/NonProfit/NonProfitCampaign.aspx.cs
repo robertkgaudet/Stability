@@ -125,7 +125,7 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 
 		litCampaignMission.Text				= organizationEvent.oe.MissionPurpose;
 		hypOrganizationName.Text			= organizationEvent.o.Name;
-		hypOrganizationName.NavigateUrl		= "/V1/NonProfit/NonProfit.aspx?organizationId=" + organizationEvent.o.OrganizationId; //http://localhost:64915/V1/NonProfit/NonProfit.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32
+		hypOrganizationName.NavigateUrl		= "/V1/NonProfit/Default.aspx?organizationId=" + organizationEvent.o.OrganizationId; //http://localhost:64915/V1/NonProfit/Default.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32
 		hypOrganizationName.Font.Underline	= true;
 		lblParentOrgName.Text				= organizationEvent.o.Name;
 		hypParentAddress.Text				= organizationEvent.o.Address + "<br/>" + organizationEvent.o.City + ", " + organizationEvent.o.State + " " + organizationEvent.o.Zip;

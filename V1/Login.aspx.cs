@@ -75,7 +75,7 @@ public partial class V1_Login : System.Web.UI.Page
 
 			if(userOrganization != null) 
 			{ 
-				urlRedirect = "/V1/NonProfit/TakeAction.aspx?OrganizationId=" + userOrganization.OrganizationId.ToString();
+				urlRedirect = "/V1/NonProfit/Default.aspx?OrganizationId=" + userOrganization.OrganizationId.ToString();
 			}
 			else
 			{
@@ -84,7 +84,7 @@ public partial class V1_Login : System.Web.UI.Page
 			//if (userOrganizationOwner != null)
 			//{
 			//	//SEND TO PAGE TO SEE CAUSES.
-			//	urlRedirect = "/V1/NonProfit/NonProfit.aspx?OrganizationId=" + userOrganizationOwner.OrganizationId.ToString();
+			//	urlRedirect = "/V1/NonProfit/Default.aspx?OrganizationId=" + userOrganizationOwner.OrganizationId.ToString();
 			//}
 			//else
 			//{
@@ -120,26 +120,26 @@ public partial class V1_Login : System.Web.UI.Page
 			//	}
 			//}
 		}
-    //    else if(User.Identity.IsAuthenticated)
-    //    {
-    //        //See if they have a default disaster set.
-    //        var profile = (from p in dc.Profiles
-    //                       where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-    //                       select p).SingleOrDefault();
+		//    else if(User.Identity.IsAuthenticated)
+		//    {
+		//        //See if they have a default disaster set.
+		//        var profile = (from p in dc.Profiles
+		//                       where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+		//                       select p).SingleOrDefault();
 
-    //        if (profile != null)
-    //        {
-    //            if (profile.DefaultEventId != null)
-    //            {
-    //                var disasterEvent = (from d in dc.Events
-    //                                     where d.EventId == profile.DefaultEventId
-    //                                     select new { d.URLFriendlyName }
-    //                                ).Take(1).SingleOrDefault();
+		//        if (profile != null)
+		//        {
+		//            if (profile.DefaultEventId != null)
+		//            {
+		//                var disasterEvent = (from d in dc.Events
+		//                                     where d.EventId == profile.DefaultEventId
+		//                                     select new { d.URLFriendlyName }
+		//                                ).Take(1).SingleOrDefault();
 
-    //                urlRedirect = "/Disaster/" + disasterEvent.URLFriendlyName;// + "/" + roleType;
-				//}
-    //        }
-    //    }
+		//                urlRedirect = "/Disaster/" + disasterEvent.URLFriendlyName;// + "/" + roleType;
+		//}
+		//        }
+		//    }
 
 		Response.Redirect(urlRedirect);
 	}

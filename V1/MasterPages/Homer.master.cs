@@ -30,10 +30,10 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 	public string _noCause = "false";
 	public Guid userId = Guid.NewGuid();
 	public string _showUserActionModal = string.Empty;
-	public string communityUpdated		= "orange";
-	public string skillsUpdated			= "orange";
-	public string teamUpdated			= "orange";
-	public string deploymentUpdated		= "orange";
+	public string communityUpdated		= "grey";
+	public string skillsUpdated			= "grey";
+	public string teamUpdated			= "grey";
+	public string deploymentUpdated		= "grey";
 
 	protected void Page_Load(object sender, EventArgs e)
 	{
@@ -116,7 +116,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 					//Put the default disaster at the top.
 					hypMDefaultDisaster.Text = "<b>" + disasterEvent.Name + "</b>";
 					hypMDefaultDisaster.NavigateUrl = "/Disaster/" + disasterEvent.URLFriendlyName;
-					hypDefaultDisaster.Text = "<b>Default Portal: " + disasterEvent.Name + "</b>";
+					hypDefaultDisaster.Text = "<b>" + disasterEvent.Name + "</b>";
 					hypDefaultDisaster.NavigateUrl = "/Disaster/" + disasterEvent.URLFriendlyName;
 					litDefaultDisaster.Text = "<li><strong><a href='/Disaster/" + disasterEvent.URLFriendlyName + "'>" + disasterEvent.Name + "</a> (Default Portal)</strong></li>";
 				}
@@ -131,15 +131,13 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			if (orgUser.Count() > 0)
 			{
 				teamUpdated = "yellowgreen";
-				hypActionPage.NavigateUrl = "/V1/NonProfit/TakeAction.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
+				hypActionPage.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
 				//Person is owner of a non-profit.
 				litNonProfitName.Visible = true;
                 hypNonProfit.Text = orgUser.Take(1).SingleOrDefault().Name;
-                hypNonProfit.NavigateUrl = "/V1/NonProfit/NonProfit.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
-				hypMyTeam.NavigateUrl = "/V1/NonProfit/NonProfit.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
-				hypMMyTeam.NavigateUrl = "/V1/NonProfit/NonProfit.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
-				hypDefaultTeam.NavigateUrl = "/V1/NonProfit/TakeAction.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
-				hypMDefaultTeam.NavigateUrl = "/V1/NonProfit/TakeAction.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
+                hypNonProfit.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
+				hypMyTeam.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
+				hypMMyTeam.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
 				liDeployment.Attributes.Add("data-url", "/V1/NonProfitAdministration/RespondToEvent.aspx?userActionModal=false&organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId);
 
 				hypInviteTeamMembers.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
@@ -175,7 +173,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                 string myDisasterList = string.Empty;
                 foreach(var orgOrgUser in orgOrgUsers)
                 {
-                    myDisasterList += "<li><a href=\"/V1/NonProfit/NonProfit.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId + "\">" + orgUser.Take(1).SingleOrDefault().Name + "</a></li>";
+                    myDisasterList += "<li><a href=\"/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId + "\">" + orgUser.Take(1).SingleOrDefault().Name + "</a></li>";
                 }
                 litMyCampaigns.Text = myDisasterList;
             }
@@ -191,7 +189,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                 string myOrganizationList = string.Empty;
                 foreach (var userOrganization in userOrganizations)
                 {
-                    myOrganizationList += "<li><a href=\"/V1/NonProfit/NonProfit.aspx?organizationId=" + userOrganization.OrganizationId + "\">" + userOrganization.Name + "</a></li>";
+                    myOrganizationList += "<li><a href=\"/V1/NonProfit/Default.aspx?organizationId=" + userOrganization.OrganizationId + "\">" + userOrganization.Name + "</a></li>";
                 }
                 litMyNonProfits.Text = myOrganizationList;
             }

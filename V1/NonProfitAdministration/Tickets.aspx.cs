@@ -1,0 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class V1_NonProfitAdministration_Tickets : BaseWebForm
+{
+	public string organizationId = string.Empty;
+	protected void Page_Load(object sender, EventArgs e)
+	{
+		organizationId = Request.QueryString["organizationId"];
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+		var organization = (from o in dc.Organizations
+							where o.OrganizationId == new Guid(organizationId)
+							select new { o.Name, o.Description, o.Logo, o.CoverImage }).SingleOrDefault();
+
+		Master.PageTitle = organization.Name + " Tickets on Stability";
+		Master.PageDescription = organization.Description;
+		Master.FbDescription = organization.Description;
+		Master.FbImage = organization.CoverImage;
+		Master.FbImageType = "image/jpg";
+		Master.FbSite_name = organization.Name + " Team Reports on Stability";
+		Master.FbURL = Request.Url.AbsoluteUri;
+
+		ucTeamNavigation.PageName = "ticketPage";
+		ucTeamNavigation.TeamName = organization.Name;
+
+		string logo = string.Empty;
+		if (!String.IsNullOrEmpty(organization.Logo))
+		{
+			logo = "/Impactoid/Images/Logos/" + organization.Logo;
+		}
+		else
+		{
+			//Use placeholder image.imgLogo.Visible = true;
+			logo = "/V1/Images/Logo-Placeholder.png";
+		}
+
+		ucTeamNavigation.TeamName = organization.Name;
+		ucTeamHeader.Logo = logo;
+		ucTeamHeader.OrganizationId = organizationId;
+		ucTeamHeader.PageName = "Tickets";
+		ucTeamHeader.TeamDescription = organization.Description;
+		ucTeamHeader.TeamName = organization.Name;
+
+	}
+}

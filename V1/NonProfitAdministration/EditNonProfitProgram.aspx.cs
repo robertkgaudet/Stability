@@ -96,11 +96,11 @@ public partial class V1_NonProfitAdministration_EditNonProfitProgram : BaseOrgan
 		}
 
 		//Back to non-profit page that shows the programs.
-		Response.Redirect("/V1/NonProfit/NonProfit.aspx?organizationId=" + Request.QueryString["organizationId"]);
+		Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + Request.QueryString["organizationId"]);
 	}
 
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
-		Response.Redirect("/V1/NonProfit/NonProfit.aspx?organizationId=" + Request.QueryString["organizationId"]);
+		Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + Request.QueryString["organizationId"]);
 	}
 }

@@ -114,7 +114,7 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 
 			}
 			//Redirect to setup their website.
-			Response.Redirect("/V1/NonProfit/TakeAction.aspx?OrganizationId=" + organizationId);
+			Response.Redirect("/V1/NonProfit/Default.aspx?OrganizationId=" + organizationId);
 		}
 	}
 

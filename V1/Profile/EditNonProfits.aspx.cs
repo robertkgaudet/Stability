@@ -104,7 +104,7 @@ public partial class V1_Profile_EditNonProfits : BaseOrganizationWebForm
 		dc.UserOrganizations.InsertOnSubmit(userOrganization);
 		dc.SubmitChanges();
 
-		Response.Redirect("/V1/NonProfit/TakeAction.aspx?organizationId=" + organizationId);
+		Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + organizationId);
 	}
 
 	protected void btnSubmit_Click(object sender, EventArgs e)

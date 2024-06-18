@@ -53,7 +53,7 @@ public partial class V1_NonProfit_LogoUpload : BaseOrganizationWebForm
 
 							//ResizeAndSaveImage(filePathnameOriginal, filePathNameResized, logoImageWidth, logoImageHeight);
 
-							Response.Redirect("~/V1/NonProfit/NonProfit.aspx?organizationId=" + organizationId);
+							Response.Redirect("~/V1/NonProfit/Default.aspx?organizationId=" + organizationId);
 						}
 					}
 				}

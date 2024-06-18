@@ -214,7 +214,7 @@ public partial class V1_NonProfit : BaseOrganizationWebForm
 						 "<span class=\"label label-success pull-right\">NEW</span>" + Environment.NewLine +
 						 "<div class=\"row\">" + Environment.NewLine +
 							 "<div class=\"col-sm-8\">" + Environment.NewLine +
-								"<a href=\"/V1/NonProfit/NonProfit.aspx?organizationId=" + nonProfitCampaign.o.OrganizationId + "\">" + nonProfitCampaign.o.Name + "</a>" + Environment.NewLine +
+								"<a href=\"/V1/NonProfit/Default.aspx?organizationId=" + nonProfitCampaign.o.OrganizationId + "\">" + nonProfitCampaign.o.Name + "</a>" + Environment.NewLine +
 								 "<h4><a href = \"/Cause/" + nonProfitCampaign.oe.URLFriendlyCampaignName + "\" >" + nonProfitCampaign.oe.CampaignName + "</a></h4>" + Environment.NewLine +
 								 "<p>" + Environment.NewLine +
 									 nonProfitCampaign.oe.MissionPurpose + Environment.NewLine +

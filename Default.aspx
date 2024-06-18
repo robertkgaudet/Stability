@@ -331,7 +331,7 @@
 							<p>
 								<b>Create your own disaster relief team now.</b>
 							</p>
-							<a href="/Register" class="btn btn-success" style="color:white; font-size:18px;">Create my Team</a>
+							<a href="/Register" class="btn btn-success" style="color:white; font-size:18px;">Create Or Join A Team</a>
 						</div>
 					</div>
 					<div class="row">
@@ -411,7 +411,7 @@
         </div>
         <div class="row">
 			<div class="col-md-6 col-md-offset-3 text-center m-t-lg">
-				<a href="/Register" class="btn btn-success" style="color:white; font-size:18px;">Create my Team</a>
+				<a href="/Register" class="btn btn-success" style="color:white; font-size:18px;">Create Or Join A Team</a>
 				<hr />
 			</div>
         </div>
@@ -473,7 +473,7 @@
         </div>
         <div class="row">
 			<div class="col-md-6 col-md-offset-3 text-center m-t-lg">
-				<a href="/Register" class="btn btn-success" style="color:white; font-size:18px;">Create my Team</a>
+				<a href="/Register" class="btn btn-success" style="color:white; font-size:18px;">Create Or Join A Team</a>
 				<hr />
 			</div>
         </div>

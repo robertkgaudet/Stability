@@ -234,7 +234,7 @@
             }
 			.bodyBGColor
 			{
-				background-color:#F7F9FA;
+				background-color:#F1F3F6;
 			}
 			#header
 			{
@@ -277,23 +277,20 @@
 			{
 				cursor:pointer;
 			}
-			#menu
+			.content
 			{
-			}
-			.content{
-			padding:10px;
-            background-color:#FFFFFF !important;
-            color:#6A6C6F;
-			}
-			.normalheader
-			{
-			padding:0px 20px 20px 20px;
+				background-color:#F1F3F6 !important;
+				color:#6A6C6F;
 			}
 			.liUserAction:hover
 			{
 				cursor:pointer;
 				background-color:lightgray;
 				color:white;
+			}
+			.ul_legend li
+			{
+				display: inline-block;
 			}
 		</style>
         <style>
@@ -318,6 +315,10 @@
 			{
 				color:black;
 			}
+			.text-danger{color:#FF0000;}
+			.text-warning{color:#ffb606;}
+			.text-success{color:#63CB31;}
+			.text-website{color:#5E2E91;}
 		</style>
 		<asp:ContentPlaceHolder id="head" runat="server">
 		</asp:ContentPlaceHolder>
@@ -371,9 +372,6 @@
 											<li>
 												<asp:HyperLink id="hypMMyTeam" runat="server" Text="My Team" Font-Bold="true"></asp:HyperLink>
 											</li>
-											<li>
-												<asp:HyperLink id="hypMDefaultTeam" runat="server" Text="My Team Activities" Font-Bold="true"></asp:HyperLink>
-											</li>
 											<li style="background-color:#5bbfdd; color:white; font-weight:bold;">
 												<a href="/V1/Administration/NonProfitNew.aspx"  style="font-weight:bold; color:white;"><i class='fa fa-group'></i> Create A Team</a>
 											</li>
@@ -405,9 +403,6 @@
 										</li>
 										<li>
 											<asp:HyperLink id="hypMyTeam" runat="server" Text="My Team" Font-Bold="true"></asp:HyperLink>
-										</li>
-										<li>
-											<asp:HyperLink id="hypDefaultTeam" runat="server" Text="My Team Activities" Font-Bold="true"></asp:HyperLink>
 										</li>
 										<li style="background-color:#5bbfdd; color:white; font-weight:bold;">
 											<a href="/V1/Administration/NonProfitNew.aspx"  style="font-weight:bold; color:white;"><i class='fa fa-group'></i> Create A Team</a>
@@ -658,11 +653,9 @@
 				</aside>
 				<!-- Main Wrapper -->
 				<div id="wrapper">
-					<div class="content">
 						<asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
 		
 						</asp:ContentPlaceHolder>
-					</div>
 					<!-- Footer-->
 					<footer class="footer" id="footer" runat="server">
 						<span class="pull-right">
@@ -829,14 +822,16 @@
 									<li data-url="/V1/Profile/EditDisasters.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=communityUpdated%>;"></i> <u>Choose Your Community Portal</u></li>
 									<li data-url="/V1/Profile/EditSkills.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=skillsUpdated%>;"></i> <u>Update Your Skills</u></li>
 								</ul>
-									
 								Citizens in communities are no longer victims of natrual disasters waiting for help. We are the help because citizens have many of the skills their own community needs
 								to successfully recover from natural disasters.
                             </p>
                         </div>
                         <div class="modal-footer">
 							<div class="pull-left">
-								Hide this window.
+								<ul class="ul_legend text-muted small">
+									<li><i class="fa fa-check-square" style="color:yellowgreen;"></i> COMPLETE</li>
+									<li><i class="fa fa-check-square" style="color:grey;"></i> UNCOMPLETE</li>
+								</ul>
 							</div>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>

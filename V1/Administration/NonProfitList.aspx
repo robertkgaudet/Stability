@@ -65,7 +65,7 @@
 								<ItemTemplate>
 										<tr>
 											<td>
-												<a href='/V1/NonProfit/NonProfit.aspx?organizationId=<%# DataBinder.Eval(Container.DataItem, "OrganizationId") %>' class="EventLink"><%# DataBinder.Eval(Container.DataItem, "Name") %> </a>
+												<a href='/V1/NonProfit/Default.aspx?organizationId=<%# DataBinder.Eval(Container.DataItem, "OrganizationId") %>' class="EventLink"><%# DataBinder.Eval(Container.DataItem, "Name") %> </a>
 											</td>
 											<%--<td><asp:HyperLink ID="hypImpactoidWebsite" Target="_blank" runat="server"></asp:HyperLink></td>--%>
 											<td><asp:Literal ID="litPointOfContactName" runat="server"></asp:Literal></td>
