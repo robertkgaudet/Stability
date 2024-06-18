@@ -211,11 +211,16 @@
 		}
         .tab-background
         {
-            background-color:#F7F9FA;
-              border-top-left-radius: 5px;  /* Adjust the value as needed */
-  border-top-right-radius: 5px; /* Adjust the value as needed */
-  margin-right:3px;
+			background-color:#F7F9FA;
+			border-top-left-radius: 5px;  /* Adjust the value as needed */
+			border-top-right-radius: 5px; /* Adjust the value as needed */
+			margin-right:3px;
         }
+		.tab-content
+		{
+			background-color:white;
+			padding:20px;
+		}
 	</style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
@@ -269,7 +274,7 @@
 											<uc1:DeploymentListCard runat="server" ID="ucDeploymentListCard" />
 											<div class="row">
 												<div class="col-lg-8">
-                                                    <div class="content">
+                                                    <div class="content" style="background-color:white;">
                                                         <asp:HyperLink ID="hypAddNewCampaign" CssClass="btn btn-info pull-left m-r-lg" runat="server" Text="<i class='fa fa-map'></i> Add A Deployment" Visible="false"></asp:HyperLink>
                                                         <asp:Literal ID="litAddTeamMessage" runat="server"></asp:Literal> 
                                                         <asp:HyperLink ID="hypAddTeam" Visible="false" Text="Create Your Team, Organization or Business" runat="server" NavigateUrl="/V1/Administration/NonProfitNew.aspx"></asp:HyperLink>

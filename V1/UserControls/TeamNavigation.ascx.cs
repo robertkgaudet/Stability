@@ -71,6 +71,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 			default:
 				break;
 		}
+		hypGetHelp.NavigateUrl = "/V1/VictimAccount.aspx?organizationId=" + organizationId;
 		hypPeople.Visible = false;
 		if (HttpContext.Current.User.Identity.IsAuthenticated)
 		{

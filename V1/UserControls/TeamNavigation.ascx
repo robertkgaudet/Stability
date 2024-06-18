@@ -2,7 +2,8 @@
 
                 <div class="hpanel">
                     <div class="panel-body">
-                        <ul class="mailbox-list">
+						<asp:HyperLink runat="server" ID="hypGetHelp" CssClass="btn btn-danger btn-block"><i class='fa fa-check'></i> Get Help</asp:HyperLink>
+                        <ul class="mailbox-list m-t-lg">
                             <li <%=_teamPageActive%>>
                                 <asp:HyperLink runat="server" ID="hypTeamName"><i class="fa fa-th-large"></i> <asp:Literal ID="litTeamName" runat="server"></asp:Literal></asp:HyperLink>
                             </li>
