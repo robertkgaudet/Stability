@@ -1,0 +1,78 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class V1_NonProfitCampaign : BaseOrganizationWebForm
+{
+	public string eventName = HttpContext.Current.Request.QueryString["eventName"];
+	public Guid eventId = Guid.Empty;
+	public string registerNonProfit = "/V1/Profile/NonProfitNew.aspx";
+
+	protected void Page_Load(object sender, EventArgs e)
+	{
+		//CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+		//var disaster = (from ev in dc.Events
+		//				where ev.URLFriendlyName == HttpContext.Current.Request.QueryString["eventName"]
+		//				select ev).SingleOrDefault();
+
+		//if(disaster != null)
+		//{
+		//	string pageDescription = "Non-profit organizations are invited to create a response to " + disaster.Name + ". This will allow you to collaborate with other non-profits, find volunteers, assist with home rebuilds, manage resources and much more. <br> Responding to this disaster requires two steps. <ol><li>Add your organization to the Stability system.</li> <li>Then create a non-profit response to " + disaster.Name + ".</li></ol>";
+		//	string pageTitle = disaster.Name + " Non-profit Resource Page";
+
+		//	this.Master.PageTitle			= "Stability - " + pageTitle;
+		//	this.Master.PageDescription		= pageDescription;
+		//	this.Master.FbDescription		= pageDescription;
+		//	this.Master.FbImage				= "Images/" + disaster.URLFriendlyName + ".jpg";
+		//	this.Master.FbImageType			= "image/jpg";
+		//	this.Master.FbSite_name			= "Stability - " + pageTitle;
+		//	this.Master.FbURL				= Request.Url.AbsoluteUri;
+
+		//	uc1EventHeader.PageTitle = pageTitle;
+		//	uc1EventHeader.PageDescription = pageDescription;
+		//	eventId = disaster.EventId;		}
+
+		//if(!IsPostBack)
+		//{
+		//	litRegisterNonProfit.Text = "Non-profits must register on Stability to work this event.";
+		//	btnRegisterNonProfit.Text = "Register my Non-Profit";
+			
+		//	var nonProfit = from np in dc.Organizations
+		//					where np.OwnerId == userId
+		//					select np;
+
+  //          //user must be the owner of this nonprofit to create a response.
+		//	if(nonProfit.Count() > 0)
+		//	{
+		//		//Person created a non-profit organization.
+		//		btnRegisterNonProfit.Text = "Create Survivor Portal";
+		//		litRegisterNonProfit.Visible = false;
+		//		litAddNonProfitEvent.Visible = true;
+		//		litNonProfitName.Text ="<h3>" + nonProfit.Take(1).SingleOrDefault().Name + "</h3>";
+		//		litAddNonProfitEvent.Text = " Your non-profit, <b>" + nonProfit.Take(1).SingleOrDefault().Name + "</b>, is eligible to create an Interactive Survivor Recovery Portal for responding to " + disaster.Name + ".";
+		//		registerNonProfit = "/V1/NonProfitAdministration/RespondToEvent.aspx?organizationId=" + nonProfit.Take(1).SingleOrDefault().OrganizationId +  "&eventId=" + eventId;
+		//	}
+				
+		//	var nonProfitEvent = from npe in dc.OrganizationEvents
+		//							where npe.OrganizationId == organizationId && npe.EventId == eventId
+		//							select npe;
+				
+		//	if(nonProfitEvent.Count() > 0)
+		//	{
+		//		//List the non-profits that are responding to this event.
+				
+		//		litRegisterNonProfit.Visible = true;
+		//		litRegisterNonProfit.Text = "Choose a non-profit responding to " + disaster.Name;
+					
+		//		//Hide all buttons and show the non-profit information.
+		//		btnRegisterNonProfit.Visible	= false;
+		//		litAddNonProfitEvent.Visible	= false;
+		//		litAddNonProfitEvent.Visible	= false;
+		//	}
+		//}
+	}
+}

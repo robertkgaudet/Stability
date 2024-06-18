@@ -1,0 +1,856 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Homer.master.cs" Inherits="MasterPages_Homer" %>
+
+
+<!DOCTYPE html>
+<html>
+	<head runat="server">
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-96039646-1"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() { dataLayer.push(arguments); }
+			gtag('js', new Date());
+
+			gtag('config', 'UA-96039646-1');
+		</script>
+		<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+		<link rel="manifest" href="/site.webmanifest">
+		<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="theme-color" content="#b16565">
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+		<title runat="server"					id="title">Create A Community Disaster Relief Team - Stability</title>
+		<meta name="description"				id="description" runat="server">
+		<meta property="og:image:type"			id="fbImageType" runat="server" />
+		<meta property="og:image"				id="fbImage" runat="server"/>
+		<meta property="og:title"				id="fbTitle" runat="server"/>
+		<meta property="og:url"					id="fbURL" runat="server"/>
+		<meta property="og:site_name"			id="fbSite_name" />
+		<meta property="og:description"			id="fbDescription" />
+		
+		<!-- Vendor styles -->
+		<link rel="stylesheet" href="/Homer/vendor/fontawesome/css/font-awesome.css" />
+		<link rel="stylesheet" href="/Homer/vendor/metisMenu/dist/metisMenu.css" />
+		<link rel="stylesheet" href="/Homer/vendor/animate.css/animate.css" />
+             
+		<!-- App styles -->
+		<link rel="stylesheet" href="/Homer/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css" />
+		<link rel="stylesheet" href="/Homer/fonts/pe-icon-7-stroke/css/helper.css" />
+		<link rel="stylesheet" href="/Homer/styles/style.css">
+		<link rel="stylesheet" href="/Homer/vendor/bootstrap/dist/css/bootstrap.css" />
+		<link rel="stylesheet" href="/Homer/vendor/bootstrap-toggle-master/css/bootstrap2-toggle.css" />
+        <link rel="stylesheet" href="/Homer/vendor/toastr/build/toastr.min.css" />
+		<!-- Vendor scripts -->
+		<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+
+		<script type="text/javascript">
+
+            var userOrganizationEventId = "<%=_userOrganizationEventId%>";
+            var organizationEventId = "";
+            var checkTaskType = "true";
+            var causeName = "";
+
+			document.addEventListener("DOMContentLoaded", function () {
+				const listItems = document.querySelectorAll("#userActionList li");
+
+				listItems.forEach(item => {
+					item.addEventListener("click", function () {
+						const url = this.getAttribute("data-url");
+						if (url) {
+							window.location.href = url;
+						}
+					});
+				});
+			});
+
+			$(document).ready(function () {
+				<%=_showUserActionModal%>
+				
+                $("#causeTypeList.dropdown-menu li").click(function () {
+                    causeName = $(this).text();
+                    $("#btn-causeDropdown.dropdown-chooseCause").html("<i class='fa fa-globe'></i> " + causeName);
+                    $("#<%=hidCauseId.ClientID%>").val($(this).attr('id'));
+                    $("#<%=lblCause.ClientID%>").html("<strong>Your Cause:</strong> " + causeName);
+                    organizationEventId = $(this).attr('id');
+                });
+
+                $("#causeTypeListB.dropdown-menu li").click(function () {
+                    $("#btn-causeDropdownB.dropdown-chooseCauseB").html("<i class='fa fa-globe'></i> " + $(this).text());
+                    $("#<%=hidCauseBId.ClientID%>").val($(this).attr('id'));
+                    $("#<%=lblCause.ClientID%>").html("<strong>Your Deployment:</strong> " + $(this).text());
+                    organizationEventId = $(this).attr('id');
+                });
+
+                $("#workEventType.dropdown-menu li").click(function () {
+                    $("#btn-dropdown.dropdown-taskType").html("<i class='pe-7s-id'></i> " + $(this).text());
+                    $("#<%=hidTaskTypeId.ClientID%>").val($(this).attr('id'));
+                });
+
+                var workDescription = document.getElementById('<%=txtWorkDescription.ClientID%>').value;
+                var workCompleteDescription = document.getElementById('<%=txtWorkCompleteDescription.ClientID%>').value;
+                var taskTypeId = document.getElementById('<%=hidTaskTypeId.ClientID%>').value;
+                var activeStatusButtonId = document.getElementById('<%=activeStatusButton.ClientID%>');
+                var causeCountyMessage = document.getElementById('causeCountyMessage');
+                var btnSubmitTime = document.getElementById('<%=btnSubmitTime.ClientID%>');
+                var timeEntryDiv = document.getElementById('timeEntry');
+                var timeEntryAlertDiv = document.getElementById('timeEntryAlert');
+                var activeTrackingButton = document.getElementById('<%=activeTrackingButton.ClientID%>');
+                var activeTrackingButtonId = document.getElementById('<%=activeTrackingButton.ClientID%>');
+                activeTrackingButton.style.visibility = 'hidden';
+
+                if ("<%=_noCause%>" == "true") {
+                    //No cause
+                    divTimesheet.hidden = true;
+
+                    //Show the cause Divs
+                    divChooseCause.hidden = false;
+                }
+                else {
+                    //Has a cause
+                    divTimesheet.hidden = false;
+
+                    //Remove the cause Divs
+                    divChooseCause.hidden = true;
+                }
+
+                if ("<%=_timeActive%>" == "true") {
+                    timeEntryDiv.style.visibility = 'hidden';
+                    causeCountyMessage.style.visibility = 'hidden';
+                    btnSubmitTime.style.visibility = 'hidden';
+                    activeStatusButtonId.style.visibility = 'hidden';
+                    activeTrackingButton.style.visibility = 'visible';
+                    timeEntryAlertDiv.hidden = false;
+                    checkTaskType = false;
+                }
+
+				$('#<%=imgLogo.ClientID%>').click(function () {
+					window.location.href = '/Default.aspx';
+					return false;
+				});
+
+				$('#<%=imgProfile.ClientID%>').click(function () {
+					window.location.href = <%=profileURL%>;
+					return false;
+                });
+			});
+
+            toastr.options = {
+                "debug": false,
+                "newestOnTop": true,
+                "positionClass": "toast-top-center",
+                "closeButton": true,
+                "showDuration": "600",
+                "toastClass": "animated fadeInDown",
+            };
+
+            function chooseCause()
+            {
+                //Now that we have a cause we can activate these items.
+
+                divTimesheet.hidden = false;
+
+                //Remove the cause Divs
+                divChooseCause.hidden = true;
+                $("#btn-causeDropdownB.dropdown-chooseCauseB").html("<i class='fa fa-globe'></i> " + causeName);
+            }
+
+            function updateTime(isUserActive)
+            {
+                workDescription = document.getElementById('<%=txtWorkDescription.ClientID%>').value;
+                workCompleteDescription = document.getElementById('<%=txtWorkCompleteDescription.ClientID%>').value;
+                taskTypeId = document.getElementById('<%=hidTaskTypeId.ClientID%>').value;
+                activeStatusButtonId = document.getElementById('<%=activeStatusButton.ClientID%>');
+                causeCountyMessage = document.getElementById('causeCountyMessage');
+                btnSubmitTime = document.getElementById('<%=btnSubmitTime.ClientID%>'); 
+                timeEntryDiv = document.getElementById('timeEntry');
+                timeEntryAlertDiv = document.getElementById('timeEntryAlert');
+                activeTrackingButton = document.getElementById('<%=activeTrackingButton.ClientID%>');
+
+                if (!isUserActive) {
+                    workDescription = workCompleteDescription;
+                }
+
+                if (taskTypeId == "" && checkTaskType) {
+                    toastr.error('Error - Please choose a Volunteer Role.');
+                    return;
+                }
+                else
+                {
+				    $.ajax(
+					{
+						type: "GET",
+                            url: "/V1/Handlers/UpdateTimesheet.ashx?noCause=<%=_noCause%>&taskTypeId=" + taskTypeId + "&organizationEventId=" + organizationEventId + "&userOrganizationEventId=" + userOrganizationEventId + "&workDescription=" + workDescription + "&userId=<%=userId%>&isUserActive=" + isUserActive,
+							data: "",
+							contentType: "text/plain; charset=utf-8",
+							dataType: "html",
+							success: function (data) {
+								if (data != "") {
+									$('#console-event').html(data);
+                                }
+                                if (isUserActive) {
+                                    //User signed in.
+                                    timeEntryDiv.style.visibility = 'hidden';
+                                    causeCountyMessage.style.visibility = 'hidden'; 
+                                    btnSubmitTime.style.visibility = 'hidden';
+                                    activeStatusButtonId.style.visibility = 'hidden';
+                                    activeTrackingButton.style.visibility = 'visible';
+                                    timeEntryAlertDiv.hidden = false;
+                                    checkTaskType = false;
+                                }
+                                else
+                                {
+                                    //User signed out.
+                                    timeEntryDiv.style.visibility = 'visible';
+                                    causeCountyMessage.style.visibility = 'visible';
+                                    btnSubmitTime.style.visibility = 'visible';
+                                    activeStatusButtonId.style.visibility = 'visible';
+                                    activeTrackingButton.style.visibility = 'hidden';
+                                    timeEntryAlertDiv.hidden = true;
+                                    checkTaskType = true;
+                                }
+							},
+							error: function (request, status, error) {
+								request.statusText + ' - ' + error + ' - ' + status;
+							}
+				    });
+                 }
+             }
+		</script>
+
+		<style>
+            .btn-purple
+            {
+                background-color:#5E2E91;
+                color:white;
+            }
+          .toast-message {
+               color: #000;
+            }
+			.bodyBGColor
+			{
+				background-color:#F7F9FA;
+			}
+			#header
+			{
+				background-color:#5e2e91;
+				height:58px;
+			}
+			#logo:hover	{cursor:pointer; }
+			.header-link
+			{
+				background:none;
+				border:none;
+				margin-top:-10px;
+			}
+			.header-link:hover
+			{
+				background:none;
+				border:none;
+			}
+			#<%=imgProfile.ClientID%>:hover
+			{
+				cursor:pointer;
+			}
+			.fa-bars
+			{
+				height:50px;
+			}
+			.fa-bars:hover
+			{
+				color:white;
+			}
+			#<%=imgProfile.ClientID%> {width:60%;}
+
+			.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 10px; width:200px; }
+			.toggle.ios .toggle-handle { border-radius: 10px; }
+			#<%=imgLogo.ClientID%>
+			{
+				margin:8px;
+			}
+			#<%=imgLogo.ClientID%>:hover
+			{
+				cursor:pointer;
+			}
+			#menu
+			{
+			}
+			.content{
+			padding:10px;
+            background-color:#FFFFFF !important;
+            color:#6A6C6F;
+			}
+			.normalheader
+			{
+			padding:0px 20px 20px 20px;
+			}
+			.liUserAction:hover
+			{
+				cursor:pointer;
+				background-color:lightgray;
+				color:white;
+			}
+		</style>
+        <style>
+			.skin-option {
+					position: fixed;
+					text-align: center;
+					right: -1px;
+					padding: 10px;
+					font-size:12px;
+					top: 5px;
+					text-transform: uppercase;	
+					background-color: #ffffff;
+					box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.05), 10px 5px 7px 3px rgba(0, 0, 0, .1);
+					border-radius: 4px 0 0 4px;
+					z-index: 100000;
+				}
+			.pe-7s-mail, .pe-7s-config, .pe-7s-keypad
+			{
+				color:white;
+			}
+			.pe-7s-mail:hover, .pe-7s-config:hover, .pe-7s-keypad:hover
+			{
+				color:black;
+			}
+		</style>
+		<asp:ContentPlaceHolder id="head" runat="server">
+		</asp:ContentPlaceHolder>
+	</head>
+	<%=bodyTag%>
+    <body class="sidebar-scroll hide-sidebar fixed-navbar <%=fixedFooter%> <%=fixedHeader%> bodyBGColor">
+		<form id="form1" runat="server" role="form">
+			<div style="margin-bottom:500px;">
+				<div id="header" runat="server">
+					<nav role="navigation">
+						<asp:Image ID="imgLogo" CssClass="pull-left" runat="server" Width="200" ImageUrl="~/V1/Images/logo.png" />
+						<div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs"></i></div>
+						<div class="mobile-menu">
+							<button type="button" class="navbar-toggle mobile-menu-toggle" data-toggle="collapse" data-target="#mobile-collapse">
+								<i class="fa fa-chevron-down fa-2x m-t-n-xs" style="color:white;"></i>
+							</button>
+							<div class="collapse mobile-navbar" id="mobile-collapse">
+								<ul class="nav navbar-nav no-borders">
+									<li>
+										<a class="" href="/V1/SignOut.aspx">Sign Out</a>
+									</li>
+<%--									<li class="dropdown">
+										<a class="dropdown-toggle label-menu-corner" href="#" data-toggle="dropdown">
+											Mail
+										</a>
+										<ul class="dropdown-menu hdropdown animated flipInX">
+											<div class="title">
+												You have 0 new messages
+											</div>
+											<li>
+												<a>
+													Welcome to Stability.
+												</a>
+											</li>
+											<li>
+												<a>
+													Create or find your team to get started!
+												</a>
+											</li>
+											<li class="summary"><a href="#">See All Messages</a></li>
+										</ul>
+									</li>--%>
+									<li class="dropdown">
+										<a class="dropdown-toggle" href="#" data-toggle="dropdown">
+											My Boards
+										</a>
+										<ul class="dropdown-menu hdropdown notification animated flipInX" style="margin-top:50px;">
+											<li>
+												<asp:HyperLink id="hypMDefaultDisaster" runat="server"></asp:HyperLink>
+											</li>
+											<li>
+												<asp:HyperLink id="hypMMyTeam" runat="server" Text="My Team" Font-Bold="true"></asp:HyperLink>
+											</li>
+											<li>
+												<asp:HyperLink id="hypMDefaultTeam" runat="server" Text="My Team Activities" Font-Bold="true"></asp:HyperLink>
+											</li>
+											<li style="background-color:#5bbfdd; color:white; font-weight:bold;">
+												<a href="/V1/Administration/NonProfitNew.aspx"  style="font-weight:bold; color:white;"><i class='fa fa-group'></i> Create A Team</a>
+											</li>
+										</ul>
+									</li>
+									<li class="dropdown">
+										<a class="dropdown-toggle" href="#" data-toggle="dropdown">
+											Settings
+										</a>
+										<ul class="dropdown-menu hdropdown notification animated flipInX">
+											<li><asp:HyperLink ID="HyperLink3" runat="server" Text="My Profile" NavigateUrl="~/V1/Profile/Profile.aspx"></asp:HyperLink></li>
+											<li runat="server" id="li1" visible="false"><asp:HyperLink ID="HyperLink4" runat="server" Text="Print ID Card" NavigateUrl="~/IDCard"></asp:HyperLink></li>
+											<li><asp:HyperLink ID="HyperLink5" runat="server" Text="Record Time" NavigateUrl="~/V1/Profile/Time.aspx"></asp:HyperLink></li>
+											<li><asp:HyperLink ID="HyperLink6" runat="server" Text="Sign Out" NavigateUrl="~/V1/SignOut.aspx"></asp:HyperLink></li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="navbar-right">
+							<ul class="nav navbar-nav no-borders">
+								<li class="dropdown">
+									<a class="dropdown-toggle" href="#" data-toggle="dropdown">
+										<i class="pe-7s-keypad"></i>
+									</a>
+									<ul class="dropdown-menu hdropdown notification animated flipInX">
+										<li>
+											<asp:HyperLink id="hypDefaultDisaster" runat="server"></asp:HyperLink>
+										</li>
+										<li>
+											<asp:HyperLink id="hypMyTeam" runat="server" Text="My Team" Font-Bold="true"></asp:HyperLink>
+										</li>
+										<li>
+											<asp:HyperLink id="hypDefaultTeam" runat="server" Text="My Team Activities" Font-Bold="true"></asp:HyperLink>
+										</li>
+										<li style="background-color:#5bbfdd; color:white; font-weight:bold;">
+											<a href="/V1/Administration/NonProfitNew.aspx"  style="font-weight:bold; color:white;"><i class='fa fa-group'></i> Create A Team</a>
+										</li>
+									</ul>
+								</li>
+								<li class="dropdown">
+									<a class="dropdown-toggle label-menu-corner" href="#" data-toggle="dropdown">
+										<i class="pe-7s-mail"></i>
+										<span class="label label-success">0</span>
+									</a>
+									<ul class="dropdown-menu hdropdown animated flipInX">
+										<div class="title">
+											You have 0 new messages
+										</div>
+										<li>
+											<a>
+												Welcome to Stability.
+											</a>
+										</li>
+										<li>
+											<a>
+												Create or find your team to get started!
+											</a>
+										</li>
+										<li class="summary"><a href="#">See All Messages</a></li>
+									</ul>
+								</li>
+								<li class="dropdown" runat="server" id="divSettings">
+									<a class="dropdown-toggle" href="#" data-toggle="dropdown">
+										<i class="pe-7s-config"></i>
+									</a>
+									<ul class="dropdown-menu hdropdown notification animated flipInX">
+										<li><asp:HyperLink ID="hypProfile" runat="server" Text="My Profile" NavigateUrl="~/V1/Profile/Profile.aspx"></asp:HyperLink></li>
+										<li runat="server" id="liPrintIdCard" visible="false"><asp:HyperLink ID="hypPrintIDCard" runat="server" Text="Print ID Card" NavigateUrl="~/IDCard"></asp:HyperLink></li>
+										<li><asp:HyperLink ID="hypTime" runat="server" Text="Record Time" NavigateUrl="~/V1/Profile/Time.aspx"></asp:HyperLink></li>
+										<li><asp:HyperLink ID="hypSignOut" runat="server" Text="Sign Out" NavigateUrl="~/V1/SignOut.aspx"></asp:HyperLink></li>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</nav>
+				</div>
+				<!-- Navigation -->
+				<aside id="menu" runat="server">
+					<div id="navigation">
+						<ul class="nav m-b" id="side-menu">
+							<div class="profile-picture m-b-xs">
+								<img class="m-b img-rounded" width="10" src="../Images/icons8-customer-64.png" runat="server" id="imgProfile" />
+								<div class="font-bold">
+									<asp:Literal ID="litUsername" runat="server"></asp:Literal>
+								</div>
+							</div>
+							<div class="stats-label text-color text-center m-b-md">
+							    <div class="text-center m-b-sm" runat="server" id="myDisastersButton">
+                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModalActiveDisasters">
+                                        My Assistant
+                                    </button>
+							    </div>
+								<div class="m-b-md" style="position:relative;" runat="server" id="timeButtons">
+									<button type="button" style="position:absolute;" class="btn btn-warning btn-xl" id="activeStatusButton" runat="server" data-toggle="modal" data-target="#activeStatusModal"><i class='fa fa-clock-o fa-2x'></i><br />Track Time</button>
+                                    <button type="button" class="btn btn-success btn-xl " id="activeTrackingButton" runat="server" data-toggle="modal" data-target="#activeStatusModal"><i class='fa fa-clock-o fa-2x'></i><br />Stop Time</button>
+                                    <%--fa-user-circle-o--%>
+								    <div id="console-event"></div>
+                                </div>
+								<div class="dropdown" id="divLogin" runat="server" visible="false">
+									<asp:HyperLink ID="hypLogin" runat="server" Text="Sign In" NavigateUrl="~/V1/Login.aspx"></asp:HyperLink>
+								</div>  
+
+							</div>
+							<li <asp:Literal ID="litViewDisasters" runat="server"></asp:Literal>>
+								<a href="/V1/ChooseEvent.aspx">	 
+									<span class="nav-label">Community Portals</span>
+								</a>
+							</li>
+							<li runat="server" id="liMyCampaigns" visible="false">
+								<a href="#">	 
+									<span class="nav-label">My Deployments</span><span class="fa arrow"></span> 
+								</a>
+                                <ul class="nav nav-second-level">
+                                   <asp:Literal id="litMyDisasterCampaigns" runat="server"></asp:Literal>
+                                </ul>
+							</li>
+							<li runat="server" id="liMySurvivors" visible="false">
+								<a href="/S1/Profile/MySurvivors.aspx">
+									<span class="nav-label">My Survivors</span>
+								</a>
+							</li>
+							<li runat="server" id="liAddSurvivor" visible="false">
+								<a href="/S1/Profile/AddNewSurvivor.aspx">
+									<span class="nav-label">Add a Survivor</span>
+								</a>
+							</li>
+							<li runat="server" id="liDisasterCampaigns" visible="false">
+								<a href="#">	 
+									<span class="nav-label">My Campaigns</span><span class="fa arrow"></span> 
+								</a>
+                                <ul class="nav nav-second-level">
+                                   <asp:Literal id="litMyCampaigns" runat="server"></asp:Literal>
+                                </ul>
+							</li>
+							<li runat="server" id="liMyNonProfits" visible="false">
+								<a href="#">	 
+									<span class="nav-label">My Teams</span><span class="fa arrow"></span> 
+								</a>
+                                <ul class="nav nav-second-level">
+                                   <asp:Literal id="litMyNonProfits" runat="server"></asp:Literal>
+                                </ul>
+							</li>
+							<li id="divAdminLinks" class="bg-info" runat="server" visible="false">
+									<a href="#">	 
+										<span class="nav-label">Administration</span><span class="fa arrow"></span> 
+									</a>
+								<ul class="nav m-b nav-second-level" id="side-menu">
+									<li>
+										<a href="/Homer/analytics.html">	 
+											<span class="nav-label">Homer Template</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/Item/List.aspx">	 
+											<span class="nav-label">Items</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/Item/AddItem.aspx">	 
+											<span class="nav-label">Add Item</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/Location/LocationList.aspx">	 
+											<span class="nav-label">Locations</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/Disasters.aspx">	 
+											<span class="nav-label">Command Centers</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/SurvivorsList.aspx">	 
+											<span class="nav-label">Survivors</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/VolunteerList.aspx">	 
+											<span class="nav-label">Volunteers</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/UsersOnline.aspx">	 
+											<span class="nav-label">Who's Online</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/VolunteerIDList.aspx">	 
+											<span class="nav-label">Volunteer Quick Search</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/VolunteerByRole.aspx">	 
+											<span class="nav-label">Volunteer Search by Role</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/Rebuilds.aspx">	 
+											<span class="nav-label">Rebuild</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/UserList.aspx">	 
+											<span class="nav-label">User Accounts</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/NonProfitList.aspx">	 
+											<span class="nav-label">Non Profits</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/SurveyList.aspx">	 
+											<span class="nav-label">Surveys</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/CorporateBrands.aspx">	 
+											<span class="nav-label">Corporate Brands</span>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<li id="divLocationAdministration" class="bg-info" runat="server" visible="false">
+									<a href="#">	 
+										<span class="nav-label">Location Admin</span><span class="fa arrow"></span> 
+									</a>
+								<ul class="nav m-b nav-second-level" id="side-menu">
+									<li>
+										<a href="/V1/Administration/Location/LocationList.aspx">	 
+											<span class="nav-label">Locations</span>
+										</a>
+									</li>
+								</ul>
+							</li>
+							<!--<li style="background-color:#E3E3E3; visibility:hidden;" <asp:Literal ID="litVolunteer" runat="server"></asp:Literal>>
+								<asp:HyperLink runat="server" ID="hypVolunteer" NavigateUrl="~/V1/ChooseEvent.aspx?action=volunteer">
+									<span class="nav-label text-black rebuildHomeNav"><asp:Literal ID="litVolunteerIcon" runat="server"></asp:Literal>
+										<asp:Literal ID="litVolunteerPending" runat="server"></asp:Literal>
+									</span>
+								</asp:HyperLink>
+							</li>-->
+							<li <asp:Literal ID="litStream" runat="server"></asp:Literal> style="visibility:hidden;">
+								<a href="/V1/Stream.aspx">
+									<span class="nav-label">HOME</span>
+								</a>
+							</li>
+							<li <asp:Literal ID="litAddHome" runat="server" visible="false"></asp:Literal> style="visibility:hidden;">
+								<a href="/V1/Profile/AddNewRebuild.aspx" style="visibility:hidden;">
+									<span class="nav-label">Rebuild a Home</span>
+								</a>
+							</li>
+							<li <asp:Literal ID="litStages" runat="server" visible="false"></asp:Literal> style="visibility:hidden;">
+								<a href="/V1/Stages.aspx">
+									<span class="nav-label">Recovery Stages</span>
+								</a>
+							</li>
+							<li <asp:Literal ID="litTrackHome" runat="server" visible="false"></asp:Literal> style="visibility:hidden;">
+								<a href="/Web/Index.html">
+									<span class="nav-label">About Us</span>
+								</a>
+							</li>
+							<%--<li style="background-color:#E3E3E3;" <asp:Literal ID="litMyDashboard" runat="server"></asp:Literal> style="visibility:hidden;">
+								<a href="/V1/Profile/Default.aspx">
+									<span class="nav-label text-black rebuildHomeNav"><i class="fa fa-pie-chart"></i> My Dashboard</span>
+								</a>
+							</li>--%>
+						</ul>
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+					</div>
+				</aside>
+				<!-- Main Wrapper -->
+				<div id="wrapper">
+					<div class="content">
+						<asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+		
+						</asp:ContentPlaceHolder>
+					</div>
+					<!-- Footer-->
+					<footer class="footer" id="footer" runat="server">
+						<span class="pull-right">
+							Copyright Stability 2024
+						</span>	
+					</footer>
+				</div>
+			</div>
+			<div class="modal fade" id="activeStatusModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div id="divChooseCause" hidden="hidden">
+                            <div class="color-line"></div>
+                            <div class="modal-header text-center">
+                                <h4 class="modal-title"><asp:Literal ID="Literal3" runat="server"></asp:Literal> Volunteer Timesheet</h4>
+                                <small class="thin-font">Enter a description of what you are working on and press Activate My Time.</small>
+                            </div>
+                            <div class="modal-body" style="position:relative;">
+                                <div class="bg-success text-center p-xs m-b-sm  " id="chooseCauseWarning">
+                                    <i class='fa fa-globe fa-4x'></i><br />
+                                    <h4 class="text-uppercase">First choose a deployment to activate your time
+                                    </h4>
+                                </div>
+                                <div class="row" id="chooseCauseRow">
+                                    <div class="col-lg-12">
+                                        <div id="divCauseDropdown" class="dropdown m-b-md">
+				                            <button id="btn-causeDropdown" class="btn dropdown-toggle dropdown-chooseCause" type="button" data-toggle="dropdown">Choose A Deployment <i class="fa fa-globe"></i></button>
+				                            <ul id="causeTypeList" class="dropdown-menu">
+                                                <asp:Literal ID="litCause" runat="server"></asp:Literal>
+				                            </ul>
+                                            <asp:HiddenField id="hidCauseId" runat="server" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" runat="server" id="btnChooseCause" onclick="chooseCause();">Choose Deployment</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close Window</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="divTimesheet" hidden="hidden">
+                            <div class="color-line"></div>
+                            <div class="modal-header text-center">
+                                <h4 class="modal-title"><asp:Literal ID="litCountyHeader" runat="server"></asp:Literal> Volunteer Timesheet</h4>
+                                <small class="thin-font">Enter a description of what you are working on and press Activate My Time.</small>
+                            </div>
+                            <div class="modal-body" style="position:relative;">
+                                <div class="bg-success text-center m-b-sm" id="timeEntryAlert" hidden="hidden" style="position:absolute;">
+                                    <i class='fa fa-clock-o fa-4x'></i><br />
+                                    <h4 class="text-uppercase">Your time has been activated.
+                                    </h4>
+                                    Remember to sign out when done volunteering.
+                                    <p>
+                                        <strong>
+                                            <asp:Literal ID="Literal2" runat="server" Text="Describe what you worked on and accomplished."></asp:Literal>
+                                        </strong>
+                                    </p>
+                                    <asp:TextBox TextMode="MultiLine" Rows="4" Columns="40" ID="txtWorkCompleteDescription" runat="server"></asp:TextBox>
+                                    <br />
+                                    <button type="button" class="btn btn-warning" runat="server" id="btnSignOut" onclick="updateTime(false);">Sign Out</button>
+                                </div>
+                                <div class="row" id="timeEntry">
+                                    <div class="col-lg-6">
+                                        <p>
+                                            <strong>
+                                                <asp:Literal ID="litInstructions" runat="server" Text="What volunteer role are you filling?"></asp:Literal>
+                                            </strong>
+                                        </p>
+                                        <div id="divTaskTypedropdown" class="dropdown m-b-md">
+				                            <button id="btn-dropdown" class="btn dropdown-toggle dropdown-taskType" type="button" data-toggle="dropdown">Choose A Volunteer Role <i class="pe-7s-id"></i></button>
+				                            <ul id="workEventType" class="dropdown-menu">
+                                                <asp:Literal ID="litVolunteerType" runat="server"></asp:Literal>
+				                            </ul>
+                                            <asp:HiddenField id="hidTaskTypeId" runat="server" />
+                                        </div>
+                                        <div id="divCauseDropdownB" class="dropdown m-b-md">
+				                            <button id="btn-causeDropdownB" class="btn dropdown-toggle dropdown-chooseCauseB" type="button" data-toggle="dropdown">Choose A Deployment <i class="fa fa-globe"></i></button>
+				                            <ul id="causeTypeListB" class="dropdown-menu">
+                                                <asp:Literal ID="litCauseB" runat="server"></asp:Literal>
+				                            </ul>
+                                            <asp:HiddenField id="hidCauseBId" runat="server" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <p>
+                                            <strong>
+                                                <asp:Literal ID="litWorkDescription" runat="server" Text="Describe what you will be working on."></asp:Literal>
+                                            </strong>
+                                        </p>
+                                        <asp:TextBox TextMode="MultiLine" Rows="6" Columns="30" ID="txtWorkDescription" runat="server"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="bg-info p-xs m-b-sm" id="causeCountyMessage">
+                                    <small class="">Your volunteer time will be attributed to the county and deployment listed below.</small>
+                                    <h6 class="text-uppercase"><asp:Literal ID="lblCountyState" runat="server"></asp:Literal></h6>
+                                    <h6 class="text-uppercase"><asp:Label ID="lblCause" runat="server"></asp:Label></h6>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" runat="server" id="btnSubmitTime" onclick="updateTime(true);">Activate My Time</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close Window</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="myModalActiveDisasters" tabindex="-1" role="dialog"  aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="color-line"></div>
+                        <div class="modal-header text-center">
+                            <h4 class="modal-title">My Assistant</h4>
+                            <small class="font-bold">Select a Community Portal from your <a href="/V1/Profile/EditDisasters.aspx">profile settings</a>.</small>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                <asp:HyperLink id="hypActionPage" runat="server" CssClass="btn btn-ls btn-success" Text="Team Activity Page"></asp:HyperLink>
+								<hr />
+                                <strong><asp:Literal ID="litNonProfitName" runat="server" Visible="false" Text="My Team:"></asp:Literal></strong>
+                                <asp:HyperLink id="hypNonProfit" runat="server"></asp:HyperLink>
+                                 <br />
+                                <asp:HyperLink id="hypInviteTeamMembers" runat="server" CssClass="btn btn-xs btn-success" Text="Invite New Members"></asp:HyperLink>
+                                <div class="m-t-md">
+                                    <strong>
+                                        <span class="nav-label">My Deployments:</span>
+                                    </strong>
+                                    <ul>
+                                        <asp:Literal id="litMyCauses" runat="server"></asp:Literal>
+                                    </ul>
+                                </div>
+                                <div class="m-t-md">
+                                    <strong>
+                                        <span class="nav-label">My Community Portals:</span>
+                                    </strong>
+                                    <ul>
+                                        <asp:Literal id="litDefaultDisaster" runat="server"></asp:Literal>
+                                        <asp:Literal id="litMyDisasters" runat="server"></asp:Literal>
+                                    </ul>
+                                </div>
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			<div class="modal fade hmodal-success" id="divUserActionModal" tabindex="-1" role="dialog"  aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="color-line"></div>
+                        <div class="modal-header">
+                            <h4 class="modal-title">Finish Your Profile</h4>
+                            <small class="font-bold">Complete your member profile to start helping today.</small>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+								<strong>Follow These Steps (Takes About 2 Minutes)</strong>
+								By completing this informtion you're contributing to the overall knowledge of the community in ways that can help everyone collaborate even more effectively.
+								<ul class="fa-ul" id="userActionList">
+									<li data-url="/V1/Profile/EditNonProfits.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=teamUpdated%>;"></i> <u>Choose or Create Your Team</u></li>
+									<li runat="server" id="liDeployment" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=deploymentUpdated%>;"></i> <u>Find or Create a Deployment</u></li>
+									<li data-url="/V1/Profile/EditDisasters.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=communityUpdated%>;"></i> <u>Choose Your Community Portal</u></li>
+									<li data-url="/V1/Profile/EditSkills.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=skillsUpdated%>;"></i> <u>Update Your Skills</u></li>
+								</ul>
+									
+								Citizens in communities are no longer victims of natrual disasters waiting for help. We are the help because citizens have many of the skills their own community needs
+								to successfully recover from natural disasters.
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+							<div class="pull-left">
+								Hide this window.
+							</div>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</form>
+		
+		<!-- App scripts -->
+		<script src="/Homer/scripts/homer.js"></script>
+		<script src="/Homer/vendor/slimScroll/jquery.slimscroll.min.js"></script>
+		<script src="/Homer/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="/Homer/vendor/metisMenu/dist/metisMenu.min.js"></script>
+		<script src="/Homer/vendor/bootstrap-toggle-master/js/bootstrap-toggle.js"></script>
+        <script src="/Homer/vendor/toastr/build/toastr.min.js"></script>
+	</body>
+</html>

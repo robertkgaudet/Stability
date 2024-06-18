@@ -1,0 +1,172 @@
+﻿using System;
+using System.Activities.Expressions;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class V1_Administration_EmergencyManagement : BaseOrganizationWebForm
+{
+	protected void Page_Load(object sender, EventArgs e)
+	{
+		if(!IsPostBack)
+		{
+			string stateCode = Request.QueryString["stateCode"];
+			string countyId = Request.QueryString["countyId"];
+			string countyName = string.Empty;
+
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+			var state = (from s in dc.USStates
+						 where s.Code == stateCode
+						 select s).SingleOrDefault();
+
+			lblStateInstructions.Text = state.Name + ": Update Emergency Management Information for " + state.Name + ".";
+
+			if (String.IsNullOrEmpty(countyId))
+			{
+				//Load state info only
+				var countyEmergencyManagementInformation = (from em in dc.EmergencyManagments
+															join s in dc.USStates on em.StatesId equals s.StatesId
+															where s.Code == stateCode
+															&& em.IsStateEOC == true
+															select em).SingleOrDefault();
+
+				if (countyEmergencyManagementInformation != null )
+				{
+					//A state/county record exists
+					txtEMWebsite.Value = countyEmergencyManagementInformation.Website;
+					txtEOCName.Value = countyEmergencyManagementInformation.EOCName;
+					txtEMName.Value = countyEmergencyManagementInformation.EmergencyManagerName;
+					txtPhoneNumber.Value = countyEmergencyManagementInformation.PhoneNumber;
+				}
+			}
+			else
+			{
+				//Load state and county info only
+				var countyEmergencyManagementInformation = (from em in dc.EmergencyManagments
+															join s in dc.USStates on em.StatesId equals s.StatesId
+															where s.Code == stateCode
+															&& em.CountyId == new Guid(countyId)
+															&& em.IsStateEOC == false
+															select em).SingleOrDefault();
+
+				if (countyEmergencyManagementInformation != null)
+				{
+					//A state/county record exists
+					txtEMWebsite.Value = countyEmergencyManagementInformation.Website;
+					txtEOCName.Value = countyEmergencyManagementInformation.EOCName;
+					txtEMName.Value = countyEmergencyManagementInformation.EmergencyManagerName;
+					txtPhoneNumber.Value = countyEmergencyManagementInformation.PhoneNumber;
+				}
+
+				var county = (from c in dc.Counties
+								 where c.CountyId == new Guid(countyId)
+								 select c).SingleOrDefault();
+
+				string countyOrParish = " County";
+				if(stateCode.ToUpper() == "LA")
+				{
+					countyOrParish = " Parish";
+				}
+
+				countyName = county.Name + countyOrParish;
+				lblStateInstructions.Text = state.Name + ", " + countyName + ": Update Emergency Management Information for " + countyName + ".";
+			}
+		}
+	}
+
+	protected void btnSubmit_Click(object sender, EventArgs e)
+	{
+		string stateCode = Request.QueryString["stateCode"];
+		string countyId = Request.QueryString["countyId"];
+
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+		if(String.IsNullOrEmpty(countyId))
+		{
+			//Update state.
+			var countyEmergencyManagementInformation = (from em in dc.EmergencyManagments
+														join s in dc.USStates on em.StatesId equals s.StatesId
+														where s.Code == stateCode
+														&& em.IsStateEOC == true
+														select em).SingleOrDefault();
+
+			if (countyEmergencyManagementInformation != null)
+			{
+				//UPDATE We have an EM Information. Update it.
+				countyEmergencyManagementInformation.EmergencyManagerName = txtEMName.Value;
+				countyEmergencyManagementInformation.EOCName = txtEOCName.Value;
+				countyEmergencyManagementInformation.PhoneNumber = txtPhoneNumber.Value;
+				countyEmergencyManagementInformation.Website = txtEMWebsite.Value;
+				dc.SubmitChanges();
+			}
+			else
+			{
+				//INSERT No EM exists, let's add it.
+				var state = (from s in dc.USStates
+							 where s.Code == stateCode
+							 select s).SingleOrDefault();
+
+				EmergencyManagment emergencyManagment = new EmergencyManagment();
+				emergencyManagment.EmergencyManagementId = Guid.NewGuid();
+				emergencyManagment.EOCName = txtEOCName.Value;
+				emergencyManagment.StatesId = state.StatesId;
+				emergencyManagment.EmergencyManagerName = txtEMName.Value;
+				emergencyManagment.PhoneNumber = txtPhoneNumber.Value;
+				emergencyManagment.Website = txtEMWebsite.Value;
+				emergencyManagment.IsStateEOC = string.IsNullOrEmpty(countyId) ? true : false;
+				dc.EmergencyManagments.InsertOnSubmit(emergencyManagment);
+				dc.SubmitChanges();
+			}
+		}
+		else
+		{
+			//Update state and county.
+			var countyEmergencyManagementInformation = (from em in dc.EmergencyManagments
+														join s in dc.USStates on em.StatesId equals s.StatesId
+														where s.Code == stateCode
+														&& em.IsStateEOC == false
+														&& em.CountyId == new Guid(countyId)
+														select em).SingleOrDefault();
+
+			if (countyEmergencyManagementInformation != null)
+			{
+				//UPDATE We have an EM Information. Update it.
+				countyEmergencyManagementInformation.EmergencyManagerName = txtEMName.Value;
+				countyEmergencyManagementInformation.EOCName = txtEOCName.Value;
+				countyEmergencyManagementInformation.PhoneNumber = txtPhoneNumber.Value;
+				countyEmergencyManagementInformation.Website = txtEMWebsite.Value;
+				dc.SubmitChanges();
+			}
+			else
+			{
+				//INSERT No EM exists, let's add it.
+				var state = (from s in dc.USStates
+							 where s.Code == stateCode
+							 select s).SingleOrDefault();
+
+				EmergencyManagment emergencyManagment = new EmergencyManagment();
+				emergencyManagment.EmergencyManagementId = Guid.NewGuid();
+				emergencyManagment.EOCName = txtEOCName.Value;
+				emergencyManagment.StatesId = state.StatesId;
+				emergencyManagment.CountyId = new Guid(countyId);
+				emergencyManagment.EmergencyManagerName = txtEMName.Value;
+				emergencyManagment.PhoneNumber = txtPhoneNumber.Value;
+				emergencyManagment.Website = txtEMWebsite.Value;
+				emergencyManagment.IsStateEOC = string.IsNullOrEmpty(countyId) ? true : false;
+				dc.EmergencyManagments.InsertOnSubmit(emergencyManagment);
+				dc.SubmitChanges();
+			}
+		}
+
+		string eventId = Request.QueryString["eventId"];
+
+		var disaster = (from ev in dc.Events
+						where ev.EventId == new Guid(eventId)
+						select ev).SingleOrDefault();
+
+		Response.Redirect("/Disaster/" + disaster.URLFriendlyName);
+	}
+}

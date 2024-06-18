@@ -1,0 +1,106 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Basic.master.cs" Inherits="V1_MasterPages_Basic" %>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-96039646-1"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() { dataLayer.push(arguments); }
+			gtag('js', new Date());
+
+			gtag('config', 'UA-96039646-1');
+		</script>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Create A Community Disaster Relief Team - Stability</title>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="Turn your friends and family into an impactful disaster relief team to help your community.">
+		<meta name="keywords" content="Cajun Navy, Ground Force, Ground Force Humanitarian Aid, Cajun Navy Ground Force, CajunNavy, Stability, Disaster Relief, Disaster, Disaster Response, Hurricane, Tornado, Flood, Wildfire, Heatwave">
+		<meta name="author" content="Rob Gaudet, President, Stability">
+
+		<meta property="og:image" content="http://www.Stability.org/V1/images/MSTEAM.png" />
+		<meta property="og:title" content="Create A Community Disaster Relief Team - Stability" />
+		<meta property="og:description" content="Turn your friends and family into an impactful disaster relief team to help your community." />
+
+		<meta property="og:url" content="http://www.Stability.org/Default.aspx" />
+
+		<!-- Mobile Specific Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<!-- Mainly scripts -->
+		<script src="/inspinia_v2.7.1/Static_Full_Version/js/jquery-3.1.1.min.js"></script>
+		<script src="/inspinia_v2.7.1/Static_Full_Version/js/bootstrap.min.js"></script>
+		<script src="/Homer/vendor/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js"></script>
+		<script src="/Homer/vendor/select2-3.5.2/select2.min.js"></script>
+		<script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
+		
+		<link href="/inspinia_v2.7.1/Static_Full_Version/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/inspinia_v2.7.1/Static_Full_Version/font-awesome/css/font-awesome.css" rel="stylesheet">
+		<link href="/inspinia_v2.7.1/Static_Full_Version/css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="/inspinia_v2.7.1/Static_Full_Version/css/animate.css" rel="stylesheet">
+		<link href="/inspinia_v2.7.1/Static_Full_Version/css/style.css" rel="stylesheet">
+		<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+		<link rel="manifest" href="/site.webmanifest">
+		<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="theme-color" content="#b16565">
+		
+		<link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
+		<link rel="stylesheet" href="/Homer/vendor/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" />
+		<link rel="stylesheet" href="/Homer/vendor/select2-3.5.2/select2.css" />
+		<link rel="stylesheet" href="/Homer/vendor/select2-bootstrap/select2-bootstrap.css" />
+
+		
+
+		<asp:ContentPlaceHolder id="head" runat="server">
+		</asp:ContentPlaceHolder>
+
+		<script>
+
+			$(document).ready(function () {
+				$(".logo-name").click(function () {
+					document.location.href = "/default.aspx";
+				});
+			});
+		</script>
+
+		<style>
+			.logo-name
+			{
+				cursor: pointer;
+			}
+			
+			#header
+			{
+				background-color:#5e2e91;
+				height:30px;
+			}
+			#<%=imgLogo.ClientID%>
+			{
+				margin:5px;
+			}
+			#<%=imgLogo.ClientID%>:hover
+			{
+				cursor:pointer;
+			}
+		</style>
+	</head>
+
+	<body class="white-bg">
+		<form id="form1" runat="server">
+			<div id="header" runat="server">
+				<asp:Image Visible="false" ID="imgLogo" CssClass="pull-left" runat="server" Width="130" ImageUrl="~/V1/Images/logo1.png" />
+			</div>
+			<div class="container">
+				<asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+        
+				</asp:ContentPlaceHolder>
+			</div>
+		</form>
+	</body>
+</html>

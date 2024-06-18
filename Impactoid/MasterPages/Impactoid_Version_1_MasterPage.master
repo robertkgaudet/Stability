@@ -1,0 +1,80 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Impactoid_Version_1_MasterPage.master.cs" Inherits="Impactoid_Version_1_MasterPage" %>
+
+<!DOCTYPE html>
+<html>
+	<head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-96039646-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+
+		gtag('config', 'UA-96039646-1');
+	</script>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<asp:ContentPlaceHolder id="head" runat="server">
+		</asp:ContentPlaceHolder>
+		<title>Impactoid - Disaster Relief Websites</title>
+
+		<link href="/inspinia_v2.7.1/Static_Full_Version/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/inspinia_v2.7.1/Static_Full_Version/font-awesome/css/font-awesome.css" rel="stylesheet">
+		<link href="/inspinia_v2.7.1/Static_Full_Version/css/plugins/iCheck/custom.css" rel="stylesheet">
+		<link href="/inspinia_v2.7.1/Static_Full_Version/css/animate.css" rel="stylesheet">
+		<link href="/inspinia_v2.7.1/Static_Full_Version/css/style.css" rel="stylesheet">
+
+		<meta property="og:image" id="fbImage" content="/Impactoid/Images/TTF.jpg"/>
+		<meta property="og:title" id="fbTitle" content="Impactoid - Community Based Disaster Websites"/>
+		<meta property="og:url"	id="fbURL"  content="http://www.Impactoid.com/"/>
+		<meta property="og:site_name" id="fbSite_name" content="Impactoid"/>
+		<meta property="og:description" id="fbDescription" content="Everything you need to create a website to organize your community."/>
+		
+		<!-- Mainly scripts -->
+		<script src="/inspinia_v2.7.1/Static_Full_Version/js/jquery-3.1.1.min.js"></script>
+		<script src="/inspinia_v2.7.1/Static_Full_Version/js/bootstrap.min.js"></script>
+
+		<script>
+
+			$(document).ready(function () {
+				$(".logo-name").click(function () {
+					document.location.href = "/";
+				});
+			});
+		</script>
+
+		<style>
+			.logo-name
+			{
+				cursor: pointer;
+			}
+			
+			#header
+			{
+				background-color:#29498c;
+				height:30px;
+			}
+			#<%=imgLogo.ClientID%>
+			{
+				margin:5px;
+			}
+			#<%=imgLogo.ClientID%>:hover
+			{
+				cursor:pointer;
+			}
+		</style>
+	</head>
+
+	<body class="white-bg">
+		<form id="form1" runat="server">
+			<asp:Image ID="imgLogo" CssClass="pull-left" runat="server" Width="130" ImageUrl="~/Impactoid/Images/ICON.png" />
+			<div class="container">
+				<asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+        
+				</asp:ContentPlaceHolder>
+			</div>
+		</form>
+
+	</body>
+</html>

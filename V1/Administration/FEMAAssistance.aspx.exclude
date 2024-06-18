@@ -1,0 +1,81 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="FEMAAssistance.aspx.cs" Inherits="V1_Administration_FEMAAssistance" %>
+<%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+
+	<script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script>
+
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode == 110 || charCode == 190 || charCode == 46)
+            return true;
+
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+        return true;
+        };
+
+    </script>
+</asp:Content>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <div class="row">
+		<div class="col-lg-12">
+			<div class="normalheader animate-panel" data-child="hpanel" data-effect="fadeInDown">
+				<div class="hpanel">
+					<div class="panel-body">
+						<a class="small-header-action">
+							<div class="clip-header">
+								<i class="fa fa-arrow-up"></i>
+							</div>
+						</a>
+						<h2 class="font-light m-b-xs">
+							Add/Edit FEMA Assistance Information
+						</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <div class="content animate-panel" data-child="hpanel" data-effect="fadeInDown">
+	    <div class="row">
+		    <div class="col-lg-12">
+			    <div class="hpanel form-horizontal">
+				    <div class="panel-heading hbuilt">
+					    <asp:Label ID="lblStateInstructions" runat="server"></asp:Label>
+				    </div>
+				    <div class="panel-body">
+                        
+					    <div class="form-group">
+						    <label class="col-sm-2 control-label">Match Percent Required</label>
+                            <asp:DropDownList ID="ddlFEMAAssistanceType" runat="server" DataTextField="FEMAAssistanceType" DataValueField="FEMAAssistanceTypeId" CssClass="form-control required" Required=""></asp:DropDownList>
+                        </div>
+
+					    <div class="form-group">
+						    <label class="col-sm-2 control-label">Match Percent Required</label>
+						    <div class="col-sm-5"><input type="text" runat="server" onkeypress="return isNumberKey(event)" required id="txtMatchPercent" class="form-control" placeholder="Match Percent"></div>
+					    </div>
+                        
+					    <div class="form-group">
+						    <label class="col-sm-2 control-label">Grant Amount</label>
+						    <div class="col-sm-5"><input type="text" runat="server" onkeypress="return isNumberKey(event)" required id="txtGrantAmount" class="form-control" placeholder="Grant Amount"></div>
+					    </div>
+                        
+					    <div class="form-group">
+						    <label class="col-sm-2 control-label">Covered by State</label>
+						    <div class="col-sm-5"><input type="checkbox" runat="server" required id="chkCoveredByState" class="form-control"></div>
+					    </div>
+
+		                <div class="form-group pull-right	">
+			                <div>
+				                <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary" Text="Update Emergency Operations Information" OnClick="btnSubmit_Click" />
+			                </div>
+		                </div>
+				    </div>
+			    </div>
+		    </div>
+	    </div>
+    </div>
+</asp:Content>
