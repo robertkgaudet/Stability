@@ -58,8 +58,15 @@ public partial class V1_Login : System.Web.UI.Page
 	protected void Redirect(string username)
 	{
 		//SEND USER TO THEIR MOST RECENT CAUSE PAGE.
+		string returnUrl = Request.QueryString["ReturnUrl"];
 
 		string urlRedirect = string.Empty;
+		if (returnUrl != null)
+		{
+			urlRedirect = returnUrl;
+		}
+		else
+		{ 
 
 		MembershipUser user = Membership.GetUser(txtUsername.Text);
 
@@ -120,26 +127,27 @@ public partial class V1_Login : System.Web.UI.Page
 			//	}
 			//}
 		}
-		//    else if(User.Identity.IsAuthenticated)
-		//    {
-		//        //See if they have a default disaster set.
-		//        var profile = (from p in dc.Profiles
-		//                       where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-		//                       select p).SingleOrDefault();
+			//    else if(User.Identity.IsAuthenticated)
+			//    {
+			//        //See if they have a default disaster set.
+			//        var profile = (from p in dc.Profiles
+			//                       where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+			//                       select p).SingleOrDefault();
 
-		//        if (profile != null)
-		//        {
-		//            if (profile.DefaultEventId != null)
-		//            {
-		//                var disasterEvent = (from d in dc.Events
-		//                                     where d.EventId == profile.DefaultEventId
-		//                                     select new { d.URLFriendlyName }
-		//                                ).Take(1).SingleOrDefault();
+			//        if (profile != null)
+			//        {
+			//            if (profile.DefaultEventId != null)
+			//            {
+			//                var disasterEvent = (from d in dc.Events
+			//                                     where d.EventId == profile.DefaultEventId
+			//                                     select new { d.URLFriendlyName }
+			//                                ).Take(1).SingleOrDefault();
 
-		//                urlRedirect = "/Disaster/" + disasterEvent.URLFriendlyName;// + "/" + roleType;
-		//}
-		//        }
-		//    }
+			//                urlRedirect = "/Disaster/" + disasterEvent.URLFriendlyName;// + "/" + roleType;
+			//}
+			//        }
+			//    }
+		}
 
 		Response.Redirect(urlRedirect);
 	}

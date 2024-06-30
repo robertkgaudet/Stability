@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -22,10 +23,11 @@ public partial class V1_NonProfit_ActivityDashboard : System.Web.UI.Page
 
 		ucTeamNavigation.TeamName = organization.Name;
 
+		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		Master.PageTitle = organization.Name + " Activity Dashboard on Stability";
 		Master.PageDescription = organization.Description;
 		Master.FbDescription = organization.Description;
-		Master.FbImage = organization.CoverImage;
+		Master.FbImage = causePhotoFolder + organization.CoverImage;
 		Master.FbImageType = "image/jpg";
 		Master.FbSite_name = organization.Name + " Activity Dashboard on Stability";
 		Master.FbURL = Request.Url.AbsoluteUri;
@@ -88,5 +90,59 @@ public partial class V1_NonProfit_ActivityDashboard : System.Web.UI.Page
 						  select org;
 
 		lblCauseCount.Text = deployments.Count().ToString();
+
+		var campaigns = from oe in dc.OrganizationEvents
+						join ev in dc.Events on oe.EventId equals ev.EventId
+						where oe.OrganizationId == new Guid(organizationId)
+						&& oe.IsActive == true
+						orderby ev.BeginDate descending
+						select new { oe.OrganizationEventId, oe.URLFriendlyCampaignName, campaignName = oe.CampaignName, oe.EndDate, oe.BeginDate };
+
+		rptActiveCampaigns.DataSource = campaigns;
+		rptActiveCampaigns.DataBind();
+
+		litStatesCounties.Text = CrowdRelief.Tools.GetImpactedStateCountyStringByTeam(new Guid(organizationId));
+	}
+
+	protected void rptActiveCampaigns_ItemDataBound(Object Sender, RepeaterItemEventArgs e)
+	{
+		CultureInfo culture = new CultureInfo("en-US");
+		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+		{
+			RepeaterItem dataItem = (RepeaterItem)e.Item;
+
+			HyperLink hypCauseName = (HyperLink)e.Item.FindControl("hypCauseName");
+			Label lblBeginDate = (Label)e.Item.FindControl("lblBeginDate");
+			Label lblEndDate = (Label)e.Item.FindControl("lblEndDate");
+			Label lblDeploymentLength = (Label)e.Item.FindControl("lblDeploymentLength"); 
+
+			string campaignName = (string)DataBinder.Eval(dataItem.DataItem, "campaignName");
+			string URLFriendlyCampaignName = (string)DataBinder.Eval(dataItem.DataItem, "URLFriendlyCampaignName"); 
+			Guid organizationEventId = (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationEventId");
+
+			DateTime beginDate = DateTime.Now;
+			if (DataBinder.Eval(dataItem.DataItem, "BeginDate") != null)
+			{ 
+				beginDate = (DateTime)DataBinder.Eval(dataItem.DataItem, "BeginDate");
+			}
+			DateTime endDate = DateTime.Now;
+			if (DataBinder.Eval(dataItem.DataItem, "EndDate") != null)
+			{
+				endDate = (DateTime)DataBinder.Eval(dataItem.DataItem, "EndDate");
+			}
+			TimeSpan deploymentTimeSpan = new TimeSpan();
+			int deploymentLength = 0;
+			if (beginDate != null && endDate != null)
+			{
+				deploymentTimeSpan = endDate - beginDate;
+				deploymentLength = deploymentTimeSpan.Days;
+			}
+
+			hypCauseName.Text = campaignName;
+			hypCauseName.NavigateUrl = "~/Cause/" + URLFriendlyCampaignName;
+			lblBeginDate.Text = beginDate.ToShortDateString();
+			lblEndDate.Text = endDate.ToShortDateString();
+			lblDeploymentLength.Text = String.Format(culture, "{0:N0}", deploymentLength);
+		}
 	}
 }

@@ -76,7 +76,7 @@
 							<asp:Button ID="btnActiveVolunteer" runat="server" CssClass="btn btn-light" Visible="false" />
 						</div>
                         <div class="font-normal">
-							<h4 class="m-b-none"><asp:Literal ID="litTeamName" runat="server"></asp:Literal></h4>
+							<h1 class="m-b-none"><asp:Literal ID="litTeamName" runat="server"></asp:Literal></h1>
 							<small class="text-muted">Team Details</small>
                         </div>
                     </div>

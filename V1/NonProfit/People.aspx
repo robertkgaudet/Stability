@@ -149,12 +149,18 @@
 							<asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="font-normal btn btn-sm btn-info"></asp:HyperLink>
 						</div>
                         <div class="font-normal">
-							<h4 class="m-b-none">People</h4>
+							<h1 class="m-b-none">People</h1>
 							<small class="text-muted">Team members.</small>
                         </div>
                     </div>
 					<!--PAGE CONTENT-->
 					<div class="panel-body">
+						<div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom:20px;" visible="false">
+							<asp:Literal ID="litMessage" runat="server"></asp:Literal>
+						</div>
+						<div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom:20px;" visible="false">
+							<asp:Literal ID="litFilterMessage" runat="server"></asp:Literal>
+						</div>
 						<div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers" visible="false">
 							<div  class="hpanel" runat="server" id="hpanelJoin" visible="true">
 								<a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
@@ -170,9 +176,10 @@
 													<div class="hpanel">
 														<div class="panel-body">
 															<div class="pull-right">
-																<asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-outline btn-default messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+																<asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
 															</div>
 															<asp:Literal id="litSkills" runat="server"></asp:Literal>
+															<asp:Literal id="litResources" runat="server"></asp:Literal>
 															<h5 class="m-b-xs">
 																<asp:HyperLink ID="hypName" runat="server"></asp:HyperLink>
 															</h5>

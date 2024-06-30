@@ -1,9 +1,12 @@
 ﻿<%@ Page EnableEventValidation="false" Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="EditNonProfitCampaign.aspx.cs" Inherits="V1_NonProfitAdministration_EditNonProfitCampaign" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
-    <link rel="stylesheet" href="/Homer/vendor/sweetalert/lib/sweet-alert.css" />
 	<script src="/Homer/vendor/iCheck/icheck.min.js"></script>
 	<script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
+	<script src="/Homer/vendor/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js"></script>
+
+    <link rel="stylesheet" href="/Homer/vendor/sweetalert/lib/sweet-alert.css" />
+	<link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
 	
 	<script>
 
@@ -21,7 +24,11 @@
             $('.causeImageUploadButton').click(function () {
                 window.location.href = '/V1/NonProfitAdministration/SliderUpload1600x600.aspx?OrganizationEventId=<%=organizationEventId%>';
                 return false;
-            });
+			});
+
+			$(function () {
+				$('.input-group.date').datepicker({});
+			});
         });
 
         function isNumberKey(evt) {
@@ -182,7 +189,7 @@
 				$(this).addClass("i-checks");
 			});
 		});
-    </script>
+	</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 		<div class="row">
@@ -240,6 +247,23 @@
 									<asp:DropDownList ID="ddlCounties" runat="server" onchange="updateCountyId()" Enabled="false" DataTextField="Text" DataValueField="Value" CssClass="form-control required" Required=""></asp:DropDownList>
 								    <asp:HiddenField ID="hidCountyId" runat="server" />
                                 </div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">Choose Begin Date</label>
+								<div class="col-sm-2">
+									<div class="input-group date">
+										<input type="text" class="form-control" id="hidDeploymentBeginDate" runat="server"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">Choose Target End Date</label>
+								<div class="col-sm-2">
+									<div class="input-group date">
+										<input type="text" class="form-control" id="hidDeploymentEndDate" runat="server"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+									</div>
+								</div>
 							</div>
 
 							<div class="form-group">

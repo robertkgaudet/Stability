@@ -77,6 +77,14 @@
 							Non-Profit Program
 						</div>
 						<div class="panel-body">
+							
+							<div class="form-group">
+								<label class="col-sm-2 control-label"> <i class="fa fa-paper-plane"></i> Share Program With Other Teams</label>
+								<div class="col-sm-5 m-t-sm">
+									<input type="checkbox" runat="server" id="chkSharedProgram" class="form-control">
+									<span class="text-muted"> <small>Note, once a program has been shared and deployed it can not be unshared.</small></span>
+								</div>
+							</div>
 						
 							<div class="form-group">
 								<label class="col-sm-2 control-label">Program Name</label>

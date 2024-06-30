@@ -19,6 +19,9 @@ public partial class V1_UserControls_EventHeader : System.Web.UI.UserControl
 	public string _teamCount = string.Empty;
 	public string _causeCount = string.Empty;
 	public string _ticketCount = string.Empty;
+	public string _teamURLFriendlyName = string.Empty;
+	public string _teamName	= string.Empty;
+	public string _organizationId = string.Empty;
 	public string eventBackgroundImage = "MichaelImage.jpg";
 	public Guid? eventId = Guid.Empty;
 
@@ -45,6 +48,18 @@ public partial class V1_UserControls_EventHeader : System.Web.UI.UserControl
 		litTeamCount.Text = _teamCount;
 		litCauseCount.Text = _causeCount;
 		litStatesCounties.Text = CrowdRelief.Tools.GetImpactedStateCountyString(disaster.ev.EventId);
+
+		if (String.IsNullOrEmpty(_teamName))
+		{
+			hypBreadcrumbTeamName.Text = "Find A Team";
+			hypBreadcrumbTeamName.NavigateUrl = "/V1/Profile/EditNonProfits.aspx";
+		}
+		else
+		{
+			hypBreadcrumbTeamName.Text			= _teamName;
+			hypBreadcrumbTeamName.NavigateUrl	= "/V1/NonProfit/Default.aspx?organizationId=" + _organizationId;
+		}
+		litBreadcrumbPageName.Text = _eventName + " Portal";
 	}
 
 	public string GetMonthsYearsElapsed(DateTime time)
@@ -101,6 +116,21 @@ public partial class V1_UserControls_EventHeader : System.Web.UI.UserControl
 	{
 		get { return _teamCount; }
 		set { _teamCount = value; }
+	}
+	public string TeamName
+	{
+		get { return _teamName; }
+		set { _teamName = value; }
+	}
+	public string TeamURLFriendlyName
+	{
+		get { return _teamURLFriendlyName; }
+		set { _teamURLFriendlyName = value; }
+	}
+	public string OrganizationId
+	{
+		get { return _organizationId; }
+		set { _organizationId = value; }
 	}
 	public string CauseCount
 	{

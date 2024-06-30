@@ -52,8 +52,16 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 				string beginDate = deployment.BeginDate != null ? Convert.ToDateTime(deployment.BeginDate).ToShortDateString() : string.Empty;
 				string endDate = deployment.EndDate != null ? Convert.ToDateTime(deployment.EndDate).ToShortDateString() : "NA";
 
+				TimeSpan deploymentTimeSpan = new TimeSpan();
+				int deploymentLength = 0;
+				if (deployment.BeginDate != null && deployment.EndDate != null)
+				{
+					deploymentTimeSpan = (DateTime)deployment.EndDate - (DateTime)deployment.BeginDate;
+					deploymentLength = deploymentTimeSpan.Days;
+				}
+
 				string dateRange = String.IsNullOrEmpty(beginDate) ? "Dates Unknown" : beginDate + " to " + endDate;
-				dateRange = dateRange == "NA to NA" ? "Dates Unknown" : dateRange;
+				dateRange = (dateRange == "NA to NA" ? "Dates Unknown" : dateRange);
 
 				string logo = string.Empty;
 
@@ -91,12 +99,12 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 												"</div>" + Environment.NewLine +
 												"<div class=\"row\" style=\"padding:0px 10px;\">" + Environment.NewLine +
 													"<div class=\"col\">" + Environment.NewLine +
-														"<div><h5 class=\"font-bold\">" + deployment.DeploymentName + "</h5></div>" + Environment.NewLine +
+														"<div><h5 class=\"font-bold\">" + deployment.DeploymentName + "</h5>" + deployment.County + " " + countyTerm + ", " + deployment.State + "</div>" + Environment.NewLine +
 													"</div>" + Environment.NewLine +
 												"</div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
 											"<div class=\"panel-footer\">" + Environment.NewLine +
-												"<div class=\"row\"><div class=\"col-xs-6 m-s-n5\"><small>" + deployment.County + " " + countyTerm + ", " + deployment.State + "</small></div><div class=\"col-xs-6 m-s-n5\"><small>" + dateRange + "</small></div></div>" + Environment.NewLine +
+												"<div class=\"row\"><div class=\"col-xs-8 m-s-n5\"><small>" + dateRange + "</small></div><div class=\"col-xs-4 m-s-n5\"><small>" + deploymentLength + " Days</small></div></div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
 										"</div>" + Environment.NewLine +
 									"</div>" + Environment.NewLine + Environment.NewLine;

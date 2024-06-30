@@ -32,6 +32,7 @@ public partial class V1_NonProfitAdministration_EditNonProfitProgram : BaseOrgan
 		
 		txtProgramDescription.Value = program.Description;
 		txtProgramName.Value = program.Name;
+		chkSharedProgram.Checked = program.IsShared != null ? (bool)program.IsShared : false;
 		chkRemoteWork.Checked = (bool)program.IsRemoteOnly;
 		chkRequiresDeployment.Checked = (bool)program.IsDeploymentRequired;
 		chkRequiresTraining.Checked = (bool)program.IsTrainingRequired;
@@ -45,6 +46,7 @@ public partial class V1_NonProfitAdministration_EditNonProfitProgram : BaseOrgan
 		bool isRemoteWork = chkRemoteWork.Checked;
 		bool deploymentRequies = chkRequiresDeployment.Checked;
 		bool requiresTraining = chkRequiresTraining.Checked;
+		bool isShared = chkSharedProgram.Checked;
 		string programOrder = txtProgramOrder.Value;
 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -56,6 +58,7 @@ public partial class V1_NonProfitAdministration_EditNonProfitProgram : BaseOrgan
 			Program program = new Program();
 			program.ProgramId = programId;
 			program.IsTrainingRequired = chkRequiresTraining.Checked;
+			program.IsShared = chkSharedProgram.Checked;
 			program.IsDeploymentRequired = chkRequiresDeployment.Checked;
 			program.IsRemoteOnly = chkRemoteWork.Checked;
 			program.Description = txtProgramDescription.Value;
@@ -87,6 +90,7 @@ public partial class V1_NonProfitAdministration_EditNonProfitProgram : BaseOrgan
 			program.IsDeploymentRequired = chkRequiresDeployment.Checked;
 			program.IsRemoteOnly = chkRemoteWork.Checked;
 			program.Description = txtProgramDescription.Value;
+			program.IsShared = chkSharedProgram.Checked;
 			program.Name = txtProgramName.Value;
 			if (!String.IsNullOrEmpty(txtProgramOrder.Value))
 			{
@@ -96,11 +100,11 @@ public partial class V1_NonProfitAdministration_EditNonProfitProgram : BaseOrgan
 		}
 
 		//Back to non-profit page that shows the programs.
-		Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + Request.QueryString["organizationId"]);
+		Response.Redirect("/V1/NonProfit/Programs.aspx?organizationId=" + Request.QueryString["organizationId"]);
 	}
 
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
-		Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + Request.QueryString["organizationId"]);
+		Response.Redirect("/V1/NonProfit/Programs.aspx?organizationId=" + Request.QueryString["organizationId"]);
 	}
 }

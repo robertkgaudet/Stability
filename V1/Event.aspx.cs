@@ -243,29 +243,34 @@ public partial class V1_Event : BaseOrganizationWebForm
 									   select o).SingleOrDefault();
 
 				Guid organizationIdForOwner = Guid.Empty;
-				litAddTeamMessage.Text = "If you would like to add a new deployment, first add your team.";
+				litAddTeamMessage.Text = "Add your team, to share your relief deployment mission.";
 				hypAddTeam.Visible = true;
 				if (userOrganizationOwner != null)
 				{
+					//User owns a team, let them create a campaign for it.
+					//Show link if user does not already have a team they started.
 					hypAddTeam.Visible = false;
-					//User owns a nonprofit, let them create a campaign for it.
-					litAddTeamMessage.Text = "By creating a deployment, you help the entire community understand your efforts and prevent duplication of work, thereby enhancing collaboration.";
+					litAddTeamMessage.Text = "Creating a deployment empowers your team with predesigned programs to help in your own community. Prevent duplication of efforts, deliver exactly what's needed, enhance collaboration and much more.";
 					organizationIdForOwner = userOrganizationOwner.OrganizationId;
-					//Show link if user does not already have a nonprofit they started.
 				}
 
 				hypAddNewNonProfit.Visible = true;
 				hypAddNewNonProfit.NavigateUrl = "/V1/Administration/NonProfitNew.aspx";
 
-				//Is this user associated with a nonprofit?
+				//Is this user associated with a team?
 				var userOrganization = (from uo in dc.UserOrganizations
+										join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
 									   where uo.UserId == userId
-									   select uo).Take(1).SingleOrDefault();
+									   select new { uo.OrganizationId, o.Name }).Take(1).SingleOrDefault();
 
 				if(userOrganization != null)
-				{ 
-					if(((organizationIdForOwner != Guid.Empty) && (userOrganization.OrganizationId == organizationIdForOwner)) || User.IsInRole("CauseSuperAdministrator"))
+				{
+					//User is on a team, fill in the breadcrumb links on the eventHeaderUC.
+					uc1EventHeader.TeamName = userOrganization.Name;
+					uc1EventHeader.OrganizationId = userOrganization.OrganizationId.ToString();
+					if (((organizationIdForOwner != Guid.Empty) && (userOrganization.OrganizationId == organizationIdForOwner)) || User.IsInRole("CauseSuperAdministrator"))
 					{
+						//USER IS AN ADMIN/TEAM OWNER OR DEPLOYMENT ADMINISTRATOR
 						//Allow any CauseSuperAdministrator to add a campaign.
 						//Allow a person who create a nonprofit to add a campaign to it.
 						hypAddNewCampaign.Visible = true;
@@ -287,18 +292,19 @@ public partial class V1_Event : BaseOrganizationWebForm
 
 				mapURL = disaster.MAPUrl;
 
-				string pageDescription = disaster.Description + "<br>Survivors, helpers, volunteers, non-profits and businesses start here to begin to restore and rebuild.";
+				string pageDescription = disaster.Description + "<br>Organize your friends, families, group members and teams now to help restore and rebuild your community. Religious organizations, Rotary clubs, Kiwanis clubs, civic groups, nonprofits, greek groups, sports groups, family and neighborhood groups, any group can organize now to help those most in need in your own communities across the country.";
 
-				string pageTitle = disaster.Name + disasterPageTitle;
+				string pageTitle = disaster.Name + " Disaster Relief Teams";
 
 				this.Master.PageTitle = pageTitle;
-				this.Master.PageDescription = pageDescription;
+				this.Master.PageDescription = "Organize a disaster relief team for " + pageDescription;
 				this.Master.FbDescription = pageDescription;
 				this.Master.FbSite_name = pageTitle;
-
-				uc1EventHeader.PageTitle = disasterPageTitle;
+				this.Master.HideMasterCover = false;
+				 
+				uc1EventHeader.PageTitle = pageTitle;
 				uc1EventHeader.EventName = disaster.Name;
-				uc1EventHeader.PageDescription = pageDescription;
+				uc1EventHeader.PageDescription = "Organize a disaster relief team for " + pageDescription;
 
 				if (disaster.Icon != null)
 				{

@@ -19,14 +19,56 @@
                 <div class="hpanel ">
                     <div class="panel-heading hbuilt">
                         <div class="font-normal">
-							<h4 class="m-b-none">Activity Dashboard</h4>
-							<small class="text-muted">Activities accomplished by this team.</small>
+							<h1 class="m-b-none">Impact Dashboard</h1>
+							<small class="text-muted">Deployments and impact from this team.</small>
                         </div>
                     </div>
 					<!--PAGE CONTENT-->
 					<div class="m-t-md">
 						<div class="animate-panel">
 							<div class="row">
+								<div class="col-xs-6 col-md-3">
+									<div class="hpanel">
+										<div class="panel-body">
+											<div class="stats-title pull-left">
+												<h4>Deployments</h4>
+											</div>
+											<div class="stats-icon pull-right">
+												<i class="fa fa-street-view fa-4x text-success"></i>
+											</div>
+											<div class="m-t-xl">
+												<h1 class="text-success"><asp:Label id="lblCauseCount" runat="server"></asp:Label></h1>
+												<small>
+													Deployments are the first step to helping your community. <strong>Team members engage</strong> and all activity happen when you are deployed.
+												</small>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-6 col-sm-3">
+									<div class="hpanel stats">
+										<div class="panel-body h-200">
+											<div class="stats-title pull-left">
+												<h4>Team Members</h4>
+											</div>
+											<div class="stats-icon pull-right">
+												<i class="fa fa-id-badge text-success fa-4x"></i>
+											</div>
+											<div class="clearfix"></div>
+											<div class="flot-chart">
+												<div class="flot-chart-content" id="flot-team-chart"></div>
+											</div>
+											<div class="m-t-xs">
+												<div class="row">
+													<div class="col-xs-12">
+														<small class="stat-label">Team Member Count</small>
+														<h4><asp:Label id="lblTeamCount" runat="server"></asp:Label></h4>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 								<div class="col-xs-12 col-sm-6">
 									<div class="hpanel stats">
 										<div class="panel-body h-200 list">
@@ -34,7 +76,7 @@
 												<h4>Team Hours and Impact</h4>
 											</div>
 											<div class="stats-icon pull-right">
-												<i class="pe-7s-science fa-4x"></i>
+												<i class="fa fa-bolt text-success fa-4x"></i>
 											</div>
 											<div class="m-t-xl">
 												<span class="font-bold no-margins">
@@ -59,50 +101,57 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-xs-6 col-sm-3">
-									<div class="hpanel stats">
-										<div class="panel-body h-200">
-											<div class="stats-title pull-left">
-												<h4>Team Members</h4>
-											</div>
-											<div class="stats-icon pull-right">
-												<i class="pe-7s-users fa-4x"></i>
-											</div>
-											<div class="clearfix"></div>
-											<div class="flot-chart">
-												<div class="flot-chart-content" id="flot-team-chart"></div>
-											</div>
-											<div class="m-t-xs">
-												<div class="row">
-													<div class="col-xs-12">
-														<small class="stat-label">Team Member Count</small>
-														<h4><asp:Label id="lblTeamCount" runat="server"></asp:Label></h4>
-													</div>
-												</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-12 col-md-6">
+									<div class="hpanel">
+										<div class="panel-body">
+											<div class="table-responsive">
+												<table class="table table-striped">
+													<thead>
+														<tr>
+															<th>Deployments</th>
+															<th>Begin</th>
+															<th>End</th>
+															<th>Days</th>
+														</tr>
+													</thead>
+													<tbody>
+														<asp:Repeater ID="rptActiveCampaigns" runat="server" OnItemDataBound="rptActiveCampaigns_ItemDataBound">
+															<ItemTemplate>
+																<tr class="">
+																	<td>
+																		<span class="text-success"><asp:HyperLink CssClass="text-muted" ID="hypCauseName" runat="server"></asp:HyperLink></span>
+																	</td>
+																	<td><asp:label CssClass="text-muted" ID="lblBeginDate" runat="server"></asp:label></td>
+																	<td><asp:label CssClass="text-muted" ID="lblEndDate" runat="server"></asp:label></td>
+																	<td><asp:label CssClass="text-muted" ID="lblDeploymentLength" runat="server"></asp:label></td>
+																</tr>
+															</ItemTemplate>
+														</asp:Repeater>
+													</tbody>
+												</table>
 											</div>
 										</div>
 									</div>
 								</div>
-								<div class="col-xs-6 col-sm-3">
+								<div class="col-xs-12 col-sm-6">
 									<div class="hpanel stats">
-										<div class="panel-body h-200">
+										<div class="panel-body h-200 list">
 											<div class="stats-title pull-left">
-												<h4>Deployments</h4>
+												<h4>Deployed Communities</h4>
 											</div>
 											<div class="stats-icon pull-right">
-												<i class="fa fa-street-view fa-4x"></i>
+												<i class="fa fa-dot-circle-o text-success fa-4x"></i>
 											</div>
-											<div class="clearfix"></div>
-											<div class="flot-chart">
-												<div class="flot-chart-content" id="flot-line-chart" style="height: 75px"></div>
-											</div>
-											<div class="m-t-xs">
-												<div class="row">
-													<div class="col-xs-12">
-														<small class="stat-label">Deployments</small>
-														<h4><asp:Label id="lblCauseCount" runat="server"></asp:Label></h4>
-													</div>
-												</div>
+											<div class="m-t-xl">
+												<span class="font-bold no-margins">
+													States and Counties
+												</span>
+												<br/>
+												<small>
+													<asp:Literal ID="litStatesCounties" runat="server"></asp:Literal>
+												</small>
 											</div>
 										</div>
 									</div>

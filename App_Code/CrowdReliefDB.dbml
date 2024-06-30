@@ -99,6 +99,7 @@
       <Association Name="aspnet_User_UserOrganizationInvite" Member="UserOrganizationInvites" ThisKey="UserId" OtherKey="CreatedBy" Type="UserOrganizationInvite" />
       <Association Name="aspnet_User_UserOrganizationInvite1" Member="UserOrganizationInvites1" ThisKey="UserId" OtherKey="UserId" Type="UserOrganizationInvite" />
       <Association Name="aspnet_User_UserEvent" Member="UserEvents" ThisKey="UserId" OtherKey="UserId" Type="UserEvent" />
+      <Association Name="aspnet_User_UserResource" Member="UserResources" ThisKey="UserId" OtherKey="UserId" Type="UserResource" />
       <Association Name="aspnet_User_Organization" Member="Organizations" ThisKey="UserId" OtherKey="CreatedBy" Type="Organization" />
       <Association Name="aspnet_User_Organization1" Member="Organizations1" ThisKey="UserId" OtherKey="OwnerId" Type="Organization" />
       <Association Name="StreamDonation_aspnet_User" Member="StreamDonation" Storage="_Donation" ThisKey="UserId" OtherKey="UserId" Type="StreamDonation" IsForeignKey="true" />
@@ -1338,8 +1339,8 @@
       <Column Name="ProgramId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Association Name="OrganizationProgram_UserOrganizationProgram" Member="UserOrganizationPrograms" ThisKey="OrganizationProgramId" OtherKey="OrganizationProgramId" Type="UserOrganizationProgram" />
-      <Association Name="Program_OrganizationProgram" Member="Program" ThisKey="ProgramId" OtherKey="ProgramId" Type="Program" IsForeignKey="true" />
       <Association Name="Organization_OrganizationProgram" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
+      <Association Name="Program_OrganizationProgram" Member="Program" ThisKey="ProgramId" OtherKey="ProgramId" Type="Program" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.UserOrganizationProgram" Member="UserOrganizationPrograms">
@@ -1349,18 +1350,6 @@
       <Column Name="OrganizationProgramId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Association Name="aspnet_User_UserOrganizationProgram" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="OrganizationProgram_UserOrganizationProgram" Member="OrganizationProgram" ThisKey="OrganizationProgramId" OtherKey="OrganizationProgramId" Type="OrganizationProgram" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Program" Member="Programs">
-    <Type Name="Program">
-      <Column Name="ProgramId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="IsRemoteOnly" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="IsDeploymentRequired" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="IsTrainingRequired" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="[Order]" Member="Order" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Association Name="Program_OrganizationProgram" Member="OrganizationPrograms" ThisKey="ProgramId" OtherKey="ProgramId" Type="OrganizationProgram" />
     </Type>
   </Table>
   <Table Name="dbo.County" Member="Counties">
@@ -1589,9 +1578,28 @@
       <Column Name="IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Association Name="OrganizationEvent_UserOrganizationEvent" Member="UserOrganizationEvents" ThisKey="OrganizationEventId" OtherKey="OrganizationEventId" Type="UserOrganizationEvent" />
       <Association Name="OrganizationEvent_OrganizationEventPhoto" Member="OrganizationEventPhotos" ThisKey="OrganizationEventId" OtherKey="OrganizationEventId" Type="OrganizationEventPhoto" />
+      <Association Name="OrganizationEvent_OrganizationEventProgram" Member="OrganizationEventPrograms" ThisKey="OrganizationEventId" OtherKey="OrganizationEventId" Type="OrganizationEventProgram" />
       <Association Name="County_OrganizationEvent" Member="County" ThisKey="StagingCountyId" OtherKey="CountyId" Type="County" IsForeignKey="true" />
       <Association Name="Event_OrganizationEvent" Member="Event" ThisKey="EventId" OtherKey="EventId" Type="Event" IsForeignKey="true" />
       <Association Name="Organization_OrganizationEvent" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Resource" Member="Resources">
+    <Type Name="Resource">
+      <Column Name="ResourceId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(2000) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Type" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="Resource_UserResource" Member="UserResources" ThisKey="ResourceId" OtherKey="ResourceId" Type="UserResource" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserResource" Member="UserResources">
+    <Type Name="UserResource">
+      <Column Name="UserResourceId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="ResourceId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Association Name="aspnet_User_UserResource" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+      <Association Name="Resource_UserResource" Member="Resource" ThisKey="ResourceId" OtherKey="ResourceId" Type="Resource" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Organization" Member="Organizations">
@@ -1643,6 +1651,7 @@
       <Column Name="HelpURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="IsWebsiteActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="RespondToTickets" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HideTeamList" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Association Name="Organization_OrganizationRebuild" Member="OrganizationRebuilds" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationRebuild" />
       <Association Name="Organization_UserOrganization" Member="UserOrganizations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganization" />
       <Association Name="Organization_OrganizationProgram" Member="OrganizationPrograms" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationProgram" />
@@ -1650,6 +1659,29 @@
       <Association Name="Organization_OrganizationEvent" Member="OrganizationEvents" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationEvent" />
       <Association Name="aspnet_User_Organization" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="aspnet_User_Organization1" Member="aspnet_User1" ThisKey="OwnerId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Program" Member="Programs">
+    <Type Name="Program">
+      <Column Name="ProgramId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="IsShared" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsRemoteOnly" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsDeploymentRequired" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsTrainingRequired" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="[Order]" Member="Order" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Program_OrganizationProgram" Member="OrganizationPrograms" ThisKey="ProgramId" OtherKey="ProgramId" Type="OrganizationProgram" />
+      <Association Name="Program_OrganizationEventProgram" Member="OrganizationEventPrograms" ThisKey="ProgramId" OtherKey="ProgramId" Type="OrganizationEventProgram" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OrganizationEventProgram" Member="OrganizationEventPrograms">
+    <Type Name="OrganizationEventProgram">
+      <Column Name="OrganizationEventProgramId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="OrganizationEventId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="ProgramId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Association Name="OrganizationEvent_OrganizationEventProgram" Member="OrganizationEvent" ThisKey="OrganizationEventId" OtherKey="OrganizationEventId" Type="OrganizationEvent" IsForeignKey="true" />
+      <Association Name="Program_OrganizationEventProgram" Member="Program" ThisKey="ProgramId" OtherKey="ProgramId" Type="Program" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">

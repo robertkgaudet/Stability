@@ -54,93 +54,103 @@ public partial class Login : System.Web.UI.Page
 
 	protected void Redirect()
 	{
+		string returnUrl = Request.QueryString["ReturnUrl"];
+
+		
 		string roleType = "helper";
 		string urlRedirect = "/V1/DisasterList.aspx?userType=survivor";
-
-		if (Roles.IsUserInRole("casemanager"))
+		if (returnUrl != null)
 		{
-			urlRedirect = "/CaseManagement/Default.aspx";
-			roleType = "CaseManagement";
+			urlRedirect = returnUrl;
 		}
 		else
-		{ 
-			if (Roles.IsUserInRole("survivor"))
-			{
-				//We know their disaster, send them there.
-				urlRedirect = "/V1/DisasterList.aspx?userType=survivor";
-				roleType = "Survivor";
-			}
-			if(Roles.IsUserInRole("nonprofitadministrator"))
-			{
-				urlRedirect = "/V1/DisasterList.aspx?userType=nonprofit";
-				roleType = "Nonprofit";
-			}
-			if(Roles.IsUserInRole("business") || Roles.IsUserInRole("contractor"))
-			{
-				urlRedirect = "/V1/DisasterList.aspx?userType=business";
-				roleType = "Business";
-			}
-			if(Roles.IsUserInRole("helper") || Roles.IsUserInRole("volunteer"))
-			{
-				urlRedirect = "/V1/DisasterList.aspx?userType=helper";
-				roleType = "Helper";
-			}
-		}
-
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-        if (Membership.GetUser(txtUsername.Text) != null)
 		{
-			//Get the latest disaster they registered for.
-			var disaster = (from ue in dc.UserEvents
-							join d in dc.Events on ue.EventId equals d.EventId
-							where ue.UserId == new Guid(Membership.GetUser(txtUsername.Text).ProviderUserKey.ToString())
-							orderby d.CreatedOn descending
-							select new {d.URLFriendlyName }
-							).Take(1).SingleOrDefault();
 
-			if(disaster != null)
+			if (Roles.IsUserInRole("casemanager"))
 			{
-				urlRedirect = "/Disaster/" + disaster.URLFriendlyName;// + "/" + roleType;
+				urlRedirect = "/CaseManagement/Default.aspx";
+				roleType = "CaseManagement";
+			}
+			else
+			{
+				if (Roles.IsUserInRole("survivor"))
+				{
+					//We know their disaster, send them there.
+					urlRedirect = "/V1/DisasterList.aspx?userType=survivor";
+					roleType = "Survivor";
+				}
+				if (Roles.IsUserInRole("nonprofitadministrator"))
+				{
+					urlRedirect = "/V1/DisasterList.aspx?userType=nonprofit";
+					roleType = "Nonprofit";
+				}
+				if (Roles.IsUserInRole("business") || Roles.IsUserInRole("contractor"))
+				{
+					urlRedirect = "/V1/DisasterList.aspx?userType=business";
+					roleType = "Business";
+				}
+				if (Roles.IsUserInRole("helper") || Roles.IsUserInRole("volunteer"))
+				{
+					urlRedirect = "/V1/DisasterList.aspx?userType=helper";
+					roleType = "Helper";
+				}
 			}
 
-			//See if they have a default disaster set.
-			var profile = (from p in dc.Profiles
-						  where p.UserId == new Guid(Membership.GetUser(txtUsername.Text).ProviderUserKey.ToString())
-						  select p).SingleOrDefault();
-
-			if(profile != null)
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			if (Membership.GetUser(txtUsername.Text) != null)
 			{
-				if(profile.DefaultEventId != null)
-				{
-					var disasterEvent = (from d in dc.Events
-									where d.EventId == profile.DefaultEventId
-									select new {d.URLFriendlyName }
-									).Take(1).SingleOrDefault();
+				//Get the latest disaster they registered for.
+				var disaster = (from ue in dc.UserEvents
+								join d in dc.Events on ue.EventId equals d.EventId
+								where ue.UserId == new Guid(Membership.GetUser(txtUsername.Text).ProviderUserKey.ToString())
+								orderby d.CreatedOn descending
+								select new { d.URLFriendlyName }
+								).Take(1).SingleOrDefault();
 
-					urlRedirect = "/Disaster/" + disasterEvent.URLFriendlyName;// + "/" + roleType;
+				if (disaster != null)
+				{
+					urlRedirect = "/Disaster/" + disaster.URLFriendlyName;// + "/" + roleType;
+				}
+
+				//See if they have a default disaster set.
+				var profile = (from p in dc.Profiles
+							   where p.UserId == new Guid(Membership.GetUser(txtUsername.Text).ProviderUserKey.ToString())
+							   select p).SingleOrDefault();
+
+				if (profile != null)
+				{
+					if (profile.DefaultEventId != null)
+					{
+						var disasterEvent = (from d in dc.Events
+											 where d.EventId == profile.DefaultEventId
+											 select new { d.URLFriendlyName }
+										).Take(1).SingleOrDefault();
+
+						urlRedirect = "/Disaster/" + disasterEvent.URLFriendlyName;// + "/" + roleType;
+					}
+				}
+			}
+			else if (User.Identity.IsAuthenticated)
+			{
+				//See if they have a default disaster set.
+				var profile = (from p in dc.Profiles
+							   where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+							   select p).SingleOrDefault();
+
+				if (profile != null)
+				{
+					if (profile.DefaultEventId != null)
+					{
+						var disasterEvent = (from d in dc.Events
+											 where d.EventId == profile.DefaultEventId
+											 select new { d.URLFriendlyName }
+										).Take(1).SingleOrDefault();
+
+						urlRedirect = "/Disaster/" + disasterEvent.URLFriendlyName;// + "/" + roleType;
+					}
 				}
 			}
 		}
-        else if(User.Identity.IsAuthenticated)
-        {
-            //See if they have a default disaster set.
-            var profile = (from p in dc.Profiles
-                           where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-                           select p).SingleOrDefault();
-
-            if (profile != null)
-            {
-                if (profile.DefaultEventId != null)
-                {
-                    var disasterEvent = (from d in dc.Events
-                                         where d.EventId == profile.DefaultEventId
-                                         select new { d.URLFriendlyName }
-                                    ).Take(1).SingleOrDefault();
-
-                    urlRedirect = "/Disaster/" + disasterEvent.URLFriendlyName;// + "/" + roleType;
-				}
-            }
-        }
 
 		Response.Redirect(urlRedirect);
 	}

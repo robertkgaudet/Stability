@@ -17,10 +17,11 @@ public partial class V1_NonProfit_Support : BaseWebForm
 							where o.OrganizationId == new Guid(organizationId)
 							select new { o.Name, o.Description, o.Logo, o.CoverImage }).SingleOrDefault();
 
+		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		Master.PageTitle = organization.Name + " Support on Stability";
 		Master.PageDescription = organization.Description;
 		Master.FbDescription = organization.Description;
-		Master.FbImage = organization.CoverImage;
+		Master.FbImage = causePhotoFolder + organization.CoverImage;
 		Master.FbImageType = "image/jpg";
 		Master.FbSite_name = organization.Name + " Support on Stability";
 		Master.FbURL = Request.Url.AbsoluteUri;

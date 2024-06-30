@@ -33,11 +33,11 @@ public partial class V1_NonProfit_Default : BaseWebForm
 				Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32");
 			}
 		}
-
+		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		Master.PageTitle = organization.Name + " Team Page on Stability";
 		Master.PageDescription = organization.Description;
 		Master.FbDescription = organization.Description;
-		Master.FbImage = organization.CoverImage;
+		Master.FbImage = causePhotoFolder + organization.CoverImage;
 		Master.FbImageType = "image/jpg";
 		Master.FbSite_name = organization.Name + " Team Page on Stability";
 		Master.FbURL = Request.Url.AbsoluteUri;

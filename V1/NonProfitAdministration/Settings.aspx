@@ -4,6 +4,14 @@
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+	<script src="/Homer/vendor/iCheck/icheck.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('input[type="checkbox"]').each(function () {
+				$(this).addClass("i-checks");
+			});
+        });
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
@@ -25,6 +33,20 @@
                     </div>
 					<!--PAGE CONTENT-->
 					<div class="panel-body">
+						<div class="form-group">
+							<div id="divUpdateMessage" runat="server" class="alert alert-success text-center" visible="false">
+								<i class="fa fa-2x fa-check-circle"></i><hr />Update Complete
+							</div>
+							<div class="col-sm-12 m-t-md">
+								<div><label> <input runat="server" type="checkbox" id="chkEnableTicketing" class="i-checks"> Allow the public to request help.</label></div>
+							</div>
+							<div class="col-sm-12 m-t-md">
+								<div><label> <input runat="server" type="checkbox" id="chkHideTeamList" class="i-checks"> Hide my team list from my team members.</label></div>
+							</div>
+							<div class="col-sm-12 m-t-lg">
+								<asp:Button ID="btnSubmit" runat="server" Text="Update Settings" OnClick="btnSubmit_Click" />
+							</div>
+						</div>
 					</div>
 					<!--PAGE FOOTER-->
                 </div>

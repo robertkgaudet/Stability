@@ -170,6 +170,7 @@ public partial class V1_Profile_Profile : BaseOrganizationWebForm
 		lblNumberOfDaysAvailable.Text = profile.NumberOfDaysAvailable;
 		lblVolunteerDescription.Text = profile.Description;
 		lblSkills.Text = GetSkills(_profileUserId);
+		lblResources.Text = GetResources(_profileUserId);
 		lblDisasters.Text = GetEvents(_profileUserId);
 		litNonProfits.Text = GetNonProfits(_profileUserId);
 		
@@ -304,6 +305,22 @@ public partial class V1_Profile_Profile : BaseOrganizationWebForm
 			InsertProfileNote(post, _profileUserId, userId);
 			LoadPosts(_profileUserId);
 		}
+	}
+	protected string GetResources(Guid userId)
+	{
+		string resourceList = string.Empty;
+
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+		var resources = from us in dc.UserResources
+						 join s in dc.Resources on us.ResourceId equals s.ResourceId
+						where us.UserId == userId
+						 orderby s.Type, s.Name
+						 select new { Name = s.Name + " (" + s.Type + ")" };
+
+		resourceList = string.Join(", ", resources.Select(p => p.Name.ToString()));
+
+		return resourceList;
 	}
 	protected string GetSkills(Guid userId)
 	{

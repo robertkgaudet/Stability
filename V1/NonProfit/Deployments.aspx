@@ -20,7 +20,7 @@
                 <div class="hpanel ">
                     <div class="panel-heading hbuilt">
                         <div class="font-normal">
-							<h4 class="m-b-none">Deployments</h4>
+							<h1 class="m-b-none">Deployments</h1>
 							<small class="text-muted">Active deployments.</small>
                         </div>
                     </div>

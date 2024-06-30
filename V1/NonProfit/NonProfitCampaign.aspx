@@ -84,7 +84,7 @@
                             </p>
 					        <div runat="server" visible="false" id="divEditCampaign">
 						        <div class="m-r-lg">
-							        <asp:Button id="btnEdit" runat="server" CssClass="btn btn-xs btn-warning editCampaign" Text="Edit Campaign" />
+							        <asp:Button id="btnEdit" runat="server" CssClass="btn btn-xs btn-warning editCampaign" Text="Edit Deployment" />
 						        </div>
 					        </div>
                          </div>

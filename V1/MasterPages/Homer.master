@@ -229,7 +229,8 @@
                 background-color:#5E2E91;
                 color:white;
             }
-          .toast-message {
+          .toast-message
+			{
                color: #000;
             }
 			.bodyBGColor
@@ -319,6 +320,20 @@
 			.text-warning{color:#ffb606;}
 			.text-success{color:#63CB31;}
 			.text-website{color:#5E2E91;}
+
+			.divMasterCover {
+				width: 100%;
+				height: 100vh; /* Full viewport height */
+				background-image: url('<%=_masterCoverImage%>'); /* Path to your image */
+				background-size: cover; /* Scale the image to cover the entire div */
+				background-position: center; /* Center the image */
+				background-repeat: no-repeat; /* Prevent the image from repeating */
+				height:300px;
+				margin-left:-1px;
+				margin-top:0px;
+				margin-bottom:-200px;
+				background-color:#ccc;
+			}
 		</style>
 		<asp:ContentPlaceHolder id="head" runat="server">
 		</asp:ContentPlaceHolder>
@@ -475,7 +490,12 @@
 							</div>
 							<li <asp:Literal ID="litViewDisasters" runat="server"></asp:Literal>>
 								<a href="/V1/ChooseEvent.aspx">	 
-									<span class="nav-label">Community Portals</span>
+									<span class="nav-label">Portals</span>
+								</a>
+							</li>
+							<li <asp:Literal ID="Literal1" runat="server"></asp:Literal>>
+								<a href="/V1/DisasterPrograms.aspx">	 
+									<span class="nav-label">Programs</span>
 								</a>
 							</li>
 							<li runat="server" id="liMyCampaigns" visible="false">
@@ -653,6 +673,7 @@
 				</aside>
 				<!-- Main Wrapper -->
 				<div id="wrapper">
+						<div id="divMasterCover" class="divMasterCover" runat="server"></div>
 						<asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
 		
 						</asp:ContentPlaceHolder>
@@ -818,9 +839,10 @@
 								By completing this informtion you're contributing to the overall knowledge of the community in ways that can help everyone collaborate even more effectively.
 								<ul class="fa-ul" id="userActionList">
 									<li data-url="/V1/Profile/EditNonProfits.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=teamUpdated%>;"></i> <u>Choose or Create Your Team</u></li>
+									<li data-url="/V1/Profile/EditSkills.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=skillsUpdated%>;"></i> <u>Update Your Skills</u></li>
+									<li data-url="/V1/Profile/EditResources.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=resourcesUpdated%>;"></i> <u>Update Your Resources</u></li>
 									<li runat="server" id="liDeployment" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=deploymentUpdated%>;"></i> <u>Find or Create a Deployment</u></li>
 									<li data-url="/V1/Profile/EditDisasters.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=communityUpdated%>;"></i> <u>Choose Your Community Portal</u></li>
-									<li data-url="/V1/Profile/EditSkills.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=skillsUpdated%>;"></i> <u>Update Your Skills</u></li>
 								</ul>
 								Citizens in communities are no longer victims of natrual disasters waiting for help. We are the help because citizens have many of the skills their own community needs
 								to successfully recover from natural disasters.

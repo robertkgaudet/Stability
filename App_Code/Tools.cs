@@ -243,7 +243,7 @@ namespace CrowdRelief
 			string stateResults = string.Empty;
 			if (states.Count() > 0)
 			{
-				foreach (var state in states)
+				foreach (var state in states.OrderBy(o => o.Name))
 				{
 
 					string stateName = string.Empty;
@@ -261,7 +261,7 @@ namespace CrowdRelief
 					string countyName = string.Empty;
 					if (counties.Count() > 0)
 					{
-						foreach (var county in counties)
+						foreach (var county in counties.OrderBy(o => o.Name))
 						{
 							countyCount += 1;
 							if (counties.Count() == countyCount)
@@ -295,7 +295,7 @@ namespace CrowdRelief
 			string stateResults = string.Empty;
 			if (states.Count() > 0)
 			{
-				foreach (var state in states)
+				foreach (var state in states.OrderBy(o => o.Name))
 				{
 					string stateName = string.Empty;
 
@@ -312,7 +312,7 @@ namespace CrowdRelief
 					if (counties.Count() > 0)
 					{
 						stateName = "<b>" + state.Name + "</b>";
-						foreach (var county in counties)
+						foreach (var county in counties.OrderBy(o => o.Name))
 						{
 							countyCount += 1;
 							if (counties.Count() == countyCount)
@@ -327,8 +327,60 @@ namespace CrowdRelief
 						{
 							countyTerm = countyCount == 1 ? "Parish" : "Parishes";
 						}
-						stateResults += stateName + " - " + countyCount + " " + countyTerm + " Have Team Deployments<br>" + countyName + " <br>";
+						stateResults += stateName + " - " + countyCount + " " + countyTerm + " " + countyName + " <br>";
 					}
+				}
+			}
+			return stateResults;
+		}
+
+		public static string GetImpactedStateCountyStringByTeam(Guid organizationId)
+		{
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			IEnumerable<USState> states = (from s in dc.USStates
+										   join oe in dc.OrganizationEvents on s.StatesId equals oe.StagingStateId
+										   where oe.OrganizationId == organizationId
+										  orderby s.Name
+										  select s).Distinct().ToArray();
+
+			string stateResults = string.Empty;
+			if (states.Count() > 0)
+			{
+				foreach (var state in states.OrderBy(o => o.Name))
+				{
+
+					string stateName = string.Empty;
+					stateName = "<b>" + state.Name + "</b>";
+
+					//Get the counties impacted as well.
+					var counties = (from co in dc.Counties
+								   join oe in dc.OrganizationEvents on co.CountyId equals oe.StagingCountyId
+								   where co.Code == state.Code && oe.OrganizationId == organizationId
+								   orderby co.Name
+								   select new { co.CountyId, co.Name, co.Code }).Distinct().ToArray();
+
+					string comma = ", ";
+					int countyCount = 0;
+					string countyName = string.Empty;
+					if (counties.Count() > 0)
+					{
+						foreach (var county in counties.OrderBy(o => o.Name))
+						{
+							countyCount += 1;
+							if (counties.Count() == countyCount)
+							{
+								comma = "";
+							}
+							countyName += county.Name + comma;
+						}
+					}
+
+					string countyTerm = countyCount == 1 ? "County" : "Counties";
+					if (state.Name == "Louisiana")
+					{
+						countyTerm = countyCount == 1 ? "Parish" : "Parishes";
+					}
+					stateResults += stateName + " - " + countyCount + " " + countyTerm + " " + countyName + " <br>";
 				}
 			}
 			return stateResults;

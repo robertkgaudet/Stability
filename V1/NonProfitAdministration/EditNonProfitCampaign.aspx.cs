@@ -38,7 +38,7 @@ public partial class V1_NonProfitAdministration_EditNonProfitCampaign : BaseOrga
 								 where oe.OrganizationEventId == organizationEventId
 								 select new { ev, oe }).SingleOrDefault();
 
-		txtVolunteerHourValue.Value = organizationEvent.oe.VolunteerHourlyRate != null ? Convert.ToString(organizationEvent.oe.VolunteerHourlyRate) : string.Empty;
+		txtVolunteerHourValue.Value = organizationEvent.oe.VolunteerHourlyRate != null ?  String.Format("{0:0.00}", organizationEvent.oe.VolunteerHourlyRate) : string.Empty;
 		_eventId = organizationEvent.ev.EventId.ToString();
 		txtPurposeMission.Value = organizationEvent.oe.MissionPurpose;
 		txtCampaignName.Value = organizationEvent.oe.CampaignName;
@@ -49,6 +49,18 @@ public partial class V1_NonProfitAdministration_EditNonProfitCampaign : BaseOrga
 		txtVolunteerInstructions.Value = organizationEvent.oe.VolunteerInstructions;
 		txtAddress.Value = organizationEvent.oe.StagingAddress;
 		txtCity.Value = organizationEvent.oe.StagingCity;
+		string beginDate = string.Empty;
+		string endDate = string.Empty;
+		if (organizationEvent.oe.BeginDate != null)
+		{
+			beginDate = Convert.ToDateTime(organizationEvent.oe.BeginDate).ToShortDateString();
+		}
+		if (organizationEvent.oe.EndDate != null)
+		{
+			endDate = Convert.ToDateTime(organizationEvent.oe.EndDate).ToShortDateString();
+		}
+		hidDeploymentBeginDate.Value = beginDate;
+		hidDeploymentEndDate.Value = endDate;
 
 		var organizationEventPhoto = from oep in dc.OrganizationEventPhotos
 									 where oep.OrganizationEventId == organizationEventId
@@ -144,6 +156,9 @@ public partial class V1_NonProfitAdministration_EditNonProfitCampaign : BaseOrga
 		string facebookGroup = txtFacebookGroup.Value;
 		string stagingCountyId = hidCountyId.Value;
 		string volunteerHourlyValue = txtVolunteerHourValue.Value;
+		string beginDate = hidDeploymentBeginDate.Value;
+		string endDate = hidDeploymentEndDate.Value;
+
 
 		Guid organizationEventId = new Guid(Request.QueryString["OrganizationEventId"]);
 
@@ -151,7 +166,17 @@ public partial class V1_NonProfitAdministration_EditNonProfitCampaign : BaseOrga
 		var organizationEvent = (from oe in dc.OrganizationEvents
 								 where oe.OrganizationEventId == organizationEventId
 								 select oe).SingleOrDefault();
-								 
+
+		if(!String.IsNullOrEmpty(beginDate))
+		{
+			organizationEvent.BeginDate = Convert.ToDateTime(beginDate);
+		}
+
+		if (!String.IsNullOrEmpty(endDate))
+		{
+			organizationEvent.EndDate = Convert.ToDateTime(endDate);
+		}
+
 		organizationEvent.PointOfContactName = pointOfContactName;
 		organizationEvent.AcceptsVolunteers = acceptsVolunteers;
 		organizationEvent.MissionPurpose = purposeMission;

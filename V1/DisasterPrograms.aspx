@@ -1,39 +1,33 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Programs.aspx.cs" Inherits="V1_NonProfit_Programs" %>
-<%@ Register Src="~/V1/UserControls/TeamNavigation.ascx" TagPrefix="uc1" TagName="TeamNavigation" %>
-<%@ Register Src="~/V1/UserControls/TeamHeader.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" EnableEventValidation="false" AutoEventWireup="true" CodeFile="DisasterPrograms.aspx.cs" Inherits="V1_DisasterPrograms" %>
+
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+	<style>
+		.logoDiv:hover
+		{
+			background-color:#E8D3FE;
+			cursor:pointer;
+		}
+		.logoDiv{
+			background-color:white;
+			text-align:center;
+			padding:10px;
+			border:solid 1px #ccc;
+		}
+	</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 	
-	<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
-
 	<div class="content">
         <div class="row">
-            <div class="col-md-3">
-				<uc1:TeamNavigation runat="server" ID="ucTeamNavigation" />
-            </div>
-            <div class="col-md-9">
+            <div class="col-md-12">
 					<!--PAGE HEADER-->
                 <div class="hpanel ">
                     <div class="panel-heading hbuilt">
-						
-						<div id="hbreadcrumb" class="pull-right">
-							<ol class="hbreadcrumb breadcrumb">
-								<li>
-									Team Programs
-								</li>
-								<li class="active">
-									<span>
-										<asp:HyperLink ID="hypGlobalPrograms" runat="server" NavigateUrl="~/V1/DisasterPrograms.aspx" Text="Global Programs"></asp:HyperLink>
-									</span>
-								</li>
-							</ol>
-						</div>
                         <div class="font-normal">
-							<h1 class="m-b-none">Programs</h1>
-							<small class="text-muted">This team offers the following programs.</small>
+							<h4 class="m-b-none">Programs</h4>
+							<small class="text-muted">Choose a program that best matches your teams disaster work and deployment. Each is unique programs is created by the community.</small>
                         </div>
                     </div>
 					<!--PAGE CONTENT-->
@@ -46,21 +40,15 @@
 											<div class="hpanel hbuilt">
 												<div class="panel-body">
 													<asp:Literal ID="litSharedPrivate" runat="server"></asp:Literal>
+													<span class="label label-info pull-right m-r-xs">NEW</span>
 													<div class="row">
 														<div class="col-sm-8">
 															<h4><asp:Literal ID="litProgramName" runat="server"></asp:Literal></h4>
 															<p><asp:Literal ID="litProgramDescription" runat="server"></asp:Literal></p>
 														</div>
 														<div class="col-sm-4 project-info">
-															<div class="project-action m-t-md">
-																<div class="btn-group">
-																	<button class="btn btn-xs btn-default"> Create Deployment</button>
-																	<asp:HyperLink CssClass="btn btn-xs btn-default" id="hypEditPrograms" runat="server" Text="Edit" Visible="false"></asp:HyperLink>
-																</div>
-															</div>
-															
-															<div id="logoDiv" class="m-t-md" style="background-color:white; text-align:center; padding:10px; border:solid 1px #ccc;">
-																<asp:Image ID="imgLogo" runat="server" Width="100px" />
+															<div id="logoDiv" class="m-t-md logoDiv">
+																<asp:ImageButton OnClick="imgLogo_Click" ID="imgLogo" runat="server" Width="100px" />
 															</div>
 														</div>
 													</div>
@@ -84,7 +72,12 @@
 													</div>
 												</div>
 												<div class="panel-footer">
-													Create a Deployment
+													<div class="project-action">
+														<div class="btn-group">
+															<button class="btn btn-xs btn-default"> Create Deployment</button>
+															<asp:HyperLink CssClass="btn btn-xs btn-default" id="hypEditPrograms" runat="server" Text="Edit" Visible="false"></asp:HyperLink>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -102,5 +95,6 @@
             </div>
         </div>
     </div>
+
 </asp:Content>
 

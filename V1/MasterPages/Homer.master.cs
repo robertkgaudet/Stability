@@ -18,6 +18,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 	public bool _hideHeader = false;
 	public bool _hideFooter = false;
 	public bool _hideMenu = false;
+	public bool _hideMasterCover = true;
 	public string bodyTag = string.Empty;
 	public string profileURL = string.Empty;
 	public string fixedFooter = "fixed-footer";
@@ -32,8 +33,10 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 	public string _showUserActionModal = string.Empty;
 	public string communityUpdated		= "grey";
 	public string skillsUpdated			= "grey";
+	public string resourcesUpdated		= "grey";
 	public string teamUpdated			= "grey";
 	public string deploymentUpdated		= "grey";
+	public string _masterCoverImage = "";
 
 	protected void Page_Load(object sender, EventArgs e)
 	{
@@ -42,6 +45,13 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 		divSettings.Visible = false;
 		litVolunteerPending.Text = " Volunteer";
 		litVolunteerIcon.Text = "<i class=\"fa fa-heart\"></i>";
+
+		divMasterCover.Visible = false;
+		if (!_hideMasterCover)
+		{
+			divMasterCover.Visible = true;
+			_masterCoverImage = "/V1/Images/CausePhotos/stabilityevent.png";
+		}
 
 		string userActionModal = Request.QueryString["userActionModal"];
 		
@@ -433,8 +443,12 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			{
 				skillsUpdated = "yellowgreen";
 			}
+			if (CheckResources(userId))
+			{
+				resourcesUpdated = "yellowgreen";
+			}
 
-			if (communityUpdated == "yellowgreen" && skillsUpdated == "yellowgreen" && teamUpdated == "yellowgreen" && deploymentUpdated == "yellowgreen")
+			if (communityUpdated == "yellowgreen" && skillsUpdated == "yellowgreen" && resourcesUpdated == "yellowgreen" && teamUpdated == "yellowgreen" && deploymentUpdated == "yellowgreen")
 			{
 				_showUserActionModal = "";
 			}
@@ -456,6 +470,22 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 		}
 	}
 
+	private bool CheckResources(Guid userId)
+	{
+		bool hasResources = false;
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+		var resourcesCheck = (from us in dc.UserResources
+						  where us.UserId == userId
+						  select us).Count();
+
+		if (resourcesCheck > 0)
+		{
+			hasResources = true;
+		}
+
+		return hasResources;
+	}
 	private bool CheckSkills(Guid userId)
 	{
 		bool hasSkills = false;
@@ -472,7 +502,18 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
 		return hasSkills;
 	}
-	
+
+	public bool HideMasterCover
+	{
+		get
+		{
+			return _hideMasterCover;
+		}
+		set
+		{
+			_hideMasterCover = value;
+		}
+	}
 	public bool HideMenu
 	{
 		get

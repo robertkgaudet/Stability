@@ -14,6 +14,7 @@ public partial class V1_UserControls_TeamHeader : System.Web.UI.UserControl
 	public string _pageName;
 	public string _organizationId;
 	public string _nonProfitDropDown;
+	public string _coverImage;
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		litBreadcrumbPageName.Text = _pageName;
@@ -23,12 +24,25 @@ public partial class V1_UserControls_TeamHeader : System.Web.UI.UserControl
 		hypBreadcrumbTeamName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + _organizationId;
 		imgLogo.ImageUrl = _logo;
 		LoadNonProfits();
+
+		_organizationId = Request.QueryString["organizationId"];
+		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+		var organization = (from o in dc.Organizations
+						   where o.OrganizationId == new Guid(_organizationId)
+						   select new { o.CoverImage }).SingleOrDefault();
+
+		if(organization.CoverImage != null)
+		{ 
+			_coverImage = causePhotoFolder + organization.CoverImage;
+		}
 	}
 
 	public void LoadNonProfits()
 	{
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 		var nonProfits = from o in dc.Organizations
 						 where o.IsActive == true
 						 orderby o.Name
@@ -40,6 +54,11 @@ public partial class V1_UserControls_TeamHeader : System.Web.UI.UserControl
 		}
 	}
 
+	public string CoverImage
+	{
+		get { return _coverImage; }
+		set { _coverImage = value; }
+	}
 	public string Logo
 	{
 		get { return _logo; }

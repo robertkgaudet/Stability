@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class V1_NonProfit_Deployments : BaseWebForm
+public partial class V1_NonProfit_AvailableResources : BaseWebForm
 {
 	public string organizationId = string.Empty;
 	protected void Page_Load(object sender, EventArgs e)
@@ -20,15 +20,15 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 						   select new {o.Name, o.Description, o.Logo, o.CoverImage}).SingleOrDefault();
 
 		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
-		Master.PageTitle = organization.Name + " Deployments on Stability";
+		Master.PageTitle = organization.Name + " List of Available Resources on Stability";
 		Master.PageDescription = organization.Description;
 		Master.FbDescription = organization.Description;
 		Master.FbImage = causePhotoFolder + organization.CoverImage;
 		Master.FbImageType = "image/jpg";
-		Master.FbSite_name = organization.Name + " Deployments on Stability";
+		Master.FbSite_name = organization.Name + " List of Available Resources on Stability";
 		Master.FbURL = Request.Url.AbsoluteUri;
 
-		ucTeamNavigation.PageName = "deploymentPage";
+		ucTeamNavigation.PageName = "availableResourcesPage";
 		ucTeamNavigation.TeamName = organization.Name;
 
 		string logo = string.Empty;
@@ -45,10 +45,33 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 		ucTeamNavigation.TeamName = organization.Name;
 		ucTeamHeader.Logo = logo;
 		ucTeamHeader.OrganizationId = organizationId;
-		ucTeamHeader.PageName = "Deployments";
+		ucTeamHeader.PageName = "Available Resources";
 		ucTeamHeader.TeamDescription = organization.Description;
 		ucTeamHeader.TeamName = organization.Name;
 
-		ucDeploymentListCard.OrganizationId = new Guid(organizationId);
+
+		string resourceList = string.Empty;
+
+		var resources = (from us in dc.UserResources
+						 join s in dc.Resources on us.ResourceId equals s.ResourceId
+						 join uo in dc.UserOrganizations on us.UserId equals uo.UserId
+						 where uo.OrganizationId == new Guid(organizationId)
+						 orderby s.Type, s.Name
+						 group s by s.Name + "|" + s.ResourceId + "| (" + s.Type + ")" into resourceGroup
+						 select new { Name = resourceGroup.Key, ResourceCount = resourceGroup.Count() }).Distinct();
+
+		foreach (var resource in resources)
+		{
+			string[] resourceValues = resource.Name.Split('|');
+			string resourceName = resourceValues[0];
+			string resourceId = resourceValues[1];
+			string resourceType = resourceValues[2];
+
+			resourceList += "<button type=\"button\" id=\"skillButton\" onclick=\"window.location.href='/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&resourceId=" + resourceId + "'\" class=\"btn btn-default m-sm\">" + resourceName + " " + resourceType + " " + resource.ResourceCount + " </button>";
+
+		}
+
+		litAvailableResources.Text = resourceList;
 	}
+
 }
