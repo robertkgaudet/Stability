@@ -12,13 +12,13 @@
 
 		$(document).ready(function ()
 		{
-			<%=preselectedDisasterJQuery%>
+<%--			<%=preselectedDisasterJQuery%>
 
 			$("#disasterEvent.dropdown-menu li").click(function ()
 			{
 				$("#btn-dropdown.disasterEvent").html($(this).text());
 				$("#<%=hidEventId.ClientID%>").val($(this).attr('id'));
-            });
+            });--%>
 
 			<%=preselectedNonProfitJQuery%>
 
@@ -55,8 +55,12 @@
     <div class="row">
         <div class="col-sm-1"></div>
         <div class="col-md-10">
-			<h3>Register To Create Your Own Community Disaster Relief Team</h3>
-			<p><asp:Label ID="lblMessage" runat="server" text="Create a profile to work with your team to rebuild your community."></asp:Label></p>
+			<h3>Register to create or join a Disaster Relief Team</h3>
+			<b>When those most in need are struggling after a natural disaster, there is no time to waste.</b>
+			<br />Instantly turn your network into a disaster relief team.
+			<br />Churches, civic organizations, families, any kind of team now has the tools to start helping right away.
+			<hr />
+			<p><asp:Label ID="lblMessage" runat="server" text="Create your profile here to begin work with your team to rebuild your community."></asp:Label></p>
 			<div runat="server" id="divError" visible="false">
 				<div class="alert alert-danger">
 					<a class="alert-link" href="#">REGISTRATION ERROR!!</a>
@@ -87,7 +91,7 @@
 								<asp:RadioButton type="radio" id="rdMemberTypeBusiness" runat="server" value="business" Font-Size="Larger" Text="Business" GroupName="memberType" />
 							</div>
 						</div>--%>
-						<div class="form-group col-lg-12">
+<%--						<div class="form-group col-lg-12">
 							<label>Choose Your Community Portal</label>
 							<div class="text-muted">If you do not see your community listed, <a href="mailto:support@stability.org" class="text-uppercase">email support@stability.org</a> and ask us to add it.</div>
 							<div id="div1" class="dropdown m-b-md" runat="server">
@@ -97,15 +101,14 @@
 								</ul>
 							</div>
 							<input type="hidden" id="hidEventId" runat="server" />
-						</div>
+						</div>--%>
 						<div class="form-group col-lg-12" runat="server" id="divChooseNonprofit">
-							<label>Choose a Team To Work With</label>
-							<div class="text-muted">Select a team or create your own after you register.</div>
+							<label></label>
 							<div id="div2" class="dropdown m-b-md" runat="server">
-								<button id="btn-NonProfitDropdown" class="btn btn-outline btn-default nonProfit dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Select (Optional) <i class="fa fa-sort-down"></i></button>
+								<button id="btn-NonProfitDropdown" class="btn btn-outline btn-default nonProfit dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Select A Team (Optional) <i class="fa fa-sort-down"></i></button>
 								<ul id="nonProfit" class="dropdown-menu text-center dropdown-volunteer required">
 									<%=nonProfitDropDown%>
-								</ul>
+								</ul> Leave empty to create your own team.
 							</div>
 							<input type="hidden" id="hidOrganizationId" runat="server" />
 						</div>

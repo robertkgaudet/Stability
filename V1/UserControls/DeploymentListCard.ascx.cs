@@ -1,8 +1,10 @@
 ﻿using Stability;
 using System;
+using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -33,19 +35,18 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 							  join s in dc.USStates on oe.StagingStateId equals s.StatesId
 							  join c in dc.Counties on oe.StagingCountyId equals c.CountyId
 							  where oe.OrganizationId == organizationId
-							  //&&
-							  //org.IsActive == true
-							  //&& 
-							  //oe.IsActive == true
-							  orderby c.Name ascending
+							  &&
+							  org.IsActive == true
+							  &&
+							  oe.IsActive == true
+							  orderby oe.CreatedOn descending
 							  select new { oe.BeginDate, oe.EndDate, State = s.Name, County = c.Name, org.IsVoadMember, org.Logo, oe.VolunteerHourlyRate, org.URLFriendlyName, oe.IsActive, oe.OrganizationEventId, org.OrganizationId, DeploymentName = oe.CampaignName, oe.URLFriendlyCampaignName, OrganizationName = org.Name };
 
 			deploymentCount = deployments.Count();
 
 			foreach (var deployment in deployments)
 			{
-				//string eventDate = String.Format("{0:Y}", deployment.date);
-
+				int teamMembersAvailable = 0;
 				string rebuildTickLabel = string.Empty;
 				//string volunteersNeeded = CalculateVolunteersNeeded(Guid.Empty, 0, false, disaster.EventId);
 
@@ -58,6 +59,24 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 				{
 					deploymentTimeSpan = (DateTime)deployment.EndDate - (DateTime)deployment.BeginDate;
 					deploymentLength = deploymentTimeSpan.Days;
+
+					List<DateTime> allDates = GetDatesBetween((DateTime)deployment.BeginDate, (DateTime)deployment.EndDate);
+					//Loop through all dates between the two ranges and count team members who are available
+
+					foreach (DateTime date in allDates)
+					{
+						//Check to see how many team members are available for these dates?
+						//In the future also check for matching skills.
+						var teamMemberDates = (from uo in dc.UserOrganizations
+											  join oe in dc.OrganizationEvents on uo.OrganizationId equals oe.OrganizationId
+											  join uad in dc.UserAvailableDates on uo.UserId equals uad.UserId
+											  where oe.OrganizationId == organizationId
+											  && uad.DateAvailable == date
+											  && oe.OrganizationEventId == deployment.OrganizationEventId
+											   select uo).Count();
+
+						teamMembersAvailable = teamMemberDates;
+					}
 				}
 
 				string dateRange = String.IsNullOrEmpty(beginDate) ? "Dates Unknown" : beginDate + " to " + endDate;
@@ -104,7 +123,7 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 												"</div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
 											"<div class=\"panel-footer\">" + Environment.NewLine +
-												"<div class=\"row\"><div class=\"col-xs-8 m-s-n5\"><small>" + dateRange + "</small></div><div class=\"col-xs-4 m-s-n5\"><small>" + deploymentLength + " Days</small></div></div>" + Environment.NewLine +
+												"<div class=\"row\"><div class=\"col-xs-8 m-s-n5\"><small>" + dateRange + "<br>" + teamMembersAvailable + " Team Members</small></div><div class=\"col-xs-4 m-s-n5\"><small>" + deploymentLength + " Days</small></div></div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
 										"</div>" + Environment.NewLine +
 									"</div>" + Environment.NewLine + Environment.NewLine;
@@ -119,10 +138,10 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 							  join s in dc.USStates on oe.StagingStateId equals s.StatesId
 							  join c in dc.Counties on oe.StagingCountyId equals c.CountyId
 							  where oe.EventId == eventId
-							  //&&
-							  //org.IsActive == true
-							  //&&
-							  //oe.IsActive == true
+							  &&
+							  org.IsActive == true
+							  &&
+							  oe.IsActive == true
 							  orderby c.Name ascending
 							  select new { oe.BeginDate, oe.EndDate, State = s.Name, County = c.Name, org.IsVoadMember, org.Logo, oe.VolunteerHourlyRate, org.URLFriendlyName, oe.IsActive, oe.OrganizationEventId, org.OrganizationId, DeploymentName = oe.CampaignName, oe.URLFriendlyCampaignName, OrganizationName = org.Name };
 
@@ -192,6 +211,19 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 
 		return deploymentPanel;
 	}
+
+	static List<DateTime> GetDatesBetween(DateTime startDate, DateTime endDate)
+	{
+		List<DateTime> dates = new List<DateTime>();
+
+		for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
+		{
+			dates.Add(date);
+		}
+
+		return dates;
+	}
+
 	public Guid OrganizationId
 	{
 		get { return _organizationId; }

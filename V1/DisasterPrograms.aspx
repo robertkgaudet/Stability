@@ -23,13 +23,15 @@
         <div class="row">
             <div class="col-md-12">
 					<!--PAGE HEADER-->
-                <div class="hpanel ">
-                    <div class="panel-heading hbuilt">
-                        <div class="font-normal">
-							<h4 class="m-b-none">Programs</h4>
-							<small class="text-muted">Choose a program that best matches your teams disaster work and deployment. Each is unique programs is created by the community.</small>
-                        </div>
-                    </div>
+					<div class="m-t-md">
+					<div class="hpanel ">
+						<div class="panel-heading hbuilt">
+							<div class="font-normal">
+								<h1 class="m-b-none">Programs</h1>
+								<small class="text-muted">Choose a program that best matches your teams disaster work and deployment. Each is unique programs is created by the community.</small>
+							</div>
+						</div>
+					</div>
 					<!--PAGE CONTENT-->
 					<div class="panel-body">
 						<div class="row projects">
@@ -37,7 +39,7 @@
 								<asp:Repeater ID="rptPrograms" runat="server" OnItemDataBound="rptPrograms_ItemDataBound">
 									<ItemTemplate>
 										<div class="col-lg-6">
-											<div class="hpanel hbuilt">
+											<div class="hpanel hbuilt hbgblue">
 												<div class="panel-body">
 													<asp:Literal ID="litSharedPrivate" runat="server"></asp:Literal>
 													<span class="label label-info pull-right m-r-xs">NEW</span>

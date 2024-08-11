@@ -18,7 +18,9 @@
             // Event handler for DropDownList change
             dropdown.on("change", function () {
                 // Set the hidden field's value to the selected option's value
-                hiddenField.val(dropdown.val());
+				hiddenField.val(dropdown.val());
+				//alert(dropdown.val());
+				//alert(hiddenField.val());
             });
 
             $('.causeImageUploadButton').click(function () {

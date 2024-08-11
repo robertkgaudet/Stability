@@ -11,6 +11,7 @@ using System.Xml.Linq;
 using System.Security.Policy;
 using System.IdentityModel.Metadata;
 using Stability;
+using System.Security.Cryptography;
 
 public partial class V1_Event : BaseOrganizationWebForm
 {
@@ -361,6 +362,7 @@ public partial class V1_Event : BaseOrganizationWebForm
 				var nonProfitCount = from pe in dc.OrganizationEvents
 									 join ev in dc.Events on pe.EventId equals ev.EventId
 									 where ev.EventId == eventId
+									 && pe.IsActive == true
 									 select pe;
 
 				litNonprofitCount.Text = nonProfitCount.Count().ToString();
@@ -392,7 +394,9 @@ public partial class V1_Event : BaseOrganizationWebForm
 		var deployments = from org in dc.Organizations
 							join oe in dc.OrganizationEvents on org.OrganizationId equals oe.OrganizationId
 							join s in dc.USStates on oe.StagingStateId equals s.StatesId
-							where oe.EventId == eventId && org.IsActive == true
+							where oe.EventId == eventId 
+							&& org.IsActive == true 
+							&& oe.IsActive == true
 							orderby oe.IsActive descending, org.Name ascending
 							select new { org.IsVoadMember, org.Logo, oe.VolunteerHourlyRate, org.URLFriendlyName, oe.IsActive, oe.OrganizationEventId, org.OrganizationId, oe.HelpURL, oe.VolunteerURL, org.DonationURL, oe.CampaignName, oe.VolunteerInstructions, oe.MissionPurpose, oe.URLFriendlyCampaignName, oe.StagingCity, StagingState = s.Name, org.Name, org.Description };
 
@@ -484,7 +488,9 @@ public partial class V1_Event : BaseOrganizationWebForm
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 		var organizationEventCount = (from oe in dc.OrganizationEvents
 									  join o in dc.Organizations on oe.OrganizationId equals o.OrganizationId
-									  where oe.EventId == eventId && o.IsActive == true
+									  where oe.EventId == eventId
+									  && o.IsActive == true
+									  && oe.IsActive == true
 									  select new { o.OrganizationId, o.Name, o.Description }).Distinct();
 
 		rptTeams.DataSource = organizationEventCount;
@@ -753,7 +759,9 @@ public partial class V1_Event : BaseOrganizationWebForm
 		{
 			RepeaterItem dataItem = (RepeaterItem)e.Item;
 			HyperLink hypViewTeam = (HyperLink)e.Item.FindControl("hypViewTeam");
-			HyperLink hypViewActivities = (HyperLink)e.Item.FindControl("hypViewActivities"); 
+			HyperLink hypViewActivities = (HyperLink)e.Item.FindControl("hypViewActivities");
+			HyperLink hypTeamWebsite = (HyperLink)e.Item.FindControl("hypTeamWebsite");
+			HyperLink hypTeamCalendar = (HyperLink)e.Item.FindControl("hypTeamCalendar");
 			Literal litTeamDescription = (Literal)e.Item.FindControl("litTeamDescription");
 			Literal litTeamName = (Literal)e.Item.FindControl("litTeamName");
 			Literal litDivQH = (Literal)e.Item.FindControl("litDivQH");
@@ -768,12 +776,18 @@ public partial class V1_Event : BaseOrganizationWebForm
 
 			litTeamName.Text = name;
 			litTeamDescription.Text = description;
-			hypViewTeam.Text = "Team Profile Page";
+			hypViewTeam.Text = "Home";
 			hypViewTeam.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
 
-			hypViewActivities.Text = "Open Team Activity";
+			hypViewActivities.Text = "Impact";
 			hypViewActivities.NavigateUrl = "/V1/NonProfit/ActivityDashboard.aspx?organizationId=" + organizationId;
-			
+
+			hypTeamWebsite.Text = "Website";
+			hypTeamWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + organizationId;
+
+			hypTeamCalendar.Text = "Calendar";
+			hypTeamCalendar.NavigateUrl = "/V1/NonProfit/TeamAvailabilityCalendar.aspx?organizationId=" + organizationId;
+
 		}
 	}
 }

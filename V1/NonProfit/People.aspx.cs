@@ -43,6 +43,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 		Master.FbURL = Request.Url.AbsoluteUri;
 
 		string logo = string.Empty;
+		string squareLogo = string.Empty;
 		if (!String.IsNullOrEmpty(organization.Logo))
 		{
 			logo = "/Impactoid/Images/Logos/" + organization.Logo;
@@ -52,12 +53,17 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			//Use placeholder image.imgLogo.Visible = true;
 			logo = "/V1/Images/Logo-Placeholder.png";
 		}
+		if (!String.IsNullOrEmpty(organization.LogoSquare))
+		{
+			squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+		}
 
 		ucTeamHeader.Logo = logo;
 		ucTeamHeader.OrganizationId = organizationId;
 		ucTeamHeader.PageName = "People";
 		ucTeamHeader.TeamDescription = organization.Description;
 		ucTeamHeader.TeamName = organization.Name;
+		ucTeamHeader.TeamSquareLogo = squareLogo;
 
 		if (User.Identity.IsAuthenticated)
 		{
@@ -143,7 +149,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 								 select pl;
 
 					divFilterMessage.Visible = true;
-					litFilterMessage.Text = "<i class=\"fa fa-2x fa-fire-extinguisher\"></i><hr>Showing team members with a '" + resouceName.Name + "' as an available resource.";
+					litFilterMessage.Text = "<i class=\"fa fa-2x fa-truck\"></i><hr>Showing team members with a '" + resouceName.Name + "' as an available resource.";
 				}
 				hpanelMembers.Visible = true;
 				rptVolunteers.DataSource = peopleList;
@@ -228,15 +234,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			btnContact.Attributes.Add("data-email", loweredEmail);
 			btnContact.Attributes.Add("onclick", "return btnClick(this);");
 
-			title = !String.IsNullOrEmpty(title) ? " TITLE: " + title + "</br>" : "";
-			zelloName = !String.IsNullOrEmpty(zelloName) ? " ZELLO: " + zelloName + "</br>" : "";
-			description = !String.IsNullOrEmpty(description) ? " ABOUT ME: " + description + "</br>" : "";
+			title = !String.IsNullOrEmpty(title) ? title + "</br>" : "";
+			//zelloName = !String.IsNullOrEmpty(zelloName) ? " Zello: " + zelloName + "</br>" : "";
+			description = !String.IsNullOrEmpty(description) ? description + "</br>" : "";
 
-			litMemberInfo.Text = title + " " + zelloName;
+			litMemberInfo.Text = title;
 			string skills = GetSkills(userId);
 			string resources = GetResources(userId);
-			litSkills.Text = !String.IsNullOrEmpty(skills) ? "<small>SKILLS:</small> " + skills + "</br>" : "";
-			litResources.Text = !String.IsNullOrEmpty(resources) ? "<small>RESOURCES:</small> " + resources + "</br>" : "";
+			litSkills.Text = !String.IsNullOrEmpty(skills) ? "<h6>Skills:</h6> " + skills + "</br>" : "";
+			litResources.Text = !String.IsNullOrEmpty(resources) ? "<h6>Resources:</h6> " + resources + "</br>" : "";
 			litDescription.Text = description;
 		}
 	}

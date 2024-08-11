@@ -27,7 +27,7 @@
                 <div class="hpanel ">
                     <div class="panel-heading hbuilt">
                         <div class="font-normal">
-							<h4 class="m-b-none">Settings</h4>
+							<h1 class="m-b-none"><i class="fa fa-cog"></i> Settings</h1>
 							<small class="text-muted">Adjust Team Settings.</small>
                         </div>
                     </div>

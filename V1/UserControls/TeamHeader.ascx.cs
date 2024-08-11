@@ -1,4 +1,5 @@
-﻿using Stability;
+﻿using Microsoft.SqlServer.Server;
+using Stability;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ public partial class V1_UserControls_TeamHeader : System.Web.UI.UserControl
 {
 	public string _logo;
 	public string _teamName;
+	public string _teamSquareLogo;
 	public string _teamDescription;
 	public string _pageName;
 	public string _organizationId;
@@ -22,7 +24,8 @@ public partial class V1_UserControls_TeamHeader : System.Web.UI.UserControl
 		litTeamName.Text = _teamName;
 		hypBreadcrumbTeamName.Text = _teamName;
 		hypBreadcrumbTeamName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + _organizationId;
-		imgLogo.ImageUrl = _logo;
+		imgTeamLogo.ImageUrl = _teamSquareLogo;
+
 		LoadNonProfits();
 
 		_organizationId = Request.QueryString["organizationId"];
@@ -33,7 +36,11 @@ public partial class V1_UserControls_TeamHeader : System.Web.UI.UserControl
 						   where o.OrganizationId == new Guid(_organizationId)
 						   select new { o.CoverImage }).SingleOrDefault();
 
-		if(organization.CoverImage != null)
+		hypTeamWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + _organizationId;
+		hypTeamWebsite.Text = " Open Team Website";
+		hypWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + _organizationId;
+		_coverImage = causePhotoFolder + "/coverplaceholder.png";
+		if (organization.CoverImage != null)
 		{ 
 			_coverImage = causePhotoFolder + organization.CoverImage;
 		}
@@ -50,7 +57,14 @@ public partial class V1_UserControls_TeamHeader : System.Web.UI.UserControl
 
 		foreach (var nonProfit in nonProfits)
 		{
-			_nonProfitDropDown += "<li id=\"" + nonProfit.o.OrganizationId + "\"><a href=\"#\">" + nonProfit.o.Name + "</a></li>" + Environment.NewLine;
+			DateTime currentDate = DateTime.Now;
+			TimeSpan difference = currentDate - nonProfit.o.CreatedOn;
+			string newFlag = string.Empty;
+			if (difference.TotalDays < 30)
+			{
+				newFlag = "<i class=\"label label-success pull-right inline\">NEW</i>";
+			}
+			_nonProfitDropDown += "<li id=\"" + nonProfit.o.OrganizationId + "\"><a href=\"#\">" + nonProfit.o.Name + " " + newFlag + "</a></li>" + Environment.NewLine;
 		}
 	}
 
@@ -64,6 +78,12 @@ public partial class V1_UserControls_TeamHeader : System.Web.UI.UserControl
 		get { return _logo; }
 		set { _logo = value; }
 	}
+	public string TeamSquareLogo
+	{
+		get { return _teamSquareLogo; }
+		set { _teamSquareLogo = value; }
+	}
+	
 
 	public string TeamName
 	{

@@ -9,6 +9,11 @@
 		$('input[type="checkbox"]').each(function () {
 			$(this).addClass("i-checks");
 		});
+		
+		$('.btnAddNonProfit').click(function () {
+		window.location.href = '/V1/Administration/TeamName.aspx?userActionModal=false';
+			return false;
+		});
 	});
 	</script>
 
@@ -26,9 +31,15 @@
 								</div>
 							</div>
 							<h2 class="font-light m-b-xs">
-								Choose A Team 
+								Join A Disaster Relief Team
 							</h2>
-                            <small>Only one team can be active at a time.</small>
+							When your neighbors have lost everything, there is no time to waste. Stability makes it easy to rally your team to instantly help your community after a disaster.
+							<hr />
+							<div class="alert alert-success">
+								<i class="fa fa-bolt"></i>
+								OPTION: Did you want to CREATE a team instead of JOIN one? Click Here To Create Your Team 
+								<asp:Button id="btnAdd" runat="server" CssClass="btnAddNonProfit btn btn-primary" text="Create A New Team" />
+							</div>
 						</div>
 					</div>
 				</div>
@@ -39,11 +50,7 @@
 				<div class="col-lg-12 container">
 					<div class="hpanel form-horizontal">
 						<div class="panel-heading hbuilt">
-							Select the team you are interested in.
-							<br />
-                            <small class="text-muted">If you don't see a team to join, you can create a team here and invite your friends to join.</small>
-							<br />
-							<asp:Button id="btnAdd" runat="server" CssClass="btnAddNonProfit btn btn-primary" text="Create A New Team" />
+							Select The Team To Join
 						</div>
 						<div runat="server" id="divMessage" class="alert alert-success" visible="false">
 							<i class="fa fa-bolt"></i>

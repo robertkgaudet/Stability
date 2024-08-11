@@ -1,0 +1,167 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #323232;
+    font-weight: 700;
+}
+
+p {
+    color: #434343;
+    font-size: 16px;
+    line-height: 1.9;
+    font-weight: 400;
+}
+
+ol,
+li,
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+a {
+    transition-duration: 500ms;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.section_padding_100 {
+    padding: 100px 0;
+}
+
+.section_padding_100_0 {
+    padding: 100px 0 0 0;
+}
+
+.section_padding_200 {
+    padding: 200px 0;
+}
+
+.section_padding_100_70 {
+    padding: 100px 0 70px 0;
+}
+
+.header_area {
+    background-color: #fff;
+    height: 80px;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 99999;
+    border-bottom: 1px solid #ebebeb;
+}
+
+.doc-content-area {
+    position: relative;
+    z-index: 1;
+    margin-top: 80px;
+}
+
+#doc-nav > li {
+    display: inline-block;
+}
+
+.menu-area ul {
+    text-align: right;
+}
+
+.files-area ul li ul li {
+    margin-left: 30px;
+}
+
+#doc-nav a {
+    display: block;
+    height: 70px;
+    padding: 23px 10px;
+    text-transform: capitalize;
+}
+
+#doc-nav a:hover {
+    color: #27ae60;
+}
+
+.bg-gray {
+    background-color: #f8f8ff;
+}
+
+img {
+    max-width: 100%;
+}
+
+.logo-area a img {
+    max-width: 140px;
+}
+
+.single_part > img {
+    border: 2px solid #ddd;
+    margin-bottom: 15px;
+    padding: 5px;
+}
+
+.support_area {
+    background-color: #27ae60;
+    padding: 50px 30px;
+    text-align: center;
+    width: 100%;
+    border-radius: 12px;
+}
+
+.support_area h4 {
+    color: #fff;
+}
+
+.support_area i {
+    color: #fff;
+    display: block;
+    font-size: 50px;
+    margin-bottom: 5px;
+}
+
+.support_area > a {
+    background-color: #fff;
+    border-radius: 5px;
+    display: block;
+    padding: 5px 15px;
+}
+
+@media (min-width: 320px) and (max-width: 767px) {
+    #doc-nav a {
+        font-size: 12px;
+        padding: 26px 4px;
+    }
+
+    .support_area {
+        margin-bottom: 100px;
+        padding: 30px 15px;
+        top: 0;
+    }
+
+    #intro > h3 {
+        font-size: 20px;
+    }
+    
+    .logo-area a img {
+        max-width: 100px;
+    }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+    #doc-nav a {
+        font-size: 16px;
+        padding: 23px 5px;
+    }
+}

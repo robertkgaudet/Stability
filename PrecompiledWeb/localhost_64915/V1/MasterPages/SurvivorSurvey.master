@@ -1,0 +1,371 @@
+﻿<%@ master language="C#" autoeventwireup="true" inherits="V1_MasterPages_SurvivorSurvey, App_Web_qwo5cswo" %>
+
+<!DOCTYPE html>
+<html>
+	<head runat="server">
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-96039646-1"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() { dataLayer.push(arguments); }
+			gtag('js', new Date());
+
+			gtag('config', 'UA-96039646-1');
+		</script>
+		<link rel="shortcut icon" href="/favicon.ico">
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+		<title runat="server"					id="title">Stability - Disaster relief done differently.</title>
+		<meta name="description"				id="description">
+		<meta property="og:image:type"			id="fbImageType" runat="server" />
+		<meta property="og:image"				id="fbImage" runat="server"/>
+		<meta property="og:title"				id="fbTitle" runat="server"/>
+		<meta property="og:url"					id="fbURL" runat="server"/>
+		<meta property="og:site_name"			id="fbSite_name" />
+		<meta property="og:description"			id="fbDescription" />
+
+		<!-- Vendor styles -->
+		<link rel="stylesheet" href="/Homer/vendor/fontawesome/css/font-awesome.css" />
+		<link rel="stylesheet" href="/Homer/vendor/metisMenu/dist/metisMenu.css" />
+		<link rel="stylesheet" href="/Homer/vendor/animate.css/animate.css" />
+		<link rel="stylesheet" href="/Homer/vendor/bootstrap/dist/css/bootstrap.css" />
+
+		<!-- App styles -->
+		<link rel="stylesheet" href="/Homer/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css" />
+		<link rel="stylesheet" href="/Homer/fonts/pe-icon-7-stroke/css/helper.css" />
+		<link rel="stylesheet" href="/Homer/styles/style.css">
+
+		<!-- Vendor scripts -->
+		<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+
+		<script type="text/javascript">
+
+			$(document).ready(function () {
+				$('#logo').click(function () {
+					window.location.href = '/Web/Index.html';
+					return false;
+				});
+
+				$('#<%=imgProfile.ClientID%>').click(function () {
+					window.location.href = <%=profileURL%>;;
+					return false;
+				});
+			});
+		</script>
+
+		<style>
+			.bodyBGColor
+			{
+				background-color:#F1F3F6;
+			}
+			#header
+			{
+				background-color:#34495E;
+			}
+			#logo:hover	{cursor:pointer; }
+			.header-link
+			{
+				background:none;
+				border:none;
+			}
+			.header-link:hover
+			{
+				background:none;
+				border:none;
+			}
+			#<%=imgProfile.ClientID%>:hover
+			{
+				cursor:pointer;
+			}
+			.fa-bars:hover
+			{
+				color:white;
+			}
+			#<%=imgProfile.ClientID%> {width:100%;}
+		</style>
+        <style>
+    .skin-option {
+            position: fixed;
+            text-align: center;
+            right: -1px;
+            padding: 10px;
+            font-size:10px;
+            top: 5px;
+            text-transform: uppercase;
+            background-color: #ffffff;
+            box-shadow: 0 1px 10px 0px rgba(0, 0, 0, 0.05), 10px 12px 7px 3px rgba(0, 0, 0, .1);
+            border-radius: 4px 0 0 4px;
+            z-index: 100000;
+        }
+    </style>
+		<asp:ContentPlaceHolder id="head" runat="server">
+		</asp:ContentPlaceHolder>
+	</head>
+	<%=bodyTag%>
+		<form id="form1" runat="server" role="form">
+            <div class="skin-option animated fadeInRight">
+               <asp:HyperLink id="hypDefaultDisaster" runat="server"></asp:HyperLink>
+            </div>
+			<div style="margin-bottom:500px;">
+				<div id="header" runat="server">
+					<div id="logo" class="dark-version">
+						<span>
+							<asp:Image ID="Image1" runat="server" Width="130" ImageUrl="~/V1/Images/CajunNavyCrowdRelief.png" />
+						</span>
+					</div>
+					<nav role="navigation">
+						<div class="header-link hide-menu text-white"><i class="fa fa-bars"></i></div>
+						<div class="small-logo">
+							<span class="text-primary">
+								<asp:Image ID="imgLogo" runat="server" Width="130" ImageUrl="~/V1/Images/CajunNavyCrowdRelief.png" />
+							</span>
+						</div>
+						<div class="mobile-menu">
+							<button type="button" class="navbar-toggle mobile-menu-toggle" data-toggle="collapse" data-target="#mobile-collapse">
+								<i class="fa fa-chevron-down"></i>
+							</button>
+							<div class="collapse mobile-navbar" id="mobile-collapse">
+								<ul class="nav navbar-nav">
+									<li>
+										<a class="" href="/V1/Profile/Default.aspx">My Dashboard</a>
+									</li>
+									<li runat="server" id="liSurvivorPortal">
+										<a class="" href="/Stories">Survivor Help</a>
+									</li>
+									<li>
+										<a class="" href="/V1/Profile/AddNewRebuild.aspx">Rebuild A Home</a>
+									</li>
+									<li>
+										<a class="" href="/V1/Profile/ChooseEvent.aspx">View Disasaters</a>
+									</li>
+									<li>
+										<a class="" href="/V1/Stream.aspx">LIVE Feed</a>
+									</li>
+									<li>
+										<a class="" href="/V1/Stages.aspx">Recovery Stages</a>
+									</li>
+									<li>
+										<a class="" href="/Web/Index.html">About Crowd Relief</a>
+									</li>
+									<li>
+										<a class="" href="http://cajunrelief.org/donations/donate-cajun-relief-foundation/" target="_blank">Donate</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</nav>
+				</div>
+				<!-- Navigation -->
+				<aside id="menu" runat="server">
+					<div id="navigation">
+						<div class="p-sm text-center">
+                            <asp:HyperLink id="lblNonProfitDescription" runat="server" visible="false"></asp:HyperLink>
+                            <asp:HyperLink id="hypNonProfit" runat="server"></asp:HyperLink>
+						</div>
+						<ul class="nav m-b" id="side-menu">
+							<li runat="server" id="liMyCampaigns" visible="true">
+								<a href="#">	 
+									<span class="nav-label">My Campaigns</span><span class="fa arrow"></span> 
+								</a>
+                                <ul class="nav nav-second-level">
+                                   <asp:Literal id="litMyDisasterCampaigns" runat="server"></asp:Literal>
+                                </ul>
+							</li>
+							<div class="profile-picture">
+								<img class="m-b img-rounded" src="../Images/icons8-customer-64.png" runat="server" id="imgProfile" />
+								<div class="stats-label text-color">
+									<span class="font-extra-bold font-uppercase">
+										<asp:Literal ID="litUsername" runat="server"></asp:Literal>
+									</span>
+									<div class="dropdown m-b-sm" id="divSettings" runat="server" visible="false">
+										<a class="dropdown-toggle" href="#" data-toggle="dropdown">
+											<small class="text-muted">Settings<b class="caret"></b></small>
+										</a>
+										<ul class="dropdown-menu animated flipInX m-t-xs">
+											<li><asp:HyperLink ID="hypProfile" runat="server" Text="My Profile" NavigateUrl="~/V1/Profile/Profile.aspx"></asp:HyperLink></li>
+											<li runat="server" id="liPrintIdCard" visible="false"><asp:HyperLink ID="hypPrintIDCard" runat="server" Text="Print ID Card" NavigateUrl="~/IDCard"></asp:HyperLink></li>
+											<li><asp:HyperLink ID="hypTime" runat="server" Text="Record Time" NavigateUrl="~/V1/Profile/Time.aspx"></asp:HyperLink></li>
+											<li><asp:HyperLink ID="hypSignOut" runat="server" Text="Sign Out" NavigateUrl="~/V1/SignOut.aspx"></asp:HyperLink></li>
+										</ul>
+									</div>
+									<span class="font-uppercase">
+										<asp:Literal ID="litRoleType" runat="server"></asp:Literal>
+									</span>
+
+									<div class="dropdown" id="divLogin" runat="server" visible="false">
+										<asp:HyperLink ID="hypLogin" runat="server" Text="Sign In" NavigateUrl="~/V1/Login.aspx"></asp:HyperLink>
+									</div>
+
+								</div>
+							</div>
+							<li runat="server" id="liAddSurvivor">
+								<a href="/S1/Profile/AddNewSurvivor.aspx">
+									<span class="nav-label">Add a Survivor</span>
+								</a>
+							</li>
+							<li <asp:Literal ID="litViewDisasters" runat="server"></asp:Literal>>
+								<a href="/V1/ChooseEvent.aspx">	 
+									<span class="nav-label">Find a Disaster</span>
+								</a>
+							</li>
+							<li runat="server" id="liMyDisasters" visible="false">
+								<a href="#">	 
+									<span class="nav-label">My Disasters</span><span class="fa arrow"></span> 
+								</a>
+                                <ul class="nav nav-second-level">
+                                   <asp:Literal id="litDefaultDisaster" runat="server"></asp:Literal>
+                                   <asp:Literal id="litMyDisasters" runat="server"></asp:Literal>
+                                </ul>
+							</li>
+							<li runat="server" id="liDisasterCampaigns" visible="false">
+								<a href="#">	 
+									<span class="nav-label">My Campaigns</span><span class="fa arrow"></span> 
+								</a>
+                                <ul class="nav nav-second-level">
+                                   <asp:Literal id="litMyCampaigns" runat="server"></asp:Literal>
+                                </ul>
+							</li>
+							<li runat="server" id="liMyNonProfits" visible="false">
+								<a href="#">	 
+									<span class="nav-label">My Nonprofits</span><span class="fa arrow"></span> 
+								</a>
+                                <ul class="nav nav-second-level">
+                                   <asp:Literal id="litMyNonProfits" runat="server"></asp:Literal>
+                                </ul>
+							</li>
+							<li <asp:Literal ID="Literal1" runat="server"></asp:Literal>>
+								<a href="/c/CrowdRelief-Disaster-Survivor-Stories">
+									<span class="nav-label text-black rebuildHomeNav small">Stability Stories</span>
+								</a>
+							</li>
+							<li style="background-color:#E3E3E3;" <asp:Literal ID="litMyDashboard" runat="server"></asp:Literal>>
+								<a href="/V1/Profile/Default.aspx">
+									<span class="nav-label text-black rebuildHomeNav"><i class="fa fa-pie-chart"></i> My Dashboard</span>
+								</a>
+							</li>
+							<!--<li style="background-color:#E3E3E3; visibility:hidden;" <asp:Literal ID="litVolunteer" runat="server"></asp:Literal>>
+								<asp:HyperLink runat="server" ID="hypVolunteer" NavigateUrl="~/V1/ChooseEvent.aspx?action=volunteer">
+									<span class="nav-label text-black rebuildHomeNav"><asp:Literal ID="litVolunteerIcon" runat="server"></asp:Literal>
+										<asp:Literal ID="litVolunteerPending" runat="server"></asp:Literal>
+									</span>
+								</asp:HyperLink>
+							</li>-->
+							<li <asp:Literal ID="litAddHome" runat="server"></asp:Literal>>
+								<a href="/V1/Profile/AddNewRebuild.aspx">
+									<span class="nav-label">Rebuild a Home</span>
+								</a>
+							</li>
+							<li <asp:Literal ID="litStream" runat="server"></asp:Literal>>
+								<a href="/V1/Stream.aspx">
+									<span class="nav-label">Live Feed</span>
+								</a>
+							</li>
+							<li <asp:Literal ID="litStages" runat="server"></asp:Literal>>
+								<a href="/V1/Stages.aspx">
+									<span class="nav-label">Recovery Stages</span>
+								</a>
+							</li>
+							<li <asp:Literal ID="litTrackHome" runat="server"></asp:Literal>>
+								<a href="/Web/Index.html">
+									<span class="nav-label">About Us</span>
+								</a>
+							</li>
+						</ul>
+						<div id="divAdminLinks" runat="server" visible="false">
+							<div class="profile-picture">
+								<div class="stats-label text-color">
+									<span class="font-extra-bold font-uppercase">
+										Administration
+									</span>
+								</div>
+							</div>
+							<ul class="nav m-b" id="side-menu">
+								<li>
+									<a href="/V1/Administration/Disasters.aspx">	 
+										<span class="nav-label">Disasters</span>
+									</a>
+								</li>
+								<li>
+									<a href="/V1/Administration/VolunteerList.aspx">	 
+										<span class="nav-label">Volunteers</span>
+									</a>
+								</li>
+								<li>
+									<a href="/V1/Administration/UsersOnline.aspx">	 
+										<span class="nav-label">Who's Online</span>
+									</a>
+								</li>
+								<li>
+									<a href="/V1/Administration/VolunteerIDList.aspx">	 
+										<span class="nav-label">Volunteer Quick Search</span>
+									</a>
+								</li>
+								<li>
+									<a href="/V1/Administration/VolunteerByRole.aspx">	 
+										<span class="nav-label">Volunteer Search by Role</span>
+									</a>
+								</li>
+								<li>
+									<a href="/V1/Administration/Rebuilds.aspx">	 
+										<span class="nav-label">Rebuild</span>
+									</a>
+								</li>
+								<li>
+									<a href="/V1/Administration/UserList.aspx">	 
+										<span class="nav-label">User Accounts</span>
+									</a>
+								</li>
+								<li>
+									<a href="/V1/Administration/NonProfitList.aspx">	 
+										<span class="nav-label">Non Profits</span>
+									</a>
+								</li>
+								<li>
+									<a href="/V1/Administration/SurveyList.aspx">	 
+										<span class="nav-label">Surveys</span>
+									</a>
+								</li>
+								<li>
+									<a href="/V1/Administration/CorporateBrands.aspx">	 
+										<span class="nav-label">Corporate Brands</span>
+									</a>
+								</li>
+							</ul>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+						</div>
+					</div>
+				</aside>
+				<!-- Main Wrapper -->
+				<div id="wrapper">
+					<div class="content">
+						<asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+		
+						</asp:ContentPlaceHolder>
+					</div>
+					<!-- Footer-->
+					<footer class="footer" id="footer" runat="server">
+						<span class="pull-right">
+							Stability 2018
+						</span>	
+					</footer>
+				</div>
+			</div>
+		</form>
+	
+		<!-- App scripts -->
+		<script src="/Homer/scripts/homer.js"></script>
+		<script src="/Homer/vendor/slimScroll/jquery.slimscroll.min.js"></script>
+		<script src="/Homer/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="/Homer/vendor/metisMenu/dist/metisMenu.min.js"></script>
+	</body>
+</html>

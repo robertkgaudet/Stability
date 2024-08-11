@@ -16,6 +16,12 @@ public partial class V1_Stream : BaseOrganizationWebForm
 
 	protected void Page_Load(object sender, EventArgs e)
 	{
+
+		foreach (ListItem item in cblPostTo.Items)
+		{
+			item.Attributes.CssStyle.Add("margin-right", "10px");
+		}
+
 		LoadPosts();
 
 		bool testMode = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["brainTreeTestMode"].ToString());
@@ -28,6 +34,12 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		else
 		{
 		}
+
+		this.Master.PageTitle = "Stability Activity Feed";
+		this.Master.PageDescription = "View posts and updates from your team, friends and the public.";
+		this.Master.FbDescription = "View posts and updates from your team, friends and the public.";
+		this.Master.FbSite_name = "Stability Activity Feed";
+		this.Master.HideMasterCover = false;
 	}
 
 	public void LoadPosts()

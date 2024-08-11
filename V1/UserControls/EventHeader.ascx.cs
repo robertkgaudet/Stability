@@ -34,7 +34,10 @@ public partial class V1_UserControls_EventHeader : System.Web.UI.UserControl
 						where ev.URLFriendlyName == HttpContext.Current.Request.QueryString["eventName"]
 						select new { ev, et }).SingleOrDefault();
 
-		litDate.Text = String.Format("{0:Y}", disaster.ev.BeginDate);
+		if(disaster.ev.BeginDate.HasValue)
+		{ 
+			litDate.Text = String.Format("{0:Y}", disaster.ev.BeginDate);
+		}
 		litWeatherType.Text = disaster.et.Name;
 		litEventName.Text = _eventName;
 		litEventDescription.Text = _pageDescription;

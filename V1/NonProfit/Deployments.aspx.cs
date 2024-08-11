@@ -17,7 +17,7 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 
 		var organization = (from o in dc.Organizations
 						   where o.OrganizationId == new Guid(organizationId)
-						   select new {o.Name, o.Description, o.Logo, o.CoverImage}).SingleOrDefault();
+						   select new {o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage}).SingleOrDefault();
 
 		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		Master.PageTitle = organization.Name + " Deployments on Stability";
@@ -32,6 +32,7 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 		ucTeamNavigation.TeamName = organization.Name;
 
 		string logo = string.Empty;
+		string squareLogo = string.Empty;
 		if (!String.IsNullOrEmpty(organization.Logo))
 		{
 			logo = "/Impactoid/Images/Logos/" + organization.Logo;
@@ -41,6 +42,10 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 			//Use placeholder image.imgLogo.Visible = true;
 			logo = "/V1/Images/Logo-Placeholder.png";
 		}
+		if (!String.IsNullOrEmpty(organization.LogoSquare))
+		{
+			squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+		}
 
 		ucTeamNavigation.TeamName = organization.Name;
 		ucTeamHeader.Logo = logo;
@@ -48,6 +53,7 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 		ucTeamHeader.PageName = "Deployments";
 		ucTeamHeader.TeamDescription = organization.Description;
 		ucTeamHeader.TeamName = organization.Name;
+		ucTeamHeader.TeamSquareLogo = squareLogo;
 
 		ucDeploymentListCard.OrganizationId = new Guid(organizationId);
 	}

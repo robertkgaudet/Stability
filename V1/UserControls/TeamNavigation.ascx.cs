@@ -13,6 +13,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 	public string _pageName;
 	public string _teamName; 
 	public string _teamPageActive;
+	public string _teamCalendarActive;
 	public string _reportPageActive;
 	public string _deploymentPageActive;
 	public string _activityPageActive;
@@ -34,12 +35,13 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 		hypDeployments.NavigateUrl = "/V1/NonProfit/Deployments.aspx?organizationId=" + organizationId;
 		hypTeamName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
 		hypActivity.NavigateUrl = "/V1/NonProfit/ActivityDashboard.aspx?organizationId=" + organizationId;
+		hypTeamCalendar.NavigateUrl = "/V1/NonProfit/TeamAvailabilityCalendar.aspx?organizationId=" + organizationId;
 		hypPeople.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId;
 		hypSettings.NavigateUrl = "/V1/NonProfitAdministration/Settings.aspx?organizationId=" + organizationId;
 		hypSupport.NavigateUrl = "/V1/NonProfit/Support.aspx?organizationId=" + organizationId;
 		hypTickets.NavigateUrl = "/V1/NonProfitAdministration/Tickets.aspx?organizationId=" + organizationId;
 		hypReports.NavigateUrl = "/V1/NonProfitAdministration/Reports.aspx?organizationId=" + organizationId;
-		hypWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + organizationId;
+		//hypWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + organizationId;
 		hypSkillsets.NavigateUrl = "/V1/NonProfit/Skillsets.aspx?organizationId=" + organizationId;
 		hypResources.NavigateUrl = "/V1/NonProfit/AvailableResources.aspx?organizationId=" + organizationId;
 
@@ -52,6 +54,9 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 				break;
 			case "availableResourcesPage":
 				_resourcesPageActive = "class=\"active\"";
+				break;
+			case "teamCalendarPage":
+				_teamCalendarActive = "class=\"active\"";
 				break;
 			case "teamPage":
 				_teamPageActive = "class=\"active\"";

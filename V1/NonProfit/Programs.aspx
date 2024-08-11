@@ -18,7 +18,6 @@
 					<!--PAGE HEADER-->
                 <div class="hpanel ">
                     <div class="panel-heading hbuilt">
-						
 						<div id="hbreadcrumb" class="pull-right">
 							<ol class="hbreadcrumb breadcrumb">
 								<li>
@@ -32,18 +31,18 @@
 							</ol>
 						</div>
                         <div class="font-normal">
-							<h1 class="m-b-none">Programs</h1>
+							<h1 class="m-b-none"><i class="fa fa-superpowers"></i> Programs</h1>
 							<small class="text-muted">This team offers the following programs.</small>
                         </div>
                     </div>
 					<!--PAGE CONTENT-->
-					<div class="panel-body">
+					<div class="m-t-md">
 						<div class="row projects">
 							<div id="divPrograms" runat="server" visible="true">
 								<asp:Repeater ID="rptPrograms" runat="server" OnItemDataBound="rptPrograms_ItemDataBound">
 									<ItemTemplate>
 										<div class="col-lg-6">
-											<div class="hpanel hbuilt">
+											<div class="hpanel hbuilt hbgblue">
 												<div class="panel-body">
 													<asp:Literal ID="litSharedPrivate" runat="server"></asp:Literal>
 													<div class="row">

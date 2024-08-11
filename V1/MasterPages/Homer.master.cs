@@ -36,6 +36,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 	public string resourcesUpdated		= "grey";
 	public string teamUpdated			= "grey";
 	public string deploymentUpdated		= "grey";
+	public string calendarUpdated		= "grey";
 	public string _masterCoverImage = "";
 
 	protected void Page_Load(object sender, EventArgs e)
@@ -67,7 +68,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 		if(_hideFooter)
 		{
 			fixedFooter = string.Empty;
-			footer.Visible = false;
+			//footer.Visible = false;
 		}
 
 		FbImage = String.IsNullOrEmpty(_fbImage) ? "V1/Images/MSTEAM.png" : _fbImage;
@@ -204,6 +205,16 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                 litMyNonProfits.Text = myOrganizationList;
             }
 
+			//Has the user entered dates to deploy?
+			var userAvailableDate = from uad in dc.UserAvailableDates
+									where uad.UserId == userId
+									select uad;
+
+			if(userAvailableDate.Count() > 0)
+			{
+				calendarUpdated = "yellowgreen";
+			}
+
 			//Has the user selected a cause?
 			var userOrganizationEvents = from uoe in dc.UserOrganizationEvents
 										 join oe in dc.OrganizationEvents on uoe.OrganizationEventId equals oe.OrganizationEventId
@@ -214,7 +225,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
 			var causes = from oe in dc.OrganizationEvents
 							where oe.IsActive == true
-							orderby oe.CampaignName
+							orderby oe.CreatedOn descending
 							select oe;
 
 			foreach (var cause in causes)
@@ -448,7 +459,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 				resourcesUpdated = "yellowgreen";
 			}
 
-			if (communityUpdated == "yellowgreen" && skillsUpdated == "yellowgreen" && resourcesUpdated == "yellowgreen" && teamUpdated == "yellowgreen" && deploymentUpdated == "yellowgreen")
+			if (calendarUpdated == "yellowgreen" && communityUpdated == "yellowgreen" && skillsUpdated == "yellowgreen" && resourcesUpdated == "yellowgreen" && teamUpdated == "yellowgreen" && deploymentUpdated == "yellowgreen")
 			{
 				_showUserActionModal = "";
 			}

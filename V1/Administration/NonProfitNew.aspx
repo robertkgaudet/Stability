@@ -10,12 +10,6 @@
 				rules: {
 					<%=txtParentOrganization.UniqueID%>: {
 					required: true
-				},
-					<%=txtDescription.UniqueID%>: {
-						required: true
-					},
-					<%=txtPurposeMission.UniqueID%>: {
-						required: true
 					},
 					<%=txtWebsite.UniqueID%>: {
 						url: true
@@ -23,8 +17,8 @@
 					<%=txtblogURL.UniqueID%>: {
 						url: true
                     },
-					    <%=txtTikTok.UniqueID%>: {
-                        url: true
+					<%=txtTikTok.UniqueID%>: {
+						url: true
                     }, 
 					<%=txtDonationLink.UniqueID%>: {
 						url: true
@@ -39,12 +33,10 @@
 						url: true
 					},
 					<%=txtPrimaryPhonenumber.UniqueID%>: {
-						required: true,
 						number: true,
 						maxlength: 12
 					},
 					<%=txtYearFounded.UniqueID%>: {
-						required: true,
 						number: true,
 						maxlength: 4
 					},
@@ -56,34 +48,26 @@
 						number: true,
 						maxlength: 12
 					},
-					<%=txtPOCFullname.UniqueID%>: {
-						required: true
-					},
 					<%=txtPOCPhoneNumber.UniqueID%>: {
-						required: true,
 						number: true,
 						maxlength: 12
 					},
 					<%=txtPOCEmailAddress.UniqueID%>: {
-						required: true,
 						email: true
 					},
 					<%=txtPublicEmailAddress.UniqueID%>: {
 						email: true
 					},
 					<%=txtZipCode.UniqueID%>: {
-						required: true,
 						number: true,
 						maxlength: 5
 					},
 					max: {
-						required: true,
 						maxlength: 4
 					},
 					email:
 					{
-							required: true,
-							minlength: 5
+						minlength: 5
 					}
 				},
 				submitHandler: function (form) {
@@ -103,12 +87,12 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
 
-     <div class="text-center m-b-md" id="wizardControl">
-        <a class="btn btn-purple activeTab">Step 1 - Create Team</a>
-        <a class="btn btn-default">Step 2 - Invite Members</a>
-        <a class="btn btn-default">Step 3 - Add Deployment</a>
-        <a class="btn btn-default">Step 3 - Launch Website</a>
-    </div>
+		 <div class="text-center m-b-md" id="wizardControl">
+			<a class="btn btn-purple activeTab">Step 1 - Create Team</a>
+			<a class="btn btn-default">Step 2 - Invite Members</a>
+			<a class="btn btn-default">Step 3 - Add Deployment</a>
+			<a class="btn btn-default">Step 3 - Launch Website</a>
+		</div>
 
 
 		<div class="row">
@@ -336,9 +320,6 @@
 									</div>
 								</div>
 							</div>
-						</div>
-
-						<div class="panel-footer">
 						</div>
 					</div>
 

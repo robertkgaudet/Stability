@@ -19,7 +19,7 @@
                 <div class="hpanel ">
                     <div class="panel-heading hbuilt">
                         <div class="font-normal">
-							<h1 class="m-b-none">Support</h1>
+							<h1 class="m-b-none"><i class="fa fa-info-circle"></i> Support</h1>
 							<small class="text-muted">Request Support.</small>
                         </div>
                     </div>

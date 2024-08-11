@@ -17,6 +17,8 @@ public partial class V1_Profile_Profile : BaseOrganizationWebForm
 	public string profileNumber = String.Empty;
 	protected void Page_Load(object sender, EventArgs e)
 	{
+		//Only show this to the team administrator.
+		btnAddToWebsite.Visible = false;
 		LoadPage();
 	}
 

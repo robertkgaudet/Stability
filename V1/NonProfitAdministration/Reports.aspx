@@ -19,7 +19,7 @@
                 <div class="hpanel ">
                     <div class="panel-heading hbuilt">
                         <div class="font-normal">
-							<h4 class="m-b-none">Reports</h4>
+							<h1 class="m-b-none"><i class="fa fa-file-text text-warning"></i> Reports</h1>
 							<small class="text-muted">Download or print reports.</small>
                         </div>
                     </div>

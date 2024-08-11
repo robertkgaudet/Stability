@@ -29,7 +29,12 @@
             $('.managePhotosButton').click(function () {
                 window.location.href = '/V1/NonProfitAdministration/ManagePhotos.aspx?organizationId=<%=organizationId%>';
                 return false;
-            }); 
+			});
+
+			$('.squareLogoUploadButton').click(function () {
+				window.location.href = '/V1/NonProfit/SquareLogoUpload.aspx?organizationId=<%=organizationId%>';
+				return false;
+			});
 
             $('.logoUploadButton').click(function () {
                 window.location.href = '/V1/NonProfit/LogoUpload.aspx?organizationId=<%=organizationId%>';
@@ -40,6 +45,10 @@
                 window.location.href = '<%=volunteerLink%>';
                 return false;
 			});
+			$('.editButton').click(function () {
+				window.location.href = '<%=editLink%>';
+				return false;
+			}); 
 		});	
 </script>
 	<style>
@@ -76,7 +85,7 @@
 							<asp:Button ID="btnActiveVolunteer" runat="server" CssClass="btn btn-light" Visible="false" />
 						</div>
                         <div class="font-normal">
-							<h1 class="m-b-none"><asp:Literal ID="litTeamName" runat="server"></asp:Literal></h1>
+							<h1 class="m-b-none"><i class="fa fa-th-large"></i> <asp:Literal ID="litTeamName" runat="server"></asp:Literal></h1>
 							<small class="text-muted">Team Details</small>
                         </div>
                     </div>
@@ -98,7 +107,7 @@
 						</p>
 						
 						<div class="row">
-							<div class="col-lg-3">
+							<div class="col-lg-6">
 								<div class="hpanel hgreen">
 									<div class="panel-heading hbuilt">
 										Details
@@ -141,7 +150,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-lg-3">
+							<div class="col-lg-6">
 								<div class="hpanel hgreen">
 									<div class="panel-heading hbuilt">
 										Social Media
@@ -252,8 +261,9 @@
 						<div class="form-group">
 							<div class="pull-left">
 								<asp:Button id="btnInviteTeamMembers" runat="server" Visible="false" CssClass="btn btn-success inviteButton" Text="Invite Team Members" />
-								<asp:Button id="btnEditMyGroup" runat="server" Visible="false" CssClass="btn btn-primary editButton" Text="Edit	Team" />
+								<asp:Button id="btnEditMyGroup" runat="server" Visible="false" CssClass="btn btn-warning editButton" Text="Update Team Information" />
 								<asp:Button id="btnUploadLogo" runat="server" Visible="false" CssClass="btn btn-primary logoUploadButton" Text="Upload Logo" />
+								<asp:Button id="btnUploadSquare" runat="server" Visible="false" CssClass="btn btn-primary squareLogoUploadButton" Text="Upload A Square Logo" />
 								<asp:Button id="btnUploadCoverImage" runat="server" Visible="false" CssClass="btn btn-primary coverUploadButton" Text="Upload Cover Image" />
 								<asp:Button id="btnManagePhotos" runat="server" Visible="false" CssClass="btn btn-primary managePhotosButton" Text="Manage Photos" />
 								<asp:Button id="btnDeactivatePage" OnClick="btnChangePageStatus_Click" runat="server" CssClass="btn btn-primary" Text="De-activate This Team" />

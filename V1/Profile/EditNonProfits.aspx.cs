@@ -23,8 +23,9 @@ public partial class V1_Profile_EditNonProfits : BaseOrganizationWebForm
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 			var organizations = from c in dc.Organizations
-							orderby c.Name
-							select new {name = c.Name, c.OrganizationId };
+								where c.IsActive == true
+								orderby c.Name
+								select new {name = c.Name, c.OrganizationId };
 
 			rblOrganizations.DataSource = organizations;
 			rblOrganizations.DataBind();

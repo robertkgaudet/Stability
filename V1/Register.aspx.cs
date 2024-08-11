@@ -27,7 +27,7 @@ public partial class V1_Register : System.Web.UI.Page
 
 		if(!IsPostBack)
 		{
-			LoadDisasters();
+			//LoadDisasters();
 			LoadNonProfits(organizationId, eventId);
 			string memberType = Request.QueryString["type"];
 
@@ -88,7 +88,7 @@ public partial class V1_Register : System.Web.UI.Page
 		string state = ddlState.Value;
 		string zipCode = txtZipCode.Text;
 		string eventName = string.Empty;
-		string eventId = hidEventId.Value;
+		//string eventId = hidEventId.Value;
 		string organizationId = hidOrganizationId.Value;
 
 		MembershipUser newUser = Membership.CreateUser(username, password, email, passwordQuestion, passwordAnswer, true, out status);
@@ -103,22 +103,22 @@ public partial class V1_Register : System.Web.UI.Page
 		{
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 			//Send to the add a team page.
-			urlRedirect = "/V1/Administration/NonProfitNew.aspx?userActionModal=false";
-			if (!String.IsNullOrEmpty(eventId))
-			{
-				UserEvent userEvent = new UserEvent();
-				userEvent.EventId = new Guid(eventId);
-				userEvent.UserEventId = Guid.NewGuid();
-				userEvent.UserId = new Guid(newUser.ProviderUserKey.ToString());
-				dc.UserEvents.InsertOnSubmit(userEvent);
-				dc.SubmitChanges();
+			urlRedirect = "/V1/Administration/TeamName.aspx?userActionModal=false";
+			//if (!String.IsNullOrEmpty(eventId))
+			//{
+			//	UserEvent userEvent = new UserEvent();
+			//	userEvent.EventId = new Guid(eventId);
+			//	userEvent.UserEventId = Guid.NewGuid();
+			//	userEvent.UserId = new Guid(newUser.ProviderUserKey.ToString());
+			//	dc.UserEvents.InsertOnSubmit(userEvent);
+			//	dc.SubmitChanges();
 
-				var eventNameValue = (from u in dc.Events
-								where u.EventId == new Guid(eventId)
-								select new { u.URLFriendlyName }).SingleOrDefault();
+			//	var eventNameValue = (from u in dc.Events
+			//					where u.EventId == new Guid(eventId)
+			//					select new { u.URLFriendlyName }).SingleOrDefault();
 
-				eventName = eventNameValue.URLFriendlyName;
-			}
+			//	eventName = eventNameValue.URLFriendlyName;
+			//}
 
 			if (!String.IsNullOrEmpty(organizationId))
 			{
@@ -132,11 +132,9 @@ public partial class V1_Register : System.Web.UI.Page
 				urlRedirect = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
 			}
 
-			Roles.AddUserToRole(username, "Helper");
-			Roles.AddUserToRole(username, "Volunteer");
 
 			//Send to their team page or send them to a page to find or create a team.
-			
+
 			//if (rdMemberTypeCaseManager.Checked)
 			//{
 			//	Roles.AddUserToRole(username, "CaseManager");
@@ -173,6 +171,8 @@ public partial class V1_Register : System.Web.UI.Page
 			//	urlRedirect = eventName = String.IsNullOrEmpty(eventName) ? "/V1/DisasterList.aspx?userType=business" : "/" + eventName + "/Business";
 			//}
 
+			Roles.AddUserToRole(username, "Helper");
+			Roles.AddUserToRole(username, "Volunteer");
 			Roles.AddUserToRole(username, "Member");
 
 			//Create a profile for this user.
@@ -227,7 +227,7 @@ public partial class V1_Register : System.Web.UI.Page
 
 			nonProfitDropDown = nonProfitDropDown + "<li id=\"" + nonProfit.o.OrganizationId + "\"><a href=\"#\">" + nonProfit.o.Name + "</a></li>" + Environment.NewLine;
 
-			preselectedDisasterJQuery = "$(\"#btn-NonProfitDropdown.nonProfit\").html('" + nonProfit.o.Name + "');";
+			preselectedNonProfitJQuery = "$(\"#btn-NonProfitDropdown.nonProfit\").html('" + nonProfit.o.Name + "');";
 			hidOrganizationId.Value = organizationId;
 		}
 		else
@@ -271,34 +271,34 @@ public partial class V1_Register : System.Web.UI.Page
 		}
 	}
 
-	public void LoadDisasters()
-	{
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-		var disasters = from d in dc.Events
-						orderby d.BeginDate descending
-						where d.IsActive == true
-						select new {d };
+	//public void LoadDisasters()
+	//{
+	//	CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+	//	var disasters = from d in dc.Events
+	//					orderby d.BeginDate descending
+	//					where d.IsActive == true
+	//					select new {d };
 
-		int idNumber = 0;
-		foreach(var disaster in disasters)
-		{
-			string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
-			disasterDropDown = disasterDropDown + "<li id=\"" + disaster.d.EventId + "\"><a href=\"#\">" + disaster.d.Name + " - " + disasterDate +  " Community Portal</a></li>" + Environment.NewLine;
-			idNumber = idNumber + 1;
-		}
-		if(!String.IsNullOrEmpty(eventId))
-		{
-			//Hide the Dropdown and show the selected disaster
-			var disaster = (from d in dc.Events
-							where d.EventId == new Guid(eventId)
-							orderby d.BeginDate descending
-							select new {d}).SingleOrDefault();
+	//	int idNumber = 0;
+	//	foreach(var disaster in disasters)
+	//	{
+	//		string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
+	//		disasterDropDown = disasterDropDown + "<li id=\"" + disaster.d.EventId + "\"><a href=\"#\">" + disaster.d.Name + " - " + disasterDate +  " Community Portal</a></li>" + Environment.NewLine;
+	//		idNumber = idNumber + 1;
+	//	}
+	//	if(!String.IsNullOrEmpty(eventId))
+	//	{
+	//		//Hide the Dropdown and show the selected disaster
+	//		var disaster = (from d in dc.Events
+	//						where d.EventId == new Guid(eventId)
+	//						orderby d.BeginDate descending
+	//						select new {d}).SingleOrDefault();
 			
-			string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
-			preselectedDisasterJQuery = "$(\"#btn-dropdown.disasterEvent\").html('" + disaster.d.Name + " - " + disasterDate + "');";
-			hidEventId.Value = eventId;
-		}
-	}
+	//		string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
+	//		preselectedDisasterJQuery = "$(\"#btn-dropdown.disasterEvent\").html('" + disaster.d.Name + " - " + disasterDate + "');";
+	//		hidEventId.Value = eventId;
+	//	}
+	//}
 	public string GetErrorMessage(MembershipCreateStatus status)
 	{
 		switch (status)

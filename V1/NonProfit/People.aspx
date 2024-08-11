@@ -145,12 +145,12 @@
 					<!--PAGE HEADER-->
                 <div class="hpanel ">
                     <div class="panel-heading hbuilt">
-						<div class="pull-right">
-							<asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="font-normal btn btn-sm btn-info"></asp:HyperLink>
-						</div>
                         <div class="font-normal">
-							<h1 class="m-b-none">People</h1>
+							<h1 class="m-b-none"><i class="fa fa-vcard"></i> People</h1>
 							<small class="text-muted">Team members.</small>
+							<div class="pull-right">
+								<asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="font-normal btn btn-sm btn-info"></asp:HyperLink>
+							</div>
                         </div>
                     </div>
 					<!--PAGE CONTENT-->
@@ -175,11 +175,6 @@
 												<td style="background-color:white;">
 													<div class="hpanel">
 														<div class="panel-body">
-															<div class="pull-right">
-																<asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
-															</div>
-															<asp:Literal id="litSkills" runat="server"></asp:Literal>
-															<asp:Literal id="litResources" runat="server"></asp:Literal>
 															<h5 class="m-b-xs">
 																<asp:HyperLink ID="hypName" runat="server"></asp:HyperLink>
 															</h5>
@@ -187,6 +182,11 @@
 																<asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
 																<asp:Literal ID="litDescription" runat="server"></asp:Literal>
 															</p>
+															<div class="pull-right">
+																<asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+															</div>
+															<asp:Literal id="litSkills" runat="server"></asp:Literal>
+															<asp:Literal id="litResources" runat="server"></asp:Literal>
 														</div>
 														<div class="panel-footer" id="divFooter" runat="server" visible="false">
 															<div class="text-muted small">

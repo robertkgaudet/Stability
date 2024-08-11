@@ -86,11 +86,11 @@ public class GetStreamPost : IHttpHandler, IReadOnlySessionState
 												post.Post +  Environment.NewLine +
 												"</span>" +  Environment.NewLine + progressBars +
 											"</div>" + Environment.NewLine +
-											"<div class=\"panel-footer\">"  + Environment.NewLine +
-											"<span>" + volunteersNeeded + " - </span>" + Environment.NewLine +
-											"<a href=\"Profile/Volunteer.aspx?eventid=" + post.EventId + "\" class=\"StreamLink\">Volunteer</a>" + Environment.NewLine +
-											"</div>" + Environment.NewLine + 
 										"</div>" +  Environment.NewLine +
+										"<div class=\"panel-footer\">"  + Environment.NewLine +
+										"<span>" + volunteersNeeded + " - </span>" + Environment.NewLine +
+										"<a href=\"Profile/Volunteer.aspx?eventid=" + post.EventId + "\" class=\"StreamLink\">Volunteer</a>" + Environment.NewLine +
+										"</div>" + Environment.NewLine + 
 									"</div>" + Environment.NewLine;
 			}
 		}

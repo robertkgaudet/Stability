@@ -26,6 +26,8 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 
 	protected void Page_Load(object sender, EventArgs e)
 	{
+		Response.Redirect("/SignIn");
+
 		organizationId = Request.QueryString["organizationId"]; 
 		string inviteSent = Request.QueryString["invite"];
 

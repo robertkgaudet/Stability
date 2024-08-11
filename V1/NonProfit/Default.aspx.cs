@@ -17,6 +17,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 	public string impactoidLink = string.Empty;
 	public string activityPageLink = string.Empty;
 	public string nonProfitDropDown = string.Empty;
+	public string editLink = string.Empty;
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		organizationId = Request.QueryString["organizationId"];
@@ -46,6 +47,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 		ucTeamNavigation.TeamName = organization.Name;
 
 		string logo = string.Empty;
+		string squareLogo = string.Empty;
 		if (!String.IsNullOrEmpty(organization.Logo))
 		{
 			logo = "/Impactoid/Images/Logos/" + organization.Logo;
@@ -55,6 +57,10 @@ public partial class V1_NonProfit_Default : BaseWebForm
 			//Use placeholder image.imgLogo.Visible = true;
 			logo = "/V1/Images/Logo-Placeholder.png";
 		}
+		if (!String.IsNullOrEmpty(organization.LogoSquare))
+		{
+			squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+		}
 
 		ucTeamNavigation.TeamName = organization.Name;
 		ucTeamHeader.Logo = logo;
@@ -62,6 +68,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
 		ucTeamHeader.PageName = "Home";
 		ucTeamHeader.TeamDescription = organization.Description;
 		ucTeamHeader.TeamName = organization.Name;
+		ucTeamHeader.TeamSquareLogo = squareLogo;
+		
 
 		litTeamName.Text = organization.Name;
 		lblOrgName.Text = organization.Name;
@@ -69,8 +77,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
 		litDescription.Text = organization.Description;
 		litYearFounded.Text = organization.YearFounded;
 		hypAddress.Text = organization.Address + "<br/>" + organization.City + ", " + organization.State + " " + organization.Zip;
-		hypAddress.NavigateUrl = "http://maps.google.com/maps?q=" + organization.Address.Replace(" ", "+") + "," + organization.City.Replace(" ", "+") + "," + organization.State.Replace(" ", "+") + "," + organization.Zip;
-		lblVoadMember.Text = organization.IsVoadMember.ToString();
+//		hypAddress.NavigateUrl = "http://maps.google.com/maps?q=" + organization.Address.Replace(" ", "+") + "," + organization.City.Replace(" ", "+") + "," + organization.State.Replace(" ", "+") + "," + organization.Zip;
+//		lblVoadMember.Text = organization.IsVoadMember.ToString();
 		lbl501c3.Text = organization._501c3Status.ToString();
 
 		bool isOwner = false;
@@ -129,9 +137,11 @@ public partial class V1_NonProfit_Default : BaseWebForm
 			dtEIN.Visible = true;
 			ddEIN.Visible = true;
 			btnUploadLogo.Visible = true;
+			btnUploadSquare.Visible = true;
 			btnUploadCoverImage.Visible = true;
 			btnManagePhotos.Visible = true;
 			btnEditMyGroup.Visible = true;
+			editLink = "/V1/Administration/NonProfitNew.aspx?userActionModal=false&organizationId=" + organizationId;
 		}
 
 		lblPointOfContactPerson.Text = organization.PointOfContactName;

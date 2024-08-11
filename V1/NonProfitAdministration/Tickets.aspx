@@ -19,7 +19,7 @@
                 <div class="hpanel ">
                     <div class="panel-heading hbuilt">
                         <div class="font-normal">
-							<h4 class="m-b-none">Tickets</h4>
+							<h4 class="m-b-none"><i class="fa fa-clipboard text-danger"></i> Tickets</h4>
 							<small class="text-muted">Tickets that you have accepted.</small>
                         </div>
                     </div>

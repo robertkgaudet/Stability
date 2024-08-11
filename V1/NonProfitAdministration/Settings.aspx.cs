@@ -15,7 +15,7 @@ public partial class V1_NonProfitAdministration_Settings : BaseWebForm
 
 		var organization = (from o in dc.Organizations
 							where o.OrganizationId == new Guid(organizationId)
-							select new { o.Name, o.HideTeamList, o.Description, o.Logo, o.CoverImage, o.RespondToTickets }).SingleOrDefault();
+							select new { o.Name, o.LogoSquare, o.HideTeamList, o.Description, o.Logo, o.CoverImage, o.RespondToTickets }).SingleOrDefault();
 
 		Master.PageTitle = organization.Name + " Settings on Stability";
 		Master.PageDescription = organization.Description;
@@ -29,6 +29,7 @@ public partial class V1_NonProfitAdministration_Settings : BaseWebForm
 		ucTeamNavigation.TeamName = organization.Name;
 
 		string logo = string.Empty;
+		string squareLogo = string.Empty;
 		if (!String.IsNullOrEmpty(organization.Logo))
 		{
 			logo = "/Impactoid/Images/Logos/" + organization.Logo;
@@ -38,6 +39,10 @@ public partial class V1_NonProfitAdministration_Settings : BaseWebForm
 			//Use placeholder image.imgLogo.Visible = true;
 			logo = "/V1/Images/Logo-Placeholder.png";
 		}
+		if (!String.IsNullOrEmpty(organization.LogoSquare))
+		{
+			squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+		}
 
 		ucTeamNavigation.TeamName = organization.Name;
 		ucTeamHeader.Logo = logo;
@@ -45,8 +50,9 @@ public partial class V1_NonProfitAdministration_Settings : BaseWebForm
 		ucTeamHeader.PageName = "Settings";
 		ucTeamHeader.TeamDescription = organization.Description;
 		ucTeamHeader.TeamName = organization.Name;
+		ucTeamHeader.TeamSquareLogo = squareLogo;
 
-		if(!IsPostBack)
+		if (!IsPostBack)
 		{
 			bool respondToTickets = organization.RespondToTickets != null ? (bool)organization.RespondToTickets : false;
 			bool hideTeamList = organization.HideTeamList != null ? (bool)organization.HideTeamList : false;

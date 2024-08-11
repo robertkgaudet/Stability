@@ -80,22 +80,28 @@
 					{
 						background-color:#E8D3FE;
 					}
+					.text-website
+					{
+						color:white;
+					}
 			</style>
 
 				<div id="divDeployment" runat="server" class="alert alert-success text-center deployment m-b-xs" visible="false">
-					<h5><i class="fa fa-street-view pe-2x pull-left"></i><b>Want To Help?</b><br />Click Here To Create A New Deployment</h5>
+					<h5><i class="fa fa-street-view pe-2x pull-left"></i><b>Create A New Deployment</b></h5>
 				</div>
                 <div class="hpanel">
                     <div class="panel-body">
+						<asp:HyperLink runat="server" ID="hypGetHelp" CssClass="btn btn-danger btn-block"><i class='fa fa-check'></i> Get Help From This Team</asp:HyperLink>
 						<button class="btn panelNav btn-block" type="button" data-bs-toggle="collapseTeam" data-bs-target="#collapseTeamNavigation" aria-expanded="false" aria-controls="collapseTeamNavigation">
 							<span class="caret"></span> Team Navigation
 						</button>
 						<div class="collapseTeam mt-2" id="collapseTeamNavigation">
-							<asp:HyperLink runat="server" ID="hypJoinTeam" CssClass="btn btn-success btn-block"><i class='fa fa-check'></i> Request To Join This Team</asp:HyperLink>
-							<asp:HyperLink runat="server" ID="hypGetHelp" CssClass="btn btn-danger btn-block"><i class='fa fa-check'></i> Get Help From This Team</asp:HyperLink>
 							<ul class="mailbox-list">
 								<li <%=_teamPageActive%>>
 									<asp:HyperLink runat="server" ID="hypTeamName"><i class="fa fa-th-large"></i> <asp:Literal ID="litTeamName" runat="server"></asp:Literal></asp:HyperLink>
+								</li>
+								<li <%=_teamCalendarActive%>>
+									<asp:HyperLink runat="server" ID="hypTeamCalendar"><i class="fa fa-calendar"></i> Team Calendar</asp:HyperLink>
 								</li>
 								<li <%=_activityPageActive%>>
 									<asp:HyperLink runat="server" ID="hypActivity"><i class="fa fa-rocket"></i> Impact Dashboard</asp:HyperLink>
@@ -113,10 +119,7 @@
 									<asp:HyperLink runat="server" ID="hypSkillsets"><i class="fa fa-hand-pointer-o"></i> Skillsets</asp:HyperLink>
 								</li>
 								<li <%=_resourcesPageActive%>>
-									<asp:HyperLink runat="server" ID="hypResources"><i class="fa fa-fire-extinguisher"></i> Resources</asp:HyperLink>
-								</li>
-								<li <%=_websitePageActive%>>
-									<asp:HyperLink runat="server" ID="hypWebsite" Target="_blank"><i class="fa fa-globe text-website"></i> Website</asp:HyperLink>
+									<asp:HyperLink runat="server" ID="hypResources"><i class="fa fa-truck"></i> Resources</asp:HyperLink>
 								</li>
 							</ul>
 							<hr runat="server" id="hrAdmin" visible="false"></hr>
@@ -137,6 +140,7 @@
 									<asp:HyperLink runat="server" ID="hypSupport"><i class="fa fa-info-circle"></i> Support</asp:HyperLink>
 								</li>
 							</ul>
+							<asp:HyperLink runat="server" ID="hypJoinTeam" CssClass="btn btn-success btn-block"><i class='fa fa-check'></i> Request To Join This Team</asp:HyperLink>
 						</div>
                     </div>
                 </div>

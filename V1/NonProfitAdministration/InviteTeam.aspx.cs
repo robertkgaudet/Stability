@@ -86,9 +86,9 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 										where p.UserId == userId
 									   select new { organizationName = o.Name, p.Firstname, senderName = p.Firstname + " " + p.Lastname}).Take(1).SingleOrDefault();
 
-				string senderName = organizationInfo.senderName;
-				string organizationName = organizationInfo.organizationName;
-				string firstName = organizationInfo.Firstname;
+				string senderName				= organizationInfo.senderName;
+				string organizationName			= organizationInfo.organizationName;
+				string firstName				= organizationInfo.Firstname;
 
 				ListDictionary ldEmailBodyReplacements = new ListDictionary();
 				ldEmailBodyReplacements.Add("<% SenderName %>", senderName);

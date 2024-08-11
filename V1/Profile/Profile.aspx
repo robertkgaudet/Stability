@@ -54,6 +54,12 @@
 							Choose the community portals you're working.
 						</dd>
 						<dt>
+							<asp:HyperLink runat="server" id="HyperLink1" Text="Available Dates" NavigateURL="AvailableDates.aspx"></asp:HyperLink>
+						</dt>
+						<dd>
+							What dates are you available to deploy and help?
+						</dd>
+						<dt>
 							<asp:HyperLink runat="server" id="hypCauses" Text="Choose A Deployment" NavigateURL="EditNonProfitCauses.aspx"></asp:HyperLink>
 						</dt>
 						<dd>

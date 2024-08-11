@@ -1,0 +1,185 @@
+﻿<%@ page title="" language="C#" masterpagefile="~/V1/MasterPages/Homer.master" autoeventwireup="true" inherits="V1_ProfileEdit, App_Web_oetfxeqz" %>
+<%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+    <link rel="stylesheet" href="/Homer/vendor/sweetalert/lib/sweet-alert.css" />
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="normalheader animate-panel" data-child="hpanel" data-effect="fadeInDown">
+					<div class="hpanel">
+						<div class="panel-body">
+							<h2 class="font-light m-b-xs">
+								Edit Your Profile
+							</h2>
+							
+
+							<div class="form-group">
+								<div class="pull-right">
+									<asp:LinkButton id="btnSubmit" CausesValidation="false" runat="server" OnClick="btnSubmit_Cancel" CssClass="btn btn-default" Text="Cancel" />
+									<asp:Button id="btnCancel" runat="server" OnClick="btnSubmit_Click" CssClass="btn btn-primary" Text="Save Changes" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="content animate-panel" data-child="hpanel" data-effect="fadeInDown">
+			<div class="row">
+				<div class="col-lg-6 container">
+					<div class="hpanel form-horizontal">
+
+						<div class="panel-heading hbuilt">
+							Personal Information
+						</div>
+						<div class="panel-body">
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">First Name</label>
+								<div class="col-sm-9"><input type="text" required runat="server" id="txtFirstname" class="form-control" placeholder="First Name"></div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Last Name</label>
+								<div class="col-sm-9"><input type="text" required runat="server" id="txtLastname" class="form-control" placeholder="Last Name"></div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Address</label>
+								<div class="col-sm-9"><input type="text" required runat="server" id="txtAddress" class="form-control" placeholder="Address"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">City</label>
+								<div class="col-sm-9"><input type="text" required runat="server" id="txtCity" class="form-control" placeholder="City"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">State</label>
+								<div class="col-sm-9">
+									<asp:DropDownList ID="ddlState" runat="server" DataTextField="Text" DataValueField="Value" CssClass="form-control" required=""></asp:DropDownList>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Zip</label>
+								<div class="col-sm-9"><input type="text" required runat="server" id="txtZipCode" class="form-control" placeholder="Zip Code"></div>
+							</div>
+						</div>
+									
+						<div class="panel-footer">
+						</div>
+					</div>
+					
+					<div class="hpanel form-horizontal">
+						<div class="panel-heading hbuilt">
+							Contact Information
+						</div>
+						<div class="panel-body">
+							
+							
+							<div runat="server" id="divMessage" visible="false">
+								<i class="fa fa-bolt"></i>
+								<asp:Literal runat="server" id="lblMessage"></asp:Literal>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Phone Number</label>
+								<div class="col-sm-9"><input type="text" maxlength="10" required runat="server" id="txtPhonenumber" class="form-control" placeholder="Phone Number" name="number"></div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Zello Handle</label>
+								<div class="col-sm-9"><input type="text" runat="server" id="txtZello" class="form-control" placeholder="Zello Handle"></div>
+							</div>
+
+
+
+						</div>
+									
+						<div class="panel-footer">
+						</div>
+					</div>
+
+				</div>
+				<div class="col-lg-6 container">
+					<div class="hpanel form-horizontal">
+						<div class="panel-heading hbuilt">
+							Volunteer Information
+						</div>
+						<div class="panel-body">
+							
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Volunteer Title</label>
+								<div class="col-sm-9"><input type="text" runat="server" id="txtTitle" class="form-control" placeholder="Your title.">
+									<span class="help-block m-b-none">Your title can be assigned by your supervisor.</span>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Dates Available</label>
+								<div class="col-sm-9"><input type="text" runat="server" id="txtDatesAvailable" class="form-control" placeholder="Specific dates you would like to volunteer.">
+									<span class="help-block m-b-none">Specific dates you would like to volunteer.</span>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Number of Days Available</label>
+								<div class="col-sm-9"><input type="text" runat="server" id="txtNumberOfDays" class="form-control" placeholder="Enter the number of days you can volunteer.">
+									<span class="help-block m-b-none">Enter the number of days you can volunteer.</span>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Volunteer Description</label>
+								<div class="col-sm-9"><textarea runat="server" id="txtVolunteerDescription" rows="10" class="form-control" placeholder="Describe your background, special skills and generally how you think you can help."></textarea>
+									<span class="help-block m-b-none">Describe your background, special skills and generally how you think you can help.</span>
+
+								</div>
+							</div>
+
+
+
+
+						</div>
+									
+						<div class="panel-footer">
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
+
+		<script>
+			$(document).ready(function () {
+				$(function () {
+
+					$("#form").validate({
+						rules: {
+							password: {
+								required: true,
+								minlength: 3
+							},
+							url: {
+								required: true,
+								url: true
+							},
+							number: {
+								required: true,
+								number: true
+							},
+							max: {
+								required: true,
+								maxlength: 4
+							}
+						},
+						submitHandler: function (form) {
+							form.submit();
+						}
+					});
+				});
+			});
+		</script>
+</asp:Content>

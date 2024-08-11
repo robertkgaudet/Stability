@@ -70,6 +70,24 @@
 			});
 
 			$(document).ready(function () {
+
+				$('.homeLink').click(function () {
+					window.location.href = '/feed';
+					return false;
+				})
+				$('.teamLink').click(function () {
+					window.location.href = '/V1/NonProfit/Default.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32';
+					return false;
+				})
+				$('.portalLink').click(function () {
+					window.location.href = '/V1/ChooseEvent.aspx';
+					return false;
+				})
+				$('.profileLink').click(function () {
+					window.location.href = '/V1/Profile/Profile.aspx';
+					return false;
+				})
+
 				<%=_showUserActionModal%>
 				
                 $("#causeTypeList.dropdown-menu li").click(function () {
@@ -333,6 +351,28 @@
 				margin-top:0px;
 				margin-bottom:-200px;
 				background-color:#ccc;
+			}
+
+			.mobileFooter {
+			  position: fixed;
+			  bottom: -20px;
+			  width: 100%;
+			  background-color: #f1f1f1;
+			  padding: 10px;
+			  padding-bottom:50px;
+			  text-align: center;
+			  /* Additional styling for the footer */
+			}
+
+			@media only screen and (min-width: 768px) {
+			  .mobileFooter {
+				display: none;
+			  }
+			}
+
+			.text-light-grey
+			{
+				color:gray !important;
 			}
 		</style>
 		<asp:ContentPlaceHolder id="head" runat="server">
@@ -678,11 +718,28 @@
 		
 						</asp:ContentPlaceHolder>
 					<!-- Footer-->
-					<footer class="footer" id="footer" runat="server">
+<%--					<footer class="footer" id="footer" runat="server">
 						<span class="pull-right">
 							Copyright Stability 2024
 						</span>	
-					</footer>
+					</footer>--%>
+					<div class="mobileFooter">
+						<div class="row">
+							<div class="col-xs-3">
+								<a class="fa fa-home pe-2x text-light-grey homeLink" href="/feed"></a>
+							</div>
+							<div class="col-xs-3">
+								<a class="fa fa-users pe-2x text-light-grey teamLink" href="/V1/NonProfit/Default.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32"></a>
+							</div>
+							
+							<div class="col-xs-3">
+								<a class="fa fa-map-o pe-2x text-light-grey portalLink" href="/Disaster/TropicalStormDebby"></a> 
+							</div>
+							<div class="col-xs-3">
+								<a class="fa fa-id-badge pe-2x text-light-grey profileLink" href="/V1/Profile/Profile.aspx"></a> 
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="modal fade" id="activeStatusModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -838,6 +895,7 @@
 								<strong>Follow These Steps (Takes About 2 Minutes)</strong>
 								By completing this informtion you're contributing to the overall knowledge of the community in ways that can help everyone collaborate even more effectively.
 								<ul class="fa-ul" id="userActionList">
+									<li data-url="/V1/Profile/AvailableDates.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=calendarUpdated%>;"></i> <u>Update My Available Deployment Dates</u></li>
 									<li data-url="/V1/Profile/EditNonProfits.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=teamUpdated%>;"></i> <u>Choose or Create Your Team</u></li>
 									<li data-url="/V1/Profile/EditSkills.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=skillsUpdated%>;"></i> <u>Update Your Skills</u></li>
 									<li data-url="/V1/Profile/EditResources.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=resourcesUpdated%>;"></i> <u>Update Your Resources</u></li>

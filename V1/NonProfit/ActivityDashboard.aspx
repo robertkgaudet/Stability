@@ -19,7 +19,7 @@
                 <div class="hpanel ">
                     <div class="panel-heading hbuilt">
                         <div class="font-normal">
-							<h1 class="m-b-none">Impact Dashboard</h1>
+							<h1 class="m-b-none"><i class="fa fa-rocket"></i> Impact Dashboard</h1>
 							<small class="text-muted">Deployments and impact from this team.</small>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
 									<div class="hpanel">
 										<div class="panel-body">
 											<div class="stats-title pull-left">
-												<h4>Deployments</h4>
+												<h4>Active Deployments</h4>
 											</div>
 											<div class="stats-icon pull-right">
 												<i class="fa fa-street-view fa-4x text-success"></i>
@@ -110,7 +110,7 @@
 												<table class="table table-striped">
 													<thead>
 														<tr>
-															<th>Deployments</th>
+															<th>All Deployments</th>
 															<th>Begin</th>
 															<th>End</th>
 															<th>Days</th>
@@ -135,7 +135,32 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-xs-12 col-sm-6">
+								<div class="col-xs-12 col-sm-12 col-md-6">
+									<div class="hpanel stats">
+										<div class="panel-body h-200 list">
+											<div class="stats-title pull-left">
+												<h4>Future Scheduling</h4>
+											</div>
+											<div class="stats-icon pull-right">
+												<i class="fa fa-calendar-check-o text-success fa-4x"></i>
+											</div>
+											<div class="m-t-xl">
+												<span class="font-bold no-margins">
+													Team Members Available Over Next 6 Weeks
+												</span>
+												<br/>
+												<div class="hpanel">
+													<div class="panel-body">
+														<div>
+															<canvas id="lineOptions" height="140"></canvas>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-12 col-md-6">
 									<div class="hpanel stats">
 										<div class="panel-body h-200 list">
 											<div class="stats-title pull-left">
@@ -157,6 +182,8 @@
 									</div>
 								</div>
 							</div>
+							<div class="row">
+							</div>
 						</div>
 					</div>
 					<!--PAGE FOOTER-->
@@ -164,12 +191,17 @@
             </div>
         </div>
     </div>
+	
+	<script src="/Homer/vendor/jquery-ui/jquery-ui.min.js"></script>
 	<script src="/Homer/vendor/jquery-flot/jquery.flot.js"></script>
 	<script src="/Homer/vendor/jquery-flot/jquery.flot.resize.js"></script>
 	<script src="/Homer/vendor/jquery-flot/jquery.flot.pie.js"></script>
 	<script src="/Homer/scripts/charts.js"></script>
-	<script type="text/javascript">
-		$(function () {
+	<script src="/Homer/vendor/chartjs/Chart.min.js"></script>
+	<script src="/Homer/vendor/sparkline/index.js"></script>
+
+	<script>
+		$(document).ready(function () {
 
 			/**
 			 * Flot charts line data and options
@@ -203,49 +235,52 @@
 			$.plot($("#flot-team-chart"), chartIncomeData, chartIncomeOptions);
 
 
-			/**
-			 * Line Chart Data and Options
-			 */
 
-			var lineChartData = [
-				{
-					label: "line",
-					data: [[1, 24], [2, 15], [3, 29], [4, 34], [5, 30], [6, 40], [7, 23], [8, 27], [9, 40]]
-				}
-			];
+			var lineData = {
+				labels: [<%=availableDates%>],
+				datasets: [
 
-			var lineChartOptions = {
-				series: {
-					lines: {
-						show: true,
-						lineWidth: 1,
-						fill: true,
-						fillColor: {
-							colors: [{ opacity: 1 }, { opacity: 1 }
-							]
-						}
+					{
+						label: "Team Member Count",
+						backgroundColor: 'rgba(98,203,49, 0.5)',
+						pointBorderWidth: 1,
+						pointBackgroundColor: "rgba(98,203,49,1)",
+						pointRadius: 3,
+						pointBorderColor: '#ffffff',
+						borderWidth: 1,
+						data: [<%=teamCounts%>]
+					},
+					{
+						label: "Deplyment Members Needed",
+						backgroundColor: 'rgba(220,220,220,0.5)',
+						pointBorderWidth: 1,
+						pointBackgroundColor: "rgba(98,203,49,1)",
+						pointRadius: 3,
+						pointBorderColor: '#ffffff',
+						borderWidth: 1,
+						data: [22, 44, 67, 43, 76, 45]
 					}
-				},
-				xaxis: {
-					tickDecimals: 0
-				},
-				colors: ["#62cb31"],
-				grid: {
-					tickColor: "#e4e5e7",
-					borderWidth: 1,
-					borderColor: '#e4e5e7',
-					color: '#6a6c6f'
-				},
-				legend: {
-					show: false
-				},
-				tooltip: true,
-				tooltipOpts: {
-					content: "x: %x, y: %y"
-				}
+					//,
+					//{
+					//	label: "Dt 2",
+					//	backgroundColor: 'rgba(220,220,220,0.5)',
+					//	borderColor: "rgba(220,220,220,0.7)",
+					//	pointBorderWidth: 1,
+					//	pointBackgroundColor: "rgba(220,220,220,1)",
+					//	pointRadius: 3,
+					//	pointBorderColor: '#ffffff',
+					//	borderWidth: 1,
+					//	data: [22, 44, 67, 43, 76, 45, 12]
+					//}
+				]
 			};
 
-			$.plot($("#flot-line-chart"), lineChartData, lineChartOptions);
+			var lineOptions = {
+				responsive: true
+			};
+
+			var ctx = document.getElementById("lineOptions").getContext("2d");
+			new Chart(ctx, { type: 'line', data: lineData, options: lineOptions });
 		});
 	</script>
 </asp:Content>

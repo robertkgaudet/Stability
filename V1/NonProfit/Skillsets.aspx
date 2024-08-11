@@ -19,12 +19,12 @@
                 <div class="hpanel ">
                     <div class="panel-heading hbuilt">
                         <div class="font-normal">
-							<h1 class="m-b-none">Skillsets</h1>
+							<h1 class="m-b-none"><i class="fa fa-hand-pointer-o"></i> Skillsets</h1>
 							<small class="text-muted">This teams skills.</small>
                         </div>
                     </div>
 					<!--PAGE CONTENT-->
-					<div class="panel-body">
+					<div class="m-t-md">
 						<asp:Literal ID="litSkillsets" runat="server"></asp:Literal>
 					</div>
 					<!--PAGE FOOTER-->

@@ -10,6 +10,8 @@ using System.Web.UI.WebControls;
 public partial class V1_NonProfit_ActivityDashboard : System.Web.UI.Page
 {
 	public string organizationId = string.Empty;
+	public string availableDates = string.Empty;
+	public string teamCounts = string.Empty;
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		ucTeamNavigation.PageName = "activityPage";
@@ -34,6 +36,7 @@ public partial class V1_NonProfit_ActivityDashboard : System.Web.UI.Page
 
 
 		string logo = string.Empty;
+		string squareLogo = string.Empty;
 		if (!String.IsNullOrEmpty(organization.Logo))
 		{
 			logo = "/Impactoid/Images/Logos/" + organization.Logo;
@@ -43,12 +46,17 @@ public partial class V1_NonProfit_ActivityDashboard : System.Web.UI.Page
 			//Use placeholder image.imgLogo.Visible = true;
 			logo = "/V1/Images/Logo-Placeholder.png";
 		}
+		if (!String.IsNullOrEmpty(organization.LogoSquare))
+		{
+			squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+		}
 
 		ucTeamHeader.Logo = logo;
 		ucTeamHeader.OrganizationId = organizationId;
 		ucTeamHeader.PageName = "Activity Dashboard";
 		ucTeamHeader.TeamDescription = organization.Description;
 		ucTeamHeader.TeamName = organization.Name;
+		ucTeamHeader.TeamSquareLogo = squareLogo;
 
 
 		var organizationEvents = from oe in dc.OrganizationEvents
@@ -94,14 +102,55 @@ public partial class V1_NonProfit_ActivityDashboard : System.Web.UI.Page
 		var campaigns = from oe in dc.OrganizationEvents
 						join ev in dc.Events on oe.EventId equals ev.EventId
 						where oe.OrganizationId == new Guid(organizationId)
-						&& oe.IsActive == true
-						orderby ev.BeginDate descending
+						orderby ev.CreatedOn descending
 						select new { oe.OrganizationEventId, oe.URLFriendlyCampaignName, campaignName = oe.CampaignName, oe.EndDate, oe.BeginDate };
 
 		rptActiveCampaigns.DataSource = campaigns;
 		rptActiveCampaigns.DataBind();
 
 		litStatesCounties.Text = CrowdRelief.Tools.GetImpactedStateCountyStringByTeam(new Guid(organizationId));
+
+		LoadTeamCountGraph(organizationId);
+	}
+
+	public void LoadTeamCountGraph(string organizationId)
+	{
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		DateTime currentDate = DateTime.Now;
+		var startOfCurrentWeek = currentDate.AddDays(-(int)currentDate.DayOfWeek);
+		var eightWeeksLater = startOfCurrentWeek.AddDays(7 * 5);
+
+		var query = from ur in dc.UserAvailableDates
+					join uo in dc.UserOrganizations on ur.UserId equals uo.UserId
+					where ur.DateAvailable >= startOfCurrentWeek && ur.DateAvailable <= eightWeeksLater
+					&& uo.OrganizationId == new Guid(organizationId)
+					group ur by new
+					{
+						WeekStart = ur.DateAvailable.AddDays(-(int)ur.DateAvailable.DayOfWeek)
+					} into g
+					select new
+					{
+						WeekStart = g.Key.WeekStart,
+						UserCount = g.Select(ur => ur.UserId).Distinct().Count()
+					};
+
+		var result = query.ToList();
+
+		List<string> weekStarts = new List<string>();
+		List<int> userCounts = new List<int>();
+
+		foreach (var item in result)
+		{
+			weekStarts.Add(String.Format("\"{0}\"",
+				item.WeekStart.ToString("MMMM dd")));
+			userCounts.Add(item.UserCount);
+		}
+
+		string weekStartsString = String.Join(", ", weekStarts);
+		string userCountsString = String.Join(", ", userCounts);
+
+		availableDates = weekStartsString;
+		teamCounts = userCountsString;
 	}
 
 	protected void rptActiveCampaigns_ItemDataBound(Object Sender, RepeaterItemEventArgs e)

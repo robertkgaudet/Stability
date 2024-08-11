@@ -20,12 +20,12 @@
                 <div class="hpanel ">
                     <div class="panel-heading hbuilt">
                         <div class="font-normal">
-							<h1 class="m-b-none">Deployments</h1>
+							<h1 class="m-b-none"><i class="fa fa-street-view"></i> Deployments</h1>
 							<small class="text-muted">Active deployments.</small>
                         </div>
                     </div>
 					<!--PAGE CONTENT-->
-					<div class="panel-body">
+					<div class="m-t-md">
 						<asp:HyperLink ID="hypCreateCause" runat="server" Visible="false" Text="Create A New Deployment" CssClass="font-normal btn btn-sm btn-info"></asp:HyperLink>
 						<uc1:DeploymentListCard runat="server" ID="ucDeploymentListCard" />
 						<div runat="server" id="divNoCause" visible="false">

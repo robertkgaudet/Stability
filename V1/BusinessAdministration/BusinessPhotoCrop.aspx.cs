@@ -86,7 +86,7 @@ public partial class V1_BusinessAdministration_BusinessPhotoCrop : BaseOrganizat
 		}
 		catch (Exception Ex)
 		{
-			throw (Ex);
+			throw Ex;
 		}
 	}
 }

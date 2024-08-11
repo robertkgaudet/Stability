@@ -315,7 +315,9 @@
                                                                             <asp:Literal id="litTeamDescription" runat="server"></asp:Literal>
                                                                         </p>
                                                                         <asp:HyperLink id="hypViewTeam" runat="server"></asp:HyperLink> | 
-                                                                        <asp:HyperLink id="hypViewActivities" runat="server"></asp:HyperLink>
+                                                                        <asp:HyperLink id="hypViewActivities" runat="server"></asp:HyperLink> | 
+                                                                        <asp:HyperLink id="hypTeamWebsite" Target="_blank" runat="server"></asp:HyperLink> | 
+                                                                        <asp:HyperLink id="hypTeamCalendar" runat="server"></asp:HyperLink>
                                                                     </div>
                                                                 </div>
                                                             </ItemTemplate>
