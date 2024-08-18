@@ -33,6 +33,7 @@
                         <div class="font-normal">
 							<h1 class="m-b-none"><i class="fa fa-superpowers"></i> Programs</h1>
 							<small class="text-muted">This team offers the following programs.</small>
+						<asp:HyperLink CssClass="pull-right" id="hypEditPrograms" runat="server" Text="Add a Program" Visible="false"></asp:HyperLink>
                         </div>
                     </div>
 					<!--PAGE CONTENT-->
@@ -93,7 +94,6 @@
 									</FooterTemplate>
 								</asp:Repeater>
 							</div>
-							<asp:HyperLink id="hypEditPrograms" runat="server" Text="Add a Program" Visible="false"></asp:HyperLink>
 						</div>
 					</div>
 					<!--PAGE FOOTER-->

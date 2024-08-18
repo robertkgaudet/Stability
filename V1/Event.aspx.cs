@@ -394,9 +394,7 @@ public partial class V1_Event : BaseOrganizationWebForm
 		var deployments = from org in dc.Organizations
 							join oe in dc.OrganizationEvents on org.OrganizationId equals oe.OrganizationId
 							join s in dc.USStates on oe.StagingStateId equals s.StatesId
-							where oe.EventId == eventId 
-							&& org.IsActive == true 
-							&& oe.IsActive == true
+							where oe.EventId == eventId && org.IsActive == true && oe.IsActive == true
 							orderby oe.IsActive descending, org.Name ascending
 							select new { org.IsVoadMember, org.Logo, oe.VolunteerHourlyRate, org.URLFriendlyName, oe.IsActive, oe.OrganizationEventId, org.OrganizationId, oe.HelpURL, oe.VolunteerURL, org.DonationURL, oe.CampaignName, oe.VolunteerInstructions, oe.MissionPurpose, oe.URLFriendlyCampaignName, oe.StagingCity, StagingState = s.Name, org.Name, org.Description };
 

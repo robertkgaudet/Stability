@@ -44,7 +44,7 @@ public partial class V1_Profile_Skills : BaseOrganizationWebForm
 
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
-		Response.Redirect("/V1/Profile/Profile.aspx");
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 
 	protected void btnSubmit_Click(object sender, EventArgs e)
@@ -92,6 +92,6 @@ public partial class V1_Profile_Skills : BaseOrganizationWebForm
 				}
 			}
 		}
-		Response.Redirect("/V1/Profile/Profile.aspx");
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 }

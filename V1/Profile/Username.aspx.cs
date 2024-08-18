@@ -18,13 +18,14 @@ public partial class V1_Profile_Username : BaseOrganizationWebForm
 
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
-		Response.Redirect("Profile.aspx");
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 
 	protected void btnSubmit_Click(object sender, EventArgs e)
 	{
 		lblMessage.Text = ChangeUsername(User.Identity.Name, txtUsername.Value);
 		divMessage.Visible = true;
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 
 	public string ChangeUsername(string oldUsername, string newUsername)

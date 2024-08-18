@@ -84,7 +84,7 @@
 					return false;
 				})
 				$('.profileLink').click(function () {
-					window.location.href = '/V1/Profile/Profile.aspx';
+					window.location.href = '/V1/Member/Default.aspx';
 					return false;
 				})
 
@@ -253,7 +253,12 @@
             }
 			.bodyBGColor
 			{
-				background-color:#F1F3F6;
+				background-color:#f8f7f6;
+			}
+			.content
+			{
+				background-color:#f8f7f6 !important;
+				color:#6A6C6F;
 			}
 			#header
 			{
@@ -296,11 +301,6 @@
 			{
 				cursor:pointer;
 			}
-			.content
-			{
-				background-color:#F1F3F6 !important;
-				color:#6A6C6F;
-			}
 			.liUserAction:hover
 			{
 				cursor:pointer;
@@ -310,6 +310,11 @@
 			.ul_legend li
 			{
 				display: inline-block;
+			}
+			#wrapper
+			{
+				/*padding:0px !important;
+				margin:0px !important;*/
 			}
 		</style>
         <style>
@@ -392,31 +397,9 @@
 							</button>
 							<div class="collapse mobile-navbar" id="mobile-collapse">
 								<ul class="nav navbar-nav no-borders">
-									<li>
-										<a class="" href="/V1/SignOut.aspx">Sign Out</a>
-									</li>
-<%--									<li class="dropdown">
-										<a class="dropdown-toggle label-menu-corner" href="#" data-toggle="dropdown">
-											Mail
-										</a>
-										<ul class="dropdown-menu hdropdown animated flipInX">
-											<div class="title">
-												You have 0 new messages
-											</div>
-											<li>
-												<a>
-													Welcome to Stability.
-												</a>
-											</li>
-											<li>
-												<a>
-													Create or find your team to get started!
-												</a>
-											</li>
-											<li class="summary"><a href="#">See All Messages</a></li>
-										</ul>
-									</li>--%>
-									<li class="dropdown">
+											<li><asp:HyperLink ID="HyperLink3" runat="server" Text="My Profile" NavigateUrl="~/V1/Member/Default.aspx"></asp:HyperLink></li>
+											<li><asp:HyperLink ID="HyperLink6" runat="server" Text="Sign Out" NavigateUrl="~/V1/SignOut.aspx"></asp:HyperLink></li>
+								<%--<li class="dropdown" style="visibility:hidden;">
 										<a class="dropdown-toggle" href="#" data-toggle="dropdown">
 											My Boards
 										</a>
@@ -437,34 +420,14 @@
 											Settings
 										</a>
 										<ul class="dropdown-menu hdropdown notification animated flipInX">
-											<li><asp:HyperLink ID="HyperLink3" runat="server" Text="My Profile" NavigateUrl="~/V1/Profile/Profile.aspx"></asp:HyperLink></li>
-											<li runat="server" id="li1" visible="false"><asp:HyperLink ID="HyperLink4" runat="server" Text="Print ID Card" NavigateUrl="~/IDCard"></asp:HyperLink></li>
-											<li><asp:HyperLink ID="HyperLink5" runat="server" Text="Record Time" NavigateUrl="~/V1/Profile/Time.aspx"></asp:HyperLink></li>
-											<li><asp:HyperLink ID="HyperLink6" runat="server" Text="Sign Out" NavigateUrl="~/V1/SignOut.aspx"></asp:HyperLink></li>
 										</ul>
-									</li>
+									</li>--%>
 								</ul>
 							</div>
 						</div>
 						<div class="navbar-right">
 							<ul class="nav navbar-nav no-borders">
-								<li class="dropdown">
-									<a class="dropdown-toggle" href="#" data-toggle="dropdown">
-										<i class="pe-7s-keypad"></i>
-									</a>
-									<ul class="dropdown-menu hdropdown notification animated flipInX">
-										<li>
-											<asp:HyperLink id="hypDefaultDisaster" runat="server"></asp:HyperLink>
-										</li>
-										<li>
-											<asp:HyperLink id="hypMyTeam" runat="server" Text="My Team" Font-Bold="true"></asp:HyperLink>
-										</li>
-										<li style="background-color:#5bbfdd; color:white; font-weight:bold;">
-											<a href="/V1/Administration/NonProfitNew.aspx"  style="font-weight:bold; color:white;"><i class='fa fa-group'></i> Create A Team</a>
-										</li>
-									</ul>
-								</li>
-								<li class="dropdown">
+								<li class="dropdown" style="visibility:hidden;">
 									<a class="dropdown-toggle label-menu-corner" href="#" data-toggle="dropdown">
 										<i class="pe-7s-mail"></i>
 										<span class="label label-success">0</span>
@@ -491,9 +454,7 @@
 										<i class="pe-7s-config"></i>
 									</a>
 									<ul class="dropdown-menu hdropdown notification animated flipInX">
-										<li><asp:HyperLink ID="hypProfile" runat="server" Text="My Profile" NavigateUrl="~/V1/Profile/Profile.aspx"></asp:HyperLink></li>
-										<li runat="server" id="liPrintIdCard" visible="false"><asp:HyperLink ID="hypPrintIDCard" runat="server" Text="Print ID Card" NavigateUrl="~/IDCard"></asp:HyperLink></li>
-										<li><asp:HyperLink ID="hypTime" runat="server" Text="Record Time" NavigateUrl="~/V1/Profile/Time.aspx"></asp:HyperLink></li>
+										<li><asp:HyperLink ID="hypProfile" runat="server" Text="My Profile" NavigateUrl="~/V1/Member/Default.aspx"></asp:HyperLink></li>
 										<li><asp:HyperLink ID="hypSignOut" runat="server" Text="Sign Out" NavigateUrl="~/V1/SignOut.aspx"></asp:HyperLink></li>
 									</ul>
 								</li>
@@ -736,7 +697,7 @@
 								<a class="fa fa-map-o pe-2x text-light-grey portalLink" href="/Disaster/TropicalStormDebby"></a> 
 							</div>
 							<div class="col-xs-3">
-								<a class="fa fa-id-badge pe-2x text-light-grey profileLink" href="/V1/Profile/Profile.aspx"></a> 
+								<a class="fa fa-id-badge pe-2x text-light-grey profileLink" href="/V1/Member/Default.aspx"></a> 
 							</div>
 						</div>
 					</div>

@@ -52,7 +52,7 @@ public partial class V1_Profile_ProfilePhotoCrop : BaseOrganizationWebForm
 			}
 			else
 			{
-				Response.Redirect("~/V1/Profile/Profile.aspx");
+				Response.Redirect("/V1/Member/Default.aspx");
 			}
 		}
 		catch (Exception ex)

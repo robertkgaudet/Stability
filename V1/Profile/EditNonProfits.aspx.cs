@@ -64,7 +64,7 @@ public partial class V1_Profile_EditNonProfits : BaseOrganizationWebForm
 
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
-		Response.Redirect("Profile.aspx");
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 
 
@@ -105,7 +105,7 @@ public partial class V1_Profile_EditNonProfits : BaseOrganizationWebForm
 		dc.UserOrganizations.InsertOnSubmit(userOrganization);
 		dc.SubmitChanges();
 
-		Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + organizationId);
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 
 	protected void btnSubmit_Click(object sender, EventArgs e)

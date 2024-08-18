@@ -59,7 +59,7 @@ public partial class V1_Profile_EditNonProfitCauses : BaseOrganizationWebForm
 
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
-		Response.Redirect("Profile.aspx");
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 
 	protected void UpdateUsersNonProfitCause(string userId, string organizationEventId, string urlFriendlyName)
@@ -91,7 +91,7 @@ public partial class V1_Profile_EditNonProfitCauses : BaseOrganizationWebForm
 		dc.UserOrganizationEvents.InsertOnSubmit(userOrganizationEvent);
 		dc.SubmitChanges();
 
-		Response.Redirect("/Disaster/" + urlFriendlyName);
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 
 	protected void btnSubmit_Click(object sender, EventArgs e)

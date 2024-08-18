@@ -97,8 +97,11 @@
 						</button>
 						<div class="collapseTeam mt-2" id="collapseTeamNavigation">
 							<ul class="mailbox-list">
+								<li <%=_streamActive%>>
+									<asp:HyperLink runat="server" ID="hypStream"><i class="fa fa-home"></i> Home</asp:HyperLink>
+								</li>
 								<li <%=_teamPageActive%>>
-									<asp:HyperLink runat="server" ID="hypTeamName"><i class="fa fa-th-large"></i> <asp:Literal ID="litTeamName" runat="server"></asp:Literal></asp:HyperLink>
+									<asp:HyperLink runat="server" ID="hypTeamName"><i class="fa fa-th-large"></i> About</asp:HyperLink>
 								</li>
 								<li <%=_teamCalendarActive%>>
 									<asp:HyperLink runat="server" ID="hypTeamCalendar"><i class="fa fa-calendar"></i> Team Calendar</asp:HyperLink>

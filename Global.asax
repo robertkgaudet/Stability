@@ -1,9 +1,10 @@
-﻿<%@ Application Language="C#" %>
+﻿<%@ Application Language="C#"%> 
 
 <script runat="server">
 
 	protected void Application_Start(object sender, EventArgs e)
 	{
+		System.Web.Http.GlobalConfiguration.Configure(Stability.WebApiConfig.Register);
 		System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 		// Other startup code...
 	}

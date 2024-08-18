@@ -21,19 +21,19 @@ public partial class V1_Profile_Volunteer : BaseOrganizationWebForm
 			string volunteerStatus = VolunteerStatus.GetVolunteerStatus(userId).Value;
 			if(volunteerStatus == VolunteerStatus.ApplicationComplete.Value)
 			{
-				Response.Redirect("~/V1/Profile/Profile.aspx");
+				Response.Redirect("/V1/Member/Default.aspx");
 			}
 			else if(volunteerStatus == VolunteerStatus.VettingComplete_Failed.Value)
 			{
-				Response.Redirect("~/V1/Profile/Profile.aspx");
+				Response.Redirect("/V1/Member/Default.aspx");
 			}
 			else if(volunteerStatus == VolunteerStatus.VettingComplete_Passed.Value)
 			{
-				Response.Redirect("~/V1/Profile/Profile.aspx");
+				Response.Redirect("/V1/Member/Default.aspx");
 			}
 			else if(volunteerStatus == VolunteerStatus.VettingStarted.Value)
 			{
-				Response.Redirect("~/V1/Profile/Profile.aspx");
+				Response.Redirect("/V1/Member/Default.aspx");
 			}
 
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -191,10 +191,6 @@ public partial class V1_Profile_Volunteer : BaseOrganizationWebForm
 				lblResults.Text = "Welcome aboard " + profile.Firstname + "! We will be in touch with you soon about your request to volunteer!";
 			}
 		}
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 }
-
-
-
-
-		

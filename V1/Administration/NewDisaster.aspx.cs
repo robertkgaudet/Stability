@@ -40,8 +40,11 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 			}
 			txtDisasterName.Value = disasterEvent.Name;
 			txtDescription.Value = disasterEvent.Description;
-			txtLatitude.Value = disasterEvent.Latitude.ToString();
-			txtLongitude.Value = disasterEvent.Longitude.ToString();
+			if(!String.IsNullOrEmpty(disasterEvent.Latitude))
+			{ 
+				txtLatitude.Value = disasterEvent.Latitude.ToString();
+				txtLongitude.Value = disasterEvent.Longitude.ToString();
+			}
 			txtMapZoomLevel.Value = disasterEvent.Zoom.ToString();
 			txtURLFriendlyName.Value = disasterEvent.URLFriendlyName;
 			chkActive.Checked = disasterEvent.IsActive;

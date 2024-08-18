@@ -125,10 +125,10 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 					hasDefaultDisaster = true;
 					communityUpdated = "yellowgreen";
 					//Put the default disaster at the top.
-					hypMDefaultDisaster.Text = "<b>" + disasterEvent.Name + "</b>";
-					hypMDefaultDisaster.NavigateUrl = "/Disaster/" + disasterEvent.URLFriendlyName;
-					hypDefaultDisaster.Text = "<b>" + disasterEvent.Name + "</b>";
-					hypDefaultDisaster.NavigateUrl = "/Disaster/" + disasterEvent.URLFriendlyName;
+					//hypMDefaultDisaster.Text = "<b>" + disasterEvent.Name + "</b>";
+					//hypMDefaultDisaster.NavigateUrl = "/Disaster/" + disasterEvent.URLFriendlyName;
+					//hypDefaultDisaster.Text = "<b>" + disasterEvent.Name + "</b>";
+					//hypDefaultDisaster.NavigateUrl = "/Disaster/" + disasterEvent.URLFriendlyName;
 					litDefaultDisaster.Text = "<li><strong><a href='/Disaster/" + disasterEvent.URLFriendlyName + "'>" + disasterEvent.Name + "</a> (Default Portal)</strong></li>";
 				}
             }
@@ -146,9 +146,9 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 				//Person is owner of a non-profit.
 				litNonProfitName.Visible = true;
                 hypNonProfit.Text = orgUser.Take(1).SingleOrDefault().Name;
-                hypNonProfit.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
-				hypMyTeam.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
-				hypMMyTeam.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
+                hypNonProfit.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
+				//hypMyTeam.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
+				//hypMMyTeam.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
 				liDeployment.Attributes.Add("data-url", "/V1/NonProfitAdministration/RespondToEvent.aspx?userActionModal=false&organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId);
 
 				hypInviteTeamMembers.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
@@ -302,10 +302,10 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 				litMyDisasters.Text = myDisasterList;
 				if(!hasDefaultDisaster)
 				{
-					hypMDefaultDisaster.Text = "<b>" + disasters.Take(1).SingleOrDefault().Name + "</b>";
-					hypMDefaultDisaster.NavigateUrl = "/Disaster/" + disasters.Take(1).SingleOrDefault().URLFriendlyName;
-					hypDefaultDisaster.Text = "<b>" + disasters.Take(1).SingleOrDefault().Name + "</b>";
-					hypDefaultDisaster.NavigateUrl = "/Disaster/" + disasters.Take(1).SingleOrDefault().URLFriendlyName;
+					//hypMDefaultDisaster.Text = "<b>" + disasters.Take(1).SingleOrDefault().Name + "</b>";
+					//hypMDefaultDisaster.NavigateUrl = "/Disaster/" + disasters.Take(1).SingleOrDefault().URLFriendlyName;
+					//hypDefaultDisaster.Text = "<b>" + disasters.Take(1).SingleOrDefault().Name + "</b>";
+					//hypDefaultDisaster.NavigateUrl = "/Disaster/" + disasters.Take(1).SingleOrDefault().URLFriendlyName;
 					litDefaultDisaster.Text = "<li><strong><a href='/Disaster/" + disasters.Take(1).SingleOrDefault().URLFriendlyName + "'>" + disasters.Take(1).SingleOrDefault().Name + "</a> (Default Portal)</strong></li>";
 				}
 			}
@@ -337,17 +337,17 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			}
 			else if(HttpContext.Current.User.IsInRole("helper"))
 			{
-				profileURL = "'/V1/Profile/Profile.aspx'";
+				profileURL = "'/V1/Member/Default.aspx'";
 				//roleType = "Helper";
 			}
 			else if(HttpContext.Current.User.IsInRole("volunteer"))
 			{
-				profileURL = "'/V1/Profile/Profile.aspx'";
+				profileURL = "'/V1/Member/Default.aspx'";
 				//roleType = "Survivor";
 			}
 			else
 			{
-				profileURL = "'/V1/Profile/Profile.aspx'";
+				profileURL = "'/V1/Member/Default.aspx'";
 				//roleType = "Member";
 			}
 
@@ -366,13 +366,13 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			{
 				//Change the Volunteer button to say volunteer pending.
 				litVolunteerPending.Text = " Volunteer Pending";
-				hypVolunteer.NavigateUrl = "~/V1/Profile/Profile.aspx";
+				hypVolunteer.NavigateUrl = "~/V1/Member/Default.aspx";
 				litVolunteerIcon.Text = "<i class=\"fa fa-exclamation-circle\"></i>";
 			}
 			else if(volunteerStatus == VolunteerStatus.VettingComplete_Failed.Value)
 			{
 				litVolunteerPending.Text = " Volunteer Pending";
-				hypVolunteer.NavigateUrl = "~/V1/Profile/Profile.aspx";
+				hypVolunteer.NavigateUrl = "~/V1/Member/Default.aspx";
 				litVolunteerIcon.Text = "<i class=\"fa fa-exclamation-circle\"></i>";
 			}
 			else if(volunteerStatus == VolunteerStatus.VettingComplete_Passed.Value)
@@ -380,12 +380,11 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 				litVolunteerPending.Text = " Find Volunteer Opportunities";
 				hypVolunteer.NavigateUrl = "~/V1/Stream.aspx";
 				litVolunteerIcon.Text = "<i class=\"fa fa-heart\"></i>";
-				liPrintIdCard.Visible = true;
 			}
 			else if(volunteerStatus == VolunteerStatus.VettingStarted.Value)
 			{
 				litVolunteerPending.Text = " Volunteer Under Review";
-				hypVolunteer.NavigateUrl = "~/V1/Profile/Profile.aspx";
+				hypVolunteer.NavigateUrl = "~/V1/Member/Default.aspx";
 				litVolunteerIcon.Text = "<i class=\"fa fa-exclamation-circle\"></i>";
 			}
 			else

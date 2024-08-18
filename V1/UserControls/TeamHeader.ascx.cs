@@ -23,7 +23,7 @@ public partial class V1_UserControls_TeamHeader : System.Web.UI.UserControl
 		litTeamDescription.Text = _teamDescription;
 		litTeamName.Text = _teamName;
 		hypBreadcrumbTeamName.Text = _teamName;
-		hypBreadcrumbTeamName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + _organizationId;
+		hypBreadcrumbTeamName.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + _organizationId;
 		imgTeamLogo.ImageUrl = _teamSquareLogo;
 
 		LoadNonProfits();

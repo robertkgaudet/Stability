@@ -51,6 +51,6 @@ public partial class V1_Profile_EditEmail : System.Web.UI.Page
 	}
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
-		Response.Redirect("Profile.aspx");
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 }

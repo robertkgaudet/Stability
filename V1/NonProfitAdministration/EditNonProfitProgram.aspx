@@ -124,8 +124,6 @@
 								<div class="col-sm-1"><input type="text" runat="server" required maxlength="2" id="txtProgramOrder" onkeypress="return isNumberKey(event)" class="form-control" placeholder="0-20"></div>
 							</div>
 						</div>
-						<div class="panel-footer">
-						</div>
 					</div>
 				</div>
 
