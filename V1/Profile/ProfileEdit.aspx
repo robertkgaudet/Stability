@@ -15,11 +15,14 @@
 								Edit Your Profile
 							</h2>
 							
-
-							<div class="form-group">
-								<div class="pull-right">
-									<asp:LinkButton id="btnSubmit" CausesValidation="false" runat="server" OnClick="btnSubmit_Cancel" CssClass="btn btn-default" Text="Cancel" />
-									<asp:Button id="btnCancel" runat="server" OnClick="btnSubmit_Click" CssClass="btn btn-primary" Text="Save Changes" />
+							<div class="hpanel hgreen" id="divEditProfile" runat="server">
+								<div class="panel-heading hbuilt">
+									Update My Personal Information
+								</div>
+								<div class="panel-body">
+									<asp:HyperLink runat="server" id="HyperLink4" Text="Change Password" NavigateURL="EditPassword.aspx"></asp:HyperLink> | 
+									<asp:HyperLink runat="server" id="HyperLink3" Text="Change Email" NavigateURL="EditEmail.aspx"></asp:HyperLink> | 
+									<asp:HyperLink runat="server" id="HyperLink5" Text="Change Username" NavigateURL="Username.aspx"></asp:HyperLink>
 								</div>
 							</div>
 						</div>
@@ -66,9 +69,6 @@
 								<div class="col-sm-9"><input type="text" required runat="server" id="txtZipCode" class="form-control" placeholder="Zip Code"></div>
 							</div>
 						</div>
-									
-						<div class="panel-footer">
-						</div>
 					</div>
 					
 					<div class="hpanel form-horizontal">
@@ -95,9 +95,6 @@
 
 
 
-						</div>
-									
-						<div class="panel-footer">
 						</div>
 					</div>
 
@@ -142,10 +139,14 @@
 
 
 						</div>
-									
-						<div class="panel-footer">
-						</div>
 					</div>
+
+			<div class="form-group">
+				<div class="pull-right">
+					<asp:LinkButton id="btnSubmit" CausesValidation="false" runat="server" OnClick="btnSubmit_Cancel" CssClass="btn btn-default" Text="Cancel" />
+					<asp:Button id="btnCancel" runat="server" OnClick="btnSubmit_Click" CssClass="btn btn-primary" Text="Save Changes" />
+				</div>
+			</div>
 
 				</div>
 			</div>

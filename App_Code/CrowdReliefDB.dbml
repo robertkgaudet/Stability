@@ -68,8 +68,6 @@
       <Association Name="aspnet_User_EventPost" Member="EventPosts" ThisKey="UserId" OtherKey="UserId" Type="EventPost" />
       <Association Name="aspnet_User_ArticleComment" Member="ArticleComments" ThisKey="UserId" OtherKey="UserId" Type="ArticleComment" />
       <Association Name="aspnet_User_ArticlePhoto" Member="ArticlePhotos" ThisKey="UserId" OtherKey="CreatedBy" Type="ArticlePhoto" />
-      <Association Name="aspnet_User_UserUser" Member="UserUsers" ThisKey="UserId" OtherKey="RequestingUserId" Type="UserUser" />
-      <Association Name="aspnet_User_UserUser1" Member="UserUsers1" ThisKey="UserId" OtherKey="AcceptingUserId" Type="UserUser" />
       <Association Name="aspnet_User_UserHousing" Member="UserHousings" ThisKey="UserId" OtherKey="UserId" Type="UserHousing" />
       <Association Name="aspnet_User_UserHousing1" Member="UserHousings1" ThisKey="UserId" OtherKey="CreatedBy" Type="UserHousing" />
       <Association Name="aspnet_User_UserQualifier" Member="UserQualifiers" ThisKey="UserId" OtherKey="UserId" Type="UserQualifier" />
@@ -105,6 +103,7 @@
       <Association Name="aspnet_User_Organization1" Member="Organizations1" ThisKey="UserId" OtherKey="OwnerId" Type="Organization" />
       <Association Name="aspnet_User_Post" Member="Posts" ThisKey="UserId" OtherKey="CreatedBy" Type="Post" />
       <Association Name="aspnet_User_PostImage" Member="PostImages" ThisKey="UserId" OtherKey="CreatedBy" Type="PostImage" />
+      <Association Name="aspnet_User_UserUser" Member="UserUsers" ThisKey="UserId" OtherKey="AcceptingUserId" Type="UserUser" />
       <Association Name="StreamDonation_aspnet_User" Member="StreamDonation" Storage="_Donation" ThisKey="UserId" OtherKey="UserId" Type="StreamDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User" Member="UserDonation" ThisKey="UserId" OtherKey="DonorId" Type="UserDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User1" Member="UserDonation1" ThisKey="UserId" OtherKey="RecipientId" Type="UserDonation" IsForeignKey="true" />
@@ -424,21 +423,6 @@
       <Column Name="UserUserRelationshipId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="RelationshipType" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
       <Association Name="UserUserRelationship_UserUser" Member="UserUsers" ThisKey="UserUserRelationshipId" OtherKey="UserUserRelationshipId" Type="UserUser" />
-    </Type>
-  </Table>
-  <Table Name="dbo.UserUser" Member="UserUsers">
-    <Type Name="UserUser">
-      <Column Name="UserUserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="UserUserRelationshipId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="RequestingUserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="AcceptingUserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="RequestedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="AcceptedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="RemovedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Association Name="aspnet_User_UserUser" Member="aspnet_User" ThisKey="RequestingUserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
-      <Association Name="aspnet_User_UserUser1" Member="aspnet_User1" ThisKey="AcceptingUserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
-      <Association Name="UserUserRelationship_UserUser" Member="UserUserRelationship" ThisKey="UserUserRelationshipId" OtherKey="UserUserRelationshipId" Type="UserUserRelationship" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.UserHousing" Member="UserHousings">
@@ -1742,6 +1726,29 @@
       <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="aspnet_User_PostImage" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="Post_PostImage" Member="Post" ThisKey="PostId" OtherKey="PostId" Type="Post" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserUser" Member="UserUsers">
+    <Type Name="UserUser">
+      <Column Name="UserUserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="UserUserRelationshipId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="UserUserStatusId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="RequestingUserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="AcceptingUserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="RequestedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="AcceptedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="RemovedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="aspnet_User_UserUser" Member="aspnet_User" ThisKey="AcceptingUserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+      <Association Name="UserUserRelationship_UserUser" Member="UserUserRelationship" ThisKey="UserUserRelationshipId" OtherKey="UserUserRelationshipId" Type="UserUserRelationship" IsForeignKey="true" />
+      <Association Name="UserUserStatus_UserUser" Member="UserUserStatus" ThisKey="UserUserStatusId" OtherKey="UserUserStatusId" Type="UserUserStatus" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserUserStatus" Member="UserUserStatus">
+    <Type Name="UserUserStatus">
+      <Column Name="UserUserStatusId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Status" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="UserUserStatus_UserUser" Member="UserUsers" ThisKey="UserUserStatusId" OtherKey="UserUserStatusId" Type="UserUser" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">

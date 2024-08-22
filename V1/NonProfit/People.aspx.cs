@@ -228,7 +228,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			Literal litResources = (Literal)e.Item.FindControl("litResources");
 
 			hypName.Text = firstname + " " + lastname;
-			hypName.NavigateUrl = "/V1/Profile/Profile.aspx?userId=" + userId;
+			hypName.NavigateUrl = "/V1/Member/Default.aspx?userId=" + userId;
 
 			btnContact.Attributes.Add("data-name", firstname + " " + lastname);
 			btnContact.Attributes.Add("data-email", loweredEmail);

@@ -129,12 +129,6 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 					 join p in dc.Profiles on uo.UserId equals p.UserId
 					 where uo.OrganizationId == new Guid(organizationId)
 					 select new { uad, p }).ToList();
-		//{
-		// title = p.Firstname + " " + p.Lastname,
-		// start = uad.DateAvailable,
-		// allDay = "true",
-		// url = "/V1/Profile/AvailableDates.aspx?userId=" + p.UserId
-		//};
 
 		var eventAvail = events.Select(e => new { title = e.p.Firstname + " " + e.p.Lastname, start = e.uad.DateAvailable.ToString("yyyy-MM-ddTHH:mm:ss"), allDay = "true", url = "/V1/Profile/AvailableDates.aspx?userId=" + e.p.UserId }).ToList();
 

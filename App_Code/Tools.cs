@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.IdentityModel.Protocols.WSTrust;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -21,6 +22,210 @@ namespace CrowdRelief
 			//
 			// TODO: Add constructor logic here
 			//
+		}
+
+		public enum FriendStatus
+		{
+			AddConnection,
+			Blocked,
+			Connected,
+			Delete,
+			Pending
+		}
+
+		public class FriendInfo
+		{
+			public string FullName { get; set; }
+			public string ProfileImage { get; set; }
+			public DateTime AcceptedOn { get; set; }
+			public Guid UserId { get; set; }
+			public bool? PassedVetting { get; set; }
+			public string ProfileDescription { get; set; }
+			public string ProfileTitle { get; set; }
+			public string CityState { get; set; }
+			public string TeamName { get; set; }
+			public DateTime CreateDate { get; set; }
+		}
+
+		public static List<FriendInfo> PeopleSearch(string searchTerm, int itemCountToReturn)
+		{
+			//Guid UserId = new Guid(userId);
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+			// All DB Users
+			var profiles = from profile in dc.Profiles
+						   join a in dc.aspnet_Memberships on profile.UserId equals a.UserId
+						   where
+						   //profile.PassedVetting == null || profile.PassedVetting == true
+						   //&&
+						   a.IsLockedOut == false && a.IsApproved == true
+						   orderby a.CreateDate descending
+						   select new FriendInfo
+						   {
+							   UserId = profile.UserId,
+							   ProfileImage = (from p in dc.Photos
+											   join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
+											   where ph.UserId == profile.UserId
+											   orderby p.CreatedOn descending
+											   select p.FilenameCropped).Take(1).SingleOrDefault(),
+							   FullName = profile.Firstname + " " + profile.Lastname,
+							   PassedVetting = profile.PassedVetting == null ? false : profile.PassedVetting,
+							   ProfileDescription = profile.Description,
+							   CreateDate = a.CreateDate,
+							   ProfileTitle = profile.Title,
+							   CityState = profile.City + " " + profile.State,
+							   TeamName = (from uo in dc.UserOrganizations
+										   join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
+										   where uo.UserId == profile.UserId
+										   select o.Name).Take(1).SingleOrDefault()
+							};
+
+			if(searchTerm != null)
+			{
+				profiles = profiles.Where(item => item.FullName.Contains(searchTerm) 
+				|| item.ProfileDescription.Contains(searchTerm) 
+				||  item.ProfileTitle.Contains(searchTerm)
+				|| item.TeamName.Contains(searchTerm)
+				|| item.CityState.Contains(searchTerm));
+			}
+
+			if (itemCountToReturn > 0)
+			{
+				profiles = profiles.Take(itemCountToReturn);
+			}
+			// Bind data to DataList
+			return profiles.Distinct().OrderByDescending(sort => sort.CreateDate).ToList();
+		}
+
+		public static List<FriendInfo> MyReceivedConnections(Guid userId, int itemCountToReturn)
+		{
+			//Guid UserId = new Guid(userId);
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			var statusType = (from uus in dc.UserUserStatus
+							  where uus.Status == "Pending"
+							  select new { uus.UserUserStatusId }).SingleOrDefault();
+
+			// Requests I received, i need to accept
+			// Fetch data using LINQ to SQL
+			var friendsThatRequestedMe = from friend in dc.UserUsers
+											 where friend.AcceptingUserId == userId
+											 //&& friend.IsActive == isActive
+											 && friend.UserUserStatusId == statusType.UserUserStatusId //CONNECTED STATUS TYPE
+											 && friend.UserUserRelationshipId == new Guid("aae059ad-b986-4675-a86c-039b28e6b296") //FRIEND TYPE
+											 orderby friend.RequestedOn descending
+											 select new FriendInfo
+											 {
+												 AcceptedOn = friend.RequestedOn,
+												 UserId = friend.RequestingUserId,
+												 ProfileImage = (from p in dc.Photos
+																 join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
+																 where ph.UserId == friend.RequestingUserId
+																 orderby p.CreatedOn descending
+																 select p.FilenameCropped).Take(1).SingleOrDefault(),
+												 FullName = (from profile in dc.Profiles
+															 where profile.UserId == friend.RequestingUserId //Since I need to accept, show the name of the requestor
+															 select profile.Firstname + " " + profile.Lastname).SingleOrDefault()
+											 };
+
+			if (itemCountToReturn > 0)
+			{
+				friendsThatRequestedMe = friendsThatRequestedMe.Take(itemCountToReturn);
+			}
+			// Bind data to DataList
+			return friendsThatRequestedMe.Distinct().ToList();
+		}
+		public static List<FriendInfo> MySentConnections(Guid userId, int itemCountToReturn)
+		{
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			var statusType = (from uus in dc.UserUserStatus
+							  where uus.Status == "Pending"
+							  select new { uus.UserUserStatusId }).SingleOrDefault();
+
+			//Requests I sent, pending acceptance
+			// Fetch data using LINQ to SQL
+			var friendRequestsISent = from friend in dc.UserUsers
+									where friend.RequestingUserId == userId
+									//&& friend.IsActive == isActive
+									&& friend.UserUserStatusId == statusType.UserUserStatusId //CONNECTED STATUS TYPE
+									&& friend.UserUserRelationshipId == new Guid("aae059ad-b986-4675-a86c-039b28e6b296") //FRIEND TYPE
+									orderby friend.RequestedOn descending
+									select new FriendInfo
+									{
+										AcceptedOn = friend.RequestedOn,
+										UserId = friend.AcceptingUserId,
+										ProfileImage = (from p in dc.Photos
+														join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
+														where ph.UserId == friend.AcceptingUserId
+														orderby p.CreatedOn descending
+														select p.FilenameCropped).Take(1).SingleOrDefault(),
+										FullName = (from profile in dc.Profiles
+													where profile.UserId == friend.AcceptingUserId //Since I'm the requested, show the name of the acceptor
+													select profile.Firstname + " " + profile.Lastname).SingleOrDefault()
+									};
+
+			if(itemCountToReturn > 0)
+			{
+				friendRequestsISent = friendRequestsISent.Take(itemCountToReturn);
+			}
+			// Bind data to DataList
+			return friendRequestsISent.Distinct().ToList();
+		}
+		public static List<FriendInfo> MyConnections(Guid userId, int itemCountToReturn)
+		{
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			var statusType = (from uus in dc.UserUserStatus
+							  where uus.Status == "Connected"
+							  select new { uus.UserUserStatusId }).SingleOrDefault();
+
+			var friendsThatRequestedMe = from friend in dc.UserUsers
+										 where friend.AcceptingUserId == userId
+										 //&& friend.IsActive == isActive
+										 && friend.UserUserStatusId == statusType.UserUserStatusId //CONNECTED STATUS TYPE
+										 && friend.UserUserRelationshipId == new Guid("aae059ad-b986-4675-a86c-039b28e6b296") //FRIEND TYPE
+										 orderby friend.AcceptedOn descending
+										 select new FriendInfo
+										 {
+											 AcceptedOn = friend.RequestedOn,
+											 UserId = friend.RequestingUserId,
+											 ProfileImage = (from p in dc.Photos
+															 join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
+															 where ph.UserId == friend.RequestingUserId
+															 orderby p.CreatedOn descending
+															 select p.FilenameCropped).Take(1).SingleOrDefault(),
+											 FullName = (from profile in dc.Profiles
+														 where profile.UserId == friend.RequestingUserId //Since I need to accept, show the name of the requestor
+														 select profile.Firstname + " " + profile.Lastname).SingleOrDefault()
+										 };
+
+			//Requests I received
+			// Fetch data using LINQ to SQL
+			var friendsIRequested = from friend in dc.UserUsers
+									where friend.RequestingUserId == userId
+									//&& friend.IsActive == isActive
+									&& friend.UserUserStatusId == statusType.UserUserStatusId //  == new Guid("DBC81BFF-6772-48BE-9781-77825CEF590D") //statusType.UserUserStatusId  //CONNECTED STATUS TYPE
+									&& friend.UserUserRelationshipId == new Guid("aae059ad-b986-4675-a86c-039b28e6b296") //FRIEND TYPE
+									orderby friend.RequestedOn descending
+									select new FriendInfo
+									{
+										AcceptedOn = friend.RequestedOn,
+										UserId = friend.AcceptingUserId,
+										ProfileImage = (from p in dc.Photos
+														join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
+														where ph.UserId == friend.AcceptingUserId
+														orderby p.CreatedOn descending
+														select p.FilenameCropped).Take(1).SingleOrDefault(),
+										FullName = (from profile in dc.Profiles
+													where profile.UserId == friend.AcceptingUserId //Since I'm the requested, show the name of the acceptor
+													select profile.Firstname + " " + profile.Lastname).SingleOrDefault()
+									};
+
+			var myConnections = friendsIRequested.Union(friendsThatRequestedMe).Distinct();
+
+			if (itemCountToReturn > 0)
+			{
+				myConnections = myConnections.Take(itemCountToReturn);
+			}
+			return myConnections.ToList();
 		}
 
 		public static string GetColor(string color)

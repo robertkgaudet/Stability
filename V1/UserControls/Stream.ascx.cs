@@ -174,7 +174,7 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 
 			lblMessageDate.Text = CrowdRelief.Tools.GetElapsedTime(createdOn);
 			hypCreatedBy.Text = fullname;
-			hypCreatedBy.NavigateUrl = "/V1/Profile/Profile.aspx?userId=" + createdBy;
+			hypCreatedBy.NavigateUrl = "/V1/Member/Default.aspx?userId=" + createdBy;
 
 			string postHtml = string.Empty;
 			bool URLShared = false;

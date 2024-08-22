@@ -91,7 +91,7 @@ public partial class V1_Profile_EditNonProfitCauses : BaseOrganizationWebForm
 		dc.UserOrganizationEvents.InsertOnSubmit(userOrganizationEvent);
 		dc.SubmitChanges();
 
-		Response.Redirect("/V1/Member/Default.aspx");
+		//Response.Redirect("/V1/Member/Default.aspx");
 	}
 
 	protected void btnSubmit_Click(object sender, EventArgs e)

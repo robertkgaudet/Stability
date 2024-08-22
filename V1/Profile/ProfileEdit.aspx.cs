@@ -25,7 +25,7 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
 
 		if(!IsPostBack)
 		{
-			MembershipUser user = Membership.GetUser( User.Identity.Name);
+			MembershipUser user = Membership.GetUser(User.Identity.Name);
 
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
@@ -81,11 +81,11 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
 		profile.Title = txtTitle.Value;
 		dc.SubmitChanges();
 		divMessage.Visible = true;
-		Response.Redirect("Profile.aspx");
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
-		Response.Redirect("Profile.aspx");
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 }

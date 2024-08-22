@@ -439,7 +439,6 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 					}
 					break;
 			}
-
 			if (userActionModal == "false" && !IsPostBack)
 			{
 				//Hide the user action modal.
@@ -447,7 +446,28 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			}
 			else
 			{
-				_showUserActionModal = "$(\"#divUserActionModal\").modal('show')";
+
+				if (Session["FirstLoad"] == null)
+				{
+					// If it doesn't exist, set it to true
+					Session["FirstLoad"] = true;
+
+					// Perform your action that should only happen on the first load
+					// Example: Prevent some specific action from taking place
+					//Show the modal
+
+					//Can hide it here.
+					_showUserActionModal = "$(\"#divUserActionModal\").modal('show')";
+				}
+				else
+				{
+					// On subsequent loads, set the session value to false
+					Session["FirstLoad"] = false;
+				}
+
+
+
+
 			}
 			if (CheckSkills(userId))
 			{
@@ -646,4 +666,10 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			_fbDescription = value;
 		}
 	}
+
+    protected void btnSearchMobile_Click(object sender, EventArgs e)
+    {
+		string searchTerm = String.IsNullOrEmpty(txtSearchMobile.Text) ? txtSearchHeader.Text : txtSearchMobile.Text;
+		Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm);
+    }
 }

@@ -112,18 +112,6 @@
 							format: 'mm/dd/yyyy',
 							defaultView: 'month',
 							editable: false,
-							//eventLimit: true, // allow "more" link when too many events
-							//todayHighlight: true,
-							//beforeShowDay: function (date) {
-							//	// Highlight weekends
-							//	var day = date.getDay();
-							//	if (day === 0 || day === 6) {
-							//		return {
-							//			classes: 'highlight'
-							//		};
-							//	}
-							//	return;
-							//},
 							events: events
 						});
 					},

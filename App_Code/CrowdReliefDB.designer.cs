@@ -122,9 +122,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertUserUserRelationship(UserUserRelationship instance);
   partial void UpdateUserUserRelationship(UserUserRelationship instance);
   partial void DeleteUserUserRelationship(UserUserRelationship instance);
-  partial void InsertUserUser(UserUser instance);
-  partial void UpdateUserUser(UserUser instance);
-  partial void DeleteUserUser(UserUser instance);
   partial void InsertUserHousing(UserHousing instance);
   partial void UpdateUserHousing(UserHousing instance);
   partial void DeleteUserHousing(UserHousing instance);
@@ -377,6 +374,12 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertPostImage(PostImage instance);
   partial void UpdatePostImage(PostImage instance);
   partial void DeletePostImage(PostImage instance);
+  partial void InsertUserUser(UserUser instance);
+  partial void UpdateUserUser(UserUser instance);
+  partial void DeleteUserUser(UserUser instance);
+  partial void InsertUserUserStatus(UserUserStatus instance);
+  partial void UpdateUserUserStatus(UserUserStatus instance);
+  partial void DeleteUserUserStatus(UserUserStatus instance);
 	#endregion
 	public CrowdReliefDBDataContext() :
 			base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
@@ -653,14 +656,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<UserUserRelationship>();
-		}
-	}
-	
-	public System.Data.Linq.Table<UserUser> UserUsers
-	{
-		get
-		{
-			return this.GetTable<UserUser>();
 		}
 	}
 	
@@ -1333,6 +1328,22 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<PostImage>();
+		}
+	}
+	
+	public System.Data.Linq.Table<UserUser> UserUsers
+	{
+		get
+		{
+			return this.GetTable<UserUser>();
+		}
+	}
+	
+	public System.Data.Linq.Table<UserUserStatus> UserUserStatus
+	{
+		get
+		{
+			return this.GetTable<UserUserStatus>();
 		}
 	}
 	
@@ -2439,10 +2450,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private EntitySet<ArticlePhoto> _ArticlePhotos;
 	
-	private EntitySet<UserUser> _UserUsers;
-	
-	private EntitySet<UserUser> _UserUsers1;
-	
 	private EntitySet<UserHousing> _UserHousings;
 	
 	private EntitySet<UserHousing> _UserHousings1;
@@ -2513,6 +2520,8 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private EntitySet<PostImage> _PostImages;
 	
+	private EntitySet<UserUser> _UserUsers;
+	
 	private EntityRef<StreamDonation> _Donation;
 	
 	private EntityRef<UserDonation> _UserDonation;
@@ -2554,8 +2563,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		this._EventPosts = new EntitySet<EventPost>(new Action<EventPost>(this.attach_EventPosts), new Action<EventPost>(this.detach_EventPosts));
 		this._ArticleComments = new EntitySet<ArticleComment>(new Action<ArticleComment>(this.attach_ArticleComments), new Action<ArticleComment>(this.detach_ArticleComments));
 		this._ArticlePhotos = new EntitySet<ArticlePhoto>(new Action<ArticlePhoto>(this.attach_ArticlePhotos), new Action<ArticlePhoto>(this.detach_ArticlePhotos));
-		this._UserUsers = new EntitySet<UserUser>(new Action<UserUser>(this.attach_UserUsers), new Action<UserUser>(this.detach_UserUsers));
-		this._UserUsers1 = new EntitySet<UserUser>(new Action<UserUser>(this.attach_UserUsers1), new Action<UserUser>(this.detach_UserUsers1));
 		this._UserHousings = new EntitySet<UserHousing>(new Action<UserHousing>(this.attach_UserHousings), new Action<UserHousing>(this.detach_UserHousings));
 		this._UserHousings1 = new EntitySet<UserHousing>(new Action<UserHousing>(this.attach_UserHousings1), new Action<UserHousing>(this.detach_UserHousings1));
 		this._UserQualifiers = new EntitySet<UserQualifier>(new Action<UserQualifier>(this.attach_UserQualifiers), new Action<UserQualifier>(this.detach_UserQualifiers));
@@ -2591,6 +2598,7 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		this._Organizations1 = new EntitySet<Organization>(new Action<Organization>(this.attach_Organizations1), new Action<Organization>(this.detach_Organizations1));
 		this._Posts = new EntitySet<Post>(new Action<Post>(this.attach_Posts), new Action<Post>(this.detach_Posts));
 		this._PostImages = new EntitySet<PostImage>(new Action<PostImage>(this.attach_PostImages), new Action<PostImage>(this.detach_PostImages));
+		this._UserUsers = new EntitySet<UserUser>(new Action<UserUser>(this.attach_UserUsers), new Action<UserUser>(this.detach_UserUsers));
 		this._Donation = default(EntityRef<StreamDonation>);
 		this._UserDonation = default(EntityRef<UserDonation>);
 		this._UserDonation1 = default(EntityRef<UserDonation>);
@@ -2924,32 +2932,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		set
 		{
 			this._ArticlePhotos.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserUser", Storage="_UserUsers", ThisKey="UserId", OtherKey="RequestingUserId")]
-	public EntitySet<UserUser> UserUsers
-	{
-		get
-		{
-			return this._UserUsers;
-		}
-		set
-		{
-			this._UserUsers.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserUser1", Storage="_UserUsers1", ThisKey="UserId", OtherKey="AcceptingUserId")]
-	public EntitySet<UserUser> UserUsers1
-	{
-		get
-		{
-			return this._UserUsers1;
-		}
-		set
-		{
-			this._UserUsers1.Assign(value);
 		}
 	}
 	
@@ -3408,6 +3390,19 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserUser", Storage="_UserUsers", ThisKey="UserId", OtherKey="AcceptingUserId")]
+	public EntitySet<UserUser> UserUsers
+	{
+		get
+		{
+			return this._UserUsers;
+		}
+		set
+		{
+			this._UserUsers.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="StreamDonation_aspnet_User", Storage="_Donation", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
 	public StreamDonation StreamDonation
 	{
@@ -3672,30 +3667,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	{
 		this.SendPropertyChanging();
 		entity.aspnet_User = null;
-	}
-	
-	private void attach_UserUsers(UserUser entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = this;
-	}
-	
-	private void detach_UserUsers(UserUser entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = null;
-	}
-	
-	private void attach_UserUsers1(UserUser entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User1 = this;
-	}
-	
-	private void detach_UserUsers1(UserUser entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User1 = null;
 	}
 	
 	private void attach_UserHousings(UserHousing entity)
@@ -4113,6 +4084,18 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	}
 	
 	private void detach_PostImages(PostImage entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_UserUsers(UserUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_UserUsers(UserUser entity)
 	{
 		this.SendPropertyChanging();
 		entity.aspnet_User = null;
@@ -10918,359 +10901,6 @@ public partial class UserUserRelationship : INotifyPropertyChanging, INotifyProp
 	{
 		this.SendPropertyChanging();
 		entity.UserUserRelationship = null;
-	}
-}
-
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.UserUser")]
-public partial class UserUser : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _UserUserId;
-	
-	private System.Guid _UserUserRelationshipId;
-	
-	private System.Guid _RequestingUserId;
-	
-	private System.Guid _AcceptingUserId;
-	
-	private bool _IsActive;
-	
-	private System.DateTime _RequestedOn;
-	
-	private System.Nullable<System.DateTime> _AcceptedOn;
-	
-	private System.Nullable<System.DateTime> _RemovedOn;
-	
-	private EntityRef<aspnet_User> _aspnet_User;
-	
-	private EntityRef<aspnet_User> _aspnet_User1;
-	
-	private EntityRef<UserUserRelationship> _UserUserRelationship;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnUserUserIdChanging(System.Guid value);
-    partial void OnUserUserIdChanged();
-    partial void OnUserUserRelationshipIdChanging(System.Guid value);
-    partial void OnUserUserRelationshipIdChanged();
-    partial void OnRequestingUserIdChanging(System.Guid value);
-    partial void OnRequestingUserIdChanged();
-    partial void OnAcceptingUserIdChanging(System.Guid value);
-    partial void OnAcceptingUserIdChanged();
-    partial void OnIsActiveChanging(bool value);
-    partial void OnIsActiveChanged();
-    partial void OnRequestedOnChanging(System.DateTime value);
-    partial void OnRequestedOnChanged();
-    partial void OnAcceptedOnChanging(System.Nullable<System.DateTime> value);
-    partial void OnAcceptedOnChanged();
-    partial void OnRemovedOnChanging(System.Nullable<System.DateTime> value);
-    partial void OnRemovedOnChanged();
-    #endregion
-	
-	public UserUser()
-	{
-		this._aspnet_User = default(EntityRef<aspnet_User>);
-		this._aspnet_User1 = default(EntityRef<aspnet_User>);
-		this._UserUserRelationship = default(EntityRef<UserUserRelationship>);
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserUserId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid UserUserId
-	{
-		get
-		{
-			return this._UserUserId;
-		}
-		set
-		{
-			if ((this._UserUserId != value))
-			{
-				this.OnUserUserIdChanging(value);
-				this.SendPropertyChanging();
-				this._UserUserId = value;
-				this.SendPropertyChanged("UserUserId");
-				this.OnUserUserIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserUserRelationshipId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid UserUserRelationshipId
-	{
-		get
-		{
-			return this._UserUserRelationshipId;
-		}
-		set
-		{
-			if ((this._UserUserRelationshipId != value))
-			{
-				if (this._UserUserRelationship.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnUserUserRelationshipIdChanging(value);
-				this.SendPropertyChanging();
-				this._UserUserRelationshipId = value;
-				this.SendPropertyChanged("UserUserRelationshipId");
-				this.OnUserUserRelationshipIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestingUserId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid RequestingUserId
-	{
-		get
-		{
-			return this._RequestingUserId;
-		}
-		set
-		{
-			if ((this._RequestingUserId != value))
-			{
-				if (this._aspnet_User.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnRequestingUserIdChanging(value);
-				this.SendPropertyChanging();
-				this._RequestingUserId = value;
-				this.SendPropertyChanged("RequestingUserId");
-				this.OnRequestingUserIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AcceptingUserId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid AcceptingUserId
-	{
-		get
-		{
-			return this._AcceptingUserId;
-		}
-		set
-		{
-			if ((this._AcceptingUserId != value))
-			{
-				if (this._aspnet_User1.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnAcceptingUserIdChanging(value);
-				this.SendPropertyChanging();
-				this._AcceptingUserId = value;
-				this.SendPropertyChanged("AcceptingUserId");
-				this.OnAcceptingUserIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
-	public bool IsActive
-	{
-		get
-		{
-			return this._IsActive;
-		}
-		set
-		{
-			if ((this._IsActive != value))
-			{
-				this.OnIsActiveChanging(value);
-				this.SendPropertyChanging();
-				this._IsActive = value;
-				this.SendPropertyChanged("IsActive");
-				this.OnIsActiveChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestedOn", DbType="DateTime NOT NULL")]
-	public System.DateTime RequestedOn
-	{
-		get
-		{
-			return this._RequestedOn;
-		}
-		set
-		{
-			if ((this._RequestedOn != value))
-			{
-				this.OnRequestedOnChanging(value);
-				this.SendPropertyChanging();
-				this._RequestedOn = value;
-				this.SendPropertyChanged("RequestedOn");
-				this.OnRequestedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AcceptedOn", DbType="DateTime")]
-	public System.Nullable<System.DateTime> AcceptedOn
-	{
-		get
-		{
-			return this._AcceptedOn;
-		}
-		set
-		{
-			if ((this._AcceptedOn != value))
-			{
-				this.OnAcceptedOnChanging(value);
-				this.SendPropertyChanging();
-				this._AcceptedOn = value;
-				this.SendPropertyChanged("AcceptedOn");
-				this.OnAcceptedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RemovedOn", DbType="DateTime")]
-	public System.Nullable<System.DateTime> RemovedOn
-	{
-		get
-		{
-			return this._RemovedOn;
-		}
-		set
-		{
-			if ((this._RemovedOn != value))
-			{
-				this.OnRemovedOnChanging(value);
-				this.SendPropertyChanging();
-				this._RemovedOn = value;
-				this.SendPropertyChanged("RemovedOn");
-				this.OnRemovedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserUser", Storage="_aspnet_User", ThisKey="RequestingUserId", OtherKey="UserId", IsForeignKey=true)]
-	public aspnet_User aspnet_User
-	{
-		get
-		{
-			return this._aspnet_User.Entity;
-		}
-		set
-		{
-			aspnet_User previousValue = this._aspnet_User.Entity;
-			if (((previousValue != value) 
-						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._aspnet_User.Entity = null;
-					previousValue.UserUsers.Remove(this);
-				}
-				this._aspnet_User.Entity = value;
-				if ((value != null))
-				{
-					value.UserUsers.Add(this);
-					this._RequestingUserId = value.UserId;
-				}
-				else
-				{
-					this._RequestingUserId = default(System.Guid);
-				}
-				this.SendPropertyChanged("aspnet_User");
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserUser1", Storage="_aspnet_User1", ThisKey="AcceptingUserId", OtherKey="UserId", IsForeignKey=true)]
-	public aspnet_User aspnet_User1
-	{
-		get
-		{
-			return this._aspnet_User1.Entity;
-		}
-		set
-		{
-			aspnet_User previousValue = this._aspnet_User1.Entity;
-			if (((previousValue != value) 
-						|| (this._aspnet_User1.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._aspnet_User1.Entity = null;
-					previousValue.UserUsers1.Remove(this);
-				}
-				this._aspnet_User1.Entity = value;
-				if ((value != null))
-				{
-					value.UserUsers1.Add(this);
-					this._AcceptingUserId = value.UserId;
-				}
-				else
-				{
-					this._AcceptingUserId = default(System.Guid);
-				}
-				this.SendPropertyChanged("aspnet_User1");
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserUserRelationship_UserUser", Storage="_UserUserRelationship", ThisKey="UserUserRelationshipId", OtherKey="UserUserRelationshipId", IsForeignKey=true)]
-	public UserUserRelationship UserUserRelationship
-	{
-		get
-		{
-			return this._UserUserRelationship.Entity;
-		}
-		set
-		{
-			UserUserRelationship previousValue = this._UserUserRelationship.Entity;
-			if (((previousValue != value) 
-						|| (this._UserUserRelationship.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._UserUserRelationship.Entity = null;
-					previousValue.UserUsers.Remove(this);
-				}
-				this._UserUserRelationship.Entity = value;
-				if ((value != null))
-				{
-					value.UserUsers.Add(this);
-					this._UserUserRelationshipId = value.UserUserRelationshipId;
-				}
-				else
-				{
-					this._UserUserRelationshipId = default(System.Guid);
-				}
-				this.SendPropertyChanged("UserUserRelationship");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
 	}
 }
 
@@ -40393,6 +40023,497 @@ public partial class PostImage : INotifyPropertyChanging, INotifyPropertyChanged
 		{
 			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.UserUser")]
+public partial class UserUser : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _UserUserId;
+	
+	private System.Guid _UserUserRelationshipId;
+	
+	private System.Nullable<System.Guid> _UserUserStatusId;
+	
+	private System.Guid _RequestingUserId;
+	
+	private System.Guid _AcceptingUserId;
+	
+	private bool _IsActive;
+	
+	private System.DateTime _RequestedOn;
+	
+	private System.Nullable<System.DateTime> _AcceptedOn;
+	
+	private System.Nullable<System.DateTime> _RemovedOn;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+	private EntityRef<UserUserRelationship> _UserUserRelationship;
+	
+	private EntityRef<UserUserStatus> _UserUserStatus;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnUserUserIdChanging(System.Guid value);
+    partial void OnUserUserIdChanged();
+    partial void OnUserUserRelationshipIdChanging(System.Guid value);
+    partial void OnUserUserRelationshipIdChanged();
+    partial void OnUserUserStatusIdChanging(System.Nullable<System.Guid> value);
+    partial void OnUserUserStatusIdChanged();
+    partial void OnRequestingUserIdChanging(System.Guid value);
+    partial void OnRequestingUserIdChanged();
+    partial void OnAcceptingUserIdChanging(System.Guid value);
+    partial void OnAcceptingUserIdChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    partial void OnRequestedOnChanging(System.DateTime value);
+    partial void OnRequestedOnChanged();
+    partial void OnAcceptedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnAcceptedOnChanged();
+    partial void OnRemovedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnRemovedOnChanged();
+    #endregion
+	
+	public UserUser()
+	{
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		this._UserUserRelationship = default(EntityRef<UserUserRelationship>);
+		this._UserUserStatus = default(EntityRef<UserUserStatus>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserUserId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid UserUserId
+	{
+		get
+		{
+			return this._UserUserId;
+		}
+		set
+		{
+			if ((this._UserUserId != value))
+			{
+				this.OnUserUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserUserId = value;
+				this.SendPropertyChanged("UserUserId");
+				this.OnUserUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserUserRelationshipId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid UserUserRelationshipId
+	{
+		get
+		{
+			return this._UserUserRelationshipId;
+		}
+		set
+		{
+			if ((this._UserUserRelationshipId != value))
+			{
+				if (this._UserUserRelationship.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserUserRelationshipIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserUserRelationshipId = value;
+				this.SendPropertyChanged("UserUserRelationshipId");
+				this.OnUserUserRelationshipIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserUserStatusId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> UserUserStatusId
+	{
+		get
+		{
+			return this._UserUserStatusId;
+		}
+		set
+		{
+			if ((this._UserUserStatusId != value))
+			{
+				if (this._UserUserStatus.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserUserStatusIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserUserStatusId = value;
+				this.SendPropertyChanged("UserUserStatusId");
+				this.OnUserUserStatusIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestingUserId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid RequestingUserId
+	{
+		get
+		{
+			return this._RequestingUserId;
+		}
+		set
+		{
+			if ((this._RequestingUserId != value))
+			{
+				this.OnRequestingUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._RequestingUserId = value;
+				this.SendPropertyChanged("RequestingUserId");
+				this.OnRequestingUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AcceptingUserId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid AcceptingUserId
+	{
+		get
+		{
+			return this._AcceptingUserId;
+		}
+		set
+		{
+			if ((this._AcceptingUserId != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnAcceptingUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._AcceptingUserId = value;
+				this.SendPropertyChanged("AcceptingUserId");
+				this.OnAcceptingUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
+	public bool IsActive
+	{
+		get
+		{
+			return this._IsActive;
+		}
+		set
+		{
+			if ((this._IsActive != value))
+			{
+				this.OnIsActiveChanging(value);
+				this.SendPropertyChanging();
+				this._IsActive = value;
+				this.SendPropertyChanged("IsActive");
+				this.OnIsActiveChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime RequestedOn
+	{
+		get
+		{
+			return this._RequestedOn;
+		}
+		set
+		{
+			if ((this._RequestedOn != value))
+			{
+				this.OnRequestedOnChanging(value);
+				this.SendPropertyChanging();
+				this._RequestedOn = value;
+				this.SendPropertyChanged("RequestedOn");
+				this.OnRequestedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AcceptedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> AcceptedOn
+	{
+		get
+		{
+			return this._AcceptedOn;
+		}
+		set
+		{
+			if ((this._AcceptedOn != value))
+			{
+				this.OnAcceptedOnChanging(value);
+				this.SendPropertyChanging();
+				this._AcceptedOn = value;
+				this.SendPropertyChanged("AcceptedOn");
+				this.OnAcceptedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RemovedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> RemovedOn
+	{
+		get
+		{
+			return this._RemovedOn;
+		}
+		set
+		{
+			if ((this._RemovedOn != value))
+			{
+				this.OnRemovedOnChanging(value);
+				this.SendPropertyChanging();
+				this._RemovedOn = value;
+				this.SendPropertyChanged("RemovedOn");
+				this.OnRemovedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserUser", Storage="_aspnet_User", ThisKey="AcceptingUserId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.UserUsers.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.UserUsers.Add(this);
+					this._AcceptingUserId = value.UserId;
+				}
+				else
+				{
+					this._AcceptingUserId = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserUserRelationship_UserUser", Storage="_UserUserRelationship", ThisKey="UserUserRelationshipId", OtherKey="UserUserRelationshipId", IsForeignKey=true)]
+	public UserUserRelationship UserUserRelationship
+	{
+		get
+		{
+			return this._UserUserRelationship.Entity;
+		}
+		set
+		{
+			UserUserRelationship previousValue = this._UserUserRelationship.Entity;
+			if (((previousValue != value) 
+						|| (this._UserUserRelationship.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._UserUserRelationship.Entity = null;
+					previousValue.UserUsers.Remove(this);
+				}
+				this._UserUserRelationship.Entity = value;
+				if ((value != null))
+				{
+					value.UserUsers.Add(this);
+					this._UserUserRelationshipId = value.UserUserRelationshipId;
+				}
+				else
+				{
+					this._UserUserRelationshipId = default(System.Guid);
+				}
+				this.SendPropertyChanged("UserUserRelationship");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserUserStatus_UserUser", Storage="_UserUserStatus", ThisKey="UserUserStatusId", OtherKey="UserUserStatusId", IsForeignKey=true)]
+	public UserUserStatus UserUserStatus
+	{
+		get
+		{
+			return this._UserUserStatus.Entity;
+		}
+		set
+		{
+			UserUserStatus previousValue = this._UserUserStatus.Entity;
+			if (((previousValue != value) 
+						|| (this._UserUserStatus.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._UserUserStatus.Entity = null;
+					previousValue.UserUsers.Remove(this);
+				}
+				this._UserUserStatus.Entity = value;
+				if ((value != null))
+				{
+					value.UserUsers.Add(this);
+					this._UserUserStatusId = value.UserUserStatusId;
+				}
+				else
+				{
+					this._UserUserStatusId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("UserUserStatus");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.UserUserStatus")]
+public partial class UserUserStatus : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _UserUserStatusId;
+	
+	private string _Status;
+	
+	private EntitySet<UserUser> _UserUsers;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnUserUserStatusIdChanging(System.Guid value);
+    partial void OnUserUserStatusIdChanged();
+    partial void OnStatusChanging(string value);
+    partial void OnStatusChanged();
+    #endregion
+	
+	public UserUserStatus()
+	{
+		this._UserUsers = new EntitySet<UserUser>(new Action<UserUser>(this.attach_UserUsers), new Action<UserUser>(this.detach_UserUsers));
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserUserStatusId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid UserUserStatusId
+	{
+		get
+		{
+			return this._UserUserStatusId;
+		}
+		set
+		{
+			if ((this._UserUserStatusId != value))
+			{
+				this.OnUserUserStatusIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserUserStatusId = value;
+				this.SendPropertyChanged("UserUserStatusId");
+				this.OnUserUserStatusIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+	public string Status
+	{
+		get
+		{
+			return this._Status;
+		}
+		set
+		{
+			if ((this._Status != value))
+			{
+				this.OnStatusChanging(value);
+				this.SendPropertyChanging();
+				this._Status = value;
+				this.SendPropertyChanged("Status");
+				this.OnStatusChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="UserUserStatus_UserUser", Storage="_UserUsers", ThisKey="UserUserStatusId", OtherKey="UserUserStatusId")]
+	public EntitySet<UserUser> UserUsers
+	{
+		get
+		{
+			return this._UserUsers;
+		}
+		set
+		{
+			this._UserUsers.Assign(value);
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_UserUsers(UserUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.UserUserStatus = this;
+	}
+	
+	private void detach_UserUsers(UserUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.UserUserStatus = null;
 	}
 }
 
