@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Server;
+using System;
 using System.Linq;
 using System.Web.ClientServices.Providers;
 using System.Web.UI.WebControls;
@@ -30,11 +31,12 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 				divCreateCause.Visible = true;
 				divSelectEvent.Visible = false;
 				var states = from s in dc.USStates
-							 join es in dc.EventStates on s.StatesId equals es.StatesId
-							 where es.EventId == guidEventId
-							 select new { es.StatesId, s.Name };
+							 //join es in dc.EventStates on s.StatesId equals es.StatesId
+						//	 where es.EventId == guidEventId
+							orderby s.Name
+							 select new { s.StatesId, s.Name };
 
-				ddlState.DataSource = states;
+				ddlState.DataSource = states.ToList();
 				ddlState.DataBind();
 				ddlState.Items.Insert(0, new ListItem("Choose a State", ""));
 
@@ -43,6 +45,19 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 								select new { ev.Name }).SingleOrDefault();
 
 				litEventName.Text = disaster.Name;
+
+				//LoadDisasters();
+			}
+
+			var profile = (from p in dc.Profiles
+						   join u in dc.aspnet_Memberships on p.UserId equals u.UserId
+						  where p.UserId == userId
+						  select new { fullName = p.Firstname + " " + p.Lastname, u.Email, p.PhoneNumber }).SingleOrDefault();
+			if(profile != null)
+			{ 
+				txtEmailAddress.Value = profile.Email;
+				txtPOCFullname.Value = profile.fullName;
+				txtPhonenumber.Value = profile.PhoneNumber;
 			}
 		}
 	}
@@ -60,7 +75,7 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 		foreach (var disaster in disasters)
 		{
 			string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
-			disasterDropDown = disasterDropDown + "<li id=\"" + disaster.d.EventId + "\"><a href=\"#\">" + disaster.d.Name + " - " + disasterDate + "</a></li>" + Environment.NewLine;
+			disasterDropDown = disasterDropDown + "<li id=\"" + disaster.d.EventId + "\"><a href=\"#\">" + disasterDate + " - " + disaster.d.Name + "</a></li>" + Environment.NewLine;
 			idNumber = idNumber + 1;
 		}
 		if (!String.IsNullOrEmpty(eventId))
@@ -82,63 +97,45 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 		organizationId = Request.QueryString["organizationId"];
 
 		string pointOfContactName = txtPOCFullname.Value;
-		string purposeMission = txtPurposeMission.Value;
 		string campaignName = txtCampaignName.Value;
-		string URLFriendlyCampaignName = txtURLFriendlyCampaignName.Value.Replace(" ", "").Replace("'", "").Replace("\"", "").Replace("(", "").Replace(")", "").Replace(".", "").Replace(",", "").Replace("!", "").Replace("-", "").Replace(":", "").Replace("+", "").Replace("&", "").Replace("*", "");
+		//string URLFriendlyCampaignName = txtURLFriendlyCampaignName.Value.Replace(" ", "").Replace("'", "").Replace("\"", "").Replace("(", "").Replace(")", "").Replace(".", "").Replace(",", "").Replace("!", "").Replace("-", "").Replace(":", "").Replace("+", "").Replace("&", "").Replace("*", "");
 		bool? isVoad = chkVoad.Checked;
-		bool acceptsVolunteers = chkAcceptsVolunteers.Checked;
-		bool isActive = chkIsActive.Checked;
-		string volunteerInstructions = txtVolunteerInstructions.Value;
+		string volunteerInstructions = Server.HtmlEncode(txtVolunteerInstructions.Text);
 		string address = txtAddress.Value;
 		string city = txtCity.Value;
 		string stateId = ddlState.SelectedValue;
 		string zip = txtZipCode.Value;
 		string POCName = txtPOCFullname.Value;
 		string phoneNumber = txtPhonenumber.Value;
-		string zelloChannel = txtZelloChannel.Value;
 		string emailAddress = txtEmailAddress.Value;
-		string donationLink = txtDonationLink.Value;
-		string volunteerLink = txtVolunteerLink.Value;
-		string helpLink = txtHelpLink.Value;
-		string website = txtWebsite.Value;
-		string blogURL = txtblogURL.Value;
-		string facebook = txtFacebook.Value;
-		string facebookGroup = txtFacebookGroup.Value;
+		//string donationLink = txtDonationLink.Value;
 		string stagingCountyId = hidCountyId.Value;
-		string volunteerHourlyValue = txtVolunteerHourValue.Value;
+		//string volunteerHourlyValue = txtVolunteerHourValue.Value;
 
 		OrganizationEvent organizationEvent = new OrganizationEvent();
-		if (!String.IsNullOrEmpty(hidDeploymentBeginDate.Value))
-		{
-			organizationEvent.BeginDate = Convert.ToDateTime(hidDeploymentBeginDate.Value);
-		}
-		if (!String.IsNullOrEmpty(hidDeploymentBeginDate.Value))
-		{
-			organizationEvent.EndDate = Convert.ToDateTime(hidDeploymentEndDate.Value);
-		}
-		organizationEvent.OrganizationEventId = Guid.NewGuid();
+		//if (!String.IsNullOrEmpty(hidDeploymentBeginDate.Value))
+		//{
+		//	organizationEvent.BeginDate = Convert.ToDateTime(hidDeploymentBeginDate.Value);
+		//}
+		//if (!String.IsNullOrEmpty(hidDeploymentBeginDate.Value))
+		//{
+		//	organizationEvent.EndDate = Convert.ToDateTime(hidDeploymentEndDate.Value);
+		//}
+		Guid organizationEventId = Guid.NewGuid();
+		organizationEvent.OrganizationEventId = organizationEventId;
 		organizationEvent.EventId = eventId;
 		organizationEvent.OrganizationId = new Guid(organizationId);
 		organizationEvent.PointOfContactName = pointOfContactName;
-		organizationEvent.AcceptsVolunteers = acceptsVolunteers;
-		organizationEvent.IsActive = isActive;
-		organizationEvent.MissionPurpose = purposeMission;
 		organizationEvent.CampaignName = campaignName;
-		organizationEvent.URLFriendlyCampaignName = URLFriendlyCampaignName;
-		organizationEvent.VolunteerHourlyRate = String.IsNullOrEmpty(volunteerHourlyValue) ? 0 : Convert.ToDecimal(volunteerHourlyValue);
+		//organizationEvent.URLFriendlyCampaignName = URLFriendlyCampaignName;
+		//organizationEvent.VolunteerHourlyRate = String.IsNullOrEmpty(volunteerHourlyValue) ? 0 : Convert.ToDecimal(volunteerHourlyValue);
 		organizationEvent.VolunteerInstructions = volunteerInstructions;
-		organizationEvent.AcceptsVolunteers = acceptsVolunteers;
 		organizationEvent.PointOfContactName = POCName;
 		organizationEvent.PhoneNumber = phoneNumber;
-		organizationEvent.ZelloChannel = zelloChannel;
+		organizationEvent.IsActive = true;
+		organizationEvent.AcceptsVolunteers = true;
 		organizationEvent.Email = emailAddress;
-		organizationEvent.DonationURL = string.IsNullOrEmpty(donationLink) ? null : donationLink;
-		organizationEvent.VolunteerURL = string.IsNullOrEmpty(volunteerLink) ? null : volunteerLink;
-		organizationEvent.HelpURL = string.IsNullOrEmpty(helpLink) ? null : helpLink;
-		organizationEvent.Website = string.IsNullOrEmpty(website) ? null : website;
-		organizationEvent.BlogURL = string.IsNullOrEmpty(blogURL) ? null : blogURL;
-		organizationEvent.FacebookPage = string.IsNullOrEmpty(facebook) ? null : facebook;
-		organizationEvent.FacebookGroup = string.IsNullOrEmpty(facebookGroup) ? null : facebookGroup;
+		//organizationEvent.DonationURL = string.IsNullOrEmpty(donationLink) ? null : donationLink;
 		organizationEvent.StagingAddress = address;
 		organizationEvent.StagingCity = city;
 		if (!String.IsNullOrEmpty(stagingCountyId))
@@ -170,7 +167,9 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 			dc.SubmitChanges();
 		}
 
-		Response.Redirect("/Cause/" + URLFriendlyCampaignName);
+		Response.Redirect("/V1/NonProfitAdministration/PositionsNeeded.aspx?organizationEventId=" + organizationEventId);
+
+		//Response.Redirect("/Cause/" + URLFriendlyCampaignName);
 
 	}
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IdentityModel.Metadata;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Security;
@@ -11,6 +10,14 @@ using System.Web.UI.WebControls;
 
 public partial class V1_NonProfit_Default : BaseWebForm
 {
+	public string _logo;
+	public string _teamName;
+	public string _teamSquareLogo;
+	public string _teamDescription;
+	public string _pageName;
+	public string _organizationId;
+	public string _nonProfitDropDown;
+	public string _coverImage;
 	public string organizationId = string.Empty;
 	public string volunteerLink = string.Empty;
 	public string donateLink = string.Empty;
@@ -20,70 +27,68 @@ public partial class V1_NonProfit_Default : BaseWebForm
 	public string editLink = string.Empty;
 	protected void Page_Load(object sender, EventArgs e)
 	{
-		organizationId = Request.QueryString["organizationId"];
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		ucTeamFooter.PageName = "teamPage";
+		ucTeamHeader.PageName = "Team Page";
 
+		#region HEADER PROPERTIES
+		////////////////////////
+		//BEGIN HEADER PROPERTIES
+		////////////////////////
+
+		organizationId = Request.QueryString["organizationId"];
+		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
+		_coverImage = causePhotoFolder + "businesscoverimage.png";
+
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 		var organization = (from o in dc.Organizations
 							where o.OrganizationId == new Guid(organizationId)
-							select o).SingleOrDefault();
+							select new { o.PurposeMission, o.YearFounded,
+							o.City, o.State, o._501c3Status, o.Address, o.Zip, o.PointOfContactName, o.PointOfContactPhoneNumber, o.PointOfContactEmail,
+							o.FacebookGroupURL, o.FacebookURL, o.TwitterURL, o.InstagramURL, o.YouTubeURL, o.EIN, o.PrimaryPhone, o.SecondaryPhone, 
+								o.PublicEmail, o.PublicPhoneNumber, o.Website, o.BlogURL, o.DonationURL, o.IsActive,
+								o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
 
-		if (!User.Identity.IsAuthenticated)
+		string squareLogo = string.Empty;
+		if (organization != null)
 		{
-			if ((bool)!organization.IsActive)
+			if (organization.CoverImage != null)
 			{
-				Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32");
+			//	_coverImage = causePhotoFolder + organization.CoverImage;
 			}
+
+			ucTeamHeader.CoverImage = _coverImage;
+			ucTeamHeader.TeamDescription = organization.Description;
+			ucTeamHeader._teamTitle = organization.Name;
+
+			if (!String.IsNullOrEmpty(organization.LogoSquare))
+			{
+				squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+			}
+			else
+			{
+				squareLogo = "/V1/Images/Logo-Placeholder.png";
+			}
+
+			Master.PageTitle = organization.Name + " Programs on Stability";
+			Master.PageDescription = organization.Description;
+			Master.FbDescription = organization.Description;
+			Master.FbImage = _coverImage;
+			Master.FbSite_name = organization.Name + " Programs on Stability";
+			ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
 		}
-		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
-		Master.PageTitle = organization.Name + " Team Page on Stability";
-		Master.PageDescription = organization.Description;
-		Master.FbDescription = organization.Description;
-		Master.FbImage = causePhotoFolder + organization.CoverImage;
+
+		ucTeamFooter.TeamName = organization.Name;
+		ucTeamFooter.OrganizationId = organizationId;
+		ucTeamHeader.OrganizationId = organizationId;
+		ucTeamHeader.TeamLogo = squareLogo;
 		Master.FbImageType = "image/jpg";
-		Master.FbSite_name = organization.Name + " Team Page on Stability";
 		Master.FbURL = Request.Url.AbsoluteUri;
 
-		ucTeamNavigation.PageName = "teamPage";
-		ucTeamNavigation.TeamName = organization.Name;
 
-		string logo = string.Empty;
-		string squareLogo = string.Empty;
-		if (!String.IsNullOrEmpty(organization.Logo))
-		{
-			logo = "/Impactoid/Images/Logos/" + organization.Logo;
-		}
-		else
-		{
-			//Use placeholder image.imgLogo.Visible = true;
-			logo = "/V1/Images/Logo-Placeholder.png";
-		}
-		if (!String.IsNullOrEmpty(organization.LogoSquare))
-		{
-			squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-		}
 
-		ucTeamNavigation.TeamName = organization.Name;
-		ucTeamHeader.Logo = logo;
-		ucTeamHeader.OrganizationId = organizationId;
-		ucTeamHeader.PageName = "Home";
-		ucTeamHeader.TeamDescription = organization.Description;
-		ucTeamHeader.TeamName = organization.Name;
-		ucTeamHeader.TeamSquareLogo = squareLogo;
-		
-
-		litTeamName.Text = organization.Name;
-		lblOrgName.Text = organization.Name;
-		litMission.Text = organization.PurposeMission;
-		litDescription.Text = organization.Description;
-		litYearFounded.Text = organization.YearFounded;
-		hypAddress.Text = organization.Address + "<br/>" + organization.City + ", " + organization.State + " " + organization.Zip;
-//		hypAddress.NavigateUrl = "http://maps.google.com/maps?q=" + organization.Address.Replace(" ", "+") + "," + organization.City.Replace(" ", "+") + "," + organization.State.Replace(" ", "+") + "," + organization.Zip;
-//		lblVoadMember.Text = organization.IsVoadMember.ToString();
-		lbl501c3.Text = organization._501c3Status.ToString();
 
 		bool isOwner = false;
-		lbVolunteer.Visible = true;
-		if (User.Identity.IsAuthenticated)
+		if (User.Identity.IsAuthenticated == true)
 		{
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
@@ -98,6 +103,27 @@ public partial class V1_NonProfit_Default : BaseWebForm
 					isOwner = true;
 				}
 			}
+		}
+
+		////////////////////////
+		//END HEADER PROPERTIES
+		////////////////////////
+		#endregion
+
+
+//		litTeamName.Text = organization.Name;
+		lblOrgName.Text = organization.Name;
+		litMission.Text = organization.PurposeMission;
+		litDescription.Text = organization.Description;
+		litYearFounded.Text = organization.YearFounded;
+		hypAddress.Text = organization.Address + "<br/>" + organization.City + ", " + organization.State + " " + organization.Zip;
+		//		hypAddress.NavigateUrl = "http://maps.google.com/maps?q=" + organization.Address.Replace(" ", "+") + "," + organization.City.Replace(" ", "+") + "," + organization.State.Replace(" ", "+") + "," + organization.Zip;
+		//		lblVoadMember.Text = organization.IsVoadMember.ToString();
+		lbl501c3.Text = organization._501c3Status.ToString();
+
+		lbVolunteer.Visible = true;
+		if (User.Identity.IsAuthenticated)
+		{
 
 			//If the user is logged in and not in a nonprofit already then send to choose a nonprofit.
 			var userOrganization = from uo in dc.UserOrganizations

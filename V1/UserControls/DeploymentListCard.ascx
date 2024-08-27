@@ -13,7 +13,7 @@
 		});
 	</script>
 	<style type="text/css">
-			.grid-item								{width:320px;}
+			.grid-item								{width:330px;}
 			.panel-body.deploymentPanel				{background-color:#E8D3FE; color:#5E2E91; height:150px;}
 			.panel-body.deploymentPanel:hover		{cursor:pointer; background-color:#5E2E91; color:white;}
 	</style>

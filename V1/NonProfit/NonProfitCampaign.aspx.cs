@@ -15,6 +15,7 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 	public string getHelpLink = string.Empty;
 	public string icon = string.Empty;
 	public string editCampaignLink = string.Empty;
+	public string editPositionsLink = string.Empty;
 
 	public string _todayVolunteerCount = "0";
 	public string _todayVolunteerHours = "0";
@@ -66,13 +67,13 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 
 	protected void Page_Load(object sender, EventArgs e)
 	{
-        if (String.IsNullOrEmpty(Request.QueryString["organizationEventFriendlyURLName"]))
+        if (String.IsNullOrEmpty(Request.QueryString["organizationEventId"]))
 		{
-			Response.Write("No organization Id provided.");
+			Response.Write("No organizationEventId provided.");
 			Response.End();
         }
 
-        string organizationEventFriendlyURLName = Request.QueryString["organizationEventFriendlyURLName"];
+        string organizationEventId = Request.QueryString["organizationEventId"];
 
 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -80,8 +81,8 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 		var organizationEvent = (from oe in dc.OrganizationEvents
 								join ev in dc.Events on oe.EventId equals ev.EventId
 								join o in dc.Organizations on oe.OrganizationId equals o.OrganizationId
-								where oe.URLFriendlyCampaignName == organizationEventFriendlyURLName
-								select new { oe, ev, o }).Take(1).SingleOrDefault();
+								where oe.OrganizationEventId == new Guid(organizationEventId)
+								 select new { oe, ev, o }).Take(1).SingleOrDefault();
 
 		decimal volunteerRate = organizationEvent.oe.VolunteerHourlyRate != null ? Convert.ToDecimal(organizationEvent.oe.VolunteerHourlyRate) : 0;
 		_volunteerHourlyRate = volunteerRate.ToString("C");
@@ -146,6 +147,7 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 		{
 			divEditCampaign.Visible = true;
 			editCampaignLink = "/V1/NonProfitAdministration/EditNonProfitCampaign.aspx?OrganizationEventId=" + organizationEvent.oe.OrganizationEventId;
+			editPositionsLink = "/V1/NonProfitAdministration/PositionsNeeded.aspx?OrganizationEventId=" + organizationEvent.oe.OrganizationEventId;
 		}
 
 			if (!String.IsNullOrEmpty(organizationEvent.oe.BlogURL))

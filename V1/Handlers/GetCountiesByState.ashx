@@ -21,9 +21,10 @@ public class GetCountiesByState : IHttpHandler, IReadOnlySessionState
         string stateId = (string)context.Request.QueryString["stateId"];
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         var counties = from c in dc.Counties
-                       join ec in dc.EventCounties on c.CountyId equals ec.CountyId
-                        where ec.EventId == new Guid(eventId) 
-                        && c.StateId == new Guid(stateId)
+                       //join ec in dc.EventCounties on c.CountyId equals ec.CountyId
+                       where c.StateId == new Guid(stateId)
+					   // && ec.EventId == new Guid(eventId) 
+                        
                         orderby c.Name
                         select new {text = c.Name, id = c.CountyId};
 

@@ -21,8 +21,6 @@ public partial class V1_Profile_AvailableDates : BaseWebForm
 			Response.Redirect("/SignIn");
 		}
 
-		calendarUserId = Request.QueryString["userId"];
-
 		Master.PageTitle = "Schedule Future Dates To Help - Stability";
 		Master.FbSite_name = "Schedule Future Dates To Help - Stability";
 		Master.PageDescription = "Earmark the future dates you will be available to join your team to help.";
@@ -30,6 +28,14 @@ public partial class V1_Profile_AvailableDates : BaseWebForm
 		Master.FbImage = "/V1/Images/AvailableTime.png";
 		Master.FbImageType = "image/png";
 		Master.FbURL = Request.Url.AbsoluteUri;
+
+
+
+
+
+
+
+		calendarUserId = Request.QueryString["userId"];
 
 		if(!String.IsNullOrEmpty(calendarUserId))
 		{
@@ -91,6 +97,7 @@ public partial class V1_Profile_AvailableDates : BaseWebForm
 	{
 		Response.Redirect("/V1/Member/");
 	}
+
 
 	protected void btnSubmit_Click(object sender, EventArgs e)
 	{

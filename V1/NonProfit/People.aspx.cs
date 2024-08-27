@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Metadata;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
@@ -9,6 +10,14 @@ using System.Web.UI.WebControls;
 
 public partial class V1_NonProfit_People : BaseOrganizationWebForm
 {
+	public string _logo;
+	public string _teamName;
+	public string _teamSquareLogo;
+	public string _teamDescription;
+	public string _pageName;
+	public string _organizationId;
+	public string _nonProfitDropDown;
+	public string _coverImage;
 	public string organizationId = string.Empty;
 	public string signedInUserFullName = string.Empty;
 	public bool isUserOnTeam = false;
@@ -20,50 +29,92 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 	public bool hideTeamList = false;
 	protected void Page_Load(object sender, EventArgs e)
 	{
-		ucTeamNavigation.PageName	= "peoplePage";
-		organizationId				= Request.QueryString["organizationId"];
-		skillId						= Request.QueryString["skillId"];
-		resourceId					= Request.QueryString["resourceId"];
+		ucTeamFooter.PageName = "peoplePage";
+		ucTeamHeader.PageName = "Team Members";
+
+		#region HEADER PROPERTIES
+		////////////////////////
+		//BEGIN HEADER PROPERTIES
+		////////////////////////
+
+		organizationId = Request.QueryString["organizationId"];
+		skillId = Request.QueryString["skillId"];
+		resourceId = Request.QueryString["resourceId"];
+		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
+		_coverImage = causePhotoFolder + "businesscoverimage.png";
 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-
 		var organization = (from o in dc.Organizations
 							where o.OrganizationId == new Guid(organizationId)
-							select o).SingleOrDefault();
-		hideTeamList = organization.HideTeamList != null ? (bool)organization.HideTeamList : false;
-		ucTeamNavigation.TeamName = organization.Name;
+							select new { o.Name, o.LogoSquare, o.HideTeamList, o.OwnerId, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
 
-		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
-		Master.PageTitle = organization.Name + " Team Members on Stability";
-		Master.PageDescription = organization.Description;
-		Master.FbDescription = organization.Description;
-		Master.FbImage = causePhotoFolder + organization.CoverImage;
+		string squareLogo = string.Empty;
+		if (organization != null)
+		{
+			if (organization.CoverImage != null)
+			{
+			//	_coverImage = causePhotoFolder + organization.CoverImage;
+			}
+
+			ucTeamHeader.CoverImage = _coverImage;
+			ucTeamHeader.TeamDescription = organization.Description;
+			ucTeamHeader._teamTitle = organization.Name;
+
+			if (!String.IsNullOrEmpty(organization.LogoSquare))
+			{
+				squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+			}
+			else
+			{
+				squareLogo = "/V1/Images/Logo-Placeholder.png";
+			}
+
+			Master.PageTitle = organization.Name + " Programs on Stability";
+			Master.PageDescription = organization.Description;
+			Master.FbDescription = organization.Description;
+			Master.FbImage = _coverImage;
+			Master.FbSite_name = organization.Name + " Programs on Stability";
+			ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
+		}
+
+		ucTeamFooter.TeamName = organization.Name;
+		ucTeamFooter.OrganizationId = organizationId;
+		ucTeamHeader.OrganizationId = organizationId;
+		ucTeamHeader.TeamLogo = squareLogo;
 		Master.FbImageType = "image/jpg";
-		Master.FbSite_name = organization.Name + " Team Members on Stability";
 		Master.FbURL = Request.Url.AbsoluteUri;
 
-		string logo = string.Empty;
-		string squareLogo = string.Empty;
-		if (!String.IsNullOrEmpty(organization.Logo))
+		//ucTeamHeader.Logo = logo;
+		//ucTeamHeader.OrganizationId = organizationId;
+		//ucTeamHeader.PageName = "Programs";
+		//ucTeamHeader.TeamDescription = organization.Description;
+		//ucTeamHeader.TeamName = organization.Name;
+		//ucTeamHeader.TeamSquareLogo = squareLogo;
+
+		bool isOwner = false;
+		if (User.Identity.IsAuthenticated == true)
 		{
-			logo = "/Impactoid/Images/Logos/" + organization.Logo;
-		}
-		else
-		{
-			//Use placeholder image.imgLogo.Visible = true;
-			logo = "/V1/Images/Logo-Placeholder.png";
-		}
-		if (!String.IsNullOrEmpty(organization.LogoSquare))
-		{
-			squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+			var userOrganizationOwner = (from uo in dc.UserOrganizations
+										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
+										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+										 && uo.OrganizationId == new Guid(organizationId)
+										 select o).Take(1).SingleOrDefault();
+
+			if (userOrganizationOwner != null)
+			{
+				if ((userOrganizationOwner.OwnerId != userId))
+				{
+					isOwner = true;
+				}
+			}
 		}
 
-		ucTeamHeader.Logo = logo;
-		ucTeamHeader.OrganizationId = organizationId;
-		ucTeamHeader.PageName = "People";
-		ucTeamHeader.TeamDescription = organization.Description;
-		ucTeamHeader.TeamName = organization.Name;
-		ucTeamHeader.TeamSquareLogo = squareLogo;
+		////////////////////////
+		//END HEADER PROPERTIES
+		////////////////////////
+		#endregion
+
+		hideTeamList = organization.HideTeamList != null ? (bool)organization.HideTeamList : false;
 
 		if (User.Identity.IsAuthenticated)
 		{
@@ -126,8 +177,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 				if (!String.IsNullOrEmpty(skillId))
 				{
 					var skillName = (from s in dc.Skills
-								where s.SkillId == new Guid(skillId)
-								select new { s.Name }).SingleOrDefault();
+									 where s.SkillId == new Guid(skillId)
+									 select new { s.Name }).SingleOrDefault();
 
 					peopleList = from pl in peopleList
 								 join spl in dc.UserSkills on pl.UserId equals spl.UserId
@@ -140,8 +191,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 				if (!String.IsNullOrEmpty(resourceId))
 				{
 					var resouceName = (from r in dc.Resources
-									 where r.ResourceId == new Guid(resourceId)
-									 select new { r.Name }).SingleOrDefault();
+									   where r.ResourceId == new Guid(resourceId)
+									   select new { r.Name }).SingleOrDefault();
 
 					peopleList = from pl in peopleList
 								 join rpl in dc.UserResources on pl.UserId equals rpl.UserId
@@ -168,8 +219,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			divUpdateMessage.Visible = true;
 			litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr><a href=\"\\signin\">Sign in</a> to see the list of team members.";
 		}
-
 	}
+
 	protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
 	{
 		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -219,7 +270,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 				litVettingInfo.Text = vettingCompleted;
 			}
 
-			
+
 
 			HyperLink hypName = (HyperLink)e.Item.FindControl("hypName");
 			Literal litMemberInfo = (Literal)e.Item.FindControl("litMemberInfo");
@@ -253,9 +304,9 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 		var resources = from ur in dc.UserResources
-					 join r in dc.Resources on ur.ResourceId equals r.ResourceId
-					 where ur.UserId == userId
-					 select r;
+						join r in dc.Resources on ur.ResourceId equals r.ResourceId
+						where ur.UserId == userId
+						select r;
 
 
 		foreach (var resource in resources)
@@ -295,8 +346,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			string skillIdLocal = skill.SkillId.ToString();
 
 			string btnColor = "btn-default";
-			if(!String.IsNullOrEmpty(skillId))
-			{ 
+			if (!String.IsNullOrEmpty(skillId))
+			{
 				if (skillId.Equals(skillIdLocal, StringComparison.OrdinalIgnoreCase))
 				{
 					//Change button color.

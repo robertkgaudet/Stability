@@ -9,7 +9,7 @@
         <div>
             <div>
                 <h1 class="logo-name">
-					<img class="img-responsive" src="/V1/Images/Logo-Horizontal.png" />
+					<img class="img-responsive" src="/V1/Images/Logo-Horizontal-cs.png" />
                 </h1>
 				<div class="p-sm text-center">
 					Welcome to Stability<br /> Community Disaster Relief Teams

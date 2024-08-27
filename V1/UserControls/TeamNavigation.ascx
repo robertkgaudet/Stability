@@ -46,6 +46,10 @@
 							}
 						});
 
+						$('#<%=divWebsite.ClientID%>').click(function () {
+							window.location.href = '/Impactoid/CommunityPage.aspx?organizationId=<%=organizationId%>';
+							return false;
+						});
 						$('#<%=divDeployment.ClientID%>').click(function () {
 							window.location.href = '/V1/NonProfitAdministration/RespondToEvent.aspx?organizationId=<%=organizationId%>';
 							return false;
@@ -61,6 +65,12 @@
 						background-color:#D6F0CC;
 						cursor:pointer;
 					}
+
+					.website:hover{
+						background-color:#BCE8F1;
+						cursor:pointer;
+					}
+
 
 					.caret {
 						border-top: 4px solid;
@@ -85,10 +95,6 @@
 						color:white;
 					}
 			</style>
-
-				<div id="divDeployment" runat="server" class="alert alert-success text-center deployment m-b-xs" visible="false">
-					<h5><i class="fa fa-street-view pe-2x pull-left"></i><b>Create A New Deployment</b></h5>
-				</div>
                 <div class="hpanel">
                     <div class="panel-body">
 						<asp:HyperLink runat="server" ID="hypGetHelp" CssClass="btn btn-danger btn-block"><i class='fa fa-check'></i> Get Help From This Team</asp:HyperLink>
@@ -103,20 +109,20 @@
 								<li <%=_teamPageActive%>>
 									<asp:HyperLink runat="server" ID="hypTeamName"><i class="fa fa-th-large"></i> About</asp:HyperLink>
 								</li>
+								<li <%=_peoplePageActive%>>
+									<asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-vcard"></i> Team Members</asp:HyperLink>
+								</li>
+								<li <%=_deploymentPageActive%>>
+									<asp:HyperLink runat="server" ID="hypDeployments"><i class="fa fa-street-view"></i> Deployments</asp:HyperLink>
+								</li>
 								<li <%=_teamCalendarActive%>>
 									<asp:HyperLink runat="server" ID="hypTeamCalendar"><i class="fa fa-calendar"></i> Team Calendar</asp:HyperLink>
 								</li>
 								<li <%=_activityPageActive%>>
 									<asp:HyperLink runat="server" ID="hypActivity"><i class="fa fa-rocket"></i> Impact Dashboard</asp:HyperLink>
 								</li>
-								<li <%=_deploymentPageActive%>>
-									<asp:HyperLink runat="server" ID="hypDeployments"><i class="fa fa-street-view"></i> Deployments</asp:HyperLink>
-								</li>
 								<li <%=_programsPageActive%>>
 									<asp:HyperLink runat="server" ID="hypPrograms"><i class="fa fa-superpowers"></i> Programs</asp:HyperLink>
-								</li>
-								<li <%=_peoplePageActive%>>
-									<asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-vcard"></i> People</asp:HyperLink>
 								</li>
 								<li <%=_skillsPageActive%>>
 									<asp:HyperLink runat="server" ID="hypSkillsets"><i class="fa fa-hand-pointer-o"></i> Skillsets</asp:HyperLink>
@@ -147,3 +153,11 @@
 						</div>
                     </div>
                 </div>
+				<div id="desktopNavigation">
+					<div id="divWebsite" runat="server" class="alert alert-info text-center website m-b-xs">
+						<h5><i class="fa fa-globe pe-2x"></i> <b>Team Member Website</b></h5>
+					</div>
+					<div id="divDeployment" runat="server" class="alert alert-success text-center deployment m-b-xs" visible="false">
+						<h5><i class="fa fa-street-view pe-2x"></i> <b>Create A New Deployment</b></h5>
+					</div>
+				</div>

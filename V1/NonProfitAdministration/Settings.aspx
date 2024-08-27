@@ -1,6 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Settings.aspx.cs" Inherits="V1_NonProfitAdministration_Settings" %>
-<%@ Register Src="~/V1/UserControls/TeamNavigation.ascx" TagPrefix="uc1" TagName="TeamNavigation" %>
-<%@ Register Src="~/V1/UserControls/TeamHeader.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Settings.aspx.cs" Inherits="V1_NonProfit_Settings" %>
+<%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
+<%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
@@ -11,27 +11,17 @@
 				$(this).addClass("i-checks");
 			});
         });
-    </script>
+	</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-
-	<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
-
-	<div class="content">
-        <div class="row">
-            <div class="col-md-3">
-				<uc1:TeamNavigation runat="server" ID="ucTeamNavigation" />
-            </div>
-            <div class="col-md-9">
-					<!--PAGE HEADER-->
-                <div class="hpanel ">
+	
+				<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
                     <div class="panel-heading hbuilt">
                         <div class="font-normal">
 							<h1 class="m-b-none"><i class="fa fa-cog"></i> Settings</h1>
 							<small class="text-muted">Adjust Team Settings.</small>
                         </div>
                     </div>
-					<!--PAGE CONTENT-->
 					<div class="panel-body">
 						<div class="form-group">
 							<div id="divUpdateMessage" runat="server" class="alert alert-success text-center" visible="false">
@@ -48,9 +38,5 @@
 							</div>
 						</div>
 					</div>
-					<!--PAGE FOOTER-->
-                </div>
-            </div>
-        </div>
-    </div>
+				<uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>

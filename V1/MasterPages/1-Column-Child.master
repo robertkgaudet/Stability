@@ -1,0 +1,71 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="1-Column-Child.master.cs" Inherits="V1_MasterPages_1_Column_Child" %>
+
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+
+	<asp:ContentPlaceHolder id="head" runat="server"></asp:ContentPlaceHolder>
+
+	<style>
+	.divCover {
+		width: 100%;
+		background-image: url('<%=_coverImage%>'); /* Path to your image */
+		background-size: cover; /* Scale the image to cover the entire div */
+		background-position: center; /* Center the image */
+		background-repeat: no-repeat; /* Prevent the image from repeating */
+		height:60px;
+		border-top-left-radius: 10px !important;
+		border-top-right-radius: 10px !important;
+	}
+	.content
+	{
+		padding:0px 0px 0px 0px !important;
+	}
+	.hpanel
+	{
+		margin-bottom:5px !important;
+	}
+	.member-panel-body
+	{
+		border-radius: 10px !important;
+		border-top-right-radius: 0px !important;
+		border-top-left-radius: 0px !important;
+		margin-bottom: 0px !important;
+	}
+	/* Custom gutter class for rows */
+	.row.no-gutter
+	{
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.row.no-gutter [class*="col-"] {
+		padding-left: 1px;  /* Reduced gutter padding */
+		padding-right: 1px;
+	}
+	.bodyColor
+	{background-color:#F1F3F6 !important;}
+</style>
+
+<script>
+	$(document).ready(function () {
+		$("body").tooltip({ selector: '[data-toggle=tooltip]' });
+	});
+</script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+	<div class="container bodyColor" style="padding-bottom:200px !important;">
+		<div class="row justify-content-center" style="margin-top:40px;">
+			<!--MAIN CONTENT CONTAINER-->
+			<div class="col-sm-12 col-lg-12">
+				<div id="divCover" class="divCover"></div>
+				<div class="hpanel">
+					<div class="panel-body member-panel-body">
+						<asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</asp:Content>
+

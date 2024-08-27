@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="V1_NonProfit_Default" %>
-<%@ Register Src="~/V1/UserControls/TeamNavigation.ascx" TagPrefix="uc1" TagName="TeamNavigation" %>
-<%@ Register Src="~/V1/UserControls/TeamHeader.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
+<%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
+<%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">	<script type="text/javascript">
@@ -67,29 +67,13 @@
 	</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+	
+				<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
 
-	<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
+					<asp:LinkButton id="lbVolunteer" runat="server" CssClass="btn btn-success volunteerButton" Text="Join This Team" visible="false"></asp:LinkButton>
+					<asp:LinkButton id="lbDonate" runat="server" CssClass="btn btn-success donateButton" Text="Donate" visible="false"></asp:LinkButton>
+					<asp:Button ID="btnActiveVolunteer" runat="server" CssClass="btn btn-light" Visible="false" />
 
-	<div class="content">
-        <div class="row">
-            <div class="col-md-3">
-				<uc1:TeamNavigation runat="server" ID="ucTeamNavigation" />
-            </div>
-            <div class="col-md-9">
-				<!--PAGE HEADER-->
-                <div class="hpanel ">
-                    <div class="panel-heading hbuilt">
-						<div class="pull-right">
-							<asp:LinkButton id="lbVolunteer" runat="server" CssClass="btn btn-success volunteerButton" Text="Join This Team" visible="false"></asp:LinkButton>
-							<asp:LinkButton id="lbDonate" runat="server" CssClass="btn btn-success donateButton" Text="Donate" visible="false"></asp:LinkButton>
-							<asp:Button ID="btnActiveVolunteer" runat="server" CssClass="btn btn-light" Visible="false" />
-						</div>
-                        <div class="font-normal">
-							<h1 class="m-b-none"><i class="fa fa-th-large"></i> <asp:Literal ID="litTeamName" runat="server"></asp:Literal></h1>
-							<small class="text-muted">Team Details</small>
-                        </div>
-                    </div>
-					<!--PAGE CONTENT-->
 					<div class="panel-body">
 						<div class="alert alert-success" runat="server" id="divAlertPageMessage" visible="false">
 							<i class="fa fa-bolt"></i> This team page is de-activated.
@@ -244,39 +228,33 @@
 							</div>
 						</div>
 					</div>
-					<!--PAGE FOOTER-->
-                </div>
-            </div>
-        </div>
-    </div>
-	
-	<div class="content" runat="server" visible="false" id="divUploadLogoCover">
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="hpanel hblue">
-					<div class="panel-heading hbuilt">
-						Your Page Administation Tools
-					</div>
-					<div class="panel-body">
-						<div class="form-group">
-							<div class="pull-left">
-								<asp:Button id="btnInviteTeamMembers" runat="server" Visible="false" CssClass="btn btn-success inviteButton" Text="Invite Team Members" />
-								<asp:Button id="btnEditMyGroup" runat="server" Visible="false" CssClass="btn btn-warning editButton" Text="Update Team Information" />
-								<asp:Button id="btnUploadLogo" runat="server" Visible="false" CssClass="btn btn-primary logoUploadButton" Text="Upload Logo" />
-								<asp:Button id="btnUploadSquare" runat="server" Visible="false" CssClass="btn btn-primary squareLogoUploadButton" Text="Upload A Square Logo" />
-								<asp:Button id="btnUploadCoverImage" runat="server" Visible="false" CssClass="btn btn-primary coverUploadButton" Text="Upload Cover Image" />
-								<asp:Button id="btnManagePhotos" runat="server" Visible="false" CssClass="btn btn-primary managePhotosButton" Text="Manage Photos" />
-								<asp:Button id="btnDeactivatePage" OnClick="btnChangePageStatus_Click" runat="server" CssClass="btn btn-primary" Text="De-activate This Team" />
-								<br />List of members who have been invited.
+					<div class="content" runat="server" visible="false" id="divUploadLogoCover">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="hpanel hblue">
+									<div class="panel-heading hbuilt">
+										Your Page Administation Tools
+									</div>
+									<div class="panel-body">
+										<div class="form-group">
+											<div class="pull-left">
+												<asp:Button id="btnInviteTeamMembers" runat="server" Visible="false" CssClass="btn btn-success inviteButton" Text="Invite Team Members" />
+												<asp:Button id="btnEditMyGroup" runat="server" Visible="false" CssClass="btn btn-warning editButton" Text="Update Team Information" />
+												<asp:Button id="btnUploadLogo" runat="server" Visible="false" CssClass="btn btn-primary logoUploadButton" Text="Upload Logo" />
+												<asp:Button id="btnUploadSquare" runat="server" Visible="false" CssClass="btn btn-primary squareLogoUploadButton" Text="Upload A Square Logo" />
+												<asp:Button id="btnUploadCoverImage" runat="server" Visible="false" CssClass="btn btn-primary coverUploadButton" Text="Upload Cover Image" />
+												<asp:Button id="btnManagePhotos" runat="server" Visible="false" CssClass="btn btn-primary managePhotosButton" Text="Manage Photos" />
+												<asp:Button id="btnDeactivatePage" OnClick="btnChangePageStatus_Click" runat="server" CssClass="btn btn-primary" Text="De-activate This Team" />
+												<br />List of members who have been invited.
+											</div>
+										</div>
+									</div>
+									<div class="panel-footer">
+										<i class="fa fa-lock"></i> These tools are only visible to the page administator.
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="panel-footer">
-						<i class="fa fa-lock"></i> These tools are only visible to the page administator.
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+				<uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>
-

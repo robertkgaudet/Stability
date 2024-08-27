@@ -17,6 +17,7 @@ public partial class V1_UserControls_TeamHeader : System.Web.UI.UserControl
 	public string _organizationId;
 	public string _nonProfitDropDown;
 	public string _coverImage;
+
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		litBreadcrumbPageName.Text = _pageName;

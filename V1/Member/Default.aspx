@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="V1_Member_Default" %>
 <%@ Register Src="~/V1/UserControls/MemberNavigation.ascx" TagPrefix="uc1" TagName="MemberNavigation" %>
 <%@ Register Src="~/V1/UserControls/MemberHeader.ascx" TagPrefix="uc1" TagName="MemberHeader" %>
+<%@ Register Src="~/V1/UserControls/DeploymentListCard.ascx" TagPrefix="uc1" TagName="DeploymentListCard" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">	<script type="text/javascript">
@@ -111,65 +112,26 @@
 				</div>
 				<div class="hpanel">
 					<div class="panel-body member-panel-body">
-						<h4>Deployment History</h4>
+						<h4>My Volunteer Record</h4>
 							<div class="hpanel">
 								<div class="hpanel">
 									<ul class="nav nav-tabs">
 										<li class="active"><a data-toggle="tab" href="#tab-1">Deployments</a></li>
-										<li class=""><a data-toggle="tab" href="#tab-2">Portals</a></li>
+										<%--<li class=""><a data-toggle="tab" href="#tab-2">Portals</a></li>--%>
 									</ul>
 									<div class="tab-content">
 										<div id="tab-1" class="tab-pane active">
 											<div class="panel-body">
-												<strong>DEPLOYMENTS</strong>
+												<p>	<b>Find new deployments from your team home page.</b> 
+													Each deployment below represents a time-boxed response via a disaster relief program. You'll notice the name of the team and length of time this deployment ran. 
+													These entries highlight the dedicated efforts to provide targeted assistance to communities affected 
+													by natural disasters, demonstrating the structured and impactful nature of each mission.
+												</p>
 
-												<p>A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart. I am alone, and feel the charm of
-													existence in this spot, which was created for the bliss of souls like mine.</p>
-
-												<div class="table-responsive">
-													<table class="table table-striped">
-														<thead>
-														<tr>
-															<th>#</th>
-															<th>Project </th>
-															<th>Name </th>
-															<th>Phone </th>
-															<th>Company </th>
-															<th>Completed </th>
-															<th>Task</th>
-															<th>Date</th>
-															<th>Action</th>
-														</tr>
-														</thead>
-														<tbody>
-														<tr>
-															<td>1</td>
-															<td>Project <small>This is example of project</small></td>
-															<td>Patrick Smith</td>
-															<td>0800 051213</td>
-															<td>Inceptos Hymenaeos Ltd</td>
-															<td><span class="pie">2/45</span></td>
-															<td>20%</td>
-															<td>Jul 14, 2013</td>
-															<td><a href="#"><i class="fa fa-check text-success"></i></a></td>
-														</tr>
-														<tr>
-															<td>2</td>
-															<td>Alpha project</td>
-															<td>Alice Jackson</td>
-															<td>0500 780909</td>
-															<td>Nec Euismod In Company</td>
-															<td><span class="pie">1/5</span></td>
-															<td>40%</td>
-															<td>Jul 16, 2013</td>
-															<td><a href="#"><i class="fa fa-check text-success"></i></a></td>
-														</tr>
-														</tbody>
-													</table>
-												</div>
+												<uc1:DeploymentListCard runat="server" ID="ucDeploymentListCard" />
 											</div>
 										</div>
-										<div id="tab-2" class="tab-pane">
+										<%--<div id="tab-2" class="tab-pane">
 											<div class="panel-body">
 												<strong>PORTALS</strong>
 
@@ -219,7 +181,7 @@
 													</table>
 												</div>
 											</div>
-										</div>
+										</div>--%>
 									</div>
 							</div>
 						</div>

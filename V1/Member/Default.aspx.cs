@@ -69,6 +69,7 @@ public partial class V1_Member_Default : BaseWebForm
 		//Does not have to be signed in to do all of this.
 		if (!String.IsNullOrEmpty(pageUserId))
 		{
+			ucDeploymentListCard.UserId = new Guid(pageUserId);
 			userId = new Guid(pageUserId);
 			ucMemberHeader.UserId = pageUserId;
 			//Load profile information.
@@ -175,16 +176,23 @@ public partial class V1_Member_Default : BaseWebForm
 				ucMemberHeader.TeamName = orgUser.Name;
 			}
 
-
-
-
-
 			//Count deployments
-			var deployments = from d in dc.UserOrganizationEvents
-							  where d.UserId == new Guid(pageUserId)
-							  select d;
+			var deployments = (from ue in dc.UserEvents
+							  join uoe in dc.UserOrganizationEvents on ue.UserId equals uoe.UserId
+							  join oe in dc.OrganizationEvents on uoe.OrganizationEventId equals oe.OrganizationEventId
+							  join org in dc.Organizations on oe.OrganizationId equals org.OrganizationId
+							  join s in dc.USStates on oe.StagingStateId equals s.StatesId
+							  join c in dc.Counties on oe.StagingCountyId equals c.CountyId
+							  where uoe.UserId == new Guid(pageUserId)
+							  select new { uoe }).Distinct().Count();
 
-			ucMemberHeader.DeploymentCount = deployments.Count().ToString();
+			ucMemberHeader.DeploymentCount = deployments.ToString();
+			//if(Session["deploymentCount"] != null)
+			//{
+			//	deploymentCount = (Session["deploymentCount"] != null) ? Convert.ToInt32(Session["deploymentCount"]) : 0;
+
+			//}
+			//ucMemberHeader.DeploymentCount = deploymentCount.ToString(); // deployments.Count().ToString();
 
 
 			//SKILLS AND RESOURCES CODE

@@ -26,8 +26,14 @@
 				window.location.href = '<%=editCampaignLink%>';
 				return false;
 			});
+
+			$('.editPositions').click(function () {
+				window.location.href = '<%=editPositionsLink%>';
+				return false;
+			});
+			
 		});
-    </script>
+	</script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
@@ -85,6 +91,7 @@
 					        <div runat="server" visible="false" id="divEditCampaign">
 						        <div class="m-r-lg">
 							        <asp:Button id="btnEdit" runat="server" CssClass="btn btn-xs btn-warning editCampaign" Text="Edit Deployment" />
+							        <asp:Button id="btnEditPositions" runat="server" CssClass="btn btn-xs btn-warning editPositions" Text="Edit Positions" />
 						        </div>
 					        </div>
                          </div>

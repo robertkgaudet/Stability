@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
-<%@ Register Src="~/V1/UserControls/TeamNavigation.ascx" TagPrefix="uc1" TagName="TeamNavigation" %>
-<%@ Register Src="~/V1/UserControls/TeamHeader.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
+<%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
+<%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
@@ -133,28 +133,14 @@
 	</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-
-	<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
-
-	<div class="content">
-        <div class="row">
-            <div class="col-md-3">
-				<uc1:TeamNavigation runat="server" ID="ucTeamNavigation" />
-            </div>
-            <div class="col-md-9">
-					<!--PAGE HEADER-->
-                <div class="hpanel ">
-                    <div class="panel-heading hbuilt">
-                        <div class="font-normal">
-							<h1 class="m-b-none"><i class="fa fa-vcard"></i> People</h1>
-							<small class="text-muted">Team members.</small>
-							<div class="pull-right">
-								<asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="font-normal btn btn-sm btn-info"></asp:HyperLink>
-							</div>
-                        </div>
-                    </div>
-					<!--PAGE CONTENT-->
-					<div class="panel-body">
+	
+				<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
+	
+					<div class="panel-heading">
+						<asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
+					</div>
+	
+						<div class="panel-body">
 						<div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom:20px;" visible="false">
 							<asp:Literal ID="litMessage" runat="server"></asp:Literal>
 						</div>
@@ -237,10 +223,8 @@
 							</div>
 						</div>
 					</div>
-					<!--PAGE FOOTER-->
-                </div>
-            </div>
-        </div>
-    </div>
-</asp:Content>
 
+
+
+				<uc1:TeamFooter runat="server" ID="ucTeamFooter" />
+</asp:Content>

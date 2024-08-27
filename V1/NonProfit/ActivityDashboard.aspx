@@ -1,30 +1,32 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="ActivityDashboard.aspx.cs" Inherits="V1_NonProfit_ActivityDashboard" %>
-<%@ Register Src="~/V1/UserControls/TeamNavigation.ascx" TagPrefix="uc1" TagName="TeamNavigation" %>
-<%@ Register Src="~/V1/UserControls/TeamHeader.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
+<%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
+<%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">	<script type="text/javascript">
+
+		$(document).ready(function () {
+			$('.table').footable({
+				columns: [
+					{ name: "BeginDate", type: "date" },
+					{ name: "EndDate", type: "date" }
+				]
+			});
+		});	
+</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+	
+				<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
+					
 
-	<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
 
-	<div class="content">
-        <div class="row">
-            <div class="col-md-3">
-				<uc1:TeamNavigation runat="server" ID="ucTeamNavigation" />
-            </div>
-            <div class="col-md-9">
-					<!--PAGE HEADER-->
-                <div class="hpanel ">
-                    <div class="panel-heading hbuilt">
-                        <div class="font-normal">
-							<h1 class="m-b-none"><i class="fa fa-rocket"></i> Impact Dashboard</h1>
-							<small class="text-muted">Deployments and impact from this team.</small>
-                        </div>
-                    </div>
-					<!--PAGE CONTENT-->
-					<div class="m-t-md">
+
+
+
+
+
+						<div class="m-t-md">
 						<div class="animate-panel">
 							<div class="row">
 								<div class="col-xs-6 col-md-3">
@@ -111,20 +113,20 @@
 													<thead>
 														<tr>
 															<th>All Deployments</th>
-															<th>Begin</th>
-															<th>End</th>
+															<th data-name="BeginDate">Begin</th>
+															<th data-name="EndDate">End</th>
 															<th>Days</th>
 														</tr>
 													</thead>
 													<tbody>
 														<asp:Repeater ID="rptActiveCampaigns" runat="server" OnItemDataBound="rptActiveCampaigns_ItemDataBound">
 															<ItemTemplate>
-																<tr class="">
+																<tr>
 																	<td>
 																		<span class="text-success"><asp:HyperLink CssClass="text-muted" ID="hypCauseName" runat="server"></asp:HyperLink></span>
 																	</td>
-																	<td><asp:label CssClass="text-muted" ID="lblBeginDate" runat="server"></asp:label></td>
-																	<td><asp:label CssClass="text-muted" ID="lblEndDate" runat="server"></asp:label></td>
+																	<td runat="server" id="tdBeginDate"><asp:label CssClass="text-muted" ID="lblBeginDate" runat="server"></asp:label></td>
+																	<td runat="server" id="tdEndDate"><asp:label CssClass="text-muted" ID="lblEndDate" runat="server"></asp:label></td>
 																	<td><asp:label CssClass="text-muted" ID="lblDeploymentLength" runat="server"></asp:label></td>
 																</tr>
 															</ItemTemplate>
@@ -186,11 +188,6 @@
 							</div>
 						</div>
 					</div>
-					<!--PAGE FOOTER-->
-                </div>
-            </div>
-        </div>
-    </div>
 	
 	<script src="/Homer/vendor/jquery-ui/jquery-ui.min.js"></script>
 	<script src="/Homer/vendor/jquery-flot/jquery.flot.js"></script>
@@ -283,4 +280,16 @@
 			new Chart(ctx, { type: 'line', data: lineData, options: lineOptions });
 		});
 	</script>
+
+
+
+
+
+
+
+
+
+				<uc1:TeamFooter runat="server" ID="ucTeamFooter" />
+
+
 </asp:Content>

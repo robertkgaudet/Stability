@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="TeamAvailabilityCalendar.aspx.cs" Inherits="V1_NonProfit_TeamAvailabilityCalendar" %>
-<%@ Register Src="~/V1/UserControls/TeamNavigation.ascx" TagPrefix="uc1" TagName="TeamNavigation" %>
-<%@ Register Src="~/V1/UserControls/TeamHeader.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
+<%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
+<%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
@@ -15,17 +15,8 @@
 	</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-
-	<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
-
-	<div class="content">
-        <div class="row">
-            <div class="col-md-3">
-				<uc1:TeamNavigation runat="server" ID="ucTeamNavigation" />
-            </div>
-            <div class="col-md-9">
-					<!--PAGE HEADER-->
-                <div class="hpanel ">
+	
+				<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
                     <div class="panel-heading hbuilt">
                         <div class="font-normal">
 							<div class="pull-right">
@@ -35,7 +26,9 @@
 							<small class="text-muted">Team members available for deployment.</small>
                         </div>
                     </div>
-					<!--PAGE CONTENT-->
+
+
+
 					<div class="m-t-md">
 						<div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom:20px;" visible="false">
 							<asp:Literal ID="litMessage" runat="server"></asp:Literal>
@@ -43,14 +36,14 @@
 						<div class="row" id="divCalendarRow" runat="server">
 							<div class="col-lg-12">
 								<div class="row">
-									<div class="col-xs-12 col-sm-12 col-md-6">
+									<div class="col-lg-12">
 										<div class="hpanel stats">
 											<div class="panel-body h-200 list">
 												<div id="calendar"></div>
 											</div>
 										</div>
 									</div>
-									<div class="col-xs-12 col-sm-12 col-md-6">
+									<div class="col-lg-12">
 										<div class="hpanel stats">
 											<div class="panel-body h-200 list">
 												<div class="stats-title pull-left">
@@ -79,128 +72,125 @@
 							</div>
 						</div>
 					</div>
-					<!--PAGE FOOTER-->
-                </div>
-            </div>
-        </div>
-    </div>
+					<script src="/Homer/scripts/charts.js"></script>
+					<script src="/Homer/vendor/chartjs/Chart.min.js"></script>
+					<script src="/Homer/vendor/sparkline/index.js"></script>
 	
-	<script src="/Homer/scripts/charts.js"></script>
-	<script src="/Homer/vendor/chartjs/Chart.min.js"></script>
-	<script src="/Homer/vendor/sparkline/index.js"></script>
-	
-	<script>
+					<script>
 
-		$(document).ready(function () {
-			function fetchDates(organizationId) {
-				$.ajax({
-					url: '/V1/NonProfit/TeamAvailabilityCalendar.aspx/LoadCalendar',
-					method: 'POST',
-					contentType: 'application/json; charset=utf-8',
-					dataType: 'json',
-					data: JSON.stringify({ organizationId: organizationId }),
-					success: function (response) {
-						var events = JSON.parse(response.d);
+						$(document).ready(function () {
+							function fetchDates(organizationId) {
+								$.ajax({
+									url: '/V1/NonProfit/TeamAvailabilityCalendar.aspx/LoadCalendar',
+									method: 'POST',
+									contentType: 'application/json; charset=utf-8',
+									dataType: 'json',
+									data: JSON.stringify({ organizationId: organizationId }),
+									success: function (response) {
+										var events = JSON.parse(response.d);
 
-						$('#calendar').fullCalendar('destroy'); // Destroy the existing calendar
-						$('#calendar').fullCalendar({
-							header: {
-								left: 'prev,next today',
-								center: 'title',
-								right: 'month,agendaWeek,agendaDay'
-							},
-							format: 'mm/dd/yyyy',
-							defaultView: 'month',
-							editable: false,
-							events: events
+										$('#calendar').fullCalendar('destroy'); // Destroy the existing calendar
+										$('#calendar').fullCalendar({
+											header: {
+												left: 'prev,next today',
+												center: 'title',
+												right: 'month,agendaWeek,agendaDay'
+											},
+											format: 'mm/dd/yyyy',
+											defaultView: 'month',
+											editable: false,
+											events: events
+										});
+									},
+									error: function (error) {
+										console.error('Error loading events:', error);
+									}
+								});
+							}
+
+							// Initialize the calendar with no events
+							$('#calendar').fullCalendar({
+								header: {
+									left: 'prev,next today',
+									center: 'title',
+									right: 'month,agendaWeek,agendaDay'
+								},
+								format: 'mm/dd/yyyy',
+								defaultView: 'month',
+								editable: false,
+								//eventLimit: true,
+								//beforeShowDay: function (date) {
+								//	// Highlight weekends
+								//	var day = date.getDay();
+								//	if (day === 0 || day === 6) {
+								//		return {
+								//			classes: 'highlight'
+								//		};
+								//	}
+								//	return;
+								//}
+							});
+
+							fetchDates('<%=organizationId%>');
 						});
-					},
-					error: function (error) {
-						console.error('Error loading events:', error);
-					}
-				});
-			}
-
-			// Initialize the calendar with no events
-			$('#calendar').fullCalendar({
-				header: {
-					left: 'prev,next today',
-					center: 'title',
-					right: 'month,agendaWeek,agendaDay'
-				},
-				format: 'mm/dd/yyyy',
-				defaultView: 'month',
-				editable: false,
-				//eventLimit: true,
-				//beforeShowDay: function (date) {
-				//	// Highlight weekends
-				//	var day = date.getDay();
-				//	if (day === 0 || day === 6) {
-				//		return {
-				//			classes: 'highlight'
-				//		};
-				//	}
-				//	return;
-				//}
-			});
-
-			fetchDates('<%=organizationId%>');
-		});
 
 
-	</script>
+					</script>
 	
-	<script>
-		$(document).ready(function () {
+					<script>
+						$(document).ready(function () {
 
-			var lineData = {
-				labels: [<%=availableDates%>],
-				datasets: [
+							var lineData = {
+								labels: [<%=availableDates%>],
+								datasets: [
 
-					{
-						label: "Team Member Count",
-						backgroundColor: 'rgba(98,203,49, 0.5)',
-						pointBorderWidth: 1,
-						pointBackgroundColor: "rgba(98,203,49,1)",
-						pointRadius: 3,
-						pointBorderColor: '#ffffff',
-						borderWidth: 1,
-						data: [<%=teamCounts%>]
-					},
-					{
-						label: "Deplyment Members Needed",
-						backgroundColor: 'rgba(220,220,220,0.5)',
-						pointBorderWidth: 1,
-						pointBackgroundColor: "rgba(98,203,49,1)",
-						pointRadius: 3,
-						pointBorderColor: '#ffffff',
-						borderWidth: 1,
-						data: [22, 44, 67, 43, 76, 45]
-					}
-					//,
-					//{
-					//	label: "Dt 2",
-					//	backgroundColor: 'rgba(220,220,220,0.5)',
-					//	borderColor: "rgba(220,220,220,0.7)",
-					//	pointBorderWidth: 1,
-					//	pointBackgroundColor: "rgba(220,220,220,1)",
-					//	pointRadius: 3,
-					//	pointBorderColor: '#ffffff',
-					//	borderWidth: 1,
-					//	data: [22, 44, 67, 43, 76, 45, 12]
-					//}
-				]
-			};
+									{
+										label: "Team Member Count",
+										backgroundColor: 'rgba(98,203,49, 0.5)',
+										pointBorderWidth: 1,
+										pointBackgroundColor: "rgba(98,203,49,1)",
+										pointRadius: 3,
+										pointBorderColor: '#ffffff',
+										borderWidth: 1,
+										data: [<%=teamCounts%>]
+									},
+									{
+										label: "Deplyment Members Needed",
+										backgroundColor: 'rgba(220,220,220,0.5)',
+										pointBorderWidth: 1,
+										pointBackgroundColor: "rgba(98,203,49,1)",
+										pointRadius: 3,
+										pointBorderColor: '#ffffff',
+										borderWidth: 1,
+										data: [22, 44, 67, 43, 76, 45]
+									}
+									//,
+									//{
+									//	label: "Dt 2",
+									//	backgroundColor: 'rgba(220,220,220,0.5)',
+									//	borderColor: "rgba(220,220,220,0.7)",
+									//	pointBorderWidth: 1,
+									//	pointBackgroundColor: "rgba(220,220,220,1)",
+									//	pointRadius: 3,
+									//	pointBorderColor: '#ffffff',
+									//	borderWidth: 1,
+									//	data: [22, 44, 67, 43, 76, 45, 12]
+									//}
+								]
+							};
 
-			var lineOptions = {
-				responsive: true
-			};
+							var lineOptions = {
+								responsive: true
+							};
 
-			var ctx = document.getElementById("lineOptions").getContext("2d");
-			new Chart(ctx, { type: 'line', data: lineData, options: lineOptions });
-		});
-	</script>
+							var ctx = document.getElementById("lineOptions").getContext("2d");
+							new Chart(ctx, { type: 'line', data: lineData, options: lineOptions });
+						});
+					</script>
 
-	<script src="/Homer/vendor/moment/min/moment.min.js"></script>
-	<script src="/Homer/vendor/fullcalendar/dist/fullcalendar.min.js"></script>
+					<script src="/Homer/vendor/moment/min/moment.min.js"></script>
+					<script src="/Homer/vendor/fullcalendar/dist/fullcalendar.min.js"></script>
+
+				<uc1:TeamFooter runat="server" ID="ucTeamFooter" />
+
 </asp:Content>

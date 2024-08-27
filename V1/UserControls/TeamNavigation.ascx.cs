@@ -182,8 +182,8 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 				{
 					ulAdmin.Visible = true;
 					hrAdmin.Visible = true;
+					divDeployment.Visible = true;
 				}
-				divDeployment.Visible = true;
 			}
 		}
 		else
@@ -202,5 +202,10 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 	{
 		get { return _pageName; }
 		set { _pageName = value; }
+	}
+	public string OrganizationId
+	{
+		get { return organizationId; }
+		set { organizationId = value; }
 	}
 }

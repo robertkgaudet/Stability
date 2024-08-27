@@ -125,9 +125,8 @@
 							<li><a href="/V1/SignOut.aspx">Sign Out</a></li>
 						</ul>
 					</div>
-						<asp:HyperLink CssClass="btn btn-xs btn-default" runat="server" id="hypProfileAdmin" visible="false"><i class="fa fa-lock"></i> Admin Edit</asp:HyperLink>
-						<asp:HyperLink CssClass="btn btn-xs btn-default" runat="server" id="hypProfileEdit" NavigateUrl="/V1/Profile/ProfileEdit.aspx" Visible="false"><i class="fa fa-user-circle"></i> Edit Profile</asp:HyperLink>
-					
+					<asp:HyperLink CssClass="btn btn-xs btn-default" runat="server" id="hypProfileAdmin" visible="false"><i class="fa fa-lock"></i> Admin Edit</asp:HyperLink>
+					<asp:HyperLink CssClass="btn btn-xs btn-default" runat="server" id="hypProfileEdit" NavigateUrl="/V1/Profile/ProfileEdit.aspx" Visible="false"><i class="fa fa-user-circle"></i> Edit Profile</asp:HyperLink>
 				</div>
             </div>
 			<div class="row memberDetail">
@@ -135,13 +134,13 @@
 					<div style="margin-top:10px; width:100%;">
 					<span style="color:darkslategrey; font-size:20px; font-weight:800; margin-right:10px;"><asp:Literal ID="litMemberName" runat="server"></asp:Literal></span>
 					<i class="fa fa-id-badge pe-2x <%=_badgeVettingStatus%> float-right <%=faIdBadgeClick%>" data-toggle="tooltip" data-placement="top" title="Activate Vetted ID Badge"></i>
-					<i class="fa fa-shield pe-2x <%=_badgeCertificationStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Earn Traininig Certifications To Activate"></i>
+					<i class="fa fa-shield pe-2x <%=_badgeCertificationStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Earn Training Certifications To Activate"></i>
 					<i class="fa fa-certificate pe-2x <%=_badgeDeployedStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Deploy Once To Activate"></i>
 					<i class="fa fa-check-circle pe-2x <%=_badgeHoursRecordedStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Record 8 Hours of Volunteer Time To Activate"></i>
 					<i class="fa fa-star pe-2x <%=_badgeTOPStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Record 100 Hours of Volunteer Time or 5 Or More Deployments to Activate"></i>
 					<i class="fa fa-ban text-danger pe-2x float-right" runat="server" id="idKwest" visible="false" data-toggle="tooltip" data-placement="top" title="Work in Progress"></i>
 					</div>
-						<div style="clear: both;"></div>
+					<div style="clear: both;"></div>
 					<asp:Literal ID="litTitle" runat="server"></asp:Literal>
 					<p style="font-size:16px;">
 						<asp:Literal ID="litMemberDescription" runat="server"></asp:Literal>

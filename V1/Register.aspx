@@ -46,7 +46,7 @@
         <div>
             <div class="col-sm-4"></div>
             <div class="col-sm-4">
-				<img class="img-responsive logo-name" src="/V1/Images/Logo-Horizontal.png" />
+				<img class="img-responsive logo-name" src="/V1/Images/Logo-Horizontal-cs.png" />
             </div>
             <div class="col-sm-4"></div>
 		</div>

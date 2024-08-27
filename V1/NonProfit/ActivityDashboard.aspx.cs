@@ -1,62 +1,114 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IdentityModel.Metadata;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
-public partial class V1_NonProfit_ActivityDashboard : System.Web.UI.Page
+public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 {
+	public string _logo;
+	public string _teamName;
+	public string _teamSquareLogo;
+	public string _teamDescription;
+	public string _pageName;
+	public string _organizationId;
+	public string _nonProfitDropDown;
+	public string _coverImage;
 	public string organizationId = string.Empty;
 	public string availableDates = string.Empty;
 	public string teamCounts = string.Empty;
 	protected void Page_Load(object sender, EventArgs e)
 	{
-		ucTeamNavigation.PageName = "activityPage";
+		ucTeamFooter.PageName = "activityPage";
+		ucTeamHeader.PageName = "Impact Dashboard";
+
+		#region HEADER PROPERTIES
+		////////////////////////
+		//BEGIN HEADER PROPERTIES
+		////////////////////////
+
 		organizationId = Request.QueryString["organizationId"];
+		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
+		_coverImage = causePhotoFolder + "businesscoverimage.png";
 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-
 		var organization = (from o in dc.Organizations
 							where o.OrganizationId == new Guid(organizationId)
-							select o).SingleOrDefault();
+							select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
 
-		ucTeamNavigation.TeamName = organization.Name;
+		string squareLogo = string.Empty;
+		if (organization != null)
+		{
+			if (organization.CoverImage != null)
+			{
+			//	_coverImage = causePhotoFolder + organization.CoverImage;
+			}
 
-		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
-		Master.PageTitle = organization.Name + " Activity Dashboard on Stability";
-		Master.PageDescription = organization.Description;
-		Master.FbDescription = organization.Description;
-		Master.FbImage = causePhotoFolder + organization.CoverImage;
+			ucTeamHeader.CoverImage = _coverImage;
+			ucTeamHeader.TeamDescription = organization.Description;
+			ucTeamHeader._teamTitle = organization.Name;
+			ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
+
+			if (!String.IsNullOrEmpty(organization.LogoSquare))
+			{
+				squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+			}
+			else
+			{
+				squareLogo = "/V1/Images/Logo-Placeholder.png";
+			}
+
+			Master.PageTitle = organization.Name + " Programs on Stability";
+			Master.PageDescription = organization.Description;
+			Master.FbDescription = organization.Description;
+			Master.FbImage = _coverImage;
+			Master.FbSite_name = organization.Name + " Programs on Stability";
+		}
+
+		ucTeamFooter.TeamName = organization.Name;
+		ucTeamFooter.OrganizationId = organizationId;
+		ucTeamHeader.OrganizationId = organizationId;
+		ucTeamHeader.TeamLogo = squareLogo;
 		Master.FbImageType = "image/jpg";
-		Master.FbSite_name = organization.Name + " Activity Dashboard on Stability";
 		Master.FbURL = Request.Url.AbsoluteUri;
 
+		//ucTeamHeader.Logo = logo;
+		//ucTeamHeader.OrganizationId = organizationId;
+		//ucTeamHeader.PageName = "Programs";
+		//ucTeamHeader.TeamDescription = organization.Description;
+		//ucTeamHeader.TeamName = organization.Name;
+		//ucTeamHeader.TeamSquareLogo = squareLogo;
 
-		string logo = string.Empty;
-		string squareLogo = string.Empty;
-		if (!String.IsNullOrEmpty(organization.Logo))
+		bool isOwner = false;
+		if (User.Identity.IsAuthenticated == true)
 		{
-			logo = "/Impactoid/Images/Logos/" + organization.Logo;
-		}
-		else
-		{
-			//Use placeholder image.imgLogo.Visible = true;
-			logo = "/V1/Images/Logo-Placeholder.png";
-		}
-		if (!String.IsNullOrEmpty(organization.LogoSquare))
-		{
-			squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+			var userOrganizationOwner = (from uo in dc.UserOrganizations
+										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
+										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+										 && uo.OrganizationId == new Guid(organizationId)
+										 select o).Take(1).SingleOrDefault();
+
+			if (userOrganizationOwner != null)
+			{
+				if ((userOrganizationOwner.OwnerId != userId))
+				{
+					isOwner = true;
+				}
+			}
 		}
 
-		ucTeamHeader.Logo = logo;
-		ucTeamHeader.OrganizationId = organizationId;
-		ucTeamHeader.PageName = "Activity Dashboard";
-		ucTeamHeader.TeamDescription = organization.Description;
-		ucTeamHeader.TeamName = organization.Name;
-		ucTeamHeader.TeamSquareLogo = squareLogo;
+		////////////////////////
+		//END HEADER PROPERTIES
+		////////////////////////
+		#endregion
+
+
+
 
 
 		var organizationEvents = from oe in dc.OrganizationEvents
@@ -102,10 +154,9 @@ public partial class V1_NonProfit_ActivityDashboard : System.Web.UI.Page
 		var campaigns = from oe in dc.OrganizationEvents
 						join ev in dc.Events on oe.EventId equals ev.EventId
 						where oe.OrganizationId == new Guid(organizationId)
-						orderby ev.CreatedOn descending
 						select new { oe.OrganizationEventId, oe.URLFriendlyCampaignName, campaignName = oe.CampaignName, oe.EndDate, oe.BeginDate };
 
-		rptActiveCampaigns.DataSource = campaigns;
+		rptActiveCampaigns.DataSource = campaigns.OrderByDescending(d => d.BeginDate).ToList();
 		rptActiveCampaigns.DataBind();
 
 		litStatesCounties.Text = CrowdRelief.Tools.GetImpactedStateCountyStringByTeam(new Guid(organizationId));
@@ -163,21 +214,25 @@ public partial class V1_NonProfit_ActivityDashboard : System.Web.UI.Page
 			HyperLink hypCauseName = (HyperLink)e.Item.FindControl("hypCauseName");
 			Label lblBeginDate = (Label)e.Item.FindControl("lblBeginDate");
 			Label lblEndDate = (Label)e.Item.FindControl("lblEndDate");
-			Label lblDeploymentLength = (Label)e.Item.FindControl("lblDeploymentLength"); 
+			Label lblDeploymentLength = (Label)e.Item.FindControl("lblDeploymentLength");
+			HtmlTableCell tdBeginDate = e.Item.FindControl("tdBeginDate") as HtmlTableCell;
+			HtmlTableCell tdEndDate = e.Item.FindControl("tdEndDate") as HtmlTableCell;
 
 			string campaignName = (string)DataBinder.Eval(dataItem.DataItem, "campaignName");
-			string URLFriendlyCampaignName = (string)DataBinder.Eval(dataItem.DataItem, "URLFriendlyCampaignName"); 
+			string URLFriendlyCampaignName = (string)DataBinder.Eval(dataItem.DataItem, "URLFriendlyCampaignName");
 			Guid organizationEventId = (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationEventId");
 
 			DateTime beginDate = DateTime.Now;
 			if (DataBinder.Eval(dataItem.DataItem, "BeginDate") != null)
-			{ 
+			{
 				beginDate = (DateTime)DataBinder.Eval(dataItem.DataItem, "BeginDate");
+				tdBeginDate.Attributes.Add("data-value", beginDate.ToString("yyyy-MM-dd"));
 			}
 			DateTime endDate = DateTime.Now;
 			if (DataBinder.Eval(dataItem.DataItem, "EndDate") != null)
 			{
 				endDate = (DateTime)DataBinder.Eval(dataItem.DataItem, "EndDate");
+				tdEndDate.Attributes.Add("data-value", endDate.ToString("yyyy-MM-dd"));
 			}
 			TimeSpan deploymentTimeSpan = new TimeSpan();
 			int deploymentLength = 0;

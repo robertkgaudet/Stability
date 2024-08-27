@@ -1,0 +1,69 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="2-Column-Child.master.cs" Inherits="V1_MasterPages_2_Column_Child" %>
+
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+
+	<asp:ContentPlaceHolder id="head" runat="server"></asp:ContentPlaceHolder>
+
+	<style>
+	.content
+	{
+		padding:0px 0px 0px 0px !important;
+	}
+		.hpanel
+		{
+			margin-bottom:5px !important;
+		}
+		.member-panel-body
+		{
+			border-radius: 10px !important;
+			margin-bottom: 0px !important;
+		}
+		/* Custom gutter class for rows */
+		.row.no-gutter {
+			margin-left: 0;
+			margin-right: 0;
+		}
+
+		.row.no-gutter [class*="col-"] {
+			padding-left: 1px;  /* Reduced gutter padding */
+			padding-right: 1px;
+		}
+
+</style>
+
+<script>
+	$(document).ready(function () {
+		$("body").tooltip({ selector: '[data-toggle=tooltip]' });
+	});
+</script>
+
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">	<div class="container" style="padding-bottom:100px !important;">
+		<div class="row justify-content-center" style="margin-top:40px;">
+			<!--MAIN CONTENT CONTAINER-->
+			<div class="col-sm-8 col-lg-9">
+				<div class="hpanel">
+					<div class="panel-body member-panel-body">
+						<h4>
+							<asp:Literal ID="litPageName" runat="server"></asp:Literal>
+						</h4>
+
+						<asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+
+					</div>
+				</div>
+			</div>
+			<!--NAVIGATION-->
+			<div class="col-sm-4 col-lg-3">
+				<div class="hpanel">
+					<div class="panel-body member-panel-body">
+						test
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</asp:Content>
+

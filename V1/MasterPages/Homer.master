@@ -253,11 +253,11 @@
             }
 			.bodyBGColor
 			{
-				background-color:#f8f7f6;
+				background-color:#F1F3F6;
 			}
 			.content
 			{
-				background-color:#f8f7f6 !important;
+				background-color:#F1F3F6 !important;
 				color:#6A6C6F;
 			}
 			#header
@@ -311,11 +311,6 @@
 			.ul_legend li
 			{
 				display: inline-block;
-			}
-			#wrapper
-			{
-				/*padding:0px !important;
-				margin:0px !important;*/
 			}
 		</style>
         <style>
@@ -415,7 +410,7 @@
 			<div style="margin-bottom:500px;">
 				<div id="header" runat="server">
 					<nav role="navigation">
-						<asp:Image ID="imgLogo" CssClass="pull-left" runat="server" Width="200" ImageUrl="~/V1/Images/logo.png" />
+						<asp:Image ID="imgLogo" CssClass="pull-left" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png" />
 						<div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs"></i></div>
 
 						<div role="search" class="navbar-form-custom">
@@ -702,16 +697,10 @@
 				</aside>
 				<!-- Main Wrapper -->
 				<div id="wrapper">
-						<div id="divMasterCover" class="divMasterCover" runat="server"></div>
-						<asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+					<div id="divMasterCover" class="divMasterCover" runat="server"></div>
+					<asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
 		
-						</asp:ContentPlaceHolder>
-					<!-- Footer-->
-<%--					<footer class="footer" id="footer" runat="server">
-						<span class="pull-right">
-							Copyright Stability 2024
-						</span>	
-					</footer>--%>
+					</asp:ContentPlaceHolder>
 					<div class="mobileFooter">
 						<div class="row">
 							<div class="col-xs-3">
