@@ -1,1 +1,0 @@
-﻿<%@ control language="C#" autoeventwireup="true" inherits="UserControls_Navigation, App_Web_qaqxyxhv" %>
