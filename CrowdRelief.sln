@@ -24,6 +24,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "CrowdRelief", ".", "{03D1A7
 		SlnRelativePath = "..\Stability\"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stability.Tests", "Stability.Tests\Stability.Tests.csproj", "{9BE93318-B694-479F-8D59-7D5C5C9ABE25}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{03D1A72D-A3D5-4465-8551-9E36A3CFD885}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{03D1A72D-A3D5-4465-8551-9E36A3CFD885}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BE93318-B694-479F-8D59-7D5C5C9ABE25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BE93318-B694-479F-8D59-7D5C5C9ABE25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
