@@ -50,19 +50,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-10">
-								<div id="hbreadcrumb" class="pull-right">
-									<ol class="hbreadcrumb breadcrumb">
-										<li>
-											<asp:HyperLink ID="hypBreadcrumbTeamName" runat="server"></asp:HyperLink>
-										</li>
-										<li class="active">
-											<span>
-												<asp:Literal ID="litBreadcrumbPageName" runat="server"></asp:Literal>
-											</span>
-										</li>
-									</ol>
-								</div>
+	                        <div class="col-lg-10">
                                 <h2>
                                     <asp:Literal ID="litEventName" runat="server"></asp:Literal>
                                 </h2>

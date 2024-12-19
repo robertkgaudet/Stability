@@ -1,4 +1,5 @@
 ﻿using CrowdRelief;
+using Stability;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -34,7 +35,8 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 	{
 		//string causePhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		string profilePhotoFolder		= System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
-		_coverImage						= profilePhotoFolder + "/profilecover.png";
+		string coverPhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
+		_coverImage						= coverPhotoFolder + "Stability_Cover_V3.jpg";
 		litMemberName.Text				= _memberFullname;
 		imgMemberProfilePhoto.ImageUrl	= profilePhotoFolder + _memberProfileImageFilename;
 		litMemberDescription.Text		= _memberDescription;
@@ -54,8 +56,8 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 			litTeamBreak.Text =         "<br />";
 			hypTeam.Visible				= true;
 			hypTeam.Text				= _teamName;
-			hypTeam.NavigateUrl			= "/V1/NonProfit/Stream.aspx?organizationId=" + _teamId;
-			hypMyTeam.NavigateUrl		= "/V1/NonProfit/Stream.aspx?organizationId=" + _teamId;
+			hypTeam.NavigateUrl			= "/V1/NonProfit/Default.aspx?organizationId=" + _teamId;
+			hypMyTeam.NavigateUrl		= "/V1/NonProfit/Default.aspx?organizationId=" + _teamId;
 		}
 
 		if (HttpContext.Current.User.Identity.IsAuthenticated)

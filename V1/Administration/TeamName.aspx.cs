@@ -66,10 +66,10 @@ public partial class V1_Administration_TeamName : BaseWebForm
 		"~\\EmailTemplates\\TeamName.html",
 		out error);
 
-		Response.Redirect("/V1/NonProfitAdministration/InviteTeam.aspx?userActionModal=false&organizationId=" + organization.OrganizationId);
+		Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + organization.OrganizationId);
 	}
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
-		Response.Redirect("/V1/Profile/Profile.aspx");
+		Response.Redirect("/V1/Member/Default.aspx");
 	}
 }

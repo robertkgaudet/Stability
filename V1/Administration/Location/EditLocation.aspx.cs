@@ -57,6 +57,7 @@ public partial class V1_Administration_Resources_EditLocation : BaseOrganization
 						txtDateOpened.Value = locationProfile.DateOpened.Value.ToShortDateString();
 
 					txtEmailAddress.Value = locationProfile.EmailAddress;
+					txtGeneratorSize.Value = locationProfile.GeneratorSize;
 					txtFacebookURL.Value = locationProfile.FacebookURL;
 					txtInstagramUsername.Value = locationProfile.InstagramUsername;
 					txtLocationDescription.Value = locationProfile.Description;
@@ -69,6 +70,7 @@ public partial class V1_Administration_Resources_EditLocation : BaseOrganization
 					txtWebsiteURL.Value = locationProfile.WebsiteURL;
 					txtDonationURL.Value = locationProfile.DonationURL;
 					txtYouTubeURL.Value = locationProfile.YouTubeURL;
+					chkHasGenerator.Checked = Convert.ToBoolean(locationProfile.HasGenerator);
 					chkActive.Checked = locationProfile.IsActive;
 					chkAllowsPets.Checked = locationProfile.AllowsPets;
 					chkIsOnMap.Checked = locationProfile.IsOnMap;
@@ -104,10 +106,14 @@ public partial class V1_Administration_Resources_EditLocation : BaseOrganization
 			locationProfile.IsActive = chkActive.Checked;
 			locationProfile.SeekingVolunteers = chkNeedsVolunteers.Checked;
 			locationProfile.IsOnMap = chkIsOnMap.Checked;
+			locationProfile.HasGenerator = chkHasGenerator.Checked;
 			locationProfile.ProvidesMedicalHelp = chkMedicalHelpProvided.Checked;
 			locationProfile.Capacity = !String.IsNullOrEmpty(txtCapacity.Value) ? int.Parse(txtCapacity.Value) : 0;
 			locationProfile.CreatedBy = userId;
 			locationProfile.CreatedOn = DateTime.Now;
+
+			if (!String.IsNullOrEmpty(txtGeneratorSize.Value))
+				locationProfile.GeneratorSize = txtGeneratorSize.Value;
 
 			if (!String.IsNullOrEmpty(txtDateClosed.Value))
 				locationProfile.DateClosed = Convert.ToDateTime(txtDateClosed.Value);
@@ -166,11 +172,15 @@ public partial class V1_Administration_Resources_EditLocation : BaseOrganization
 			duplicateLocationProfile.AllowsPets = chkAllowsPets.Checked;
 			duplicateLocationProfile.IsActive = chkActive.Checked;
 			duplicateLocationProfile.IsOnMap = chkIsOnMap.Checked;
+			duplicateLocationProfile.HasGenerator = chkHasGenerator.Checked;
 			duplicateLocationProfile.SeekingVolunteers = (bool)chkNeedsVolunteers.Checked;
 			duplicateLocationProfile.ProvidesMedicalHelp = chkMedicalHelpProvided.Checked;
 			duplicateLocationProfile.Capacity = !String.IsNullOrEmpty(txtCapacity.Value) ? int.Parse(txtCapacity.Value) : 0;
 			duplicateLocationProfile.UpdatedBy = userId;
 			duplicateLocationProfile.UpdatedOn = DateTime.Now;
+
+			if (!String.IsNullOrEmpty(txtGeneratorSize.Value))
+				duplicateLocationProfile.GeneratorSize = txtGeneratorSize.Value;
 
 			if (!String.IsNullOrEmpty(txtDateClosed.Value))
 				duplicateLocationProfile.DateClosed = Convert.ToDateTime(txtDateClosed.Value);

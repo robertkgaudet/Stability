@@ -64,6 +64,11 @@ public partial class CaseManagement_MasterPage : System.Web.UI.MasterPage
 		//activeStatus.Attributes.Add("checked", "checked");
 		if (HttpContext.Current.User.Identity.IsAuthenticated)
 		{
+			if(!HttpContext.Current.User.IsInRole("CaseManager"))
+			{
+				Response.Redirect("/Error.aspx?ErrorType=VictimNoAccess");
+			}
+
 			userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
 			string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
 			divSettings.Visible = true;

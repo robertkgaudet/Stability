@@ -47,14 +47,12 @@
 
 			messageModelTitle = document.getElementById('messageModelTitle');
 			txtMessage = document.getElementById('<%=txtMessage.ClientID%>');
-
-			divMessageSuccess = document.getElementById('divMessageSuccess');
 			divMessageTextBox = document.getElementById('messageTextBox');
 			btnSend = document.getElementById('btnSend');
 			divMessageError = document.getElementById('divMessageError');
 			divErrorMessage = document.getElementById('divErrorMessage');
-			divMessageSuccess.style.visibility = 'hidden';
-			divMessageSuccess.style.visibility = 'visible';
+
+			divMessageSuccess = document.getElementById('divMessageSuccess');
 			divMessageSuccess.style.visibility = 'visible';
 			divMessageSuccess.hidden = true;
 			divMessageTextBox.hidden = false;
@@ -138,6 +136,7 @@
 	
 					<div class="panel-heading">
 						<asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
+						<asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank" Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
 					</div>
 	
 						<div class="panel-body">
@@ -196,7 +195,6 @@
 							</table>
 						</div>
 					</div>
-				</div>
 				<div class="modal fade" id="messageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
@@ -223,7 +221,7 @@
 							</div>
 						</div>
 					</div>
-
+				</div>
 
 
 				<uc1:TeamFooter runat="server" ID="ucTeamFooter" />

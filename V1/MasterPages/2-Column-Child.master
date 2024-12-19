@@ -1,34 +1,50 @@
 ﻿<%@ Master Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="2-Column-Child.master.cs" Inherits="V1_MasterPages_2_Column_Child" %>
-
+<%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 
 	<asp:ContentPlaceHolder id="head" runat="server"></asp:ContentPlaceHolder>
 
 	<style>
+	.divCover {
+		width: 100%;
+		background-image: url('<%=_coverImage%>'); /* Path to your image */
+		background-size: cover; /* Scale the image to cover the entire div */
+		background-position: center; /* Center the image */
+		background-repeat: no-repeat; /* Prevent the image from repeating */
+		height:80px;
+		border-top-left-radius: 10px !important;
+		border-top-right-radius: 10px !important;
+	}
 	.content
 	{
 		padding:0px 0px 0px 0px !important;
 	}
-		.hpanel
-		{
-			margin-bottom:5px !important;
-		}
-		.member-panel-body
-		{
-			border-radius: 10px !important;
-			margin-bottom: 0px !important;
-		}
-		/* Custom gutter class for rows */
-		.row.no-gutter {
-			margin-left: 0;
-			margin-right: 0;
-		}
+	.hpanel
+	{
+		margin-bottom:5px !important;
+	}
+	.member-panel-body-large
+	{
+		border-bottom-left-radius: 10px !important;
+		border-bottom-right-radius: 10px !important;
+		margin-bottom: 0px !important;
+	}
+	.member-panel-body
+	{
+		border-radius: 10px !important;
+		margin-bottom: 0px !important;
+	}
+	/* Custom gutter class for rows */
+	.row.no-gutter {
+		margin-left: 0;
+		margin-right: 0;
+	}
 
-		.row.no-gutter [class*="col-"] {
-			padding-left: 1px;  /* Reduced gutter padding */
-			padding-right: 1px;
-		}
+	.row.no-gutter [class*="col-"] {
+		padding-left: 1px;  /* Reduced gutter padding */
+		padding-right: 1px;
+	}
 
 </style>
 
@@ -43,8 +59,9 @@
 		<div class="row justify-content-center" style="margin-top:40px;">
 			<!--MAIN CONTENT CONTAINER-->
 			<div class="col-sm-8 col-lg-9">
+				<div id="divCover" class="divCover"></div>
 				<div class="hpanel">
-					<div class="panel-body member-panel-body">
+					<div class="panel-body member-panel-body-large">
 						<h4>
 							<asp:Literal ID="litPageName" runat="server"></asp:Literal>
 						</h4>
@@ -58,7 +75,7 @@
 			<div class="col-sm-4 col-lg-3">
 				<div class="hpanel">
 					<div class="panel-body member-panel-body">
-						test
+						<asp:ContentPlaceHolder ID="ContentPlaceHolder2" runat="server"></asp:ContentPlaceHolder>
 					</div>
 				</div>
 			</div>

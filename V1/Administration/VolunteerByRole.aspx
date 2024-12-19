@@ -70,6 +70,8 @@
 										<ItemTemplate>
 											<tr>
 												<td><asp:HyperLink ID="hypID" runat="server"></asp:HyperLink></td>
+												<td><asp:Literal ID="litPhone" runat="server"></asp:Literal></td>
+												<td><asp:Literal ID="litEmail" runat="server"></asp:Literal></td>
 											</tr>
 										</ItemTemplate>
 									</asp:Repeater>

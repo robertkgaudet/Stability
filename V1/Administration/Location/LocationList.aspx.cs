@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class V1_Administration_Location_LocationList : System.Web.UI.Page
+public partial class V1_Administration_Location_LocationList : BaseWebForm
 {
 	protected void Page_Load(object sender, EventArgs e)
 	{
@@ -23,8 +23,15 @@ public partial class V1_Administration_Location_LocationList : System.Web.UI.Pag
 							join a in dc.Addresses on lp.AddressId equals a.AddressId
 							join lpt in dc.LocationParentTypes on lp.LocationParentTypeId equals lpt.LocationParentTypeId
                             orderby lp.CreatedOn descending
-                            where a.State == "Florida" && a.County == "Lee County"
-						select new { locationTypeName = lpt.Name, a.State, lp.LocationProfileId, lp.IsActive, lp.IsOnMap, lp.Name, a.AddressId, lp.PointOfContactName, lp.PointOfContactPhoneNumber, a.FormattedAddress };
+                            where a.State == "North Carolina"
+						select new { locationTypeName = lpt.Name, a.State, 
+							a.County,
+							lp.PhoneNumber,
+							lp.LocationProfileId, lp.IsActive, 
+							lp.IsOnMap, lp.Name, a.AddressId, 
+							lp.PointOfContactName, 
+							lp.PointOfContactPhoneNumber, 
+							a.FormattedAddress };
 
 		rpLocations.DataSource = locations;//.Take(250);
 		rpLocations.DataBind();
@@ -49,14 +56,17 @@ public partial class V1_Administration_Location_LocationList : System.Web.UI.Pag
 			String pointOfContactPhoneNumber = (String)DataBinder.Eval(dataItem.DataItem, "PointOfContactPhoneNumber");
 			Guid addressId = (Guid)DataBinder.Eval(dataItem.DataItem, "AddressId");
 			String locationTypeName = (String)DataBinder.Eval(dataItem.DataItem, "locationTypeName");
-            String state = (String)DataBinder.Eval(dataItem.DataItem, "State");
+			String county = (String)DataBinder.Eval(dataItem.DataItem, "County");
+			String phoneNumber = (String)DataBinder.Eval(dataItem.DataItem, "PhoneNumber");
+			String state = (String)DataBinder.Eval(dataItem.DataItem, "State");
             Boolean isOnMap = (Boolean)DataBinder.Eval(dataItem.DataItem, "isOnMap");
 			Boolean isActive = (Boolean)DataBinder.Eval(dataItem.DataItem, "isActive");
 
-            litState.Text = state;
+            litState.Text = state + " (" + county + ")";
 
+			string formattedPhoneNumber = FormatPhoneNumberAsLink(phoneNumber);
 
-            litAddress.Text = formattedAddress;
+			litAddress.Text = formattedAddress + "<br>" + formattedPhoneNumber;
 			litPointOfContact.Text = pointOfContactName;
 			hypPhoneNumber.Text = pointOfContactPhoneNumber;
 			hypPhoneNumber.NavigateUrl = "tel:" + pointOfContactPhoneNumber;

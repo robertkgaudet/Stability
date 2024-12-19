@@ -25,6 +25,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 	public string fixedHeader = "fixed-header";
 	public string _userOrganizationEventId = string.Empty;
 	public string _organizationEventId = string.Empty;
+	public string _organizationId = string.Empty;
 	public string _volunteerTypes;
 	public string _timeActive = "false";
 	public string _cause = string.Empty;
@@ -51,7 +52,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 		if (!_hideMasterCover)
 		{
 			divMasterCover.Visible = true;
-			_masterCoverImage = "/V1/Images/CausePhotos/stabilityevent.png";
+			_masterCoverImage = "/V1/Images/Cover/Stability_Cover_V1.jpg";
 		}
 
 		string userActionModal = Request.QueryString["userActionModal"];
@@ -77,7 +78,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 		PageDescription = String.IsNullOrEmpty(PageDescription) ? System.Configuration.ConfigurationManager.AppSettings["Description"].ToString() : _pageDescription;
 		FbSite_name = String.IsNullOrEmpty(FbSite_name) ? System.Configuration.ConfigurationManager.AppSettings["Title"].ToString() : _fbSite_name;
 		FbDescription = String.IsNullOrEmpty(FbDescription) ? System.Configuration.ConfigurationManager.AppSettings["Description"].ToString() : _fbDescription;
-
+		FbURL = HttpContext.Current.Request.Url.ToString();
 		fbTitle.Attributes.Add("content", PageTitle);
 		fbImage.Attributes.Add("content", HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + HttpContext.Current.Request.ApplicationPath + FbImage);
 		fbURL.Attributes.Add("content", FbURL);
@@ -141,6 +142,8 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
 			if (orgUser.Count() > 0)
 			{
+				_organizationId = orgUser.Take(1).SingleOrDefault().OrganizationId.ToString();
+				linkDeployment.HRef = "/V1/NonProfit/Deployments.aspx?organizationId=" + _organizationId;
 				teamUpdated = "yellowgreen";
 				hypActionPage.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
 				//Person is owner of a non-profit.

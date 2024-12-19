@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 public partial class V1_Profile_ChooseEvent : BaseOrganizationWebForm
@@ -50,15 +51,20 @@ public partial class V1_Profile_ChooseEvent : BaseOrganizationWebForm
 		{
 			RepeaterItem dataItem = (RepeaterItem)e.Item;
 			HyperLink hypName = (HyperLink)e.Item.FindControl("hypName");
+			HyperLink hypEdit = (HyperLink)e.Item.FindControl("hypEdit");
+			HyperLink hypMap = (HyperLink)e.Item.FindControl("hypMap"); 
 			Literal litStatus = (Literal)e.Item.FindControl("litStatus");
 			Literal litEventDate = (Literal)e.Item.FindControl("litEventDate");
-			Literal litStates = (Literal)e.Item.FindControl("litStates"); 
+			Literal litStates = (Literal)e.Item.FindControl("litStates");
+			Literal litSimulation = (Literal)e.Item.FindControl("litSimulation"); 
+			HtmlGenericControl iSimulation = (HtmlGenericControl)e.Item.FindControl("iSimulation");
 
 			//Total count of items and total cost.
 			Guid eventId = (Guid)DataBinder.Eval(dataItem.DataItem, "EventId");
 			DateTime? beginDate = (DateTime)DataBinder.Eval(dataItem.DataItem, "BeginDate");
 			string disasterColor = (string)DataBinder.Eval(dataItem.DataItem, "Color");
 			bool isActive = (bool)DataBinder.Eval(dataItem.DataItem, "IsActive");
+			bool isSimulation = DataBinder.Eval(dataItem.DataItem, "IsSimulation") == null ? false : (bool)DataBinder.Eval(dataItem.DataItem, "IsSimulation");
 			string name = (string)DataBinder.Eval(dataItem.DataItem, "Name");
 			string URLFriendlyName = (string)DataBinder.Eval(dataItem.DataItem, "URLFriendlyName");
 
@@ -80,6 +86,19 @@ public partial class V1_Profile_ChooseEvent : BaseOrganizationWebForm
 				rebuildProgress = "<h6 style=\"margin:0px;\"><i class=\"fa fa-tachometer\"></i> RECOVERY " + rebuildProgress + "</h6>";
 			}
 
+			if(isSimulation)
+			{
+				iSimulation.Visible = true;
+				litSimulation.Text = "Simulation Only";
+			}
+
+			hypMap.Text = "Maps";
+			hypMap.NavigateUrl = "/Maps/" + URLFriendlyName;
+			if(User.IsInRole("Administrator"))
+			{ 
+			hypEdit.Text = "Edit";
+			hypEdit.NavigateUrl = "/V1/Administration/NewDisaster.aspx?eventId=" + eventId;
+			}
 			hypName.Text = name;
 			hypName.NavigateUrl = "/Disaster/" + URLFriendlyName;
 

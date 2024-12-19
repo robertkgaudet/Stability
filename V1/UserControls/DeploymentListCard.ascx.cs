@@ -1,5 +1,6 @@
 ﻿using Stability;
 using System;
+using System.Activities;
 using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.Drawing;
@@ -14,17 +15,18 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 {
 	Guid _eventId = Guid.Empty;
 	Guid _userId = Guid.Empty;
+	Boolean _isActive = true;
 	Guid _organizationId = Guid.Empty;
 	public int _deploymentCount = 0;
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		int deploymentCount = 0;
-		litDeployments.Text = GetDeployments(_eventId, _userId, _organizationId, out deploymentCount);
+		litDeployments.Text = GetDeployments(_eventId, _userId, _organizationId, _isActive, out deploymentCount);
 		_deploymentCount = deploymentCount;
 		Session["deploymentCount"] = deploymentCount;
 	}
 
-	protected string GetDeployments(Guid eventId, Guid userId, Guid organizationId, out int deploymentCount)
+	protected string GetDeployments(Guid eventId, Guid userId, Guid organizationId, Boolean isActive, out int deploymentCount)
 	{
 		deploymentCount = 0;
 		string deploymentPanel = string.Empty;
@@ -32,16 +34,22 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 
 		if (userId != Guid.Empty)
 		{
+			//Deployments for USER
 			var deployments = from ue in dc.UserEvents
 							  join uoe in dc.UserOrganizationEvents on ue.UserId equals uoe.UserId
 							  join oe in dc.OrganizationEvents on uoe.OrganizationEventId equals oe.OrganizationEventId
 							  join org in dc.Organizations on oe.OrganizationId equals org.OrganizationId
 							  join s in dc.USStates on oe.StagingStateId equals s.StatesId
 							  join c in dc.Counties on oe.StagingCountyId equals c.CountyId
-							  where uoe.UserId == userId
-							  select new { oe.BeginDate, oe.EndDate, State = s.Name, County = c.Name, org.IsVoadMember, org.Logo, oe.VolunteerHourlyRate, org.URLFriendlyName, oe.IsActive, oe.OrganizationEventId, org.OrganizationId, DeploymentName = oe.CampaignName, oe.URLFriendlyCampaignName, OrganizationName = org.Name };
+							  where uoe.UserId == userId && oe.IsActive == isActive
+							  select new { oe.BeginDate, oe.CreatedOn, oe.EndDate, 
+								  State = s.Name, County = c.Name, org.IsVoadMember, 
+								  org.Logo, oe.VolunteerHourlyRate, org.URLFriendlyName, 
+								  oe.IsActive, oe.OrganizationEventId, org.OrganizationId, 
+								  DeploymentName = oe.CampaignName, oe.URLFriendlyCampaignName, 
+								  OrganizationName = org.Name };
 			
-			deployments = deployments.Distinct().OrderByDescending(d => d.EndDate);
+			deployments = deployments.Distinct().OrderByDescending(d => d.CreatedOn);
 			deploymentCount = deployments.Count();
 			//DeploymentCount = deployments.Count();
 
@@ -102,24 +110,24 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 					countyTerm = "Parish";
 				}
 
-				string logoDiv = "<div class=\"m-b-sm m-l-sm pull-right\" style=\"background-color:white; display:inline-block; padding:2px; border:solid 1px #ccc;\">" +
-									"<img id=\"imgLogo\" src=\"" + logo + "\" width=\"60px\" />" +
+				string logoDiv = "<div class=\"m-b-sm m-l-sm\" style=\"background-color:white; display:inline-block; padding:2px; border:solid 1px #ccc;\">" +
+									"<img id=\"imgLogo\" src=\"" + logo + "\" width=\"100px\" />" +
 								"</div>";
 
 				deploymentPanel += "<div class=\"grid-item m-b-sm\" onclick=\"window.location.href='/V1/NonProfit/NonProfitCampaign.aspx?organizationEventId=" + deployment.OrganizationEventId + "';\">" + Environment.NewLine + Environment.NewLine +
 										"<div class=\"hpanel hviolet\">" + Environment.NewLine +
-											"<div class=\"panel-body deploymentPanel\">" + Environment.NewLine +
-												"<div class=\"row\" style=\"padding:0px 10px;\">" + Environment.NewLine +
-													"<div class=\"col\">" + Environment.NewLine +
-														logoDiv + Environment.NewLine +
-													"</div>" + Environment.NewLine +
-													"<div class=\"col\">" + Environment.NewLine +
-														"<p class=\"m-b-xs\">" + deployment.OrganizationName + "</p>" + Environment.NewLine +
-													"</div>" + Environment.NewLine +
-												"</div>" + Environment.NewLine +
+											"<div class=\"panel-body deploymentPanel\" style=\"position: relative;\">" + Environment.NewLine +
 												"<div class=\"row\" style=\"padding:0px 10px;\">" + Environment.NewLine +
 													"<div class=\"col\">" + Environment.NewLine +
 														"<div><h4 class=\"font-bold\">" + deployment.DeploymentName + "</h4>" + deployment.County + " " + countyTerm + ", " + deployment.State + "</div>" + Environment.NewLine +
+													"</div>" + Environment.NewLine +
+												"</div>" + Environment.NewLine +
+												"<div class=\"row block\" style=\"padding:0px 10px; margin-top:20px; position:absolute; bottom:0; margin-bottom:20px;\">" + Environment.NewLine +
+													"<div class=\"col\">" + Environment.NewLine +
+														"<p class=\"m-b-xs\">" + deployment.OrganizationName + "</p>" + Environment.NewLine +
+													"</div>" + Environment.NewLine +
+													"<div class=\"col\">" + Environment.NewLine +
+														logoDiv + Environment.NewLine +
 													"</div>" + Environment.NewLine +
 												"</div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
@@ -134,6 +142,7 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 
 		if (organizationId != Guid.Empty)
 		{
+			//Deployments FOR TEAM
 			var deployments = from org in dc.Organizations
 							  join oe in dc.OrganizationEvents on org.OrganizationId equals oe.OrganizationId
 							  join s in dc.USStates on oe.StagingStateId equals s.StatesId
@@ -142,12 +151,12 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 							  &&
 							  org.IsActive == true
 							  &&
-							  oe.IsActive == true
-							  select new { oe.BeginDate, oe.EndDate, State = s.Name, County = c.Name, org.IsVoadMember, org.Logo, oe.VolunteerHourlyRate, org.URLFriendlyName, oe.IsActive, oe.OrganizationEventId, org.OrganizationId, DeploymentName = oe.CampaignName, oe.URLFriendlyCampaignName, OrganizationName = org.Name };
+							  oe.IsActive == isActive
+							  select new { oe.BeginDate, oe.EndDate, oe.CreatedOn, State = s.Name, County = c.Name, org.IsVoadMember, org.Logo, oe.VolunteerHourlyRate, org.URLFriendlyName, oe.IsActive, oe.OrganizationEventId, org.OrganizationId, DeploymentName = oe.CampaignName, oe.URLFriendlyCampaignName, OrganizationName = org.Name };
 
 			deploymentCount = deployments.Count();
 
-			foreach (var deployment in deployments.OrderByDescending(d => d.EndDate).ToList())
+			foreach (var deployment in deployments.OrderByDescending(d => d.CreatedOn).ToList())
 			{
 				int teamMembersAvailable = 0;
 				string rebuildTickLabel = string.Empty;
@@ -204,24 +213,24 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 					countyTerm = "Parish";
 				}
 
-				string logoDiv = "<div class=\"m-b-sm m-l-sm pull-right\" style=\"background-color:white; display:inline-block; padding:2px; border:solid 1px #ccc;\">" +
-									"<img id=\"imgLogo\" src=\"" + logo + "\" width=\"60px\" />" +
+				string logoDiv = "<div class=\"m-b-sm m-l-sm\" style=\"background-color:white; display:inline-block; padding:2px; border:solid 1px #ccc;\">" +
+									"<img id=\"imgLogo\" src=\"" + logo + "\" width=\"100px\" />" +
 								"</div>";
 
 				deploymentPanel += "<div class=\"grid-item m-b-sm\" onclick=\"window.location.href='/V1/NonProfit/NonProfitCampaign.aspx?organizationEventId=" + deployment.OrganizationEventId + "';\">" + Environment.NewLine + Environment.NewLine +
 										"<div class=\"hpanel hviolet\">" + Environment.NewLine +
-											"<div class=\"panel-body deploymentPanel\">" + Environment.NewLine +
-												"<div class=\"row\" style=\"padding:0px 10px;\">" + Environment.NewLine +
-													"<div class=\"col\">" + Environment.NewLine +
-														logoDiv + Environment.NewLine +
-													"</div>" + Environment.NewLine +
-													"<div class=\"col\">" + Environment.NewLine +
-														"<p class=\"m-b-xs\">" + deployment.OrganizationName + "</p>" + Environment.NewLine +
-													"</div>" + Environment.NewLine +
-												"</div>" + Environment.NewLine +
+											"<div class=\"panel-body deploymentPanel\" style=\"position: relative;\">" + Environment.NewLine +
 												"<div class=\"row\" style=\"padding:0px 10px;\">" + Environment.NewLine +
 													"<div class=\"col\">" + Environment.NewLine +
 														"<div><h4 class=\"font-bold\">" + deployment.DeploymentName + "</h4>" + deployment.County + " " + countyTerm + ", " + deployment.State + "</div>" + Environment.NewLine +
+													"</div>" + Environment.NewLine +
+												"</div>" + Environment.NewLine +
+												"<div class=\"row block\" style=\"padding:0px 10px; margin-top:20px; position:absolute; bottom:0; margin-bottom:20px;\">" + Environment.NewLine +
+													"<div class=\"col\">" + Environment.NewLine +
+														"<p class=\"m-b-xs\">" + deployment.OrganizationName + "</p>" + Environment.NewLine +
+													"</div>" + Environment.NewLine +
+													"<div class=\"col\">" + Environment.NewLine +
+														logoDiv + Environment.NewLine +
 													"</div>" + Environment.NewLine +
 												"</div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
@@ -236,6 +245,7 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 
 		if (eventId != Guid.Empty)
 		{
+			//Deployments FOR EVENT
 			var deployments = from org in dc.Organizations
 							  join oe in dc.OrganizationEvents on org.OrganizationId equals oe.OrganizationId
 							  join s in dc.USStates on oe.StagingStateId equals s.StatesId
@@ -244,12 +254,12 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 							  &&
 							  org.IsActive == true
 							  &&
-							  oe.IsActive == true
-							  select new { oe.BeginDate, oe.EndDate, State = s.Name, County = c.Name, org.IsVoadMember, org.Logo, oe.VolunteerHourlyRate, org.URLFriendlyName, oe.IsActive, oe.OrganizationEventId, org.OrganizationId, DeploymentName = oe.CampaignName, oe.URLFriendlyCampaignName, OrganizationName = org.Name };
+							  oe.IsActive == isActive
+							  select new { oe.BeginDate, oe.EndDate, oe.CreatedOn, State = s.Name, County = c.Name, org.IsVoadMember, org.Logo, oe.VolunteerHourlyRate, org.URLFriendlyName, oe.IsActive, oe.OrganizationEventId, org.OrganizationId, DeploymentName = oe.CampaignName, oe.URLFriendlyCampaignName, OrganizationName = org.Name };
 
 			deploymentCount = deployments.Count();
 
-			foreach (var deployment in deployments.OrderByDescending(d => d.EndDate).ToList())
+			foreach (var deployment in deployments.OrderByDescending(d => d.CreatedOn).ToList())
 			{
 				//string eventDate = String.Format("{0:Y}", deployment.date);
 
@@ -281,24 +291,24 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 					countyTerm = "Parish";
 				}
 
-				string logoDiv = "<div class=\"m-b-sm m-l-sm pull-right\" style=\"background-color:white; display:inline-block; padding:2px; border:solid 1px #ccc;\">" +
-									"<img id=\"imgLogo\" src=\"" + logo + "\" width=\"60px\" />" +
+				string logoDiv = "<div class=\"m-b-sm m-l-sm\" style=\"background-color:white; display:inline-block; padding:2px; border:solid 1px #ccc;\">" +
+									"<img id=\"imgLogo\" src=\"" + logo + "\" width=\"100px\" />" +
 								"</div>";
 
 				deploymentPanel += "<div class=\"grid-item m-b-sm\" onclick=\"window.location.href='/V1/NonProfit/NonProfitCampaign.aspx?organizationEventId=" + deployment.OrganizationEventId + "';\">" + Environment.NewLine + Environment.NewLine +
 										"<div class=\"hpanel hviolet\">" + Environment.NewLine +
-											"<div class=\"panel-body deploymentPanel\">" + Environment.NewLine +
-												"<div class=\"row\" style=\"padding:0px 10px;\">" + Environment.NewLine +
-													"<div class=\"col\">" + Environment.NewLine +
-														logoDiv + Environment.NewLine +
-													"</div>" + Environment.NewLine +
-													"<div class=\"col\">" + Environment.NewLine +
-														"<p class=\"m-b-xs\">" + deployment.OrganizationName + "</p>" + Environment.NewLine +
-													"</div>" + Environment.NewLine +
-												"</div>" + Environment.NewLine +
+											"<div class=\"panel-body deploymentPanel\" style=\"position: relative;\">" + Environment.NewLine +
 												"<div class=\"row\" style=\"padding:0px 10px;\">" + Environment.NewLine +
 													"<div class=\"col\">" + Environment.NewLine +
 														"<div><h4 class=\"font-bold\">" + deployment.DeploymentName + "</h4></div>" + Environment.NewLine +
+													"</div>" + Environment.NewLine +
+												"</div>" + Environment.NewLine +
+												"<div class=\"row block\" style=\"padding:0px 10px; margin-top:20px; position:absolute; bottom:0; margin-bottom:20px;\">" + Environment.NewLine +
+													"<div class=\"col\">" + Environment.NewLine +
+														"<p class=\"m-b-xs\">" + deployment.OrganizationName + "</p>" + Environment.NewLine +
+													"</div>" + Environment.NewLine +
+													"<div class=\"col\">" + Environment.NewLine +
+														logoDiv + Environment.NewLine +
 													"</div>" + Environment.NewLine +
 												"</div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
@@ -345,5 +355,10 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 	{
 		get { return _deploymentCount; }
 		set { _deploymentCount = value; }
+	}
+	public Boolean IsActive
+	{
+		get { return _isActive; }
+		set { _isActive = value; }
 	}
 }

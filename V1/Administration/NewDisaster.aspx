@@ -52,7 +52,8 @@
         $(document).ready(function () {
 
             $("#<%=txtBeginDate.ClientID%>").datepicker();
-            $("#<%=txtEndDate.ClientID%>").datepicker();
+			$("#<%=txtEndDate.ClientID%>").datepicker();
+			$("#<%=txtFEMADate.ClientID%>").datepicker();
 
             $(".states-multiple").select2();
             $('.states-multiple').val([<%=preselectedStates%>]);
@@ -87,7 +88,11 @@
                     {
                         required: true,
                         date: true
-                    },
+					},
+						<%=txtFEMADate.UniqueID%>:
+					{
+						date: true
+					},
 			        <%=txtEndDate.UniqueID%>:
                     {
                         date: true
@@ -121,7 +126,7 @@
             });
 
 
-    </script>
+	</script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
@@ -156,6 +161,10 @@
 							<label class="col-sm-2 control-label">Disaster/Event Name</label>
 							<div class="col-sm-5"><input type="text" runat="server" required id="txtDisasterName" class="form-control" placeholder="Disaster/Event Name"></div>
 						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">URL Friendly Name (No Spaces)</label>
+							<div class="col-sm-3"><input type="text" onkeypress="return validateAlphaNumericInput(event)" runat="server" required id="txtURLFriendlyName" class="form-control" placeholder="URL Friendly Name (No Spaces)"></div>
+						</div>
                             
 			            <div class="form-group"><label class="col-sm-2 control-label">Disaster Type</label>
 				            <div class="col-sm-10">
@@ -173,11 +182,23 @@
 							<label class="col-sm-2 control-label">Description</label>
 							<div class="col-sm-5"><textarea runat="server" rows="5" required id="txtDescription" class="form-control" placeholder="Description"></textarea></div>
 						</div>
+						
 
 						<div class="form-group">
-							<label class="col-sm-2 control-label">URL Friendly Name (No Spaces)</label>
-							<div class="col-sm-3"><input type="text" onkeypress="return validateAlphaNumericInput(event)" runat="server" required id="txtURLFriendlyName" class="form-control" placeholder="URL Friendly Name (No Spaces)"></div>
+							<label class="col-sm-2 control-label">FEMA Declaration ID</label>
+							<div class="col-sm-3"><input type="text" onkeypress="return validateAlphaNumericInput(event)" runat="server" required id="txtFEMAID" class="form-control" placeholder="FEMA ID"></div>
 						</div>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label">FEMA Declaration Date</label>
+							<div class="col-sm-3"><input type="text" onkeypress="return validateAlphaNumericInput(event)" runat="server" required id="txtFEMADate" class="form-control" placeholder="FEMA DATE"></div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Upload FEMA KMZ File</label>
+							<asp:FileUpload ID="fileGEOJson" runat="server" />
+						</div>
+						
 
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Begin Date</label>
@@ -192,6 +213,11 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Is Currently Active Disaster</label>
 							<div class="col-sm-1"><input type="checkbox" runat="server" id="chkActive" class="form-control i-checks"></div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Disaster Simulation Mode</label>
+							<div class="col-sm-1"><input type="checkbox" runat="server" id="chkSimulation" class="form-control i-checks"></div>
 						</div>
 
 						<div class="form-group">

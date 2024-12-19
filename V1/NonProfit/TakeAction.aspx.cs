@@ -64,6 +64,7 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 		}
 
 		ucDeploymentListCard.OrganizationId = new Guid(organizationId);
+		ucDeploymentListCard.IsActive = true;
 		//LoadCauses(organizationId, inviteSent);
 		hypWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + organizationId;
 		hypDemoWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + organizationId;

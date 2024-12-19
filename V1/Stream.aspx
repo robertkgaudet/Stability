@@ -52,10 +52,49 @@
 					}
 				});
 			}
+
+
+
+
+
+
+			$('#thankButton').hover(
+				function (event) {
+					var tooltip = $('#myTooltip');
+					tooltip.css({
+						display: 'block',
+						top: $(this).offset().top - tooltip.outerHeight() - 5,
+						left: $(this).offset().left + $(this).outerWidth() / 2 - tooltip.outerWidth() / 2
+					});
+				},
+				function () {
+					$('#myTooltip').css('display', 'none');
+				}
+			);
 		});
 
 	</script>
 	<style>
+		
+        .tooltip {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .hover-button {
+            margin: 50px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+
 		.checkboxlist-item {
 			margin-left: 10px; /* Adjust the margin as needed */
 		}
@@ -627,7 +666,7 @@
 							<div class="panel-body">
 								<div class="message">
 									<div class="block-profile-image-div clearfix" style="line-height:1.3;">
-										<img class="img-rounded" style="float:left; margin-right:10px;" width="40" src="../Images/icons8-customer-64.png" runat="server" id="imgProfile" />
+										<img class="img-rounded" style="float:left; margin-right:10px;" width="40" src="" runat="server" id="imgProfile" />
 										<asp:HyperLink ID="hypCreatedBy" runat="server" CssClass="StreamLink"></asp:HyperLink><br />
 										<asp:Label ID="lblMessageDate" runat="server" CssClass="message-date"></asp:Label>
 									</div>
@@ -638,13 +677,13 @@
 									</span>
 								</div>
 							</div>
-
+							<div class="tooltip" id="myTooltip">This is a tooltip</div>
 							<div class="panel-footer">
 								<div class="row">
-									<div class="col-xs-3 post-type-div"><i class="fa fa-thumbs-up m-r-sm"></i>Thank</div>
-									<div class="col-xs-3 post-type-div"><i class="fa fa-sticky-note m-r-sm nowrap"></i>Comment</div>
-									<div class="col-xs-3 post-type-div"><i class="fa fa-users m-r-sm"></i>Help</div>
-									<div class="col-xs-3 post-type-div"><i class="fa fa-money m-r-sm"></i>Give</div>
+									<div class="col-xs-3 post-type-div" id="thankButton"><i class="fa fa-thumbs-up m-r-sm"></i>Thank</div>
+									<div class="col-xs-3 post-type-div" id="commentButton"><i class="fa fa-sticky-note m-r-sm nowrap"></i>Comment</div>
+									<div class="col-xs-3 post-type-div" id="helpButton"><i class="fa fa-users m-r-sm"></i>Help</div>
+									<div class="col-xs-3 post-type-div" id="giveButton"><i class="fa fa-money m-r-sm"></i>Give</div>
 								</div>
 							</div>
 						</div>

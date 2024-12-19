@@ -119,6 +119,7 @@ public partial class CaseManagement_AddCase : System.Web.UI.Page
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 		var disasters = from d in dc.Events
+						where d.IsActive == true
 						orderby d.BeginDate descending
 						select new {d };
 
@@ -237,7 +238,21 @@ public partial class CaseManagement_AddCase : System.Web.UI.Page
 			//Then use that list to find out which ones are in the userEvent table using the suviviorId
 			//Join on userUser and userEvent
 
-			if(!String.IsNullOrEmpty(eventId))
+			var UserOrganization = (from uo in dc.UserOrganizations
+								   where uo.IsPrimary == true &&
+								   uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+								   select uo).Take(1).SingleOrDefault();
+
+			OrganizationCase organizationCase = new OrganizationCase();
+			organizationCase.OrganizationId = UserOrganization.OrganizationId;
+			organizationCase.UserId = createdUserId;
+			organizationCase.CreatedBy = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+			organizationCase.CreatedOn = DateTime.Now;
+			organizationCase.IsActive = true;
+			dc.OrganizationCases.InsertOnSubmit(organizationCase);
+			dc.SubmitChanges();
+
+			if (!String.IsNullOrEmpty(eventId))
 			{
 				EventId = new Guid(eventId);
 

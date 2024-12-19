@@ -155,15 +155,21 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			else if (isUserOnTeam || User.IsInRole("Administrator") || userIsOwner)
 			{
 				//If user is on team or an admin or the owner they can see this team.
+				hypPrintableTeamList.Visible = true;
+				hypPrintableTeamList.NavigateUrl = "/V1/NonProfitAdministration/PrintableTeamList.aspx?organizationId=" + organizationId + "&skillId=" + skillId + "&resourceId=" + resourceId;
 				IEnumerable<PeopleList> peopleList;
 				//ADMIN SEES ALL USERS
 				peopleList = from uo in dc.UserOrganizations
 							 join p in dc.Profiles on uo.UserId equals p.UserId
 							 join net in dc.aspnet_Memberships on p.UserId equals net.UserId
 							 join u in dc.aspnet_Users on p.UserId equals u.UserId
-							 where uo.OrganizationId == new Guid(organizationId)
+							 where uo.OrganizationId == new Guid(organizationId) && net.IsLockedOut == false
 							 orderby net.LastLoginDate descending
-							 select new PeopleList(p.Firstname, net.CreateDate, p.Description, net.LoweredEmail, p.Lastname, p.UserId, p.DateVettingCompleted, p.DateVettingStarted, p.VettingNotes, p.VettingActive, p.VettingComplete, p.PassedVetting, p.Title, p.ZelloName, u.LastActivityDate, net.LastLoginDate, net.IsApproved);
+							 select new PeopleList(p.Firstname, net.CreateDate, p.Description, net.LoweredEmail, 
+							 p.PhoneNumber,
+							 p.Lastname, p.UserId, p.DateVettingCompleted, p.DateVettingStarted, 
+							 p.VettingNotes, p.VettingActive, p.VettingComplete, p.PassedVetting, 
+							 p.Title, p.ZelloName, u.LastActivityDate, net.LastLoginDate, net.IsApproved);
 
 				if (isUserOnTeam && !User.IsInRole("Administrator") && !userIsOwner)
 				{
@@ -232,6 +238,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			String zelloName = (String)DataBinder.Eval(dataItem.DataItem, "ZelloName");
 			String title = (String)DataBinder.Eval(dataItem.DataItem, "Title");
 			String loweredEmail = (String)DataBinder.Eval(dataItem.DataItem, "LoweredEmail");
+			String phoneNUmber = (String)DataBinder.Eval(dataItem.DataItem, "phoneNUmber");
 			String description = (String)DataBinder.Eval(dataItem.DataItem, "Description");
 
 			MembershipUser profileUser = Membership.GetUser(userId);
@@ -265,7 +272,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 				String lastActivitysDate = lastActivityDateString == DateTime.MinValue ? "Not Started" : lastActivityDateString.ToShortDateString() + " " + lastActivityDateString.ToLongDateString() + " at " + lastActivityDateString.ToLongTimeString();
 
 				string vettingCompleted = (bool)vettingComplete ? "VETTING COMPLETE: " + ((bool)passedVetting ? "<span style='color:yellowgreen'>PASSED</span>" : "<span style='color:orange'>FAILED</span>") : (bool)vettingActive ? "VETTING: PENDING" : "VETTING: NO ACTION TAKEN";
-				vettingCompleted += ((bool)isLockedOut ? "<br><span style='color:orange'>LOCKED OUT</span>" : "<br><span style='color:yellowgreen'>HAS ACCESS</span>") + ("<br>Notes:" + vettingNotes + "<br>Date Started: " + dateVettingStarts + "<br>Date Completed: " + dateVettingComplete + "<br>Last Activity Date: " + lastActivitysDate);
+				vettingCompleted += ((bool)isLockedOut ? "<br><span style='color:orange'>LOCKED OUT</span>" : "<br><span style='color:yellowgreen'>HAS ACCESS</span>") + ("<br>Notes:" + vettingNotes + "<br>Date Started: " + dateVettingStarts + "<br>Date Completed: " + dateVettingComplete + "<br>Last Activity Date: " + lastActivitysDate + "<br>Phone Number: " + phoneNUmber + "<br>Email: " + loweredEmail);
 
 				litVettingInfo.Text = vettingCompleted;
 			}
@@ -369,6 +376,7 @@ internal class PeopleList
 	public DateTime CreateDate { get; set; }
 	public string Description { get; set; }
 	public string LoweredEmail { get; set; }
+	public string PhoneNumber { get; set; }
 	public string Lastname { get; set; }
 	public Guid UserId { get; set; }
 	public DateTime? DateVettingCompleted { get; set; }
@@ -383,12 +391,13 @@ internal class PeopleList
 	public DateTime LastActivityDate { get; set; }
 	public bool? IsApproved { get; set; }
 
-	public PeopleList(string firstname, DateTime createDate, string description, string loweredEmail, string lastname, Guid userId, DateTime? dateVettingCompleted, DateTime? dateVettingStarted, string vettingNotes, bool? vettingActive, bool? vettingComplete, bool? passedVetting, string title, string zelloName, DateTime lastLoginDate, DateTime lastActivityDate, bool? isApproved)
+	public PeopleList(string firstname, DateTime createDate, string description, string loweredEmail, string phoneNumber, string lastname, Guid userId, DateTime? dateVettingCompleted, DateTime? dateVettingStarted, string vettingNotes, bool? vettingActive, bool? vettingComplete, bool? passedVetting, string title, string zelloName, DateTime lastLoginDate, DateTime lastActivityDate, bool? isApproved)
 	{
 		Firstname = firstname;
 		CreateDate = createDate;
 		Description = description;
 		LoweredEmail = loweredEmail;
+		PhoneNumber = phoneNumber;
 		Lastname = lastname;
 		UserId = userId;
 		DateVettingCompleted = dateVettingCompleted;

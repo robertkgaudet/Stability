@@ -39,6 +39,15 @@ public partial class V1_NonProfitAdministration_EditNonProfitProgram : BaseOrgan
 		txtProgramOrder.Value = program.Order.ToString();
 	}
 
+	/// <summary>
+	/// Retrieves the current ProgramId for the page.
+	/// </summary>
+	/// <returns>ProgramId as an integer.</returns>
+	public string GetProgramId()
+	{
+		return Request.QueryString["ProgramId"];
+	}
+
 	protected void btnSubmit_Click(object sender, EventArgs e)
 	{
 		string programName = txtProgramName.Value;
@@ -100,11 +109,11 @@ public partial class V1_NonProfitAdministration_EditNonProfitProgram : BaseOrgan
 		}
 
 		//Back to non-profit page that shows the programs.
-		Response.Redirect("/V1/NonProfit/Programs.aspx?organizationId=" + Request.QueryString["organizationId"]);
+		Response.Redirect("/V1/NonProfit/Program.aspx?programId=" + programId + "&organizationId=" + Request.QueryString["organizationId"]);
 	}
 
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
-		Response.Redirect("/V1/NonProfit/Programs.aspx?organizationId=" + Request.QueryString["organizationId"]);
+		Response.Redirect("/V1/NonProfit/Program.aspx?programId=" + Request.QueryString["programId"] + "&organizationId=" + Request.QueryString["organizationId"]);
 	}
 }

@@ -18,6 +18,7 @@ public partial class V1_NonProfit_Programs : BaseWebForm
 	public string _nonProfitDropDown;
 	public string _coverImage;
 	public string organizationId = string.Empty;
+	public string programId = string.Empty;
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		ucTeamFooter.PageName = "programsPage";
@@ -29,8 +30,10 @@ public partial class V1_NonProfit_Programs : BaseWebForm
 		////////////////////////
 
 		organizationId = Request.QueryString["organizationId"];
+		programId = Request.QueryString["programId"];
 		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		_coverImage = causePhotoFolder + "businesscoverimage.png";
+		hypAllPrograms.NavigateUrl = "/V1/NonProfit/Programs.aspx?organizationId=" + organizationId;
 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 		var organization = (from o in dc.Organizations
@@ -108,7 +111,12 @@ public partial class V1_NonProfit_Programs : BaseWebForm
 					   join o in dc.Organizations on op.OrganizationId equals o.OrganizationId
 					   where op.OrganizationId == new Guid(organizationId)
 					   orderby p.Order
-					   select new { p.Name, p.Description, o.Logo, p.IsDeploymentRequired, p.IsRemoteOnly, p.IsTrainingRequired, p.IsShared, p.ProgramId };
+					   select new { p.Name, p.Description, o.OrganizationId, o.Logo, p.IsDeploymentRequired, p.IsRemoteOnly, p.IsTrainingRequired, p.IsShared, p.ProgramId };
+
+		if (!string.IsNullOrEmpty(programId))
+		{
+			programs = programs.Where(r => r.ProgramId == new Guid(programId));
+		}
 
 		rptPrograms.DataSource = programs;
 		rptPrograms.DataBind();
@@ -132,14 +140,16 @@ public partial class V1_NonProfit_Programs : BaseWebForm
 			bool isTrainingRequired = (bool)DataBinder.Eval(dataItem.DataItem, "IsTrainingRequired");
 			bool isShared = (bool)DataBinder.Eval(dataItem.DataItem, "IsShared");
 			Guid programId = (Guid)DataBinder.Eval(dataItem.DataItem, "ProgramId");
+			Guid organizationId = (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
 
-			Literal litProgramName = (Literal)e.Item.FindControl("litProgramName");
+			HyperLink hypProgramName = (HyperLink)e.Item.FindControl("hypProgramName");
 			Literal litProgramDescription = (Literal)e.Item.FindControl("litProgramDescription");
 			Literal litRemoteWork = (Literal)e.Item.FindControl("litRemoteWork");
 			Literal litRequiresDeployment = (Literal)e.Item.FindControl("litRequiresDeployment");
 			Literal litRequiresTraining = (Literal)e.Item.FindControl("litRequiresTraining");
 			Literal litSharedPrivate = (Literal)e.Item.FindControl("litSharedPrivate");
 			Image imgLogo = (Image)e.Item.FindControl("imgLogo");
+			Repeater dlPositions = (Repeater)e.Item.FindControl("dlPositions");
 
 			string sharedIcon = string.Empty;
 			litSharedPrivate.Text = "<span class=\"label label-primary pull-right\">TEAM PROGRAM</span>";
@@ -151,7 +161,8 @@ public partial class V1_NonProfit_Programs : BaseWebForm
 			HyperLink hypEditPrograms = (HyperLink)e.Item.FindControl("hypEditPrograms");
 
 			litProgramDescription.Text = programDescription;
-			litProgramName.Text = programName + " " + sharedIcon;
+			hypProgramName.Text = programName + " " + sharedIcon;
+			hypProgramName.NavigateUrl = "/V1/NonProfit/Program.aspx?programId=" + programId + "&organizationId=" + organizationId;
 			litRemoteWork.Text = isRemoteOnly ? "Remote work requred." : "No remote work.";
 			litRequiresDeployment.Text = isDeploymentRequired ? "Requires deployment." : "Deployment not required.";
 			litRequiresTraining.Text = isTrainingRequired ? "Specialized training is required." : "Training not required.";
@@ -162,6 +173,45 @@ public partial class V1_NonProfit_Programs : BaseWebForm
 				hypEditPrograms.Visible = true;
 				hypEditPrograms.NavigateUrl = "/V1/NonProfitAdministration/EditNonProfitProgram.aspx?organizationId=" + organizationId + "&programId=" + programId;
 			}
+
+
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			var positions = from p in dc.Positions
+							join pp in dc.ProgramPositions on p.PositionId equals pp.PositionId
+							where p.OrganizationId == organizationId
+							&& p.IsDeleted == false
+							&& pp.ProgramId == programId
+							orderby p.Name
+							select new { p.Name, p.PositionId, pp.ProgramId, p.OrganizationId };
+
+			dlPositions.DataSource = positions;
+			dlPositions.DataBind();
 		}
+	}
+
+	protected void dlPositions_ItemDataBound(object sender, RepeaterItemEventArgs e)
+	{
+		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+		{
+			HyperLink hypPosition = (HyperLink)e.Item.FindControl("hypPosition");
+
+			RepeaterItem dataItem = (RepeaterItem)e.Item;
+
+			//Total count of items and total cost.
+			string positionName = (string)DataBinder.Eval(dataItem.DataItem, "Name");
+			Guid positionId = (Guid)DataBinder.Eval(dataItem.DataItem, "PositionId");
+			Guid programId = (Guid)DataBinder.Eval(dataItem.DataItem, "ProgramId");
+			Guid organizationId = (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
+
+			hypPosition.NavigateUrl = "/V1/NonProfit/TeamRole.aspx?programId=" + programId + "&organizationId=" + organizationId + "&positionId=" + positionId.ToString();
+			hypPosition.Text = positionName;
+		}
+	}
+	protected void imgLogo_Click(object sender, ImageClickEventArgs e)
+	{
+		ImageButton button = (ImageButton)sender;
+		string parameter = button.CommandArgument;
+
+		Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + parameter);
 	}
 }

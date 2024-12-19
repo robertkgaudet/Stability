@@ -6,8 +6,13 @@ using System.IdentityModel.Protocols.WSTrust;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI.WebControls;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using System.Threading.Tasks;
+using Twilio.Types;
 
 namespace CrowdRelief
 {
@@ -17,11 +22,79 @@ namespace CrowdRelief
 	/// </summary>
 	public class Tools
 	{
-		public Tools()
+		private readonly string _accountSid;
+		private readonly string _authToken;
+		private readonly string _fromNumber;
+		//public static async Task SendAsyncSMS(string[] args)
+		//{
+		//	// Find your Account SID and Auth Token at twilio.com/console
+		//	// and set the environment variables. See http://twil.io/secure
+		//	string accountSid = Environment.GetEnvironmentVariable("twilioAccountSID");
+		//	string authToken = Environment.GetEnvironmentVariable("twilioAuthToken");
+
+		//	TwilioClient.Init(accountSid, authToken);
+
+		//	var message = await MessageResource.CreateAsync(
+		//		body: "Join Earth's mightiest heroes. Like Kevin Bacon.",
+		//		from: new Twilio.Types.PhoneNumber("+13372704049"),
+		//		to: new Twilio.Types.PhoneNumber("+13372580572"));
+
+		//	Console.WriteLine(message.Body);
+		//}
+
+		// Method to send SMS to an array of phone numbers
+		public void SendSms(string messageBody, string[] phoneNumbers)
+		{
+			foreach (var phoneNumber in phoneNumbers)
+			{
+				try
+				{
+					var message = MessageResource.Create(
+						body: messageBody,
+						from: new PhoneNumber(_fromNumber),
+						to: new PhoneNumber(phoneNumber)
+					);
+
+					Console.WriteLine("Message sent to " + phoneNumber +  " : SID " +  message.Sid);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine("Failed to send message to" + phoneNumber + " : " + ex.Message);
+				}
+			}
+		}
+
+		public class PhoneNumberFormatter
+		{
+			public static string FormatPhoneNumber(string phoneNumber)
+			{
+				if (string.IsNullOrEmpty(phoneNumber))
+				{
+					return phoneNumber;
+				}
+
+				// Use a regular expression to format the phone number
+				return Regex.Replace(phoneNumber, @"(\d{3})(\d{3})(\d{4})", "($1) $2-$3");
+			}
+
+			public static string CreateClickablePhoneNumber(string phoneNumber)
+			{
+				string formattedPhoneNumber = FormatPhoneNumber(phoneNumber);
+				string clickablePhoneNumber = string.Format("<a href=\"tel:{0}\">{1}</a>", phoneNumber, formattedPhoneNumber);
+				return clickablePhoneNumber;
+			}
+		}
+		public Tools(string accountSid, string authToken, string fromNumber)
 		{
 			//
 			// TODO: Add constructor logic here
 			//
+			_accountSid = accountSid;
+			_authToken = authToken;
+			_fromNumber = fromNumber;
+
+			// Initialize the Twilio client with credentials
+			TwilioClient.Init(_accountSid, _authToken);
 		}
 
 		public enum FriendStatus

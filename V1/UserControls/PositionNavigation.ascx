@@ -1,9 +1,19 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="PositionNavigation.ascx.cs" Inherits="V1_UserControls_PositionNavigation" %>
 
+    <div class="container" style="margin-bottom:15px;">
+        <h3>Deployment: <asp:Literal id="litCampaignName" runat="server"></asp:Literal></h3>
+		Portal: <asp:HyperLink ID="hypEventName" runat="server"></asp:HyperLink><br />
+		Team: <asp:HyperLink id="hypOrganization" runat="server"></asp:HyperLink>
+    </div>
+
+<div id="divNavigation" runat="server" visible="false">
 	<style>
 		.activeLink{
 			font-weight:bold;
 			text-decoration:underline;
+		}
+		i{
+			color:#5E2E91;
 		}
 		.activeLink:hover{
 			color:#FFFDEA;
@@ -22,16 +32,28 @@
 			padding:10px;	
 			color:white;
 		}
+		        .row {
+            margin-left: -5px; /* Adjust the left margin */
+            margin-right: -5px; /* Adjust the right margin */
+        }
+        .grid-item {
+            padding-left: 5px; /* Decrease column padding (gutter) */
+            padding-right: 5px; /* Decrease column padding (gutter) */
+            padding: 3px;
+        }
 	</style>
 	<div class="child-master-header">
 		<div class="postions-navigation-menu">
-            <a href="/V1/NonProfit/NonProfitCampaign.aspx?organizationEventId=<%=_organizationEventId%>" <%=_detailsActive%>>Details</a>
-            <a href="PositionsNeeded.aspx?organizationEventId=<%=_organizationEventId%>" <%=_positionsActive%>>Postions</a>
-			<a href="Participants.aspx?organizationEventId=<%=_organizationEventId%>" <%=_participantsActive%>>Participants</a>
-            <a href="EventMessages.aspx?organizationEventId=<%=_organizationEventId%>" <%=_messagesActive%>>Message</a>
-            <a href="EventReports.aspx?organizationEventId=<%=_organizationEventId%>" <%=_reportsActive%>>Reports</a>
-            <a href="EventInvitations.aspx?organizationEventId=<%=_organizationEventId%>" <%=_invitesActive%>>Invite</a>
-            <a href="EventMoney.aspx?organizationEventId=<%=_organizationEventId%>" <%=_moneyActive%>>Collect Money</a>
-            <a href="EventSettings.aspx?organizationEventId=<%=_organizationEventId%>" <%=_settingsActive%>>Settings</a>
+            <a href="/V1/NonProfit/NonProfitCampaign.aspx?organizationEventId=<%=_organizationEventId%>" <%=_detailsActive%>>Deployment Details</a>
+            <a href="/V1/NonProfitAdministration/PositionsNeeded.aspx?organizationEventId=<%=_organizationEventId%>" <%=_positionsActive%>>Add New Positions</a>
+			<a href="/V1/NonProfitAdministration/Participants.aspx?organizationEventId=<%=_organizationEventId%>" <%=_participantsActive%>>View Participant List</a>
+            <a href="/V1/NonProfitAdministration/EditNonProfitCampaign.aspx?OrganizationEventId=<%=_organizationEventId%>" <%=_viewPositionsActive%>>Edit Deployment</a>
+            <span class="pull-right"> <i class="fa fa-arrow-circle-o-up"></i> <b><a href="/SignUp/<%=_urlFriendlyName%>" target="_blank" <%=_viewPositionsActive%>>View Open Positions</a></b></span>
+            <%--<a href="/V1/NonProfitAdministration/EventMessages.aspx?organizationEventId=<%=_organizationEventId%>" <%=_messagesActive%>>Message</a>
+            <a href="/V1/NonProfitAdministration/EventReports.aspx?organizationEventId=<%=_organizationEventId%>" <%=_reportsActive%>>Reports</a>
+            <a href="/V1/NonProfitAdministration/EventInvitations.aspx?organizationEventId=<%=_organizationEventId%>" <%=_invitesActive%>>Invite</a>
+            <a href="/V1/NonProfitAdministration/EventMoney.aspx?organizationEventId=<%=_organizationEventId%>" <%=_moneyActive%>>Collect Money</a>
+            <a href="/V1/NonProfitAdministration/EventSettings.aspx?organizationEventId=<%=_organizationEventId%>" <%=_settingsActive%>>Settings</a>--%>
 		</div>
 	</div>
+</div>

@@ -1,4 +1,4 @@
-﻿<%@ Page EnableEventValidation="false" Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="EditNonProfitCampaign.aspx.cs" Inherits="V1_NonProfitAdministration_EditNonProfitCampaign" %>
+﻿<%@ Page EnableEventValidation="false" Title="" Language="C#" ValidateRequest="false" MasterPageFile="~/V1/MasterPages/1-Column-Child.master" AutoEventWireup="true" CodeFile="EditNonProfitCampaign.aspx.cs" Inherits="V1_NonProfitAdministration_EditNonProfitCampaign" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 	<script src="/Homer/vendor/iCheck/icheck.min.js"></script>
@@ -118,9 +118,9 @@
 					required: true,
 					maxlength: 100
 					},
-					<%=txtPurposeMission.UniqueID%>: {
+					<%--<%=txtPurposeMission.UniqueID%>: {
 						required: true
-					},
+					},--%>
 					<%=txtWebsite.UniqueID%>: {
 						url: true
 					},
@@ -144,7 +144,8 @@
 					},
 					<%=txtPhonenumber.UniqueID%>: {
 						number: true,
-						maxlength: 12
+						maxlength: 12,
+						required: true
 					},
 					<%=txtPOCFullname.UniqueID%>: {
 						required: true
@@ -166,19 +167,9 @@
 						maxlength: 5
                     },
 					<%=txtVolunteerHourValue.UniqueID%>: {
-                    required: true,
                     number: true,
                     maxlength: 5
-                    },
-					max: {
-						required: true,
-						maxlength: 4
-					},
-					email:
-					{
-							required: true,
-							minlength: 5
-					}
+                    }
 				},
 				submitHandler: function (form) {
 					form.submit();
@@ -194,22 +185,12 @@
 	</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="normalheader animate-panel" data-child="hpanel" data-effect="fadeIn">
-					<div class="hpanel">
-						<div class="panel-body">
 						<h1>	
 							<asp:Literal id="litEventName" runat="server"></asp:Literal>
 						</h1>
 							<h2 class="font-light m-b-xs">
-								Add a Cause
+								Add/Update Deployment Information
 							</h2>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 		<div class="content animate-panel" data-child="hpanel" data-effect="fadeInDown">
 		
 							

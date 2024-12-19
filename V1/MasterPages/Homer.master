@@ -13,10 +13,11 @@
 
 			gtag('config', 'UA-96039646-1');
 		</script>
+		<link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
 		<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-		<link rel="manifest" href="/site.webmanifest">
+		<%--<link rel="manifest" href="/site.webmanifest">--%>
 		<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 		<meta name="msapplication-TileColor" content="#da532c">
 		<meta name="theme-color" content="#b16565">
@@ -34,6 +35,7 @@
 		<meta property="og:site_name"			id="fbSite_name" />
 		<meta property="og:description"			id="fbDescription" />
 		
+
 		<!-- Vendor styles -->
 		<link rel="stylesheet" href="/Homer/vendor/fontawesome/css/font-awesome.css" />
 		<link rel="stylesheet" href="/Homer/vendor/metisMenu/dist/metisMenu.css" />
@@ -70,23 +72,6 @@
 			});
 
 			$(document).ready(function () {
-
-				$('.homeLink').click(function () {
-					window.location.href = '/feed';
-					return false;
-				})
-				$('.teamLink').click(function () {
-					window.location.href = '/V1/NonProfit/Default.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32';
-					return false;
-				})
-				$('.portalLink').click(function () {
-					window.location.href = '/V1/ChooseEvent.aspx';
-					return false;
-				})
-				$('.profileLink').click(function () {
-					window.location.href = '/V1/Member/Default.aspx';
-					return false;
-				})
 
 				<%=_showUserActionModal%>
 				
@@ -156,16 +141,16 @@
 					window.location.href = <%=profileURL%>;
 					return false;
                 });
-			});
 
-            toastr.options = {
-                "debug": false,
-                "newestOnTop": true,
-                "positionClass": "toast-top-center",
-                "closeButton": true,
-                "showDuration": "600",
-                "toastClass": "animated fadeInDown",
-            };
+				toastr.options = {
+					"debug": false,
+					"newestOnTop": true,
+					"positionClass": "toast-top-center",
+					"closeButton": true,
+					"showDuration": "600",
+					"toastClass": "animated fadeInDown",
+				};
+			});
 
             function chooseCause()
             {
@@ -271,6 +256,7 @@
 				background:none;
 				border:none;
 				margin-top:-10px;
+				padding:18px 5px;
 			}
 			.header-link:hover
 			{
@@ -400,6 +386,7 @@
 				padding:9px 0px !important;
 				margin:8px 8px 8px 0px !important;
 			}
+			
 		</style>
 		<asp:ContentPlaceHolder id="head" runat="server">
 		</asp:ContentPlaceHolder>
@@ -410,8 +397,11 @@
 			<div style="margin-bottom:500px;">
 				<div id="header" runat="server">
 					<nav role="navigation">
-						<asp:Image ID="imgLogo" CssClass="pull-left" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png" />
+						<asp:Image ID="imgLogo" CssClass="pull-left" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png" />
 						<div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs"></i></div>
+						<div class="header-link load-map text-white" onclick="window.location.href='/V1/Member/Default.aspx';"><i class="fa fa-user fa-2x m-t-xs"></i></div>
+						<div class="header-link load-map text-white" onclick="window.location.href='/V1/NonProfit/Default.aspx';"><i class="fa fa-users fa-2x m-t-xs"></i></div>
+						<div class="header-link load-map text-white" onclick="window.location.href='/MapZone';"><i class="fa fa-map fa-2x m-t-xs"></i></div>
 
 						<div role="search" class="navbar-form-custom">
 							<div class="input-group">
@@ -428,9 +418,10 @@
 							</button>
 							<div class="collapse mobile-navbar" id="mobile-collapse-profile">
 								<ul class="nav navbar-nav no-borders">
-									<li><asp:HyperLink ID="HyperLink1" runat="server" Text="Search People" NavigateUrl="~/V1/Member/PeopleSearch.aspx"></asp:HyperLink></li>
-									<li><asp:HyperLink ID="HyperLink3" runat="server" Text="My Profile" NavigateUrl="~/V1/Member/Default.aspx"></asp:HyperLink></li>
-									<li><asp:HyperLink ID="HyperLink6" runat="server" Text="Sign Out" NavigateUrl="~/V1/SignOut.aspx"></asp:HyperLink></li>
+									<li><asp:HyperLink ID="HyperLink4" runat="server" Text="Create A Team" NavigateUrl="/V1/NonProfit/NonProfitNew.aspx"></asp:HyperLink></li>
+									<li><asp:HyperLink ID="HyperLink1" runat="server" Text="Search People" NavigateUrl="/V1/Member/PeopleSearch.aspx"></asp:HyperLink></li>
+									<li><asp:HyperLink ID="HyperLink3" runat="server" Text="My Profile" NavigateUrl="/V1/Member/Default.aspx"></asp:HyperLink></li>
+									<li><asp:HyperLink ID="HyperLink6" runat="server" Text="Sign Out" NavigateUrl="/V1/SignOut.aspx"></asp:HyperLink></li>
 								</ul>
 							</div>
 							<button type="button" class="navbar-toggle mobile-menu-toggle" data-toggle="collapse" data-target="#mobile-collapse-search">
@@ -445,7 +436,6 @@
 								</div>
 							</div>
 						</div>
-
 
 						<div class="navbar-right">
 							<ul class="nav navbar-nav no-borders">
@@ -476,6 +466,7 @@
 										<i class="fa fa-chevron-down m-t-n-xs" style="color:white;"></i>
 									</a>
 									<ul class="dropdown-menu hdropdown notification animated flipInX">
+										<li><asp:HyperLink ID="HyperLink5" runat="server" Text="Create A Team" NavigateUrl="/V1/NonProfit/NonProfitNew.aspx"></asp:HyperLink></li>
 										<li><asp:HyperLink ID="HyperLink2" runat="server" Text="Search People" NavigateUrl="~/V1/Member/PeopleSearch.aspx"></asp:HyperLink></li>
 										<li><asp:HyperLink ID="hypProfile" runat="server" Text="My Profile" NavigateUrl="~/V1/Member/Default.aspx"></asp:HyperLink></li>
 										<li><asp:HyperLink ID="hypSignOut" runat="server" Text="Sign Out" NavigateUrl="~/V1/SignOut.aspx"></asp:HyperLink></li>
@@ -512,9 +503,19 @@
 								</div>  
 
 							</div>
+							<li <asp:Literal ID="Literal5" runat="server"></asp:Literal>>
+								<a href="/V1/Deployments.aspx">	 
+									<span class="nav-label">Deployments</span>
+								</a>
+							</li>
 							<li <asp:Literal ID="litViewDisasters" runat="server"></asp:Literal>>
 								<a href="/V1/ChooseEvent.aspx">	 
 									<span class="nav-label">Portals</span>
+								</a>
+							</li>
+							<li <asp:Literal ID="Literal4" runat="server"></asp:Literal>>
+								<a href="/V1/NonProfit/TeamList.aspx">
+									<span class="nav-label">Teams</span>
 								</a>
 							</li>
 							<li <asp:Literal ID="Literal1" runat="server"></asp:Literal>>
@@ -707,14 +708,14 @@
 								<a class="fa fa-home pe-2x text-light-grey homeLink" href="/feed"></a>
 							</div>
 							<div class="col-xs-3">
-								<a class="fa fa-users pe-2x text-light-grey teamLink" href="/V1/NonProfit/Default.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32"></a>
+								<a runat="server" id="linkDeployment" class="fa fa-street-view pe-2x text-light-grey teamLink"></a>
 							</div>
 							
 							<div class="col-xs-3">
-								<a class="fa fa-map-o pe-2x text-light-grey portalLink" href="/Disaster/TropicalStormDebby"></a> 
+								<a class="fa fa-map-o pe-2x text-light-grey portalLink" href="/V1/ChooseEvent.aspx"></a> 
 							</div>
 							<div class="col-xs-3">
-								<a class="fa fa-id-badge pe-2x text-light-grey profileLink" href="/V1/Member/Default.aspx"></a> 
+								<a class="fa fa-id-badge pe-2x text-light-grey profileLink" href="/V1/Member/Default.aspx"></a>
 							</div>
 						</div>
 					</div>
@@ -899,11 +900,22 @@
 		</form>
 		
 		<!-- App scripts -->
+		
+        <script src="/Homer/vendor/toastr/build/toastr.min.js"></script>
 		<script src="/Homer/scripts/homer.js"></script>
 		<script src="/Homer/vendor/slimScroll/jquery.slimscroll.min.js"></script>
 		<script src="/Homer/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 		<script src="/Homer/vendor/metisMenu/dist/metisMenu.min.js"></script>
 		<script src="/Homer/vendor/bootstrap-toggle-master/js/bootstrap-toggle.js"></script>
-        <script src="/Homer/vendor/toastr/build/toastr.min.js"></script>
+
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<br />
 	</body>
 </html>

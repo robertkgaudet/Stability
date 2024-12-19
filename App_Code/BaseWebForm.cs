@@ -29,6 +29,18 @@ public class BaseWebForm : System.Web.UI.Page, IRequiresSessionState
 			}
 		}
     }
+
+	public static string FormatPhoneNumberAsLink(string phoneNumber)
+	{
+		if (string.IsNullOrEmpty(phoneNumber) || phoneNumber.Length != 10 || !phoneNumber.All(char.IsDigit))
+		{
+			return string.Empty; // Return an empty string if the input is null, empty, or not a valid 10-digit number
+		}
+
+		string formattedNumber = String.Format("{0:(###) ###-####}", Convert.ToInt64(phoneNumber));
+		return "<a href=\"tel:" + phoneNumber + "\">" + formattedNumber + "</a>";
+	}
+
 	public string GetsDisastersForDropDown()
 	{
 		string preselectedDisasterJQuery = string.Empty;

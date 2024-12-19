@@ -31,7 +31,7 @@ public partial class V1_Member_Connections : BaseWebForm
 				String _userId = String.IsNullOrEmpty(Request.QueryString["userId"]) ? userId.ToString() : Request.QueryString["userId"];
 				String status = String.IsNullOrEmpty(Request.QueryString["status"]) ? "Connected" : Request.QueryString["status"];
 				litPageName.Text = status;
-
+				
 				BindFriendsDataList(_userId, status, received);
 
 				//Only show connections sent or receieved links if the user is on their own page.
@@ -49,6 +49,7 @@ public partial class V1_Member_Connections : BaseWebForm
 					linkConnectionsReceived.NavigateUrl = "/V1/Member/Connections.aspx?received=true&status=Pending&userId=" + userId;
 					linkConnectionsSent.NavigateUrl = "/V1/Member/Connections.aspx?status=Sent&userId=" + userId;
 				}
+				ucMemberNavigation.UserId = userId.ToString();
 			}
 			else
 			{

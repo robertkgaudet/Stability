@@ -6,12 +6,6 @@ using System.Configuration;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 using System.Web.UI;
-using System.Data.Linq.SqlClient;
-using System.Xml.Linq;
-using System.Security.Policy;
-using System.IdentityModel.Metadata;
-using Stability;
-using System.Security.Cryptography;
 
 public partial class V1_Event : BaseOrganizationWebForm
 {
@@ -155,6 +149,7 @@ public partial class V1_Event : BaseOrganizationWebForm
 			//LoadPosts();
 			ucDeploymentListCard.EventId = eventId;
 			uc1EventHeader.CauseCount = Convert.ToString(Session["deploymentCount"]);
+			ucDeploymentListCard.IsActive = true;
 
 			LoadTeams();
 
@@ -239,9 +234,10 @@ public partial class V1_Event : BaseOrganizationWebForm
 
 				hidEventName.Value = disaster.URLFriendlyName;
 
+				//TODO User could own several groups. Which is this returning?
 				var userOrganizationOwner = (from o in dc.Organizations
 									   where o.OwnerId == userId && o.IsActive == true
-									   select o).SingleOrDefault();
+									   select o).Take(1).SingleOrDefault();
 
 				Guid organizationIdForOwner = Guid.Empty;
 				litAddTeamMessage.Text = "Add your team, to share your relief deployment mission.";
@@ -301,11 +297,12 @@ public partial class V1_Event : BaseOrganizationWebForm
 				this.Master.PageDescription = "Organize a disaster relief team for " + pageDescription;
 				this.Master.FbDescription = pageDescription;
 				this.Master.FbSite_name = pageTitle;
-				this.Master.HideMasterCover = false;
+				this.Master.HideMasterCover = true;
 				 
 				uc1EventHeader.PageTitle = pageTitle;
 				uc1EventHeader.EventName = disaster.Name;
 				uc1EventHeader.PageDescription = "Organize a disaster relief team for " + pageDescription;
+				eventName = disaster.Name;
 
 				if (disaster.Icon != null)
 				{

@@ -11,6 +11,7 @@ using System.Web.UI.WebControls;
 public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 {
 	public string _pageName;
+	public string _teamRolesActive;
 	public string _teamName; 
 	public string _teamPageActive;
 	public string _teamCalendarActive;
@@ -26,13 +27,15 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 	public string _skillsPageActive;
 	public string _resourcesPageActive;
 	public string _streamActive;
+	public string _deploymentTeamActive;
 	public string organizationId;
 	public bool isUserOnTeam = false;
 
 	protected void Page_Load(object sender, EventArgs e)
 	{
-		organizationId = Request.QueryString["organizationId"];
+		//organizationId = Request.QueryString["organizationId"];
 		hypStream.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + organizationId;
+		hypTeamRoles.NavigateUrl = "/V1/NonProfit/TeamRoles.aspx?organizationId=" + organizationId;
 		hypPrograms.NavigateUrl = "/V1/NonProfit/Programs.aspx?organizationId=" + organizationId;
 		hypDeployments.NavigateUrl = "/V1/NonProfit/Deployments.aspx?organizationId=" + organizationId;
 		hypTeamName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
@@ -46,13 +49,20 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 		//hypWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + organizationId;
 		hypSkillsets.NavigateUrl = "/V1/NonProfit/Skillsets.aspx?organizationId=" + organizationId;
 		hypResources.NavigateUrl = "/V1/NonProfit/AvailableResources.aspx?organizationId=" + organizationId;
+		hypDeploymentTeam.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + organizationId;
 
 		//litTeamName.Text = _teamName;
 
 		switch (PageName)
 		{
+			case "teamRolesPage":
+				_teamRolesActive = "class=\"active\"";
+				break;
 			case "streamPage":
 				_streamActive = "class=\"active\"";
+				break;
+			case "deploymentTeamPage":
+				_deploymentTeamActive = "class=\"active\"";
 				break;
 			case "skillsetsPage":
 				_skillsPageActive = "class=\"active\"";
@@ -98,9 +108,6 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 		}
 		hypGetHelp.NavigateUrl = "/V1/VictimAccount.aspx?organizationId=" + organizationId;
 		//hypPeople.Visible = false;
-
-
-
 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 		var organization = (from o in dc.Organizations

@@ -5,6 +5,9 @@ using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 {
@@ -23,31 +26,37 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 
 
 		eventId = Request.QueryString["eventId"];
-		if(!IsPostBack && !String.IsNullOrEmpty(eventId))
+		if (!IsPostBack && !String.IsNullOrEmpty(eventId))
 		{
 			//Edit mode
 			btnSubmit.Text = "Update Disaster/Event";
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 			//Load event information.
 			var disasterEvent = (from ev in dc.Events
-								where ev.EventId == new Guid(eventId)
-								select ev).SingleOrDefault();
+								 where ev.EventId == new Guid(eventId)
+								 select ev).SingleOrDefault();
 
 			txtBeginDate.Value = disasterEvent.BeginDate.ToString();
-			if(disasterEvent.EndDate != null)
-			{ 
+			if (disasterEvent.EndDate != null)
+			{
 				txtEndDate.Value = disasterEvent.EndDate.ToString();
 			}
+			if (disasterEvent.FEMADeclarationDate != null)
+			{
+				txtFEMADate.Value = disasterEvent.FEMADeclarationDate.ToString();
+			}
+			txtFEMAID.Value = disasterEvent.FEMADeclarationID;
 			txtDisasterName.Value = disasterEvent.Name;
 			txtDescription.Value = disasterEvent.Description;
-			if(!String.IsNullOrEmpty(disasterEvent.Latitude))
-			{ 
+			if (!String.IsNullOrEmpty(disasterEvent.Latitude))
+			{
 				txtLatitude.Value = disasterEvent.Latitude.ToString();
 				txtLongitude.Value = disasterEvent.Longitude.ToString();
 			}
 			txtMapZoomLevel.Value = disasterEvent.Zoom.ToString();
 			txtURLFriendlyName.Value = disasterEvent.URLFriendlyName;
 			chkActive.Checked = disasterEvent.IsActive;
+			chkSimulation.Checked = disasterEvent.IsSimulation == null ? false : (bool)disasterEvent.IsSimulation;
 
 			//Select the various states.
 
@@ -68,11 +77,11 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 				}
 			}
 
-			if(disasterEvent.EventTypeId != null)
-			{ 
+			if (disasterEvent.EventTypeId != null)
+			{
 				var eventType = (from et in dc.EventTypes
-									where et.EventTypeId == disasterEvent.EventTypeId
-									select et).SingleOrDefault();
+								 where et.EventTypeId == disasterEvent.EventTypeId
+								 select et).SingleOrDefault();
 
 				if (eventType != null)
 				{
@@ -82,7 +91,7 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 			}
 		}
 		if (!IsPostBack)
-		{ 
+		{
 			LoadStates(eventId);
 			LoadDisasters();
 		}
@@ -106,8 +115,8 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 		var disasterTypes = from et in dc.EventTypes
-						orderby et.Name
-						select new { et };
+							orderby et.Name
+							select new { et };
 
 		int idNumber = 0;
 		foreach (var disasterType in disasterTypes)
@@ -127,14 +136,24 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 		string beginDate = txtBeginDate.Value;
 		string endDate = txtEndDate.Value;
 		string latitude = txtLatitude.Value;
-		string longitude = txtLongitude.Value;	
+		string longitude = txtLongitude.Value;
 		int mapZoomLevel = int.Parse(txtMapZoomLevel.Value);
-		string redirectURL = "/Disaster/" + URLFriendlyName;
+		string redirectURL = "/Maps/" + URLFriendlyName;
+		string FEMADeclarationDATE = txtFEMADate.Value;
+		string FEMADeclarationID = txtFEMAID.Value;
 
 		if (eventId == null)
 		{
-			Guid newEventId = Guid.NewGuid();
 			//Insert into event table.
+			string GEOJSONFilePath = string.Empty;
+			if(!String.IsNullOrEmpty(FEMADeclarationID) && fileGEOJson.HasFile)
+			{
+				GEOJSONFilePath = "/Uploads/" + Guid.NewGuid().ToString() + "_FEMA_" + fileGEOJson.FileName;
+				//Upload the GEOJSONE FILE
+				fileGEOJson.SaveAs(Server.MapPath(GEOJSONFilePath));
+			}
+
+			Guid newEventId = Guid.NewGuid();
 			Event disasterEvent = new Event();
 
 			if (!String.IsNullOrEmpty(beginDate))
@@ -146,7 +165,15 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 			{
 				disasterEvent.EndDate = DateTime.Parse(endDate);
 			}
-
+			if (!String.IsNullOrEmpty(FEMADeclarationDATE))
+			{
+				disasterEvent.FEMADeclarationDate = DateTime.Parse(FEMADeclarationDATE);
+			}
+			if(!String.IsNullOrEmpty(GEOJSONFilePath))
+			{
+				disasterEvent.DeclaredGEOJSON = GEOJSONFilePath;
+			}
+			disasterEvent.FEMADeclarationID = FEMADeclarationID;
 			disasterEvent.Name = disasterName;
 			disasterEvent.Description = description;
 			disasterEvent.Latitude = latitude; ;
@@ -159,6 +186,7 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 			disasterEvent.URLFriendlyName = URLFriendlyName;
 			disasterEvent.IsActive = chkActive.Checked;
 			disasterEvent.IsDisaster = true;
+			disasterEvent.IsSimulation = chkSimulation.Checked;
 			dc.Events.InsertOnSubmit(disasterEvent);
 			dc.SubmitChanges();
 
@@ -183,10 +211,19 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 		}
 		else
 		{
+
+			//EDIT
+			string GEOJSONFilePath = string.Empty;
+			if (!String.IsNullOrEmpty(FEMADeclarationID) && fileGEOJson.HasFile)
+			{
+				GEOJSONFilePath = "/Uploads/" + Guid.NewGuid().ToString() + "_FEMA_" + fileGEOJson.FileName;
+				//Upload the GEOJSONE FILE
+				fileGEOJson.SaveAs(Server.MapPath(GEOJSONFilePath));
+			}
 			eventId = Request.QueryString["eventId"];
 			var disasterEvent = (from de in dc.Events
-								where de.EventId == new Guid(eventId)
-								select de).SingleOrDefault();
+								 where de.EventId == new Guid(eventId)
+								 select de).SingleOrDefault();
 
 			if (!String.IsNullOrEmpty(beginDate))
 			{
@@ -197,27 +234,36 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 			{
 				disasterEvent.EndDate = DateTime.Parse(endDate);
 			}
-
+			if (!String.IsNullOrEmpty(FEMADeclarationDATE))
+			{
+				disasterEvent.FEMADeclarationDate = DateTime.Parse(FEMADeclarationDATE);
+			}
+			if (!String.IsNullOrEmpty(GEOJSONFilePath))
+			{
+				disasterEvent.DeclaredGEOJSON = GEOJSONFilePath;
+			}
+			disasterEvent.FEMADeclarationID = FEMADeclarationID;
 			disasterEvent.Name = disasterName;
 			disasterEvent.Description = description;
 			disasterEvent.Latitude = latitude; ;
 			disasterEvent.Longitude = longitude;
-			disasterEvent.CreatedBy = new Guid(Membership.GetUser().ProviderUserKey.ToString());
-			disasterEvent.CreatedOn = DateTime.Now;
+			//disasterEvent.CreatedBy = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+			//disasterEvent.CreatedOn = DateTime.Now;
 			disasterEvent.EventId = new Guid(eventId);
 			disasterEvent.EventTypeId = new Guid(hidEventTypeId.Value);
 			disasterEvent.Zoom = mapZoomLevel;
 			disasterEvent.URLFriendlyName = URLFriendlyName;
 			disasterEvent.IsActive = chkActive.Checked;
+			disasterEvent.IsSimulation = chkSimulation.Checked;
 			dc.SubmitChanges();
 
 			foreach (ListItem listItem in ddlStates.Items)
 			{
 				//If item is selected, make sure it remains selected.
 				var eventStates = from es in dc.EventStates
-									where es.EventId == new Guid(eventId)
-									&& es.StatesId == new Guid(listItem.Value)
-									select es;
+								  where es.EventId == new Guid(eventId)
+								  && es.StatesId == new Guid(listItem.Value)
+								  select es;
 
 				if (listItem.Selected)
 				{
@@ -253,7 +299,7 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 												join ec in dc.EventCounties on co.CountyId equals ec.CountyId
 												join s in dc.USStates on co.StateId equals s.StatesId
 												where ec.EventId == new Guid(eventId) && co.StateId == new Guid(listItem.Value)
-												select ec ;
+												select ec;
 
 							//Item is selected.
 							foreach (var eventCounty in eventCounties)
@@ -270,7 +316,58 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 		}
 
 		//Redirect to county association page.
-		Response.Redirect(redirectURL); 
+		Response.Redirect(redirectURL);
 
-	}	 
+	}
+
+	private string ConvertKMZtoGEOJSON(FileUpload fileGEOJson, string FEMADeclarationID)
+	{
+		string GEOJsonGuid = Guid.NewGuid().ToString();
+		string GEOJsonFilePath = string.Empty;
+		string filePath = Server.MapPath("/App_Data/FEMA_" + fileGEOJson.FileName);
+		fileGEOJson.SaveAs(filePath);
+
+		// Call the async method without using async/await, as the button click can't be async in C# v5.
+		string geoJson = ConvertKmzToGeoJson(filePath);
+		if (geoJson != null)
+		{
+			string FilePath = "~/App_Data/" + FEMADeclarationID + "_FEMA_" + GEOJsonGuid + ".geojson";
+			GEOJsonFilePath = Server.MapPath(FilePath);
+			File.WriteAllText(GEOJsonFilePath, geoJson);
+		}
+		else
+		{
+		}
+		return GEOJsonFilePath;
+	}
+
+	private string ConvertKmzToGeoJson(string kmzFilePath)
+	{
+		string apiKey = "cONDCvUaaxVgsLY"; // Replace with your actual API key
+		string apiUrl = "https://mygeodata.cloud/api/converter";
+
+		using (var client = new HttpClient())
+		{
+			var formData = new MultipartFormDataContent();
+			formData.Add(new StringContent(apiKey), "key");
+			formData.Add(new StringContent("geojson"), "output_format");
+			formData.Add(new ByteArrayContent(File.ReadAllBytes(kmzFilePath)), "file", Path.GetFileName(kmzFilePath));
+
+			// Synchronous Post request
+			HttpResponseMessage response = client.PostAsync(apiUrl, formData).Result;
+
+			if (response.IsSuccessStatusCode)
+			{
+				// Synchronously read the response content
+				string jsonResponse = response.Content.ReadAsStringAsync().Result;
+				return jsonResponse; // Return GeoJSON content
+			}
+			else
+			{
+				string errorContent = response.Content.ReadAsStringAsync().Result;
+				string errorMessage = "Error " + response.StatusCode + " " + errorContent; // Display error info
+				return null; // Indicate failure
+			}
+		}
+	}
 }

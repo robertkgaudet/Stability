@@ -40,8 +40,33 @@ public partial class V1_NonProfit_Default : BaseWebForm
 		_coverImage = causePhotoFolder + "businesscoverimage.png";
 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		if (String.IsNullOrEmpty(organizationId))
+		{
+			if (!User.Identity.IsAuthenticated)
+			{
+				//Have the user signin
+				Response.Redirect("/SignIn");
+			}
+			else
+			{
+				//Get this users team, no team? Send them to pick a team.
+				var userOrganization = (from uo in dc.UserOrganizations
+										where uo.UserId == userId
+										select new { uo.OrganizationId }).Take(1).SingleOrDefault();
+
+				if (userOrganization == null)
+				{
+					Response.Redirect("/V1/NonProfit/TeamList.aspx?team=false");
+				}
+				else
+				{
+					organizationId = userOrganization.OrganizationId.ToString();
+				}
+			}
+		}
+
 		var organization = (from o in dc.Organizations
-							where o.OrganizationId == new Guid(organizationId)
+							where o.OrganizationId == new Guid(organizationId) && o.IsActive == true
 							select new { o.PurposeMission, o.YearFounded,
 							o.City, o.State, o._501c3Status, o.Address, o.Zip, o.PointOfContactName, o.PointOfContactPhoneNumber, o.PointOfContactEmail,
 							o.FacebookGroupURL, o.FacebookURL, o.TwitterURL, o.InstagramURL, o.YouTubeURL, o.EIN, o.PrimaryPhone, o.SecondaryPhone, 
@@ -98,7 +123,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
 			if (userOrganizationOwner != null)
 			{
-				if ((userOrganizationOwner.OwnerId != userId))
+				if ((userOrganizationOwner.OwnerId == userId))
 				{
 					isOwner = true;
 				}

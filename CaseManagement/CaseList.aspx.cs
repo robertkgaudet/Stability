@@ -20,6 +20,7 @@ public partial class CaseManagement_CaseList : BaseOrganizationWebForm
 		var survivors = from p in dc.Profiles
 						join uu in dc.UserUsers on p.UserId equals uu.AcceptingUserId
 						join aspUser in dc.aspnet_Memberships on uu.AcceptingUserId equals aspUser.UserId
+						join oc in dc.OrganizationCases on uu.RequestingUserId equals oc.UserId
 						where uu.RequestingUserId == userId
 						orderby p.ProfileNumber
 						select new {p.Firstname, p.Lastname, p.PhoneNumber, p.ProfileNumber, aspUser.Email, survivorId = p.UserId};

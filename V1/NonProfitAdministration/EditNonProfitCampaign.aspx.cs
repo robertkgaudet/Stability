@@ -77,8 +77,9 @@ public partial class V1_NonProfitAdministration_EditNonProfitCampaign : BaseOrga
 			//Load the county dropdownlist and select the right value.
 
 			var counties = from c in dc.Counties
-						   join ec in dc.EventCounties on c.CountyId equals ec.CountyId
-						   where ec.EventId == new Guid(_eventId) &&
+						   //join ec in dc.EventCounties on c.CountyId equals ec.CountyId
+						   where 
+						   //ec.EventId == new Guid(_eventId) &&
 						   c.StateId == organizationEvent.oe.StagingStateId
 						   orderby c.Name
 						   select new { Value = c.CountyId, Text = c.Name };
@@ -104,11 +105,13 @@ public partial class V1_NonProfitAdministration_EditNonProfitCampaign : BaseOrga
 		txtFacebook.Value = organizationEvent.oe.FacebookPage;
 		txtFacebookGroup.Value = organizationEvent.oe.FacebookGroup;
 
+
+		//The state/county selected for deployment does not need to be a part of the deployment.
 		var states = from s in dc.USStates
-					 join es in dc.EventStates on s.StatesId equals es.StatesId
-					 where es.EventId == organizationEvent.ev.EventId
+					 //join es in dc.EventStates on s.StatesId equals es.StatesId
+					 //where es.EventId == organizationEvent.ev.EventId
 					 orderby s.Name
-					 select new { es.StatesId, s.Name };
+					 select new { s.StatesId, s.Name };
 
 		ddlState.DataSource = states;
 		ddlState.DataBind();
@@ -159,7 +162,6 @@ public partial class V1_NonProfitAdministration_EditNonProfitCampaign : BaseOrga
 		string beginDate = hidDeploymentBeginDate.Value;
 		string endDate = hidDeploymentEndDate.Value;
 
-
 		Guid organizationEventId = new Guid(Request.QueryString["OrganizationEventId"]);
 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -179,7 +181,7 @@ public partial class V1_NonProfitAdministration_EditNonProfitCampaign : BaseOrga
 
 		organizationEvent.PointOfContactName = pointOfContactName;
 		organizationEvent.AcceptsVolunteers = acceptsVolunteers;
-		organizationEvent.MissionPurpose = purposeMission;
+		organizationEvent.MissionPurpose = Server.HtmlEncode(purposeMission);
 		organizationEvent.CampaignName = campaignName;
 		organizationEvent.URLFriendlyCampaignName = URLFriendlyCampaignName;
 		organizationEvent.VolunteerHourlyRate = String.IsNullOrEmpty(volunteerHourlyValue) ? 0 : Convert.ToDecimal(volunteerHourlyValue);

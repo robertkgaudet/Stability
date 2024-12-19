@@ -1,0 +1,63 @@
+﻿<%@ Master Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Portal.master.cs" Inherits="V1_MasterPages_Portal" %>
+<%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
+<%@ Register Src="~/V1/UserControls/EventHeader.ascx" TagPrefix="uc1" TagName="EventHeader" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+	<asp:ContentPlaceHolder id="head" runat="server"></asp:ContentPlaceHolder>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			// Function for collapse hpanel
+			$('.showhide').on('click', function (event) {
+				event.preventDefault();
+				var hpanel = $(this).closest('div.hpanel');
+				var icon = $(this).find('i:first');
+				var body = hpanel.find('div.panel-body');
+				var footer = hpanel.find('div.panel-footer');
+				body.slideToggle(300);
+				footer.slideToggle(200);
+
+				// Toggle icon from up to down
+				icon.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
+				hpanel.toggleClass('').toggleClass('panel-collapse');
+				setTimeout(function () {
+					hpanel.resize();
+					hpanel.find('[id^=map-]').resize();
+				}, 50);
+			});
+
+			// Function for close hpanel
+			$('.closebox').on('click', function (event) {
+				event.preventDefault();
+				var hpanel = $(this).closest('div.hpanel');
+				hpanel.remove();
+				if ($('body').hasClass('fullscreen-panel-mode')) { $('body').removeClass('fullscreen-panel-mode'); }
+			});
+
+			// Fullscreen for fullscreen hpanel
+			$('.fullscreen').on('click', function () {
+				var hpanel = $(this).closest('div.hpanel');
+				var icon = $(this).find('i:first');
+				$('body').toggleClass('fullscreen-panel-mode');
+				icon.toggleClass('fa-expand').toggleClass('fa-compress');
+				hpanel.toggleClass('fullscreen');
+				setTimeout(function () {
+					$(window).trigger('resize');
+				}, 100);
+			});
+		})
+	</script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+		<asp:HiddenField runat="server" id="hidEventId"></asp:HiddenField>
+		<asp:HiddenField runat="server" id="hidEventName"></asp:HiddenField>
+			<div class="hpanel collapsed">
+				<div class="panel-heading hbuilt member-panel-body">
+					<div class="panel-tools"><a class="showhide"><i class="fa fa-chevron-up"></i></a></div>
+					<h4><%=_eventName%></h4>
+				</div>
+				<div class="panel-body member-panel-body">
+					<uc1:EventHeader runat="server" ID="uc1EventHeader" />
+				</div>
+			</div>
+			<asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+</asp:Content>

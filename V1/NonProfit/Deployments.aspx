@@ -10,7 +10,7 @@
 	
 				<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
                     <div class="panel-heading">
-						<div id="hbreadcrumb" class="pull-right">
+						<div id="hbreadcrumb" class="pull-left">
 							<ol class="hbreadcrumb breadcrumb">
 								<li>
 									<asp:HyperLink ID="hypCreateCause" runat="server" Visible="false" Text="Create A New Deployment" CssClass="font-normal btn btn-sm btn-info"></asp:HyperLink>
@@ -28,4 +28,19 @@
 						</div>
 					</div>
 				<uc1:TeamFooter runat="server" ID="ucTeamFooter" />
+
+				<script src="/v1/Scripts/masonry.pkgd.min.js"></script>
+				<script type="text/javascript">
+					$(document).ready(function () {
+						$('.grid').each(function () {
+							// Initialize Masonry for each grid individually
+							$(this).masonry({
+								itemSelector: '.grid-item',
+								gutter: 20,
+								columnWidth: '.grid-item',
+								percentPosition: true
+							});
+						});
+					});
+				</script>
 </asp:Content>

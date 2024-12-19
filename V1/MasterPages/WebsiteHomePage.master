@@ -1,0 +1,671 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="WebsiteHomePage.master.cs" Inherits="V1_MasterPages_WebsiteHomePage" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<title>Stability - Disaster-Ready Communities</title>
+
+	<!-- Primary Meta Tags -->
+	<meta name="description" content="Turn your friend network into a proficient disaster response team, ready to meet urgent needs in your own community.">
+	<meta name="keywords" content="stability, disaster ready community, disaster relief collaboration, emergency management network, civic organization disaster response, church disaster relief, citizen disaster response platform, disaster readiness community, volunteer coordination disaster relief, emergency management collaboration, social network for disaster response, nonprofit disaster response, disaster preparedness platform, community disaster readiness, resilience in disasters, collaborative disaster management, disaster response software, crisis coordination network, fema">
+	<meta name="author" content="Stability">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Open Graph Meta Tags for Facebook, LinkedIn, and other platforms -->
+	<meta property="og:title" content="Stability - Disaster-Ready Communities">
+	<meta property="og:description" content="Turn your friend network into a proficient disaster response team, ready to meet urgent needs in your own community.">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://www.stability.org">
+	<meta property="og:image" content="https://www.stability.org/v1/images/meta-og-image.jpg">
+	<meta property="og:image:alt" content="A disaster ready community is a thriving community.">
+	<meta property="og:site_name" content="Stability">
+
+	<!-- Twitter Card Meta Tags -->
+	<meta name="twitter:title" content="Stability - Disaster-Ready Communities">
+	<meta name="twitter:description" content="Turn your friend network into a proficient disaster response team, ready to meet urgent needs in your own community.">
+	<meta name="twitter:image" content="https://www.stability.org/v1/images/meta-twitter-image.jpg">
+	<meta name="twitter:image:alt" content="A disaster ready community is a thriving community.">
+	<meta name="twitter:site" content="@GroundForceAid">
+
+	<!-- Additional Meta Tags -->
+	<link rel="canonical" href="https://www.yourwebsite.com">
+	<meta name="robots" content="index, follow">
+
+
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+	<link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
+	<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+    <!-- Vendor styles -->
+    <link rel="stylesheet" href="/homer/vendor/fontawesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="/homer/vendor/metisMenu/dist/metisMenu.css" />
+    <link rel="stylesheet" href="/homer/vendor/animate.css/animate.css" />
+    <link rel="stylesheet" href="/homer/vendor/bootstrap/dist/css/bootstrap.css" />
+
+    <!-- App styles -->
+    <link rel="stylesheet" href="/homer/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css" />
+    <link rel="stylesheet" href="/homer/fonts/pe-icon-7-stroke/css/helper.css" />
+    <link rel="stylesheet" href="/homer/styles/style.css">
+	
+	<style>
+		.landing-page header
+		{
+		background:url('/V1/images/headerv1.jpg') 50% 0 no-repeat !important;
+		 height:480px;
+		 padding-top:50px;
+		 margin-bottom:30px
+
+		}
+		.small{color:white !important;}
+		.navbar-fixed-top
+		{
+			background-color:white !important;
+		}
+		.navbar-brand
+		{background-color:white !important;
+		 margin:0px !important;
+		}
+		.btn-w-m
+		{
+			width:150px;
+		}
+		.font-size-medium
+		{
+			font-size:18px !important;
+		}
+		.container{
+		}
+		.heading{    
+
+		}
+	</style>
+
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body class="landing-page">
+	
+    <form id="form1" runat="server">
+    <div>
+        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+<!-- Simple splash screen-->
+<div class="splash"> <div class="color-line"></div><div class="splash-title"><h1>Homer - Responsive Admin Theme</h1><p>Special Admin Theme for small and medium webapp with very clean and aesthetic style and feel. </p><div class="spinner"> <div class="rect1"></div> <div class="rect2"></div> <div class="rect3"></div> <div class="rect4"></div> <div class="rect5"></div> </div> </div> </div>
+
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="default.aspx" class="navbar-brand">
+				<img src="/V1/images/logo-horizontal-cs.png" style="width:200px;" />
+            </a>	
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><a class="page-scroll" href="#page-top">Home</a></li>
+                <li><a class="page-scroll" page-scroll href="#groupResponse">Group Response</a></li>
+                <li><a class="page-scroll" page-scroll href="#citizenResponse">Citizens</a></li>
+                <li><a class="page-scroll" page-scroll href="#emergencyManagementProfessionals">EM</a></li>
+                <li><a class="page-scroll" page-scroll href="#team">About Us</a></li>
+                <li><a class="page-scroll" page-scroll href="/SignIn">Sign In</a></li>
+                <li><a class="page-scroll" page-scroll href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<header id="page-top">
+    <div class="container">
+        <div class="heading">
+            <h1>
+                Disaster-Ready Communities
+            </h1>
+            <span class="font-size-medium">Turn your friend network into a proficient disaster response team, ready to meet urgent needs in your own community.</span>
+            <div style="max-width:450px; margin-top:20px; margin-bottom:20px; color:white;">
+                For Emergency Management Professionals, Stability offers simulation features that transitions from planning into a coordinated, community-empowered response during disasters.
+           	</div>
+			<a class="btn btn-success btn-sm btn-w-m" role="button" page-scroll href="#groupResponse">Read More</a>
+			<a class="btn btn-success btn-sm btn-w-m" role="button" href="/SignIn">Sign In</a>
+        </div>
+    </div>
+</header>
+<%--	<div class="container">
+		<h2>Activated for Hurricane Francine</h2>
+		<a class="btn btn-primary2 btn-lg" target="_blank" role="button" href="/MapZone">Disaster Zone & Deployment Map</a>
+	</div>--%>
+<section>
+    <div class="container">
+		<div class="row">
+			<div class="col-md-4 m-b-lg" style="margin-bottom:100px;">
+				<h4>Citizens, Help Your Community Be Disaster-Ready</h4>
+				<p>
+					When disasters strike, communities need more than just good intentions—they need a team ready to act. Stability empowers everyday citizens like you to join forces with local community-based groups to provide meaningful disaster relief. By leveraging your unique skills, resources, and time, you can make a real difference in the lives of those affected by hurricanes, floods, wildfires, and other crises.
+				</p>
+				<a class="btn btn-success m-b-sm" style="font-size:20px; font-weight:bold;" role="button" page-scroll href="/V1/Register.aspx?type=volunteer">Volunteer Here</a>
+				<p><a class="btn-info btn btn-sm btn-w-m" role="button" page-scroll href="#citizenResponse">Learn more</a></p>
+			</div>
+			<div class="col-md-4 m-b-lg" style="margin-bottom:100px;">
+				<h4>Community Groups, Why Stability Matters</h4>
+				<p>
+					When disasters strike, there’s no time for lengthy preparation. Stability instantly transforms your organization into a disaster-ready team with pre-designed programs, training, and real-time coordination tools. We enable you to mobilize your members, harness their unique skills, and deliver meaningful support when it matters most.
+				</p>
+				<a class="btn btn-success m-b-sm" role="button" page-scroll href="/V1/Register.aspx?type=group">Groups Register Here</a>
+				<p><a class="btn-info btn btn-sm btn-w-m" role="button" page-scroll href="#groupResponse">Learn more</a></p>
+			</div>
+			<div class="col-md-4 m-b-lg" style="margin-bottom:100px;">
+				<h4>Emergency Management Professionals</h4>
+				<p>
+					Stability empowers emergency managers to effectively coordinate with community-based groups, allowing for a well-prepared, efficient disaster response. Our platform not only facilitates real-time coordination but also enables pre-planning with local groups, ensuring that when disaster strikes, community teams are ready to act with minimal delay.
+				</p>
+					<a class="btn btn-success m-b-sm" role="button" page-scroll href="/V1/Register.aspx?type=professional">Emergency Management Professionals Register Here</a>
+				<p><a class="btn-info btn btn-sm btn-w-m" role="button" page-scroll href="#emergencyManagementProfessionals">Learn more</a></p>
+			</div>
+		</div>
+    </div>
+</section>
+
+<section id="groupResponse" class="bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center">
+                <h2><span class="text-info">Community Group and Nonprofit </span>Response</h2>
+                <p>
+					Whether you're a church, civic group, disater nonprofit or neighborhood association, Stability gives you the tools and training to take swift, organized action during a crisis.
+                </p>
+            </div>
+        </div>
+        <div class="row m-t-lg">
+            <div class="col-md-4 col-md-offset-2">
+                <strong>Rapid Response Programs:</strong>
+                <p>
+					 Quickly access and deploy ready-to-go disaster response programs tailored for your community’s needs.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <strong>Member Skill Coordination:</strong>
+                <p>
+					Leverage the skills, resources, and availability of your members to make the greatest impact.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-2">
+                <strong>Training for Action:</strong>
+                <p>
+					 Equip your group with essential disaster response training, ensuring that everyone is prepared to contribute effectively.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <strong>Real-Time Monitoring:</strong>
+                <p>
+					 Track your team’s time, actions and resources, ensuring your community benefits from the most efficient use of FEMA matching funds.
+                </p>
+                <a class="btn btn-success btn-sm" href="/V1/Register.aspx?type=group">Groups Get Started Here</a>
+            </div>
+        </div>
+        <div class="row m-t-lg">
+            <div class="col-md-8 col-md-offset-2">
+                <strong>FREE: One Click to Launch a Custom Website That Coordinates and Engages Your Members and Community</strong>
+                <p>
+					 Coordinate with Your Own Custom Website: Stability enables your team to launch a custom website, allowing you to organize, communicate, and coordinate all efforts seamlessly.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="citizenResponse">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center">
+                <h2><span class="text-info">Citizens and Team </span>Members</h2>
+                <p>
+                   Join Stability – Help Your Community Be Disaster-Ready, Be Part of the Solution
+                </p>
+            </div>
+        </div>
+        <div class="row m-t-lg">
+            <div class="col-md-4 col-md-offset-2">
+                <strong>Put Your Skills to Use:</strong>
+                <p>
+					 Whatever your background—medical, logistics, communications, or general support—there’s a place for you on your local disaster response team.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <strong>Make an Impact:</strong>
+                <p>
+					Every hour you contribute and every resource you provide directly helps your community secure vital disaster relief.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-2">
+                <strong>Be Prepared:</strong>
+                <p>
+					Get trained and ready before disasters strike, so you can be part of a team that knows exactly how to help in times of crisis.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <strong>Connect with Local & National Partners:</strong>
+                <p>
+					Work with Local & National Partners: Through Stability, your group collaborates with emergency managers and disaster relief organizations, ensuring your efforts are coordinated and effective.
+                </p>
+                <a class="btn btn-success btn-sm" href="/V1/Register.aspx?type=member">Volunteer Register Here</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="emergencyManagementProfessionals" class="bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center">
+                <h2><span class="text-info">Emergency Management </span>Professionals</h2>
+                <p>
+                   Streamline Your Disaster Response with Pre-Planned Community Support. Stability empowers emergency managers to effectively coordinate with community-based groups, allowing for a well-prepared, efficient disaster response. Our platform not only facilitates real-time coordination but also enables pre-planning with local groups, ensuring that when disaster strikes, community teams are ready to act with minimal delay.
+                </p>
+            </div>
+        </div>
+        <div class="row m-t-lg">
+            <div class="col-md-4 col-md-offset-2">
+                <strong>Pre-Planning with Community Groups:</strong>
+                <p>
+					 Collaborate with community-based groups ahead of time to build a pre-planned disaster response strategy, ensuring they’re ready to act when needed.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <strong>Real-Time Monitoring:</strong>
+                <p>
+					Track every hour of work and every donated resource, ensuring accurate records that can be applied toward the community’s required matching funds, helping secure federal disaster relief funding.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-2">
+                <strong>Resource & Skill Tracking:</strong>
+                <p>
+					Get trained and ready before disasters strike, so you can be part of a team that knows exactly how to help in times of crisis.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <strong>Strategic Deployments:</strong>
+                <p>
+					Use our platform to deploy groups based on their strengths, ensuring an organized and effective disaster response.
+                </p>
+                <a class="btn btn-success btn-sm" href="/V1/Register.aspx?type=professional">Emergency Managers Get Started Here</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="team">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-6 col-md-offset-3">
+                <h2><span class="text-info">Our Team </span>Supports You</h2>
+                <p>
+               	With 40 years of combined citizen-led disaster relief experience, this is the driving force behind the Stability platform. We’ve been on the front lines of disaster response, and now we’re dedicated to empowering communities with the tools, training, and technology they need to respond swiftly and effectively. Our deep expertise in disaster logistics, coordination, and relief operations makes us the ideal support team to help Stability users prepare for and respond to crises.
+               </p>
+            </div>
+        </div>
+
+        <div class="row m-t-lg text-center">
+            <div class="col-sm-4">
+                <div class="team-member">
+                    <img src="/V1/images/team/rob.jpg" class="img-circle" alt="">
+                    <h4><span>Rob</span> Gaudet</h4>
+                    <p>
+					</p>
+
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="team-member">
+                    <img src="/V1/images/team/cole.jpg" class="img-circle" alt="">
+                    <h4><span>Cole</span> Perrault</h4>
+                    <p>
+					</p>
+
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="team-member">
+                    <img src="/V1/images/team/jon.jpg" class="img-circle" alt="">
+                    <h4><span>Jon</span> Raso</h4>
+                    <p>
+					</p>
+
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-lg text-center">
+            <div class="col-sm-4">
+                <div class="team-member">
+                    <img src="/V1/images/team/sarah.jpg" class="img-circle" alt="">
+                    <h4><span>Sarah</span> Mostafa</h4>
+                    <p>
+					</p>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="team-member">
+                    <img src="/V1/images/team/shane.jpg" class="img-circle" alt="">
+                    <h4><span>Shane</span> Callcut</h4>
+                    <p>
+					</p>
+
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="team-member">
+                    <img src="/V1/images/team/ken.jpg" class="img-circle" alt="">
+                    <h4><span>Ken</span> Calvin</h4>
+                    <p>
+					</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%--
+<section id="pricing" class="bg-light" style="visibility:hidden;">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-12">
+                <h2><span class="text-success">Best pricing </span>for your app</h2>
+                <p>Lorem Ipsum available, but the majority have suffered alteration euismod. </p>
+            </div>
+        </div>
+
+        <div class="row m-t-lg">
+            <div class="col-lg-3">
+                <ul class="pricing-plan list-unstyled">
+                    <li class="pricing-title">
+                        Basic
+                    </li>
+                    <li class="pricing-desc">
+                        Lorem ipsum dolor sit amet, illum fastidii dissentias quo ne. Sea ne sint animal iisque, nam an soluta sensibus.
+                    </li>
+                    <li class="pricing-price">
+                        <span>$16</span>
+                    </li>
+                    <li>
+                        Dashboards
+                    </li>
+                    <li>
+                        Projects view
+                    </li>
+                    <li>
+                        Contacts
+                    </li>
+                    <li>
+                        Calendar
+                    </li>
+                    <li>
+                        AngularJs
+                    </li>
+                    <li>
+                        <a class="btn btn-primary btn-sm" href="#">Signup today</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3">
+                <ul class="pricing-plan list-unstyled selected">
+                    <li class="pricing-title">
+                        Standard
+                    </li>
+                    <li class="pricing-desc">
+                        Lorem ipsum dolor sit amet, illum fastidii dissentias quo ne. Sea ne sint animal iisque, nam an soluta sensibus.
+                    </li>
+                    <li class="pricing-price">
+                        <span>$22</span>
+                    </li>
+                    <li>
+                        Dashboards
+                    </li>
+                    <li>
+                        Projects view
+                    </li>
+                    <li>
+                        Contacts
+                    </li>
+                    <li>
+                        Calendar
+                    </li>
+                    <li>
+                        AngularJs
+                    </li>
+                    <li class="plan-action">
+                        <a class="btn btn-primary btn-sm" href="#">Signup today</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3">
+                <ul class="pricing-plan list-unstyled">
+                    <li class="pricing-title">
+                        Premium
+                    </li>
+                    <li class="pricing-desc">
+                        Lorem ipsum dolor sit amet, illum fastidii dissentias quo ne. Sea ne sint animal iisque, nam an soluta sensibus.
+                    </li>
+                    <li class="pricing-price">
+                        <span>$160</span>
+                    </li>
+                    <li>
+                        Dashboards
+                    </li>
+                    <li>
+                        Projects view
+                    </li>
+                    <li>
+                        Contacts
+                    </li>
+                    <li>
+                        Calendar
+                    </li>
+                    <li>
+                        AngularJs
+                    </li>
+                    <li>
+                        <a class="btn btn-primary btn-sm" href="#">Signup today</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-lg-3">
+                <ul class="pricing-plan list-unstyled">
+                    <li class="pricing-title">
+                        Prestige
+                    </li>
+                    <li class="pricing-desc">
+                        Lorem ipsum dolor sit amet, illum fastidii dissentias quo ne. Sea ne sint animal iisque, nam an soluta sensibus.
+                    </li>
+                    <li class="pricing-price">
+                        <span>$260</span>
+                    </li>
+                    <li>
+                        Dashboards
+                    </li>
+                    <li>
+                        Projects view
+                    </li>
+                    <li>
+                        Contacts
+                    </li>
+                    <li>
+                        Calendar
+                    </li>
+                    <li>
+                        AngularJs
+                    </li>
+                    <li>
+                        <a class="btn btn-primary btn-sm" href="#">Signup today</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</section>
+<section id="clients">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-6 col-md-offset-3">
+                <h2><span class="text-success">Our best</span> clients</h2>
+                <p>
+                    Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes.
+                </p>
+            </div>
+        </div>
+
+        <div class="row text-center m-t-lg">
+            <div class="col-md-6 col-md-offset-3">
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="client">Company logo</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="client">Company logo</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="client">Company logo</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="client">Company logo</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="client">Company logo</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="client">Company logo</div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+</section>--%>
+<section id="contact" class="bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-6 col-md-offset-3">
+                <h2><span class="text-info">Contact</span> Us</h2>
+                <p>
+                </p>
+            </div>
+        </div>
+
+        <div class="row text-center m-t-lg">
+            <div class="col-md-4 col-md-offset-3">
+
+                <form class="form-horizontal" role="form" method="post" action="#">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-2 control-label">Name</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Your full name" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="col-sm-2 control-label">Email</label>
+
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="user@example.com" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message" class="col-sm-2 control-label">Message</label>
+
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="3" name="message"  placeholder="Your message here..."></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <input id="submit" name="submit" type="submit" value="Send us a message" class="btn btn-success">
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="col-md-3 text-left">
+                <address>
+                    <strong><span class="navy">Stability, Inc.</span></strong><br/>
+                    4400-a Ambassador Caffery Parkway #342<br/>
+                    Lafayette, La 70508<br/>
+                    <abbr title="Phone">P:</abbr> (318) 572-3161<br />
+                    <abbr title="Email">E:</abbr> Support@Stability.org
+                </address>
+                <p class="text-color">
+               Stability is a cutting-edge, technology-based platform that empowers community-based groups, churches, and civic organizations to seamlessly pivot into disaster response teams. By providing pre-planned programs, training, and real-time coordination tools, Stability turns local talent into an organized, efficient, and impactful disaster response force. </p>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+<!-- Vendor scripts -->
+<script src="/homer/vendor/jquery/dist/jquery.min.js"></script>
+<script src="/homer/vendor/jquery-ui/jquery-ui.min.js"></script>
+<script src="/homer/vendor/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="/homer/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/homer/vendor/metisMenu/dist/metisMenu.min.js"></script>
+<script src="/homer/vendor/iCheck/icheck.min.js"></script>
+<script src="/homer/vendor/sparkline/index.js"></script>
+
+<!-- App scripts -->
+<script src="scripts/homer.js"></script>
+
+<!-- Local script for menu handle -->
+<!-- It can be also directive -->
+<script>
+	$(document).ready(function () {
+
+		// Page scrolling feature
+		$('a.page-scroll').bind('click', function (event) {
+			var link = $(this);
+			$('html, body').stop().animate({
+				scrollTop: $(link.attr('href')).offset().top - 50
+			}, 500);
+			event.preventDefault();
+		});
+
+		$('body').scrollspy({
+			target: '.navbar-fixed-top',
+			offset: 80
+		});
+
+	});
+</script>
+
+</body>
+</html>

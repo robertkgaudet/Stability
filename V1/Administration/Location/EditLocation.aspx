@@ -145,6 +145,16 @@
 								<div class="col-sm-5"><input type="text" runat="server" id="txtEmailAddress" class="form-control" placeholder="Email Address"></div>
 							</div>
 							<div class="form-group">
+								<label class="col-sm-2 control-label">Has Generator</label>
+								<div class="col-sm-1 m-t-sm">
+									<input type="checkbox" runat="server" id="chkHasGenerator" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label">Generator Size</label>
+								<div class="col-sm-5"><input type="text" runat="server" maxlength="249" id="txtGeneratorSize" class="form-control" placeholder="Generator Description"></div>
+							</div>
+							<div class="form-group">
 								<label class="col-sm-2 control-label">Is Visible</label>
 								<div class="col-sm-1 m-t-sm">
 									<input type="checkbox" runat="server" id="chkActive" class="form-control">

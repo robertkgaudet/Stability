@@ -1,0 +1,134 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="1-Column-Narrow.master.cs" Inherits="V1_MasterPages_1_Column_Narrow" %>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-96039646-1"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() { dataLayer.push(arguments); }
+			gtag('js', new Date());
+
+			gtag('config', 'UA-96039646-1');
+		</script>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Stability - Disaster-Ready Communities</title>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="Turn your friends and family into an impactful disaster relief team to help your community.">
+		<meta name="keywords" content="Cajun Navy, Ground Force, Ground Force Humanitarian Aid, Cajun Navy Ground Force, CajunNavy, Stability, Disaster Relief, Disaster, Disaster Response, Hurricane, Tornado, Flood, Wildfire, Heatwave">
+		<meta name="author" content="Rob Gaudet, President, Stability">
+
+		<meta property="og:image" content="http://www.Stability.org/V1/images/MSTEAM.png" />
+		<meta property="og:title" content="Stability - Disaster-Ready Communities" />
+		<meta property="og:description" content="Turn your friends and family into an impactful disaster relief team to help your community." />
+
+		<meta property="og:url" content="http://www.Stability.org/Default.aspx" />
+
+		<!-- Mobile Specific Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+		
+		<!-- Favicons -->
+		<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+		<link rel="manifest" href="/site.webmanifest">
+		<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="theme-color" content="#b16565">
+
+		<!-- Mainly scripts -->
+		<link rel="stylesheet" href="/Homer/vendor/fontawesome/css/font-awesome.css" />
+		<link rel="stylesheet" href="/Homer/vendor/metisMenu/dist/metisMenu.css" />
+		<link rel="stylesheet" href="/Homer/vendor/animate.css/animate.css" />
+		<link rel="stylesheet" href="/Homer/styles/style.css">
+		<link rel="stylesheet" href="/Homer/vendor/bootstrap/dist/css/bootstrap.css" />
+		<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+
+		<asp:ContentPlaceHolder id="head" runat="server">
+		</asp:ContentPlaceHolder>
+
+		<script>
+
+			$(document).ready(function () {
+				$(".logo").click(function () {
+					document.location.href = "/default.aspx";
+				});
+				$("body").tooltip({ selector: '[data-toggle=tooltip]' });
+			});
+		</script>
+
+		<style>
+			.logo
+			{
+				margin:10px;
+				width:200px;
+			}
+			.logo:hover
+			{
+				cursor: pointer;
+			}
+			
+			#header
+			{
+				background-color:#5e2e91;
+			}
+
+			.divCover {
+				width: 100%;
+				background-image: url('<%=_coverImage%>'); /* Path to your image */
+				background-size: cover; /* Scale the image to cover the entire div */
+				background-position: center; /* Center the image */
+				background-repeat: no-repeat; /* Prevent the image from repeating */
+				height:160px;
+				border-top-left-radius: 10px !important;
+				border-top-right-radius: 10px !important;
+			}
+			.hpanel
+			{
+				margin-bottom:5px !important;
+			}
+			.member-panel-body
+			{
+				border-radius: 10px !important;
+				border-top-right-radius: 0px !important;
+				border-top-left-radius: 0px !important;
+				margin-bottom: 0px !important;
+			}
+			.bodyColor
+			{background-color:#F1F3F6 !important;}
+		</style>
+	</head>
+
+	<body class="bodyColor">
+		<form id="form1" runat="server">
+			<div id="header" runat="server">
+				<asp:Image ID="imgLogo" CssClass="pull-left logo" runat="server" ImageUrl="~/V1/Images/logo1.png" />
+			</div>
+			<div class="container bodyColor" style="padding-bottom:200px !important;">
+				<div class="row justify-content-center" style="margin-top:40px;">
+					<!--MAIN CONTENT CONTAINER-->
+					<div class="col-sm-12 col-lg-12">
+						<div id="divCover" class="divCover"></div>
+						<div class="hpanel">
+							<div class="panel-body member-panel-body">
+								<asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+        
+								</asp:ContentPlaceHolder>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>		
+		<script src="/Homer/vendor/slimScroll/jquery.slimscroll.min.js"></script>
+		<script src="/Homer/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="/Homer/vendor/metisMenu/dist/metisMenu.min.js"></script>
+		<script src="/Homer/vendor/iCheck/icheck.min.js"></script>
+		<script src="/Homer/scripts/homer.js"></script>
+	</body>
+</html>

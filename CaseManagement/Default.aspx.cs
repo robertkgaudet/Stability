@@ -138,7 +138,10 @@ public partial class CaseManagement_Default : BaseOrganizationWebForm
 		var survivors = from ue in dc.UserEvents
 						join p in dc.Profiles on ue.UserId equals p.UserId //Gets the Survivors information.
 						join aspUser in dc.aspnet_Memberships on p.UserId equals aspUser.UserId
+						join ur in dc.aspnet_UsersInRoles on ue.UserId equals ur.UserId
+						join r in dc.aspnet_Roles on ur.RoleId equals r.RoleId
 						where ue.EventId == new Guid(eventId)
+						&& r.LoweredRoleName == "survivor"
 						orderby aspUser.CreateDate descending
 						select new { p.Firstname, p.Lastname, createdBy = ue.CreatedBy, p.PhoneNumber, p.City, p.State, aspUser.Email, survivorId = p.UserId, p.ProfileNumber };
 

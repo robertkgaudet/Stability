@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.SqlServer.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,6 +16,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 	public string _URLFriendlyPageName = string.Empty;
 	public string _organizationId = string.Empty;
 	public string _teamName = string.Empty;
+	public string _streamClass = string.Empty;
 
 	protected void Page_Load(object sender, EventArgs e)
 	{
@@ -23,12 +25,16 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 		litMemberDescription.Text = _teamDescription;
 		litPageName.Text = _pageName;
 
-
 		ucTeamNavigation.PageName = _pageName;
 		ucTeamNavigation.TeamName = _teamName;
 		ucTeamNavigation.organizationId = _organizationId;
 	}
 
+	public string StreamClass
+	{
+		get { return _streamClass; }
+		set { _streamClass = value; }
+	}
 	public string OrganizationId
 	{
 		get { return _organizationId; }

@@ -17,13 +17,13 @@ public partial class V1_Register : System.Web.UI.Page
 
 	protected void Page_Load(object sender, EventArgs e)
 	{
-		eventId = Request.QueryString["eventId"];
-		organizationId = Request.QueryString["organizationId"];
-
 		if(User.Identity.IsAuthenticated)
 		{
-			//Redirect();
+			Response.Redirect("/V1/Member/Default.aspx");
 		}
+
+		eventId = Request.QueryString["eventId"];
+		organizationId = Request.QueryString["organizationId"];
 
 		if(!IsPostBack)
 		{
@@ -48,6 +48,7 @@ public partial class V1_Register : System.Web.UI.Page
 			}
 		}
 	}
+
 	protected void Redirect()
 	{
 		string urlRedirect = "/Survivor";
@@ -88,6 +89,7 @@ public partial class V1_Register : System.Web.UI.Page
 		string state = ddlState.Value;
 		string zipCode = txtZipCode.Text;
 		string eventName = string.Empty;
+		Boolean deploymentSMS = chkMessageOptIn.Checked;
 		//string eventId = hidEventId.Value;
 		string organizationId = hidOrganizationId.Value;
 
@@ -96,29 +98,13 @@ public partial class V1_Register : System.Web.UI.Page
 		if (newUser == null)
 		{
 			litError.Text = GetErrorMessage(status);
-			lblMessage.Visible = false;
 			divError.Visible = true;
 		}
 		else
 		{
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 			//Send to the add a team page.
-			urlRedirect = "/V1/Administration/TeamName.aspx?userActionModal=false";
-			//if (!String.IsNullOrEmpty(eventId))
-			//{
-			//	UserEvent userEvent = new UserEvent();
-			//	userEvent.EventId = new Guid(eventId);
-			//	userEvent.UserEventId = Guid.NewGuid();
-			//	userEvent.UserId = new Guid(newUser.ProviderUserKey.ToString());
-			//	dc.UserEvents.InsertOnSubmit(userEvent);
-			//	dc.SubmitChanges();
-
-			//	var eventNameValue = (from u in dc.Events
-			//					where u.EventId == new Guid(eventId)
-			//					select new { u.URLFriendlyName }).SingleOrDefault();
-
-			//	eventName = eventNameValue.URLFriendlyName;
-			//}
+			//urlRedirect = "/V1/Member/Default.aspx"; // " / V1/Administration/TeamName.aspx?userActionModal=false";
 
 			if (!String.IsNullOrEmpty(organizationId))
 			{
@@ -131,45 +117,11 @@ public partial class V1_Register : System.Web.UI.Page
 				dc.SubmitChanges();
 				urlRedirect = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
 			}
-
-
-			//Send to their team page or send them to a page to find or create a team.
-
-			//if (rdMemberTypeCaseManager.Checked)
-			//{
-			//	Roles.AddUserToRole(username, "CaseManager");
-			//	//Send survivor to the survivor disaster page
-			//	urlRedirect = eventName = "CaseManagement/Default.aspx?userType=casemanager";
-			//}
-
-			//if (rdMemberTypeSurvivor.Checked)
-			//{
-			//	Roles.AddUserToRole(username, "Survivor");
-			//	//Send survivor to the survivor disaster page
-			//	urlRedirect = "/Disaster/" + eventName;
-			//}
-
-			//if(rdMemberTypeHelper.Checked)
-			//{
-			//	//Send helpers to the 
-
-			//	//Send to place for choosing their role and skillset.
-			//	urlRedirect = "/V1/Profile/EditNonProfitCauses.aspx";
-			//}
-
-			//if(rdMemberTypeNonProfit.Checked)
-			//{
-			//	Roles.AddUserToRole(username, "Helper");
-			//	Roles.AddUserToRole(username, "Volunteer");
-			//	Roles.AddUserToRole(username, "NonProfitAdministrator");
-			//	urlRedirect = eventName = String.IsNullOrEmpty(eventName) ? "/V1/DisasterList.aspx?userType=nonprofit" : "/" + eventName + "/NonProfit";
-			//}
-
-			//if(rdMemberTypeBusiness.Checked)
-			//{
-			//	Roles.AddUserToRole(username, "Business");
-			//	urlRedirect = eventName = String.IsNullOrEmpty(eventName) ? "/V1/DisasterList.aspx?userType=business" : "/" + eventName + "/Business";
-			//}
+			else
+			{
+				//Send to the team list page and ask that they choose a team.
+				urlRedirect = "/V1/NonProfit/TeamList.aspx?team=false";
+			}
 
 			Roles.AddUserToRole(username, "Helper");
 			Roles.AddUserToRole(username, "Volunteer");
@@ -186,6 +138,7 @@ public partial class V1_Register : System.Web.UI.Page
 			userProfile.City			= city;
 			userProfile.State			= state;
 			userProfile.Zip				= zipCode;
+			userProfile.ReceiveDeploymentSMS = deploymentSMS;
 			dc.Profiles.InsertOnSubmit(userProfile);
 			dc.SubmitChanges();
 			
@@ -201,7 +154,7 @@ public partial class V1_Register : System.Web.UI.Page
 			firstName,
 			string.Empty,
 			string.Empty,
-			"~\\EmailTemplates\\CreateAccount.html",
+			"~\\EmailTemplates\\NewUser.html",
 			out error);
 
 			// Log the user into the site

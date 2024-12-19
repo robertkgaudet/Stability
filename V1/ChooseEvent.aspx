@@ -53,8 +53,10 @@
 								<thead>
 									<tr>
 										<th data-toggle="true">Portal Name</th>
+                                        <th data-toggle="true"></th>
                                         <th data-toggle="true">States/Counties</th>
                                         <th data-toggle="true">Date</th>
+                                        <th data-toggle="true">Simulation</th>
                                         <th data-toggle="true">Status</th>
 									</tr>
 								</thead>
@@ -62,9 +64,14 @@
 									<asp:Repeater ID="dlDisasterPortal" runat="server" OnItemDataBound="dlDisasterPortal_ItemDataBound">
 										<ItemTemplate>
 											<tr>
-												<td><asp:HyperLink ID="hypName" runat="server"></asp:HyperLink></td>
+												<td>
+													<i class="fa fa-binoculars pull-left" id="iSimulation" runat="server" visible="false"></i>
+													<asp:HyperLink ID="hypName" runat="server"></asp:HyperLink>
+												</td>
+                                                <td><asp:HyperLink ID="hypMap" runat="server"></asp:HyperLink> <asp:HyperLink ID="hypEdit" runat="server"></asp:HyperLink></td>
 												<td><asp:Literal ID="litStates" runat="server"></asp:Literal></td>
                                                 <td><asp:Literal ID="litEventDate" runat="server"></asp:Literal></td>
+                                                <td><asp:Literal ID="litSimulation" runat="server"></asp:Literal></td>
                                                 <td><asp:Literal ID="litStatus" runat="server"></asp:Literal></td>
 											</tr>
 										</ItemTemplate>

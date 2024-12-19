@@ -229,8 +229,8 @@
 								</div>
 							</div>
 							<li>
-								<a href="/CaseManagement/<%=urlFriendlyName%>">
-									<span class="nav-label rebuildHomeNav"><i class="fa fa-pie-chart"></i> My Dashboard</span>
+								<a href="/Maps/<%=urlFriendlyName%>">
+									<span class="nav-label rebuildHomeNav"><i class="fa fa-map"></i> Maps</span>
 								</a>
 							</li>
 							<li runat="server" id="liMySurvivors">

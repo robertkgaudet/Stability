@@ -47,7 +47,7 @@
 					<h4 class="no-margins font-bold"><i class="fa fa-id-card-o"></i> <asp:Literal id="litTitle" runat="server"></asp:Literal> </h4>
 				</div>
 				<div class="alert alert-danger text-center">
-					<h4 class="font-bold no-margins">CAJUN NAVY GROUND FORCE</h4>
+					<h4 class="font-bold no-margins">GROUND FORCE HUMANITARIAN AID</h4>
 				</div>
 				<div class="panel-body-bg">
 					<div class="m-md">

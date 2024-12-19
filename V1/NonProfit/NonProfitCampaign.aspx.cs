@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Stability;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -25,6 +26,8 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 	public string _totalVolunteerHours = "0";
 	public string _totalVolunteerValue = "0";
 	public string _volunteerHourlyRate = "";
+	string pageName = "Details";
+	public bool userIsInOrganization = false;
 
 	protected void LoadImpactMetrics(Guid organizationEventId, decimal volunteerHourlyRate)
 	{
@@ -67,16 +70,34 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 
 	protected void Page_Load(object sender, EventArgs e)
 	{
-        if (String.IsNullOrEmpty(Request.QueryString["organizationEventId"]))
+		string organizationEventId = string.Empty;
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+		if (String.IsNullOrEmpty(Request.QueryString["organizationEventId"]) && String.IsNullOrEmpty(Request.QueryString["organizationEventFriendlyURLName"]))
 		{
-			Response.Write("No organizationEventId provided.");
+			Response.Write("No organizationEventId or organizationEventFriendlyURLName provided.");
 			Response.End();
         }
+		else
+		{
+			if(!String.IsNullOrEmpty(Request.QueryString["organizationEventFriendlyURLName"]))
+			{
+				//Get the org id.
 
-        string organizationEventId = Request.QueryString["organizationEventId"];
+				var organizationIdOnly = (from oe in dc.OrganizationEvents
+									  where oe.URLFriendlyCampaignName == Request.QueryString["organizationEventFriendlyURLName"]
+									  select new { oe.OrganizationEventId }).SingleOrDefault();
 
+				organizationEventId = organizationIdOnly.OrganizationEventId.ToString();
+			}
+			else
+			{
+				organizationEventId = Request.QueryString["organizationEventId"];
+			}
+		}
 
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		ucPostionNavigation.PageName = pageName;
+		ucPostionNavigation.OrganizationEventId = organizationEventId;
 
 		var organizationEvent = (from oe in dc.OrganizationEvents
 								join ev in dc.Events on oe.EventId equals ev.EventId
@@ -84,19 +105,34 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 								where oe.OrganizationEventId == new Guid(organizationEventId)
 								 select new { oe, ev, o }).Take(1).SingleOrDefault();
 
+		if (organizationEvent == null)
+		{
+			Response.Redirect("/V1/Member/Default.aspx");
+		}
+
+		hypAddCase.NavigateUrl = "/CaseManagement/AddCase.aspx";
+		hypViewCases.NavigateUrl = "/CaseManagement/Default.aspx?eventName=" + organizationEvent.ev.URLFriendlyName;
+		lbVolunteer.Visible = true;
+		lbVolunteer.NavigateUrl = "/SignUp/" + organizationEvent.oe.URLFriendlyCampaignName;
+
+		volunteerLink = "/SignUp/" + organizationEvent.oe.URLFriendlyCampaignName;
+		ucPostionNavigation.URLFriendlyName = organizationEvent.oe.URLFriendlyCampaignName;
 		decimal volunteerRate = organizationEvent.oe.VolunteerHourlyRate != null ? Convert.ToDecimal(organizationEvent.oe.VolunteerHourlyRate) : 0;
 		_volunteerHourlyRate = volunteerRate.ToString("C");
 		LoadImpactMetrics(organizationEvent.oe.OrganizationEventId, volunteerRate);
 
 		bool isActive = (bool)organizationEvent.oe.IsActive;
 		//litOrganizationName.Text = organizationEvent.o.Name;
-		litCampaignName.Text = organizationEvent.oe.CampaignName;
-		litEventName.Text = organizationEvent.ev.Name;
-		hypEventName.Text = organizationEvent.ev.Name;
-		hypEventName.NavigateUrl = "/Disaster/" + organizationEvent.ev.URLFriendlyName;
-		hypEventName.Font.Underline = true;
+
+		ucPostionNavigation.CampaignName = organizationEvent.oe.CampaignName;
+		ucPostionNavigation.OrganizationName = organizationEvent.o.Name;
+		ucPostionNavigation.PortalName = organizationEvent.ev.Name;
+		ucPostionNavigation.PortalId = organizationEvent.ev.EventId.ToString();
+		ucPostionNavigation.OrganizationId = organizationEvent.o.OrganizationId.ToString();
+		ucPostionNavigation.Description = organizationEvent.oe.MissionPurpose;
 		hypCauseIsNotActive.Visible = !isActive;
 		organizationId = organizationEvent.oe.OrganizationId;
+		linkDeploymentMap.NavigateUrl = "/Maps/" + organizationEvent.ev.URLFriendlyName;
 
 		//FILTER TO PEOPLE ON THIS NON-PROFIT CAMPAIGN
 		var peopleList = from uo in dc.UserOrganizationEvents
@@ -115,26 +151,23 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 
 		rpNonProfitPeople.DataSource = peopleList;
 		rpNonProfitPeople.DataBind();
-		
-		Master.PageTitle			= organizationEvent.oe.CampaignName + " by " + organizationEvent.o.Name + " - Stability";
-		Master.PageDescription		= organizationEvent.oe.MissionPurpose;
-		Master.FbDescription		= organizationEvent.oe.MissionPurpose;
-		Master.FbImage				= "/V1/Images/" + organizationEvent.ev.ImageFileName;
-		Master.FbImageType			= "image/jpg";
-		Master.FbSite_name			= organizationEvent.oe.CampaignName + " by " + organizationEvent.o.Name + " - Stability";
-		Master.FbURL				= Request.Url.AbsoluteUri;
+
+		//Master.PageTitle = organizationEvent.oe.CampaignName + " by " + organizationEvent.o.Name + " - Stability";
+		//Master.PageDescription = organizationEvent.oe.MissionPurpose;
+		//Master.FbDescription = organizationEvent.oe.MissionPurpose;
+		//Master.FbImage = "/V1/Images/" + organizationEvent.ev.ImageFileName;
+		//Master.FbImageType = "image/jpg";
+		//Master.FbSite_name = organizationEvent.oe.CampaignName + " by " + organizationEvent.o.Name + " - Stability";
+		//Master.FbURL = Request.Url.AbsoluteUri;
 
 		litCampaignMission.Text				= organizationEvent.oe.MissionPurpose;
-		hypOrganizationName.Text			= organizationEvent.o.Name;
-		hypOrganizationName.NavigateUrl		= "/V1/NonProfit/Default.aspx?organizationId=" + organizationEvent.o.OrganizationId; //http://localhost:64915/V1/NonProfit/Default.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32
-		hypOrganizationName.Font.Underline	= true;
 		lblParentOrgName.Text				= organizationEvent.o.Name;
 		hypParentAddress.Text				= organizationEvent.o.Address + "<br/>" + organizationEvent.o.City + ", " + organizationEvent.o.State + " " + organizationEvent.o.Zip;
-		hypParentAddress.NavigateUrl		= "http://maps.google.com/maps?q=" + organizationEvent.o.Address.Replace(" ","+") + "," + organizationEvent.o.City.Replace(" ","+") + "," + organizationEvent.o.State.Replace(" ","+") + "," + organizationEvent.o.Zip;
+		//hypParentAddress.NavigateUrl		= "http://maps.google.com/maps?q=" + organizationEvent.o.Address.Replace(" ","+") + "," + organizationEvent.o.City.Replace(" ","+") + "," + organizationEvent.o.State.Replace(" ","+") + "," + organizationEvent.o.Zip;
 		lblVoadMember.Text					= organizationEvent.o.IsVoadMember.ToString();
 		lbl501c3.Text						= organizationEvent.o._501c3Status.ToString();
-			
-			
+		Master.PageName						= organizationEvent.o.Name + " " + organizationEvent.oe.CampaignName + " Deployment for " + organizationEvent.ev.Name;
+
 		lblPointOfContactPerson.Text = organizationEvent.o.PointOfContactName;
 		if(!String.IsNullOrEmpty(organizationEvent.o.PointOfContactPhoneNumber))
 		{
@@ -145,12 +178,14 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 
 		if (userId == organizationEvent.o.OwnerId || Roles.IsUserInRole("Administrator"))
 		{
-			divEditCampaign.Visible = true;
+			hypViewCases.Visible = true;
+			hypAddCase.Visible = true;
+			ucPostionNavigation.IsTeamOwner = true;
 			editCampaignLink = "/V1/NonProfitAdministration/EditNonProfitCampaign.aspx?OrganizationEventId=" + organizationEvent.oe.OrganizationEventId;
 			editPositionsLink = "/V1/NonProfitAdministration/PositionsNeeded.aspx?OrganizationEventId=" + organizationEvent.oe.OrganizationEventId;
 		}
 
-			if (!String.IsNullOrEmpty(organizationEvent.oe.BlogURL))
+		if (!String.IsNullOrEmpty(organizationEvent.oe.BlogURL))
 		{
 			hypBlog.NavigateUrl = organizationEvent.oe.BlogURL;
 			hypBlog.Text = organizationEvent.oe.BlogURL;
@@ -235,6 +270,23 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 			hypWebsite.Font.Underline	= true;
 		}
 
+		//Is user on this team?
+		var userOrganization = from uo in dc.UserOrganizations
+							   where uo.UserId == userId && uo.OrganizationId == organizationId
+							   select uo;
+
+		if (userOrganization != null)
+		{
+			//user is in organization
+			userIsInOrganization = true;
+		}
+
+		if(userIsInOrganization && User.IsInRole("CaseManager"))
+		{
+			hypViewCases.Visible = true;
+			hypAddCase.Visible = true;
+		}
+
 		if (!isActive)
 		{
 			//Campaign is no longer active, hide all volunteer links.
@@ -244,29 +296,31 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 		else
 		{
 			lbVolunteer.Visible = true;
+			lbVolunteer.NavigateUrl = "/SignUp/" + organizationEvent.oe.URLFriendlyCampaignName;
+
 			if (User.Identity.IsAuthenticated)
 			{
 				//If the user is logged in and not in a nonprofit already then send to choose a nonprofit.
-				var userOrganizationEvent = from uoe in dc.UserOrganizationEvents
-									   where uoe.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-									   && uoe.OrganizationEventId == organizationEvent.oe.OrganizationEventId
-									   && uoe.DeactivatedOn == null
-									   orderby uoe.CreatedOn descending
-										select uoe;
+				//var userOrganizationEvent = from uoe in dc.UserOrganizationEvents
+				//					   where uoe.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+				//					   && uoe.OrganizationEventId == organizationEvent.oe.OrganizationEventId
+				//					   && uoe.DeactivatedOn == null
+				//					   orderby uoe.CreatedOn descending
+				//						select uoe;
 
-				if (userOrganizationEvent.Count() == 0)
-				{
-					//Tell the user they can choose this nonprofit to volunteer with, not volunteering for this.
-					volunteerLink = "/V1/Profile/EditNonProfitCauses.aspx?userOrganizationEvent=true&organizationEventId=" + organizationEvent.oe.OrganizationEventId;
-				}
-				else
-				{
-					//User is already volunteering for this nonprofit, show that message and disable the volunteer button.
-					lbVolunteer.Visible = false;
-					btnActiveVolunteer.Text = "You are volunteering for this deployment.";
-					btnActiveVolunteer.Visible = true;
-					btnActiveVolunteer.Enabled = false;
-				}
+				//if (userOrganizationEvent.Count() == 0)
+				//{
+				//	//Tell the user they can choose this nonprofit to volunteer with, not volunteering for this.
+				//	volunteerLink = "/V1/Profile/EditNonProfitCauses.aspx?userOrganizationEvent=true&organizationEventId=" + organizationEvent.oe.OrganizationEventId;
+				//}
+				//else
+				//{
+				//	//User is already volunteering for this nonprofit, show that message and disable the volunteer button.
+				//	lbVolunteer.Visible = false;
+				//	btnActiveVolunteer.Text = "You are volunteering for this deployment.";
+				//	btnActiveVolunteer.Visible = true;
+				//	btnActiveVolunteer.Enabled = false;
+				//}
 
 			}
 			else
@@ -371,10 +425,9 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 			zelloName = String.IsNullOrEmpty(zelloName) ? "none" : zelloName;
 			title = String.IsNullOrEmpty(title) ? "none" : title;
 			string active = (GetElapsedTime(lastOnlineActiveDate).Substring(0, 1) == "-" ? "<span class='text-success'>Online Now</span> <i class=\"fa fa-wifi text-success\"></i>" : "Last Online: " + GetElapsedTime(lastOnlineActiveDate) + " <i class=\"fa fa-wifi text-muted\"></i>");
-			lblInfo.Text = "<dl class=\"dl-vertical\"><dt><b><a href=\"/V1/Profile/Profile.aspx?userId=" + userId.ToString() + "\"  style=\"text-decoration:underline;\">" + firstname + " " + lastname + "</a></b> <small>" + active + "</small></dt><dd><small>" + title + "</small></dd><dd><small>" + signedInInfo + "</small></dd><dd><small>Last Active Total: " + totalTimeToday + "</small></dd></dl>";
+			lblInfo.Text = "<dl class=\"dl-vertical\"><dt><b><a href=\"/V1/Member/Default.aspx?userId=" + userId.ToString() + "\"  style=\"text-decoration:underline;\">" + firstname + " " + lastname + "</a></b> <small>" + active + "</small></dt><dd><small>" + title + "</small></dd><dd><small>" + signedInInfo + "</small></dd><dd><small>Last Active Total: " + totalTimeToday + "</small></dd></dl>";
 
-
-
+			
 
 
 

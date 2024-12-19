@@ -110,7 +110,6 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 
 		hypMyCalendar.NavigateUrl = "/V1/Profile/AvailableDates.aspx";
 		LoadTeamCountGraph(organizationId);
-
 	}
 		public void LoadTeamCountGraph(string organizationId)
 		{

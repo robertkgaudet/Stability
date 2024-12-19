@@ -64,12 +64,15 @@ public partial class V1_Member_Default : BaseWebForm
 			}
 
 			ucMemberHeader.IsSignedInUser = isSignedInUser;
+			ucMemberNavigation.UserId = userId.ToString();
 		}
 
 		//Does not have to be signed in to do all of this.
 		if (!String.IsNullOrEmpty(pageUserId))
 		{
+			ucMemberHeader.UserId = pageUserId;
 			ucDeploymentListCard.UserId = new Guid(pageUserId);
+			DeploymentListCard1.UserId = new Guid(pageUserId);
 			userId = new Guid(pageUserId);
 			ucMemberHeader.UserId = pageUserId;
 			//Load profile information.
@@ -172,6 +175,7 @@ public partial class V1_Member_Default : BaseWebForm
 
 			if(orgUser != null)
 			{
+				//ucMemberNavigation.OrganizationId = orgUser.OrganizationId.ToString();
 				ucMemberHeader.TeamId = orgUser.OrganizationId.ToString();
 				ucMemberHeader.TeamName = orgUser.Name;
 			}
@@ -264,17 +268,14 @@ public partial class V1_Member_Default : BaseWebForm
 				availableToday = string.Empty;
 			}
 
+			if(isSignedInUser)
+			{ 
+				btnUpdateCalendar.Visible = true;
+			}
 			if(!String.IsNullOrEmpty(datesAvailable))
 			{
 				availabilityStyle = "alert-success";
 				litDatesAvailable.Text = "<div class=\"row no-gutter\">" + datesAvailable + "</div>";
-			}
-			else
-			{
-				if(isSignedInUser)
-				{ 
-					btnUpdateCalendar.Visible = true;
-				}
 			}
 			//CALENDAR CODE
 		}

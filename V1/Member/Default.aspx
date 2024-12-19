@@ -34,12 +34,56 @@
 					}
 				});
 			}
+
+			// Function for collapse hpanel
+			$('.showhide').on('click', function (event) {
+				event.preventDefault();
+				var hpanel = $(this).closest('div.hpanel');
+				var icon = $(this).find('i:first');
+				var body = hpanel.find('div.panel-body');
+				var footer = hpanel.find('div.panel-footer');
+				body.slideToggle(300);
+				footer.slideToggle(200);
+
+				// Toggle icon from up to down
+				icon.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
+				hpanel.toggleClass('').toggleClass('panel-collapse');
+				setTimeout(function () {
+					hpanel.resize();
+					hpanel.find('[id^=map-]').resize();
+				}, 50);
+			});
+
+			// Function for close hpanel
+			$('.closebox').on('click', function (event) {
+				event.preventDefault();
+				var hpanel = $(this).closest('div.hpanel');
+				hpanel.remove();
+				if ($('body').hasClass('fullscreen-panel-mode')) { $('body').removeClass('fullscreen-panel-mode'); }
+			});
+
+			// Fullscreen for fullscreen hpanel
+			$('.fullscreen').on('click', function () {
+				var hpanel = $(this).closest('div.hpanel');
+				var icon = $(this).find('i:first');
+				$('body').toggleClass('fullscreen-panel-mode');
+				icon.toggleClass('fa-expand').toggleClass('fa-compress');
+				hpanel.toggleClass('fullscreen');
+				setTimeout(function () {
+					$(window).trigger('resize');
+				}, 100);
+			});
 		});
 </script>
 	<style>
 		.hpanel
 		{
 			margin-bottom:5px !important;
+		}
+		.member-panel-body
+		{
+			border-radius: 10px !important;
+			margin-bottom: 0px !important;
 		}
 		.member-panel-body
 		{
@@ -80,6 +124,10 @@
 			padding-left: 1px;  /* Reduced gutter padding */
 			padding-right: 1px;
 		}
+		.tab-pane .panel-body {
+			overflow: auto;
+			height:1000px;
+		}
 	</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
@@ -91,16 +139,62 @@
 					<uc1:MemberHeader runat="server" ID="ucMemberHeader" />
 				</div>
 				<div class="hpanel">
-					<div class="alert <%=availabilityStyle%> member-panel-body">
-						<button Class="btn btn-success pull-right" onclick="updateCalendar(); return false;" runat="server" id="btnUpdateCalendar" ClientIDMode="static" Visible="false"><b>Update My Calendar</b><br />Add dates you want to volunteer to your calendar. <i class='fa fa-long-arrow-right'></i></button>
-						<h4>Availability</h4>
-						<asp:Literal ID="litDatesAvailable" runat="server"></asp:Literal>
+					<div class="panel-heading hbuilt member-panel-body">
+						<div class="panel-tools">
+							<a class="showhide"><i class="fa fa-chevron-up"></i></a>
+						</div>
+						<h3>Activity</h3>
+						<span class="font-normal"> Deployments and positions signed up for.</span>
+					</div>
+					<div class="panel-body member-panel-body">
+						<div class="hpanel">
+							<ul class="nav nav-tabs">
+								<li class="active"><a data-toggle="tab" href="#tab-1">Active Deployments</a></li>
+								<li class=""><a data-toggle="tab" href="#tab-2">Upcoming Deployments</a></li>
+								<li class=""><a data-toggle="tab" href="#tab-3">Past Deployments</a></li>
+							</ul>
+							<div class="tab-content">
+								<div id="tab-1" class="tab-pane active">
+									<div class="panel-body">
+										<uc1:DeploymentListCard runat="server" ID="ucDeploymentListCard" IsActive="true" />
+									</div>
+								</div>
+								<div id="tab-2" class="tab-pane">
+									<div class="panel-body">
+									</div>
+								</div>
+								<div id="tab-3" class="tab-pane">
+									<div class="panel-body">
+										<uc1:DeploymentListCard runat="server" ID="DeploymentListCard1" IsActive="false" />
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="hpanel">
+				<div class="hpanel collapsed">
+					<div class="panel-heading hbuilt member-panel-body">
+						<div class="panel-tools">
+							<a class="showhide"><i class="fa fa-chevron-up"></i></a>
+						</div>
+						<h3>Calendar</h3>
+						<span class="font-normal"> The dates available to help.</span>
+					</div>
+					<div class="panel-body alert <%=availabilityStyle%> member-panel-body">
+						<asp:Literal ID="litDatesAvailable" runat="server"></asp:Literal>
+						<div>
+							<button Class="btn btn-success pull-right m-t-lg" onclick="updateCalendar(); return false;" runat="server" id="btnUpdateCalendar" ClientIDMode="static" Visible="false"><b>Update My Calendar</b><br />Add dates you want to volunteer to your calendar. <i class='fa fa-long-arrow-right'></i></button>
+						</div>
+					</div>
+				</div>
+				<div class="hpanel collapsed">
+					<div class="panel-heading hbuilt member-panel-body">
+						<div class="panel-tools">
+							<a class="showhide"><i class="fa fa-chevron-up"></i></a>
+						</div>
+						<h3>Skills & Resources</h3>
+					</div>
 					<div class="panel-body member-panel-body">
-						<h4>Skills & Resources</h4>
-						<hr />
 						<p style="font-size:16px;">
 							<asp:Literal ID="litSkills" runat="server"></asp:Literal>
 						</p>
@@ -108,83 +202,6 @@
 						<p style="font-size:16px;">
 							<asp:Literal ID="litResources" runat="server"></asp:Literal>
 						</p>
-					</div>
-				</div>
-				<div class="hpanel">
-					<div class="panel-body member-panel-body">
-						<h4>My Volunteer Record</h4>
-							<div class="hpanel">
-								<div class="hpanel">
-									<ul class="nav nav-tabs">
-										<li class="active"><a data-toggle="tab" href="#tab-1">Deployments</a></li>
-										<%--<li class=""><a data-toggle="tab" href="#tab-2">Portals</a></li>--%>
-									</ul>
-									<div class="tab-content">
-										<div id="tab-1" class="tab-pane active">
-											<div class="panel-body">
-												<p>	<b>Find new deployments from your team home page.</b> 
-													Each deployment below represents a time-boxed response via a disaster relief program. You'll notice the name of the team and length of time this deployment ran. 
-													These entries highlight the dedicated efforts to provide targeted assistance to communities affected 
-													by natural disasters, demonstrating the structured and impactful nature of each mission.
-												</p>
-
-												<uc1:DeploymentListCard runat="server" ID="ucDeploymentListCard" />
-											</div>
-										</div>
-										<%--<div id="tab-2" class="tab-pane">
-											<div class="panel-body">
-												<strong>PORTALS</strong>
-
-												<p>A wonderful serenity has taken possession of my entire soul, like these sweet mornings of spring which I enjoy with my whole heart. I am alone, and feel the charm of
-													existence in this spot, which was created for the bliss of souls like mine.</p>
-
-												<div class="table-responsive">
-													<table class="table table-striped">
-														<thead>
-														<tr>
-
-															<th>#</th>
-															<th>Project </th>
-															<th>Name </th>
-															<th>Phone </th>
-															<th>Company </th>
-															<th>Completed </th>
-															<th>Task</th>
-															<th>Date</th>
-															<th>Action</th>
-														</tr>
-														</thead>
-														<tbody>
-														<tr>
-															<td>1</td>
-															<td>Project <small>This is example of project</small></td>
-															<td>Patrick Smith</td>
-															<td>0800 051213</td>
-															<td>Inceptos Hymenaeos Ltd</td>
-															<td><span class="pie">2/45</span></td>
-															<td>20%</td>
-															<td>Jul 14, 2013</td>
-															<td><a href="#"><i class="fa fa-check text-success"></i></a></td>
-														</tr>
-														<tr>
-															<td>2</td>
-															<td>Alpha project</td>
-															<td>Alice Jackson</td>
-															<td>0500 780909</td>
-															<td>Nec Euismod In Company</td>
-															<td><span class="pie">1/5</span></td>
-															<td>40%</td>
-															<td>Jul 16, 2013</td>
-															<td><a href="#"><i class="fa fa-check text-success"></i></a></td>
-														</tr>
-														</tbody>
-													</table>
-												</div>
-											</div>
-										</div>--%>
-									</div>
-							</div>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -196,6 +213,22 @@
 			</div>
 		</div>
 	</div>
+	
+	<script src="/v1/Scripts/masonry.pkgd.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('.grid').each(function () {
+				// Initialize Masonry for each grid individually
+				$(this).masonry({
+					itemSelector: '.grid-item',
+					gutter: 20,
+					columnWidth: '.grid-item',
+					percentPosition: true
+				});
+			});
+		});
 
+
+	</script>
 </asp:Content>
 

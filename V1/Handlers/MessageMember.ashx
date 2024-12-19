@@ -97,7 +97,6 @@ public class MessageMember : IHttpHandler, IReadOnlySessionState
 			ldEmailBodyReplacements.Add("<% Message %>", message);
 			ldEmailBodyReplacements.Add("<% SenderName %>", senderName);
 
-
 			MailDefinition mailDefinition = new MailDefinition();
 			mailDefinition.BodyFileName = HttpContext.Current.Server.MapPath("~\\EmailTemplates\\TeamMemberMessage.html");
 			mailDefinition.Subject = senderName + " sent you a message on Stability.";

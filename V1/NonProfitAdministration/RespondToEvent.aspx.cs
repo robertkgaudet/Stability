@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Web.ClientServices.Providers;
+using System.Web.Services;
 using System.Web.UI.WebControls;
 
 public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizationWebForm
@@ -10,6 +11,7 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 	public string preselectedDisasterJQuery = string.Empty;
 	public string eventId = string.Empty;
 	public string organizationId = string.Empty;
+
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		eventId = Request.QueryString["eventId"];
@@ -18,6 +20,17 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 		if (!IsPostBack)
 		{
+			//Load the address lookup state list.
+			ListItemCollection statesList = new ListItemCollection();
+			foreach (string state in States.Names())
+			{
+				ListItem li = new ListItem(state, state);
+				statesList.Add(li);
+			}
+
+			ddlState1.DataSource = statesList;
+			ddlState1.DataBind();
+			
 			if (String.IsNullOrEmpty(eventId))
 			{
 				//No event id was sent.
@@ -30,15 +43,15 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 				Guid guidEventId = new Guid(eventId);
 				divCreateCause.Visible = true;
 				divSelectEvent.Visible = false;
-				var states = from s in dc.USStates
-							 //join es in dc.EventStates on s.StatesId equals es.StatesId
-						//	 where es.EventId == guidEventId
-							orderby s.Name
-							 select new { s.StatesId, s.Name };
+				//var states = from s in dc.USStates
+				//			 //join es in dc.EventStates on s.StatesId equals es.StatesId
+				//		//	 where es.EventId == guidEventId
+				//			orderby s.Name
+				//			 select new { s.StatesId, s.Name };
 
-				ddlState.DataSource = states.ToList();
-				ddlState.DataBind();
-				ddlState.Items.Insert(0, new ListItem("Choose a State", ""));
+				//ddlState.DataSource = states.ToList();
+				//ddlState.DataBind();
+				//ddlState.Items.Insert(0, new ListItem("Choose a State", ""));
 
 				var disaster = (from ev in dc.Events
 								where ev.EventId == guidEventId
@@ -53,6 +66,7 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 						   join u in dc.aspnet_Memberships on p.UserId equals u.UserId
 						  where p.UserId == userId
 						  select new { fullName = p.Firstname + " " + p.Lastname, u.Email, p.PhoneNumber }).SingleOrDefault();
+
 			if(profile != null)
 			{ 
 				txtEmailAddress.Value = profile.Email;
@@ -62,6 +76,15 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 		}
 	}
 
+	[WebMethod]
+	public static bool IsURLFriendlyNameUnique(string urlFriendlyName)
+	{
+		using (var dc = new CrowdReliefDBDataContext()) // Replace with your actual DataContext
+		{
+			// Check if the URLFriendlyCampaignName already exists
+			return !dc.OrganizationEvents.Any(o => o.URLFriendlyCampaignName == urlFriendlyName);
+		}
+	}
 	public void LoadDisasters()
 	{
 		eventId = Request.QueryString["eventId"];
@@ -91,25 +114,49 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 			hidEventId.Value = eventId;
 		}
 	}
+
 	protected void btnSubmit_Click(object sender, EventArgs e)
 	{
 		Guid eventId = new Guid(Request.QueryString["eventId"]);
 		organizationId = Request.QueryString["organizationId"];
+		string addressId = string.Empty;
+		Guid stateId = Guid.Empty;
+		Guid countyId = Guid.Empty;
+		string address = string.Empty;
+		string city = string.Empty;
+		string zip = string.Empty;
 
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		if (!String.IsNullOrEmpty(hidAddressData.Value))
+		{
+			string hiddenAddressData = hidAddressData.Value;
+			string[] addressArray = hiddenAddressData.Split(Convert.ToChar("|"));
+			addressId = addressArray[13];
+			address = addressArray[3] + " " + addressArray[4];
+			city = addressArray[5];
+			zip = addressArray[8];
+			stateId = (from s in dc.USStates where s.Name == addressArray[6] select s.StatesId).SingleOrDefault();
+
+			string countyName = addressArray[9].Replace("County", "").Trim();
+			countyName = countyName.Replace("Parish", "").Trim();
+			countyId = (from s in dc.Counties where s.Name == countyName && s.StateId == stateId select s.CountyId).SingleOrDefault();
+		}
+
+		//address = txtAddress.Value;
+		//city = txtCity.Value;
+		//zip = txtZipCode.Value;
+		//stateId = ddlState.SelectedValue;
+		//stagingCountyId = hidCountyId.Value;
+		
 		string pointOfContactName = txtPOCFullname.Value;
 		string campaignName = txtCampaignName.Value;
-		//string URLFriendlyCampaignName = txtURLFriendlyCampaignName.Value.Replace(" ", "").Replace("'", "").Replace("\"", "").Replace("(", "").Replace(")", "").Replace(".", "").Replace(",", "").Replace("!", "").Replace("-", "").Replace(":", "").Replace("+", "").Replace("&", "").Replace("*", "");
+		string URLFriendlyCampaignName = txtURLFriendlyCampaignName.Value.Replace(" ", "").Replace("'", "").Replace("\"", "").Replace("(", "").Replace(")", "").Replace(".", "").Replace(",", "").Replace("!", "").Replace("-", "").Replace(":", "").Replace("+", "").Replace("&", "").Replace("*", "");
 		bool? isVoad = chkVoad.Checked;
 		string volunteerInstructions = Server.HtmlEncode(txtVolunteerInstructions.Text);
-		string address = txtAddress.Value;
-		string city = txtCity.Value;
-		string stateId = ddlState.SelectedValue;
-		string zip = txtZipCode.Value;
 		string POCName = txtPOCFullname.Value;
 		string phoneNumber = txtPhonenumber.Value;
 		string emailAddress = txtEmailAddress.Value;
 		//string donationLink = txtDonationLink.Value;
-		string stagingCountyId = hidCountyId.Value;
 		//string volunteerHourlyValue = txtVolunteerHourValue.Value;
 
 		OrganizationEvent organizationEvent = new OrganizationEvent();
@@ -122,33 +169,33 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 		//	organizationEvent.EndDate = Convert.ToDateTime(hidDeploymentEndDate.Value);
 		//}
 		Guid organizationEventId = Guid.NewGuid();
+		if (!string.IsNullOrEmpty(addressId))
+		{
+			organizationEvent.AddressId = new Guid(addressId);
+			organizationEvent.StagingAddress = address;
+			organizationEvent.StagingCity = city;
+			organizationEvent.StagingCountyId = countyId;
+			organizationEvent.StagingStateId = stateId;
+			organizationEvent.StagingZipCode = zip;
+		}
 		organizationEvent.OrganizationEventId = organizationEventId;
 		organizationEvent.EventId = eventId;
 		organizationEvent.OrganizationId = new Guid(organizationId);
 		organizationEvent.PointOfContactName = pointOfContactName;
 		organizationEvent.CampaignName = campaignName;
-		//organizationEvent.URLFriendlyCampaignName = URLFriendlyCampaignName;
+		organizationEvent.URLFriendlyCampaignName = URLFriendlyCampaignName;
 		//organizationEvent.VolunteerHourlyRate = String.IsNullOrEmpty(volunteerHourlyValue) ? 0 : Convert.ToDecimal(volunteerHourlyValue);
+		//organizationEvent.DonationURL = string.IsNullOrEmpty(donationLink) ? null : donationLink;
 		organizationEvent.VolunteerInstructions = volunteerInstructions;
 		organizationEvent.PointOfContactName = POCName;
 		organizationEvent.PhoneNumber = phoneNumber;
 		organizationEvent.IsActive = true;
 		organizationEvent.AcceptsVolunteers = true;
 		organizationEvent.Email = emailAddress;
-		//organizationEvent.DonationURL = string.IsNullOrEmpty(donationLink) ? null : donationLink;
-		organizationEvent.StagingAddress = address;
-		organizationEvent.StagingCity = city;
-		if (!String.IsNullOrEmpty(stagingCountyId))
-		{
-			organizationEvent.StagingCountyId = new Guid(stagingCountyId);
-		}
-		organizationEvent.StagingStateId = new Guid(stateId);
-		organizationEvent.StagingZipCode = zip;
 		organizationEvent.Createdby = userId;
 		organizationEvent.CreatedOn = DateTime.Now;
 		organizationEvent.IsVoadMember = isVoad;
 
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 		dc.OrganizationEvents.InsertOnSubmit(organizationEvent);
 		dc.SubmitChanges();
 
@@ -175,6 +222,6 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
-		Response.Redirect("/V1/Administration/NonProfitList.aspx");
+		Response.Redirect("/V1/NonProfit/Deployments.aspx?organizationId=" + organizationId);
 	}
 }

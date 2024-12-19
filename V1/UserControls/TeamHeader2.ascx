@@ -105,6 +105,9 @@
 				display: block;
 			}
 		}
+		.stream{
+			background-color:#F1F3F6 !important;
+		}
 </style>
 	<%--SECTION: End Header Styles--%>
 
@@ -143,9 +146,7 @@
 									</p>
 								</div>
 								<div class="col-xs-12 col-lg-4 project-info">
-									<asp:LinkButton CssClass="btn btn-primary pull-left m-t-sm btnFriend m-r-sm" runat="server" ID="btnRequestToJoinTeam" ClientIDMode="Static">Request To Join Team</asp:LinkButton>
-									<asp:LinkButton CssClass="btn btn-primary2 pull-left m-t-sm btnFriend pull-left" Visible="false" runat="server" ID="btnFriend" ClientIDMode="Static">Follow Team</asp:LinkButton>
-									
+							
 								</div>
 							</div>
 						</div>
@@ -156,7 +157,7 @@
 					<uc1:TeamNavigation runat="server" ID="ucTeamNavigation" />
 				</div>
 				<div class="hpanel">
-					<div class="panel-body member-panel-body">
+					<div class="panel-body member-panel-body <%=_streamClass%>">
 						<h4>
 							<asp:Literal ID="litPageName" runat="server"></asp:Literal>
 						</h4>

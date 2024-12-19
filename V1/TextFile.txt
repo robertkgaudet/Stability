@@ -1,0 +1,13 @@
+﻿<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+	<div class="panel panel-default">
+        <div id="heading1" class="panel-heading" role="tab">
+            <h4 class="panel-title">
+				<a data-toggle="collapse" data-parent="#accordion" aria-expanded="true" id='collapseLink1' aria-controls='collapseLink1' href='#collapseLink1'>8/29/2024 12:00:00 AM</a>
+            </h4>
+        </div>
+        <div id="collapseLink1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading1">
+            <div class="panel-body">
+			</div>
+		</div>
+	</div>
+

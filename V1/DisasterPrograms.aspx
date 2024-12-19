@@ -15,6 +15,8 @@
 			padding:10px;
 			border:solid 1px #ccc;
 		}
+		.text-muted
+		{color:#F1F3F6;}
 	</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
@@ -28,7 +30,9 @@
 						<div class="panel-heading hbuilt">
 							<div class="font-normal">
 								<h1 class="m-b-none">Programs</h1>
-								<small class="text-muted">Choose a program that best matches your teams disaster work and deployment. Each is unique programs is created by the community.</small>
+								<small>Choose a program that best matches your teams disaster work and deployment. Each is unique programs is created by the community.</small>
+								<br />
+								<a href="/V1/DisasterPrograms.aspx">All Programs</a>
 							</div>
 						</div>
 					</div>
@@ -39,24 +43,48 @@
 								<asp:Repeater ID="rptPrograms" runat="server" OnItemDataBound="rptPrograms_ItemDataBound">
 									<ItemTemplate>
 										<div class="col-lg-6">
-											<div class="hpanel hbuilt hbgblue">
+											<div class="hpanel hbuilt">
 												<div class="panel-body">
 													<asp:Literal ID="litSharedPrivate" runat="server"></asp:Literal>
 													<span class="label label-info pull-right m-r-xs">NEW</span>
 													<div class="row">
 														<div class="col-sm-8">
-															<h4><asp:Literal ID="litProgramName" runat="server"></asp:Literal></h4>
+															<h4><asp:HyperLink ID="hypProgramName" runat="server"></asp:HyperLink></h4>
 															<p><asp:Literal ID="litProgramDescription" runat="server"></asp:Literal></p>
 														</div>
-														<div class="col-sm-4 project-info">
+														
+														<div class="col-sm-4 project-info pull-left">
+															<small class="pull-left">Created By</small>
 															<div id="logoDiv" class="m-t-md logoDiv">
+															
 																<asp:ImageButton OnClick="imgLogo_Click" ID="imgLogo" runat="server" Width="100px" />
 															</div>
 														</div>
 													</div>
 													<div class="row">
+														<div class="col-sm-12 m-b-lg m-t-lg">
+															<div class="project-label">Recommended Program Roles</div>
+															Select a role below for detailed description and training.
+															<br />
+															<asp:Repeater ID="dlPositions" runat="server" OnItemDataBound="dlPositions_ItemDataBound">
+																<ItemTemplate>
+																	<i class="fa fa-user-circle text-muted"></i> <asp:HyperLink ID="hypPosition" Target="_blank" runat="server"></asp:HyperLink>
+																</ItemTemplate>
+																<SeparatorTemplate><br /></SeparatorTemplate>
+																
+															</asp:Repeater>
+														</div>
+													</div>
+												<div class="panel-footer">
+													<div class="project-action">
+														<div class="btn-group">
+															<button class="btn btn-xs btn-default"> Create Deployment</button>
+															<asp:HyperLink CssClass="btn btn-xs btn-default" id="hypEditPrograms" runat="server" Text="Edit" Visible="false"></asp:HyperLink>
+														</div>
+													</div>
+													<div class="row">
 														<div class="col-sm-3">
-															<div class="project-label">DEPLOY</div>
+															<div class="project-label">DEPLOYMENT STATUS</div>
 															<asp:Literal ID="litRequiresDeployment" runat="server"></asp:Literal>
 														</div>
 														<div class="col-sm-3">
@@ -73,13 +101,6 @@
 														</div>
 													</div>
 												</div>
-												<div class="panel-footer">
-													<div class="project-action">
-														<div class="btn-group">
-															<button class="btn btn-xs btn-default"> Create Deployment</button>
-															<asp:HyperLink CssClass="btn btn-xs btn-default" id="hypEditPrograms" runat="server" Text="Edit" Visible="false"></asp:HyperLink>
-														</div>
-													</div>
 												</div>
 											</div>
 										</div>

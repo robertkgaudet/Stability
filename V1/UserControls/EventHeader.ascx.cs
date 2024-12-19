@@ -34,35 +34,25 @@ public partial class V1_UserControls_EventHeader : System.Web.UI.UserControl
 						where ev.URLFriendlyName == HttpContext.Current.Request.QueryString["eventName"]
 						select new { ev, et }).SingleOrDefault();
 
-		if(disaster.ev.BeginDate.HasValue)
+		if(disaster != null)
 		{ 
-			litDate.Text = String.Format("{0:Y}", disaster.ev.BeginDate);
-		}
-		litWeatherType.Text = disaster.et.Name;
-		litEventName.Text = _eventName;
-		litEventDescription.Text = _pageDescription;
-		LoadStates(disaster.ev.EventId);
-		DateTime beginDate = (DateTime) disaster.ev.BeginDate;
-		string timePassed = GetMonthsYearsElapsed(beginDate);
-		litAge.Text = timePassed + " Ago";
-		//string volunteersNeeded = CalculateVolunteersNeeded(Guid.Empty, 0, false, disaster.ev.EventId);
+			if(disaster.ev.BeginDate.HasValue)
+			{ 
+				litDate.Text = String.Format("{0:Y}", disaster.ev.BeginDate);
+			}
+			litWeatherType.Text = disaster.et.Name;
+			litEventName.Text = _eventName;
+			litEventDescription.Text = _pageDescription;
+			LoadStates(disaster.ev.EventId);
+			DateTime beginDate = (DateTime) disaster.ev.BeginDate;
+			string timePassed = GetMonthsYearsElapsed(beginDate);
+			litAge.Text = timePassed + " Ago";
 
-		litTicketCount.Text = _ticketCount;
-		litTeamCount.Text = _teamCount;
-		litCauseCount.Text = _causeCount;
-		litStatesCounties.Text = CrowdRelief.Tools.GetImpactedStateCountyString(disaster.ev.EventId);
-
-		if (String.IsNullOrEmpty(_teamName))
-		{
-			hypBreadcrumbTeamName.Text = "Find A Team";
-			hypBreadcrumbTeamName.NavigateUrl = "/V1/Profile/EditNonProfits.aspx";
+			litTicketCount.Text = _ticketCount;
+			litTeamCount.Text = _teamCount;
+			litCauseCount.Text = _causeCount;
+			litStatesCounties.Text = CrowdRelief.Tools.GetImpactedStateCountyString(disaster.ev.EventId);
 		}
-		else
-		{
-			hypBreadcrumbTeamName.Text			= _teamName;
-			hypBreadcrumbTeamName.NavigateUrl	= "/V1/NonProfit/Default.aspx?organizationId=" + _organizationId;
-		}
-		litBreadcrumbPageName.Text = _eventName + " Portal";
 	}
 
 	public string GetMonthsYearsElapsed(DateTime time)

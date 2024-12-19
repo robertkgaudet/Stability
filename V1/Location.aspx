@@ -112,6 +112,8 @@
 									<strong>Currently: <asp:Literal id="litActivity" runat="server"></asp:Literal></strong>
 									<br />
 									<strong>Volunteers: <asp:Literal id="litVolunteers" runat="server"></asp:Literal></strong>
+									<br />
+									<strong>Generator: <i class="fa fa-bolt" runat="server" id="iGenerator" visible="false"></i> <asp:Literal id="litGenerator" runat="server"></asp:Literal></strong>
 								</dd>
 							</dl>
 						</div>

@@ -11,6 +11,8 @@ public partial class V1_DisasterPrograms : BaseWebForm
 {
 	protected void Page_Load(object sender, EventArgs e)
 	{
+
+		string programId = Request.QueryString["programId"];
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 		var programs = from p in dc.Programs
 					   join op in dc.OrganizationPrograms on p.ProgramId equals op.ProgramId
@@ -18,6 +20,11 @@ public partial class V1_DisasterPrograms : BaseWebForm
 					   where p.IsShared == true
 					   orderby p.Order
 					   select new { op.OrganizationId, p.Name, p.Description, o.Logo, p.IsDeploymentRequired, p.IsRemoteOnly, p.IsTrainingRequired, p.IsShared, p.ProgramId };
+
+		if(!string.IsNullOrEmpty(programId))
+		{
+			programs = programs.Where(r => r.ProgramId == new Guid(programId));
+		}
 
 		rptPrograms.DataSource = programs;
 		rptPrograms.DataBind();
@@ -45,15 +52,16 @@ public partial class V1_DisasterPrograms : BaseWebForm
 			bool isTrainingRequired = (bool)DataBinder.Eval(dataItem.DataItem, "IsTrainingRequired");
 			bool isShared = (bool)DataBinder.Eval(dataItem.DataItem, "IsShared");
 			Guid programId = (Guid)DataBinder.Eval(dataItem.DataItem, "ProgramId");
-			Guid organizationId = (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId"); 
+			Guid organizationId = (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
 
-			Literal litProgramName = (Literal)e.Item.FindControl("litProgramName");
+			HyperLink hypProgramName = (HyperLink)e.Item.FindControl("hypProgramName");
 			Literal litProgramDescription = (Literal)e.Item.FindControl("litProgramDescription");
 			Literal litRemoteWork = (Literal)e.Item.FindControl("litRemoteWork");
 			Literal litRequiresDeployment = (Literal)e.Item.FindControl("litRequiresDeployment");
 			Literal litRequiresTraining = (Literal)e.Item.FindControl("litRequiresTraining");
 			Literal litSharedPrivate = (Literal)e.Item.FindControl("litSharedPrivate");
 			ImageButton imgLogo = (ImageButton)e.Item.FindControl("imgLogo");
+			Repeater dlPositions = (Repeater)e.Item.FindControl("dlPositions");
 
 			string sharedIcon = string.Empty;
 			litSharedPrivate.Text = "";// "<span class=\"label label-danger pull-right\">PRIVATE PROGRAM</span>";
@@ -65,7 +73,8 @@ public partial class V1_DisasterPrograms : BaseWebForm
 			HyperLink hypEditPrograms = (HyperLink)e.Item.FindControl("hypEditPrograms");
 
 			litProgramDescription.Text = programDescription;
-			litProgramName.Text =  programName + " " + sharedIcon;
+			hypProgramName.Text =  programName + " " + sharedIcon;
+			hypProgramName.NavigateUrl = "/V1/NonProfit/Program.aspx?organizationId=" + organizationId + "&programId=" + programId;
 			litRemoteWork.Text = isRemoteOnly ? "Remote work requred." : "No remote work.";
 			litRequiresDeployment.Text = isDeploymentRequired ? "Requires deployment." : "Deployment not required.";
 			litRequiresTraining.Text = isTrainingRequired ? "Specialized training is required." : "Training not required.";
@@ -77,6 +86,37 @@ public partial class V1_DisasterPrograms : BaseWebForm
 				hypEditPrograms.Visible = true;
 				hypEditPrograms.NavigateUrl = "/V1/NonProfitAdministration/EditNonProfitProgram.aspx?organizationId=" + organizationId + "&programId=" + programId;
 			}
+
+
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			var positions = from p in dc.Positions
+							join pp in dc.ProgramPositions on p.PositionId equals pp.PositionId
+							where p.OrganizationId == organizationId
+							&& p.IsDeleted == false
+							&& pp.ProgramId == programId
+							orderby p.Name
+							select new { p.Name, p.PositionId, pp.ProgramId, p.OrganizationId };
+
+			dlPositions.DataSource = positions;
+			dlPositions.DataBind();
+		}
+	}
+	protected void dlPositions_ItemDataBound(object sender, RepeaterItemEventArgs e)
+	{
+		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+		{
+			HyperLink hypPosition = (HyperLink)e.Item.FindControl("hypPosition");
+
+			RepeaterItem dataItem = (RepeaterItem)e.Item;
+
+			//Total count of items and total cost.
+			string positionName = (string)DataBinder.Eval(dataItem.DataItem, "Name");
+			Guid positionId = (Guid)DataBinder.Eval(dataItem.DataItem, "PositionId");
+			Guid programId = (Guid)DataBinder.Eval(dataItem.DataItem, "ProgramId");
+			Guid organizationId = (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
+
+			hypPosition.NavigateUrl = "/V1/NonProfit/TeamRole.aspx?programId=" + programId + "&organizationId=" + organizationId + "&positionId=" + positionId.ToString();
+			hypPosition.Text = positionName;
 		}
 	}
 	protected void imgLogo_Click(object sender, ImageClickEventArgs e)

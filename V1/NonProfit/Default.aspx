@@ -49,6 +49,51 @@
 				window.location.href = '<%=editLink%>';
 				return false;
 			}); 
+
+			// Function for collapse hpanel
+			$('.showhide').on('click', function (event) {
+				event.preventDefault();
+				var hpanel = $(this).closest('div.hpanel');
+				var icon = $(this).find('i:first');
+				var body = hpanel.find('div.panel-body');
+				var footer = hpanel.find('div.panel-footer');
+				body.slideToggle(300);
+				footer.slideToggle(200);
+
+				// Toggle icon from up to down
+				icon.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
+				hpanel.toggleClass('').toggleClass('panel-collapse');
+				setTimeout(function () {
+					hpanel.resize();
+					hpanel.find('[id^=map-]').resize();
+				}, 50);
+			});
+
+			// Function for close hpanel
+			$('.closebox').on('click', function (event) {
+				event.preventDefault();
+				var hpanel = $(this).closest('div.hpanel');
+				hpanel.remove();
+				if ($('body').hasClass('fullscreen-panel-mode')) { $('body').removeClass('fullscreen-panel-mode'); }
+			});
+
+			// Fullscreen for fullscreen hpanel
+			$('.fullscreen').on('click', function () {
+				var hpanel = $(this).closest('div.hpanel');
+				var icon = $(this).find('i:first');
+				$('body').toggleClass('fullscreen-panel-mode');
+				icon.toggleClass('fa-expand').toggleClass('fa-compress');
+				hpanel.toggleClass('fullscreen');
+				setTimeout(function () {
+					$(window).trigger('resize');
+				}, 100);
+			});
+
+
+
+
+
+
 		});	
 </script>
 	<style>
@@ -69,11 +114,45 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 	
 				<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
-
-					<asp:LinkButton id="lbVolunteer" runat="server" CssClass="btn btn-success volunteerButton" Text="Join This Team" visible="false"></asp:LinkButton>
-					<asp:LinkButton id="lbDonate" runat="server" CssClass="btn btn-success donateButton" Text="Donate" visible="false"></asp:LinkButton>
-					<asp:Button ID="btnActiveVolunteer" runat="server" CssClass="btn btn-light" Visible="false" />
-
+					<div class="row">
+						<div class="col-xs-12">
+							<asp:LinkButton id="lbVolunteer" runat="server" CssClass="btn btn-success btn-large volunteerButton pull-right m-l-md" Text="Join This Team" visible="false"></asp:LinkButton>
+							<asp:Button ID="btnActiveVolunteer" runat="server" CssClass="btn btn-light btn-large pull-right m-l-md" Visible="false" />
+							<asp:LinkButton id="lbDonate" runat="server" CssClass="btn btn-success pull-right donateButton" Text="Donate" visible="false"></asp:LinkButton>
+						</div>
+					</div>
+	
+					<div class="content" runat="server" visible="false" id="divUploadLogoCover">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="hpanel hblue">
+									<div class="panel-heading hbuilt">
+										<div class="panel-tools">
+											<a class="showhide"><i class="fa fa-chevron-up"></i></a>
+										</div>
+										Your Page Administation Tools
+									</div>
+									<div class="panel-body">
+										<div class="form-group">
+											<div class="pull-left">
+												<asp:Button id="btnInviteTeamMembers" runat="server" Visible="false" CssClass="btn btn-success inviteButton" Text="Invite Team Members" />
+												<asp:Button id="btnEditMyGroup" runat="server" Visible="false" CssClass="btn btn-warning editButton" Text="Update Team Information" />
+												<asp:Button id="btnUploadLogo" runat="server" Visible="false" CssClass="btn btn-primary logoUploadButton" Text="Upload Logo" />
+												<asp:Button id="btnUploadSquare" runat="server" Visible="false" CssClass="btn btn-primary squareLogoUploadButton" Text="Upload A Square Logo" />
+												<asp:Button id="btnUploadCoverImage" runat="server" Visible="false" CssClass="btn btn-primary coverUploadButton" Text="Upload Cover Image" />
+												<asp:Button id="btnManagePhotos" runat="server" Visible="false" CssClass="btn btn-primary managePhotosButton" Text="Manage Photos" />
+												<asp:Button id="btnDeactivatePage" OnClick="btnChangePageStatus_Click" runat="server" CssClass="btn btn-primary" Text="De-activate This Team" />
+												<br />List of members who have been invited.
+											</div>
+										</div>
+									</div>
+									<div class="panel-footer">
+										<i class="fa fa-lock"></i> These tools are only visible to the page administator.
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="panel-body">
 						<div class="alert alert-success" runat="server" id="divAlertPageMessage" visible="false">
 							<i class="fa fa-bolt"></i> This team page is de-activated.
@@ -223,34 +302,6 @@
 												<asp:Label id="lblEIN" runat="server"></asp:Label>
 											</dd>
 										</dl>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="content" runat="server" visible="false" id="divUploadLogoCover">
-						<div class="row">
-							<div class="col-lg-12">
-								<div class="hpanel hblue">
-									<div class="panel-heading hbuilt">
-										Your Page Administation Tools
-									</div>
-									<div class="panel-body">
-										<div class="form-group">
-											<div class="pull-left">
-												<asp:Button id="btnInviteTeamMembers" runat="server" Visible="false" CssClass="btn btn-success inviteButton" Text="Invite Team Members" />
-												<asp:Button id="btnEditMyGroup" runat="server" Visible="false" CssClass="btn btn-warning editButton" Text="Update Team Information" />
-												<asp:Button id="btnUploadLogo" runat="server" Visible="false" CssClass="btn btn-primary logoUploadButton" Text="Upload Logo" />
-												<asp:Button id="btnUploadSquare" runat="server" Visible="false" CssClass="btn btn-primary squareLogoUploadButton" Text="Upload A Square Logo" />
-												<asp:Button id="btnUploadCoverImage" runat="server" Visible="false" CssClass="btn btn-primary coverUploadButton" Text="Upload Cover Image" />
-												<asp:Button id="btnManagePhotos" runat="server" Visible="false" CssClass="btn btn-primary managePhotosButton" Text="Manage Photos" />
-												<asp:Button id="btnDeactivatePage" OnClick="btnChangePageStatus_Click" runat="server" CssClass="btn btn-primary" Text="De-activate This Team" />
-												<br />List of members who have been invited.
-											</div>
-										</div>
-									</div>
-									<div class="panel-footer">
-										<i class="fa fa-lock"></i> These tools are only visible to the page administator.
 									</div>
 								</div>
 							</div>

@@ -1,21 +1,11 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="DeploymentListCard.ascx.cs" Inherits="V1_UserControls_DeploymentListCard" %>
 
-
-	<script src="/v1/Scripts/masonry.pkgd.min.js"></script>
-
-	<script type="text/javascript">
-		$(document).ready(function () {
-			$('.grid').masonry({
-				// options
-				itemSelector: '.grid-item',
-				gutter: 10
-			});
-		});
-	</script>
 	<style type="text/css">
-			.grid-item								{width:330px;}
-			.panel-body.deploymentPanel				{background-color:#E8D3FE; color:#5E2E91; height:150px;}
+			.grid-item								{width:300px; }
+			.panel-body.deploymentPanel				{background-color:#E8D3FE; color:#5E2E91; height:350px; border-top-right-radius:10px; border-top-left-radius:10px;}
 			.panel-body.deploymentPanel:hover		{cursor:pointer; background-color:#5E2E91; color:white;}
+			.panel-footer							{ border-bottom-right-radius:10px; border-bottom-left-radius:10px;}
+			
 	</style>
 	<div class="grid">
 		<asp:Literal ID="litDeployments" runat="server"></asp:Literal>

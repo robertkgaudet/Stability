@@ -47,10 +47,96 @@
 					}
 				});
 			}
+
+			let tooltipTimeout; // Declare a variable to hold the timeout reference
+			$('.thankButton').hover(
+				function () {
+					var tooltip = $('#thankTooltip');
+					var buttonOffset = $(this).offset(); // Get the button's position
+
+					// Set tooltip text or modify as needed
+					//tooltip.text('Tooltip for ' + $(this).text())
+					//	.append('<button class="tooltipButton" id="closeTooltip">Close</button>'); // Adding a close button for demonstration
+
+					// Calculate top position
+					var topPosition = buttonOffset.top - tooltip.outerHeight() - 480;
+					var leftPosition = 120;
+					if (window.innerWidth <= 768) { // Adjust top position for mobile
+						topPosition -= 120; // Modify by 120 pixels for mobile
+						leftPosition -= 100;
+					}
+
+					// Position and show tooltip
+					tooltip.css({
+						display: 'block',
+						top: topPosition,
+						left: leftPosition
+					});
+
+					// Clear any existing timeout before setting a new one
+					clearTimeout(tooltipTimeout);
+
+					// Set a timeout to hide the tooltip after 8 seconds
+					tooltipTimeout = setTimeout(function () {
+						tooltip.css('display', 'none');
+					}, 10000); // 8000 milliseconds = 8 seconds
+				},
+				function () {
+					// Do nothing here to keep the tooltip visible until manually closed or timed out
+				}
+			);
+
+			// Hide tooltip on clicking outside or on clicking the button inside the tooltip
+			$(document).on('click', function (event) {
+				if (!$(event.target).closest('#thankTooltip').length && !$(event.target).is('.thankButton')) {
+					$('#thankTooltip').css('display', 'none');
+					clearTimeout(tooltipTimeout); // Clear the timeout when hiding the tooltip manually
+				}
+			});
+
+			// Close button click event inside the tooltip
+			$(document).on('click', '#closeTooltip', function () {
+				$('#thankTooltip').css('display', 'none');
+				clearTimeout(tooltipTimeout); // Clear the timeout when closing the tooltip manually
+			});
 		});
 
 	</script>
 	<style>
+		    .bold-purple-star {
+				font-weight: bold;
+				color: red;
+			}
+			.large-icon:hover {
+			  transform: scale(1.5); /* Slightly increase the size */
+			}
+		  .large-icon {
+			font-size: 24px;
+            display: inline-block; /* Ensure it responds to transforms */
+            transition: transform 0.2s ease-in-out; /* Smooth transition effect */
+            cursor: pointer; /* Hand cursor */
+			padding:0px 5px;
+			}
+		.thankTooltip {
+			display: none;
+			position: absolute;
+			background-color: #fff; /* White background */
+			color: #333; /* Dark text color */
+			padding:3px 8px 3px 8px;
+			border-radius: 50px; /* Completely rounded corners */
+			font-size: 12px;
+			white-space: nowrap;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Drop shadow */
+			border: none; /* Remove border */
+		}
+		.tooltipButton {
+            margin-top: 5px;
+            padding: 5px 10px;
+            background-color: #f00;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
 		.checkboxlist-item {
 			margin-left: 10px; /* Adjust the margin as needed */
 		}
@@ -98,7 +184,6 @@
 			background-repeat: no-repeat; /* Prevent the image from repeating */
 			/*background-color:#E8D3FE;*/
         }
-
 		.contentFeed{
 			/*margin-top:100px !important;*/
 		}
@@ -169,14 +254,14 @@
 		
 		.post-container
 		{
-			margin-top:-40px !important;
+			margin-top:-60px !important;
 			display: flex;
 			justify-content: center; /* Centers horizontally */
 		}
 		.post-content
 		{
 			margin-bottom:1px !important;
-			margin-top:1px !important;
+			margin-top:100px !important;
 			width:100%;
 			max-width: 100%; /* Ensure it doesn't exceed the width of the container */
 			margin: 0 auto; /* Center the div */
@@ -325,9 +410,6 @@
             justify-content: center; /* Horizontal centering */
             align-items: center; /* Vertical centering */
         }
-
-
-
 		.upload-div {
             width: 100%;
             display: flex;
@@ -594,7 +676,7 @@
 </script>
 	<div class="postContainer">
 		<div class="row postrow">
-			<div class="col-xs-12 col-lg-11">
+			<div class="col-xs-12">
 				<div class="hpanel post m-t-lg">
 					<div class="panel-body postOpen">
 						<div class="message">
@@ -607,7 +689,6 @@
 		</div>
 	</div>
 
-	<div class="content animate-panel" data-child="hpanel" data-effect="fadeInDown">
 		<div class="post-container">
 			<div class="post-content">
 				<asp:Repeater ID="rptPosts" runat="server" OnItemDataBound="rptPosts_ItemDataBound">
@@ -616,7 +697,7 @@
 							<div class="panel-body">
 								<div class="message">
 									<div class="block-profile-image-div clearfix" style="line-height:1.3;">
-										<img class="img-rounded" style="float:left; margin-right:10px;" width="40" src="../Images/icons8-customer-64.png" runat="server" id="imgProfile" />
+										<img class="img-rounded" style="float:left; margin-right:10px;" width="40" src="" runat="server" id="imgProfile" />
 										<asp:HyperLink ID="hypCreatedBy" runat="server" CssClass="StreamLink"></asp:HyperLink><br />
 										<asp:Label ID="lblMessageDate" runat="server" CssClass="message-date"></asp:Label>
 									</div>
@@ -627,21 +708,27 @@
 									</span>
 								</div>
 							</div>
-
+							
 							<div class="panel-footer">
 								<div class="row">
-									<div class="col-xs-3 post-type-div"><i class="fa fa-thumbs-up m-r-sm"></i>Thank</div>
-									<div class="col-xs-3 post-type-div"><i class="fa fa-sticky-note m-r-sm nowrap"></i>Comment</div>
-									<div class="col-xs-3 post-type-div"><i class="fa fa-users m-r-sm"></i>Help</div>
-									<div class="col-xs-3 post-type-div"><i class="fa fa-money m-r-sm"></i>Give</div>
+									<div class="col-xs-3 post-type-div thankButton"><i class="fa fa-thumbs-up m-r-sm"></i>Thank</div>
+									<div class="col-xs-3 post-type-div commentButton"><i class="fa fa-sticky-note m-r-sm nowrap"></i>Comment</div>
+									<div class="col-xs-3 post-type-div helpButton"><i class="fa fa-users m-r-sm"></i>Help</div>
+									<div class="col-xs-3 post-type-div giveButton"><i class="fa fa-money m-r-sm"></i>Give</div>
 								</div>
 							</div>
 						</div>
 					</ItemTemplate>
 				</asp:Repeater>
+				<div class="thankTooltip" id="thankTooltip">
+					<span class="large-icon" data-toggle="tooltip" data-placement="top" title="Thank">&#128591;</span>						<!-- Thank -->
+					<span class="large-icon text-danger" data-toggle="tooltip" data-placement="top" title="Love">&#10084;</span>			<!-- Love -->
+					<span class="large-icon bold-purple-star" data-toggle="tooltip" data-placement="top" title="Bump">&#128171;</span>			<!-- Bump -->
+					<span class="large-icon" data-toggle="tooltip" data-placement="top" title="Be Strong">&#128074;</span>						<!-- Connect -->
+					<span class="large-icon" data-toggle="tooltip" data-placement="top" title="Wow">&#128558;</span>						<!-- Be Strong -->
+				</div>
 			</div>
 		</div>
-	</div>
 
 	<div class="modal fade" id="newPost" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog">

@@ -22,6 +22,7 @@ public partial class V1_NonProfit_Stream : BaseWebForm
 	{
 		ucTeamFooter.PageName = "streamPage";
 		ucTeamHeader.PageName = "";
+		ucTeamHeader.StreamClass = "stream";
 
 		#region HEADER PROPERTIES
 		////////////////////////

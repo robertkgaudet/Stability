@@ -140,6 +140,12 @@ public partial class V1_Location : BaseOrganizationWebForm
 		lblCountry.Text = location.a.Country;
 		lblCounty.Text = location.a.County;
 		litCapacity.Text = ((capacity == null) || (capacity == 0)) ? "N/A" : location.lp.Capacity.ToString();
+		bool hasGenerator = location.lp.HasGenerator != null ? Convert.ToBoolean(location.lp.HasGenerator) : false;
+		if (hasGenerator)
+		{
+			litGenerator.Text = !String.IsNullOrEmpty(location.lp.GeneratorSize) ? "Yes: " + location.lp.GeneratorSize.ToString() : "Has Generator, Unknown Capacity";
+			iGenerator.Visible = true;
+		}
 
 		donationURL = location.lp.DonationURL;
 		liDonation.Visible = location.lp.DonationURL == null ? false : true;

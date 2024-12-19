@@ -9,8 +9,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 	
 				<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
-					<div class="m-t-md">
-						<uc1:Stream runat="server" ID="TeamNavigation1" />
-					</div>
+				<uc1:Stream runat="server" ID="TeamNavigation1" />
 				<uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>

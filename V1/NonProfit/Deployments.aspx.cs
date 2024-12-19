@@ -58,11 +58,11 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 				squareLogo = "/V1/Images/Logo-Placeholder.png";
 			}
 
-			Master.PageTitle = organization.Name + " Programs on Stability";
+			Master.PageTitle = organization.Name + " Deployment Teams on Stability, Disaster-Ready Communities";
 			Master.PageDescription = organization.Description;
 			Master.FbDescription = organization.Description;
 			Master.FbImage = _coverImage;
-			Master.FbSite_name = organization.Name + " Programs on Stability";
+			Master.FbSite_name = organization.Name + " Deployment Teams on Stability, Disaster-Ready Communities";
 			ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
 		}
 
@@ -101,6 +101,7 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 		////////////////////////
 		//END HEADER PROPERTIES
 		////////////////////////
+		///
 		#endregion
 
 		if(isOwner) 
@@ -109,6 +110,7 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 			hypCreateCause.NavigateUrl = "/V1/NonProfitAdministration/RespondToEvent.aspx?organizationId=" + organizationId;
 		}
 		ucDeploymentListCard.OrganizationId = new Guid(organizationId);
+		ucDeploymentListCard.IsActive = true;
 
 	}
 }

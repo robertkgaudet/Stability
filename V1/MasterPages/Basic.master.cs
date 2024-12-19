@@ -9,7 +9,10 @@ using System.Web.UI.WebControls;
 
 public partial class V1_MasterPages_Basic : System.Web.UI.MasterPage
 {
+	public string _coverImage = "";
 	protected void Page_Load(object sender, EventArgs e)
 	{
+		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
+		_coverImage = causePhotoFolder + "Stability_Cover_V3";
 	}
 }

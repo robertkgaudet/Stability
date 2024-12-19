@@ -1,6 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="NonProfitCampaign.aspx.cs" Inherits="V1_NonProfit_NonProfitCampaign" %>
-<%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/1-Column-Child.master" AutoEventWireup="true" CodeFile="NonProfitCampaign.aspx.cs" Inherits="V1_NonProfit_NonProfitCampaign" %>
+<%@ MasterType VirtualPath="~/V1/MasterPages/1-Column-Child.master"%>
 <%@ Register Src="~/V1/UserControls/TimeBoard.ascx" TagPrefix="uc1" TagName="TimeBoard" %>
+<%@ Register Src="~/V1/UserControls/PositionNavigation.ascx" TagPrefix="uc1" TagName="PostionNavigation" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 	<script type="text/javascript">
@@ -21,98 +22,50 @@
                 window.location.href = '<%=getHelpLink%>';
                 return false;
             });
-
-			$('.editCampaign').click(function () {
-				window.location.href = '<%=editCampaignLink%>';
-				return false;
-			});
-
-			$('.editPositions').click(function () {
-				window.location.href = '<%=editPositionsLink%>';
-				return false;
-			});
 			
 		});
 	</script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-<div class="normalheader">
+	<uc1:PostionNavigation runat="server" ID="ucPostionNavigation" />
 	<div class="hpanel">
 		<div class="panel-body">
 			<div class="row">
 				<div class="col-lg-8">
-					Deployment for <asp:Literal ID="litEventName" runat="server"></asp:Literal>
-					<h2 class="font-light m-b-xs"> 
-						<asp:Literal id="litCampaignName" runat="server"></asp:Literal>
-					</h2>
                     <div>
 					    <b>Mission</b>
 					    <p>
 						    <asp:Literal id="litCampaignMission" runat="server"></asp:Literal>
 					    </p>
-                        <div class="row">
-				            <div class="col-lg-6">
-                                <h1 class="m-xs font-extra-bold" style="color:#62CB31;"><%=_totalVolunteerHours %></h1>
-
-                                <h4 class="font-extra-bold no-margins text-success">
-                                    Volunteer Hours
-                                </h4>
-                                <small>Total hours recorded by volunteers for this deployment. When a volunteer works through an approved nonprofit, many of the volunteers hours can be credit 
-                                    to the county where the volunteer labor is happening. It's important to select approved nonprofits. You can find many of them right here on Stability.org.
-                                </small>
-				            </div>
-				            <div class="col-lg-6">
-                                    <h1 class="m-xs font-extra-bold" style="color:#62CB31;"><%=_totalVolunteerValue %>*</h1>
-
-                                    <h4 class="font-extra-bold no-margins text-success">
-                                        Volunteer Offset
-                                    </h4>
-                                    <small>This is how much can be credited against FEMA for the county where this deployment is taking place. 
-                                        It is calculated by multiplying volunteer hours by <span  style="color:#62CB31;"><%=_volunteerHourlyRate%></span> which is the value of volunteer time per hour. This number varies by state.</small>
-				            </div>
-                        </div>
+						<div class="m-t-lg">
+							If you would like to help you can <asp:HyperLink id="lbVolunteer" runat="server" CssClass="volunteerButton" Text="view open volunteer positions" visible="false"></asp:HyperLink>, <a href="/V1/Administration/TeamName.aspx?userActionModal=false">create your own team</a> or <asp:HyperLink id="linkDeploymentMap" runat="server" CssClass="mapButton" Text="view the deployment map"></asp:HyperLink> showing areas that need assistance.
+							
+							<asp:Button ID="btnActiveVolunteer" runat="server" CssClass="btn btn-light" Visible="false" />
+							<asp:LinkButton id="lbGetHelp" runat="server" CssClass="btn btn-warning btn-dark getHelpButton" Text="Get Help" visible="false"></asp:LinkButton>
+							<asp:Button Visible="false" CssClass="btn w-xs btn-light" ID="hypCauseIsNotActive" runat="server"></asp:Button>
+							<br /><br />
+							<div class="col-md-3 m-t-lg">
+								<asp:LinkButton id="lbDonate" runat="server" CssClass="btn btn-success btn-block donateButton" Text="Donate Here" visible="false"></asp:LinkButton>
+							</div>
+							<div class="col-md-3 m-t-lg">
+								<asp:Hyperlink id="hypViewCases" runat="server" CssClass="btn btn-info btn-block" Text="View Cases" visible="false"></asp:Hyperlink>
+							</div>
+							<div class="col-md-3 m-t-lg">
+								<asp:Hyperlink id="hypAddCase" runat="server" CssClass="btn btn-info btn-block" Text="Add A Case" visible="false"></asp:Hyperlink>
+							</div>
+						</div>
                     </div>
 				</div>
 				<div class="col-lg-4">
-                    <div>
-					    <div class="m-b-sm m-t-xs">
-						    <asp:LinkButton id="lbGetHelp" runat="server" CssClass="btn btn-warning btn-dark getHelpButton" Text="Get Help" visible="false"></asp:LinkButton>
-						    <asp:LinkButton id="lbDonate" runat="server" CssClass="btn btn-success donateButton" Text="Donate to Deployment" visible="false"></asp:LinkButton>
-					        <asp:LinkButton id="lbVolunteer" runat="server" CssClass="btn btn-success volunteerButton" Text="Volunteer for Deployment" visible="false"></asp:LinkButton>
-		                    <asp:Button ID="btnActiveVolunteer" runat="server" CssClass="btn btn-light" Visible="false" />
-                            <asp:Button Visible="false" CssClass="btn w-xs btn-light" ID="hypCauseIsNotActive" runat="server"></asp:Button>
-                            <p>
-					            <small>
-						            Campaign created by: <asp:HyperLink id="hypOrganizationName" runat="server"></asp:HyperLink> 
-						            for <asp:HyperLink id="hypEventName" runat="server"></asp:HyperLink>
-					            </small>
-                            </p>
-					        <div runat="server" visible="false" id="divEditCampaign">
-						        <div class="m-r-lg">
-							        <asp:Button id="btnEdit" runat="server" CssClass="btn btn-xs btn-warning editCampaign" Text="Edit Deployment" />
-							        <asp:Button id="btnEditPositions" runat="server" CssClass="btn btn-xs btn-warning editPositions" Text="Edit Positions" />
-						        </div>
-					        </div>
-                         </div>
-                    </div>
                     <div class="hpanel stats">
                         <div class="panel-body h-200 list">
-                            <div class="stats-title pull-left">
-                                <h4>Nonprofit Volunteer Impact Is <span style="color:#62CB31;"><%=_volunteerHourlyRate%></span>/HR</h4>
-                            </div>
-                            <div class="stats-icon pull-right">
-                                <i class="pe-7s-share fa-4x"></i>
-                                <span class="label label-success pull-left" style="color:#ffffff; background-color:#62CB31;">LIVE DATA</span>
-                            </div>
-                            <div class="m-t-xl">
-                                <span class="font-bold no-margins">
-                                    Volunteer Activity
-                                </span>
-                                <br/>
+                            <div>
+                                <div class="font-bold no-margins">
+                                    Deployment Activity
+                                </div>
                                 <small>
-                                    Nonprofit value in time and dollars for this deployment.
-                                    <br />Updated: <%=DateTime.Now.ToShortDateString() %> <%=DateTime.Now.ToShortTimeString() %>
+                                    Time/monetary value of this deployment.
                                 </small>
                             </div>
                             <div class="row m-t-sm bg-info">
@@ -123,35 +76,42 @@
                             </div>
                             <div class="row m-t-sm bg-success">
                                 <div class="col-xs-2">
-                                    <small class="stats-label">TODAY</small>
+                                    <small class="stats-label">Today</small>
                                 </div>
                                 <div class="col-xs-2">
-                                    <h3 class="no-margins font-extra-bold text-success" style="color:#62CB31;"><%=_todayVolunteerCount%></h3>
+                                    <span class="no-margins"><%=_todayVolunteerCount%></span>
                                 </div>
                                 <div class="col-xs-2">
-                                    <h3 class="no-margins font-extra-bold text-success" style="color:#62CB31;"><%=_todayVolunteerHours%></h3>
+                                    <span class="no-margins"><%=_todayVolunteerHours%></span>
                                 </div>
                                 <div class="col-xs-6">
-                                    <h3 class="no-margins font-extra-bold text-success" style="color:#62CB31;"><%=_todayVolunteerValue%>*</h3>
+                                    <span class="no-margins"><%=_todayVolunteerValue%>*</span>
                                 </div>
                             </div>
                             <div class="row m-t-sm bg-success">
                                 <div class="col-xs-2">
-                                    <small class="stats-label">TOTAL</small>
+                                    <small class="stats-label">Total</small>
                                 </div>
                                 <div class="col-xs-2">
-                                    <h3 class="no-margins font-extra-bold text-success" style="color:#62CB31;"><%=_totalVolunteerCount%></h3>
+                                    <span class="no-margins"><%=_totalVolunteerCount%></span>
                                 </div>
                                 <div class="col-xs-2">
-                                    <h3 class="no-margins font-extra-bold text-success" style="color:#62CB31;"><%=_totalVolunteerHours%></h3>
+                                    <span class="no-margins"><%=_totalVolunteerHours%></span>
                                 </div>
                                 <div class="col-xs-6">
-                                    <h3 class="no-margins font-extra-bold text-success" style="color:#62CB31;"><%=_totalVolunteerValue%>*</h3>
+                                    <span class="no-margins"><%=_totalVolunteerValue%>*</span>
                                 </div>
+                            </div>
+                            <div class="stats-icon pull-right m-t-sm">
+                                <span class="label label-success pull-left" style="color:#ffffff; background-color:#62CB31;">LIVE DATA</span>
+                            </div>
+                            <div class="stats-title pull-left">
+                                <h4>Volunteer Rate <span style="color:orangered;"><%=_volunteerHourlyRate%>/HR</span></h4>
                             </div>
                         </div>
                         <div class="panel-footer">
-                             <small>*This number is calcuted based on volunteer hours. It does not reflect a cash donation.</small>
+                             <small>*This number is calcuted based on volunteer hours. It does not reflect a cash donation. <br />
+                                    Latest Update: <%=DateTime.Now.ToShortDateString() %> <%=DateTime.Now.ToShortTimeString() %></small>
                         </div>
                     </div>
 				</div>
@@ -167,7 +127,7 @@
 
 <div class="content">
 	<div class="row">
-		<div class="col-lg-6">
+		<div class="col-xs-12">
 			<div class="hpanel hgreen">
 				<div class="panel-heading hbuilt">
 					Social Media Links
@@ -297,7 +257,7 @@
                 <div class="panel-footer"></div>
 			</div>
 		</div>
-		<div class="col-lg-6">
+		<div class="col-xs-12 l-lg-6">
 			<div class="hpanel hgreen">
 				<div class="panel-heading hbuilt">
 					Volunteers for this Cause (Active within the past 30 days.)
@@ -315,6 +275,5 @@
 			</div>
 		</div>
 	</div>
-</div>
 </asp:Content>
 

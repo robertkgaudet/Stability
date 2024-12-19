@@ -30,6 +30,7 @@ public partial class V1_Member_PeopleSearch : BaseWebForm
 				{
 					LoadConnections(searchTerm, 50);
 				}
+				ucMemberNavigation.UserId = userId.ToString();
 			}
 		}
 		else
