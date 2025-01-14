@@ -13,6 +13,8 @@ using System.Drawing.Drawing2D;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Web.Services.Description;
+using System.Web.Security;
+using System.Web.Services;
 //using static System.Net.Mime.MediaTypeNames;
 
 public partial class V1_Stream : BaseOrganizationWebForm
@@ -26,7 +28,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		LoadPosts();
-
+		BindDropdown();
 		postField.Visible = false;
 		lblPostMessage.Text = "Sign in to post";
 		if (User.Identity.IsAuthenticated)
@@ -39,9 +41,9 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 			var profile = (from p in dc.Profiles
-						  where p.UserId == userId
-						  select p).SingleOrDefault();
-			if(profile != null)
+						   where p.UserId == userId
+						   select p).SingleOrDefault();
+			if (profile != null)
 			{
 				litFullName.Text = profile.Firstname + " " + profile.Lastname;
 			}
@@ -65,6 +67,43 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		this.Master.HideMasterCover = true;
 	}
 
+	public void BindDropdown()
+	{
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		var AudianceType = dc.AudienceTypes.ToList();
+		foreach (var option in AudianceType)
+		{
+			ListItem item = new ListItem(option.Type.ToString(), option.AudienceTypeId.ToString());
+			AudienceType.Items.Add(item);
+		}
+		var PostReactionTypes = dc.PostReactionTypes.OrderBy(f => f.OrderId).ToList();
+		var div = new HtmlGenericControl("div");
+
+		foreach (var item in PostReactionTypes)
+		{
+			HtmlGenericControl newDiv = new HtmlGenericControl("span");
+			newDiv.InnerHtml = item.PostReactionSymbol;
+			newDiv.Attributes["id"] = item.PostReactionTypeId.ToString();
+			if (item.OrderId == 2)
+			{
+				newDiv.Attributes["class"] = "large-icon text-danger thanksReaction";
+			}
+			else if (item.OrderId == 3)
+			{
+				newDiv.Attributes["class"] = "large-icon bold-purple-star thanksReaction";
+			}
+			else
+			{
+				newDiv.Attributes["class"] = "large-icon thanksReaction";
+			}
+			newDiv.Attributes["data-toggle"] = "tooltip";
+			newDiv.Attributes["data-placement"] = "top";
+			newDiv.Attributes["title"] = item.PostReactionType1.ToString();
+			div.Controls.Add(newDiv);
+		}
+		PostReactionTypesId.Controls.Add(div);
+	}
+
 	public void LoadPosts()
 	{
 		int streamPostPageSize = int.Parse(ConfigurationManager.AppSettings["streamPostPageSize"].ToString()) + 10;
@@ -74,8 +113,20 @@ public partial class V1_Stream : BaseOrganizationWebForm
 					join pr in dc.Profiles on p.CreatedBy equals pr.UserId
 					where p.IsVisible == true
 					orderby p.CreatedOn descending
-					select new { p.CreatedBy, p.PostId, p.PostTypeId, p.URLImage, p.URLTitle, p.URLDescription, p.SharedURL, p.CreatedOn, p.Message, pr.UserId, fullname = pr.Firstname + " " + pr.Lastname };
-
+					select new
+					{
+						p.CreatedBy,
+						p.PostId,
+						p.PostTypeId,
+						p.URLImage,
+						p.URLTitle,
+						p.URLDescription,
+						p.SharedURL,
+						p.CreatedOn,
+						p.Message,
+						pr.UserId,
+						fullname = pr.Firstname + " " + pr.Lastname
+					};
 		rptPosts.DataSource = posts;
 		rptPosts.DataBind();
 	}
@@ -105,7 +156,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 					// Save and resize the original image to a max width of 1500 pixels
 					using (Stream fileStream = uploadedFile.InputStream)
 					{
-                        System.Drawing.Image originalImage = System.Drawing.Image.FromStream(fileStream);
+						System.Drawing.Image originalImage = System.Drawing.Image.FromStream(fileStream);
 						System.Drawing.Image resizedImage = ResizeImage(originalImage, 1500);
 						resizedImage.Save(originalFilePath);
 
@@ -153,26 +204,65 @@ public partial class V1_Stream : BaseOrganizationWebForm
 	{
 		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
 		{
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			var userId = new Guid();
+			string username = HttpContext.Current.User.Identity.Name;
+			MembershipUser user = Membership.GetUser(username);
+			if (user != null)
+			{
+				userId = new Guid(user.ProviderUserKey.ToString());
+			}
 			RepeaterItem dataItem = (RepeaterItem)e.Item;
 			Guid postId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostId");
 			Guid postTypeId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostTypeId");
 			DateTime createdOn = (DateTime)DataBinder.Eval(dataItem.DataItem, "CreatedOn");
 			String fullname = (String)DataBinder.Eval(dataItem.DataItem, "Fullname");
 			String message = (String)DataBinder.Eval(dataItem.DataItem, "Message");
-			Guid createdBy = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId"); 
+			Guid createdBy = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId");
 			String URLImage = (String)DataBinder.Eval(dataItem.DataItem, "URLImage");
 			String URLDescription = (String)DataBinder.Eval(dataItem.DataItem, "URLDescription");
-			String URLTitle = (String)DataBinder.Eval(dataItem.DataItem, "URLTitle"); 
+			String URLTitle = (String)DataBinder.Eval(dataItem.DataItem, "URLTitle");
 			String SharedURL = (String)DataBinder.Eval(dataItem.DataItem, "SharedURL");
-
 			HyperLink hypCreatedBy = (HyperLink)e.Item.FindControl("hypCreatedBy");
 			Label lblMessageDate = (Label)e.Item.FindControl("lblMessageDate");
 			Literal litMessage = (Literal)e.Item.FindControl("litMessage");
+			Literal litReactionTitle = (Literal)e.Item.FindControl("litReactionTitle");
+			Literal litReactionCount = (Literal)e.Item.FindControl("litReactionCount");
 			HtmlImage imgProfile = (HtmlImage)e.Item.FindControl("imgProfile");
 
 			lblMessageDate.Text = GetElapsedTime(createdOn);
 			hypCreatedBy.Text = fullname;
 			hypCreatedBy.NavigateUrl = "/V1/Profile/Profile.aspx?userId=" + createdBy;
+
+			var postReaction = from pr in dc.PostReactions
+							   join p in dc.Profiles on pr.CreatedBy equals p.UserId
+							   where pr.PostId == postId
+							   orderby pr.CreatedOn descending
+							   select new { pr.PostReactionId, pr.CreatedBy, p.Firstname, pr.ReactionTypeId };
+			Guid reactionTypeID = new Guid();
+			if (postReaction.Count() > 0)
+			{
+				if (!string.IsNullOrEmpty(username))
+				{
+					var dataExist = postReaction.FirstOrDefault(f => f.CreatedBy == userId);
+					if (dataExist != null)
+					{
+						reactionTypeID = (Guid)dataExist.ReactionTypeId;
+					}
+				}
+				if (postReaction.FirstOrDefault(f => f.CreatedBy == userId) != null)
+				{
+					litReactionCount.Text = "You and " + (postReaction.Count() - 1).ToString() + " others";
+				}
+				else
+				{
+					litReactionCount.Text = postReaction.FirstOrDefault().Firstname + " and " + (postReaction.Count() - 1).ToString() + " others";
+				}
+			}
+			else
+			{
+				litReactionCount.Text = "";
+			}
 
 			string postHtml = string.Empty;
 			bool URLShared = false;
@@ -194,7 +284,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			}
 
 			postHtml += !String.IsNullOrEmpty(message) ? "<p>" + message + "</p>" : string.Empty;// If there's a message, show it.
-			//
+																								 //
 			if (URLShared)
 			{
 				//Load the URL Preview DIV
@@ -210,11 +300,13 @@ public partial class V1_Stream : BaseOrganizationWebForm
 
 			string divSingleImage = string.Empty;
 			//If they shared images, show them too.
-			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
 
 			var postImages = from pi in dc.PostImages
-							where pi.PostId == postId
-							select new {pi.ImageFilename, pi.PostImageId};
+							 where pi.PostId == postId
+							 select new { pi.ImageFilename, pi.PostImageId };
+
+			//dc.PostReactions
 
 			if (postImages.Count() > 0)
 			{
@@ -222,7 +314,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				{
 					Guid postImageId = postImage.PostImageId;
 					string imageFilename = postImage.ImageFilename;
-					if(postImages.Count() == 1)
+					if (postImages.Count() == 1)
 					{
 						divSingleImage = "<div class=\"single-thumbnail-container image-container-post\"><img class=\"thumbnail\" src=\"/V1/Images/PostImages/Thumbnails/" + imageFilename + "\"></div>";
 					}
@@ -252,6 +344,31 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				//Get the users profile image
 				imgProfile.Src = profilePhotoFolder + profileImage.FilenameCropped;
 			}
+
+			if (reactionTypeID == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"))
+			{
+				litReactionTitle.Text = "<span style='color: #286090'> &#128591; Thank </span>";
+			}
+			else if (reactionTypeID == new Guid("b247efe7-3da7-44fa-9452-a331f71d337f"))
+			{
+				litReactionTitle.Text = "<span style='color: #FF0000'> &#10084; Love </span>";
+			}
+			else if (reactionTypeID == new Guid("8fe324d4-3694-4b7d-b710-df277c74b1c4"))
+			{
+				litReactionTitle.Text = "<span style='color: #f0ad4e'> &#128171; Bump </span>";
+			}
+			else if (reactionTypeID == new Guid("6528bbd7-501b-475b-a15f-520bb0a3ffbf"))
+			{
+				litReactionTitle.Text = "<span style='color: #f0ad4e'> &#128074; Be Strong </span>";
+			}
+			else if (reactionTypeID == new Guid("43142e57-f55b-4c8d-b024-84e0e5c664e9"))
+			{
+				litReactionTitle.Text = "<span style='color: #eea236'> &#128558; Wow </span>";
+			}
+			else
+			{
+				litReactionTitle.Text = "<span style='color: #777'> &#128077; Thank </span>";
+			}
 		}
 	}
 
@@ -268,7 +385,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		string audienceTypeId = String.IsNullOrEmpty(AudienceType.Value) ? "FA66D7CD-4B31-4A52-B15B-4E76FD2030C2" : AudienceType.Value; //Default to public
 
 		if (!String.IsNullOrEmpty(postText))
-		{ 
+		{
 			postText = postText.Replace(Environment.NewLine, "<br />");
 		}
 
@@ -351,5 +468,48 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		}
 
 		return resizedImage;
+	}
+
+	[WebMethod]
+	public static bool UploadPostReaction(string reactionId, string postId)
+	{
+		var isRemoved = false;
+		var userId = new Guid();
+		string username = HttpContext.Current.User.Identity.Name;
+		MembershipUser user = Membership.GetUser(username);
+		if (user != null)
+		{
+			userId = new Guid(user.ProviderUserKey.ToString());
+
+			using (var dc = new CrowdReliefDBDataContext())
+			{
+				PostReaction pr = new PostReaction();
+				pr.PostReactionId = Guid.NewGuid();
+				pr.PostId = new Guid(postId);
+				pr.ReactionTypeId = new Guid(reactionId);
+				pr.CreatedBy = userId;
+				pr.CreatedOn = DateTime.Now;
+				pr.IsDeleted = false;
+
+				var IsExists = dc.PostReactions.FirstOrDefault(f => f.CreatedBy == userId && f.PostId == new Guid(postId));
+				if (IsExists != null)
+				{
+					dc.PostReactions.DeleteOnSubmit(IsExists);
+				}
+				if (IsExists != null && IsExists.ReactionTypeId == new Guid(reactionId))
+				{
+					dc.PostReactions.DeleteOnSubmit(IsExists);
+					isRemoved = true;
+				}
+				else
+				{
+					dc.PostReactions.InsertOnSubmit(pr);
+					isRemoved = false;
+				}
+				dc.SubmitChanges();
+				return isRemoved;
+			}
+		}
+		return isRemoved;
 	}
 }

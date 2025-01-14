@@ -1,81 +1,207 @@
-﻿<%@ Page Title="" Language="C#" validateRequest="false" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Stream.aspx.cs" Inherits="V1_Stream" %>
-<%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
+﻿<%@ Page Title="" Language="C#" ValidateRequest="false" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Stream.aspx.cs" Inherits="V1_Stream" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
-	<script src="Scripts/infinite-scroll.pkgd.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/#.#.#/jquery.jscroll.min.js"></script>
-	<script>
+<%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
 
-		$(document).ready(function () {
-			//$('.container').infiniteScroll({
-			//  // options
-			//  path: '.pagination__next',
-			//  append: '.post',
-			//  history: false,
-			//});
-			var pageNumber = 1;
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <script src="Scripts/infinite-scroll.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/#.#.#/jquery.jscroll.min.js"></script>
+    <script>
 
-			$(window).scroll(function () {
-				var windowHeight	= $(window).scrollTop() + $(window).height();
-				var documentHeight = $(document).height();
+        $(document).ready(function () {
+            //$('.container').infiniteScroll({
+            //  // options
+            //  path: '.pagination__next',
+            //  append: '.post',
+            //  history: false,
+            //});
+            var pageNumber = 1;
 
-				if ((windowHeight + 200) > documentHeight)
-				{
-					pageNumber = pageNumber + 1;
-					updateStreamPost(pageNumber);
-				}
-			});
+            $(window).scroll(function () {
+                var windowHeight = $(window).scrollTop() + $(window).height();
+                var documentHeight = $(document).height();
 
-			function AppendPostIntoStream(message) {
-				$(".container").append($(message).fadeIn(1000));
-			}
+                if ((windowHeight + 200) > documentHeight) {
+                    pageNumber = pageNumber + 1;
+                    updateStreamPost(pageNumber);
+                }
+            });
 
-			function updateStreamPost(pageNumber) {
-			//sending commentId will cause a delete.
+            function AppendPostIntoStream(message) {
+                $(".post-content").append($(message).fadeIn(1000));
+            }
 
-			$.ajax(
-				{
-					type: "GET",
-					url: "/V1/Handlers/GetStreamPost.ashx?eventId=<%=eventId%>",
-					data: "pageNumber=" + pageNumber,
-					contentType: "text/plain; charset=utf-8",
-					dataType: "html",
-					success: function (data)
-					{
-						if (data != "")
-						{
-							AppendPostIntoStream(data);
-						}
-					},
-					error: function (request, status, error) {
-						request.statusText + ' - ' + error + ' - ' + status;
-					}
-				});
-			}
+            function updateStreamPost(pageNumber) {
+                //sending commentId will cause a delete.
+                $.ajax(
+                    {
+                        type: "GET",
+                        url: "/V1/Handlers/GetStreamPostNew.ashx?eventId=<%=eventId%>",
+                        data: "pageNumber=" + pageNumber,
+                        contentType: "text/plain; charset=utf-8",
+                        dataType: "html",
+                        success: function (data) {
+                            if (data != "") {
+                                AppendPostIntoStream(data);
+                            }
+                        },
+                        error: function (request, status, error) {
+                            request.statusText + ' - ' + error + ' - ' + status;
+                        }
+                    });
+            }
 
+            $('.thanksReaction').click(
+                function () {
+                    let postId = $("#currentSelectedPost").val();
+                    let reactionId = $(this).attr("id");
+                    $.ajax({
+                        type: "POST",
+                        url: "/V1/Stream.aspx/UploadPostReaction",
+                        data: JSON.stringify({ reactionId: reactionId, postId: postId }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.d) {
+                                $("[data-item-id='" + postId + "']").html("&#128077; Thank");
+                                $("[data-item-id='" + postId + "']").css('color', '#777');
+                            }
+                            else {
+                                if (reactionId === '463be049-a178-4327-948c-eb3e3e7dce73') {
+                                    $("[data-item-id='" + postId + "']").html("&#128591; Thank");
+                                    $("[data-item-id='" + postId + "']").css('color', '#286090');
+                                }
+                                else if (reactionId === 'b247efe7-3da7-44fa-9452-a331f71d337f') {
+                                    $("[data-item-id='" + postId + "']").html("&#10084; Love");
+                                    $("[data-item-id='" + postId + "']").css('color', '#FF0000');
+                                }
+                                else if (reactionId === '8fe324d4-3694-4b7d-b710-df277c74b1c4') {
+                                    $("[data-item-id='" + postId + "']").html("&#128171; Bump");
+                                    $("[data-item-id='" + postId + "']").css('color', '#f0ad4e');
+                                }
+                                else if (reactionId === '6528bbd7-501b-475b-a15f-520bb0a3ffbf') {
+                                    $("[data-item-id='" + postId + "']").html("&#128074; Be Strong");
+                                    $("[data-item-id='" + postId + "']").css('color', '#f0ad4e');
+                                }
+                                else if (reactionId === '43142e57-f55b-4c8d-b024-84e0e5c664e9') {
+                                    $("[data-item-id='" + postId + "']").html("&#128558; Wow");
+                                    $("[data-item-id='" + postId + "']").css('color', '#eea236');
+                                }
+                                else {
+                                    $("[data-item-id='" + postId + "']").html("&#128077; Thank");
+                                    $("[data-item-id='" + postId + "']").css('color', '#777');
+                                }
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error: " + error);
+                        }
+                    });
+                }
+            );
 
+            let tooltipTimeout; // Declare a variable to hold the timeout reference
+            //$('.thankButton').hover(
+            //    function () {
+            //        $("#currentSelectedPost").val($(this).data("item-id"));
+            //        var tooltip = $('#thankTooltip');
+            //        var buttonOffset = $(this).offset(); // Get the button's position
 
+            //        // Set tooltip text or modify as needed
+            //        //tooltip.text('Tooltip for ' + $(this).text())
+            //        //	.append('<button class="tooltipButton" id="closeTooltip">Close</button>'); // Adding a close button for demonstration
 
+            //        // Calculate top position
+            //        var topPosition = buttonOffset.top - tooltip.outerHeight() - 70;
+            //        var leftPosition = 480;
+            //        if (window.innerWidth <= 768) { // Adjust top position for mobile
+            //            topPosition -= 120; // Modify by 120 pixels for mobile
+            //            leftPosition -= 100;
+            //        }
 
+            //        // Position and show tooltip
+            //        tooltip.css({
+            //            display: 'block',
+            //            top: topPosition,
+            //            left: leftPosition
+            //        });
 
-			$('#thankButton').hover(
-				function (event) {
-					var tooltip = $('#myTooltip');
-					tooltip.css({
-						display: 'block',
-						top: $(this).offset().top - tooltip.outerHeight() - 5,
-						left: $(this).offset().left + $(this).outerWidth() / 2 - tooltip.outerWidth() / 2
-					});
-				},
-				function () {
-					$('#myTooltip').css('display', 'none');
-				}
-			);
-		});
+            //        // Clear any existing timeout before setting a new one
+            //        clearTimeout(tooltipTimeout);
 
-	</script>
-	<style>
-		
+            //        // Set a timeout to hide the tooltip after 8 seconds
+            //        tooltipTimeout = setTimeout(function () {
+            //            tooltip.css('display', 'none');
+            //        }, 10000); // 8000 milliseconds = 8 seconds
+            //    },
+            //);
+
+            //Hide tooltip on clicking outside or on clicking the button inside the tooltip
+            $(document).on('click', function (event) {
+                if (!$(event.target).closest('#thankTooltip').length && !$(event.target).is('.thankButton')) {
+                    $('#thankTooltip').css('display', 'none');
+                    clearTimeout(tooltipTimeout); // Clear the timeout when hiding the tooltip manually
+                }
+            });
+
+            // Close button click event inside the tooltip
+            $(document).on('click', '#closeTooltip', function () {
+                $('#thankTooltip').css('display', 'none');
+                clearTimeout(tooltipTimeout); // Clear the timeout when closing the tooltip manually
+            });
+        });
+
+        let tooltipTimeout; // Declare a variable to hold the timeout reference
+        $(document).on('mouseenter', '.thankButton', function () {
+            debugger;
+            $("#currentSelectedPost").val($(this).data("item-id"));
+            var tooltip = $('#thankTooltip');
+            var buttonOffset = $(this).offset(); // Get the button's position
+            // Set tooltip text or modify as needed
+            //tooltip.text('Tooltip for ' + $(this).text())
+            //	.append('<button class="tooltipButton" id="closeTooltip">Close</button>'); // Adding a close button for demonstration
+
+            // Calculate top position
+            var topPosition = buttonOffset.top - tooltip.outerHeight() - 70;
+            var leftPosition = 480;
+            if (window.innerWidth <= 768) { // Adjust top position for mobile
+                topPosition -= 120; // Modify by 120 pixels for mobile
+                leftPosition -= 100;
+            }
+
+            // Position and show tooltip
+            tooltip.css({
+                display: 'block',
+                top: topPosition,
+                left: leftPosition
+            });
+
+            // Clear any existing timeout before setting a new one
+            clearTimeout(tooltipTimeout);
+
+            // Set a timeout to hide the tooltip after 8 seconds
+            tooltipTimeout = setTimeout(function () {
+                tooltip.css('display', 'none');
+            }, 10000); // 8000 milliseconds = 8 seconds
+        });
+    </script>
+    <style>
+        .bold-purple-star {
+            font-weight: bold;
+            color: red;
+        }
+
+        .large-icon:hover {
+            transform: scale(1.5); /* Slightly increase the size */
+        }
+
+        .large-icon {
+            font-size: 24px;
+            display: inline-block; /* Ensure it responds to transforms */
+            transition: transform 0.2s ease-in-out; /* Smooth transition effect */
+            cursor: pointer; /* Hand cursor */
+            padding: 0px 5px;
+        }
+
         .tooltip {
             display: none;
             position: absolute;
@@ -85,6 +211,7 @@
             border-radius: 3px;
             font-size: 12px;
         }
+
         .hover-button {
             margin: 50px;
             padding: 10px 20px;
@@ -94,174 +221,186 @@
             cursor: pointer;
         }
 
+        .thankTooltip {
+            display: none;
+            position: absolute;
+            background-color: #fff; /* White background */
+            color: #333; /* Dark text color */
+            padding: 3px 8px 3px 8px;
+            border-radius: 50px; /* Completely rounded corners */
+            font-size: 12px;
+            white-space: nowrap;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Drop shadow */
+            border: none; /* Remove border */
+        }
 
-		.checkboxlist-item {
-			margin-left: 10px; /* Adjust the margin as needed */
-		}
-		.StreamLink
-		{	
-			color:#050505;
-			font-weight:bold;
-		}
-		.StreamLink:hover
-		{
-			color:#050505;
-			text-decoration:underline;
-		}
-		.panel-body
-		{
-			border-top-left-radius: 10px !important;
-			border-top-right-radius: 10px !important;
-		}
-		.panel-footer
-		{
-			border-bottom-left-radius: 10px !important;
-			border-bottom-right-radius: 10px !important;
-		}
-		.postOpen
-		{
-			border-radius: 10px !important;
-		}
+        .checkboxlist-item {
+            margin-left: 10px; /* Adjust the margin as needed */
+        }
 
-		.postContainer{
-			position:fixed !important;
-			z-index:500;
-		}
+        .StreamLink {
+            color: #050505;
+            font-weight: bold;
+        }
 
-		.postrow {
-			width: 100%;
-			height:120px;
-			margin-left:-1px;
-			margin-top:-25px;
+            .StreamLink:hover {
+                color: #050505;
+                text-decoration: underline;
+            }
+
+        .panel-body {
+            border-top-left-radius: 10px !important;
+            border-top-right-radius: 10px !important;
+        }
+
+        .panel-footer {
+            border-bottom-left-radius: 10px !important;
+            border-bottom-right-radius: 10px !important;
+        }
+
+        .postOpen {
+            border-radius: 10px !important;
+        }
+
+        .postContainer {
+            position: fixed !important;
+            z-index: 500;
+        }
+
+        .postrow {
+            width: 100%;
+            height: 120px;
+            margin-left: -1px;
+            margin-top: -25px;
             position: fixed;
             display: flex;
             justify-content: center;
-			/*background-image: url('/V1/Images/CausePhotos/stabilityevent.png');*/ /* Path to your image */
-			background-size: cover; /* Scale the image to cover the entire div */
-			background-position: center; /* Center the image */
-			background-repeat: no-repeat; /* Prevent the image from repeating */
-			background-color:#E8D3FE;
+            /*background-image: url('/V1/Images/CausePhotos/stabilityevent.png');*/ /* Path to your image */
+            background-size: cover; /* Scale the image to cover the entire div */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+            background-color: #E8D3FE;
         }
 
-		.contentFeed{
-			margin-top:100px !important;
-		}
-		.modal-dialog
-		{
-			display: flex;
-			justify-content: center; /* Centers horizontally */
-		}
-		.modal-content
-		{
-			background-color:#FFF !important;
-			width:450px !important;
-		}
-		.modal-header
-		{
-			background-color:#FFF !important;
-			border-top-left-radius: 10px !important;
-			border-top-right-radius: 10px !important;
-		}
-		.modal-footer
-		{
-			background-color:#FFF !important;
-			border-bottom-left-radius: 10px !important;
-			border-bottom-right-radius: 10px !important;
-		}
-		.modal-body
-		{
-			text-align:left;
-		}
-		.modal
-		{
-			margin-top:5px;
-		}
+        .contentFeed {
+            margin-top: 100px !important;
+        }
 
-		.image-container {
-			margin-top:25px;
-			width: 100%; /* The container will take up the full width of its parent */
-			max-width: 600px; /* Optional: set a maximum width for the container */
-		}
-		
-		.text-container
-		{
-			border-bottom-left-radius: 5px !important;
-			border-bottom-right-radius: 5px !important;
-			width: 100%; /* The container will take up the full width of its parent */
-			max-width: 600px; /* Optional: set a maximum width for the container */
-			border: 1px solid #ccc; /* Optional: border to visualize the container */
-			padding: 10px; /* Optional: padding around the image */
-			box-sizing: border-box; /* Ensures padding is included in the width calculation */
-			background-color:#F4F4F4;
-		}
+        .modal-dialog {
+            display: flex;
+            justify-content: center; /* Centers horizontally */
+        }
 
-		.responsive-image {
-			border-top-left-radius: 5px !important;
-			border-top-right-radius: 5px !important;
-			width: 100%; /* Image will take up the full width of the container */
-			height: auto; /* Maintains the image's aspect ratio */
-			display: block; /* Removes any inline spacing below the image */
-		}
+        .modal-content {
+            background-color: #FFF !important;
+            width: 450px !important;
+        }
 
-		.post
-		{
-			border-radius: 100px !important;
-		}
+        .modal-header {
+            background-color: #FFF !important;
+            border-top-left-radius: 10px !important;
+            border-top-right-radius: 10px !important;
+        }
 
-		.URLPost:hover
-		{cursor: pointer;}
-		
-		.post-container
-		{
-			margin-top:90px !important;
-			display: flex;
-			justify-content: center; /* Centers horizontally */
-		}
-		.post-content
-		{
-			margin-bottom:1px !important;
-			margin-top:1px !important;
-			width:100%;
-			max-width: 100%; /* Ensure it doesn't exceed the width of the container */
-			margin: 0 auto; /* Center the div */
-		}
-		@media only screen and (min-width: 768px) {
-			.post-content {
-				max-width: 610px; /* Limit width to 610px on larger screens */
-				margin: 0 auto; /* Center the div on the page */
-			}
-		}
-		.message, .message-content
-		{
-			padding:0px !important;
-			word-wrap: break-word; /* Breaks long words onto the next line */
-			word-break: break-all; /* Forces a line break at any point within the word */
-			overflow-wrap: break-word; /* Ensures compatibility with modern browsers */
-		}
-		.messageBody
-		{
-			margin-bottom:15px !important;
-		}
-		.block-profile-image-div
-		{
+        .modal-footer {
+            background-color: #FFF !important;
+            border-bottom-left-radius: 10px !important;
+            border-bottom-right-radius: 10px !important;
+        }
+
+        .modal-body {
+            text-align: left;
+        }
+
+        .modal {
+            margin-top: 5px;
+        }
+
+        .image-container {
+            margin-top: 25px;
+            width: 100%; /* The container will take up the full width of its parent */
+            max-width: 600px; /* Optional: set a maximum width for the container */
+        }
+
+        .text-container {
+            border-bottom-left-radius: 5px !important;
+            border-bottom-right-radius: 5px !important;
+            width: 100%; /* The container will take up the full width of its parent */
+            max-width: 600px; /* Optional: set a maximum width for the container */
+            border: 1px solid #ccc; /* Optional: border to visualize the container */
+            padding: 10px; /* Optional: padding around the image */
+            box-sizing: border-box; /* Ensures padding is included in the width calculation */
+            background-color: #F4F4F4;
+        }
+
+        .responsive-image {
+            border-top-left-radius: 5px !important;
+            border-top-right-radius: 5px !important;
+            width: 100%; /* Image will take up the full width of the container */
+            height: auto; /* Maintains the image's aspect ratio */
+            display: block; /* Removes any inline spacing below the image */
+        }
+
+        .post {
+            border-radius: 100px !important;
+        }
+
+        .URLPost:hover {
+            cursor: pointer;
+        }
+
+        .post-container {
+            margin-top: 90px !important;
+            display: flex;
+            justify-content: center; /* Centers horizontally */
+        }
+
+        .post-content {
+            margin-bottom: 1px !important;
+            margin-top: 1px !important;
+            width: 100%;
+            max-width: 100%; /* Ensure it doesn't exceed the width of the container */
+            margin: 0 auto; /* Center the div */
+        }
+
+        @media only screen and (min-width: 768px) {
+            .post-content {
+                max-width: 610px; /* Limit width to 610px on larger screens */
+                margin: 0 auto; /* Center the div on the page */
+            }
+        }
+
+        .message, .message-content {
+            padding: 0px !important;
+            word-wrap: break-word; /* Breaks long words onto the next line */
+            word-break: break-all; /* Forces a line break at any point within the word */
+            overflow-wrap: break-word; /* Ensures compatibility with modern browsers */
+        }
+
+        .messageBody {
+            margin-bottom: 15px !important;
+        }
+
+        .block-profile-image-div {
             clear: both; /* Prevents floating elements from wrapping around */
             width: 100%; /* Ensure the div takes up the full width */
         }
-		.clearfix::after {
-			content: "";
-			display: table;
-			clear: both;
-		}
-		.message-date
-		{
-			font-size:smaller;
-		}
-		p, div
-		{
-			/*word-wrap: break-word;*/ /* Breaks long words onto the next line */
-			/*word-break: break-all;*/ /* Forces a line break at any point within the word */
-			/*overflow-wrap: break-word;*/ /* Ensures compatibility with modern browsers */
-		}
+
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .message-date {
+            font-size: smaller;
+        }
+
+        p, div {
+            /*word-wrap: break-word;*/ /* Breaks long words onto the next line */
+            /*word-break: break-all;*/ /* Forces a line break at any point within the word */
+            /*overflow-wrap: break-word;*/ /* Ensures compatibility with modern browsers */
+        }
 
         #highlighted-text {
             position: absolute;
@@ -281,7 +420,7 @@
         #postInput {
             width: 100%; /* Make sure the textarea takes the full width of its container */
             resize: none; /* Disable manual resizing */
-			min-height: 50px; /* Set a minimum height */
+            min-height: 50px; /* Set a minimum height */
             max-height: 200px; /* Set a maximum height after which the scroll will appear */
             overflow-y: auto; /* Hide the scrollbar */
 
@@ -293,19 +432,20 @@
             color: black;
             white-space: pre-wrap;
             word-wrap: break-word;
-			border: none; /* Remove the border */
-			outline: none; /* Remove the outline that might appear on focus */
+            border: none; /* Remove the border */
+            outline: none; /* Remove the outline that might appear on focus */
         }
-		#postInput:focus {
-			border: none; /* Remove the border */
-			outline: none; /* Remove the outline that might appear on focus */
-		}
+
+            #postInput:focus {
+                border: none; /* Remove the border */
+                outline: none; /* Remove the outline that might appear on focus */
+            }
 
         .highlighted-url {
             color: rebeccapurple;
             text-decoration: underline;
         }
-		/* Custom scrollbar styles for WebKit browsers (Chrome, Safari, Edge) */
+        /* Custom scrollbar styles for WebKit browsers (Chrome, Safari, Edge) */
         textarea::-webkit-scrollbar {
             width: 8px; /* Adjust the width of the scrollbar */
         }
@@ -315,56 +455,58 @@
             border-radius: 4px; /* Round the corners of the scrollbar thumb */
         }
 
-        textarea::-webkit-scrollbar-thumb:hover {
-            background-color: #555; /* Darker color when hovering over the scrollbar thumb */
-        }
+            textarea::-webkit-scrollbar-thumb:hover {
+                background-color: #555; /* Darker color when hovering over the scrollbar thumb */
+            }
 
         textarea::-webkit-scrollbar-track {
             background-color: #f1f1f1; /* Background color of the scrollbar track */
         }
-		textarea {
-			border: none; /* Remove the border */
-			outline: none; /* Remove the outline that might appear on focus */
-		}
 
-		select {
+        textarea {
+            border: none; /* Remove the border */
+            outline: none; /* Remove the outline that might appear on focus */
+        }
+
+        select {
             border-radius: 3px; /* Round the corners of the scrollbar thumb */
-			border: none; /* Remove the border */
-			background-color: #f0f0f0; /* Set background color to light grey */
-			min-width: fit-content; /* Make the width fit the content */
-			width: auto; /* Allow the width to adjust based on content */
-			padding: 5px; /* Optional: Add some padding for better appearance */
-			font-size: 12px; /* Optional: Adjust the font size */
-		}
+            border: none; /* Remove the border */
+            background-color: #f0f0f0; /* Set background color to light grey */
+            min-width: fit-content; /* Make the width fit the content */
+            width: auto; /* Allow the width to adjust based on content */
+            padding: 5px; /* Optional: Add some padding for better appearance */
+            font-size: 12px; /* Optional: Adjust the font size */
+        }
 
-		select option {
-			border: none; /* Remove the border */
-			padding: 8px; /* Add padding to create space inside the options */
-			margin: 5px 0; /* Vertical margin between options (works in some browsers) */
-		}
+            select option {
+                border: none; /* Remove the border */
+                padding: 8px; /* Add padding to create space inside the options */
+                margin: 5px 0; /* Vertical margin between options (works in some browsers) */
+            }
 
-		.post-type-div {
+        .post-type-div {
             display: flex;
             justify-content: center; /* Centers horizontally */
             align-items: center; /* Centers vertically */
-			padding:4px;
+            padding: 4px;
             transition: background-color 0.3s ease; /* Smooth transition for hover effect */
         }
 
-        /* Hover effect to slightly darken the background color */
-        .post-type-div:hover {
-			cursor:pointer;
-            background-color: #e0e0e0; /* Slightly darker grey on hover */
+            /* Hover effect to slightly darken the background color */
+            .post-type-div:hover {
+                cursor: pointer;
+                background-color: #e0e0e0; /* Slightly darker grey on hover */
+            }
+
+        .imagePost {
+            height: 100px;
+            background-color: #F1F3F6;
+            padding: 5px;
+            border: solid 1px #ccc;
+            cursor: pointer;
         }
-		.imagePost
-		{
-			height:100px;
-			background-color:#F1F3F6;
-			padding:5px;	
-			border:solid 1px #ccc;
-			cursor:pointer;
-		}
-		.centered-image-div {
+
+        .centered-image-div {
             display: flex;
             justify-content: center; /* Horizontal centering */
             align-items: center; /* Vertical centering */
@@ -372,7 +514,7 @@
 
 
 
-		.upload-div {
+        .upload-div {
             width: 100%;
             display: flex;
             flex-wrap: wrap; /* Ensures the thumbnails wrap to the next line when space runs out */
@@ -380,7 +522,7 @@
             margin-top: 20px;
         }
 
-		.thumbnail {
+        .thumbnail {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain; /* Ensure the image fits within the container without being cropped */
@@ -393,7 +535,7 @@
             align-items: center;
             justify-content: center;
         }
-		
+
         .single-thumbnail-container {
             width: 100%; /* Width of the thumbnail container */
             display: inline-flex;
@@ -405,343 +547,451 @@
             display: inline-block;
         }
 
-		.image-container {
-			width: 100%; /* Full width of the container */
-			overflow: hidden; /* Hide any overflow */
-		}
+        .image-container {
+            width: 100%; /* Full width of the container */
+            overflow: hidden; /* Hide any overflow */
+        }
 
-		.image-container-post {
-			width: 100%; /* Full width of the container */
-			overflow: hidden; /* Hide any overflow */
-		}
+        .image-container-post {
+            width: 100%; /* Full width of the container */
+            overflow: hidden; /* Hide any overflow */
+        }
 
-		.image-container img {
-			width: 100%; /* Make the image full width */
-			height: 100%; /* Make the image fill the container height */
-			object-fit: cover; /* Ensures the image covers the area without distortion */
-		}
+        .image-container img {
+            width: 100%; /* Make the image full width */
+            height: 100%; /* Make the image fill the container height */
+            object-fit: cover; /* Ensures the image covers the area without distortion */
+        }
+
+        .tooltipButton {
+            margin-top: 5px;
+            padding: 5px 10px;
+            background-color: #f00;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
     </style>
 
-	<script>
-		function triggerFileUpload() {
-			// Trigger click event on the hidden FileUpload control
-			document.getElementById('<%=FileUpload1.ClientID%>').click();
-		}
+    <script>
+        function triggerFileUpload() {
+            // Trigger click event on the hidden FileUpload control
+            document.getElementById('<%=FileUpload1.ClientID%>').click();
+        }
 
-		var postTypeId = "8D8CDB63-28D9-4265-AC78-AF06BA6AC582"; //Message
-		$('#postTypeId').val(postTypeId);
-		$(document).ready(function () {
-			$('.imagePost').hide();
-			$('#btnImagePost').hide();
+        var postTypeId = "8D8CDB63-28D9-4265-AC78-AF06BA6AC582"; //Message
+        $('#postTypeId').val(postTypeId);
+        $(document).ready(function () {
+            $('.imagePost').hide();
+            $('#btnImagePost').hide();
 
-			$('#previewButton').click(function () {
-			});
+            $('#previewButton').click(function () {
+            });
 
-			// Infinite scroll feature
-			$('#postContent').on('scroll', function () {
-				if ($('#postContent').scrollTop() + $('#postContent').innerHeight() >= $('#postContent')[0].scrollHeight) {
-					// Load more content (here you can implement a call to the server to get more data)
-					$('#postContent').append('<div class="post">More content loaded...</div>');
-				}
-			});
-			
-			// Regular expression to detect URLs
-			var urlRegex = /\b((?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)\b/g;
+            // Infinite scroll feature
+            $('#postContent').on('scroll', function () {
+                if ($('#postContent').scrollTop() + $('#postContent').innerHeight() >= $('#postContent')[0].scrollHeight) {
+                    // Load more content (here you can implement a call to the server to get more data)
+                    $('#postContent').append('<div class="post">More content loaded...</div>');
+                }
+            });
 
-			var previousUrls = []; // Array to store previously detected URLs
-			var debounceTimer; // Timer to handle the debounce
+            // Regular expression to detect URLs
+            var urlRegex = /\b((?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)\b/g;
 
-			$('#postInput').on('input', function () {
-				var textarea = $(this); // Store the reference to the textarea
+            var previousUrls = []; // Array to store previously detected URLs
+            var debounceTimer; // Timer to handle the debounce
 
-				clearTimeout(debounceTimer); // Clear the timer to reset the debounce
+            $('#postInput').on('input', function () {
+                var textarea = $(this); // Store the reference to the textarea
 
-				// Set a new debounce timer
-				debounceTimer = setTimeout(function () {
-					var text = textarea.val(); // Get the current value of the textarea
+                clearTimeout(debounceTimer); // Clear the timer to reset the debounce
 
-					// Clear previous highlights
-		//			$('#highlighted-text').empty();
+                // Set a new debounce timer
+                debounceTimer = setTimeout(function () {
+                    var text = textarea.val(); // Get the current value of the textarea
 
-					var latestUrl = null;
+                    // Clear previous highlights
+                    //			$('#highlighted-text').empty();
 
-					// Find the latest URL
-					text.replace(urlRegex, function (url) {
-						latestUrl = url; // Store the last detected URL
-						return url; // Return the URL as is
-					});
+                    var latestUrl = null;
 
-					if (latestUrl) {
-						if (!previousUrls.includes(latestUrl)) {
-							previousUrls.push(latestUrl); // Add the new URL to the list
-							triggerAjaxCall(latestUrl); // Trigger the AJAX call
-						}
-					}
-				}, 300); // Delay in milliseconds (e.g., 300ms)
-			});
+                    // Find the latest URL
+                    text.replace(urlRegex, function (url) {
+                        latestUrl = url; // Store the last detected URL
+                        return url; // Return the URL as is
+                    });
 
-			// Function to trigger the AJAX call
-			function triggerAjaxCall(url) {
+                    if (latestUrl) {
+                        if (!previousUrls.includes(latestUrl)) {
+                            previousUrls.push(latestUrl); // Add the new URL to the list
+                            triggerAjaxCall(latestUrl); // Trigger the AJAX call
+                        }
+                    }
+                }, 300); // Delay in milliseconds (e.g., 300ms)
+            });
 
-				//var url = $('#postInput').val();
-				//alert(url);
-				// Regular expression to check if the URL starts with "http://" or "https://"
-				var httpsRegex = /^(https?:\/\/)/i;
+            // Function to trigger the AJAX call
+            function triggerAjaxCall(url) {
 
-				// If the URL does not start with "http://" or "https://", prepend "https://"
-				if (!httpsRegex.test(url)) {
-					url = "https://" + url;
-				}
+                //var url = $('#postInput').val();
+                //alert(url);
+                // Regular expression to check if the URL starts with "http://" or "https://"
+                var httpsRegex = /^(https?:\/\/)/i;
 
-				$.ajax({
-					url: '/api/previewlink',
-					type: 'POST',
-					contentType: 'application/json',
-					data: JSON.stringify(url),
-					success: function (data) {
+                // If the URL does not start with "http://" or "https://", prepend "https://"
+                if (!httpsRegex.test(url)) {
+                    url = "https://" + url;
+                }
 
-						//Hide the image upload feature on the post modal.
-						//document.getElementById('#postType').style.display = 'none';
-						$('.imagePost').hide();
-						$('#btnImagePost').hide();
-						$('#btnPost').show();
-						postTypeId = "6614579C-BD4F-45E1-9DD4-7AF88DA1C151"; //LINK POSTTYPEID
-						$('#postTypeId').val(postTypeId);
+                $.ajax({
+                    url: '/api/previewlink',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(url),
+                    success: function (data) {
 
-						$('#postContent').empty();
-						var postHtml = '<div class="post">';
+                        //Hide the image upload feature on the post modal.
+                        //document.getElementById('#postType').style.display = 'none';
+                        $('.imagePost').hide();
+                        $('#btnImagePost').hide();
+                        $('#btnPost').show();
+                        postTypeId = "6614579C-BD4F-45E1-9DD4-7AF88DA1C151"; //LINK POSTTYPEID
+                        $('#postTypeId').val(postTypeId);
 
-						if (data.imageUrl) {
-							postHtml += '<div class="image-container"><img class="responsive-image" src="' + data.imageUrl + '" alt="Image"></div>';
-						}
+                        $('#postContent').empty();
+                        var postHtml = '<div class="post">';
 
-						var truncatedDescription = truncateText(data.description, 28);
+                        if (data.imageUrl) {
+                            postHtml += '<div class="image-container"><img class="responsive-image" src="' + data.imageUrl + '" alt="Image"></div>';
+                        }
 
-						postHtml += '<div class="text-container"><small class="text-muted">' + url + '</small></br>';
-						postHtml += '<b>' + data.title + '</b>';
-						postHtml += '<p>' + truncatedDescription + '</p></div>';
+                        var truncatedDescription = truncateText(data.description, 28);
 
-						postHtml += '</div>';
-						$('#postContent').append(postHtml);
+                        postHtml += '<div class="text-container"><small class="text-muted">' + url + '</small></br>';
+                        postHtml += '<b>' + data.title + '</b>';
+                        postHtml += '<p>' + truncatedDescription + '</p></div>';
 
-						postHtml = '';
-						
-						$('#postURL').val(url);
-						$('#postURLTitle').val(data.title);
-						$('#postURLDescription').val(truncatedDescription);
-						$('#postURLImage').val(data.imageUrl);
-						thumbnailDiv.empty(); // Clear the div for new images
-					}
-				});
-			}
+                        postHtml += '</div>';
+                        $('#postContent').append(postHtml);
 
-			// Function to automatically resize the textarea
-			function autoResizeTextarea(textarea) {
-				textarea.style.height = 'auto'; // Reset height
-				textarea.style.height = (textarea.scrollHeight) + 'px'; // Set height based on scroll height
+                        postHtml = '';
 
-				// If the height exceeds the max-height, revert to max-height and allow scrolling
-				if (textarea.scrollHeight > parseInt(window.getComputedStyle(textarea).maxHeight)) {
-					textarea.style.height = window.getComputedStyle(textarea).maxHeight;
-				}
-			}
+                        $('#postURL').val(url);
+                        $('#postURLTitle').val(data.title);
+                        $('#postURLDescription').val(truncatedDescription);
+                        $('#postURLImage').val(data.imageUrl);
+                        thumbnailDiv.empty(); // Clear the div for new images
+                    }
+                });
+            }
 
-			// Attach the event listener to the textarea
-			document.getElementById('postInput').addEventListener('input', function () {
-				autoResizeTextarea(this);
-			});
+            // Function to automatically resize the textarea
+            function autoResizeTextarea(textarea) {
+                textarea.style.height = 'auto'; // Reset height
+                textarea.style.height = (textarea.scrollHeight) + 'px'; // Set height based on scroll height
 
-			// Initialize the textarea height based on initial content
-			document.addEventListener('DOMContentLoaded', function () {
-				var textarea = document.getElementById('postInput');
-				autoResizeTextarea(textarea);
-			});
+                // If the height exceeds the max-height, revert to max-height and allow scrolling
+                if (textarea.scrollHeight > parseInt(window.getComputedStyle(textarea).maxHeight)) {
+                    textarea.style.height = window.getComputedStyle(textarea).maxHeight;
+                }
+            }
 
-			// JavaScript to clear the content when the button is clicked
-			document.getElementById('buttonCancel').addEventListener('click', function () {
-				// Clear the content of the div
-				document.getElementById('postContent').innerHTML = '';
-				document.getElementById('postInput').value = '';
-				previousUrls.length = 0;
-				$('.postType').show();
-				$('#btnImagePost').hide();
-				$('#btnPost').show();
-				thumbnailDiv.empty(); // Clear the div for new images
-			});
+            // Attach the event listener to the textarea
+            document.getElementById('postInput').addEventListener('input', function () {
+                autoResizeTextarea(this);
+            });
 
-			document.getElementById('postTypeImageDiv').addEventListener('click', function () {
-				//PHOTO POST TYPE
-				$('.imagePost').show();
-				$('#btnImagePost').show();
-				$('#btnPost').hide();
-			});
+            // Initialize the textarea height based on initial content
+            document.addEventListener('DOMContentLoaded', function () {
+                var textarea = document.getElementById('postInput');
+                autoResizeTextarea(textarea);
+            });
 
-			document.getElementById('postTypeTextDiv').addEventListener('click', function () {
-				//TEXT POST TYPE
-				$('.imagePost').hide();
-				$('#btnImagePost').hide();
-				$('#btnPost').show();
-			});
+            // JavaScript to clear the content when the button is clicked
+            document.getElementById('buttonCancel').addEventListener('click', function () {
+                // Clear the content of the div
+                document.getElementById('postContent').innerHTML = '';
+                document.getElementById('postInput').value = '';
+                previousUrls.length = 0;
+                $('.postType').show();
+                $('#btnImagePost').hide();
+                $('#btnPost').show();
+                thumbnailDiv.empty(); // Clear the div for new images
+            });
 
-			function truncateText(text, wordLimit) {
-				// Split the text into an array of words
-				var words = text.split(' ');
+            document.getElementById('postTypeImageDiv').addEventListener('click', function () {
+                //PHOTO POST TYPE
+                $('.imagePost').show();
+                $('#btnImagePost').show();
+                $('#btnPost').hide();
+            });
 
-				// Check if the word count exceeds the limit
-				if (words.length > wordLimit) {
-					// Join the first 'wordLimit' words and add "..."
-					return words.slice(0, wordLimit).join(' ') + '...';
-				} else {
-					// If text is within the limit, return it unchanged
-					return text;
-				}
-			}
+            document.getElementById('postTypeTextDiv').addEventListener('click', function () {
+                //TEXT POST TYPE
+                $('.imagePost').hide();
+                $('#btnImagePost').hide();
+                $('#btnPost').show();
+            });
 
-			$('#FileUpload1').on('change', function (e) {
-				const files = e.target.files;
+            function truncateText(text, wordLimit) {
+                // Split the text into an array of words
+                var words = text.split(' ');
 
-				const thumbnailDiv = $('#thumbnails');
-				thumbnailDiv.empty(); // Clear the div for new images
+                // Check if the word count exceeds the limit
+                if (words.length > wordLimit) {
+                    // Join the first 'wordLimit' words and add "..."
+                    return words.slice(0, wordLimit).join(' ') + '...';
+                } else {
+                    // If text is within the limit, return it unchanged
+                    return text;
+                }
+            }
 
-				// Limit to 4 images
-				const maxImages = Math.min(files.length, 4);
+            $('#FileUpload1').on('change', function (e) {
+                const files = e.target.files;
 
-				for (let i = 0; i < maxImages; i++) {
-					const file = files[i];
+                const thumbnailDiv = $('#thumbnails');
+                thumbnailDiv.empty(); // Clear the div for new images
 
-					// Ensure the file is an image
-					if (file.type.startsWith('image/')) {
-						postTypeId = "00D6E5A4-362E-40F0-8E95-1320EB1767F3"; //PHOTO POSTTYPEID
-						$('#postTypeId').val(postTypeId);
-						const reader = new FileReader();
+                // Limit to 4 images
+                const maxImages = Math.min(files.length, 4);
 
-						reader.onload = function (event) {
-							const imgElement = $('<img>', {
-								src: event.target.result,
-								class: 'thumbnail',
-							});
+                for (let i = 0; i < maxImages; i++) {
+                    const file = files[i];
 
-							const container = files.length == 1 ? $('<div>', { class: 'single-thumbnail-container image-container' }) : $('<div>', { class: 'thumbnail-container' });
-							container.append(imgElement);
-							thumbnailDiv.append(container);
-						};
+                    // Ensure the file is an image
+                    if (file.type.startsWith('image/')) {
+                        postTypeId = "00D6E5A4-362E-40F0-8E95-1320EB1767F3"; //PHOTO POSTTYPEID
+                        $('#postTypeId').val(postTypeId);
+                        const reader = new FileReader();
 
-						reader.readAsDataURL(file); // Read the image as a data URL
-					}
-				}
+                        reader.onload = function (event) {
+                            const imgElement = $('<img>', {
+                                src: event.target.result,
+                                class: 'thumbnail',
+                            });
 
-				// Hide the file input after images are selected
-				$('.imagePost').hide();
-			});
-		});
-		
-</script>
+                            const container = files.length == 1 ? $('<div>', { class: 'single-thumbnail-container image-container' }) : $('<div>', { class: 'thumbnail-container' });
+                            container.append(imgElement);
+                            thumbnailDiv.append(container);
+                        };
+
+                        reader.readAsDataURL(file); // Read the image as a data URL
+                    }
+                }
+
+                // Hide the file input after images are selected
+                $('.imagePost').hide();
+            });
+        });
+
+    </script>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-	<div class="postContainer">
-		<div class="row postrow">
-			<div class="col-lg-3">
-			</div>
-			<div class="col-xs-12 col-lg-6">
-				<div class="hpanel post m-t-lg">
-					<div class="panel-body postOpen">
-						<div class="message">
-							<asp:HyperLink ID="lblPostMessage" NavigateUrl="/SignIn" runat="server"></asp:HyperLink>
-							<input runat="server" id="postField" type="text" class="form-control" placeholder="Create A Post" data-toggle="modal" data-target="#newPost" />
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-3">
-			</div>
-		</div>
-	</div>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <div class="postContainer">
+        <div class="row postrow">
+            <div class="col-lg-3">
+            </div>
+            <div class="col-xs-12 col-lg-6">
+                <div class="hpanel post m-t-lg">
+                    <div class="panel-body postOpen">
+                        <div class="message">
+                            <asp:HyperLink ID="lblPostMessage" NavigateUrl="/SignIn" runat="server"></asp:HyperLink>
+                            <input runat="server" id="postField" type="text" class="form-control" placeholder="Create A Post" data-toggle="modal" data-target="#newPost" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
+            </div>
+        </div>
+    </div>
 
-	<div class="content animate-panel" data-child="hpanel" data-effect="fadeInDown">
-		<div class="post-container">
-			<div class="post-content">
-				<asp:Repeater ID="rptPosts" runat="server" OnItemDataBound="rptPosts_ItemDataBound">
-					<ItemTemplate>
-						<div class="hpanel messageBody">
-							<div class="panel-body">
-								<div class="message">
-									<div class="block-profile-image-div clearfix" style="line-height:1.3;">
-										<img class="img-rounded" style="float:left; margin-right:10px;" width="40" src="" runat="server" id="imgProfile" />
-										<asp:HyperLink ID="hypCreatedBy" runat="server" CssClass="StreamLink"></asp:HyperLink><br />
-										<asp:Label ID="lblMessageDate" runat="server" CssClass="message-date"></asp:Label>
-									</div>
-									<span class="message-content">
-										<p style="margin-top:10px;">
-											<asp:Literal ID="litMessage" runat="server"></asp:Literal>
-										</p>
-									</span>
-								</div>
-							</div>
-							<div class="tooltip" id="myTooltip">This is a tooltip</div>
-							<div class="panel-footer">
-								<div class="row">
-									<div class="col-xs-3 post-type-div" id="thankButton"><i class="fa fa-thumbs-up m-r-sm"></i>Thank</div>
-									<div class="col-xs-3 post-type-div" id="commentButton"><i class="fa fa-sticky-note m-r-sm nowrap"></i>Comment</div>
-									<div class="col-xs-3 post-type-div" id="helpButton"><i class="fa fa-users m-r-sm"></i>Help</div>
-									<div class="col-xs-3 post-type-div" id="giveButton"><i class="fa fa-money m-r-sm"></i>Give</div>
-								</div>
-							</div>
-						</div>
-					</ItemTemplate>
-				</asp:Repeater>
-			</div>
-		</div>
-	</div>
+    <div class="content animate-panel" data-child="hpanel" data-effect="fadeInDown">
+        <div class="post-container">
+            <div class="post-content">
+                <asp:Repeater ID="rptPosts" runat="server" OnItemDataBound="rptPosts_ItemDataBound">
+                    <ItemTemplate>
+                        <div class="hpanel messageBody">
+                            <div class="panel-body">
+                                <div class="message">
+                                    <div class="block-profile-image-div clearfix" style="line-height: 1.3;">
+                                        <img class="img-rounded" style="float: left; margin-right: 10px;" width="40" src="" runat="server" id="imgProfile" />
+                                        <asp:HyperLink ID="hypCreatedBy" runat="server" CssClass="StreamLink"></asp:HyperLink><br />
+                                        <asp:Label ID="lblMessageDate" runat="server" CssClass="message-date"></asp:Label>
+                                    </div>
+                                    <span class="message-content">
+                                        <p style="margin-top: 10px;">
+                                            <asp:Literal ID="litMessage" runat="server"></asp:Literal>
+                                        </p>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="panel-footer">
 
-	<div class="modal fade" id="newPost" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<center>
-						<h4>Create post</h4>
-						<button type="button" class="btn btn-default pull-right" data-dismiss="modal" id="buttonCancel">Cancel</button>
-					</center>
-					<b>
-						<asp:Literal ID="litFullName" runat="server"></asp:Literal>
-					</b>
-					<select name="account" id="AudienceType" runat="server" ClientIDMode="static">
-						<option style="font-size:13px;" value="FA66D7CD-4B31-4A52-B15B-4E76FD2030C2"> Public</option>
-						<option style="font-size:13px;" value="3499A4F5-08AE-4869-9DAC-8B2BE4E3B206"> Friends</option>
-						<option style="font-size:13px;" value="6EB17B41-1FCC-4739-BB09-94AE7044A1F9"> My Team</option>
-						<option style="font-size:13px;" value="82D78B09-A57B-4674-A14E-CD3EECBB6650"> Only Me</option>
-					</select>
-				</div>
-				<div class="modal-body">
-					<div class="textPost">
-						<textarea id="postInput" ClientIDMode="Static" runat="server" style="resize: none;" name="post" rows="1" placeholder="Create A Post"></textarea>
-						<asp:Label ID="StatusLabel" runat="server" Text=""></asp:Label>
-						<div id="postContent"></div>
-						<div class="upload-div" id="thumbnails"></div>
-					</div>
-					<div class="imagePost centered-image-div" onclick="triggerFileUpload();">
-						Add Photos
-					</div>
-					<asp:FileUpload ID="FileUpload1" ClientIDMode="Static" name="files" multiple="multiple" runat="server" style="display:none;" />
-					<input type="file" id="fileInput" ClientIdMode="Static" accept="image/*" name="files" multiple="multiple" style="display:none;" runat="server" />
-				</div>
-				<div class="modal-footer">
-					<div class="postType">
-						<div class="row">
-							<div class="col-lg-3"></div>
-							<div id="postTypeTextDiv" class="col-lg-3 post-type-div"><i class="fa fa-align-left m-r-sm"></i> TEXT</div>
-							<div id="postTypeImageDiv" class="col-lg-3 post-type-div"><i class="fa fa-image m-r-sm"></i> PHOTO</div>
-							<div class="col-lg-3"></div>
-						</div>
-					</div>
-					<asp:Button ID="btnImagePost" ClientIDMode="Static" runat="server" CssClass="btn btn-primary btn-block" Text="Post" OnClick="Button1_Click" />
-					<asp:Button id="btnPost" ClientIDMode="Static" runat="server" OnClick="btnSubmit_Click" CssClass="btn btn-primary btn-block" Text="Post" />
-				</div>
-			</div>
-		</div>
-		<input type="hidden" ClientIDMode="Static" id="postURLTitle" runat="server" />
-		<input type="hidden" ClientIDMode="Static" id="postURLDescription" runat="server" />
-		<input type="hidden" ClientIDMode="Static" id="postURLImage" runat="server" />
-		<input type="hidden" ClientIDMode="Static" id="postURL" runat="server" />
-		<input type="hidden" ClientIDMode="Static" id="postTypeId" runat="server" />
-	</div>
+
+
+
+
+
+                                <%--                                <div class="social-details-social-counts social-details-social-counts--no-vertical-padding">
+                                    <div class="display-flex flex-grow-1 full-width">
+                                        <div class="relative full-width">
+                                            <ul class="display-flex flex-wrap">
+                                                <li class="social-details-social-counts__item social-details-social-counts__reactions
+                  social-details-social-counts__reactions--left-aligned
+                  social-details-social-counts__item--height-two-x
+                  ">
+                                                    <button data-reaction-details="" aria-label="3,371 reactions" class="t-black--light display-flex align-items-center social-details-social-counts__count-value social-details-social-counts__count-value-hover
+                    text-body-small
+                    hoverable-link-text
+                    "
+                                                        type="button">
+                                                        <img class="reactions-icon social-detail-social-counts__count-icon social-detail-social-counts__count-icon--0 reactions-icon__consumption--small data-test-reactions-icon-type-LIKE data-test-reactions-icon-theme-light" src="https://static.licdn.com/aero-v1/sc/h/8ekq8gho1ruaf8i7f86vd1ftt" alt="like" data-test-reactions-icon-type="LIKE" data-test-reactions-icon-theme="light" data-test-reactions-icon-style="consumption" data-test-reactions-icon-size="small">
+
+                                                        <img class="reactions-icon social-detail-social-counts__count-icon social-detail-social-counts__count-icon--1 reactions-icon__consumption--small reactions-icon--stacked data-test-reactions-icon-type-EMPATHY data-test-reactions-icon-theme-light" src="https://static.licdn.com/aero-v1/sc/h/cpho5fghnpme8epox8rdcds22" alt="love" data-test-reactions-icon-type="EMPATHY" data-test-reactions-icon-theme="light" data-test-reactions-icon-style="consumption" data-test-reactions-icon-size="small">
+
+                                                        <img class="reactions-icon social-detail-social-counts__count-icon social-detail-social-counts__count-icon--2 reactions-icon__consumption--small reactions-icon--stacked data-test-reactions-icon-type-ENTERTAINMENT data-test-reactions-icon-theme-light" src="https://static.licdn.com/aero-v1/sc/h/41j9d0423ck1snej32brbuuwg" alt="funny" data-test-reactions-icon-type="ENTERTAINMENT" data-test-reactions-icon-theme="light" data-test-reactions-icon-style="consumption" data-test-reactions-icon-size="small">
+                                                        <span class="social-details-social-counts__social-proof-container">
+                                                            <span aria-hidden="true" data-social-proof-fallback="" class="social-details-social-counts__social-proof-fallback-number">3,372</span>
+                                                            <span class="social-details-social-counts__social-proof-text">Shella Idrees and 3,371 others
+                      </span>
+                                                        </span>
+                                                    </button>
+                                                </li>
+
+                                                <li data-non-reaction-details="" class="display-flex flex-grow-1 max-full-width">
+                                                    <ul class="display-flex flex-grow-1 max-full-width">
+                                                        <li class="social-details-social-counts__item social-details-social-counts__comments
+                        social-details-social-counts__item--right-aligned
+                        social-details-social-counts__item--height-two-x
+                        ">
+                                                            <button aria-label="671 comments" class="t-black--light social-details-social-counts__count-value social-details-social-counts__count-value-hover
+                            text-body-small
+                            hoverable-link-text
+                            social-details-social-counts__btn
+                            "
+                                                                type="button">
+                                                                <span aria-hidden="true">671 comments
+                          </span>
+                                                            </button>
+                                                        </li>
+
+                                                        <li class="social-details-social-counts__item
+                        social-details-social-counts__item--right-aligned
+                        social-details-social-counts__item--height-two-x flex-shrink-1 overflow-hidden
+                        ">
+                                                            <button id="ember583" class="ember-view t-black--light social-details-social-counts__count-value-hover
+                            text-body-small
+                            social-details-social-counts__item--truncate-text
+                            hoverable-link-text social-details-social-counts__btn
+                            full-width
+                            "
+                                                                aria-label="339 reposts">
+                                                                <span aria-hidden="true">339 reposts
+                          </span>
+                                                            </button>
+                                                        </li>
+
+                                                        <!---->
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>--%>
+
+
+                                <div class="row" style="margin: -5px 5px -18px 5px">
+                                    <span>
+                                        <asp:Literal ID="litReactionCount" runat="server"></asp:Literal></span>
+                                    <span style="float: right">100 comments</span>
+                                </div>
+
+                                <hr />
+
+                                <div class="row">
+                                    <div class="col-xs-3 post-type-div thankButton text-muted" data-item-id='<%# Eval("postId") %>'>
+                                        <%--<i class="fa fa-thumbs-up m-r-sm"></i>Thank--%>
+                                        <asp:Literal ID="litReactionTitle" runat="server"></asp:Literal>
+                                    </div>
+                                    <div class="col-xs-3 post-type-div" id="commentButton"><i class="fa fa-sticky-note m-r-sm nowrap"></i>Comment</div>
+                                    <div class="col-xs-3 post-type-div" id="helpButton"><i class="fa fa-users m-r-sm"></i>Help</div>
+                                    <div class="col-xs-3 post-type-div" id="giveButton"><i class="fa fa-money m-r-sm"></i>Give</div>
+                                </div>
+                            </div>
+                        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+
+                <div class="thankTooltip" id="thankTooltip">
+                    <asp:PlaceHolder ID="PostReactionTypesId" runat="server"></asp:PlaceHolder>
+                    <%-- <span id="463BE049-A178-4327-948C-EB3E3E7DCE73" class="large-icon thanksReaction" data-toggle="tooltip" data-placement="top" title="Thank">&#128591;</span>
+                    <!-- Thank -->
+                    <span id="B247EFE7-3DA7-44FA-9452-A331F71D337F" class="large-icon text-danger thanksReaction" data-toggle="tooltip" data-placement="top" title="Love">&#10084;</span>
+                    <!-- Love -->
+                    <span id="8FE324D4-3694-4B7D-B710-DF277C74B1C4" class="large-icon bold-purple-star thanksReaction" data-toggle="tooltip" data-placement="top" title="Bump">&#128171;</span>
+                    <!-- Bump -->
+                    <span id="6528BBD7-501B-475B-A15F-520BB0A3FFBF" class="large-icon thanksReaction" data-toggle="tooltip" data-placement="top" title="Be Strong">&#128074;</span>
+                    <!-- Connect -->
+                    <span id="43142E57-F55B-4C8D-B024-84E0E5C664E9" class="large-icon thanksReaction" data-toggle="tooltip" data-placement="top" title="Wow">&#128558;</span>
+                    <!-- Be Strong -->--%>
+                </div>
+                <div id="currentSelectedPost" val="" class="hidden"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="newPost" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <center>
+                        <h4>Create post</h4>
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal" id="buttonCancel">Cancel</button>
+                    </center>
+                    <b>
+                        <asp:Literal ID="litFullName" runat="server"></asp:Literal>
+                    </b>
+                    <select name="account" id="AudienceType" runat="server" clientidmode="static">
+                        <%--<option style="font-size:13px;" value="FA66D7CD-4B31-4A52-B15B-4E76FD2030C2"> Public</option>
+			                <option style="font-size:13px;" value="3499A4F5-08AE-4869-9DAC-8B2BE4E3B206"> Friends</option>
+			                <option style="font-size:13px;" value="6EB17B41-1FCC-4739-BB09-94AE7044A1F9"> My Team</option>
+			                <option style="font-size:13px;" value="82D78B09-A57B-4674-A14E-CD3EECBB6650"> Only Me</option>--%>
+                    </select>
+                </div>
+                <div class="modal-body">
+                    <div class="textPost">
+                        <textarea id="postInput" clientidmode="Static" runat="server" style="resize: none;" name="post" rows="1" placeholder="Create A Post"></textarea>
+                        <asp:Label ID="StatusLabel" runat="server" Text=""></asp:Label>
+                        <div id="postContent"></div>
+                        <div class="upload-div" id="thumbnails"></div>
+                    </div>
+                    <div class="imagePost centered-image-div" onclick="triggerFileUpload();">
+                        Add Photos
+                    </div>
+                    <asp:FileUpload ID="FileUpload1" ClientIDMode="Static" name="files" multiple="multiple" runat="server" Style="display: none;" />
+                    <input type="file" id="fileInput" clientidmode="Static" accept="image/*" name="files" multiple="multiple" style="display: none;" runat="server" />
+                </div>
+                <div class="modal-footer">
+                    <div class="postType">
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div id="postTypeTextDiv" class="col-lg-3 post-type-div"><i class="fa fa-align-left m-r-sm"></i>TEXT</div>
+                            <div id="postTypeImageDiv" class="col-lg-3 post-type-div"><i class="fa fa-image m-r-sm"></i>PHOTO</div>
+                            <div class="col-lg-3"></div>
+                        </div>
+                    </div>
+                    <asp:Button ID="btnImagePost" ClientIDMode="Static" runat="server" CssClass="btn btn-primary btn-block" Text="Post" OnClick="Button1_Click" />
+                    <asp:Button ID="btnPost" ClientIDMode="Static" runat="server" OnClick="btnSubmit_Click" CssClass="btn btn-primary btn-block" Text="Post" />
+                </div>
+            </div>
+        </div>
+        <input type="hidden" clientidmode="Static" id="postURLTitle" runat="server" />
+        <input type="hidden" clientidmode="Static" id="postURLDescription" runat="server" />
+        <input type="hidden" clientidmode="Static" id="postURLImage" runat="server" />
+        <input type="hidden" clientidmode="Static" id="postURL" runat="server" />
+        <input type="hidden" clientidmode="Static" id="postTypeId" runat="server" />
+    </div>
 </asp:Content>
