@@ -1504,6 +1504,7 @@
       <Association Name="Organization_OrganizationEvent" Member="OrganizationEvents" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationEvent" />
       <Association Name="Organization_OrganizationCase" Member="OrganizationCases" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationCase" />
       <Association Name="Organization_Position" Member="Positions" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Position" />
+      <Association Name="Organization_PaymentConfiguration" Member="PaymentConfigurations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="PaymentConfiguration" />
       <Association Name="aspnet_User_Organization" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="aspnet_User_Organization1" Member="aspnet_User1" ThisKey="OwnerId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
@@ -1954,6 +1955,23 @@
       <Column Name="Title" Type="System.String" DbType="VarChar(5000)" CanBeNull="true" />
       <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Association Name="VideoLink_ProgramVideoLink" Member="ProgramVideoLinks" ThisKey="VideoLinkId" OtherKey="VideoLinkId" Type="ProgramVideoLink" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PaymentConfigurations" Member="PaymentConfigurations">
+    <Type Name="PaymentConfiguration">
+      <Column Name="PaymentConfigurationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="PayPal" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Venmo" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="CashApp" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="Summary" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="UpdatedBy" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="ShowDonationButton" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="Organization_PaymentConfiguration" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">
