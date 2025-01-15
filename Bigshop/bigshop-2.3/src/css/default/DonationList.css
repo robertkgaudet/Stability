@@ -1,0 +1,111 @@
+﻿.form-control {
+    margin-bottom: 20px;
+}
+
+.donor-name-cell {
+    color: #337ab7;
+}
+
+.date-of-donation-cell {
+    color: #337ab7;
+}
+
+.btn-pdf {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 20px;
+}
+
+    .btn-pdf:hover {
+        background-color: #45a049;
+    }
+
+.btn-csv {
+    border: none;
+    background-color: #f39c12;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+    .btn-csv:hover {
+        background-color: #e67e22;
+    }
+
+.form-control {
+    margin-bottom: 20px;
+}
+
+
+.table td, .table th {
+    padding: 15px !important;
+}
+
+.pager {
+    text-align: right;
+    margin-top: 10px;
+}
+
+    .pager a, .pager span {
+        display: inline-block;
+        padding: 4px 8px;
+        margin: -13px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #007bff;
+        background-color: #f9f9f9;
+    }
+
+        .pager a:hover {
+            background-color: #e9ecef;
+            border-color: #007bff;
+        }
+
+    .pager .selected {
+        font-weight: bold;
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.search-btn {
+    background-color: #007bff !important;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .search-btn:hover {
+        background-color: #45a049;
+    }
+
+.clear-btn {
+    background-color: #6c757d !important;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .clear-btn:hover {
+        background-color: #e53935;
+    }
