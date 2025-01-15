@@ -268,6 +268,7 @@
       <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="Hidden" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="BasicNeedsCampaign_Donation" Member="Donations" ThisKey="BasicNeedsCampaignId" OtherKey="CampaignId" Type="Donation" />
       <Association Name="BasicNeedsSurvey_BasicNeedsCampaign" Member="BasicNeedsSurvey" ThisKey="BasicNeedsSurveyId" OtherKey="SurveyId" Type="BasicNeedsSurvey" IsForeignKey="true" />
     </Type>
   </Table>
@@ -500,6 +501,7 @@
       <Column Name="ItemId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="SurveyId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="Count" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="BasicNeedsSurveyItem_Donation" Member="Donations" ThisKey="BasicSurveyItemId" OtherKey="BasicNeedsSurveyItemId" Type="Donation" />
       <Association Name="Item_BasicNeedsSurveyItem" Member="Item" ThisKey="ItemId" OtherKey="ItemId" Type="Item" IsForeignKey="true" />
       <Association Name="BasicNeedsSurvey_BasicNeedsSurveyItem" Member="BasicNeedsSurvey" ThisKey="SurveyId" OtherKey="SurveyId" Type="BasicNeedsSurvey" IsForeignKey="true" />
     </Type>
@@ -1954,6 +1956,29 @@
       <Column Name="Title" Type="System.String" DbType="VarChar(5000)" CanBeNull="true" />
       <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Association Name="VideoLink_ProgramVideoLink" Member="ProgramVideoLinks" ThisKey="VideoLinkId" OtherKey="VideoLinkId" Type="ProgramVideoLink" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Donation" Member="Donations">
+    <Type Name="Donation">
+      <Column Name="DonationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Amount" Type="System.Decimal" DbType="Decimal(18,2) NOT NULL" CanBeNull="false" />
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="EmailAddress" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="CampaignId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="BasicNeedsSurveyItemId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="TransactionId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="OrderId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="AuthorizedTransactionId" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="SettlementBatchId" Type="System.String" DbType="NChar(10)" CanBeNull="true" />
+      <Column Name="IsTest" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedAt" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="ItemCostEach" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="ItemCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="BasicNeedsCampaign_Donation" Member="BasicNeedsCampaign" ThisKey="CampaignId" OtherKey="BasicNeedsCampaignId" Type="BasicNeedsCampaign" IsForeignKey="true" />
+      <Association Name="BasicNeedsSurveyItem_Donation" Member="BasicNeedsSurveyItem" ThisKey="BasicNeedsSurveyItemId" OtherKey="BasicSurveyItemId" Type="BasicNeedsSurveyItem" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">
