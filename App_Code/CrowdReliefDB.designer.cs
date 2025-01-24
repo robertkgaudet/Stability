@@ -410,15 +410,15 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertVideoLink(VideoLink instance);
   partial void UpdateVideoLink(VideoLink instance);
   partial void DeleteVideoLink(VideoLink instance);
-  partial void InsertPaymentConfiguration(PaymentConfiguration instance);
-  partial void UpdatePaymentConfiguration(PaymentConfiguration instance);
-  partial void DeletePaymentConfiguration(PaymentConfiguration instance);
   partial void InsertDonation(Donation instance);
   partial void UpdateDonation(Donation instance);
   partial void DeleteDonation(Donation instance);
   partial void InsertDonationCampaign(DonationCampaign instance);
   partial void UpdateDonationCampaign(DonationCampaign instance);
   partial void DeleteDonationCampaign(DonationCampaign instance);
+  partial void InsertPaymentConfiguration(PaymentConfiguration instance);
+  partial void UpdatePaymentConfiguration(PaymentConfiguration instance);
+  partial void DeletePaymentConfiguration(PaymentConfiguration instance);
     #endregion
 
     public CrowdReliefDBDataContext() :
@@ -1461,14 +1461,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		}
 	}
 	
-	public System.Data.Linq.Table<PaymentConfiguration> PaymentConfigurations
-	{
-		get
-		{
-			return this.GetTable<PaymentConfiguration>();
-		}
-	}
-	
 	public System.Data.Linq.Table<Donation> Donations
 	{
 		get
@@ -1482,6 +1474,14 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<DonationCampaign>();
+		}
+	}
+	
+	public System.Data.Linq.Table<PaymentConfiguration> PaymentConfigurations
+	{
+		get
+		{
+			return this.GetTable<PaymentConfiguration>();
 		}
 	}
 	
@@ -45653,373 +45653,6 @@ public partial class VideoLink : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PaymentConfigurations")]
-public partial class PaymentConfiguration : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _PaymentConfigurationId;
-	
-	private string _PayPal;
-	
-	private string _Venmo;
-	
-	private string _CashApp;
-	
-	private string _Summary;
-	
-	private string _Address;
-	
-	private System.Nullable<System.DateTime> _CreatedOn;
-	
-	private System.Nullable<System.DateTime> _UpdatedOn;
-	
-	private string _CreatedBy;
-	
-	private string _UpdatedBy;
-	
-	private System.Nullable<System.Guid> _OrganizationId;
-	
-	private System.Nullable<bool> _ShowDonationButton;
-	
-	private EntityRef<Organization> _Organization;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnPaymentConfigurationIdChanging(System.Guid value);
-    partial void OnPaymentConfigurationIdChanged();
-    partial void OnPayPalChanging(string value);
-    partial void OnPayPalChanged();
-    partial void OnVenmoChanging(string value);
-    partial void OnVenmoChanged();
-    partial void OnCashAppChanging(string value);
-    partial void OnCashAppChanged();
-    partial void OnSummaryChanging(string value);
-    partial void OnSummaryChanged();
-    partial void OnAddressChanging(string value);
-    partial void OnAddressChanged();
-    partial void OnCreatedOnChanging(System.Nullable<System.DateTime> value);
-    partial void OnCreatedOnChanged();
-    partial void OnUpdatedOnChanging(System.Nullable<System.DateTime> value);
-    partial void OnUpdatedOnChanged();
-    partial void OnCreatedByChanging(string value);
-    partial void OnCreatedByChanged();
-    partial void OnUpdatedByChanging(string value);
-    partial void OnUpdatedByChanged();
-    partial void OnOrganizationIdChanging(System.Nullable<System.Guid> value);
-    partial void OnOrganizationIdChanged();
-    partial void OnShowDonationButtonChanging(System.Nullable<bool> value);
-    partial void OnShowDonationButtonChanged();
-    #endregion
-	
-	public PaymentConfiguration()
-	{
-		this._Organization = default(EntityRef<Organization>);
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PaymentConfigurationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid PaymentConfigurationId
-	{
-		get
-		{
-			return this._PaymentConfigurationId;
-		}
-		set
-		{
-			if ((this._PaymentConfigurationId != value))
-			{
-				this.OnPaymentConfigurationIdChanging(value);
-				this.SendPropertyChanging();
-				this._PaymentConfigurationId = value;
-				this.SendPropertyChanged("PaymentConfigurationId");
-				this.OnPaymentConfigurationIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PayPal", DbType="VarChar(255)")]
-	public string PayPal
-	{
-		get
-		{
-			return this._PayPal;
-		}
-		set
-		{
-			if ((this._PayPal != value))
-			{
-				this.OnPayPalChanging(value);
-				this.SendPropertyChanging();
-				this._PayPal = value;
-				this.SendPropertyChanged("PayPal");
-				this.OnPayPalChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Venmo", DbType="VarChar(255)")]
-	public string Venmo
-	{
-		get
-		{
-			return this._Venmo;
-		}
-		set
-		{
-			if ((this._Venmo != value))
-			{
-				this.OnVenmoChanging(value);
-				this.SendPropertyChanging();
-				this._Venmo = value;
-				this.SendPropertyChanged("Venmo");
-				this.OnVenmoChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CashApp", DbType="VarChar(255)")]
-	public string CashApp
-	{
-		get
-		{
-			return this._CashApp;
-		}
-		set
-		{
-			if ((this._CashApp != value))
-			{
-				this.OnCashAppChanging(value);
-				this.SendPropertyChanging();
-				this._CashApp = value;
-				this.SendPropertyChanged("CashApp");
-				this.OnCashAppChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Summary", DbType="NVarChar(MAX)")]
-	public string Summary
-	{
-		get
-		{
-			return this._Summary;
-		}
-		set
-		{
-			if ((this._Summary != value))
-			{
-				this.OnSummaryChanging(value);
-				this.SendPropertyChanging();
-				this._Summary = value;
-				this.SendPropertyChanged("Summary");
-				this.OnSummaryChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="NVarChar(MAX)")]
-	public string Address
-	{
-		get
-		{
-			return this._Address;
-		}
-		set
-		{
-			if ((this._Address != value))
-			{
-				this.OnAddressChanging(value);
-				this.SendPropertyChanging();
-				this._Address = value;
-				this.SendPropertyChanged("Address");
-				this.OnAddressChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime")]
-	public System.Nullable<System.DateTime> CreatedOn
-	{
-		get
-		{
-			return this._CreatedOn;
-		}
-		set
-		{
-			if ((this._CreatedOn != value))
-			{
-				this.OnCreatedOnChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedOn = value;
-				this.SendPropertyChanged("CreatedOn");
-				this.OnCreatedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedOn", DbType="DateTime")]
-	public System.Nullable<System.DateTime> UpdatedOn
-	{
-		get
-		{
-			return this._UpdatedOn;
-		}
-		set
-		{
-			if ((this._UpdatedOn != value))
-			{
-				this.OnUpdatedOnChanging(value);
-				this.SendPropertyChanging();
-				this._UpdatedOn = value;
-				this.SendPropertyChanged("UpdatedOn");
-				this.OnUpdatedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="VarChar(255)")]
-	public string CreatedBy
-	{
-		get
-		{
-			return this._CreatedBy;
-		}
-		set
-		{
-			if ((this._CreatedBy != value))
-			{
-				this.OnCreatedByChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedBy = value;
-				this.SendPropertyChanged("CreatedBy");
-				this.OnCreatedByChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedBy", DbType="VarChar(255)")]
-	public string UpdatedBy
-	{
-		get
-		{
-			return this._UpdatedBy;
-		}
-		set
-		{
-			if ((this._UpdatedBy != value))
-			{
-				this.OnUpdatedByChanging(value);
-				this.SendPropertyChanging();
-				this._UpdatedBy = value;
-				this.SendPropertyChanged("UpdatedBy");
-				this.OnUpdatedByChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> OrganizationId
-	{
-		get
-		{
-			return this._OrganizationId;
-		}
-		set
-		{
-			if ((this._OrganizationId != value))
-			{
-				if (this._Organization.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnOrganizationIdChanging(value);
-				this.SendPropertyChanging();
-				this._OrganizationId = value;
-				this.SendPropertyChanged("OrganizationId");
-				this.OnOrganizationIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowDonationButton", DbType="Bit")]
-	public System.Nullable<bool> ShowDonationButton
-	{
-		get
-		{
-			return this._ShowDonationButton;
-		}
-		set
-		{
-			if ((this._ShowDonationButton != value))
-			{
-				this.OnShowDonationButtonChanging(value);
-				this.SendPropertyChanging();
-				this._ShowDonationButton = value;
-				this.SendPropertyChanged("ShowDonationButton");
-				this.OnShowDonationButtonChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_PaymentConfiguration", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
-	public Organization Organization
-	{
-		get
-		{
-			return this._Organization.Entity;
-		}
-		set
-		{
-			Organization previousValue = this._Organization.Entity;
-			if (((previousValue != value) 
-						|| (this._Organization.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Organization.Entity = null;
-					previousValue.PaymentConfigurations.Remove(this);
-				}
-				this._Organization.Entity = value;
-				if ((value != null))
-				{
-					value.PaymentConfigurations.Add(this);
-					this._OrganizationId = value.OrganizationId;
-				}
-				else
-				{
-					this._OrganizationId = default(Nullable<System.Guid>);
-				}
-				this.SendPropertyChanged("Organization");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-}
-
 [global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Donation")]
 public partial class Donation : INotifyPropertyChanging, INotifyPropertyChanged
 {
@@ -46638,7 +46271,7 @@ public partial class DonationCampaign : INotifyPropertyChanging, INotifyProperty
 	
 	private string _Description;
 	
-	private bool _IsDefault;
+	private System.Nullable<bool> _IsDefault;
 	
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -46786,7 +46419,7 @@ public partial class DonationCampaign : INotifyPropertyChanging, INotifyProperty
 	}
 	
 	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDefault", DbType="Bit")]
-	public bool IsDefault
+	public System.Nullable<bool> IsDefault
 	{
 		get
 		{
@@ -46801,6 +46434,373 @@ public partial class DonationCampaign : INotifyPropertyChanging, INotifyProperty
 				this._IsDefault = value;
 				this.SendPropertyChanged("IsDefault");
 				this.OnIsDefaultChanged();
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PaymentConfiguration")]
+public partial class PaymentConfiguration : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _PaymentConfigurationId;
+	
+	private string _PayPal;
+	
+	private string _Venmo;
+	
+	private string _CashApp;
+	
+	private string _Summary;
+	
+	private string _Address;
+	
+	private System.Nullable<System.DateTime> _CreatedOn;
+	
+	private System.Nullable<System.DateTime> _UpdatedOn;
+	
+	private string _CreatedBy;
+	
+	private string _UpdatedBy;
+	
+	private System.Nullable<System.Guid> _OrganizationId;
+	
+	private System.Nullable<bool> _ShowDonationButton;
+	
+	private EntityRef<Organization> _Organization;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPaymentConfigurationIdChanging(System.Guid value);
+    partial void OnPaymentConfigurationIdChanged();
+    partial void OnPayPalChanging(string value);
+    partial void OnPayPalChanged();
+    partial void OnVenmoChanging(string value);
+    partial void OnVenmoChanged();
+    partial void OnCashAppChanging(string value);
+    partial void OnCashAppChanged();
+    partial void OnSummaryChanging(string value);
+    partial void OnSummaryChanged();
+    partial void OnAddressChanging(string value);
+    partial void OnAddressChanged();
+    partial void OnCreatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnCreatedOnChanged();
+    partial void OnUpdatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnUpdatedOnChanged();
+    partial void OnCreatedByChanging(string value);
+    partial void OnCreatedByChanged();
+    partial void OnUpdatedByChanging(string value);
+    partial void OnUpdatedByChanged();
+    partial void OnOrganizationIdChanging(System.Nullable<System.Guid> value);
+    partial void OnOrganizationIdChanged();
+    partial void OnShowDonationButtonChanging(System.Nullable<bool> value);
+    partial void OnShowDonationButtonChanged();
+    #endregion
+	
+	public PaymentConfiguration()
+	{
+		this._Organization = default(EntityRef<Organization>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PaymentConfigurationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid PaymentConfigurationId
+	{
+		get
+		{
+			return this._PaymentConfigurationId;
+		}
+		set
+		{
+			if ((this._PaymentConfigurationId != value))
+			{
+				this.OnPaymentConfigurationIdChanging(value);
+				this.SendPropertyChanging();
+				this._PaymentConfigurationId = value;
+				this.SendPropertyChanged("PaymentConfigurationId");
+				this.OnPaymentConfigurationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PayPal", DbType="VarChar(255)")]
+	public string PayPal
+	{
+		get
+		{
+			return this._PayPal;
+		}
+		set
+		{
+			if ((this._PayPal != value))
+			{
+				this.OnPayPalChanging(value);
+				this.SendPropertyChanging();
+				this._PayPal = value;
+				this.SendPropertyChanged("PayPal");
+				this.OnPayPalChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Venmo", DbType="VarChar(255)")]
+	public string Venmo
+	{
+		get
+		{
+			return this._Venmo;
+		}
+		set
+		{
+			if ((this._Venmo != value))
+			{
+				this.OnVenmoChanging(value);
+				this.SendPropertyChanging();
+				this._Venmo = value;
+				this.SendPropertyChanged("Venmo");
+				this.OnVenmoChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CashApp", DbType="VarChar(255)")]
+	public string CashApp
+	{
+		get
+		{
+			return this._CashApp;
+		}
+		set
+		{
+			if ((this._CashApp != value))
+			{
+				this.OnCashAppChanging(value);
+				this.SendPropertyChanging();
+				this._CashApp = value;
+				this.SendPropertyChanged("CashApp");
+				this.OnCashAppChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Summary", DbType="NVarChar(MAX)")]
+	public string Summary
+	{
+		get
+		{
+			return this._Summary;
+		}
+		set
+		{
+			if ((this._Summary != value))
+			{
+				this.OnSummaryChanging(value);
+				this.SendPropertyChanging();
+				this._Summary = value;
+				this.SendPropertyChanged("Summary");
+				this.OnSummaryChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="NVarChar(MAX)")]
+	public string Address
+	{
+		get
+		{
+			return this._Address;
+		}
+		set
+		{
+			if ((this._Address != value))
+			{
+				this.OnAddressChanging(value);
+				this.SendPropertyChanging();
+				this._Address = value;
+				this.SendPropertyChanged("Address");
+				this.OnAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> UpdatedOn
+	{
+		get
+		{
+			return this._UpdatedOn;
+		}
+		set
+		{
+			if ((this._UpdatedOn != value))
+			{
+				this.OnUpdatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedOn = value;
+				this.SendPropertyChanged("UpdatedOn");
+				this.OnUpdatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="VarChar(255)")]
+	public string CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedBy", DbType="VarChar(255)")]
+	public string UpdatedBy
+	{
+		get
+		{
+			return this._UpdatedBy;
+		}
+		set
+		{
+			if ((this._UpdatedBy != value))
+			{
+				this.OnUpdatedByChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedBy = value;
+				this.SendPropertyChanged("UpdatedBy");
+				this.OnUpdatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				if (this._Organization.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowDonationButton", DbType="Bit")]
+	public System.Nullable<bool> ShowDonationButton
+	{
+		get
+		{
+			return this._ShowDonationButton;
+		}
+		set
+		{
+			if ((this._ShowDonationButton != value))
+			{
+				this.OnShowDonationButtonChanging(value);
+				this.SendPropertyChanging();
+				this._ShowDonationButton = value;
+				this.SendPropertyChanged("ShowDonationButton");
+				this.OnShowDonationButtonChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_PaymentConfiguration", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
+	public Organization Organization
+	{
+		get
+		{
+			return this._Organization.Entity;
+		}
+		set
+		{
+			Organization previousValue = this._Organization.Entity;
+			if (((previousValue != value) 
+						|| (this._Organization.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Organization.Entity = null;
+					previousValue.PaymentConfigurations.Remove(this);
+				}
+				this._Organization.Entity = value;
+				if ((value != null))
+				{
+					value.PaymentConfigurations.Add(this);
+					this._OrganizationId = value.OrganizationId;
+				}
+				else
+				{
+					this._OrganizationId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("Organization");
 			}
 		}
 	}
