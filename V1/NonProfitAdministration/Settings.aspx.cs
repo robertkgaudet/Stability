@@ -136,11 +136,11 @@ public partial class V1_NonProfit_Settings : BaseWebForm
 
         if (!string.IsNullOrEmpty(organizationId))
         {
-            Response.Redirect("~/V1/NonProfit/AddEditPaymentConfig.aspx?organizationId=" + organizationId);
+            Response.Redirect("~/V1/NonProfit/AddEditTransactionConfigSetting.aspx?organizationId=" + organizationId);
         }
         else
         {
-            Response.Redirect("~/V1/NonProfit/AddEditPaymentConfig.aspx");
+            Response.Redirect("~/V1/NonProfit/AddEditTransactionConfigSetting.aspx");
         }
     }
 }
