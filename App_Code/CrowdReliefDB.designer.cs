@@ -46620,7 +46620,7 @@ public partial class Donation : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.DonationCampaigns")]
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.DonationCampaign")]
 public partial class DonationCampaign : INotifyPropertyChanging, INotifyPropertyChanged
 {
 	

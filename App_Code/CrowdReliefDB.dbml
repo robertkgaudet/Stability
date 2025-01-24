@@ -2002,7 +2002,7 @@
       <Association Name="BasicNeedsSurveyItem_Donation" Member="BasicNeedsSurveyItem" ThisKey="BasicNeedsSurveyItemId" OtherKey="BasicSurveyItemId" Type="BasicNeedsSurveyItem" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.DonationCampaigns" Member="DonationCampaigns">
+  <Table Name="dbo.DonationCampaign" Member="DonationCampaigns">
     <Type Name="DonationCampaign">
       <Column Name="DonationCampaignId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="OrganizationEventId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
