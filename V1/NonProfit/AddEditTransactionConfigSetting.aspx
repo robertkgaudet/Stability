@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/Homer/vendor/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" />
+   
+
     <script>
         $(function () {
             $('#<%=txtPaymentSummary.ClientID%>').summernote({
@@ -48,40 +50,7 @@
         }
     </script>
     <style>
-        .i-checks {
-            margin-right: 10px !important;
-        }
-
-        .save-btn {
-            background-color: #269abc;
-            color: white;
-            border: none;
-            padding: 2px 12px;
-            font-size: 15px;
-        }
-
-        .compaign-btn {
-            background-color: #269abc;
-            color: white;
-            margin: 10px;
-            border: none;
-            padding: 4px 6px;
-            font-size: 16px;
-        }
-
-        .hidden-text {
-            visibility: hidden;
-        }
-
-        .fieldset-container {
-            margin-bottom: 10px;
-            margin-top: 25px;
-        }
-
-        .modal-fullscreen {
-            width: 50%;
-            height: 100vh;
-        }
+        
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -89,7 +58,7 @@
         <h2 class="font-light m-b-xs">Edit Payment Configurations</h2>
         <!-- Save Button -->
         <div class="col-12" style="display: flex; justify-content: end;">
-            <asp:Button type="submit" class="save-btn" runat="server" Text="Save" OnClick="btnSelectPayment_Click" />
+            <asp:Button type="submit" class="save-btn" runat="server" CssClass="btn btn-primary" Text="Save" OnClick="PaymentConfigration_Click" />
         </div>
         <div class="form-group"></div>
     </div>
@@ -126,20 +95,19 @@
                     </div>
                 </div>
                 <div class="col-12" style="display: flex; justify-content: end;">
-                    <asp:Button type="button" class="compaign-btn" runat="server" Text="Add New Campaign" OnClientClick="showModal('Add New Campaign'); return false;" />
+                    <asp:Button type="button" class="compaign-btn" runat="server" Text="Add New Campaign" CssClass="btn btn-primary" OnClientClick="showModal('Add New Campaign' ); return false;" />
                 </div>
-                <asp:GridView ID="gvDonationCampaigns" runat="server" AutoGenerateColumns="False" DataKeyNames="DonationCampaignId" OnRowCommand="gvCampaigns_RowCommand"  CssClass="table table-bordered">
+                <asp:GridView ID="gvDonationCampaigns" runat="server" AutoGenerateColumns="False" DataKeyNames="DonationCampaignId" OnRowCommand="gvCampaigns_RowCommand" CssClass="table table-bordered">
 
                     <Columns>
-                         <asp:BoundField DataField="DonationCampaignId" HeaderText="Campaign ID" Visible="False" />
-                        <asp:BoundField DataField="OrganizationEventName" HeaderText="Deployment" />                        
+                        <asp:BoundField DataField="DonationCampaignId" HeaderText="Campaign ID" Visible="False" />
+                        <asp:BoundField DataField="OrganizationEventName" HeaderText="Deployment" />
                         <asp:BoundField DataField="Amount" HeaderText="Amount" DataFormatString="${0:N2}" HtmlEncode="False" />
                         <asp:TemplateField HeaderText="Default?">
                             <ItemTemplate><%# Convert.ToBoolean(Eval("IsDefault")) ? "True" : "False" %>     </ItemTemplate>
                         </asp:TemplateField>
-                 
-                          <asp:ButtonField CommandName="EditRow" Text="Edit" ButtonType="Button"  />
-                          <asp:ButtonField CommandName="DeleteRow" Text="Delete" ButtonType="Button"  />
+                        <asp:ButtonField CommandName="EditRow" Text="Edit"  ButtonType="Button"   /> 
+                        <asp:ButtonField CommandName="DeleteRow" Text="Delete" ButtonType="Button"  />
                     </Columns>
                 </asp:GridView>
                 <div id="campaignModal" class="modal fade" tabindex="-1" role="dialog">
@@ -152,7 +120,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Deployment</label>
                                     <div class="col-sm-8">
-                                        <asp:DropDownList ID="ddlOrganizationEvent" runat="server" class="form-control" >
+                                        <asp:DropDownList ID="ddlOrganizationEvent" runat="server" class="form-control">
                                             <asp:ListItem Text="Select Deployment" Value="" />
                                         </asp:DropDownList>
                                     </div>
@@ -192,52 +160,57 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Campaign" OnClick="saveCampaign" />
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <asp:Button type="submit" class="btn btn-primary" runat="server"  Text="Save Campaign" OnClick="SaveCampaign" />
+                                <%--        <button type="button" class="btn btn-secondary" data-dismiss="modal">close</button>   --%>
+                                <asp:Button
+                                    ID="btnClose"
+                                    runat="server"
+                                    Text="Close"
+                                    CssClass="btn btn-secondary"
+                                    OnClick="btnClose_Click" />
+
                             </div>
                         </div>
                     </div>
                 </div>
                 <div id="deleteCampaignModal" class="modal fade" tabindex="-1" role="dialog">
-             <div class="modal-dialog" role="document">
-             <div class="modal-content">
-               <div class="modal-header">
-                <h5 class="modal-title text-center">Delete Campaign</h5>
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title text-center">Delete Campaign</h5>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure want to delete this item?
+                            </div>
+                            <div class="modal-footer">
+                                <asp:Button type="submit" class="btn btn-danger" runat="server" Text="Delete" OnClick="DeleteCampaign" />
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-               <div class="modal-body">
-                   Are you sure want to delete this item?
-                </div>
-                <div class="modal-footer">
-                <asp:Button type="submit" class="btn btn-danger" runat="server" Text="Delete" OnClick="DeleteCampaign" />
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
 
             </div>
         </div>
-        <asp:HiddenField ID="hdnSelectedCampaignId" Value="" runat="server"/>
+        <asp:HiddenField ID="hdnSelectedCampaignId" Value="" runat="server" />
         <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
         <script>
             function showModal(title) {
-                setTimeout(function () {               
+                setTimeout(function () {
                     $('.modal-title').text(title);
-                    $('#campaignModal').modal('show') ;
+                    $('#campaignModal').modal('show');
                 }, 1000);
-                
+
             }
+
             function showDeleteModal() {
                 setTimeout(function () {
                     $('#deleteCampaignModal').modal('show');
                 }, 1000);
 
             }
-
-
-
         </script>
         <script>
-        </script>
+</script>
         <script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
 </asp:Content>

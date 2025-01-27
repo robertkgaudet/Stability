@@ -78,11 +78,9 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
         Donation donation = dc.Donations.Where(x => x.DonationId == new Guid(paymentIntent.Metadata.Values.FirstOrDefault().ToString())).FirstOrDefault();
         if (donation != null) 
         {
-
-            
-
-           donation.DonationStatus = (int)Tools.TransactionStatus.Succeeded;
-           dc.SubmitChanges();
+            donation.TransactionId = paymentIntent.PaymentIntentId;
+            donation.DonationStatus = (int)Tools.TransactionStatus.Succeeded;
+            dc.SubmitChanges();
 
 
             ListDictionary ldEmailBodyReplacements = new ListDictionary

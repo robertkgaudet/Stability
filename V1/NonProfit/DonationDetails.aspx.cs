@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.UI;
 using Stripe.Checkout;
 using Stripe;
+using System.Configuration;
 
 public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
 {
@@ -59,11 +60,11 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
 
                 }
             }
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "HideLoginButton", "document.getElementById('btnLogin').style.display = 'none';", true);
+            btnLogin.Visible = false;
         }
         else
         {
-            Page.ClientScript.RegisterStartupScript(this.GetType(), "ShowLoginButton", "document.getElementById('btnLogin').style.display = 'inline-block';", true);
+            btnLogin.Visible = true;
         }
         string organizationId = Request.QueryString["organizationId"];
         if (String.IsNullOrEmpty(organizationId))
@@ -82,6 +83,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
         this.publishKey.Value = System.Configuration.ConfigurationManager.AppSettings["stripePublishKey"].ToString();
         this.organizationId.Value = Request.QueryString["organizationId"].ToString();
         Guid donationCampaignId = Guid.Parse(Request.QueryString["donationCampaignId"]);
+        Session["OrderId"] = donationCampaignId;
         this.orgId = Request.QueryString["organizationId"].ToString();
         CrowdReliefDBDataContext dbContext = new CrowdReliefDBDataContext();
         DonationCampaign donationCampaign = dbContext.DonationCampaigns.Where(x => x.DonationCampaignId == donationCampaignId).FirstOrDefault();
@@ -168,8 +170,10 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                 CreatedAt = DateTime.Now,
                 BasicNeedsSurveyItemId = new Guid("7CC45EAD-7FB1-44A1-9CDA-EA76C4404102"),
                 CampaignId = new Guid("24C73ECD-9345-4CB0-8234-4D9EF5472302"),
-                //PaymentProvider = (int)Tools.TransactionType.CreditCard,
-                //DonationStatus = (int)Tools.TransactionStatus.Started
+                PaymentProvider = (int)Tools.TransactionType.CreditCard,
+                DonationStatus = (int)Tools.TransactionStatus.Started,
+                OrderId = HttpContext.Current.Session["OrderId"].ToString() ?? "",
+                IsTest = Convert.ToBoolean(ConfigurationManager.AppSettings["isTestPayment"])
             };
             dc.Donations.InsertOnSubmit(donation);
             dc.SubmitChanges();
@@ -200,7 +204,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                 },
             },
                 Mode = "payment",
-                SuccessUrl = domainUrl + "/V1/NonProfit/DonationSuccess.aspx", // Redirect after successful payment,
+                SuccessUrl = domainUrl + "/V1/NonProfit/DonationSuccess.aspx?session_id={CHECKOUT_SESSION_ID}", // Redirect after successful payment,
             };
 
             var service = new SessionService();

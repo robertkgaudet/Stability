@@ -46271,7 +46271,7 @@ public partial class DonationCampaign : INotifyPropertyChanging, INotifyProperty
 	
 	private string _Description;
 	
-	private System.Nullable<bool> _IsDefault;
+	private bool _IsDefault;
 	
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -46419,7 +46419,7 @@ public partial class DonationCampaign : INotifyPropertyChanging, INotifyProperty
 	}
 	
 	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDefault", DbType="Bit")]
-	public System.Nullable<bool> IsDefault
+	public bool IsDefault
 	{
 		get
 		{

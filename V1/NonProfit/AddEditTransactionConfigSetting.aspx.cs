@@ -67,57 +67,44 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             ddlOrganizationEvent.Items.Insert(0, new ListItem("Select Deployment", ""));
         }
     }
-    protected void btnSelectPayment_Click(object sender, EventArgs e)
+    protected void PaymentConfigration_Click(object sender, EventArgs e)
     {
-
         if (string.IsNullOrWhiteSpace(txtPayPal.Value) ||
             string.IsNullOrWhiteSpace(txtVenmo.Value) ||
             string.IsNullOrWhiteSpace(txtCashPay.Value))
         {
-            Response.Write("<script>alert('Please fill out all fields.');</script>");
-            return;
+            return; 
         }
-
-        try
+        using (var context = new CrowdReliefDBDataContext())
         {
-            using (var context = new CrowdReliefDBDataContext())
+            var paymentConfig = context.PaymentConfigurations
+                .FirstOrDefault(p => p.OrganizationId == new Guid(organizationId));
+
+            if (paymentConfig != null)
             {
-                var paymentConfig = context.PaymentConfigurations
-                    .FirstOrDefault(p => p.OrganizationId == new Guid(organizationId));
-                if (paymentConfig != null)
-                {
-                    paymentConfig.PayPal = txtPayPal.Value;
-                    paymentConfig.Venmo = txtVenmo.Value;
-                    paymentConfig.CashApp = txtCashPay.Value;
-                    paymentConfig.ShowDonationButton = chkShowDonateButton.Checked;
-
-                    context.SubmitChanges();
-                    Response.Write("<script>alert('Payment Configuration updated successfully!');</script>");
-                }
-                else
-                {
-                    var newPaymentConfig = new PaymentConfiguration
-                    {
-                        PaymentConfigurationId = Guid.NewGuid(),
-                        PayPal = txtPayPal.Value,
-                        Venmo = txtVenmo.Value,
-                        CashApp = txtCashPay.Value,
-                        OrganizationId = new Guid(organizationId),
-                        ShowDonationButton = chkShowDonateButton.Checked
-                    };
-
-                    context.PaymentConfigurations.InsertOnSubmit(newPaymentConfig);
-                    context.SubmitChanges();
-                    Response.Write("<script>alert('Payment Configuration saved successfully!');</script>");
-                }
+                paymentConfig.PayPal = txtPayPal.Value;
+                paymentConfig.Venmo = txtVenmo.Value;
+                paymentConfig.CashApp = txtCashPay.Value;
+                paymentConfig.ShowDonationButton = chkShowDonateButton.Checked;
             }
-        }
-        catch (Exception ex)
-        {
-            Response.Write("<script>alert('Error: " + ex.Message + "');</script>");
+            else
+            {               
+                var newPaymentConfig = new PaymentConfiguration
+                {
+                    PaymentConfigurationId = Guid.NewGuid(),
+                    PayPal = txtPayPal.Value,
+                    Venmo = txtVenmo.Value,
+                    CashApp = txtCashPay.Value,
+                    OrganizationId = new Guid(organizationId),
+                    ShowDonationButton = chkShowDonateButton.Checked
+                };
+
+                context.PaymentConfigurations.InsertOnSubmit(newPaymentConfig);
+            }
+            context.SubmitChanges();
         }
     }
-    protected void saveCampaign(object sender, EventArgs e)
+    protected void SaveCampaign(object sender, EventArgs e)
     {
         string organizationEventId = ddlOrganizationEvent.SelectedValue;
         string summary = txtPaymentSummary.Text.Trim();
@@ -125,6 +112,20 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         string amount = textAmount.Value.Trim();
         string description = txtDescription.Text.Trim();
         bool isDefault = chkIsDefault.Checked;
+        if (isDefault)
+        {
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                var existingDefaultCampaign = dc.DonationCampaigns.SingleOrDefault(c => c.IsDefault == true);
+
+                if (existingDefaultCampaign != null)
+                {
+                    existingDefaultCampaign.IsDefault = false;
+                    dc.SubmitChanges();
+                }
+            }
+        }
+
         if (string.IsNullOrEmpty(hdnSelectedCampaignId.Value))
         {
             DonationCampaign newCampaign = new DonationCampaign
@@ -167,7 +168,6 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         ClearControls();
         BindDonationCampaigns();
         BindOrganizationEventDropDown();
-
     }
     private void ClearControls()
     {
@@ -226,6 +226,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         {
             ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenModal", "showDeleteModal();", true);
         }
+       
     }
     protected void DeleteCampaign(object sender, EventArgs e)
     {
@@ -243,5 +244,13 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         BindDonationCampaigns();
         BindOrganizationEventDropDown();
     }
+
+    protected void btnClose_Click(object sender, EventArgs e)
+    {
+        ClearControls();
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "closeModal", "$('#yourModal').modal('hide');", true);
+    }
+
+
 }
 

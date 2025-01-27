@@ -6,7 +6,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Donation Page</title>
@@ -17,28 +16,8 @@
     <link rel="stylesheet" href="/Homer/vendor/select2-bootstrap/select2-bootstrap.css" />
     <script src="/Homer/vendor/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js"></script>
     <script src="/Homer/vendor/select2-3.5.2/select2.min.js"></script>
-
     <script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
-
     <link href="../Styles/DonationStyles.css" rel="stylesheet" />
-    <style>
-        .containerLabel h2 {
-            margin-right: 296px;
-        }
-
-        #btnLogin {
-            background-color: #007bff;
-            border: none;
-            padding: 2px 20px;
-            font-size: 18px;
-            color: white;
-            cursor: pointer;
-        }
-
-            #btnLogin:hover {
-                background-color: #0056b3;
-            }
-    </style>
 </head>
 <body>
 
@@ -48,7 +27,7 @@
     </div>
 
 
-    <from method="post" id="donationForm">
+   
 
         <div style="display: flex; flex-wrap: wrap;">
             <div class="content left">
@@ -79,15 +58,15 @@
                                 <% for (int i = 0; i < LiteralAmountList.Count(); i++)
                                     { %>
                                 <% if (i == 0)
-                                { %>
+                                    { %>
                                 <label class="item selected" for="amount<%= i + 1 %>">
                                     $<%= LiteralAmountList[i] %>
                                     <input type="radio" id="amount<%= i + 1 %>" name="Amount" value="<%= LiteralAmountList[i] %>
                                                 " />
                                 </label>
                                 <% }
-                                else
-                                { %>
+                                    else
+                                    { %>
                                 <label class="item" for="amount<%= i + 1 %>">
                                     $<%= LiteralAmountList[i] %>
                                     <input type="radio" id="amount<%= i + 1 %>" name="Amount" value="<%= LiteralAmountList[i] %>
@@ -126,27 +105,25 @@
                             <span for="coverfee">Yes, I'd like to cover the $<span id="coverFeeAmount"><%= LiteralAmountList[0]*0.06 %></span> transaction fee</span>
                         </div>
                         <div class="col-12 mb-20">
-                            <div class="containerLabel">
-                                <h2 class="mr-3">Donation Details</h2>
-                                <button type="button" id="btnLogin" class="btn btn-primary" onclick="redirectToLogin()">Login</button>
-                            </div>
+                                <h2 class="mr-3">Donation Details <a id="btnLogin" runat="server" href="/V1/Login.aspx?returnUrl=<%=HttpUtility.UrlEncode(Request.Url.ToString()) %>">Already Registered? Login</a></h2>
+                                
                         </div>
                         <div class="col-6">
                             <div class="input-group">
                                 <span class="legend" for="firstname">First Name:</span><span style="color: red"></span>
-                                <input class="form-control formInput " type="text" id="firstname" runat="server" name="FirstName"  />
+                                <input class="form-control formInput " type="text" id="firstname" runat="server" name="FirstName" />
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="input-group">
                                 <span class="legend" for="lastname">Last Name:</span><span style="color: red"></span>
-                                <input class="formInput" type="text" id="lastname" runat="server" name="LastName"  />
+                                <input class="formInput" type="text" id="lastname" runat="server" name="LastName" />
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="input-group">
                                 <span class="legend" for="email">Your Email Address:</span><span style="color: red"></span>
-                                <input class="formInput" type="email" id="email" runat="server" name="Email"  />
+                                <input class="formInput" type="email" id="email" runat="server" name="Email" />
                             </div>
                         </div>
                         <div class="col-6">
@@ -177,35 +154,6 @@
                                 <input class="formInput" id="ddlState" runat="server" onkeypress="return isNumberKey(event)" maxlength="5" name="txtState" type="text" />
                             </div>
                         </div>
-                        <%--                        <div class="col-6">
-                            <div class="input-group">
-                                <span class="legend" for="state">State:</span>
-
-                                <select class="form-select" id="ddlState" runat="server" name="ddlState">
-                                    <option value="">Choose a State*
-                                    </option>
-                                    <option value="Louisiana">Louisiana
-                                    </option>
-                                    <option value="Texas">Texas
-                                    </option>
-                                    <option value="North Carolina">North Carolina
-                                    </option>
-                                    <option value="South Carolina">South Carolina
-                                    </option>
-                                    <option value="Florida">Florida
-                                    </option>
-                                    <option value="Mississippi">Mississippi
-                                    </option>
-                                    <option value="Alabama">Alabama
-                                    </option>
-                                    <option value="Virginia">Virginia
-                                    </option>
-                                    <option value="Georgia">Georgia
-                                    </option>
-                                </select>
-
-                            </div>
-                        </div>--%>
                         <div class="col-6">
                             <div class="input-group">
                                 <span class="legend" for="zip">Zip:</span>
@@ -258,7 +206,7 @@
             </div>
 
         </div>
-    </from>
+    
 
 
     <script src="https://js.stripe.com/v3/"></script>
@@ -278,19 +226,12 @@
             });
             $(".form-select").select2();
             $("[name='Frequency']").on('click', function () {
-                // Remove the 'selected' class from all labels
                 $(".freqLabel").removeClass("selected");
-
-                // Add the 'selected' class to the label associated with the selected radio button
                 $(this).closest("label").addClass("selected");
             });
             $('input[type="radio"][name="Amount"]').on('click', function () {
-                // Remove the 'selected' class from all labels
                 $(".item:not(.freqLabel)").removeClass("selected");
-
-                // Add the 'selected' class to the label associated with the selected radio button
                 $(this).closest("label").addClass("selected");
-                // Get the value of the clicked radio button
                 var selectedValue = $(this).val();
                 if (selectedValue == "0") {
                     $('#DonationAmount').val('');
@@ -419,7 +360,6 @@
                         'NotShareName': $('#notShareName').prop("checked"),
                         'IsHonorDonation': $('#honordonation').prop("checked"),
                     };
-                    debugger;
                     if (transactionData.IsCoverFee) {
                         transactionData.DonationAmount += parseFloat($('#coverFeeAmount').text());
                     }
@@ -452,13 +392,6 @@
                 },
             });
         });
-        function redirectToLogin() {
-            var currentUrl = window.location.href;
-            var domain = window.location.origin;
-            var loginUrl = domain + "/V1/Login.aspx?returnUrl=" + encodeURIComponent(currentUrl);
-            window.location.href = loginUrl;
-        }
-
     </script>
 </body>
 </html>

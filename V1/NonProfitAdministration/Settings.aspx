@@ -43,8 +43,8 @@
                         Hide my team list from my team members.</label></div>
             </div>
             <div class="col-sm-12 m-t-lg">
-                <asp:Button ID="btnSubmit" runat="server" Text="Update Settings" OnClick="btnSubmit_Click" />
-                <asp:Button ID="btnPaymentConfig" runat="server" Text="Edit Payment Configuration" OnClick="btnPaymentConfig_Click" />
+                <asp:Button ID="btnSubmit" runat="server" Text="Update Settings" OnClick="btnSubmit_Click" CssClass="btn btn-primary" />
+                <asp:Button ID="btnPaymentConfig" runat="server" Text="Edit Payment Configuration" OnClick="btnPaymentConfig_Click" CssClass="btn btn-primary"/>
             </div>
 
         </div>

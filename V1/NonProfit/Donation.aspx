@@ -8,10 +8,12 @@
     <link href="https://pagecdn.io/lib/easyfonts/fonts.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-
-    <div class="summary">
-        <%=DefaultCampaign.Summary%>
+    <div class="container">
+        <div class="summary">
+            <%=DefaultCampaign.Summary%>
+        </div>
     </div>
+
 
     <div class="container">
         <% if (ShowDonationButton)
@@ -21,13 +23,16 @@
         </a>
         <% } %>
     </div>
-
     <div class="address-with-divider">
         <h3 class="addressHeader">SEND A CHECK TO THIS ADDRESS</h3>
         <div class="divider"></div>
     </div>
+    <div class="container">
 
-    <%=DefaultCampaign.Address%>
+
+        <%=DefaultCampaign.Address%>
+    </div>
+
     <div class="module_row themify_builder_row tb_pflf545 tf_w" style="margin-top: 140px;">
 
         <input runat="server" type="hidden" id="transactionDetailId" name="TransactionDetailId" value="" />
@@ -97,18 +102,19 @@
             </div>
         </div>
     </div>
-    <div>
-        <div>
-            <div class="container">
-                <% foreach (var campaign in DonationCampaigns.Where(x => x.IsDefault == false))
-                    { %>
-                <a href="DonationDetails.aspx?organizationId=<%=orgId%>&donationCampaignId=<%=campaign.DonationCampaignId%>">
-                    <%=campaign.CampaignName%>
-                </a>
-                <br />
-                <% } %>
-            </div>
-        </div>
+    <div class="container" style="display:inherit;">
+
+        <% foreach (var campaign in DonationCampaigns.Where(x => x.IsDefault == false))
+            { %>
+      
+ <h3>
+     <a href="DonationDetails.aspx?organizationId=<%=orgId%>&donationCampaignId=<%=campaign.DonationCampaignId%>">
+         <%=campaign.CampaignName%>
+     </a>
+ </h3>
+            
+       
+        <% } %>
     </div>
 
     <!-- Add the following CSS in your head or external stylesheet -->

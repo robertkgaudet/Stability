@@ -18,6 +18,7 @@
             height: 100vh;
             color: #333;
         }
+
         .container {
             text-align: center;
             background: white;
@@ -27,28 +28,33 @@
             max-width: 400px;
             width: 90%;
         }
-        .container h1 {
-            color: #4CAF50;
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        .container p {
-            font-size: 1.1em;
-            margin: 10px 0 20px;
-        }
-        .container .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1em;
-            transition: background-color 0.3s;
-        }
-        .container .btn:hover {
-            background-color: #45a049;
-        }
+
+            .container h1 {
+                color: #4CAF50;
+                font-size: 2em;
+                margin-bottom: 10px;
+            }
+
+            .container p {
+                font-size: 1.1em;
+                margin: 10px 0 20px;
+            }
+
+            .container .btn {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #4CAF50;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 1em;
+                transition: background-color 0.3s;
+            }
+
+                .container .btn:hover {
+                    background-color: #45a049;
+                }
+
         .icon {
             font-size: 3em;
             color: #4CAF50;
@@ -61,8 +67,12 @@
         <div class="icon">✔️</div>
         <h1>Thank You!</h1>
         <p>Your donation was successful. We greatly appreciate your support!</p>
-        <p>Transaction ID: <strong>#123456789</strong></p>
+        <p><strong> <%=TransactionId%> </strong></p>
         <a href="/" class="btn">Return to Homepage</a>
+        <% if (ShowRegisterButton == false)
+            { %>
+        <a href="/V1/Register.aspx?role=Donor&transactionId=<%=TransactionId%>" id="btnRegister" class="btn">Register</a>
+        <% } %>
     </div>
 </body>
 </html>
