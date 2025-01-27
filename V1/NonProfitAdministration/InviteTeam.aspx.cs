@@ -79,14 +79,13 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 					//Email the user.
 				}
 
-				//Get the team name and creator name to send in the email.
+                //Get the team name and creator name to send in the email.
+                var organizationInfo = (from p in dc.Profiles
+                                        join o in dc.UserOrganizations on p.UserId equals o.UserId
+                                        where p.UserId == userId
+                                        select new { organizationName = o.Organization.Name, p.Firstname, senderName = p.Firstname + " " + p.Lastname }).FirstOrDefault();
 
-				var organizationInfo = (from p in dc.Profiles
-									   join o in dc.Organizations on p.UserId equals o.OwnerId
-										where p.UserId == userId
-									   select new { organizationName = o.Name, p.Firstname, senderName = p.Firstname + " " + p.Lastname}).Take(1).SingleOrDefault();
-
-				string senderName				= organizationInfo.senderName;
+                string senderName				= organizationInfo.senderName;
 				string organizationName			= organizationInfo.organizationName;
 				string firstName				= organizationInfo.Firstname;
 
