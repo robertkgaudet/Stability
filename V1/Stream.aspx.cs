@@ -5,16 +5,13 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Configuration;
-using System.Text;
-using System.Security.Policy;
 using System.Web.UI.HtmlControls;
 using System.IO;
 using System.Drawing.Drawing2D;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Web.Services.Description;
 using System.Web.Security;
 using System.Web.Services;
+using System.Text.RegularExpressions;
 //using static System.Net.Mime.MediaTypeNames;
 
 public partial class V1_Stream : BaseOrganizationWebForm
@@ -24,52 +21,50 @@ public partial class V1_Stream : BaseOrganizationWebForm
 	public string overallProgressSliderId = ConfigurationManager.AppSettings["overallProgressSliderId"].ToString();
 	public string eventId = HttpContext.Current.Request.QueryString["eventId"];
 	public string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
-
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		LoadPosts();
 		BindDropdown();
-		postField.Visible = false;
-		lblPostMessage.Text = "Sign in to post";
-		if (User.Identity.IsAuthenticated)
-		{
-			postField.Visible = true;
-			lblPostMessage.Text = "";
-			lblPostMessage.Visible = false;
-
-
-			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-
-			var profile = (from p in dc.Profiles
-						   where p.UserId == userId
-						   select p).SingleOrDefault();
-			if (profile != null)
-			{
-				litFullName.Text = profile.Firstname + " " + profile.Lastname;
-			}
-		}
-
-		bool testMode = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["brainTreeTestMode"].ToString());
-		string testNonce = System.Configuration.ConfigurationManager.AppSettings["testNonce"].ToString();
-
 		if (!this.IsPostBack)
 		{
+			postField.Visible = false;
+			lblPostMessage.Text = "Sign in to post";
+			if (User.Identity.IsAuthenticated)
+			{
+				postField.Visible = true;
+				lblPostMessage.Text = "";
+				lblPostMessage.Visible = false;
 
+
+				CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+				var profile = (from p in dc.Profiles
+							   where p.UserId == userId
+							   select p).SingleOrDefault();
+				if (profile != null)
+				{
+					litFullName.Text = profile.Firstname + " " + profile.Lastname;
+				}
+			}
+
+			bool testMode = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["brainTreeTestMode"].ToString());
+			string testNonce = System.Configuration.ConfigurationManager.AppSettings["testNonce"].ToString();
+
+			this.Master.PageTitle = "Stability Activity Feed";
+			this.Master.PageDescription = "View posts and updates from your team, friends and the public.";
+			this.Master.FbDescription = "View posts and updates from your team, friends and the public.";
+			this.Master.FbSite_name = "Stability Activity Feed";
+			this.Master.HideMasterCover = true;
 		}
 		else
 		{
 		}
-
-		this.Master.PageTitle = "Stability Activity Feed";
-		this.Master.PageDescription = "View posts and updates from your team, friends and the public.";
-		this.Master.FbDescription = "View posts and updates from your team, friends and the public.";
-		this.Master.FbSite_name = "Stability Activity Feed";
-		this.Master.HideMasterCover = true;
 	}
 
 	public void BindDropdown()
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		AudienceType.Items.Clear();
 		var AudianceType = dc.AudienceTypes.ToList();
 		foreach (var option in AudianceType)
 		{
@@ -103,7 +98,54 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		}
 		PostReactionTypesId.Controls.Add(div);
 	}
+	public static string GetTimeAgo(DateTime pastDate)
+	{
+		TimeSpan timeDifference = DateTime.Now - pastDate;
+		double yearsDifference = timeDifference.TotalDays / 365.25;
+		if (yearsDifference >= 1)
+		{
+			int years = (int)yearsDifference;
+			return years + " y";
+		}
+		else if (timeDifference.TotalDays >= 1)
+		{
+			int days = (int)timeDifference.TotalDays;
+			return days + " d";
+		}
+		else if (timeDifference.TotalHours >= 1)
+		{
+			int hours = (int)timeDifference.TotalHours;
+			return hours + " h";
+		}
+		else if (timeDifference.TotalMinutes >= 1)
+		{
+			int minutes = (int)timeDifference.TotalMinutes;
+			return minutes + " m";
+		}
+		else
+		{
+			return "Just Now";
+		}
+	}
 
+	private static List<Profile> ExtractTaggedUsers(string content, List<Profile> _users)
+	{
+		var taggedUsers = new List<Profile>();
+		var regex = new Regex(@"@([a-zA-Z0-9_]+)");  // Matches "@username"
+		var matches = regex.Matches(content);
+
+		foreach (Match match in matches)
+		{
+			var username = match.Groups[1].Value;
+			// Find the user from the list based on the username
+			var user = _users.Find(u => u.Firstname.Equals(username, StringComparison.OrdinalIgnoreCase));
+			if (user != null)
+			{
+				taggedUsers.Add(user);
+			}
+		}
+		return taggedUsers;
+	}
 	public void LoadPosts()
 	{
 		int streamPostPageSize = int.Parse(ConfigurationManager.AppSettings["streamPostPageSize"].ToString()) + 10;
@@ -227,8 +269,11 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			Label lblMessageDate = (Label)e.Item.FindControl("lblMessageDate");
 			Literal litMessage = (Literal)e.Item.FindControl("litMessage");
 			Literal litReactionTitle = (Literal)e.Item.FindControl("litReactionTitle");
+			Repeater rptPostComments = (Repeater)e.Item.FindControl("rptPostComments");
 			Literal litReactionCount = (Literal)e.Item.FindControl("litReactionCount");
+			Literal litCommentsCount = (Literal)e.Item.FindControl("litCommentsCount");
 			HtmlImage imgProfile = (HtmlImage)e.Item.FindControl("imgProfile");
+			//int postCount = (int)DataBinder.Eval(dataItem.DataItem, "postCount");
 
 			lblMessageDate.Text = GetElapsedTime(createdOn);
 			hypCreatedBy.Text = fullname;
@@ -369,6 +414,69 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			{
 				litReactionTitle.Text = "<span style='color: #777'> &#128077; Thank </span>";
 			}
+
+
+			//var profileImage = (from ph in dc.ProfilePhotos
+			//					join p in dc.Photos on ph.PhotoId equals p.PhotoId
+			//					where ph.UserId == createdBy && ph.IsCurrrent == true
+			//					orderby p.CreatedOn descending
+			//					select new { p.FilenameCropped }).Take(1).SingleOrDefault();
+
+			//if (profileImage != null)
+			//{
+			//	//Get the users profile image
+			//	imgProfile.Src = profilePhotoFolder + profileImage.FilenameCropped;
+			//}
+
+
+			rptPostComments.DataSource = from pc in dc.PostComments
+										 join c in dc.Comments on pc.CommentId equals c.CommentId
+										 //join ph in dc.ProfilePhotos on c.CreatedBy equals ph.UserId into phJoin
+										 //from ph in phJoin.DefaultIfEmpty() // This ensures a left join
+										 //join p in dc.Photos on ph.PhotoId equals p.PhotoId into pJoin
+										 //from p in pJoin.DefaultIfEmpty() // This ensures a left join
+										 where pc.PostId == postId
+											   && c.ParentId == null
+											   && c.IsDeleted == false
+										 orderby c.CreatedOn descending
+										 select new
+										 {
+											 pc.PostCommentId,
+											 c.Comment1,
+											 c.CreatedOn,
+											 c.CommentId,
+											 isEdit = c.CreatedBy == userId ? true : false,
+											 postId = pc.PostId,
+											 timeAgo = GetTimeAgo(c.CreatedOn),
+											 author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
+											 imgProfileUrl = profilePhotoFolder + (
+																	 (from rph in dc.ProfilePhotos
+																	  join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
+																	  where rph.UserId == c.CreatedBy
+																	  select rp.FilenameCropped).FirstOrDefault() ?? "default.png"),
+											 replies = dc.Comments
+														 .Where(f => f.ParentId == c.CommentId && f.IsDeleted == false)
+														 .OrderBy(f => f.CreatedOn)
+														 .Select(reply => new
+														 {
+															 pc.PostCommentId,
+															 reply.CommentId,
+															 reply.Comment1,
+															 reply.CreatedOn,
+															 timeAgo = GetTimeAgo(reply.CreatedOn),
+															 isEdit = reply.CreatedBy == userId ? true : false,
+															 postId = pc.PostId,
+															 parentCommentId = c.CommentId,
+															 author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname,
+															 imgProfileUrl = profilePhotoFolder + (
+																	 (from rph in dc.ProfilePhotos
+																	  join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
+																	  where rph.UserId == reply.CreatedBy
+																	  select rp.FilenameCropped).FirstOrDefault() ?? "default.png"),
+														 }).ToList()
+										 };
+			rptPostComments.DataBind();
+			litCommentsCount.Text = rptPostComments.Items.Count.ToString() + " Comments";
 		}
 	}
 
@@ -424,6 +532,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 	{
 		Guid postId = SavePost();
 	}
+
 	static string ExtractDomainAndTld(string url)
 	{
 		// Create a Uri object from the given URL
@@ -512,4 +621,125 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		}
 		return isRemoved;
 	}
+
+	[WebMethod]
+	public static bool UploadPostComment(string postId, string commentId, string comment, bool isReply, bool isEditComment)
+	{
+		var isRemoved = true;
+		var userId = new Guid();
+		string username = HttpContext.Current.User.Identity.Name;
+		MembershipUser user = Membership.GetUser(username);
+
+		if (user != null)
+		{
+			userId = new Guid(user.ProviderUserKey.ToString());
+
+			using (var dc = new CrowdReliefDBDataContext())
+			{
+				List<Profile> pros = ExtractTaggedUsers(comment, dc.Profiles.ToList());
+				if (isEditComment == true)
+				{
+					var isExist = dc.Comments.FirstOrDefault(f => f.CommentId == new Guid(commentId));
+					if (isExist != null)
+					{
+						isExist.Comment1 = comment;
+					}
+				}
+				else
+				{
+					Comment com = new Comment();
+					com.CommentId = Guid.NewGuid();
+					com.Comment1 = comment;
+					com.CreatedBy = userId;
+					com.CreatedOn = DateTime.Now;
+					com.IsDeleted = false;
+					com.ParentId = isReply ? new Guid(commentId) : (Guid?)null;
+					dc.Comments.InsertOnSubmit(com);
+
+					if (!isReply)
+					{
+						PostComment pc = new PostComment();
+						pc.PostId = new Guid(postId);
+						pc.CommentId = com.CommentId;
+						pc.UserId = userId;
+						pc.PostCommentId = Guid.NewGuid();
+						pc.IsDeleted = false;
+						pc.CreatedOn = DateTime.Now;
+						dc.PostComments.InsertOnSubmit(pc);
+					}
+				}
+
+				//if (pros != null)
+				//{
+				//	foreach (var item in pros)
+				//	{
+				//Push tagged users into Tagged Table
+				// Send Email & SMS as Notification
+				//postId
+				//commentId
+				//TaggedUserId
+				//IsEmail
+				//IsSMS
+				//	}
+				//}
+
+				dc.SubmitChanges();
+				return isRemoved;
+			}
+		}
+		return isRemoved;
+	}
+
+	[WebMethod]
+	public static bool DeletePostComment(string postCommentId)
+	{
+		var isRemoved = true;
+		using (var dc = new CrowdReliefDBDataContext())
+		{
+			var postComment = dc.PostComments.FirstOrDefault(f => f.CommentId == new Guid(postCommentId));
+			if (postComment != null)
+			{
+				var comment = dc.Comments.FirstOrDefault(f => f.CommentId == postComment.CommentId);
+				comment.IsDeleted = true;
+				foreach (var item in dc.Comments.Where(f => f.ParentId == comment.CommentId).ToList())
+				{
+					item.IsDeleted = true;
+				}
+				//dc.Comments.DeleteOnSubmit(comment);
+			}
+			//dc.PostComments.DeleteOnSubmit(postComment);
+			postComment.IsDeleted = true;
+			dc.SubmitChanges();
+		}
+		return isRemoved;
+	}
+
+	[WebMethod]
+	public static bool DeletePostReply(string postCommentId)
+	{
+		var isRemoved = true;
+		using (var dc = new CrowdReliefDBDataContext())
+		{
+			var comment = dc.Comments.FirstOrDefault(f => f.CommentId == new Guid(postCommentId));
+			//dc.Comments.DeleteOnSubmit(comment);
+			comment.IsDeleted = true;
+			dc.SubmitChanges();
+		}
+		return isRemoved;
+	}
+
+	[WebMethod]
+	public static List<Profile> GetUsers()
+	{
+		using (var dc = new CrowdReliefDBDataContext())
+		{
+			var Users = dc.Profiles.Select(pr => new Profile
+			{
+				Title = pr.Firstname + " " + pr.Lastname,
+				UserId = pr.UserId,
+			});
+			return Users.Cast<Profile>().ToList();
+		}
+	}
+
 }
