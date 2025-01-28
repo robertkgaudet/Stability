@@ -7,12 +7,14 @@ using System.Web.UI;
 using Stripe.Checkout;
 using Stripe;
 using System.Configuration;
+using SendGrid;
 
 public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
 {
     public string LiteralDescription { get; set; }
-    public List<int> LiteralAmountList { get; set; }
+    public List<int> LiteralAmountList { get; set; }    
     public string orgId { get; set; }
+    public Guid OrderId { get; set; }
     protected void Page_Load(object sender, EventArgs e)
     {
         if (User.Identity.IsAuthenticated)
@@ -43,16 +45,16 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                                        }).SingleOrDefault();
                         if (profile != null)
                         {
-                            firstname.Value = profile.Firstname;
-                            lastname.Value = profile.Lastname;
-                            email.Value = username;
-                            homeaddress.Value = profile.Address;
-                            txtCity.Value = profile.City;
+                            txtfirstname.Text = profile.Firstname;
+                            txtlastname.Text = profile.Lastname;
+                            txtemail.Text = username;
+                            txthomeaddress.Text = profile.Address;
+                            txtCity.Text = profile.City;
 
 
-                            ddlState.Value = profile.State;
+                            txtddlState.Text = profile.State;
 
-                            txtZip.Value = profile.Zip;
+                            txtZip.Text = profile.Zip;
 
                         }
 
@@ -80,13 +82,13 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
         }
         Session["ReturnUrl"] = returnUrl;
 
-        this.publishKey.Value = System.Configuration.ConfigurationManager.AppSettings["stripePublishKey"].ToString();
-        this.organizationId.Value = Request.QueryString["organizationId"].ToString();
-        Guid donationCampaignId = Guid.Parse(Request.QueryString["donationCampaignId"]);
-        Session["OrderId"] = donationCampaignId;
+        this.publishKey.Text = System.Configuration.ConfigurationManager.AppSettings["stripePublishKey"].ToString();
+        this.organizationId.Text = Request.QueryString["organizationId"].ToString();
+        OrderId = Guid.Parse(Request.QueryString["donationCampaignId"]);
+        
         this.orgId = Request.QueryString["organizationId"].ToString();
         CrowdReliefDBDataContext dbContext = new CrowdReliefDBDataContext();
-        DonationCampaign donationCampaign = dbContext.DonationCampaigns.Where(x => x.DonationCampaignId == donationCampaignId).FirstOrDefault();
+        DonationCampaign donationCampaign = dbContext.DonationCampaigns.Where(x => x.DonationCampaignId == OrderId).FirstOrDefault();
         if (donationCampaign != null)
         {
             LiteralDescription = donationCampaign.Description;
@@ -98,17 +100,20 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                 {
                     LiteralAmountList.Add(Convert.ToInt32(amount));
                 }
+                if (LiteralAmountList.Any())
+                {
+                    txtDonationAmount.Text = LiteralAmountList[0].ToString();
+                }
             }
 
         }
     }
 
 
-    [System.Web.Services.WebMethod]
-    public static string AddTransactionDetails(TransactionData transactionData)
+
+
+    protected void AddTransactionDetails_Click(object sender, EventArgs e)
     {
-        try
-        {
             var request = HttpContext.Current.Request;
 
             // Get the domain URL
@@ -116,63 +121,58 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
 
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-            Organization organization = dc.Organizations.Where(x => x.OrganizationId == new Guid(transactionData.OrganizationId)).FirstOrDefault();
+            Organization organization = dc.Organizations.Where(x => x.OrganizationId == new Guid(organizationId.Text)).FirstOrDefault();
             if (organization == null || organization.OwnerId == null)
             {
-
-                return "";
             }
-            Profile profile = new Profile()
+            if (!User.Identity.IsAuthenticated)
             {
-                ProfileId = Guid.NewGuid(),
-                Address = transactionData.HomeAddress,
-                Firstname = transactionData.FirstName,
-                Lastname = transactionData.LastName,
-                City = transactionData.City,
-                State = transactionData.State,
-                Zip = transactionData.Zip,
-                UserId = organization.OwnerId.Value
-            };
-            dc.Profiles.InsertOnSubmit(profile);
-            dc.SubmitChanges();
-            Address address = new Address()
-            {
-                AddressId = Guid.NewGuid(),
-                Address1 = transactionData.HomeAddress,
-                City = transactionData.City,
-                State = transactionData.State,
-                Zip = transactionData.Zip,
-                IsActive = true,
-                CreatedOn = DateTime.Now
-            };
-            dc.Addresses.InsertOnSubmit(address);
-            dc.SubmitChanges();
-            //ProfileAddress profileAddress = new ProfileAddress() // need to update later.
-            //{
-            //    ProfileAddressId = Guid.NewGuid(),
-            //    AddressId = address.AddressId,
-            //    ProfileId = profile.ProfileId,           
-            //    RebuildStatusId = new Guid("109693FE-17B8-4B43-8E90-D8D6DF8136C2");
-            //};
-            //dc.ProfileAddresses.InsertOnSubmit(profileAddress);
-            //dc.SubmitChanges();           
+                Profile profile = new Profile()
+                {
+                    ProfileId = Guid.NewGuid(),
 
+                    Address = txthomeaddress.Text,
+                    Firstname = txtfirstname.Text,
+                    Lastname = txtlastname.Text,
+                    City = txtCity.Text,
+                    State = txtddlState.Text,
+                    Zip = txtZip.Text,
 
+                    UserId = organization.OwnerId.Value
+                };
+                dc.Profiles.InsertOnSubmit(profile);
+                dc.SubmitChanges();
+                Address address = new Address()
+                {
+                    AddressId = Guid.NewGuid(),
+                    Address1 = txthomeaddress.Text,
+                    City = txtCity.Text,
+                    State = txtddlState.Text,
+                    Zip = txtZip.Text,
+                    IsActive = true,
+                    CreatedOn = DateTime.Now
+                };
+                dc.Addresses.InsertOnSubmit(address);
+                dc.SubmitChanges();
+            }
+            
+            var donationAmount = Request.Form["txtDonationAmount"];
             Donation donation = new Donation()
             {
-                Amount = transactionData.DonationAmount,
+
+                Amount = Decimal.Parse(donationAmount),
                 AuthorizedTransactionId = organization.OrganizationId.ToString(),
-                EmailAddress = transactionData.Email,
+                EmailAddress = txtemail.Text,
                 DonationId = Guid.NewGuid(),
-                FirstName = transactionData.FirstName,
-                LastName = transactionData.LastName,
+                FirstName = txtfirstname.Text,
+                LastName = txtlastname.Text,
                 ItemCount = 1,
                 CreatedAt = DateTime.Now,
                 BasicNeedsSurveyItemId = new Guid("7CC45EAD-7FB1-44A1-9CDA-EA76C4404102"),
                 CampaignId = new Guid("24C73ECD-9345-4CB0-8234-4D9EF5472302"),
                 PaymentProvider = (int)Tools.TransactionType.CreditCard,
                 DonationStatus = (int)Tools.TransactionStatus.Started,
-                OrderId = HttpContext.Current.Session["OrderId"].ToString() ?? "",
+                OrderId = OrderId.ToString() ?? "",
                 IsTest = Convert.ToBoolean(ConfigurationManager.AppSettings["isTestPayment"])
             };
             dc.Donations.InsertOnSubmit(donation);
@@ -180,29 +180,29 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
 
             StripeConfiguration.ApiKey = System.Configuration.ConfigurationManager.AppSettings["stripeSecretKey"].ToString();
             Dictionary<string, string> transactionInfo = new Dictionary<string, string>
-            {
-                { "transactionId", donation.DonationId.ToString() }
-            };
+                {
+                    { "transactionId", donation.DonationId.ToString() }
+                };
             var options = new SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string> { "card" },
                 Metadata = transactionInfo,
                 LineItems = new List<SessionLineItemOptions>
-            {
-                new SessionLineItemOptions
                 {
-                    PriceData = new SessionLineItemPriceDataOptions
+                    new SessionLineItemOptions
                     {
-                        Currency = "usd",
-                        UnitAmount = Convert.ToInt32(transactionData.DonationAmount) * 100,
-                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        PriceData = new SessionLineItemPriceDataOptions
                         {
-                            Name = "Donation to " + organization.Name, // Product Name
+                            Currency = "usd",
+                            UnitAmount = Convert.ToInt32(Decimal.Parse(donationAmount) * 100),
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = "Donation to " + organization.Name, // Product Name
+                            },
                         },
+                        Quantity = 1,
                     },
-                    Quantity = 1,
                 },
-            },
                 Mode = "payment",
                 SuccessUrl = domainUrl + "/V1/NonProfit/DonationSuccess.aspx?session_id={CHECKOUT_SESSION_ID}", // Redirect after successful payment,
             };
@@ -210,13 +210,12 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
             var service = new SessionService();
             Session session = service.Create(options);
             // Pass the session ID to the client
-            return session.Id;
+            Response.Redirect(session.Url);
+
         }
-        catch (Exception ex)
-        {
-            return ex.Message;
-        }
+       
     }
+
 
     public class TransactionData
     {
@@ -236,4 +235,3 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
         public bool NotShareName { get; set; }
         public bool IsHonorDonation { get; set; }
     }
-}
