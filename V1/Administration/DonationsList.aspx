@@ -1,110 +1,156 @@
-﻿<%@ Page Title="Donations List" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="DonationsList.aspx.cs" Inherits="Administration_DonationsList" %>
+﻿<%@ Page Title="Donations List" Language="C#" EnableViewState="true" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="DonationsList.aspx.cs" Inherits="Administration_DonationsList" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" />
     <script src="/Homer/vendor/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js"></script>
     <link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
+
     <script>
         $(document).ready(function () {
-            $('#<%= SearchByDate.ClientID %>').datepicker({
+            $('#<%= StartDate.ClientID %>').datepicker({
+                format: 'yyyy-mm-dd',
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true
+            });
+            $('#<%= EndDate.ClientID %>').datepicker({
                 format: 'yyyy-mm-dd',
                 changeMonth: true,
                 changeYear: true,
                 showButtonPanel: true
             });
         });
+
+        function __doPostBack(eventTarget, eventArgument) {
+            var theForm = document.getElementById('form1');
+            if (!theForm) {
+                theForm = document.form1;
+            }
+
+            if (theForm.onsubmit && theForm.onsubmit() === false) {
+                return false;
+            }
+
+            theForm.__EVENTTARGET.value = eventTarget;
+            theForm.__EVENTARGUMENT.value = eventArgument;
+            theForm.submit();
+        }
     </script>
+
     <style>
-    .search-btn {
-    background-color: #007bff !important;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-    .search-btn:hover {
-        background-color: #45a049;
-    }
-
-.clear-btn {
-    background-color: #6c757d !important;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-    .clear-btn:hover {
-        background-color: #e53935;
-    }
-    
-.btn-pdf {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-left: 20px;
-}
-
-    .btn-pdf:hover {
-        background-color: #45a049;
-    }
-
-.btn-csv {
-    border:none;
-    background-color: #f39c12;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-    .btn-csv:hover {
-        background-color: #e67e22;
-    }
-
-
-.table td, .table th {
-    padding: 15px !important;
-}
-
-.pager {
-    text-align: right;
-    margin-top: 10px;
-}
-
-    .pager a, .pager span {
-        display: inline-block;
-        padding: 4px 8px;
-        margin: -13px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        text-decoration: none;
-        color: #007bff;
-        background-color: #f9f9f9;
-    }
-
-        .pager a:hover {
-            background-color: #e9ecef;
-            border-color: #007bff;
+        .search-btn {
+            background-color: #007bff !important;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-    .pager .selected {
-        font-weight: bold;
-        background-color: #007bff;
-        color: white;
-        border-color: #007bff;
-    }
-    .form-control {
-    margin-bottom: 20px;
-}
-</style>
+            .search-btn:hover {
+                background-color: #45a049;
+            }
+
+        .clear-btn {
+            background-color: #6c757d !important;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .clear-btn:hover {
+                background-color: #e53935;
+            }
+
+        .btn-pdf {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 20px;
+        }
+
+            .btn-pdf:hover {
+                background-color: #45a049;
+            }
+
+        .btn-csv {
+            border: none;
+            background-color: #f39c12;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            .btn-csv:hover {
+                background-color: #e67e22;
+            }
+
+        .table td, .table th {
+            padding: 15px !important;
+            cursor: pointer;
+        }
+
+        .pager-right {
+            text-align: right;
+            margin-top: 10px;
+            padding-left: 10px;
+        }
+
+            .pager-right .selected {
+                font-weight: bold;
+                background-color: #007bff;
+                color: white;
+                border-color: #007bff;
+            }
+
+        .page-info {
+            font-weight: bold;
+            margin: 20px;
+        }
+
+
+        .form-control {
+            margin-bottom: 20px;
+        }
+
+        .sort-arrow {
+            display: inline-block;
+            margin-left: 5px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .sort-arrow-desc {
+            transform: rotate(180deg);
+        }
+
+        .page-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 1px;
+            padding: 3px 11px;
+            cursor: pointer;
+        }
+
+            .page-button:hover {
+                background-color: #0056b3;
+            }
+
+            .page-button:disabled {
+                background-color: #ccc;
+                color: #999;
+                cursor: not-allowed;
+            }
+    </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -131,45 +177,76 @@
                         <p>Search Filter</p>
                         <div class="row">
                             <div class="col-md-2">
-                                <asp:TextBox ID="SearchByName" runat="server" CssClass="form-control" placeholder="Search by Name"></asp:TextBox>
+                                <asp:TextBox ID="SearchByName" runat="server" CssClass="form-control" placeholder="Search by Name" autocomplete="off"></asp:TextBox>
                             </div>
                             <div class="col-md-2">
-                                <asp:TextBox ID="SearchByAddress" runat="server" CssClass="form-control" placeholder="Search by Address"></asp:TextBox>
+                                <asp:TextBox ID="SearchByAddress" runat="server" CssClass="form-control" placeholder="Search by Address" autocomplete="off"></asp:TextBox>
                             </div>
                             <div class="col-md-2">
-                                <asp:TextBox ID="SearchByDate" runat="server" CssClass="form-control" placeholder="Search by Date" />
+                                <asp:TextBox ID="StartDate" runat="server" CssClass="form-control" placeholder="Start Date" autocomplete="off" />
                             </div>
                             <div class="col-md-2">
-                                <asp:TextBox ID="SearchByAmount" runat="server" CssClass="form-control" placeholder="Search by Amount" TextMode="Number" />
+                                <asp:TextBox ID="EndDate" runat="server" CssClass="form-control" placeholder="End Date" autocomplete="off" />
                             </div>
                             <div class="col-md-2">
+                                <asp:TextBox ID="SearchByAmount" runat="server" CssClass="form-control" placeholder="Search by Amount" TextMode="Number" autocomplete="off" />
+                            </div>
+
+                            <div class="col-md-1">
                                 <asp:Button ID="SearchButton" runat="server" CssClass="form-control search-btn" Text="Search" OnClick="SearchButton_Click" />
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-1">
                                 <asp:Button ID="ClearButton" runat="server" CssClass="form-control clear-btn" Text="Clear" OnClick="ClearButton_Click" />
                             </div>
                         </div>
-                        <asp:GridView ID="GridView" runat="server" AutoGenerateColumns="False" CssClass="table table-hover table-bordered"
-                            BorderColor="Black" BorderStyle="Solid" BorderWidth="1px" GridLines="None" AllowPaging="True" PageSize="10"
-                            OnPageIndexChanging="GridView_PageIndexChanging">
-                            <PagerSettings Mode="Numeric" Position="Bottom" />
-                            <PagerStyle CssClass="pager text-left" />
-                            <Columns>
-                                <asp:BoundField DataField="Name" HeaderText="Donor Name" SortExpression="Name">
-                                    <ItemStyle CssClass="donor-name-cell" />
-                                </asp:BoundField>
-                                <asp:BoundField DataField="Address" HeaderText="Address" SortExpression="Address">
-                                    <ItemStyle CssClass="address-cell" />
-                                </asp:BoundField>
-                                <asp:BoundField DataField="CreatedAt" HeaderText="Date of Donation" SortExpression="CreatedAt" DataFormatString="{0:yyyy-MM-dd}">
-                                    <ItemStyle CssClass="date-of-donation-cell" />
-                                </asp:BoundField>
-                                <asp:BoundField DataField="Amount" HeaderText="Amount Donated" SortExpression="Amount" DataFormatString="${0:F2}">
-                                    <ItemStyle CssClass="amount-cell" />
-                                </asp:BoundField>
-                            </Columns>
-                            <FooterStyle CssClass="text-center" />
-                        </asp:GridView>
+
+                        <asp:Repeater ID="RepeaterDonations" runat="server">
+                            <HeaderTemplate>
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th onclick="__doPostBack('Sort', 'Name')">Donor Name
+           
+                                                <span id="sortArrowName" class="sort-arrow">&#9650;</span>
+                                            </th>
+                                            <th onclick="__doPostBack('Sort', 'Address')">Address
+           
+                                                <span id="sortArrowAddress" class="sort-arrow">&#9650;</span>
+                                            </th>
+                                            <th onclick="__doPostBack('Sort', 'Date')">Date of Donation
+           
+                                                <span id="sortArrowDate" class="sort-arrow">&#9650;</span>
+                                            </th>
+                                            <th onclick="__doPostBack('Sort', 'Amount')">Amount Donated
+           
+                                                <span id="sortArrowAmount" class="sort-arrow">&#9650;</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                            </HeaderTemplate>
+                            <ItemTemplate>
+                                <tr>
+                                    <td><%# Eval("Name") %></td>
+                                    <td><%# Eval("Address") %></td>
+                                    <td><%# Eval("CreatedAt", "{0:yyyy-MM-dd}") %></td>
+                                    <td><%# Eval("Amount", "${0:F2}") %></td>
+                                </tr>
+                            </ItemTemplate>
+                            <FooterTemplate>
+                                </tbody>
+                                </table>
+                            </FooterTemplate>
+                        </asp:Repeater>
+
+                        <div class="pager-right">
+                            <asp:Label ID="lblCurrentPage" runat="server" CssClass="page-info" />
+                            <asp:Button ID="btnPrevious" runat="server" CssClass="page-button" Text="Previous" OnClick="btnPrevious_Click" Visible="false" />
+                            <asp:Literal ID="lblPageNumbers" runat="server" />
+                            <asp:Button ID="btnNext" runat="server" Text="Next" CssClass="page-button" OnClick="btnNext_Click" Visible="false" />
+                        </div>
+                        <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+                        <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
                     </div>
                 </div>
             </div>
