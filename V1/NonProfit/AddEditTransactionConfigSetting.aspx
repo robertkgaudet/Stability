@@ -8,7 +8,12 @@
     <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/Homer/vendor/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" />
-   
+   <style>
+        .modal-fullscreen {
+            width: 80%;
+            height: 100vh;
+        }
+    </style>
 
     <script>
         $(function () {
@@ -49,9 +54,6 @@
             });
         }
     </script>
-    <style>
-        
-    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div class="panel-body">
@@ -192,6 +194,7 @@
 
             </div>
         </div>
+</div>
         <asp:HiddenField ID="hdnSelectedCampaignId" Value="" runat="server" />
         <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
         <script>
@@ -210,7 +213,5 @@
 
             }
         </script>
-        <script>
-</script>
         <script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
 </asp:Content>
