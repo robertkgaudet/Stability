@@ -37,6 +37,29 @@
             theForm.__EVENTARGUMENT.value = eventArgument;
             theForm.submit();
         }
+        document.addEventListener('DOMContentLoaded', function () {
+            var sortExpression = '<%= ViewState["SortExpression"] %>';
+          var sortDirection = '<%= ViewState["SortDirection"] %>';
+
+          function updateArrow(columnId, isAscending) {
+              var arrowElement = document.getElementById(columnId);
+              if (isAscending) {
+                  arrowElement.innerHTML = '▼'; 
+              } else {
+                  arrowElement.innerHTML = '▲'; 
+              }
+          }
+          if (sortExpression === 'Name') {
+              updateArrow('arrowName', sortDirection === 'ASC');
+          } else if (sortExpression === 'Address') {
+              updateArrow('arrowAddress', sortDirection === 'ASC');
+          } else if (sortExpression === 'Date') {
+              updateArrow('arrowDate', sortDirection === 'ASC');
+          } else if (sortExpression === 'Amount') {
+              updateArrow('arrowAmount', sortDirection === 'ASC');
+          }
+      });
+
     </script>
 
     <style>
@@ -206,20 +229,21 @@
                                     <thead>
                                         <tr>
                                             <th onclick="__doPostBack('Sort', 'Name')">Donor Name
-           
-                                                <span id="sortArrowName" class="sort-arrow">&#9650;</span>
+   
+                                                <span class="sort-arrow" id="arrowName">&#9660;</span>
+                                               
                                             </th>
                                             <th onclick="__doPostBack('Sort', 'Address')">Address
            
-                                                <span id="sortArrowAddress" class="sort-arrow">&#9650;</span>
+                                                <span id="arrowAddress" class="sort-arrow">&#9660;</span>
                                             </th>
                                             <th onclick="__doPostBack('Sort', 'Date')">Date of Donation
            
-                                                <span id="sortArrowDate" class="sort-arrow">&#9650;</span>
+                                                <span id="arrowDate" class="sort-arrow">&#9660;</span>
                                             </th>
                                             <th onclick="__doPostBack('Sort', 'Amount')">Amount Donated
            
-                                                <span id="sortArrowAmount" class="sort-arrow">&#9650;</span>
+                                                <span id="arrowAmount" class="sort-arrow">&#9660;</span>
                                             </th>
                                         </tr>
                                     </thead>

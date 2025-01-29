@@ -4,6 +4,7 @@ using System.Web.UI.WebControls;
 
 public partial class Administration_DonationsList : System.Web.UI.Page
 {
+
     public class PageInfo
     {
         public string PageNumbers { get; set; }
