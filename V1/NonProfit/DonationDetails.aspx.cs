@@ -14,7 +14,9 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
     public string LiteralDescription { get; set; }
     public List<int> LiteralAmountList { get; set; }    
     public string orgId { get; set; }
-    public Guid OrderId { get; set; }
+    public Guid ConationCampaignId { get; set; }
+    public string CampaignName { get; set; }
+    public string OrganizationName { get; set; }
     protected void Page_Load(object sender, EventArgs e)
     {
         if (User.Identity.IsAuthenticated)
@@ -84,11 +86,11 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
 
         this.publishKey.Text = System.Configuration.ConfigurationManager.AppSettings["stripePublishKey"].ToString();
         this.organizationId.Text = Request.QueryString["organizationId"].ToString();
-        OrderId = Guid.Parse(Request.QueryString["donationCampaignId"]);
+        ConationCampaignId = Guid.Parse(Request.QueryString["donationCampaignId"]);
         
         this.orgId = Request.QueryString["organizationId"].ToString();
         CrowdReliefDBDataContext dbContext = new CrowdReliefDBDataContext();
-        DonationCampaign donationCampaign = dbContext.DonationCampaigns.Where(x => x.DonationCampaignId == OrderId).FirstOrDefault();
+        DonationCampaign donationCampaign = dbContext.DonationCampaigns.Where(x => x.DonationCampaignId == ConationCampaignId).FirstOrDefault();
         if (donationCampaign != null)
         {
             LiteralDescription = donationCampaign.Description;
@@ -105,7 +107,12 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                     txtDonationAmount.Text = LiteralAmountList[0].ToString();
                 }
             }
-
+            string orgId = Request.QueryString["organizationId"].ToString();
+            string donationCampaignId = Request.QueryString["donationCampaignId"].ToString();
+            var organizationEventId = dbContext.DonationCampaigns.Where(x => x.DonationCampaignId == new Guid(donationCampaignId)).Select(x => x.OrganizationEventId).FirstOrDefault();
+            var Campaign = dbContext.OrganizationEvents.Where(x => x.OrganizationEventId == new Guid(organizationEventId.ToString())).Select(x => x.CampaignName).FirstOrDefault();
+            CampaignName = Campaign;
+            OrganizationName = dbContext.Organizations.Where(x => x.OrganizationId == new Guid(orgId)).Select(x => x.Name).FirstOrDefault();
         }
     }
 
@@ -172,7 +179,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                 CampaignId = new Guid("24C73ECD-9345-4CB0-8234-4D9EF5472302"),
                 PaymentProvider = (int)Tools.TransactionType.CreditCard,
                 DonationStatus = (int)Tools.TransactionStatus.Started,
-                OrderId = OrderId.ToString() ?? "",
+                OrderId = ConationCampaignId.ToString() ?? "",
                 IsTest = Convert.ToBoolean(ConfigurationManager.AppSettings["isTestPayment"])
             };
             dc.Donations.InsertOnSubmit(donation);

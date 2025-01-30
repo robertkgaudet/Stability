@@ -19,7 +19,7 @@
 
     <div class="header">
         <asp:Image ImageUrl="https://res.cloudinary.com/resilia/image/upload/v1/NonprofitOrgRoot/1960-c6a36c6a-d152-4120-8041-7d936d0d4df5/logos/t2vtpy7jwzafgjwf3u6f?_a=AJFJtWI0" alt="logo" class="logo" runat="server" />
-        <h4 class="title">Ground Force Humanitarian Aid, Formerly Cajun Navy Ground Force</h4>
+        <h4 class="title"> <%=OrganizationName%>, <%=CampaignName%></h4>
     </div>
         <div style="display: flex; flex-wrap: wrap;">
             <div class="content left">
