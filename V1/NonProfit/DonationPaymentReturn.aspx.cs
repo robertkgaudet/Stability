@@ -34,7 +34,7 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
                 json,
                 Request.Headers["Stripe-Signature"],
                 WebhookSecret,
-                throwOnApiVersionMismatch:false
+                throwOnApiVersionMismatch: false
             );
 
             // Handle specific event types
@@ -76,9 +76,10 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
     private void HandlePaymentSuccess(Stripe.Checkout.Session paymentIntent)
     {
         Donation donation = dc.Donations.Where(x => x.DonationId == new Guid(paymentIntent.Metadata.Values.FirstOrDefault().ToString())).FirstOrDefault();
-        if (donation != null) 
+        if (donation != null)
         {
             donation.TransactionId = paymentIntent.PaymentIntentId;
+            donation.AuthorizedTransactionId = paymentIntent.PaymentIntentId;
             donation.DonationStatus = (int)Tools.TransactionStatus.Succeeded;
             dc.SubmitChanges();
 
@@ -105,7 +106,7 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
 
             if (!string.IsNullOrEmpty(donation.AuthorizedTransactionId))
             {
-                Organization organization = dc.Organizations.Where(x=>x.OrganizationId == new Guid(donation.AuthorizedTransactionId)).FirstOrDefault();
+                Organization organization = dc.Organizations.Where(x => x.OrganizationId == new Guid(donation.AuthorizedTransactionId)).FirstOrDefault();
                 ldEmailBodyReplacements = new ListDictionary
                 {
                     { "<% OwnerName %>", organization.Name },
@@ -142,17 +143,17 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
             }
         }
 
-        
+
     }
 
     private void HandlePaymentFailure(Stripe.Checkout.Session paymentIntent)
     {
-        
+
     }
 
     private void LogUnhandledEvent(string eventType)
     {
-        
-    }     
+
+    }
 
 }
