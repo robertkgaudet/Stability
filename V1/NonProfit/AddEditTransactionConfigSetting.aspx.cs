@@ -73,7 +73,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             string.IsNullOrWhiteSpace(txtVenmo.Value) ||
             string.IsNullOrWhiteSpace(txtCashPay.Value))
         {
-            return; 
+            return;
         }
         using (var context = new CrowdReliefDBDataContext())
         {
@@ -88,7 +88,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
                 paymentConfig.ShowDonationButton = chkShowDonateButton.Checked;
             }
             else
-            {               
+            {
                 var newPaymentConfig = new PaymentConfiguration
                 {
                     PaymentConfigurationId = Guid.NewGuid(),
@@ -107,10 +107,10 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
     protected void SaveCampaign(object sender, EventArgs e)
     {
         string organizationEventId = ddlOrganizationEvent.SelectedValue;
-        string summary = txtPaymentSummary.Text.Trim();
-        string address = txtAddress.Text.Trim();
+        string summary = txtCampaignSummary.Text.Trim();
+        string address = txtCampaignMailingAddress.Text.Trim();
         string amount = textAmount.Value.Trim();
-        string description = txtDescription.Text.Trim();
+        string description = txtCampaignDescription.Text.Trim();
         bool isDefault = chkIsDefault.Checked;
         if (isDefault)
         {
@@ -171,9 +171,9 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
     }
     private void ClearControls()
     {
-        txtPaymentSummary.Text = string.Empty;
-        txtAddress.Text = string.Empty;
-        txtDescription.Text = string.Empty;
+        txtCampaignSummary.Text = string.Empty;
+        txtCampaignMailingAddress.Text = string.Empty;
+        txtCampaignDescription.Text = string.Empty;
         chkIsDefault.Text = string.Empty;
         ddlOrganizationEvent.ClearSelection();
         textAmount.Value = string.Empty;
@@ -193,29 +193,45 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
                              {
                                  campaign.DonationCampaignId,
                                  OrganizationEventName = orgEvent.CampaignName,
-                                 campaign.Amount,
-                                 campaign.IsDefault
+                                 //campaign.Amount,
+                                 Amount = FormatAmount(campaign.Amount),
+                                 campaign.IsDefault,
+
+
                              });
 
             gvDonationCampaigns.DataSource = campaigns;
             gvDonationCampaigns.DataBind();
         }
     }
+    private string FormatAmount(string amount)
+    {
+        if (string.IsNullOrEmpty(amount))
+            return string.Empty;
+        string[] amounts = amount.Split(new[] { ',',' ' }, StringSplitOptions.RemoveEmptyEntries);
+        for (int i = 0; i < amounts.Length; i++)
+        {
+            amounts[i] = "$" + amounts[i].Trim();
+        }
+        return string.Join(", ", amounts);
+    }
+
     protected void gvCampaigns_RowCommand(object sender, GridViewCommandEventArgs e)
     {
-        int rowIndex = Convert.ToInt32(e.CommandArgument);
-        campaignId = new Guid(gvDonationCampaigns.DataKeys[rowIndex].Value.ToString());
-        hdnSelectedCampaignId.Value = campaignId.ToString();
         if (e.CommandName == "EditRow")
         {
+            int rowIndex = Convert.ToInt32(e.CommandArgument); 
+            campaignId = new Guid(gvDonationCampaigns.DataKeys[rowIndex].Value.ToString());
+            hdnSelectedCampaignId.Value = campaignId.ToString();
+
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
                 BindOrganizationEventDropDown();
                 var campaign = dc.DonationCampaigns.Where(x => x.DonationCampaignId == campaignId).FirstOrDefault();
                 ddlOrganizationEvent.SelectedValue = campaign.OrganizationEventId.ToString();
-                txtPaymentSummary.Text = campaign.Summary;
-                txtAddress.Text = campaign.Address;
-                txtDescription.Text = campaign.Description;
+                txtCampaignSummary.Text = campaign.Summary;
+                txtCampaignMailingAddress.Text = campaign.Address;
+                txtCampaignDescription.Text = campaign.Description;
                 textAmount.Value = campaign.Amount;
                 chkIsDefault.Checked = campaign.IsDefault;
                 hdnSelectedCampaignId.Value = campaignId.ToString();
@@ -224,10 +240,12 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         }
         else if (e.CommandName == "DeleteRow")
         {
+            campaignId = new Guid(e.CommandArgument.ToString());
+            hdnSelectedCampaignId.Value = campaignId.ToString();
             ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenModal", "showDeleteModal();", true);
         }
-       
     }
+
     protected void DeleteCampaign(object sender, EventArgs e)
     {
         Guid campaignId = new Guid(hdnSelectedCampaignId.Value);
@@ -250,7 +268,26 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         ClearControls();
         ScriptManager.RegisterStartupScript(this, this.GetType(), "closeModal", "$('#yourModal').modal('hide');", true);
     }
+    protected void gvDonationCampaigns_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            var amount = DataBinder.Eval(e.Row.DataItem, "Amount");
+            Button deleteButton = (Button)e.Row.FindControl("btnDelete");
+            if (deleteButton != null)
+            {
+                if (string.IsNullOrEmpty(amount.ToString()) || amount.ToString() == "0")
+                {
+                    deleteButton.Visible = true;
+                }
+                else
+                {
+                    deleteButton.Visible = false;
+                }
+            }
+        }
+    }
+
 
 
 }
-

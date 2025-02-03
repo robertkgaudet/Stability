@@ -8,52 +8,64 @@
     <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/Homer/vendor/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" />
-   <style>
+
+
+    <script>
+        $(function () {
+            $('#<%=txtCampaignSummary.ClientID%>').summernote({
+                toolbar: [
+                    ['style', ['bold', 'italic']],
+                    ['alignment', ['ul', 'ol', 'paragraph']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link', 'video', 'table', 'hr']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ],
+                height: 100
+            });
+            $('#<%=txtCampaignMailingAddress.ClientID%>').summernote({
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline']],
+                    ['alignment', ['ul', 'ol', 'paragraph']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['color', ['color']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link', 'video', 'table', 'hr']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ],
+                height: 125
+            });
+
+            $('#<%=txtCampaignDescription.ClientID%>').summernote({
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline']],
+                    ['alignment', ['ul', 'ol', 'paragraph']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['color', ['color']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link', 'video', 'table', 'hr']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ],
+                height: 125
+            });
+        });
+    </script>
+    <style>
         .modal-fullscreen {
             width: 80%;
             height: 100vh;
         }
     </style>
-
-    <script>
-        $(function () {
-            $('#<%=txtPaymentSummary.ClientID%>').summernote({
-                toolbar: [
-                    ['style', ['bold', 'italic']]
-                ],
-                height: 100
-            });
-            $('#<%=txtAddress.ClientID%>').summernote({
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline']],
-                    ['alignment', ['ul', 'ol', 'paragraph']]
-                ],
-                height: 125
-            });
-
-            $('#<%=txtDescription.ClientID%>').summernote({
-                toolbar: [
-                    ['style', ['bold', 'italic', 'underline']],
-                    ['alignment', ['ul', 'ol', 'paragraph']]
-                ],
-                height: 125
-            });
-        });
-        function initializeSummernote() {
-            $('.summernote-textbox').each(function () {
-                // Check if Summernote is already initialized
-                if (!$(this).next().hasClass('note-editor')) {
-                    $(this).summernote({
-                        toolbar: [
-                            ['style', ['bold', 'italic', 'underline']],
-                            ['alignment', ['ul', 'ol', 'paragraph']]
-                        ],
-                        height: 100
-                    });
-                }
-            });
-        }
-    </script>
+    <style>
+        
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div class="panel-body">
@@ -99,24 +111,42 @@
                 <div class="col-12" style="display: flex; justify-content: end;">
                     <asp:Button type="button" class="compaign-btn" runat="server" Text="Add New Campaign" CssClass="btn btn-primary" OnClientClick="showModal('Add New Campaign' ); return false;" />
                 </div>
-                <asp:GridView ID="gvDonationCampaigns" runat="server" AutoGenerateColumns="False" DataKeyNames="DonationCampaignId" OnRowCommand="gvCampaigns_RowCommand" CssClass="table table-bordered">
+                <asp:GridView ID="gvDonationCampaigns" runat="server" AutoGenerateColumns="False" DataKeyNames="DonationCampaignId" OnRowCommand="gvCampaigns_RowCommand" OnRowDataBound="gvDonationCampaigns_RowDataBound" CssClass="table table-bordered">
 
                     <Columns>
-                        <asp:BoundField DataField="DonationCampaignId" HeaderText="Campaign ID" Visible="False" />
+                        <asp:BoundField DataField="DonationCampaignId" HeaderText="Campaign ID" Visible="false" />
                         <asp:BoundField DataField="OrganizationEventName" HeaderText="Deployment" />
-                        <asp:BoundField DataField="Amount" HeaderText="Amount" DataFormatString="${0:N2}" HtmlEncode="False" />
+                        <asp:BoundField DataField="Amount" HeaderText="Amount" HtmlEncode="False" />
                         <asp:TemplateField HeaderText="Default?">
-                            <ItemTemplate><%# Convert.ToBoolean(Eval("IsDefault")) ? "True" : "False" %>     </ItemTemplate>
+                            <ItemTemplate><%# Convert.ToBoolean(Eval("IsDefault")) ? "True" : "False" %>   </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:ButtonField CommandName="EditRow" Text="Edit"  ButtonType="Button"   /> 
-                        <asp:ButtonField CommandName="DeleteRow" Text="Delete" ButtonType="Button"  />
+                        <asp:ButtonField CommandName="EditRow" Text="Edit" ButtonType="Button" />
+                        <asp:TemplateField>
+                            <ItemTemplate>
+                                <asp:Button ID="btnDelete" runat="server" Text="Delete" CommandName="DeleteRow" CommandArgument='<%# Eval("DonationCampaignId") %>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
                 <div id="campaignModal" class="modal fade" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-lg modal-fullscreen" role="document">
                         <div class="modal-content">
-                            <div class="modal-header">
+                            <%-- <div class="modal-header">
                                 <h5 class="modal-title text-center">Add New Campaign</h5>
+                                <button type="button"
+                                    class="close btn btn-secondary"
+                                    runat="server"
+                                    aria-label="Close"
+                                    onserverclick="btnClose_Click">
+                                    <span aria-hidden="true">X</span>
+                                </button>
+
+                            </div>--%>
+                            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <h5 class="modal-title" style="flex-grow: 1; text-align: center;">Add New Campaign</h5>
+                                <button type="button" class="close btn btn-secondary" runat="server" aria-label="Close" onserverclick="btnClose_Click">
+                                    <span aria-hidden="true">X</span>
+                                </button>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
@@ -128,21 +158,21 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Payment Summary</label>
+                                    <label class="col-sm-2 control-label">Campaign Summary</label>
                                     <div class="col-sm-8">
-                                        <asp:TextBox ID="txtPaymentSummary" runat="server" class="form-control" TextMode="MultiLine" ClientIDMode="Static" Style="height: 150px; font-size: 18px;"></asp:TextBox>
+                                        <asp:TextBox ID="txtCampaignSummary" runat="server" class="form-control" TextMode="MultiLine" ClientIDMode="Static" Style="height: 150px; font-size: 18px;"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Address</label>
+                                    <label class="col-sm-2 control-label">Campaign Mailing Address</label>
                                     <div class="col-sm-8">
-                                        <asp:TextBox ID="txtAddress" runat="server" class="form-control" TextMode="MultiLine" ClientIDMode="Static" Style="height: 150px; font-size: 18px;"></asp:TextBox>
+                                        <asp:TextBox ID="txtCampaignMailingAddress" runat="server" class="form-control" TextMode="MultiLine" ClientIDMode="Static" Style="height: 150px; font-size: 18px;"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">Description</label>
+                                    <label class="col-sm-2 control-label">Campaign Description</label>
                                     <div class="col-sm-8">
-                                        <asp:TextBox ID="txtDescription" runat="server" class="form-control" TextMode="MultiLine" ClientIDMode="Static" Style="height: 150px; font-size: 18px;"></asp:TextBox>
+                                        <asp:TextBox ID="txtCampaignDescription" runat="server" class="form-control" TextMode="MultiLine" ClientIDMode="Static" Style="height: 150px; font-size: 18px;"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -162,7 +192,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <asp:Button type="submit" class="btn btn-primary" runat="server"  Text="Save Campaign" OnClick="SaveCampaign" />
+                                <asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Campaign" OnClick="SaveCampaign" />
                                 <%--        <button type="button" class="btn btn-secondary" data-dismiss="modal">close</button>   --%>
                                 <asp:Button
                                     ID="btnClose"
@@ -170,7 +200,6 @@
                                     Text="Close"
                                     CssClass="btn btn-secondary"
                                     OnClick="btnClose_Click" />
-
                             </div>
                         </div>
                     </div>
@@ -178,9 +207,13 @@
                 <div id="deleteCampaignModal" class="modal fade" tabindex="-1" role="dialog">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title text-center">Delete Campaign</h5>
+                            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <h5 class="modal-title" style="flex-grow: 1; text-align: center;">Delete Campaign</h5>
+                                <button type="button" class="close btn btn-secondary" data-dismiss="modal">
+                                    <span aria-hidden="true">X</span>
+                                </button>
                             </div>
+                            <%-- <button type="button" class="btn btn-secondary" data-dismiss="modal">X</button>--%>
                             <div class="modal-body">
                                 Are you sure want to delete this item?
                             </div>
@@ -194,7 +227,6 @@
 
             </div>
         </div>
-</div>
         <asp:HiddenField ID="hdnSelectedCampaignId" Value="" runat="server" />
         <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
         <script>
@@ -213,5 +245,7 @@
 
             }
         </script>
+        <script>
+</script>
         <script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
 </asp:Content>
