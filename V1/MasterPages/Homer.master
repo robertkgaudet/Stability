@@ -1,6 +1,5 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Homer.master.cs" Inherits="MasterPages_Homer" %>
 
-
 <!DOCTYPE html>
 <html>
 	<head runat="server">
@@ -225,8 +224,37 @@
                  }
              }
 		</script>
+		<script type="text/javascript">
+            var baseUrl = '<%= ResolveUrl("~/") %>';
+            console.log("Base URL:", baseUrl);
+		</script>
+		
+
+
+		<script>
+            $(document).ready(function () {
+                var notificationCount = '<%= notificationCounting %>';
+
+				console.log("Notification Count:", notificationCount);
+				debugger;
+
+				if (notificationCount === "" || notificationCount === "0") {
+					$('.badge.badge-danger').hide();
+				} else {
+					$('.badge.badge-danger').show();
+				}
+			});
+        </script>
 
 		<style>
+			    #notificationDropdown a:hover {
+					background: none;
+				}
+				#notificationDropdown a {
+					background: none;
+					border-bottom:none;
+				}
+
             .btn-purple
             {
                 background-color:#5E2E91;
@@ -274,7 +302,7 @@
 			}
 			.fa-bars:hover
 			{
-				color:white;
+				color:none;
 			}
 			#<%=imgProfile.ClientID%> {width:60%;}
 
@@ -291,7 +319,7 @@
 			.liUserAction:hover
 			{
 				cursor:pointer;
-				background-color:lightgray;
+				background-color:none;
 				color:white;
 			}
 			.ul_legend li
@@ -388,6 +416,7 @@
 			}
 			
 		</style>
+
 		<asp:ContentPlaceHolder id="head" runat="server">
 		</asp:ContentPlaceHolder>
 	</head>
@@ -438,6 +467,21 @@
 						</div>
 
 						<div class="navbar-right">
+							<ul class="nav navbar-nav no-borders removeStyle">
+								<li class="dropdown" id="notificationDropdown">
+									<a class="dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
+										<i class="fa fa-bell"></i>
+										<span class="badge badge-danger">
+											<asp:Label  ID="notificationCounts" runat="server" ></asp:Label>
+										</span>
+									</a>
+									<asp:PlaceHolder ID="PlaceHolderContent" runat="server"></asp:PlaceHolder>
+								</li>
+							</ul>
+							
+
+							
+							
 							<ul class="nav navbar-nav no-borders">
 								<li class="dropdown" style="visibility:hidden;">
 									<a class="dropdown-toggle label-menu-corner" href="#" data-toggle="dropdown">
@@ -917,5 +961,6 @@
 		<br />
 		<br />
 		<br />
+
 	</body>
 </html>

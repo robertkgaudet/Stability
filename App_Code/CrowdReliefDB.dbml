@@ -64,7 +64,6 @@
       <Association Name="aspnet_User_Rebuild2" Member="Rebuilds2" ThisKey="UserId" OtherKey="SurvivorId" Type="Rebuild" />
       <Association Name="aspnet_User_UserInteractionType" Member="UserInteractionTypes" ThisKey="UserId" OtherKey="UserId" Type="UserInteractionType" />
       <Association Name="aspnet_User_UserSkill" Member="UserSkills" ThisKey="UserId" OtherKey="UserId" Type="UserSkill" />
-      <Association Name="aspnet_User_ProfilePhoto" Member="ProfilePhotos" ThisKey="UserId" OtherKey="UserId" Type="ProfilePhoto" />
       <Association Name="aspnet_User_EventPost" Member="EventPosts" ThisKey="UserId" OtherKey="UserId" Type="EventPost" />
       <Association Name="aspnet_User_ArticleComment" Member="ArticleComments" ThisKey="UserId" OtherKey="UserId" Type="ArticleComment" />
       <Association Name="aspnet_User_ArticlePhoto" Member="ArticlePhotos" ThisKey="UserId" OtherKey="CreatedBy" Type="ArticlePhoto" />
@@ -112,6 +111,7 @@
       <Association Name="aspnet_User_TicketProperty1" Member="TicketProperties1" ThisKey="UserId" OtherKey="CreatedBy" Type="TicketProperty" />
       <Association Name="aspnet_User_TicketProperty2" Member="TicketProperties2" ThisKey="UserId" OtherKey="UpdatedBy" Type="TicketProperty" />
       <Association Name="aspnet_User_OrganizationCase" Member="OrganizationCases" ThisKey="UserId" OtherKey="UserId" Type="OrganizationCase" />
+      <Association Name="aspnet_User_ProfilePhoto" Member="ProfilePhotos" ThisKey="UserId" OtherKey="UserId" Type="ProfilePhoto" />
       <Association Name="StreamDonation_aspnet_User" Member="StreamDonation" Storage="_Donation" ThisKey="UserId" OtherKey="UserId" Type="StreamDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User" Member="UserDonation" ThisKey="UserId" OtherKey="DonorId" Type="UserDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User1" Member="UserDonation1" ThisKey="UserId" OtherKey="RecipientId" Type="UserDonation" IsForeignKey="true" />
@@ -362,15 +362,6 @@
       <Column Name="TaskTypeId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Association Name="TaskType_Timesheet" Member="Timesheets" ThisKey="TaskTypeId" OtherKey="TaskTypeId" Type="Timesheet" />
-    </Type>
-  </Table>
-  <Table Name="dbo.ProfilePhoto" Member="ProfilePhotos">
-    <Type Name="ProfilePhoto">
-      <Column Name="ProfilePhotoId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="PhotoId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="IsCurrrent" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="aspnet_User_ProfilePhoto" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.EventPost" Member="EventPosts">
@@ -1954,6 +1945,42 @@
       <Column Name="Title" Type="System.String" DbType="VarChar(5000)" CanBeNull="true" />
       <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Association Name="VideoLink_ProgramVideoLink" Member="ProgramVideoLinks" ThisKey="VideoLinkId" OtherKey="VideoLinkId" Type="ProgramVideoLink" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FeatureType" Member="FeatureTypes">
+    <Type Name="FeatureType">
+      <Column Name="FeatureTypeId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FeatureName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="RedirectURL" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="IncludeInStream" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="FeatureType_Notification" Member="Notifications" ThisKey="FeatureTypeId" OtherKey="FeatureTypeId" Type="Notification" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Notification" Member="Notifications">
+    <Type Name="Notification">
+      <Column Name="NotificationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(1000) NOT NULL" CanBeNull="false" />
+      <Column Name="RedirectURLParameters" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="NotificationType" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedBy" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IsRead" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="SenderUserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="RecipientUserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="FeatureTypeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PostToStream" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="FeatureType_Notification" Member="FeatureType" ThisKey="FeatureTypeId" OtherKey="FeatureTypeId" Type="FeatureType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ProfilePhoto" Member="ProfilePhotos">
+    <Type Name="ProfilePhoto">
+      <Column Name="ProfilePhotoId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="PhotoId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="IsCurrrent" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="aspnet_User_ProfilePhoto" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">

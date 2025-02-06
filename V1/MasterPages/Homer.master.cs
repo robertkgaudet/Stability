@@ -5,6 +5,10 @@ using System.Web.UI;
 using System.Web.Security;
 using System.Activities.Expressions;
 using System.Web.Caching;
+using System.Web.Services;
+using System.Text;
+using System.IO;
+using System.Web.UI.WebControls;
 
 public partial class MasterPages_Homer : System.Web.UI.MasterPage
 {
@@ -39,8 +43,10 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 	public string deploymentUpdated		= "grey";
 	public string calendarUpdated		= "grey";
 	public string _masterCoverImage = "";
+    public string TimeAgo { get; set; }
+    public string notificationCounting { get; set; }
 
-	protected void Page_Load(object sender, EventArgs e)
+    protected void Page_Load(object sender, EventArgs e)
 	{
 		form1.Action = HttpContext.Current.Request.RawUrl;
 		divLogin.Visible = true;
@@ -48,7 +54,28 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 		litVolunteerPending.Text = " Volunteer";
 		litVolunteerIcon.Text = "<i class=\"fa fa-heart\"></i>";
 
-		divMasterCover.Visible = false;
+
+        PlaceHolder PlaceHolderContent = (PlaceHolder)FindControl("PlaceHolderContent");
+
+        if (PlaceHolderContent != null)
+        {
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+
+            // Specify the page you want to render, e.g., a different ASPX page
+            string pageToRender = "/V1/MasterPages/ReusableNotification.aspx";
+
+            // Render the page to the StringWriter
+            Server.Execute(pageToRender, htw);
+
+            // Create a LiteralControl with the rendered content
+            LiteralControl litControl = new LiteralControl(sw.ToString());
+
+            // Add the LiteralControl to the PlaceHolder
+            PlaceHolderContent.Controls.Add(litControl);
+        }
+
+        divMasterCover.Visible = false;
 		if (!_hideMasterCover)
 		{
 			divMasterCover.Visible = true;
@@ -88,7 +115,14 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 		title.Text = PageTitle;
 		description.Attributes.Add("content", PageTitle);
 
-		//activeStatus.Attributes.Add("checked", "checked");
+		//Calculating the notificationCount
+		using (var dc1 = new CrowdReliefDBDataContext())
+		{
+			int unreadCount = dc1.Notifications.Count(n => !n.IsRead);
+			notificationCounting = unreadCount.ToString();
+            notificationCounts.Text = unreadCount > 0 ? unreadCount.ToString() : string.Empty;
+        }
+		
 		if (HttpContext.Current.User.Identity.IsAuthenticated)
 		{
 			userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
@@ -502,6 +536,8 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			divLocationAdministration.Visible = true;
 		}
 	}
+
+
 
 	private bool CheckResources(Guid userId)
 	{
