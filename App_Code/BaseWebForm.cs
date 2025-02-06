@@ -94,7 +94,37 @@ public class BaseWebForm : System.Web.UI.Page, IRequiresSessionState
 
 		return disasterDropDown;
 	}
-	public Guid userOrganizationId
+    public static bool AddNotifications(NotificationType notificationType, int featureTypeId, string title, string description,
+                                      DateTime date, Guid senderUserId, Guid recipientUserId, bool postToStream)
+    {
+        try
+        {
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                Notification notification = new Notification
+                {
+                    NotificationType = (int)notificationType,
+                    Title = title,
+                    Description = description,
+                    FeatureTypeId = featureTypeId,
+                    SenderUserId = senderUserId,
+                    RecipientUserId = recipientUserId,
+                    PostToStream = postToStream,
+                    CreatedOn = DateTime.Now,
+                };
+                dc.Notifications.InsertOnSubmit(notification);
+                dc.SubmitChanges();
+				return true;
+            }
+        }
+
+        catch (Exception ex)
+		{
+			Console.WriteLine("Error occurred: " + ex.Message);
+			return false;
+		}
+	}
+    public Guid userOrganizationId
 	{
 		get
 		{ return m_userOrganizationId; }
