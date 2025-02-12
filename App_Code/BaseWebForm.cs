@@ -124,6 +124,7 @@ public class BaseWebForm : System.Web.UI.Page, IRequiresSessionState
 			return false;
 		}
 	}
+
     public Guid userOrganizationId
 	{
 		get

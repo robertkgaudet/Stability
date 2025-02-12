@@ -1947,15 +1947,6 @@
       <Association Name="VideoLink_ProgramVideoLink" Member="ProgramVideoLinks" ThisKey="VideoLinkId" OtherKey="VideoLinkId" Type="ProgramVideoLink" />
     </Type>
   </Table>
-  <Table Name="dbo.FeatureType" Member="FeatureTypes">
-    <Type Name="FeatureType">
-      <Column Name="FeatureTypeId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="FeatureName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="RedirectURL" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
-      <Column Name="IncludeInStream" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="FeatureType_Notification" Member="Notifications" ThisKey="FeatureTypeId" OtherKey="FeatureTypeId" Type="Notification" />
-    </Type>
-  </Table>
   <Table Name="dbo.Notification" Member="Notifications">
     <Type Name="Notification">
       <Column Name="NotificationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -1981,6 +1972,17 @@
       <Column Name="IsCurrrent" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Association Name="aspnet_User_ProfilePhoto" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FeatureType" Member="FeatureTypes">
+    <Type Name="FeatureType">
+      <Column Name="FeatureTypeId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FeatureName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="RedirectURL" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="IncludeInStream" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Counter" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="KeyValue" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Association Name="FeatureType_Notification" Member="Notifications" ThisKey="FeatureTypeId" OtherKey="FeatureTypeId" Type="Notification" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">

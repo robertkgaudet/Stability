@@ -202,7 +202,7 @@
                 success: function (response) {
                     if (response.d && response.d.trim() !== "") {
                         $("#notificationContainer").append(response.d);
-                        page++; 
+                        page++;
                     } else {
                         $("#noloading").show();
                         console.log("No more notifications to load.");
@@ -232,15 +232,21 @@
         });
 
         $('#notificationContainer').on('click', '.notification-item', function () {
+
             var notificationId = $(this).find('.notificationClick').data('notification-id');
+            var self = $(this);
             $.ajax({
                 url: "/V1/MasterPages/ReusableNotification.aspx/MarkAsRead",
                 type: "POST",
                 data: JSON.stringify({ notificationId: notificationId }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function () {
-                    $(this).closest('li').removeClass('unread').addClass('read');
+                success: function (res) {
+
+                    console.log(res);
+                    if (res.d === "Success") {
+                        self.closest('.notification-item').removeClass('unread').addClass('read');
+                    }
                 },
                 error: function () {
                     console.error('Failed to mark notification as read.');
@@ -251,6 +257,7 @@
 </script>
 
 
+        
 
         <ul class="dropdown-menu hdropdown notification animated flipInX" style="width: 300px; max-height: 400px; overflow-y: auto;" id="notificationList">
             <li class="title">Notifications</li>

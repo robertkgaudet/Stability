@@ -1,8 +1,9 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Web;
 using System.Web.UI;
@@ -10,22 +11,29 @@ using System.Web.UI.WebControls;
 
 public partial class V1_MasterPages_ReusableNotification : System.Web.UI.Page
 {
+    public class notificationUrlParameters
+    {
+        public int FeatureTypeId { get; set; }
+        public string NotificationUrlParameters { get; set; }
+    }
     protected void Page_Load(object sender, EventArgs e)
     {
-
     }
 
     [System.Web.Services.WebMethod]
-    public static void MarkAsRead(string notificationId)
+    public static string MarkAsRead(string notificationId)
     {
         var dc = new CrowdReliefDBDataContext();
+
 
         var notification = dc.Notifications.FirstOrDefault(n => n.NotificationId == Guid.Parse(notificationId));
         if (notification != null)
         {
             notification.IsRead = true;
             dc.SubmitChanges();
+            return "Success";
         }
+        return "false";
     }
 
     [System.Web.Services.WebMethod]
@@ -33,36 +41,57 @@ public partial class V1_MasterPages_ReusableNotification : System.Web.UI.Page
     {
         int itemsPerPage = 5;
         var dc = new CrowdReliefDBDataContext();
-        var notificationList = dc.Notifications.OrderByDescending(n => n.CreatedOn).Skip((page - 1) * itemsPerPage).Take(itemsPerPage).ToList();
-        notificationList.ForEach(n =>
-        {
-            if (n.Description.Length > 30)
-            {
-                n.Description = n.Description.Substring(0, 30) + "...";
-            }
-        });
+        var notificationList = (from n in dc.Notifications
+                                join f in dc.FeatureTypes on n.FeatureTypeId equals f.FeatureTypeId
+                                orderby n.CreatedOn descending
+                                select new
+                                {
+                                    n.NotificationId,
+                                    n.Title,
+                                    n.Description,
+                                    NotificationRedirectUrl = f.RedirectURL + n.RedirectURLParameters,
+                                    n.NotificationType,
+                                    n.CreatedOn,
+                                    n.CreatedBy,
+                                    n.IsRead,
+                                    n.SenderUserId,
+                                    n.RecipientUserId,
+                                    n.FeatureTypeId,
+                                    n.PostToStream
+                                })
+                        .Skip((page - 1) * itemsPerPage)
+                        .Take(itemsPerPage)
+                        .ToList();
 
-        StringBuilder notificationHtml = new StringBuilder();
-        foreach (Notification n in notificationList)
+        var notificationHtml = new StringBuilder();
+        foreach (var n in notificationList)
         {
-            if (n.NotificationId != Guid.Empty)
-            {
-                Guid photoId = dc.ProfilePhotos.Where(x => x.UserId == n.SenderUserId).OrderByDescending(x => x.CreatedOn).Select(x => x.PhotoId).FirstOrDefault();
 
-                if (photoId != Guid.Empty)
+            var dataId = Convert.ToString(n.NotificationId);
+            if (!string.IsNullOrEmpty(dataId))
+            {
+                Guid photoIds = (n.SenderUserId != Guid.Empty)
+                                ? dc.ProfilePhotos.Where(x => x.UserId == n.SenderUserId).OrderByDescending(x => x.CreatedOn).Select(x => x.PhotoId).FirstOrDefault() : Guid.Empty;
+
+                string photoFilename = photoIds != null ? dc.Photos.Where(x => x.PhotoId == photoIds).Select(x => x.Filename).FirstOrDefault() : null;
+                string image = string.IsNullOrEmpty(photoFilename) ? "/V1/Images/ProfilePhotos/avatar2.png" : photoFilename;
+
+                string imageDirectory = HttpContext.Current.Server.MapPath("/V1/Images/ProfilePhotos/");
+                string imageFilename = image;
+                string imagePath = Path.Combine(imageDirectory, imageFilename);
+
+                string finalImageSource = File.Exists(imagePath)
+                                                            ? "/V1/Images/ProfilePhotos/" + imageFilename
+                                                            : "/V1/Images/ProfilePhotos/avatar2.png";
+                string shortDescription = n.Description.Length > 30 ? n.Description.Substring(0, 30) + "..." : n.Description;
+                string RedirectUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + n.NotificationRedirectUrl;
+
+                if (!string.IsNullOrEmpty(finalImageSource))
                 {
-                    string photoFilename = dc.Photos.Where(x => x.PhotoId == photoId).Select(x => x.Filename).FirstOrDefault();
-                    string image = string.IsNullOrEmpty(photoFilename) ? "avatar2.png" : photoFilename;
-                    string imageDirectory = HttpContext.Current.Server.MapPath("/V1/Images/ProfilePhotos/");
-                    string imagePath = Path.Combine(imageDirectory, image);
-                    string finalImageSource = File.Exists(imagePath)
-                                                             ? "/V1/Images/ProfilePhotos/" + image
-                                                             : "/V1/Images/ProfilePhotos/avatar2.png";
-
                     notificationHtml.AppendFormat(@"
 										<div class='{0} notification-item'>
 											<li class='notificationClick' data-notification-id='{1}'>
-												<a href='{2}' class='notification-link'>
+												<a href='https://{2}' target='_blank' class='notification-link'>
 													<img src='{6}' class='notification-user-img' alt='logo' />
 													<div class='notification-text'>
 														{3}<br />
@@ -74,17 +103,14 @@ public partial class V1_MasterPages_ReusableNotification : System.Web.UI.Page
 										</div>",
                                 n.IsRead ? "read" : "unread",
                                 n.NotificationId,
-                                n.RedirectURLParameters,
+                                RedirectUrl,
                                 n.Title,
-                                n.Description,
+                                shortDescription,
                                 GetTimeAgo(n.CreatedOn),
                                 finalImageSource
                      );
                 }
             }
-
-
-
         }
 
         return notificationHtml.ToString();
@@ -109,4 +135,6 @@ public partial class V1_MasterPages_ReusableNotification : System.Web.UI.Page
 
         return string.Format("{0} weeks ago", (int)(timeDifference.TotalDays / 7));
     }
+
+
 }
