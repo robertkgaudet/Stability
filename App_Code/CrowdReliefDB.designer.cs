@@ -418,7 +418,7 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void DeleteFeatureType(FeatureType instance);
     #endregion
     public CrowdReliefDBDataContext() :
-               base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
+              base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
     {
         OnCreated();
     }
@@ -45969,7 +45969,7 @@ public partial class FeatureType : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private System.Nullable<int> _Counter;
 	
-	private string _KeyValue;
+	private string _DisplayText;
 	
 	private EntitySet<Notification> _Notifications;
 	
@@ -45987,8 +45987,8 @@ public partial class FeatureType : INotifyPropertyChanging, INotifyPropertyChang
     partial void OnIncludeInStreamChanged();
     partial void OnCounterChanging(System.Nullable<int> value);
     partial void OnCounterChanged();
-    partial void OnKeyValueChanging(string value);
-    partial void OnKeyValueChanged();
+    partial void OnDisplayTextChanging(string value);
+    partial void OnDisplayTextChanged();
     #endregion
 	
 	public FeatureType()
@@ -46097,22 +46097,22 @@ public partial class FeatureType : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_KeyValue", DbType="VarChar(500)")]
-	public string KeyValue
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayText", DbType="NVarChar(50)")]
+	public string DisplayText
 	{
 		get
 		{
-			return this._KeyValue;
+			return this._DisplayText;
 		}
 		set
 		{
-			if ((this._KeyValue != value))
+			if ((this._DisplayText != value))
 			{
-				this.OnKeyValueChanging(value);
+				this.OnDisplayTextChanging(value);
 				this.SendPropertyChanging();
-				this._KeyValue = value;
-				this.SendPropertyChanged("KeyValue");
-				this.OnKeyValueChanged();
+				this._DisplayText = value;
+				this.SendPropertyChanged("DisplayText");
+				this.OnDisplayTextChanged();
 			}
 		}
 	}

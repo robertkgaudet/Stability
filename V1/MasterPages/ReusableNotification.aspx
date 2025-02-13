@@ -3,15 +3,16 @@
 
 
 <style>
-
     .removeStyle:hover {
         background: none;
         border: none;
     }
+
     .removeStyle {
         background: none;
         border: none;
     }
+
     #notificationDropdown {
         position: relative;
     }
@@ -26,7 +27,7 @@
         #notificationDropdown .badge {
             position: absolute;
             top: 18px;
-            right: 30px; 
+            right: 30px;
             background-color: red;
             color: white;
             font-size: 11px;
@@ -42,10 +43,10 @@
 
     .dropdown-menu.notification {
         background: #fff;
-        border-radius: 10px; 
+        border-radius: 10px;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
         padding: 0;
-        margin-top: 6px !important; 
+        margin-top: 6px !important;
         border: none;
         font-family: Arial, sans-serif;
         width: 320px;
@@ -143,11 +144,10 @@
             }
 
     .notification-user-img {
-        width: 100px; 
-        height: 100px; 
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
         object-fit: cover;
-        
     }
 
     .notification-link {
@@ -231,10 +231,12 @@
             }
         });
 
-        $('#notificationContainer').on('click', '.notification-item', function () {
+
+        $('#notificationList').on('click', '.notification-item', function () {
 
             var notificationId = $(this).find('.notificationClick').data('notification-id');
             var self = $(this);
+            
             $.ajax({
                 url: "/V1/MasterPages/ReusableNotification.aspx/MarkAsRead",
                 type: "POST",
@@ -242,32 +244,45 @@
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (res) {
-
                     console.log(res);
                     if (res.d === "Success") {
-                        self.closest('.notification-item').removeClass('unread').addClass('read');
+
                     }
                 },
                 error: function () {
                     console.error('Failed to mark notification as read.');
                 }
             });
+
+            if ($(this).hasClass('unread')) {
+                self.closest('.notification-item').removeClass('unread').addClass('read');
+                var countElem = $('#notificationCounts');
+                var count = parseInt(countElem.text()) || 0; // Get the current count (default to 0 if empty)
+                if (count > 0) {
+                    count -= 1;
+                    countElem.text(count);
+                    if (count == 0) {
+                        $('.badge.badge-danger').hide();
+                    }
+                }
+            }
         });
+
     });
 </script>
 
 
-        
 
-        <ul class="dropdown-menu hdropdown notification animated flipInX" style="width: 300px; max-height: 400px; overflow-y: auto;" id="notificationList">
-            <li class="title">Notifications</li>
-            <li id="notificationContainer">
-                <!-- Notifications will be dynamically loaded here -->
-            </li>
-            <li id="loading" style="display: none; text-align: center; padding: 10px; font-style: italic;">Loading...</li>
-            <li id="noloading" style="display: none; text-align: center; padding: 10px; font-style: italic;">No notifications to load.</li>
-            <li class="summary text-center">
-                <a href="/V1/Notifications.aspx">See All Notifications</a>
-            </li>
-        </ul>
+
+<ul class="dropdown-menu hdropdown notification animated flipInX" style="width: 300px; max-height: 400px; overflow-y: auto;" id="notificationList">
+    <li class="title">Notifications</li>
+    <li id="notificationContainer" class="decreaseCount">
+        <!-- Notifications will be dynamically loaded here -->
+    </li>
+    <li id="loading" style="display: none; text-align: center; padding: 10px; font-style: italic;">Loading...</li>
+    <li id="noloading" style="display: none; text-align: center; padding: 10px; font-style: italic;">No notifications to load.</li>
+    <li class="summary text-center">
+        <a href="/V1/Notifications.aspx">See All Notifications</a>
+    </li>
+</ul>
 

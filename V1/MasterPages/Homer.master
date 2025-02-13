@@ -230,13 +230,11 @@
 		</script>
 		
 
-
 		<script>
             $(document).ready(function () {
                 var notificationCount = '<%= notificationCounting %>';
 
                 console.log("Notification Count:", notificationCount);
-                debugger;
 
                 if (notificationCount === "" || notificationCount === "0") {
                     $('.badge.badge-danger').hide();
@@ -245,7 +243,6 @@
                 }
             });
             $('#notificationContainer').on('click', '.notification-item', function () {
-                debugger
                 var notificationId = $(this).find('.notificationClick').data('notification-id');
                 var self = $(this);
                 $.ajax({
@@ -255,7 +252,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (res) {
-                        debugger;
                         console.log(res);
 
                     },
@@ -458,6 +454,7 @@
 	<%=bodyTag%>
     <body class="sidebar-scroll hide-sidebar fixed-navbar <%=fixedFooter%> <%=fixedHeader%> bodyBGColor">
 		<form id="form1" runat="server" role="form">
+										
 			<div style="margin-bottom:500px;">
 				<div id="header" runat="server">
 					<nav role="navigation">
@@ -504,7 +501,7 @@
 						<div class="navbar-right">
 							<ul class="nav navbar-nav no-borders removeStyle">
 								<li id="featureTypeCounter">
-								<%=FeatureTypeCounterTitle %> : <asp:label ID="FeatureTypeCounterNumber" runat="server" ></asp:label>
+								<%=FeatureTypeCounterTitle %> <asp:label ID="FeatureTypeCounterNumber" runat="server" ></asp:label>
 
 								</li>
 								
@@ -522,7 +519,7 @@
 									<asp:PlaceHolder ID="PlaceHolderContent" runat="server"></asp:PlaceHolder>
 								</li>
 							</ul>
-							
+
 
 							
 							

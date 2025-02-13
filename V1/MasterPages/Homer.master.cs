@@ -122,9 +122,9 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         description.Attributes.Add("content", PageTitle);
 
         //Calculating the notificationCount
-        using (var dc1 = new CrowdReliefDBDataContext())
+        using (var dc = new CrowdReliefDBDataContext())
         {
-            int unreadCount = dc1.Notifications.Count(n => !n.IsRead);
+            int unreadCount = dc.Notifications.Count(n => !n.IsRead);
             notificationCounting = unreadCount.ToString();
             notificationCounts.Text = unreadCount > 0 ? unreadCount.ToString() : string.Empty;
         }
@@ -150,19 +150,19 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                     .Select(x => new FeatureTypeCounter
                     {
                         Counter = (int)x.Counter,
-                        FeatureKey = x.KeyValue
+                        FeatureKey = x.DisplayText
                     })
                     .FirstOrDefault();
 
                 if (FeatreTypeCounters != null)
                 {
                     FeatureTypeCounterTitle = FeatreTypeCounters.FeatureKey;
-                    FeatureTypeCounterNumber.Text = FeatreTypeCounters.Counter.ToString();
+                    FeatureTypeCounterNumber.Text = " : " + FeatreTypeCounters.Counter.ToString();
                 }
                 else
                 {
                     FeatureTypeCounterTitle = "";
-                    FeatureTypeCounterNumber.Text = "0";
+                    FeatureTypeCounterNumber.Text = "";
                 }
             }
 

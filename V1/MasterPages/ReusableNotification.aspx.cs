@@ -1,21 +1,13 @@
-﻿using Org.BouncyCastle.Asn1.Ocsp;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
-using System.Security.Principal;
 using System.Text;
 using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class V1_MasterPages_ReusableNotification : System.Web.UI.Page
 {
-    public class notificationUrlParameters
-    {
-        public int FeatureTypeId { get; set; }
-        public string NotificationUrlParameters { get; set; }
-    }
+
     protected void Page_Load(object sender, EventArgs e)
     {
     }
@@ -35,6 +27,8 @@ public partial class V1_MasterPages_ReusableNotification : System.Web.UI.Page
         }
         return "false";
     }
+
+
 
     [System.Web.Services.WebMethod]
     public static string GetMoreNotifications(int page)
@@ -91,7 +85,7 @@ public partial class V1_MasterPages_ReusableNotification : System.Web.UI.Page
                     notificationHtml.AppendFormat(@"
 										<div class='{0} notification-item'>
 											<li class='notificationClick' data-notification-id='{1}'>
-												<a href='https://{2}' target='_blank' class='notification-link'>
+												<a href='{2}' target='_blank' class='notification-link'>
 													<img src='{6}' class='notification-user-img' alt='logo' />
 													<div class='notification-text'>
 														{3}<br />
@@ -135,6 +129,5 @@ public partial class V1_MasterPages_ReusableNotification : System.Web.UI.Page
 
         return string.Format("{0} weeks ago", (int)(timeDifference.TotalDays / 7));
     }
-
 
 }

@@ -1981,7 +1981,7 @@
       <Column Name="RedirectURL" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
       <Column Name="IncludeInStream" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="Counter" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="KeyValue" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DisplayText" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
       <Association Name="FeatureType_Notification" Member="Notifications" ThisKey="FeatureTypeId" OtherKey="FeatureTypeId" Type="Notification" />
     </Type>
   </Table>

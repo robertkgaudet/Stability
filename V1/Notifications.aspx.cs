@@ -32,8 +32,8 @@ public partial class V1_Notifications : System.Web.UI.Page
     public static string GetMoreNotifications(int page)
     {
         int itemsPerPage = 5;
-        var dc1 = new CrowdReliefDBDataContext();
-        var notificationList = dc1.Notifications
+        var dc = new CrowdReliefDBDataContext();
+        var notificationList = dc.Notifications
             .OrderByDescending(n => n.CreatedOn)
             .Skip((page - 1) * itemsPerPage)
             .Take(itemsPerPage)
@@ -45,8 +45,6 @@ public partial class V1_Notifications : System.Web.UI.Page
             {
                 n.Description = n.Description.Substring(0, 50) + "...";
             }
-
-
         });
 
         var notificationHtml = new StringBuilder();
@@ -56,12 +54,12 @@ public partial class V1_Notifications : System.Web.UI.Page
             if (!string.IsNullOrEmpty(dataId))
             {
                 var photoIds = (n.SenderUserId != Guid.Empty)
-                                ? dc1.ProfilePhotos.Where(x => x.UserId == n.SenderUserId).OrderByDescending(x => x.CreatedOn).Select(x => x.PhotoId).ToList() : new List<Guid>();
+                                ? dc.ProfilePhotos.Where(x => x.UserId == n.SenderUserId).OrderByDescending(x => x.CreatedOn).Select(x => x.PhotoId).ToList() : new List<Guid>();
 
                 if (photoIds != null && photoIds.Count > 1)
                 {
                     var SinglePhotoId = photoIds[0];
-                    var photoFilename = SinglePhotoId != null ? dc1.Photos.Where(x => x.PhotoId == SinglePhotoId).Select(x => x.Filename).ToList() : new List<string>();
+                    var photoFilename = SinglePhotoId != null ? dc.Photos.Where(x => x.PhotoId == SinglePhotoId).Select(x => x.Filename).ToList() : new List<string>();
                     var newPhoto = photoFilename[0];
                     var image = string.IsNullOrEmpty(newPhoto) ? "https://www.w3schools.com/w3images/avatar2.png" : newPhoto;
 
