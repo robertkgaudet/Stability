@@ -13,83 +13,184 @@
             //  append: '.post',
             //  history: false,
             //});
-            
+
             var pageNumber = 1;
 
             var gCommentId = "";
             var isEditComment = false;
-            //loadUser();
+            loadUser();
 
-            const users = [
-                'afzalahmed222222', 'Afzaal', 'Charlie Brown', 'David White', 'Eva Green'
-            ];
-            var taggedUsers = [];
+            const users = [];
+            let cursorPosition = 0;
 
-            $('textarea[data-item-id]').on('keyup', function (event) {
-                $('.suggestions').hide();
-                const itemId = $(this).data("item-id").slice(0, -8);
-                const input = $(this).val();
-                const lastWord = input.split(' ').pop();  // Get the last word typed
-                const suggestionsContainer = $('.suggestions');
-                // Show suggestions if the last word starts with '@'
-                if (lastWord.startsWith('@')) {
-                    const query = lastWord.slice(1);  // Remove the '@' symbol
+            $(document).on('click', '.commentSection', function () {
+                debugger;
+                let postId = $(this).data("item-id");
+                $('#postIdForComments').val(postId);
+                loadComments(postId);
+            });
 
-                    // Filter users based on the query
-                    const filteredUsers = users.filter(user => user.toLowerCase().includes(query.toLowerCase()));
+            function loadComments(postId) {
+                $(".commentTextarea").val('');
+                $('#newComments').fadeIn();
+                $('#newComments').modal('show');
+                $.ajax({
+                    type: "POST",
+                    url: "/V1/Stream.aspx/GetCommentsByPostId",
+                    data: JSON.stringify({ postId: postId }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $('#rptPostComments').html('');
+                        var html = ""
+                        debugger;
+                        if (response.d) {
+                            if (response.d.length > 0) {
+                                for (let i = 0; i < response.d.length; ++i) {
+                                    let item = response.d[i];
+                                    html += "<ul class=\"comments\" data-item-id=\"" + item.CommentId + "\">\n<li>\n<div class=\"userImage\">\n" +
+                                        "<a target=\"_blank\" href=\"" + item.ProfileUrl + "\">\n<img class=\"img-rounded\" " +
+                                        "src=\"" + item.ImgProfileUrl + "\" />\n</a>\n</div>\n<div class=\"commentReact\">\n" +
+                                        "<span style=\"font-weight: bold; width: 70%\">\n<a target=\"_blank\" href=\"" + item.ProfileUrl + "\" " +
+                                        "class=\"author-link\">" + item.Author + "</a>\n</span>\n<span style=\"float: right; width: 20%; " +
+                                        "text-align: right; margin: -20px 0px 0px 0px;\">" + item.TimeAgo + "</span>\n<span style=\"margin-top: 10px\" " +
+                                        "data-item-id=\"" + item.CommentId + "-comments\">" + item.Comment1 + "</span>\n\n<div class=\"reaction\">\n" +
+                                        "<div class=\"ReplyPostComment\" data-item-id=\"" + item.CommentId + "\">\n<i class=\"fa fa-reply\"></i>" +
+                                        "&nbsp;Reply\n</div>\n";
 
-                    // Create suggestion list
-                    if (filteredUsers.length > 0) {
-                        suggestionsContainer.empty().show();
-                        filteredUsers.forEach(function (user) {
-                            suggestionsContainer.append('<div class="suggestion-item">' + user + '</div>');
-                        });
+                                    if (item.IsEdit) {
+                                        html += "<div class=\"EditPostComment\" data-item-id=\"" + item.CommentId + "\" " +
+                                            "data-item-idpost=\"" + postId + "\">\n<i class=\"fa fa-edit\"></i>&nbsp;Edit\n" +
+                                            "</div>";
+                                    }
 
-                        // Select suggestion
-                        $('.suggestion-item').on('click', function () {
-                            const selectedUser = $(this).text();
-                            const newText = input.substring(0, input.lastIndexOf(' ') + 1) + '@' + selectedUser + ' ';
-                            //$('textarea[data-item-id]').val(newText);  // Update the textarea with the selected user
-                            $("textarea[data-item-id='" + itemId + "-comment" + "']").val(newText);
+                                    if (item.IsDelete) {
+                                        html += "<div class=\"DeletePostComment\" data-item-id=\"" + item.CommentId + "\">\n<i class=\"fa fa-trash-o\">" +
+                                            "</i>&nbsp;Delete\n</div>\n";
+                                    }
 
-                            var regex = /@(\w+)/g;
-                            var match;
-                            while ((match = regex.exec(newText)) !== null) {
-                                taggedUsers.push(match[1]);
+                                    html += "\n</div>\n</div>\n</li>\n\n<div class=\"reply-input hidden\" " +
+                                        "data-item-id=\"" + item.CommentId + "-replyDiv\">\n<textarea data-item-id=\"" + item.CommentId + "-reply\" " +
+                                        "rows=\"3\" class=\"replyTextarea\" placeholder=\"Write a reply...\"></textarea>\n<span class=\"hidden\" " +
+                                        "data-item-id=\"" + postId + "-postReplyId\"></span>\n<button type=\"button\" class=\"addreply\" " +
+                                        "data-item-id=\"" + item.CommentId + "-postReply\">\n<i class=\"fa fa-reply\"></i>&nbsp;Reply\n</button>\n" +
+                                        "<div style='z-index:999' id=\"replySuggestions\" class=\"suggestions replySuggestions\"></div>\n</div>\n\n";
+
+                                    for (let j = 0; j < item.Replies.length; ++j) {
+                                        let reply = item.Replies[j];
+                                        html += "<div class=\"reply\">\n<div class=\"replyImg\">\n" +
+                                            "<a target=\"_blank\" href=\"" + reply.ProfileUrl + "\">\n<img class=\"img-rounded\" style=\"float: left; " +
+                                            "margin-right: 10px; border-radius: 20px\" width=\"40\" src=\"" + reply.ImgProfileUrl + "\" />\n</a>\n" +
+                                            "</div>\n<div class=\"replyContent\">\n<span style=\"font-weight: bold; width: 70%\">\n" +
+                                            "<a target=\"_blank\" href=\"" + reply.ProfileUrl + "\" class=\"author-link\">" + reply.Author + "</a>\n</span>\n" +
+                                            "<span style=\"float: right; width: 20%; text-align: right; margin: -20px 10px 0px 0px;\">" + reply.TimeAgo + "</span>\n" +
+                                            "<span style=\"margin: 10px 0px 0px 40px;width: 90%;\" data-item-id=\"" + reply.CommentId + "-comments\">" + reply.Comment1 + "</span>\n" +
+                                            "\n<div class=\"reaction\">\n<div class=\"ReplyPostComment\" data-item-id=\"" + reply.CommentId + "\">\n<i class=\"fa fa-reply\">" +
+                                            "</i>&nbsp;Reply\n</div>\n";
+
+                                        if (reply.IsEdit) {
+                                            html += "<div class=\"EditPostReply\" data-item-id=\"" + reply.CommentId + "\" " +
+                                                "data-item-postid=\"" + postId + "\">\n<i class=\"fa fa-edit\"></i>&nbsp;Edit\n</div>";
+                                        }
+
+                                        if (reply.IsDelete) {
+                                            html += "<div class=\"DeletePostReply\" data-item-id=\"" + reply.CommentId + "\">\n<i class=\"fa fa-trash-o\"></i>&nbsp;Delete\n</div>";
+                                        }
+
+                                        html += "</div>\n</div>\n</div>\n";
+
+                                        html += "<div class=\"reply-input hidden\" data-item-id=\"" + reply.CommentId + "-replyDiv\">\n" +
+                                            "<textarea data-item-id=\"" + reply.CommentId + "-reply\" rows=\"3\" class=\"replyTextarea\" placeholder=\"Write a reply...\"></textarea>\n" +
+                                            "<span class=\"hidden\" data-item-id=\"" + item.CommentId + "\"></span>\n" +
+                                            "<button type=\"button\" class=\"addReplyReply\" data-item-id=\"" + reply.CommentId + "-postReply\">\n" +
+                                            "<i class=\"fa fa-reply\"></i>&nbsp;Reply\n</button>\n<div id=\"replySuggestions\" class=\"suggestions replySuggestions\"></div>\n</div>";
+                                    }
+                                    html += "</ul>";
+                                }
                             }
-                            suggestionsContainer.hide();  // Hide suggestions after selection
-                        });
+                            else {
+                                html += "<div style='text-align: center'> <strong> No Comments... </strong> </div>"
+                            }
+                        }
+                        $("#rptPostComments").html(html);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error: " + error);
+                        $('#rptPostComments').html('<div class="error">Error loading comments. Please try again.</div>');
                     }
+                });
+            }
+
+
+            // Handle typing in the textarea
+            $('.commentTextarea').on("keyup", function (e) {
+                const value = $(this).val();
+                const itemId = $("#postIdForComments").val();
+                const caretPosition = this.selectionStart;
+                cursorPosition = caretPosition;
+                // Check for `@` followed by text
+                const match = value.slice(0, caretPosition).match(/@\s?(\w*)$/);
+                if (match) {
+                    const searchText = match[1].toLowerCase();
+                    // Filter users
+                    const filteredUsers = users.filter((user) =>
+                        user.Title.toLowerCase().startsWith(searchText)
+                    );
+
+                    // Populate commentSuggestions
+                    let suggestionsHTML = "";
+                    filteredUsers.forEach((user) => {
+                        suggestionsHTML += `<div class="suggestion" data-id="${user.UserId}" style="padding: 5px; cursor: pointer;">${user.Title}</div>`;
+                    });
+
+                    $(".commentSuggestions").html(suggestionsHTML).show();
+
+                    // Select suggestion
+                    $('.suggestion').on('click', function () {
+                        const userName = $(this).text();
+                        // Insert selected user at caret position
+                        const text = $(".commentTextarea").val(); //$("textarea[data-item-id='" + itemId + "-comment" + "']").val();
+                        const beforeCaret = text.slice(0, cursorPosition);
+                        const afterCaret = text.slice(cursorPosition);
+                        const updatedText = `${beforeCaret}${userName} ${afterCaret}`;
+
+                        $(".commentTextarea").val(updatedText);  //$("textarea[data-item-id='" + itemId + "-comment" + "']").val(updatedText);
+                        cursorPosition = updatedText.length; // Update cursor position
+                        $("textarea[data-item-id='" + itemId + "-comment" + "']").focus();
+                        $(".commentSuggestions").hide();
+                    });
                 } else {
-                    suggestionsContainer.hide();  // Hide suggestions if '@' is not present
+                    $(".commentSuggestions").hide();
                 }
             });
 
-
             $(document).on('click', function (event) {
                 if (!$(event.target).closest('.commentTextarea').length) {
-                    $('.suggestions').hide();
+                    $('.commentSuggestions').hide();
+                }
+            });
+
+            $(document).on('click', function (event) {
+                if (!$(event.target).closest('.replyTextarea').length) {
+                    $('.replySuggestions').hide();
                 }
             });
 
             function loadUser() {
                 $.ajax({
+                    type: "POST",
                     url: "/V1/Stream.aspx/GetUsers",
-                    type: 'POST',
-                    contentType: 'application/json',
-                    success: function (data) {
-                        users = data;
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        $.each(response.d, function (index, value) {
+                            users.push(value);
+                        });
                     }
                 });
             }
 
             function reloadPage() {
-
-                //$('#btnPost').click(function (event) {
-                //    event.preventDefault();  // Prevents the default action (the click event)
-                //    // You can add additional logic here if you want to perform other actions
-                //});
-              
                 var scrollPos = $(window).scrollTop();
                 $(window).on('beforeunload', function () {
                     sessionStorage.setItem('scrollPos', scrollPos);
@@ -97,11 +198,9 @@
                 location.reload();
             }
 
-
             $(window).scroll(function () {
                 var windowHeight = $(window).scrollTop() + $(window).height();
                 var documentHeight = $(document).height();
-
                 if ((windowHeight + 200) > documentHeight) {
                     pageNumber = pageNumber + 1;
                     updateStreamPost(pageNumber);
@@ -232,10 +331,18 @@
                 clearTimeout(tooltipTimeout); // Clear the timeout when closing the tooltip manually
             });
 
+            $(document).on('click', '.closeComment', function () {
+                $('#newComments').modal('hide');
+            });
+
             $(document).on('click', '.addComment', function () {
-                let postId = $(this).data("item-id").slice(0, -5);
-                const commentText = $("textarea[data-item-id='" + postId + "-comment" + "']").val();
+                let postId = $("#postIdForComments").val();
+                const commentText = $(".commentTextarea").val();
                 let commentId = gCommentId;
+                if (commentText.trim() === "") {
+                    alert("Please enter a comment.");
+                    return;
+                }
                 $.ajax({
                     type: "POST",
                     url: "/V1/Stream.aspx/UploadPostComment",
@@ -245,7 +352,7 @@
                     success: function (response) {
                         gCommentId = "";
                         isEditComment = false;
-                        reloadPage();
+                        loadComments($("#postIdForComments").val());
                     },
                     error: function (xhr, status, error) {
                         console.error("Error: " + error);
@@ -270,9 +377,9 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        reloadPage();
                         gCommentId = "";
                         isEditComment = false;
+                        loadComments($("#postIdForComments").val());
                     },
                     error: function (xhr, status, error) {
                         console.error("Error: " + error);
@@ -281,8 +388,9 @@
             });
 
             $(document).on('click', '.addReplyReply', function () {
+                debugger;
                 var parentDiv = $(this).closest(".reply-input");
-                var postId = parentDiv.find("span:nth-child(2)[data-item-id]").data("item-id").slice(0, -12);
+                var postId = $("#postIdForComments").val();
                 var commentId = $(this).data('item-id').slice(0, -10);
                 var replyText = $("textarea[data-item-id='" + commentId + "-reply']").val();
                 if (replyText.trim() === "") {
@@ -290,6 +398,9 @@
                     return;
                 }
 
+                if (!isEditComment) {
+                    commentId = parentDiv.find("span[data-item-id]").data("item-id");
+                }
                 $.ajax({
                     type: "POST",
                     url: "/V1/Stream.aspx/UploadPostComment",
@@ -297,22 +408,15 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        reloadPage();
                         gCommentId = "";
                         isEditComment = false;
+                        loadComments($("#postIdForComments").val());
                     },
                     error: function (xhr, status, error) {
                         console.error("Error: " + error);
                     }
                 });
             });
-
-            $(document).on('click', '#commentButton', function () {
-                var cDiv = $(this).data('item-id').replace('cbutton', 'cdiv');
-                $("div[data-item-id='" + cDiv + "']").removeClass("hidden");
-            });
-
-
 
             $(document).on('click', '.ReplyPostComment', function () {
                 let postId = $(this).data("item-id");
@@ -326,11 +430,52 @@
                 isEditComment = true;
                 var spanDataId = postCommentId + "-comments"; // Example: '123-comments'
                 var commentText = $("span[data-item-id='" + spanDataId + "']").text();
-                var postId = $(this).data('item-idpost');
-                $("textarea[data-item-id='" + postId + "-comment" + "']").val(commentText);
-                $("div[data-item-id='" + postId + "-cdiv" + "']").removeClass("hidden");
+                //var postId = $(this).data('item-idpost');
+                $(".commentTextarea").val(commentText);
+                //$("textarea[data-item-id='" + postId + "-comment" + "']").val(commentText);
+                //$("div[data-item-id='" + postId + "-cdiv" + "']").removeClass("hidden");
             });
 
+            $(document).on('keyup', '.replyTextarea', function () {
+                const value = $(this).val();
+                const itemId = $(this).data("item-id").slice(0, -6);
+                const caretPosition = this.selectionStart;
+                cursorPosition = caretPosition;
+                // Check for `@` followed by text
+                const match = value.slice(0, caretPosition).match(/@\s?(\w*)$/);
+                if (match) {
+                    const searchText = match[1].toLowerCase();
+                    // Filter users
+                    const filteredUsers = users.filter((user) =>
+                        user.Title.toLowerCase().startsWith(searchText)
+                    );
+
+                    // Populate commentSuggestions
+                    let suggestionsHTML = "";
+                    filteredUsers.forEach((user) => {
+                        suggestionsHTML += `<div class="suggestionReply" data-id="${user.UserId}" style="padding: 5px; cursor: pointer;">${user.Title}</div>`;
+                    });
+
+                    $(".replySuggestions").html(suggestionsHTML).show();
+
+                    // Select suggestion
+                    $('.suggestionReply').on('click', function () {
+                        debugger;
+                        const userName = $(this).text();
+                        // Insert selected user at caret position
+                        const text = $("textarea[data-item-id='" + itemId + "-reply" + "']").val();
+                        const beforeCaret = text.slice(0, cursorPosition);
+                        const afterCaret = text.slice(cursorPosition);
+                        const updatedText = `${beforeCaret}${userName} ${afterCaret}`;
+                        $("textarea[data-item-id='" + itemId + "-reply" + "']").val(updatedText);
+                        cursorPosition = updatedText.length; // Update cursor position
+                        $("textarea[data-item-id='" + itemId + "-reply" + "']").focus();
+                        $(".replySuggestions").hide();
+                    });
+                } else {
+                    $(".replySuggestions").hide();
+                }
+            });
 
             $(document).on('click', '.EditPostReply', function () {
                 let postCommentId = $(this).data("item-id");
@@ -357,7 +502,7 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        reloadPage();
+                        loadComments($("#postIdForComments").val());
                     },
                     error: function (xhr, status, error) {
                         console.error("Error: " + error);
@@ -374,7 +519,7 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        reloadPage();
+                        loadComments($("#postIdForComments").val());
                     },
                     error: function (xhr, status, error) {
                         console.error("Error: " + error);
@@ -416,6 +561,12 @@
             }, 10000); // 8000 milliseconds = 8 seconds
         });
 
+
+        $(document).on('click', '#commentButton', function () {
+            var cDiv = $(this).data('item-id').replace('cbutton', 'cdiv');
+            $("div[data-item-id='" + cDiv + "']").removeClass("hidden");
+        });
+
     </script>
     <style>
         .suggestions {
@@ -426,7 +577,11 @@
             width: 300px;
             display: none;
             background-color: white;
-            z-index: 10;
+            z-index: 999;
+        }
+
+        span{
+            word-wrap: break-word;
         }
 
         .suggestion-item {
@@ -472,6 +627,13 @@
             color: white;
             border: none;
             cursor: pointer;
+        }
+
+        .commentList {
+            padding: 10px;
+            height: 570px;
+            max-height: 570px;
+            min-height: 570px;
         }
 
         .thankTooltip {
@@ -550,9 +712,11 @@
         }
 
         .modal-header {
-            background-color: #FFF !important;
-            border-top-left-radius: 10px !important;
-            border-top-right-radius: 10px !important;
+            /*background-color: #FFF !important;*/
+            background-color: #5e2e91 !important;
+            /* border-top-left-radius: 10px !important;
+            border-top-right-radius: 10px !important;*/
+            color: #fff;
         }
 
         .modal-footer {
@@ -608,24 +772,24 @@
         }
 
             .reply::before {
-                border-left: 2px solid #ccc;
+                border-left: 2px solid #efefef;
                 content: "";
-                height: 66px;
+                height: 78px;
                 width: 1px;
                 position: absolute;
-                left: -25px;
-                top: -50px;
+                left: -35px;
+                top: -65px;
             }
 
             .reply::after {
-                border-bottom: 2px solid #ccc;
+                border-bottom: 2px solid #efefef;
                 border-radius: 0 0 0 .8rem;
                 content: "";
                 height: 20px;
-                width: 25px;
+                width: 35px;
                 position: absolute;
-                left: -25px;
-                top: 0;
+                left: -35px;
+                top: -3px;
             }
 
         .post-container {
@@ -854,7 +1018,9 @@
         .comment-section {
             width: 100%;
             max-width: 600px;
-            max-height: 350px;
+            max-height: 550px;
+            min-height: 550px;
+            height: 550px;
             /*overflow-y: scroll;*/
             margin: 0px auto;
             background: #fff;
@@ -865,11 +1031,13 @@
         }
 
         .comment-section-repeater {
-            width: 100%;
-            max-width: 600px;
-            max-height: 250px;
+            width: 103%;
+            max-height: 480px;
+            min-height: 480px;
+            height: 480px;
+            overflow-x: hidden;
             overflow-y: auto;
-            padding: 5px;
+            padding: 0px;
             position: relative;
             z-index: 0;
             scroll-behavior: smooth;
@@ -1021,15 +1189,23 @@
         .replyImg {
             width: 40px;
             float: left;
-            margin-right: 10px;
+            margin-right: 0px;
         }
 
-            .userImage img,
-            .replyImg img {
+            .userImage img {
                 border-radius: 20px;
-                width: 40px;
+                width: 30px;
                 position: relative;
                 z-index: 99;
+                border: 1px solid #ccc;
+            }
+
+            .replyImg img {
+                border-radius: 20px;
+                width: 25px;
+                position: relative;
+                z-index: 99;
+                border: 1px solid #ccc;
             }
 
         .commentReact {
@@ -1046,38 +1222,44 @@
                 font-weight: normal;
             }
 
-        .reaction {
-            /*border: 1px solid #ccc;*/
-            display: inline-flex;
-            margin: 5px 0 0 0;
-        }
-
-            .reaction .EditPostComment,
-            .reaction .DeletePostComment,
-            .reaction .ReplyPostComment,
-            .reaction .EditPostReply,
-            .reaction .DeletePostReply,
-            .reaction .ReplyPostComment {
-                padding: 5px 10px;
-                font-size: 10px;
-                border-right: 1px solid #ccc;
-                cursor: pointer;
+            .commentReact .reaction {
+                /*border: 1px solid #ccc;*/
+                display: inline-flex;
+                margin: 5px 0 0 0;
             }
 
-                .reaction .ReplyPostComment:hover,
-                .reaction .ReplyPostComment:hover {
-                    color: #007bff
-                }
+        .replyContent .reaction {
+            /*border: 1px solid #ccc;*/
+            display: inline-flex;
+            margin: 5px 0 0 40px;
+        }
 
-                .reaction .EditPostComment:hover,
-                .reaction .EditPostReply:hover {
-                    color: #17a2b8;
-                }
+        .reaction .EditPostComment,
+        .reaction .DeletePostComment,
+        .reaction .ReplyPostComment,
+        .reaction .EditPostReply,
+        .reaction .DeletePostReply,
+        .reaction .ReplyPostComment {
+            padding: 5px 10px;
+            font-size: 10px;
+            /*border-right: 1px solid #ccc;*/
+            cursor: pointer;
+        }
 
-                .reaction .DeletePostComment:hover,
-                .reaction .DeletePostReply:hover {
-                    color: #dc3545;
-                }
+            .reaction .ReplyPostComment:hover,
+            .reaction .ReplyPostComment:hover {
+                color: #007bff
+            }
+
+            .reaction .EditPostComment:hover,
+            .reaction .EditPostReply:hover {
+                color: #17a2b8;
+            }
+
+            .reaction .DeletePostComment:hover,
+            .reaction .DeletePostReply:hover {
+                color: #dc3545;
+            }
     </style>
 
     <script>
@@ -1291,7 +1473,7 @@
                 // Hide the file input after images are selected
                 $('.imagePost').hide();
             });
-           
+
         });
 
     </script>
@@ -1320,7 +1502,7 @@
         <div class="post-container">
             <div class="post-content">
                 <asp:Repeater ID="rptPosts" runat="server" OnItemDataBound="rptPosts_ItemDataBound">
-                    <ItemTemplate>
+                    <itemtemplate>
                         <div class="hpanel messageBody">
                             <div class="panel-body">
                                 <div class="message">
@@ -1349,106 +1531,15 @@
 
                                 <div class="row">
                                     <div class="col-xs-3 post-type-div thankButton text-muted" data-item-id='<%# Eval("postId") %>'>
-                                        <%--<i class="fa fa-thumbs-up m-r-sm"></i>Thank--%>
                                         <asp:Literal ID="litReactionTitle" runat="server"></asp:Literal>
                                     </div>
-                                    <div class="col-xs-3 post-type-div" id="commentButton" data-item-id='<%# Eval("postId") %>-cbutton'><i class="fa fa-sticky-note m-r-sm nowrap"></i>Comment</div>
+                                    <div class="col-xs-3 post-type-div commentSection" data-item-id='<%# Eval("postId") %>'><i class="fa fa-sticky-note m-r-sm nowrap"></i>Comment</div>
                                     <div class="col-xs-3 post-type-div" id="helpButton"><i class="fa fa-users m-r-sm"></i>Help</div>
                                     <div class="col-xs-3 post-type-div" id="giveButton"><i class="fa fa-money m-r-sm"></i>Give</div>
                                 </div>
-
-                                <%--Shahzaib Work Start--%>
-
-
-                                <%--Shahzaib Work End--%>
-
-                                <div class="comment-section">
-                                    <div class="comment-input hidden" data-item-id='<%# Eval("postId") %>-cdiv'>
-                                        <textarea data-item-id='<%# Eval("postId") %>-comment' rows="3" class="commentTextarea" placeholder="Write a comment..."></textarea>
-                                        <button type="button" class="addComment" data-item-id='<%# Eval("postId") %>-post'>Post</button>
-                                        <div id="suggestions" class="suggestions"></div>
-                                    </div>
-                                    <div class="comment-section-repeater">
-                                        <asp:Repeater ID="rptPostComments" runat="server">
-                                            <ItemTemplate>
-                                                <!-- Shahzaib Style -->
-                                                <ul class="comments" data-item-id='<%# Eval("CommentId") %>'>
-                                                    <li>
-                                                        <div class="userImage">
-                                                            <img class="img-rounded" src='<%# Eval("imgProfileUrl") %>' />
-                                                        </div>
-                                                        <div class="commentReact">
-                                                            <span style="font-weight: bold; width: 70%"><%# Eval("author") %></span>
-                                                            <span style="float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;"><%# Eval("timeAgo") %></span>
-                                                            <span data-item-id='<%# Eval("CommentId") %>-comments'><%# Eval("Comment1") %></span>
-                                                            <div class="reaction">
-                                                                <div class="ReplyPostComment" data-item-id='<%# Eval("CommentId") %>'>
-                                                                    <i class="fa fa-reply"></i>&nbsp;Reply
-                                                                </div>
-                                                                <%--<span class="hidden" data-item-id='<%# Eval("postId") %>-postId'></span>--%>
-                                                                <div class="EditPostComment" data-item-id='<%# Eval("CommentId") %>' data-item-idpost='<%# Eval("postId") %>'
-                                                                    <%# Eval("isEdit") == DBNull.Value || (bool)Eval("isEdit") == false ? "style='display:none;'" : "" %>>
-                                                                    <i class="fa fa-edit"></i>&nbsp;Edit
-                                                                </div>
-                                                                <div class="DeletePostComment" data-item-id='<%# Eval("CommentId") %>'
-                                                                    <%# Eval("isEdit") == DBNull.Value || (bool)Eval("isEdit") == false ? "style='display:none;'" : "" %>>
-                                                                    <i class="fa fa-trash-o"></i>&nbsp;Delete
-                                                                </div>
-                                                                </span>
-                                                            </div>
-                                                    </li>
-
-                                                    <div class="reply-input hidden" data-item-id='<%# Eval("CommentId") %>-replyDiv'>
-                                                        <textarea data-item-id='<%# Eval("CommentId") %>-reply' rows="3" placeholder="Write a reply..."></textarea>
-                                                        <span class="hidden" data-item-id='<%# Eval("postId") %>-postReplyId'></span>
-                                                        <button type="button" class="addreply" data-item-id='<%# Eval("CommentId") %>-postReply'><i class="fa fa-reply"></i>&nbsp;Reply</button>
-                                                    </div>
-
-                                                    <!-- Replies -->
-                                                    <asp:Repeater ID="rptReplies" runat="server" DataSource='<%# Eval("replies") %>'>
-                                                        <ItemTemplate>
-                                                            <div class="reply">
-                                                                <div class="replyImg">
-                                                                    <img class="img-rounded" style="float: left; margin-right: 10px; border-radius: 20px" width="40" src='<%# Eval("imgProfileUrl") %>' />
-                                                                </div>
-                                                                <div class="replyContent">
-                                                                    <span style="font-weight: bold; width: 70%"><%# Eval("author") %></span>
-                                                                    <span style="float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;"><%# Eval("timeAgo") %></span>
-                                                                    <span data-item-id='<%# Eval("CommentId") %>-comments'><%# Eval("Comment1") %></span>
-                                                                    <div class="reaction">
-                                                                        <%--<span class="hidden" data-item-id='<%# Eval("postId") %>-postId'></span>--%>
-                                                                        <div class="ReplyPostComment" data-item-id='<%# Eval("CommentId") %>'>
-                                                                            <i class="fa fa-reply"></i>&nbsp; Reply
-                                                                        </div>
-                                                                        <div class="EditPostReply" data-item-id='<%# Eval("CommentId") %>' data-item-postid='<%# Eval("postId") %>'
-                                                                            <%# Eval("isEdit") == DBNull.Value || (bool)Eval("isEdit") == false ? "style='display:none;'" : "" %>>
-                                                                            <i class="fa fa-edit "></i>&nbsp;Edit
-                                                                        </div>
-                                                                        <div class="DeletePostReply" data-item-id='<%# Eval("CommentId") %>'
-                                                                            <%# Eval("isEdit") == DBNull.Value || (bool)Eval("isEdit") == false ? "style='display:none;'" : "" %>>
-                                                                            <i class="fa fa-trash-o"></i>&nbsp; Delete
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="reply-input hidden" data-item-id='<%# Eval("CommentId") %>-replyDiv'>
-                                                                <textarea data-item-id='<%# Eval("CommentId") %>-reply' rows="3" placeholder="Write a reply..."></textarea>
-                                                                <span class="hidden" data-item-id='<%# Eval("postId") %>-postReplyId'></span>
-                                                                <button type="button" class="addReplyReply" data-item-id='<%# Eval("CommentId") %>-postReply'><i class="fa fa-reply"></i>Reply</button>
-                                                            </div>
-                                                        </ItemTemplate>
-                                                    </asp:Repeater>
-                                                </ul>
-                                            </ItemTemplate>
-                                        </asp:Repeater>
-                                    </div>
-                                    <%--<a class="loadComments">
-                                        Load More Comments
-                                    </a>--%>
-                                </div>
                             </div>
                         </div>
-                    </ItemTemplate>
+                    </itemtemplate>
                 </asp:Repeater>
 
                 <div class="thankTooltip" id="thankTooltip">
@@ -1519,5 +1610,39 @@
         <input type="hidden" clientidmode="Static" id="postURLImage" runat="server" />
         <input type="hidden" clientidmode="Static" id="postURL" runat="server" />
         <input type="hidden" clientidmode="Static" id="postTypeId" runat="server" />
+    </div>
+
+    <div class="modal fade" id="newComments" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 5px">
+                    <center>
+                        <h4>Comments</h4>
+                    </center>
+                </div>
+                <div class="modal-body" id="commentList" style="padding: 10px; height: 570px; max-height: 570px; min-height: 570px;">
+                    <div class="textPost">
+                        <div class="comment-section">
+                            <div class="comment-input">
+                                <textarea rows="3" class="commentTextarea" placeholder="Write a comment..."></textarea>
+                                <button type="button" class="addComment">Post</button>
+                                <div id="commentSuggestions" class="suggestions commentSuggestions"></div>
+                            </div>
+                            <div class="comment-section-repeater">
+                                <br />
+                                <div id="rptPostComments">
+                                    <strong style="margin-left: 120px">Comments are Loading... </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 5px;">
+                    <button type="button" class="btn btn-danger btn-sm closeComment">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" clientidmode="Static" id="postIdForComments" runat="server" />
     </div>
 </asp:Content>

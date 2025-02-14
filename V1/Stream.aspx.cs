@@ -12,6 +12,11 @@ using System.Drawing;
 using System.Web.Security;
 using System.Web.Services;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using System.Web.Services.Description;
+using GoogleMapsAPI.Places;
+using System.Security.Policy;
+using System.Activities.Statements;
 //using static System.Net.Mime.MediaTypeNames;
 
 public partial class V1_Stream : BaseOrganizationWebForm
@@ -128,23 +133,116 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		}
 	}
 
-	private static List<Profile> ExtractTaggedUsers(string content, List<Profile> _users)
+	public static List<string> ExtractUrls(string input)
 	{
-		var taggedUsers = new List<Profile>();
-		var regex = new Regex(@"@([a-zA-Z0-9_]+)");  // Matches "@username"
-		var matches = regex.Matches(content);
+		List<string> urls = new List<string>();
+		string pattern = @"\b(?:https?|ftp)://(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(?:/[^\s]*)?\b";
+
+		Regex regex = new Regex(pattern);
+		MatchCollection matches = regex.Matches(input);
 
 		foreach (Match match in matches)
 		{
-			var username = match.Groups[1].Value;
-			// Find the user from the list based on the username
-			var user = _users.Find(u => u.Firstname.Equals(username, StringComparison.OrdinalIgnoreCase));
+			urls.Add(match.Value);
+		}
+		return urls;
+	}
+	private static List<Profile> ExtractTaggedUser(string commentText, List<Profile> _users)
+	{
+		List<Profile> taggedUsers = new List<Profile>();
+		var regex = new Regex(@"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\s([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b");
+		foreach (Match match in regex.Matches(commentText))
+		{
+			var name = match.Groups[1].Value.Trim();
+			var words = name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			name = string.Join(" ", words.Take(2));
+			var user = _users.FirstOrDefault(u => (u.Firstname + " " + u.Lastname).Trim().ToLower().Contains(name.ToLower()));
 			if (user != null)
 			{
 				taggedUsers.Add(user);
 			}
 		}
 		return taggedUsers;
+	}
+
+	private static string ExtractTaggedMessage(string commentText, List<Profile> _users)
+	{
+		var regex = new Regex(@"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\s([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b");
+		var matches = regex.Matches(commentText);
+
+		
+		string urlPattern = @"\b(?:https?|ftp)://(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(?:/[^\s]*)?\b";
+		Regex urlRegex = new Regex(urlPattern);
+		MatchCollection matchesUrl = urlRegex.Matches(commentText);
+
+		//List<string> urls = new List<string>();
+		//foreach (Match match in matchesUrl)
+		//{
+		//	urls.Add(match.Value);
+		//}
+
+		foreach (Match match in matchesUrl)
+		{
+			string url = match.Value;
+			string anchorTag = "<a target='_blank' href='"+url+ "'>"+url+"</a>";
+			// Replace URL with the anchor tag in the comment text
+			commentText = commentText.Replace(url, anchorTag);
+		}
+
+		string processedComment = regex.Replace(commentText, match =>
+		{
+			var html = "";
+			string fullName = match.Groups[1].Value.Trim();
+			var words = fullName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+			if (words.Length > 2)
+			{
+				fullName = string.Join(" ", words.Take(2));
+			}
+
+			var user = _users.FirstOrDefault(u => (u.Firstname + " " + u.Lastname).Trim().ToLower().Contains(fullName.ToLower()));
+			if (user != null)
+			{
+				html = "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>" + user.Firstname + " " + user.Lastname + "</a>";
+			}
+
+			if (words.Length > 2)
+			{
+				html = html + " " + string.Join(" ", words.Skip(2));
+			}
+
+			return user != null ? html : match.Value;
+		});
+		return processedComment;
+	}
+
+	private static string ReplaceTaggedUsersWithLinks(string comment)
+	{
+		if (string.IsNullOrEmpty(comment)) return comment;
+
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		var regex = new Regex(@"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\s([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b");
+
+		return regex.Replace(comment, match =>
+		{
+			var html = "";
+			string fullName = match.Groups[1].Value.Trim();
+			var words = fullName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			if (words.Length > 2)
+			{
+				fullName = string.Join(" ", words.Take(2));
+			}
+
+			var user = dc.Profiles.FirstOrDefault(u => (u.Firstname + " " + u.Lastname).Trim().ToLower().Contains(fullName.ToLower()));
+
+			if (user != null)
+			{
+				html = "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>" + "@@" + fullName + "</a>";
+			}
+
+			return user != null ? html : match.Value;
+			//return user != null ? "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>@@" + fullName + "</a>" : match.Value;
+		});
 	}
 	public void LoadPosts()
 	{
@@ -269,7 +367,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			Label lblMessageDate = (Label)e.Item.FindControl("lblMessageDate");
 			Literal litMessage = (Literal)e.Item.FindControl("litMessage");
 			Literal litReactionTitle = (Literal)e.Item.FindControl("litReactionTitle");
-			Repeater rptPostComments = (Repeater)e.Item.FindControl("rptPostComments");
+			//Repeater rptPostComments = (Repeater)e.Item.FindControl("rptPostComments");
 			Literal litReactionCount = (Literal)e.Item.FindControl("litReactionCount");
 			Literal litCommentsCount = (Literal)e.Item.FindControl("litCommentsCount");
 			HtmlImage imgProfile = (HtmlImage)e.Item.FindControl("imgProfile");
@@ -429,54 +527,56 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			//}
 
 
-			rptPostComments.DataSource = from pc in dc.PostComments
-										 join c in dc.Comments on pc.CommentId equals c.CommentId
-										 //join ph in dc.ProfilePhotos on c.CreatedBy equals ph.UserId into phJoin
-										 //from ph in phJoin.DefaultIfEmpty() // This ensures a left join
-										 //join p in dc.Photos on ph.PhotoId equals p.PhotoId into pJoin
-										 //from p in pJoin.DefaultIfEmpty() // This ensures a left join
-										 where pc.PostId == postId
-											   && c.ParentId == null
-											   && c.IsDeleted == false
-										 orderby c.CreatedOn descending
-										 select new
-										 {
-											 pc.PostCommentId,
-											 c.Comment1,
-											 c.CreatedOn,
-											 c.CommentId,
-											 isEdit = c.CreatedBy == userId ? true : false,
-											 postId = pc.PostId,
-											 timeAgo = GetTimeAgo(c.CreatedOn),
-											 author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
-											 imgProfileUrl = profilePhotoFolder + (
-																	 (from rph in dc.ProfilePhotos
-																	  join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
-																	  where rph.UserId == c.CreatedBy
-																	  select rp.FilenameCropped).FirstOrDefault() ?? "default.png"),
-											 replies = dc.Comments
-														 .Where(f => f.ParentId == c.CommentId && f.IsDeleted == false)
-														 .OrderBy(f => f.CreatedOn)
-														 .Select(reply => new
-														 {
-															 pc.PostCommentId,
-															 reply.CommentId,
-															 reply.Comment1,
-															 reply.CreatedOn,
-															 timeAgo = GetTimeAgo(reply.CreatedOn),
-															 isEdit = reply.CreatedBy == userId ? true : false,
-															 postId = pc.PostId,
-															 parentCommentId = c.CommentId,
-															 author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname,
-															 imgProfileUrl = profilePhotoFolder + (
-																	 (from rph in dc.ProfilePhotos
-																	  join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
-																	  where rph.UserId == reply.CreatedBy
-																	  select rp.FilenameCropped).FirstOrDefault() ?? "default.png"),
-														 }).ToList()
-										 };
-			rptPostComments.DataBind();
-			litCommentsCount.Text = rptPostComments.Items.Count.ToString() + " Comments";
+			//rptPostComments.DataSource = from pc in dc.PostComments
+			//							 join c in dc.Comments on pc.CommentId equals c.CommentId
+			//							 //join ph in dc.ProfilePhotos on c.CreatedBy equals ph.UserId into phJoin
+			//							 //from ph in phJoin.DefaultIfEmpty() // This ensures a left join
+			//							 //join p in dc.Photos on ph.PhotoId equals p.PhotoId into pJoin
+			//							 //from p in pJoin.DefaultIfEmpty() // This ensures a left join
+			//							 where pc.PostId == postId
+			//								   && c.ParentId == null
+			//								   && c.IsDeleted == false
+			//							 orderby c.CreatedOn descending
+			//							 select new
+			//							 {
+			//								 pc.PostCommentId,
+			//								 Comment1 = ReplaceTaggedUsersWithLinks(c.Comment1),
+			//								 c.CreatedOn,
+			//								 c.CommentId,
+			//								 isEdit = c.CreatedBy == userId ? true : false,
+			//								 postId = pc.PostId,
+			//								 timeAgo = GetTimeAgo(c.CreatedOn),
+			//								 author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
+			//								 ProfileUrl = "/V1/Profile/Profile.aspx?userId=" + c.CreatedBy,
+			//								 imgProfileUrl = profilePhotoFolder + (
+			//														 (from rph in dc.ProfilePhotos
+			//														  join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
+			//														  where rph.UserId == c.CreatedBy
+			//														  select rp.FilenameCropped).FirstOrDefault() ?? "default.png"),
+			//								 replies = dc.Comments
+			//											 .Where(f => f.ParentId == c.CommentId && f.IsDeleted == false)
+			//											 .OrderBy(f => f.CreatedOn)
+			//											 .Select(reply => new
+			//											 {
+			//												 pc.PostCommentId,
+			//												 reply.CommentId,
+			//												 Comment1 = ReplaceTaggedUsersWithLinks(reply.Comment1),
+			//												 reply.CreatedOn,
+			//												 timeAgo = GetTimeAgo(reply.CreatedOn),
+			//												 isEdit = reply.CreatedBy == userId ? true : false,
+			//												 postId = pc.PostId,
+			//												 parentCommentId = c.CommentId,
+			//												 ProfileUrl = "/V1/Profile/Profile.aspx?userId=" + reply.CreatedBy,
+			//												 author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname,
+			//												 imgProfileUrl = profilePhotoFolder + (
+			//														 (from rph in dc.ProfilePhotos
+			//														  join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
+			//														  where rph.UserId == reply.CreatedBy
+			//														  select rp.FilenameCropped).FirstOrDefault() ?? "default.png"),
+			//											 }).ToList()
+			//							 };
+			//rptPostComments.DataBind();
+			litCommentsCount.Text = dc.PostComments.Where(f => f.PostId == postId).ToList().Count.ToString() + " Comments";
 		}
 	}
 
@@ -636,20 +736,22 @@ public partial class V1_Stream : BaseOrganizationWebForm
 
 			using (var dc = new CrowdReliefDBDataContext())
 			{
-				List<Profile> pros = ExtractTaggedUsers(comment, dc.Profiles.ToList());
+				Comment com = new Comment();
+				PostComment pc = new PostComment();
+				var users = dc.Profiles.ToList();
+				List<Profile> usersList = ExtractTaggedUser(comment, users);
 				if (isEditComment == true)
 				{
-					var isExist = dc.Comments.FirstOrDefault(f => f.CommentId == new Guid(commentId));
-					if (isExist != null)
+					com = dc.Comments.FirstOrDefault(f => f.CommentId == new Guid(commentId));
+					if (com != null)
 					{
-						isExist.Comment1 = comment;
+						com.Comment1 = ExtractTaggedMessage(comment, users);
 					}
 				}
 				else
 				{
-					Comment com = new Comment();
 					com.CommentId = Guid.NewGuid();
-					com.Comment1 = comment;
+					com.Comment1 = ExtractTaggedMessage(comment, users);
 					com.CreatedBy = userId;
 					com.CreatedOn = DateTime.Now;
 					com.IsDeleted = false;
@@ -658,7 +760,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 
 					if (!isReply)
 					{
-						PostComment pc = new PostComment();
 						pc.PostId = new Guid(postId);
 						pc.CommentId = com.CommentId;
 						pc.UserId = userId;
@@ -669,20 +770,42 @@ public partial class V1_Stream : BaseOrganizationWebForm
 					}
 				}
 
-				//if (pros != null)
-				//{
-				//	foreach (var item in pros)
-				//	{
-				//Push tagged users into Tagged Table
-				// Send Email & SMS as Notification
-				//postId
-				//commentId
-				//TaggedUserId
-				//IsEmail
-				//IsSMS
-				//	}
-				//}
+				if (usersList != null)
+				{
+					foreach (var item in usersList)
+					{
+						PostTaggedUser ptu = new PostTaggedUser();
+						var isExist = dc.PostTaggedUsers.FirstOrDefault(f => f.CommentId == com.CommentId && f.PostId == new Guid(postId) && f.TaggedUser == item.UserId);
+						if (isExist == null)
+						{
+							ptu.PostTaggedUserId = Guid.NewGuid();
+							ptu.CommentId = com.CommentId;
+							ptu.PostId = new Guid(postId);
+							ptu.TaggedUser = item.UserId;
+							ptu.CreatedBy = userId;
+							ptu.CreatedOn = DateTime.Now;
+							ptu.IsEmailNotification = false;
+							ptu.IsSMSNotification = false;
+							dc.PostTaggedUsers.InsertOnSubmit(ptu);
+						}
+						else
+						{
+							ptu = isExist;
+						}
 
+						if (ptu.IsEmailNotification == false)
+						{
+							//Send Email Notification
+							ptu.IsEmailNotification = true;
+						}
+
+						if (ptu.IsSMSNotification == false)
+						{
+							//Send SMS Notification
+							ptu.IsSMSNotification = true;
+						}
+					}
+				}
 				dc.SubmitChanges();
 				return isRemoved;
 			}
@@ -729,16 +852,98 @@ public partial class V1_Stream : BaseOrganizationWebForm
 	}
 
 	[WebMethod]
-	public static List<Profile> GetUsers()
+	public static List<PostCommentsModel> GetCommentsByPostId(string postId)
+	{
+		StringWriter sw = new StringWriter();
+		HtmlTextWriter writer = new HtmlTextWriter(sw);
+		var comments = new List<PostCommentsModel>();
+		using (var dc = new CrowdReliefDBDataContext())
+		{
+			var userId = new Guid();
+			string username = HttpContext.Current.User.Identity.Name;
+			MembershipUser user = Membership.GetUser(username);
+			if (user != null)
+			{
+				userId = new Guid(user.ProviderUserKey.ToString());
+			}
+
+			var roleId = dc.aspnet_UsersInRoles.FirstOrDefault(f => f.UserId == userId).RoleId;
+			var role = dc.aspnet_Roles.FirstOrDefault(f => f.RoleId == roleId).RoleName;
+
+			string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
+			comments = (from pc in dc.PostComments
+						join c in dc.Comments on pc.CommentId equals c.CommentId
+						where pc.PostId == new Guid(postId)
+							  && c.ParentId == null
+							  && c.IsDeleted == false
+						orderby c.CreatedOn descending
+						select new PostCommentsModel
+						{
+							PostCommentId = pc.PostCommentId,
+							Comment1 = ReplaceTaggedUsersWithLinks(c.Comment1),
+							CreatedOn = c.CreatedOn,
+							CommentId = c.CommentId,
+							IsEdit = c.CreatedBy == userId,
+							IsDelete = (role == "ContentManager" ? true : c.CreatedBy == userId),
+							PostId = pc.PostId,
+							TimeAgo = GetTimeAgo(c.CreatedOn),
+							Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
+							ProfileUrl = "/V1/Profile/Profile.aspx?userId=" + c.CreatedBy,
+							ImgProfileUrl = profilePhotoFolder + (
+												(from rph in dc.ProfilePhotos
+												 join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
+												 where rph.UserId == c.CreatedBy
+												 select rp.FilenameCropped).FirstOrDefault() ?? "profilepicture.png"),
+							Replies = dc.Comments
+										.Where(f => f.ParentId == c.CommentId && f.IsDeleted == false)
+										.OrderBy(f => f.CreatedOn)
+										.Select(reply => new Reply
+										{
+											PostCommentId = pc.PostCommentId,
+											CommentId = reply.CommentId,
+											Comment1 = ReplaceTaggedUsersWithLinks(reply.Comment1),
+											CreatedOn = reply.CreatedOn,
+											TimeAgo = GetTimeAgo(reply.CreatedOn),
+											IsEdit = c.CreatedBy == userId,
+											IsDelete = (role == "ContentManager" ? true : c.CreatedBy == userId),
+											PostId = pc.PostId,
+											ParentCommentId = c.CommentId,
+											ProfileUrl = "/V1/Profile/Profile.aspx?userId=" + reply.CreatedBy,
+											Author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname,
+											ImgProfileUrl = profilePhotoFolder + (
+														 (from rph in dc.ProfilePhotos
+														  join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
+														  where rph.UserId == reply.CreatedBy
+														  select rp.FilenameCropped).FirstOrDefault() ?? "profilepicture.png")
+										}).ToList()
+						}).ToList();
+
+			//return comments;
+			//var rptPostComments = new Repeater();
+			//rptPostComments.DataSource = comments;
+			//rptPostComments.ItemTemplate = new CompiledTemplateBuilder((container) =>
+			//{
+			//	Literal author = new Literal();
+			//	container.Controls.Add(author);
+			//});
+			//rptPostComments.DataBind();
+			//rptPostComments.RenderControl(writer);
+		}
+		return comments;
+	}
+
+	[WebMethod]
+	public static object GetUsers()
 	{
 		using (var dc = new CrowdReliefDBDataContext())
 		{
-			var Users = dc.Profiles.Select(pr => new Profile
+			var users = dc.Profiles.Take(20).Select(pr => new
 			{
 				Title = pr.Firstname + " " + pr.Lastname,
-				UserId = pr.UserId,
-			});
-			return Users.Cast<Profile>().ToList();
+				UserId = pr.UserId
+			}).ToList();
+
+			return users;
 		}
 	}
 

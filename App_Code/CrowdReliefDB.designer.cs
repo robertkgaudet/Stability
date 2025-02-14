@@ -419,6 +419,9 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertComment(Comment instance);
   partial void UpdateComment(Comment instance);
   partial void DeleteComment(Comment instance);
+  partial void InsertPostTaggedUser(PostTaggedUser instance);
+  partial void UpdatePostTaggedUser(PostTaggedUser instance);
+  partial void DeletePostTaggedUser(PostTaggedUser instance);
 	#endregion
 
 	public CrowdReliefDBDataContext() :
@@ -426,7 +429,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 	{
 		OnCreated();
 	}
-
 	public CrowdReliefDBDataContext(string connection) : 
 			base(connection, mappingSource)
 	{
@@ -1488,6 +1490,14 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<Comment>();
+		}
+	}
+	
+	public System.Data.Linq.Table<PostTaggedUser> PostTaggedUsers
+	{
+		get
+		{
+			return this.GetTable<PostTaggedUser>();
 		}
 	}
 	
@@ -2693,6 +2703,10 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private EntitySet<PostComment> _PostComments;
 	
+	private EntitySet<PostTaggedUser> _PostTaggedUsers;
+	
+	private EntitySet<PostTaggedUser> _PostTaggedUsers1;
+	
 	private EntityRef<StreamDonation> _Donation;
 	
 	private EntityRef<UserDonation> _UserDonation;
@@ -2780,6 +2794,8 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		this._OrganizationCases = new EntitySet<OrganizationCase>(new Action<OrganizationCase>(this.attach_OrganizationCases), new Action<OrganizationCase>(this.detach_OrganizationCases));
 		this._PostReactions = new EntitySet<PostReaction>(new Action<PostReaction>(this.attach_PostReactions), new Action<PostReaction>(this.detach_PostReactions));
 		this._PostComments = new EntitySet<PostComment>(new Action<PostComment>(this.attach_PostComments), new Action<PostComment>(this.detach_PostComments));
+		this._PostTaggedUsers = new EntitySet<PostTaggedUser>(new Action<PostTaggedUser>(this.attach_PostTaggedUsers), new Action<PostTaggedUser>(this.detach_PostTaggedUsers));
+		this._PostTaggedUsers1 = new EntitySet<PostTaggedUser>(new Action<PostTaggedUser>(this.attach_PostTaggedUsers1), new Action<PostTaggedUser>(this.detach_PostTaggedUsers1));
 		this._Donation = default(EntityRef<StreamDonation>);
 		this._UserDonation = default(EntityRef<UserDonation>);
 		this._UserDonation1 = default(EntityRef<UserDonation>);
@@ -3714,6 +3730,32 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostTaggedUser", Storage="_PostTaggedUsers", ThisKey="UserId", OtherKey="TaggedUser")]
+	public EntitySet<PostTaggedUser> PostTaggedUsers
+	{
+		get
+		{
+			return this._PostTaggedUsers;
+		}
+		set
+		{
+			this._PostTaggedUsers.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostTaggedUser1", Storage="_PostTaggedUsers1", ThisKey="UserId", OtherKey="CreatedBy")]
+	public EntitySet<PostTaggedUser> PostTaggedUsers1
+	{
+		get
+		{
+			return this._PostTaggedUsers1;
+		}
+		set
+		{
+			this._PostTaggedUsers1.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="StreamDonation_aspnet_User", Storage="_Donation", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
 	public StreamDonation StreamDonation
 	{
@@ -4530,6 +4572,30 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	{
 		this.SendPropertyChanging();
 		entity.aspnet_User = null;
+	}
+	
+	private void attach_PostTaggedUsers(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_PostTaggedUsers(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_PostTaggedUsers1(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User1 = this;
+	}
+	
+	private void detach_PostTaggedUsers1(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User1 = null;
 	}
 }
 
@@ -35333,6 +35399,8 @@ public partial class Post : INotifyPropertyChanging, INotifyPropertyChanged
 	
 	private EntitySet<PostComment> _PostComments;
 	
+	private EntitySet<PostTaggedUser> _PostTaggedUsers;
+	
 	private EntityRef<aspnet_User> _aspnet_User;
 	
 	private EntityRef<AudienceType> _AudienceType;
@@ -35374,6 +35442,7 @@ public partial class Post : INotifyPropertyChanging, INotifyPropertyChanged
 		this._PostImages = new EntitySet<PostImage>(new Action<PostImage>(this.attach_PostImages), new Action<PostImage>(this.detach_PostImages));
 		this._PostReactions = new EntitySet<PostReaction>(new Action<PostReaction>(this.attach_PostReactions), new Action<PostReaction>(this.detach_PostReactions));
 		this._PostComments = new EntitySet<PostComment>(new Action<PostComment>(this.attach_PostComments), new Action<PostComment>(this.detach_PostComments));
+		this._PostTaggedUsers = new EntitySet<PostTaggedUser>(new Action<PostTaggedUser>(this.attach_PostTaggedUsers), new Action<PostTaggedUser>(this.detach_PostTaggedUsers));
 		this._aspnet_User = default(EntityRef<aspnet_User>);
 		this._AudienceType = default(EntityRef<AudienceType>);
 		this._PostType = default(EntityRef<PostType>);
@@ -35671,6 +35740,19 @@ public partial class Post : INotifyPropertyChanging, INotifyPropertyChanged
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Post_PostTaggedUser", Storage="_PostTaggedUsers", ThisKey="PostId", OtherKey="PostId")]
+	public EntitySet<PostTaggedUser> PostTaggedUsers
+	{
+		get
+		{
+			return this._PostTaggedUsers;
+		}
+		set
+		{
+			this._PostTaggedUsers.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Post", Storage="_aspnet_User", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
 	public aspnet_User aspnet_User
 	{
@@ -35824,6 +35906,18 @@ public partial class Post : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 	
 	private void detach_PostComments(PostComment entity)
+	{
+		this.SendPropertyChanging();
+		entity.Post = null;
+	}
+	
+	private void attach_PostTaggedUsers(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.Post = this;
+	}
+	
+	private void detach_PostTaggedUsers(PostTaggedUser entity)
 	{
 		this.SendPropertyChanging();
 		entity.Post = null;
@@ -46226,6 +46320,8 @@ public partial class Comment : INotifyPropertyChanging, INotifyPropertyChanged
 	
 	private EntitySet<PostComment> _PostComments;
 	
+	private EntitySet<PostTaggedUser> _PostTaggedUsers;
+	
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -46248,6 +46344,7 @@ public partial class Comment : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this._ArticleComments = new EntitySet<ArticleComment>(new Action<ArticleComment>(this.attach_ArticleComments), new Action<ArticleComment>(this.detach_ArticleComments));
 		this._PostComments = new EntitySet<PostComment>(new Action<PostComment>(this.attach_PostComments), new Action<PostComment>(this.detach_PostComments));
+		this._PostTaggedUsers = new EntitySet<PostTaggedUser>(new Action<PostTaggedUser>(this.attach_PostTaggedUsers), new Action<PostTaggedUser>(this.detach_PostTaggedUsers));
 		OnCreated();
 	}
 	
@@ -46397,6 +46494,19 @@ public partial class Comment : INotifyPropertyChanging, INotifyPropertyChanged
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Comment_PostTaggedUser", Storage="_PostTaggedUsers", ThisKey="CommentId", OtherKey="CommentId")]
+	public EntitySet<PostTaggedUser> PostTaggedUsers
+	{
+		get
+		{
+			return this._PostTaggedUsers;
+		}
+		set
+		{
+			this._PostTaggedUsers.Assign(value);
+		}
+	}
+	
 	public event PropertyChangingEventHandler PropertyChanging;
 	
 	public event PropertyChangedEventHandler PropertyChanged;
@@ -46439,6 +46549,412 @@ public partial class Comment : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this.SendPropertyChanging();
 		entity.Comment = null;
+	}
+	
+	private void attach_PostTaggedUsers(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.Comment = this;
+	}
+	
+	private void detach_PostTaggedUsers(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.Comment = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PostTaggedUser")]
+public partial class PostTaggedUser : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _PostTaggedUserId;
+	
+	private System.Guid _CommentId;
+	
+	private System.Guid _TaggedUser;
+	
+	private System.DateTime _CreatedOn;
+	
+	private System.Guid _CreatedBy;
+	
+	private System.Nullable<bool> _IsEmailNotification;
+	
+	private System.Nullable<bool> _IsSMSNotification;
+	
+	private System.Guid _PostId;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+	private EntityRef<aspnet_User> _aspnet_User1;
+	
+	private EntityRef<Comment> _Comment;
+	
+	private EntityRef<Post> _Post;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPostTaggedUserIdChanging(System.Guid value);
+    partial void OnPostTaggedUserIdChanged();
+    partial void OnCommentIdChanging(System.Guid value);
+    partial void OnCommentIdChanged();
+    partial void OnTaggedUserChanging(System.Guid value);
+    partial void OnTaggedUserChanged();
+    partial void OnCreatedOnChanging(System.DateTime value);
+    partial void OnCreatedOnChanged();
+    partial void OnCreatedByChanging(System.Guid value);
+    partial void OnCreatedByChanged();
+    partial void OnIsEmailNotificationChanging(System.Nullable<bool> value);
+    partial void OnIsEmailNotificationChanged();
+    partial void OnIsSMSNotificationChanging(System.Nullable<bool> value);
+    partial void OnIsSMSNotificationChanged();
+    partial void OnPostIdChanging(System.Guid value);
+    partial void OnPostIdChanged();
+    #endregion
+	
+	public PostTaggedUser()
+	{
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		this._aspnet_User1 = default(EntityRef<aspnet_User>);
+		this._Comment = default(EntityRef<Comment>);
+		this._Post = default(EntityRef<Post>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostTaggedUserId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid PostTaggedUserId
+	{
+		get
+		{
+			return this._PostTaggedUserId;
+		}
+		set
+		{
+			if ((this._PostTaggedUserId != value))
+			{
+				this.OnPostTaggedUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._PostTaggedUserId = value;
+				this.SendPropertyChanged("PostTaggedUserId");
+				this.OnPostTaggedUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CommentId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid CommentId
+	{
+		get
+		{
+			return this._CommentId;
+		}
+		set
+		{
+			if ((this._CommentId != value))
+			{
+				if (this._Comment.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCommentIdChanging(value);
+				this.SendPropertyChanging();
+				this._CommentId = value;
+				this.SendPropertyChanged("CommentId");
+				this.OnCommentIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TaggedUser", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid TaggedUser
+	{
+		get
+		{
+			return this._TaggedUser;
+		}
+		set
+		{
+			if ((this._TaggedUser != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnTaggedUserChanging(value);
+				this.SendPropertyChanging();
+				this._TaggedUser = value;
+				this.SendPropertyChanged("TaggedUser");
+				this.OnTaggedUserChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				if (this._aspnet_User1.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsEmailNotification", DbType="Bit")]
+	public System.Nullable<bool> IsEmailNotification
+	{
+		get
+		{
+			return this._IsEmailNotification;
+		}
+		set
+		{
+			if ((this._IsEmailNotification != value))
+			{
+				this.OnIsEmailNotificationChanging(value);
+				this.SendPropertyChanging();
+				this._IsEmailNotification = value;
+				this.SendPropertyChanged("IsEmailNotification");
+				this.OnIsEmailNotificationChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsSMSNotification", DbType="Bit")]
+	public System.Nullable<bool> IsSMSNotification
+	{
+		get
+		{
+			return this._IsSMSNotification;
+		}
+		set
+		{
+			if ((this._IsSMSNotification != value))
+			{
+				this.OnIsSMSNotificationChanging(value);
+				this.SendPropertyChanging();
+				this._IsSMSNotification = value;
+				this.SendPropertyChanged("IsSMSNotification");
+				this.OnIsSMSNotificationChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid PostId
+	{
+		get
+		{
+			return this._PostId;
+		}
+		set
+		{
+			if ((this._PostId != value))
+			{
+				if (this._Post.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnPostIdChanging(value);
+				this.SendPropertyChanging();
+				this._PostId = value;
+				this.SendPropertyChanged("PostId");
+				this.OnPostIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostTaggedUser", Storage="_aspnet_User", ThisKey="TaggedUser", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.PostTaggedUsers.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.PostTaggedUsers.Add(this);
+					this._TaggedUser = value.UserId;
+				}
+				else
+				{
+					this._TaggedUser = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostTaggedUser1", Storage="_aspnet_User1", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User1
+	{
+		get
+		{
+			return this._aspnet_User1.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User1.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User1.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User1.Entity = null;
+					previousValue.PostTaggedUsers1.Remove(this);
+				}
+				this._aspnet_User1.Entity = value;
+				if ((value != null))
+				{
+					value.PostTaggedUsers1.Add(this);
+					this._CreatedBy = value.UserId;
+				}
+				else
+				{
+					this._CreatedBy = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User1");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Comment_PostTaggedUser", Storage="_Comment", ThisKey="CommentId", OtherKey="CommentId", IsForeignKey=true)]
+	public Comment Comment
+	{
+		get
+		{
+			return this._Comment.Entity;
+		}
+		set
+		{
+			Comment previousValue = this._Comment.Entity;
+			if (((previousValue != value) 
+						|| (this._Comment.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Comment.Entity = null;
+					previousValue.PostTaggedUsers.Remove(this);
+				}
+				this._Comment.Entity = value;
+				if ((value != null))
+				{
+					value.PostTaggedUsers.Add(this);
+					this._CommentId = value.CommentId;
+				}
+				else
+				{
+					this._CommentId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Comment");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Post_PostTaggedUser", Storage="_Post", ThisKey="PostId", OtherKey="PostId", IsForeignKey=true)]
+	public Post Post
+	{
+		get
+		{
+			return this._Post.Entity;
+		}
+		set
+		{
+			Post previousValue = this._Post.Entity;
+			if (((previousValue != value) 
+						|| (this._Post.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Post.Entity = null;
+					previousValue.PostTaggedUsers.Remove(this);
+				}
+				this._Post.Entity = value;
+				if ((value != null))
+				{
+					value.PostTaggedUsers.Add(this);
+					this._PostId = value.PostId;
+				}
+				else
+				{
+					this._PostId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Post");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }
 
