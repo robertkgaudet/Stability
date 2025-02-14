@@ -103,13 +103,13 @@
         </div>
     </div>
     <div class="container" style="display:inherit;">
-
+           <h2>Donate To Current Deployment</h2>
         <% foreach (var campaign in DonationCampaigns.Where(x => x.IsDefault == false))
             { %>
-      
- <h3>
-     <a href="DonationDetails.aspx?organizationId=<%=orgId%>&donationCampaignId=<%=campaign.DonationCampaignId%>">
-         <%=campaign.CampaignName%>
+   
+    <h3>
+      <a href="<%= ShowDonationButton ? "DonationDetails.aspx?organizationId=" + orgId + "&donationCampaignId=" + campaign.DonationCampaignId : "javascript:void(0);" %>">
+      <%=campaign.CampaignName%>
      </a>
  </h3>
             

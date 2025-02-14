@@ -17,180 +17,210 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
     public Guid DonationCampaignId { get; set; }
     public string CampaignName { get; set; }
     public string OrganizationName { get; set; }
+
+
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (User.Identity.IsAuthenticated)
+        bool showDonateButton = false;
+
+        if (!IsPostBack)
         {
-            string username = User.Identity.Name;
-
-            if (!string.IsNullOrEmpty(username))
+            using (var context = new CrowdReliefDBDataContext())
             {
-                using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+                var paymentConfig = context.PaymentConfigurations.FirstOrDefault();
+
+                if (paymentConfig != null)
                 {
-                    var user = (from u in dc.aspnet_Users
-                                where u.UserName == username
-                                select u).SingleOrDefault();
+                    showDonateButton = paymentConfig.ShowDonationButton ?? false;
+                }
+            }
+            string organizationId = Request.QueryString["organizationId"];
 
-                    if (user != null)
+            if (!showDonateButton)
+            {
+                Response.Redirect("~/V1/NonProfit/Donation.aspx?organizationId=" + organizationId);
+
+                return;
+            }
+            else
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    string username = User.Identity.Name;
+
+                    if (!string.IsNullOrEmpty(username))
                     {
-                        Guid userId = user.UserId;
-                        var profile = (from p in dc.Profiles
-                                       where p.UserId == userId
-                                       select new
-                                       {
-                                           p.Firstname,
-                                           p.Lastname,
-                                           p.Address,
-                                           p.City,
-                                           p.State,
-                                           p.Zip
-                                       }).SingleOrDefault();
-                        if (profile != null)
+                        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
                         {
-                            txtfirstname.Text = profile.Firstname;
-                            txtlastname.Text = profile.Lastname;
-                            txtemail.Text = username;
-                            txthomeaddress.Text = profile.Address;
-                            txtCity.Text = profile.City;
+                            var user = (from u in dc.aspnet_Users
+                                        where u.UserName == username
+                                        select u).SingleOrDefault();
+
+                            if (user != null)
+                            {
+                                Guid userId = user.UserId;
+                                var profile = (from p in dc.Profiles
+                                               where p.UserId == userId
+                                               select new
+                                               {
+                                                   p.Firstname,
+                                                   p.Lastname,
+                                                   p.Address,
+                                                   p.City,
+                                                   p.State,
+                                                   p.Zip
+                                               }).SingleOrDefault();
+                                if (profile != null)
+                                {
+                                    txtfirstname.Text = profile.Firstname;
+                                    txtlastname.Text = profile.Lastname;
+                                    txtemail.Text = username;
+                                    txthomeaddress.Text = profile.Address;
+                                    txtCity.Text = profile.City;
 
 
-                            txtddlState.Text = profile.State;
+                                    txtddlState.Text = profile.State;
 
-                            txtZip.Text = profile.Zip;
+                                    txtZip.Text = profile.Zip;
+
+                                }
+
+                            }
 
                         }
-
                     }
+                    btnLogin.Visible = false;
+                }
+                else
+                {
+                    btnLogin.Visible = true;
+                }
 
+                if (String.IsNullOrEmpty(organizationId))
+                {
+                    Response.Write("No organization Id provided.");
+                    Response.End();
+                    return;
+                }
+                string returnUrl = Request.QueryString["returnUrl"];
+                if (String.IsNullOrEmpty(returnUrl))
+                {
+                    returnUrl = Request.Url.AbsoluteUri;
+                }
+                Session["ReturnUrl"] = returnUrl;
+
+                this.publishKey.Text = System.Configuration.ConfigurationManager.AppSettings["stripePublishKey"].ToString();
+                this.organizationId.Text = Request.QueryString["organizationId"].ToString();
+                DonationCampaignId = Guid.Parse(Request.QueryString["donationCampaignId"]);
+
+                this.orgId = Request.QueryString["organizationId"].ToString();
+                CrowdReliefDBDataContext dbContext = new CrowdReliefDBDataContext();
+                DonationCampaign donationCampaign = dbContext.DonationCampaigns.Where(x => x.DonationCampaignId == DonationCampaignId).FirstOrDefault();
+                if (donationCampaign != null)
+                {
+                    LiteralDescription = donationCampaign.Description;
+                    var amounts = donationCampaign.Amount.Split(',');
+                    if (amounts.Length > 0)
+                    {
+                        LiteralAmountList = new List<int>();
+                        foreach (var amount in amounts)
+                        {
+                            LiteralAmountList.Add(Convert.ToInt32(amount));
+                        }
+                        if (LiteralAmountList.Any())
+                        {
+                            txtDonationAmount.Text = LiteralAmountList[0].ToString();
+                        }
+                    }
+                    string orgId = Request.QueryString["organizationId"].ToString();
+                    string donationCampaignId = Request.QueryString["donationCampaignId"].ToString();
+                    var organizationEventId = dbContext.DonationCampaigns.Where(x => x.DonationCampaignId == new Guid(donationCampaignId)).Select(x => x.OrganizationEventId).FirstOrDefault();
+                    var Campaign = dbContext.OrganizationEvents.Where(x => x.OrganizationEventId == new Guid(organizationEventId.ToString())).Select(x => x.CampaignName).FirstOrDefault();
+                    CampaignName = Campaign;
+                    OrganizationName = dbContext.Organizations.Where(x => x.OrganizationId == new Guid(orgId)).Select(x => x.Name).FirstOrDefault();
                 }
             }
-            btnLogin.Visible = false;
-        }
-        else
-        {
-            btnLogin.Visible = true;
-        }
-        string organizationId = Request.QueryString["organizationId"];
-        if (String.IsNullOrEmpty(organizationId))
-        {
-            Response.Write("No organization Id provided.");
-            Response.End();
-            return;
-        }
-        string returnUrl = Request.QueryString["returnUrl"];
-        if (String.IsNullOrEmpty(returnUrl))
-        {
-            returnUrl = Request.Url.AbsoluteUri;
-        }
-        Session["ReturnUrl"] = returnUrl;
-
-        this.publishKey.Text = System.Configuration.ConfigurationManager.AppSettings["stripePublishKey"].ToString();
-        this.organizationId.Text = Request.QueryString["organizationId"].ToString();
-        DonationCampaignId = Guid.Parse(Request.QueryString["donationCampaignId"]);
-
-        this.orgId = Request.QueryString["organizationId"].ToString();
-        CrowdReliefDBDataContext dbContext = new CrowdReliefDBDataContext();
-        DonationCampaign donationCampaign = dbContext.DonationCampaigns.Where(x => x.DonationCampaignId == DonationCampaignId).FirstOrDefault();
-        if (donationCampaign != null)
-        {
-            LiteralDescription = donationCampaign.Description;
-            var amounts = donationCampaign.Amount.Split(',');
-            if (amounts.Length > 0)
-            {
-                LiteralAmountList = new List<int>();
-                foreach (var amount in amounts)
-                {
-                    LiteralAmountList.Add(Convert.ToInt32(amount));
-                }
-                if (LiteralAmountList.Any())
-                {
-                    txtDonationAmount.Text = LiteralAmountList[0].ToString();
-                }
-            }
-            string orgId = Request.QueryString["organizationId"].ToString();
-            string donationCampaignId = Request.QueryString["donationCampaignId"].ToString();
-            var organizationEventId = dbContext.DonationCampaigns.Where(x => x.DonationCampaignId == new Guid(donationCampaignId)).Select(x => x.OrganizationEventId).FirstOrDefault();
-            var Campaign = dbContext.OrganizationEvents.Where(x => x.OrganizationEventId == new Guid(organizationEventId.ToString())).Select(x => x.CampaignName).FirstOrDefault();
-            CampaignName = Campaign;
-            OrganizationName = dbContext.Organizations.Where(x => x.OrganizationId == new Guid(orgId)).Select(x => x.Name).FirstOrDefault();
         }
     }
 
 
 
 
+
+
     protected void AddTransactionDetails_Click(object sender, EventArgs e)
     {
-        var request = HttpContext.Current.Request;
+        
+            var request = HttpContext.Current.Request;
 
-        // Get the domain URL
-        string domainUrl = request.Url.GetLeftPart(UriPartial.Authority);
+            // Get the domain URL
+            string domainUrl = request.Url.GetLeftPart(UriPartial.Authority);
 
-        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-        Organization organization = dc.Organizations.Where(x => x.OrganizationId == new Guid(organizationId.Text)).FirstOrDefault();
-        if (organization == null || organization.OwnerId == null)
-        {
-        }
-        if (!User.Identity.IsAuthenticated)
-        {
-            Profile profile = new Profile()
+            Organization organization = dc.Organizations.Where(x => x.OrganizationId == new Guid(organizationId.Text)).FirstOrDefault();
+            if (organization == null || organization.OwnerId == null)
             {
-                ProfileId = Guid.NewGuid(),
-
-                Address = txthomeaddress.Text,
-                Firstname = txtfirstname.Text,
-                Lastname = txtlastname.Text,
-                City = txtCity.Text,
-                State = txtddlState.Text,
-                Zip = txtZip.Text,
-
-                UserId = organization.OwnerId.Value
-            };
-            dc.Profiles.InsertOnSubmit(profile);
-            dc.SubmitChanges();
-            Address address = new Address()
+            }
+            if (!User.Identity.IsAuthenticated)
             {
-                AddressId = Guid.NewGuid(),
-                Address1 = txthomeaddress.Text,
-                City = txtCity.Text,
-                State = txtddlState.Text,
-                Zip = txtZip.Text,
-                IsActive = true,
-                CreatedOn = DateTime.Now
+                Profile profile = new Profile()
+                {
+                    ProfileId = Guid.NewGuid(),
+
+                    Address = txthomeaddress.Text,
+                    Firstname = txtfirstname.Text,
+                    Lastname = txtlastname.Text,
+                    City = txtCity.Text,
+                    State = txtddlState.Text,
+                    Zip = txtZip.Text,
+
+                    UserId = organization.OwnerId.Value
+                };
+                dc.Profiles.InsertOnSubmit(profile);
+                dc.SubmitChanges();
+                Address address = new Address()
+                {
+                    AddressId = Guid.NewGuid(),
+                    Address1 = txthomeaddress.Text,
+                    City = txtCity.Text,
+                    State = txtddlState.Text,
+                    Zip = txtZip.Text,
+                    IsActive = true,
+                    CreatedOn = DateTime.Now
+                };
+                dc.Addresses.InsertOnSubmit(address);
+                dc.SubmitChanges();
+            }
+
+            var donationAmount = Request.Form["txtDonationAmount"];
+            Donation donation = new Donation()
+            {
+                Amount = Decimal.Parse(donationAmount),
+                EmailAddress = txtemail.Text,
+                DonationId = Guid.NewGuid(),
+                FirstName = txtfirstname.Text,
+                LastName = txtlastname.Text,
+                ItemCount = 1,
+                CreatedAt = DateTime.Now,
+                PaymentProvider = (int)Tools.TransactionType.CreditCard,
+                DonationStatus = (int)Tools.TransactionStatus.Started,
+                DonationCampaignId = DonationCampaignId,
+                IsTest = Convert.ToBoolean(ConfigurationManager.AppSettings["isTestPayment"])
             };
-            dc.Addresses.InsertOnSubmit(address);
+            dc.Donations.InsertOnSubmit(donation);
             dc.SubmitChanges();
-        }
 
-        var donationAmount = Request.Form["txtDonationAmount"];
-        Donation donation = new Donation()
-        {
-            Amount = Decimal.Parse(donationAmount),
-            EmailAddress = txtemail.Text,
-            DonationId = Guid.NewGuid(),
-            FirstName = txtfirstname.Text,
-            LastName = txtlastname.Text,
-            ItemCount = 1,
-            CreatedAt = DateTime.Now,
-            PaymentProvider = (int)Tools.TransactionType.CreditCard,
-            DonationStatus = (int)Tools.TransactionStatus.Started,
-            DonationCampaignId = DonationCampaignId,
-            IsTest = Convert.ToBoolean(ConfigurationManager.AppSettings["isTestPayment"])
-        };
-        dc.Donations.InsertOnSubmit(donation);
-        dc.SubmitChanges();
-
-        StripeConfiguration.ApiKey = System.Configuration.ConfigurationManager.AppSettings["stripeSecretKey"].ToString();
-        Dictionary<string, string> transactionInfo = new Dictionary<string, string>
+            StripeConfiguration.ApiKey = System.Configuration.ConfigurationManager.AppSettings["stripeSecretKey"].ToString();
+            Dictionary<string, string> transactionInfo = new Dictionary<string, string>
                 {
                     { "transactionId", donation.DonationId.ToString() }
                 };
-        var options = new SessionCreateOptions
-        {
-            PaymentMethodTypes = new List<string> { "card" },
-            Metadata = transactionInfo,
-            LineItems = new List<SessionLineItemOptions>
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string> { "card" },
+                Metadata = transactionInfo,
+                LineItems = new List<SessionLineItemOptions>
                 {
                     new SessionLineItemOptions
                     {
@@ -206,18 +236,19 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                         Quantity = 1,
                     },
                 },
-            Mode = "payment",
-            SuccessUrl = domainUrl + "/V1/NonProfit/DonationSuccess.aspx?session_id={CHECKOUT_SESSION_ID}", // Redirect after successful payment,
-        };
+                Mode = "payment",
+                SuccessUrl = domainUrl + "/V1/NonProfit/DonationSuccess.aspx?session_id={CHECKOUT_SESSION_ID}", // Redirect after successful payment,
+            };
 
-        var service = new SessionService();
-        Session session = service.Create(options);
-        // Pass the session ID to the client
-        Response.Redirect(session.Url);
+            var service = new SessionService();
+            Session session = service.Create(options);
+            // Pass the session ID to the client
+            Response.Redirect(session.Url);
 
+        }
     }
 
-}
+
 
 
 public class TransactionData
