@@ -35,11 +35,15 @@ public partial class V1_NonProfit_LogoUpload : BaseOrganizationWebForm
 							string imageFileFolder			= Server.MapPath(logoFolder);
 							string imageExtension			= Path.GetExtension(profilePhotoUpload.PostedFile.FileName);;
 
-							string imageNameOriginal		= imageGuid + imageExtension;
+                            string imageNameOriginal = imageGuid + imageExtension;
+                            string imageNameCropped = imageGuid + "_crop" + imageExtension;
+                            string imageNameResized = imageGuid + "_resized" + imageExtension;
 
-							string filePathnameOriginal		= Path.Combine(imageFileFolder, imageNameOriginal);
-							
-							profilePhotoUpload.PostedFile.SaveAs(filePathnameOriginal);
+                            string filePathnameOriginal = Path.Combine(imageFileFolder, imageNameOriginal);
+                            string filePathNameCropped = Path.Combine(imageFileFolder, imageNameCropped);
+                            string filePathNameResized = Path.Combine(imageFileFolder, imageNameResized);
+
+                            profilePhotoUpload.PostedFile.SaveAs(filePathnameOriginal);
 
 							CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
@@ -51,11 +55,13 @@ public partial class V1_NonProfit_LogoUpload : BaseOrganizationWebForm
 							organization.Logo = imageNameOriginal;
 							dc.SubmitChanges();
 
-							//ResizeAndSaveImage(filePathnameOriginal, filePathNameResized, logoImageWidth, logoImageHeight);
+							ResizeAndSaveImage(filePathnameOriginal, filePathNameResized, logoImageWidth, logoImageHeight);
 
-							Response.Redirect("~/V1/NonProfit/Default.aspx?organizationId=" + organizationId);
-						}
-					}
+                            //Response.Redirect("~/V1/NonProfit/Default.aspx?organizationId=" + organizationId);
+                            Response.Redirect("~/V1/Profile/ProfilePhotoCrop.aspx?imageNameResized=" + imageNameResized + "&imageType=logo");
+
+                        }
+                    }
 				}
 				catch (Exception ex)
 				{
@@ -71,35 +77,35 @@ public partial class V1_NonProfit_LogoUpload : BaseOrganizationWebForm
 			Response.End();
 		}
 	}
-	
-	//protected void ResizeAndSaveImage(string imageFilenamePathOriginal, string imageFilenamePathFinal, int maxWidth, int maxHeight)
-	//{
-	//	//Get an image object of the newly uploaded file.
-	//	System.Drawing.Image image = System.Drawing.Image.FromFile(imageFilenamePathOriginal);
 
-	//	if(image.Width < maxWidth && image.Height < maxHeight)
-	//	{
-	//		maxWidth = image.Width;
-	//		maxHeight = image.Height;
-	//	}
-		
-	//	var ratioX = (double)maxWidth / image.Width;
-	//	var ratioY = (double)maxHeight / image.Height;
-	//	var ratio = Math.Min(ratioX, ratioY);
-	//	var newWidth = (int)(image.Width * ratio);
-	//	var newHeight = (int)(image.Height * ratio);
+	protected void ResizeAndSaveImage(string imageFilenamePathOriginal, string imageFilenamePathFinal, int maxWidth, int maxHeight)
+	{
+		//Get an image object of the newly uploaded file.
+		System.Drawing.Image image = System.Drawing.Image.FromFile(imageFilenamePathOriginal);
 
-		
-	//	//Create a copy of the image with 
-	//	var newImage = new Bitmap(newWidth, newHeight);
+		if (image.Width < maxWidth && image.Height < maxHeight)
+		{
+			maxWidth = image.Width;
+			maxHeight = image.Height;
+		}
 
-	//	//Size the image down, create a new resized image.
-	//	Graphics.FromImage(newImage).DrawImage(image, 0, 0, newWidth, newHeight);
+		var ratioX = (double)maxWidth / image.Width;
+		var ratioY = (double)maxHeight / image.Height;
+		var ratio = Math.Min(ratioX, ratioY);
+		var newWidth = (int)(image.Width * ratio);
+		var newHeight = (int)(image.Height * ratio);
 
-	//	//Convert to a bitmap
-	//	Bitmap bitmapImage = new Bitmap(newImage);
 
-	//	//Save the new image
-	//	bitmapImage.Save(imageFilenamePathFinal);
-	//}
+		//Create a copy of the image with 
+		var newImage = new Bitmap(newWidth, newHeight);
+
+		//Size the image down, create a new resized image.
+		Graphics.FromImage(newImage).DrawImage(image, 0, 0, newWidth, newHeight);
+
+		//Convert to a bitmap
+		Bitmap bitmapImage = new Bitmap(newImage);
+
+		//Save the new image
+		bitmapImage.Save(imageFilenamePathFinal);
+	}
 }

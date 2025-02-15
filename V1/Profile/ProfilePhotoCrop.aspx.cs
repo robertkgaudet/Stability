@@ -10,19 +10,61 @@ using System.Drawing.Drawing2D;
 public partial class V1_Profile_ProfilePhotoCrop : BaseOrganizationWebForm
 {
 	protected string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
+	protected string logoFolder_squareLogoFolder = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
 	protected void Page_Load(object sender, EventArgs e)
 	{
-		string imageNameResized =  Request.QueryString["imageNameResized"];
-		imgProfilePhoto.ImageUrl = profilePhotoFolder + imageNameResized;
-	}
-	
-	protected void btnUpdate_Click(object sender, EventArgs e)
+        string imageNameResized = Request.QueryString["imageNameResized"];
+        string imageType = Request.QueryString["imageType"].ToLower().ToString();
+
+        if (!string.IsNullOrEmpty(imageType))
+        {
+            switch (imageType)
+            {
+                case "profile":
+                    imgProfilePhoto.ImageUrl = profilePhotoFolder + imageNameResized;
+                    lbltext.InnerText = "Crop Your Profile Photo";
+                    break;
+
+                case "logo":
+                    imgProfilePhoto.ImageUrl = logoFolder_squareLogoFolder + imageNameResized;
+                    lbltext.InnerText = "Crop Your Logo";
+                    break;
+
+                case "squarelogo":
+                    imgProfilePhoto.ImageUrl = logoFolder_squareLogoFolder + imageNameResized;
+                    lbltext.InnerText = "Crop Your Square Logo";
+                    break;
+            }
+        }
+
+
+
+    }
+
+    protected void btnUpdate_Click(object sender, EventArgs e)
 	{
-		try
+		string imageFileFolder = string.Empty;
+
+        try
 		{
 			string imageNameResized			=  Request.QueryString["imageNameResized"];
+			string imageType = Request.QueryString["imageType"].ToLower().ToString();
 			string imageNameCropped			= imageNameResized.Replace("_resized","_crop");
-			string imageFileFolder			= Server.MapPath(profilePhotoFolder);
+            switch (imageType)
+            {
+                case "profile":
+                    imageFileFolder = Server.MapPath(profilePhotoFolder);
+                    break;
+
+                case "logo":
+                    imageFileFolder = Server.MapPath(logoFolder_squareLogoFolder);
+                    break;
+
+                case "squarelogo":
+                    imageFileFolder = Server.MapPath(logoFolder_squareLogoFolder);
+                    break;
+            }
+            
 			string filePathNameResized		= Path.Combine(imageFileFolder, imageNameResized);
 			string filePathNameCropped		= Path.Combine(imageFileFolder, imageNameCropped);
 
@@ -44,16 +86,32 @@ public partial class V1_Profile_ProfilePhotoCrop : BaseOrganizationWebForm
 					//Save the new cropped image
 					CroppedImage.Save(filePathNameCropped, CroppedImage.RawFormat);
 				}
-			}
 			
-			if(User.IsInRole("survivor"))
-			{
-				Response.Redirect("~/S1/Profile/Default.aspx");
 			}
-			else
-			{
-				Response.Redirect("/V1/Member/Default.aspx");
-			}
+
+            switch (imageType)
+            {
+                case "profile":
+                    if (User.IsInRole("survivor"))
+                    {
+                        Response.Redirect("~/S1/Profile/Default.aspx");
+                    }
+                    else
+                    {
+                        Response.Redirect("/V1/Member/Default.aspx");
+                    }
+                    break;
+
+                case "logo":
+					Response.Redirect("/V1/NonProfit/Default.aspx");
+                    break;
+
+                case "squarelogo":
+                    Response.Redirect("/V1/NonProfit/Default.aspx");
+                    break;
+            }
+
+            
 		}
 		catch (Exception ex)
 		{

@@ -70,7 +70,7 @@ public partial class V1_Profile_ProfilePhotoUpload : BaseOrganizationWebForm
 
 							ResizeAndSaveImage(filePathnameOriginal, filePathNameResized, profileImageWidth, profileImageHeight);
 
-							Response.Redirect("~/V1/Profile/ProfilePhotoCrop.aspx?imageNameResized=" + imageNameResized);
+							Response.Redirect("~/V1/Profile/ProfilePhotoCrop.aspx?imageNameResized=" + imageNameResized+"&imageType=profile");
 						}
 					}
 				}
