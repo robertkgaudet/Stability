@@ -112,6 +112,10 @@
       <Association Name="aspnet_User_TicketProperty1" Member="TicketProperties1" ThisKey="UserId" OtherKey="CreatedBy" Type="TicketProperty" />
       <Association Name="aspnet_User_TicketProperty2" Member="TicketProperties2" ThisKey="UserId" OtherKey="UpdatedBy" Type="TicketProperty" />
       <Association Name="aspnet_User_OrganizationCase" Member="OrganizationCases" ThisKey="UserId" OtherKey="UserId" Type="OrganizationCase" />
+      <Association Name="aspnet_User_PostReaction" Member="PostReactions" ThisKey="UserId" OtherKey="CreatedBy" Type="PostReaction" />
+      <Association Name="aspnet_User_PostComment" Member="PostComments" ThisKey="UserId" OtherKey="UserId" Type="PostComment" />
+      <Association Name="aspnet_User_PostTaggedUser" Member="PostTaggedUsers" ThisKey="UserId" OtherKey="TaggedUser" Type="PostTaggedUser" />
+      <Association Name="aspnet_User_PostTaggedUser1" Member="PostTaggedUsers1" ThisKey="UserId" OtherKey="CreatedBy" Type="PostTaggedUser" />
       <Association Name="StreamDonation_aspnet_User" Member="StreamDonation" Storage="_Donation" ThisKey="UserId" OtherKey="UserId" Type="StreamDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User" Member="UserDonation" ThisKey="UserId" OtherKey="DonorId" Type="UserDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User1" Member="UserDonation1" ThisKey="UserId" OtherKey="RecipientId" Type="UserDonation" IsForeignKey="true" />
@@ -395,18 +399,8 @@
       <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="aspnet_User_ArticleComment" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
-      <Association Name="Comment_ArticleComment" Member="Comment" ThisKey="CommentId" OtherKey="CommentId" Type="Comment" IsForeignKey="true" />
       <Association Name="Article_ArticleComment" Member="Article" ThisKey="ArticleId" OtherKey="ArticleId" Type="Article" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Comment" Member="Comments">
-    <Type Name="Comment">
-      <Column Name="CommentId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Comment" Member="Comment1" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="Comment_ArticleComment" Member="ArticleComments" ThisKey="CommentId" OtherKey="CommentId" Type="ArticleComment" />
+      <Association Name="Comment_ArticleComment" Member="Comment" ThisKey="CommentId" OtherKey="CommentId" Type="Comment" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.ArticleCategory" Member="ArticleCategories">
@@ -1540,6 +1534,9 @@
       <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Association Name="Post_PostImage" Member="PostImages" ThisKey="PostId" OtherKey="PostId" Type="PostImage" />
+      <Association Name="Post_PostReaction" Member="PostReactions" ThisKey="PostId" OtherKey="PostId" Type="PostReaction" />
+      <Association Name="Post_PostComment" Member="PostComments" ThisKey="PostId" OtherKey="PostId" Type="PostComment" />
+      <Association Name="Post_PostTaggedUser" Member="PostTaggedUsers" ThisKey="PostId" OtherKey="PostId" Type="PostTaggedUser" />
       <Association Name="aspnet_User_Post" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="AudienceType_Post" Member="AudienceType" ThisKey="AudienceTypeId" OtherKey="AudienceTypeId" Type="AudienceType" IsForeignKey="true" />
       <Association Name="PostType_Post" Member="PostType" ThisKey="PostTypeId" OtherKey="PostTypeId" Type="PostType" IsForeignKey="true" />
@@ -2014,6 +2011,68 @@
       <Association Name="BasicNeedsCampaign_Donation" Member="BasicNeedsCampaign" ThisKey="CampaignId" OtherKey="BasicNeedsCampaignId" Type="BasicNeedsCampaign" IsForeignKey="true" />
       <Association Name="BasicNeedsSurveyItem_Donation" Member="BasicNeedsSurveyItem" ThisKey="BasicNeedsSurveyItemId" OtherKey="BasicSurveyItemId" Type="BasicNeedsSurveyItem" IsForeignKey="true" />
       <Association Name="DonationCampaign_Donation" Member="DonationCampaign" ThisKey="DonationCampaignId" OtherKey="DonationCampaignId" Type="DonationCampaign" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PostReactionType" Member="PostReactionTypes">
+    <Type Name="PostReactionType">
+      <Column Name="PostReactionTypeId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="PostReactionType" Member="PostReactionType1" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="PostReactionSymbol" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="OrderId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PostReaction" Member="PostReactions">
+    <Type Name="PostReaction">
+      <Column Name="PostReactionId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="PostId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="ReactionTypeId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Association Name="aspnet_User_PostReaction" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+      <Association Name="Post_PostReaction" Member="Post" ThisKey="PostId" OtherKey="PostId" Type="Post" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PostComment" Member="PostComments">
+    <Type Name="PostComment">
+      <Column Name="PostCommentId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="PostId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="CommentId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="aspnet_User_PostComment" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+      <Association Name="Post_PostComment" Member="Post" ThisKey="PostId" OtherKey="PostId" Type="Post" IsForeignKey="true" />
+      <Association Name="Comment_PostComment" Member="Comment" ThisKey="CommentId" OtherKey="CommentId" Type="Comment" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Comment" Member="Comments">
+    <Type Name="Comment">
+      <Column Name="CommentId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Comment" Member="Comment1" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="ParentId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Association Name="Comment_ArticleComment" Member="ArticleComments" ThisKey="CommentId" OtherKey="CommentId" Type="ArticleComment" />
+      <Association Name="Comment_PostComment" Member="PostComments" ThisKey="CommentId" OtherKey="CommentId" Type="PostComment" />
+      <Association Name="Comment_PostTaggedUser" Member="PostTaggedUsers" ThisKey="CommentId" OtherKey="CommentId" Type="PostTaggedUser" />
+    </Type>
+  </Table>
+  <Table Name="dbo.PostTaggedUser" Member="PostTaggedUsers">
+    <Type Name="PostTaggedUser">
+      <Column Name="PostTaggedUserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CommentId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="TaggedUser" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="IsEmailNotification" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsSMSNotification" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="PostId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Association Name="aspnet_User_PostTaggedUser" Member="aspnet_User" ThisKey="TaggedUser" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+      <Association Name="aspnet_User_PostTaggedUser1" Member="aspnet_User1" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+      <Association Name="Comment_PostTaggedUser" Member="Comment" ThisKey="CommentId" OtherKey="CommentId" Type="Comment" IsForeignKey="true" />
+      <Association Name="Post_PostTaggedUser" Member="Post" ThisKey="PostId" OtherKey="PostId" Type="Post" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">
