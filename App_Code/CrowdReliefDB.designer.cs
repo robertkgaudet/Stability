@@ -410,20 +410,24 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertVideoLink(VideoLink instance);
   partial void UpdateVideoLink(VideoLink instance);
   partial void DeleteVideoLink(VideoLink instance);
-	#endregion
-	public CrowdReliefDBDataContext() :
-			base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
-	{
-		OnCreated();
-	}
+  partial void InsertDonationCampaign(DonationCampaign instance);
+  partial void UpdateDonationCampaign(DonationCampaign instance);
+  partial void DeleteDonationCampaign(DonationCampaign instance);
+  partial void InsertPaymentConfiguration(PaymentConfiguration instance);
+  partial void UpdatePaymentConfiguration(PaymentConfiguration instance);
+  partial void DeletePaymentConfiguration(PaymentConfiguration instance);
+  partial void InsertDonation(Donation instance);
+  partial void UpdateDonation(Donation instance);
+  partial void DeleteDonation(Donation instance);
+    #endregion
 
-	public CrowdReliefDBDataContext(string connection) : 
-			base(connection, mappingSource)
-	{
-		OnCreated();
-	}
-	
-	public CrowdReliefDBDataContext(System.Data.IDbConnection connection) : 
+    public CrowdReliefDBDataContext() :
+        base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
+    {
+        OnCreated();
+    }
+
+    public CrowdReliefDBDataContext(System.Data.IDbConnection connection) : 
 			base(connection, mappingSource)
 	{
 		OnCreated();
@@ -1454,6 +1458,30 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<VideoLink>();
+		}
+	}
+	
+	public System.Data.Linq.Table<DonationCampaign> DonationCampaigns
+	{
+		get
+		{
+			return this.GetTable<DonationCampaign>();
+		}
+	}
+	
+	public System.Data.Linq.Table<PaymentConfiguration> PaymentConfigurations
+	{
+		get
+		{
+			return this.GetTable<PaymentConfiguration>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Donation> Donations
+	{
+		get
+		{
+			return this.GetTable<Donation>();
 		}
 	}
 	
@@ -7582,6 +7610,8 @@ public partial class BasicNeedsCampaign : INotifyPropertyChanging, INotifyProper
 	
 	private System.Nullable<bool> _Hidden;
 	
+	private EntitySet<Donation> _Donations;
+	
 	private EntityRef<BasicNeedsSurvey> _BasicNeedsSurvey;
 	
     #region Extensibility Method Definitions
@@ -7614,6 +7644,7 @@ public partial class BasicNeedsCampaign : INotifyPropertyChanging, INotifyProper
 	
 	public BasicNeedsCampaign()
 	{
+		this._Donations = new EntitySet<Donation>(new Action<Donation>(this.attach_Donations), new Action<Donation>(this.detach_Donations));
 		this._BasicNeedsSurvey = default(EntityRef<BasicNeedsSurvey>);
 		OnCreated();
 	}
@@ -7842,6 +7873,19 @@ public partial class BasicNeedsCampaign : INotifyPropertyChanging, INotifyProper
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BasicNeedsCampaign_Donation", Storage="_Donations", ThisKey="BasicNeedsCampaignId", OtherKey="CampaignId")]
+	public EntitySet<Donation> Donations
+	{
+		get
+		{
+			return this._Donations;
+		}
+		set
+		{
+			this._Donations.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BasicNeedsSurvey_BasicNeedsCampaign", Storage="_BasicNeedsSurvey", ThisKey="BasicNeedsSurveyId", OtherKey="SurveyId", IsForeignKey=true)]
 	public BasicNeedsSurvey BasicNeedsSurvey
 	{
@@ -7894,6 +7938,18 @@ public partial class BasicNeedsCampaign : INotifyPropertyChanging, INotifyProper
 		{
 			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
+	}
+	
+	private void attach_Donations(Donation entity)
+	{
+		this.SendPropertyChanging();
+		entity.BasicNeedsCampaign = this;
+	}
+	
+	private void detach_Donations(Donation entity)
+	{
+		this.SendPropertyChanging();
+		entity.BasicNeedsCampaign = null;
 	}
 }
 
@@ -12710,6 +12766,8 @@ public partial class BasicNeedsSurveyItem : INotifyPropertyChanging, INotifyProp
 	
 	private int _Count;
 	
+	private EntitySet<Donation> _Donations;
+	
 	private EntityRef<Item> _Item;
 	
 	private EntityRef<BasicNeedsSurvey> _BasicNeedsSurvey;
@@ -12730,6 +12788,7 @@ public partial class BasicNeedsSurveyItem : INotifyPropertyChanging, INotifyProp
 	
 	public BasicNeedsSurveyItem()
 	{
+		this._Donations = new EntitySet<Donation>(new Action<Donation>(this.attach_Donations), new Action<Donation>(this.detach_Donations));
 		this._Item = default(EntityRef<Item>);
 		this._BasicNeedsSurvey = default(EntityRef<BasicNeedsSurvey>);
 		OnCreated();
@@ -12823,6 +12882,19 @@ public partial class BasicNeedsSurveyItem : INotifyPropertyChanging, INotifyProp
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BasicNeedsSurveyItem_Donation", Storage="_Donations", ThisKey="BasicSurveyItemId", OtherKey="BasicNeedsSurveyItemId")]
+	public EntitySet<Donation> Donations
+	{
+		get
+		{
+			return this._Donations;
+		}
+		set
+		{
+			this._Donations.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Item_BasicNeedsSurveyItem", Storage="_Item", ThisKey="ItemId", OtherKey="ItemId", IsForeignKey=true)]
 	public Item Item
 	{
@@ -12909,6 +12981,18 @@ public partial class BasicNeedsSurveyItem : INotifyPropertyChanging, INotifyProp
 		{
 			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
+	}
+	
+	private void attach_Donations(Donation entity)
+	{
+		this.SendPropertyChanging();
+		entity.BasicNeedsSurveyItem = this;
+	}
+	
+	private void detach_Donations(Donation entity)
+	{
+		this.SendPropertyChanging();
+		entity.BasicNeedsSurveyItem = null;
 	}
 }
 
@@ -33791,6 +33875,8 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 	
 	private EntitySet<Position> _Positions;
 	
+	private EntitySet<PaymentConfiguration> _PaymentConfigurations;
+	
 	private EntityRef<aspnet_User> _aspnet_User;
 	
 	private EntityRef<aspnet_User> _aspnet_User1;
@@ -33908,6 +33994,7 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		this._OrganizationEvents = new EntitySet<OrganizationEvent>(new Action<OrganizationEvent>(this.attach_OrganizationEvents), new Action<OrganizationEvent>(this.detach_OrganizationEvents));
 		this._OrganizationCases = new EntitySet<OrganizationCase>(new Action<OrganizationCase>(this.attach_OrganizationCases), new Action<OrganizationCase>(this.detach_OrganizationCases));
 		this._Positions = new EntitySet<Position>(new Action<Position>(this.attach_Positions), new Action<Position>(this.detach_Positions));
+		this._PaymentConfigurations = new EntitySet<PaymentConfiguration>(new Action<PaymentConfiguration>(this.attach_PaymentConfigurations), new Action<PaymentConfiguration>(this.detach_PaymentConfigurations));
 		this._aspnet_User = default(EntityRef<aspnet_User>);
 		this._aspnet_User1 = default(EntityRef<aspnet_User>);
 		OnCreated();
@@ -34992,6 +35079,19 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_PaymentConfiguration", Storage="_PaymentConfigurations", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<PaymentConfiguration> PaymentConfigurations
+	{
+		get
+		{
+			return this._PaymentConfigurations;
+		}
+		set
+		{
+			this._PaymentConfigurations.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Organization", Storage="_aspnet_User", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
 	public aspnet_User aspnet_User
 	{
@@ -35159,6 +35259,18 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 	}
 	
 	private void detach_Positions(Position entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = null;
+	}
+	
+	private void attach_PaymentConfigurations(PaymentConfiguration entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = this;
+	}
+	
+	private void detach_PaymentConfigurations(PaymentConfiguration entity)
 	{
 		this.SendPropertyChanging();
 		entity.Organization = null;
@@ -45538,6 +45650,1272 @@ public partial class VideoLink : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this.SendPropertyChanging();
 		entity.VideoLink = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.DonationCampaign")]
+public partial class DonationCampaign : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _DonationCampaignId;
+	
+	private System.Nullable<System.Guid> _OrganizationEventId;
+	
+	private string _Summary;
+	
+	private string _Address;
+	
+	private string _Amount;
+	
+	private string _Description;
+	
+	private bool _IsDefault;
+	
+	private EntitySet<Donation> _Donations;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnDonationCampaignIdChanging(System.Guid value);
+    partial void OnDonationCampaignIdChanged();
+    partial void OnOrganizationEventIdChanging(System.Nullable<System.Guid> value);
+    partial void OnOrganizationEventIdChanged();
+    partial void OnSummaryChanging(string value);
+    partial void OnSummaryChanged();
+    partial void OnAddressChanging(string value);
+    partial void OnAddressChanged();
+    partial void OnAmountChanging(string value);
+    partial void OnAmountChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnIsDefaultChanging(System.Nullable<bool> value);
+    partial void OnIsDefaultChanged();
+    #endregion
+	
+	public DonationCampaign()
+	{
+		this._Donations = new EntitySet<Donation>(new Action<Donation>(this.attach_Donations), new Action<Donation>(this.detach_Donations));
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DonationCampaignId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid DonationCampaignId
+	{
+		get
+		{
+			return this._DonationCampaignId;
+		}
+		set
+		{
+			if ((this._DonationCampaignId != value))
+			{
+				this.OnDonationCampaignIdChanging(value);
+				this.SendPropertyChanging();
+				this._DonationCampaignId = value;
+				this.SendPropertyChanged("DonationCampaignId");
+				this.OnDonationCampaignIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationEventId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> OrganizationEventId
+	{
+		get
+		{
+			return this._OrganizationEventId;
+		}
+		set
+		{
+			if ((this._OrganizationEventId != value))
+			{
+				this.OnOrganizationEventIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationEventId = value;
+				this.SendPropertyChanged("OrganizationEventId");
+				this.OnOrganizationEventIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Summary", DbType="NVarChar(MAX)")]
+	public string Summary
+	{
+		get
+		{
+			return this._Summary;
+		}
+		set
+		{
+			if ((this._Summary != value))
+			{
+				this.OnSummaryChanging(value);
+				this.SendPropertyChanging();
+				this._Summary = value;
+				this.SendPropertyChanged("Summary");
+				this.OnSummaryChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="NVarChar(MAX)")]
+	public string Address
+	{
+		get
+		{
+			return this._Address;
+		}
+		set
+		{
+			if ((this._Address != value))
+			{
+				this.OnAddressChanging(value);
+				this.SendPropertyChanging();
+				this._Address = value;
+				this.SendPropertyChanged("Address");
+				this.OnAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Amount", DbType="VarChar(255)")]
+	public string Amount
+	{
+		get
+		{
+			return this._Amount;
+		}
+		set
+		{
+			if ((this._Amount != value))
+			{
+				this.OnAmountChanging(value);
+				this.SendPropertyChanging();
+				this._Amount = value;
+				this.SendPropertyChanged("Amount");
+				this.OnAmountChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="NVarChar(MAX)")]
+	public string Description
+	{
+		get
+		{
+			return this._Description;
+		}
+		set
+		{
+			if ((this._Description != value))
+			{
+				this.OnDescriptionChanging(value);
+				this.SendPropertyChanging();
+				this._Description = value;
+				this.SendPropertyChanged("Description");
+				this.OnDescriptionChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDefault", DbType="Bit")]
+	public bool IsDefault
+	{
+		get
+		{
+			return this._IsDefault;
+		}
+		set
+		{
+			if ((this._IsDefault != value))
+			{
+				this.OnIsDefaultChanging(value);
+				this.SendPropertyChanging();
+				this._IsDefault = value;
+				this.SendPropertyChanged("IsDefault");
+				this.OnIsDefaultChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DonationCampaign_Donation", Storage="_Donations", ThisKey="DonationCampaignId", OtherKey="DonationCampaignId")]
+	public EntitySet<Donation> Donations
+	{
+		get
+		{
+			return this._Donations;
+		}
+		set
+		{
+			this._Donations.Assign(value);
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_Donations(Donation entity)
+	{
+		this.SendPropertyChanging();
+		entity.DonationCampaign = this;
+	}
+	
+	private void detach_Donations(Donation entity)
+	{
+		this.SendPropertyChanging();
+		entity.DonationCampaign = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PaymentConfiguration")]
+public partial class PaymentConfiguration : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _PaymentConfigurationId;
+	
+	private string _PayPal;
+	
+	private string _Venmo;
+	
+	private string _CashApp;
+	
+	private string _Summary;
+	
+	private string _Address;
+	
+	private System.Nullable<System.DateTime> _CreatedOn;
+	
+	private System.Nullable<System.DateTime> _UpdatedOn;
+	
+	private string _CreatedBy;
+	
+	private string _UpdatedBy;
+	
+	private System.Nullable<System.Guid> _OrganizationId;
+	
+	private System.Nullable<bool> _ShowDonationButton;
+	
+	private EntityRef<Organization> _Organization;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPaymentConfigurationIdChanging(System.Guid value);
+    partial void OnPaymentConfigurationIdChanged();
+    partial void OnPayPalChanging(string value);
+    partial void OnPayPalChanged();
+    partial void OnVenmoChanging(string value);
+    partial void OnVenmoChanged();
+    partial void OnCashAppChanging(string value);
+    partial void OnCashAppChanged();
+    partial void OnSummaryChanging(string value);
+    partial void OnSummaryChanged();
+    partial void OnAddressChanging(string value);
+    partial void OnAddressChanged();
+    partial void OnCreatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnCreatedOnChanged();
+    partial void OnUpdatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnUpdatedOnChanged();
+    partial void OnCreatedByChanging(string value);
+    partial void OnCreatedByChanged();
+    partial void OnUpdatedByChanging(string value);
+    partial void OnUpdatedByChanged();
+    partial void OnOrganizationIdChanging(System.Nullable<System.Guid> value);
+    partial void OnOrganizationIdChanged();
+    partial void OnShowDonationButtonChanging(System.Nullable<bool> value);
+    partial void OnShowDonationButtonChanged();
+    #endregion
+	
+	public PaymentConfiguration()
+	{
+		this._Organization = default(EntityRef<Organization>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PaymentConfigurationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid PaymentConfigurationId
+	{
+		get
+		{
+			return this._PaymentConfigurationId;
+		}
+		set
+		{
+			if ((this._PaymentConfigurationId != value))
+			{
+				this.OnPaymentConfigurationIdChanging(value);
+				this.SendPropertyChanging();
+				this._PaymentConfigurationId = value;
+				this.SendPropertyChanged("PaymentConfigurationId");
+				this.OnPaymentConfigurationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PayPal", DbType="VarChar(255)")]
+	public string PayPal
+	{
+		get
+		{
+			return this._PayPal;
+		}
+		set
+		{
+			if ((this._PayPal != value))
+			{
+				this.OnPayPalChanging(value);
+				this.SendPropertyChanging();
+				this._PayPal = value;
+				this.SendPropertyChanged("PayPal");
+				this.OnPayPalChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Venmo", DbType="VarChar(255)")]
+	public string Venmo
+	{
+		get
+		{
+			return this._Venmo;
+		}
+		set
+		{
+			if ((this._Venmo != value))
+			{
+				this.OnVenmoChanging(value);
+				this.SendPropertyChanging();
+				this._Venmo = value;
+				this.SendPropertyChanged("Venmo");
+				this.OnVenmoChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CashApp", DbType="VarChar(255)")]
+	public string CashApp
+	{
+		get
+		{
+			return this._CashApp;
+		}
+		set
+		{
+			if ((this._CashApp != value))
+			{
+				this.OnCashAppChanging(value);
+				this.SendPropertyChanging();
+				this._CashApp = value;
+				this.SendPropertyChanged("CashApp");
+				this.OnCashAppChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Summary", DbType="NVarChar(MAX)")]
+	public string Summary
+	{
+		get
+		{
+			return this._Summary;
+		}
+		set
+		{
+			if ((this._Summary != value))
+			{
+				this.OnSummaryChanging(value);
+				this.SendPropertyChanging();
+				this._Summary = value;
+				this.SendPropertyChanged("Summary");
+				this.OnSummaryChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="NVarChar(MAX)")]
+	public string Address
+	{
+		get
+		{
+			return this._Address;
+		}
+		set
+		{
+			if ((this._Address != value))
+			{
+				this.OnAddressChanging(value);
+				this.SendPropertyChanging();
+				this._Address = value;
+				this.SendPropertyChanged("Address");
+				this.OnAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> UpdatedOn
+	{
+		get
+		{
+			return this._UpdatedOn;
+		}
+		set
+		{
+			if ((this._UpdatedOn != value))
+			{
+				this.OnUpdatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedOn = value;
+				this.SendPropertyChanged("UpdatedOn");
+				this.OnUpdatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="VarChar(255)")]
+	public string CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedBy", DbType="VarChar(255)")]
+	public string UpdatedBy
+	{
+		get
+		{
+			return this._UpdatedBy;
+		}
+		set
+		{
+			if ((this._UpdatedBy != value))
+			{
+				this.OnUpdatedByChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedBy = value;
+				this.SendPropertyChanged("UpdatedBy");
+				this.OnUpdatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				if (this._Organization.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowDonationButton", DbType="Bit")]
+	public System.Nullable<bool> ShowDonationButton
+	{
+		get
+		{
+			return this._ShowDonationButton;
+		}
+		set
+		{
+			if ((this._ShowDonationButton != value))
+			{
+				this.OnShowDonationButtonChanging(value);
+				this.SendPropertyChanging();
+				this._ShowDonationButton = value;
+				this.SendPropertyChanged("ShowDonationButton");
+				this.OnShowDonationButtonChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_PaymentConfiguration", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
+	public Organization Organization
+	{
+		get
+		{
+			return this._Organization.Entity;
+		}
+		set
+		{
+			Organization previousValue = this._Organization.Entity;
+			if (((previousValue != value) 
+						|| (this._Organization.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Organization.Entity = null;
+					previousValue.PaymentConfigurations.Remove(this);
+				}
+				this._Organization.Entity = value;
+				if ((value != null))
+				{
+					value.PaymentConfigurations.Add(this);
+					this._OrganizationId = value.OrganizationId;
+				}
+				else
+				{
+					this._OrganizationId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("Organization");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Donation")]
+public partial class Donation : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _DonationId;
+	
+	private decimal _Amount;
+	
+	private string _FirstName;
+	
+	private string _LastName;
+	
+	private string _EmailAddress;
+	
+	private string _PhoneNumber;
+	
+	private System.Guid _UserId;
+	
+	private System.Nullable<System.Guid> _CampaignId;
+	
+	private System.Nullable<System.Guid> _BasicNeedsSurveyItemId;
+	
+	private string _TransactionId;
+	
+	private string _OrderId;
+	
+	private string _AuthorizedTransactionId;
+	
+	private string _SettlementBatchId;
+	
+	private bool _IsTest;
+	
+	private System.DateTime _CreatedAt;
+	
+	private System.Nullable<decimal> _ItemCostEach;
+	
+	private System.Nullable<int> _ItemCount;
+	
+	private System.Nullable<int> _PaymentProvider;
+	
+	private System.Nullable<int> _DonationStatus;
+	
+	private string _ErrorDetails;
+	
+	private System.Nullable<System.Guid> _DonationCampaignId;
+	
+	private EntityRef<BasicNeedsCampaign> _BasicNeedsCampaign;
+	
+	private EntityRef<BasicNeedsSurveyItem> _BasicNeedsSurveyItem;
+	
+	private EntityRef<DonationCampaign> _DonationCampaign;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnDonationIdChanging(System.Guid value);
+    partial void OnDonationIdChanged();
+    partial void OnAmountChanging(decimal value);
+    partial void OnAmountChanged();
+    partial void OnFirstNameChanging(string value);
+    partial void OnFirstNameChanged();
+    partial void OnLastNameChanging(string value);
+    partial void OnLastNameChanged();
+    partial void OnEmailAddressChanging(string value);
+    partial void OnEmailAddressChanged();
+    partial void OnPhoneNumberChanging(string value);
+    partial void OnPhoneNumberChanged();
+    partial void OnUserIdChanging(System.Guid value);
+    partial void OnUserIdChanged();
+    partial void OnCampaignIdChanging(System.Nullable<System.Guid> value);
+    partial void OnCampaignIdChanged();
+    partial void OnBasicNeedsSurveyItemIdChanging(System.Nullable<System.Guid> value);
+    partial void OnBasicNeedsSurveyItemIdChanged();
+    partial void OnTransactionIdChanging(string value);
+    partial void OnTransactionIdChanged();
+    partial void OnOrderIdChanging(string value);
+    partial void OnOrderIdChanged();
+    partial void OnAuthorizedTransactionIdChanging(string value);
+    partial void OnAuthorizedTransactionIdChanged();
+    partial void OnSettlementBatchIdChanging(string value);
+    partial void OnSettlementBatchIdChanged();
+    partial void OnIsTestChanging(bool value);
+    partial void OnIsTestChanged();
+    partial void OnCreatedAtChanging(System.DateTime value);
+    partial void OnCreatedAtChanged();
+    partial void OnItemCostEachChanging(System.Nullable<decimal> value);
+    partial void OnItemCostEachChanged();
+    partial void OnItemCountChanging(System.Nullable<int> value);
+    partial void OnItemCountChanged();
+    partial void OnPaymentProviderChanging(System.Nullable<int> value);
+    partial void OnPaymentProviderChanged();
+    partial void OnDonationStatusChanging(System.Nullable<int> value);
+    partial void OnDonationStatusChanged();
+    partial void OnErrorDetailsChanging(string value);
+    partial void OnErrorDetailsChanged();
+    partial void OnDonationCampaignIdChanging(System.Nullable<System.Guid> value);
+    partial void OnDonationCampaignIdChanged();
+    #endregion
+	
+	public Donation()
+	{
+		this._BasicNeedsCampaign = default(EntityRef<BasicNeedsCampaign>);
+		this._BasicNeedsSurveyItem = default(EntityRef<BasicNeedsSurveyItem>);
+		this._DonationCampaign = default(EntityRef<DonationCampaign>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DonationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid DonationId
+	{
+		get
+		{
+			return this._DonationId;
+		}
+		set
+		{
+			if ((this._DonationId != value))
+			{
+				this.OnDonationIdChanging(value);
+				this.SendPropertyChanging();
+				this._DonationId = value;
+				this.SendPropertyChanged("DonationId");
+				this.OnDonationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Amount", DbType="Decimal(18,2) NOT NULL")]
+	public decimal Amount
+	{
+		get
+		{
+			return this._Amount;
+		}
+		set
+		{
+			if ((this._Amount != value))
+			{
+				this.OnAmountChanging(value);
+				this.SendPropertyChanging();
+				this._Amount = value;
+				this.SendPropertyChanged("Amount");
+				this.OnAmountChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FirstName", DbType="VarChar(50)")]
+	public string FirstName
+	{
+		get
+		{
+			return this._FirstName;
+		}
+		set
+		{
+			if ((this._FirstName != value))
+			{
+				this.OnFirstNameChanging(value);
+				this.SendPropertyChanging();
+				this._FirstName = value;
+				this.SendPropertyChanged("FirstName");
+				this.OnFirstNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastName", DbType="VarChar(50)")]
+	public string LastName
+	{
+		get
+		{
+			return this._LastName;
+		}
+		set
+		{
+			if ((this._LastName != value))
+			{
+				this.OnLastNameChanging(value);
+				this.SendPropertyChanging();
+				this._LastName = value;
+				this.SendPropertyChanged("LastName");
+				this.OnLastNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmailAddress", DbType="VarChar(50)")]
+	public string EmailAddress
+	{
+		get
+		{
+			return this._EmailAddress;
+		}
+		set
+		{
+			if ((this._EmailAddress != value))
+			{
+				this.OnEmailAddressChanging(value);
+				this.SendPropertyChanging();
+				this._EmailAddress = value;
+				this.SendPropertyChanged("EmailAddress");
+				this.OnEmailAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="VarChar(50)")]
+	public string PhoneNumber
+	{
+		get
+		{
+			return this._PhoneNumber;
+		}
+		set
+		{
+			if ((this._PhoneNumber != value))
+			{
+				this.OnPhoneNumberChanging(value);
+				this.SendPropertyChanging();
+				this._PhoneNumber = value;
+				this.SendPropertyChanged("PhoneNumber");
+				this.OnPhoneNumberChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CampaignId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> CampaignId
+	{
+		get
+		{
+			return this._CampaignId;
+		}
+		set
+		{
+			if ((this._CampaignId != value))
+			{
+				if (this._BasicNeedsCampaign.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCampaignIdChanging(value);
+				this.SendPropertyChanging();
+				this._CampaignId = value;
+				this.SendPropertyChanged("CampaignId");
+				this.OnCampaignIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BasicNeedsSurveyItemId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> BasicNeedsSurveyItemId
+	{
+		get
+		{
+			return this._BasicNeedsSurveyItemId;
+		}
+		set
+		{
+			if ((this._BasicNeedsSurveyItemId != value))
+			{
+				if (this._BasicNeedsSurveyItem.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnBasicNeedsSurveyItemIdChanging(value);
+				this.SendPropertyChanging();
+				this._BasicNeedsSurveyItemId = value;
+				this.SendPropertyChanged("BasicNeedsSurveyItemId");
+				this.OnBasicNeedsSurveyItemIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TransactionId", DbType="VarChar(50)")]
+	public string TransactionId
+	{
+		get
+		{
+			return this._TransactionId;
+		}
+		set
+		{
+			if ((this._TransactionId != value))
+			{
+				this.OnTransactionIdChanging(value);
+				this.SendPropertyChanging();
+				this._TransactionId = value;
+				this.SendPropertyChanged("TransactionId");
+				this.OnTransactionIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrderId", DbType="VarChar(50)")]
+	public string OrderId
+	{
+		get
+		{
+			return this._OrderId;
+		}
+		set
+		{
+			if ((this._OrderId != value))
+			{
+				this.OnOrderIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrderId = value;
+				this.SendPropertyChanged("OrderId");
+				this.OnOrderIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AuthorizedTransactionId", DbType="VarChar(50)")]
+	public string AuthorizedTransactionId
+	{
+		get
+		{
+			return this._AuthorizedTransactionId;
+		}
+		set
+		{
+			if ((this._AuthorizedTransactionId != value))
+			{
+				this.OnAuthorizedTransactionIdChanging(value);
+				this.SendPropertyChanging();
+				this._AuthorizedTransactionId = value;
+				this.SendPropertyChanged("AuthorizedTransactionId");
+				this.OnAuthorizedTransactionIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SettlementBatchId", DbType="NChar(10)")]
+	public string SettlementBatchId
+	{
+		get
+		{
+			return this._SettlementBatchId;
+		}
+		set
+		{
+			if ((this._SettlementBatchId != value))
+			{
+				this.OnSettlementBatchIdChanging(value);
+				this.SendPropertyChanging();
+				this._SettlementBatchId = value;
+				this.SendPropertyChanged("SettlementBatchId");
+				this.OnSettlementBatchIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsTest", DbType="Bit NOT NULL")]
+	public bool IsTest
+	{
+		get
+		{
+			return this._IsTest;
+		}
+		set
+		{
+			if ((this._IsTest != value))
+			{
+				this.OnIsTestChanging(value);
+				this.SendPropertyChanging();
+				this._IsTest = value;
+				this.SendPropertyChanged("IsTest");
+				this.OnIsTestChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedAt", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedAt
+	{
+		get
+		{
+			return this._CreatedAt;
+		}
+		set
+		{
+			if ((this._CreatedAt != value))
+			{
+				this.OnCreatedAtChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedAt = value;
+				this.SendPropertyChanged("CreatedAt");
+				this.OnCreatedAtChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ItemCostEach", DbType="Decimal(18,2)")]
+	public System.Nullable<decimal> ItemCostEach
+	{
+		get
+		{
+			return this._ItemCostEach;
+		}
+		set
+		{
+			if ((this._ItemCostEach != value))
+			{
+				this.OnItemCostEachChanging(value);
+				this.SendPropertyChanging();
+				this._ItemCostEach = value;
+				this.SendPropertyChanged("ItemCostEach");
+				this.OnItemCostEachChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ItemCount", DbType="Int")]
+	public System.Nullable<int> ItemCount
+	{
+		get
+		{
+			return this._ItemCount;
+		}
+		set
+		{
+			if ((this._ItemCount != value))
+			{
+				this.OnItemCountChanging(value);
+				this.SendPropertyChanging();
+				this._ItemCount = value;
+				this.SendPropertyChanged("ItemCount");
+				this.OnItemCountChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PaymentProvider", DbType="Int")]
+	public System.Nullable<int> PaymentProvider
+	{
+		get
+		{
+			return this._PaymentProvider;
+		}
+		set
+		{
+			if ((this._PaymentProvider != value))
+			{
+				this.OnPaymentProviderChanging(value);
+				this.SendPropertyChanging();
+				this._PaymentProvider = value;
+				this.SendPropertyChanged("PaymentProvider");
+				this.OnPaymentProviderChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DonationStatus", DbType="Int")]
+	public System.Nullable<int> DonationStatus
+	{
+		get
+		{
+			return this._DonationStatus;
+		}
+		set
+		{
+			if ((this._DonationStatus != value))
+			{
+				this.OnDonationStatusChanging(value);
+				this.SendPropertyChanging();
+				this._DonationStatus = value;
+				this.SendPropertyChanged("DonationStatus");
+				this.OnDonationStatusChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ErrorDetails", DbType="NVarChar(MAX)")]
+	public string ErrorDetails
+	{
+		get
+		{
+			return this._ErrorDetails;
+		}
+		set
+		{
+			if ((this._ErrorDetails != value))
+			{
+				this.OnErrorDetailsChanging(value);
+				this.SendPropertyChanging();
+				this._ErrorDetails = value;
+				this.SendPropertyChanged("ErrorDetails");
+				this.OnErrorDetailsChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DonationCampaignId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> DonationCampaignId
+	{
+		get
+		{
+			return this._DonationCampaignId;
+		}
+		set
+		{
+			if ((this._DonationCampaignId != value))
+			{
+				if (this._DonationCampaign.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnDonationCampaignIdChanging(value);
+				this.SendPropertyChanging();
+				this._DonationCampaignId = value;
+				this.SendPropertyChanged("DonationCampaignId");
+				this.OnDonationCampaignIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BasicNeedsCampaign_Donation", Storage="_BasicNeedsCampaign", ThisKey="CampaignId", OtherKey="BasicNeedsCampaignId", IsForeignKey=true)]
+	public BasicNeedsCampaign BasicNeedsCampaign
+	{
+		get
+		{
+			return this._BasicNeedsCampaign.Entity;
+		}
+		set
+		{
+			BasicNeedsCampaign previousValue = this._BasicNeedsCampaign.Entity;
+			if (((previousValue != value) 
+						|| (this._BasicNeedsCampaign.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._BasicNeedsCampaign.Entity = null;
+					previousValue.Donations.Remove(this);
+				}
+				this._BasicNeedsCampaign.Entity = value;
+				if ((value != null))
+				{
+					value.Donations.Add(this);
+					this._CampaignId = value.BasicNeedsCampaignId;
+				}
+				else
+				{
+					this._CampaignId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("BasicNeedsCampaign");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BasicNeedsSurveyItem_Donation", Storage="_BasicNeedsSurveyItem", ThisKey="BasicNeedsSurveyItemId", OtherKey="BasicSurveyItemId", IsForeignKey=true)]
+	public BasicNeedsSurveyItem BasicNeedsSurveyItem
+	{
+		get
+		{
+			return this._BasicNeedsSurveyItem.Entity;
+		}
+		set
+		{
+			BasicNeedsSurveyItem previousValue = this._BasicNeedsSurveyItem.Entity;
+			if (((previousValue != value) 
+						|| (this._BasicNeedsSurveyItem.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._BasicNeedsSurveyItem.Entity = null;
+					previousValue.Donations.Remove(this);
+				}
+				this._BasicNeedsSurveyItem.Entity = value;
+				if ((value != null))
+				{
+					value.Donations.Add(this);
+					this._BasicNeedsSurveyItemId = value.BasicSurveyItemId;
+				}
+				else
+				{
+					this._BasicNeedsSurveyItemId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("BasicNeedsSurveyItem");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DonationCampaign_Donation", Storage="_DonationCampaign", ThisKey="DonationCampaignId", OtherKey="DonationCampaignId", IsForeignKey=true)]
+	public DonationCampaign DonationCampaign
+	{
+		get
+		{
+			return this._DonationCampaign.Entity;
+		}
+		set
+		{
+			DonationCampaign previousValue = this._DonationCampaign.Entity;
+			if (((previousValue != value) 
+						|| (this._DonationCampaign.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._DonationCampaign.Entity = null;
+					previousValue.Donations.Remove(this);
+				}
+				this._DonationCampaign.Entity = value;
+				if ((value != null))
+				{
+					value.Donations.Add(this);
+					this._DonationCampaignId = value.DonationCampaignId;
+				}
+				else
+				{
+					this._DonationCampaignId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("DonationCampaign");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }
 
