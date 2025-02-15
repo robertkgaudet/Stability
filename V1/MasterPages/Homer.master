@@ -1,18 +1,17 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Homer.master.cs" Inherits="MasterPages_Homer" %>
 
-
 <!DOCTYPE html>
 <html>
 	<head runat="server">
 		<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-96039646-1"></script>
 		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag() { dataLayer.push(arguments); }
-			gtag('js', new Date());
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
 
-			gtag('config', 'UA-96039646-1');
-		</script>
+            gtag('config', 'UA-96039646-1');
+        </script>
 		<link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
 		<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -58,23 +57,23 @@
             var checkTaskType = "true";
             var causeName = "";
 
-			document.addEventListener("DOMContentLoaded", function () {
-				const listItems = document.querySelectorAll("#userActionList li");
+            document.addEventListener("DOMContentLoaded", function () {
+                const listItems = document.querySelectorAll("#userActionList li");
 
-				listItems.forEach(item => {
-					item.addEventListener("click", function () {
-						const url = this.getAttribute("data-url");
-						if (url) {
-							window.location.href = url;
-						}
-					});
-				});
-			});
+                listItems.forEach(item => {
+                    item.addEventListener("click", function () {
+                        const url = this.getAttribute("data-url");
+                        if (url) {
+                            window.location.href = url;
+                        }
+                    });
+                });
+            });
 
-			$(document).ready(function () {
+            $(document).ready(function () {
 
 				<%=_showUserActionModal%>
-				
+
                 $("#causeTypeList.dropdown-menu li").click(function () {
                     causeName = $(this).text();
                     $("#btn-causeDropdown.dropdown-chooseCause").html("<i class='fa fa-globe'></i> " + causeName);
@@ -224,9 +223,69 @@
 				    });
                  }
              }
+        </script>
+		<script type="text/javascript">
+            var baseUrl = '<%= ResolveUrl("~/") %>';
+            console.log("Base URL:", baseUrl);
 		</script>
+		
+
+		<script>
+            $(document).ready(function () {
+                var notificationCount = '<%= notificationCounting %>';
+
+                console.log("Notification Count:", notificationCount);
+
+                if (notificationCount === "" || notificationCount === "0") {
+                    $('.badge.badge-danger').hide();
+                } else {
+                    $('.badge.badge-danger').show();
+                }
+            });
+            $('#notificationContainer').on('click', '.notification-item', function () {
+                var notificationId = $(this).find('.notificationClick').data('notification-id');
+                var self = $(this);
+                $.ajax({
+                    url: "/MasterPages/Homer.master/GetCount",
+                    type: "POST",
+                    data: JSON.stringify({ notificationId: notificationId }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+
+                    },
+                    error: function () {
+                        console.error('Failed to mark notification as read.');
+                    }
+                });
+            });
+        </script>
 
 		<style>
+			#featureTypeCounter{
+				    margin-right: 17px;
+					margin-top: 20px;
+					color: white;
+			}
+			#featureCounter{
+				top:0;
+				bottom:0;
+				right:0;
+				left:0;
+				margin-top:0;
+				margin-bottom:0;
+				margin-right:0;
+				margin-left:0;
+			}
+			    #notificationDropdown a:hover {
+					background: none;
+				}
+				#notificationDropdown a {
+					background: none;
+					border-bottom:none;
+				}
+
             .btn-purple
             {
                 background-color:#5E2E91;
@@ -274,7 +333,7 @@
 			}
 			.fa-bars:hover
 			{
-				color:white;
+				color:none;
 			}
 			#<%=imgProfile.ClientID%> {width:60%;}
 
@@ -291,7 +350,7 @@
 			.liUserAction:hover
 			{
 				cursor:pointer;
-				background-color:lightgray;
+				background-color:none;
 				color:white;
 			}
 			.ul_legend li
@@ -388,12 +447,14 @@
 			}
 			
 		</style>
+
 		<asp:ContentPlaceHolder id="head" runat="server">
 		</asp:ContentPlaceHolder>
 	</head>
 	<%=bodyTag%>
     <body class="sidebar-scroll hide-sidebar fixed-navbar <%=fixedFooter%> <%=fixedHeader%> bodyBGColor">
 		<form id="form1" runat="server" role="form">
+										
 			<div style="margin-bottom:500px;">
 				<div id="header" runat="server">
 					<nav role="navigation">
@@ -438,6 +499,30 @@
 						</div>
 
 						<div class="navbar-right">
+							<ul class="nav navbar-nav no-borders removeStyle">
+								<li id="featureTypeCounter">
+								<%=FeatureTypeCounterTitle %> <asp:label ID="FeatureTypeCounterNumber" runat="server" ></asp:label>
+
+								</li>
+								
+							</ul>
+							<ul class="nav navbar-nav no-borders removeStyle">
+								
+
+								<li class="dropdown" id="notificationDropdown">
+									<a class="dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
+										<i class="fa fa-bell"></i>
+										<span class="badge badge-danger">
+											<asp:Label  ID="notificationCounts" runat="server" ></asp:Label>
+										</span>
+									</a>
+									<asp:PlaceHolder ID="PlaceHolderContent" runat="server"></asp:PlaceHolder>
+								</li>
+							</ul>
+
+
+							
+							
 							<ul class="nav navbar-nav no-borders">
 								<li class="dropdown" style="visibility:hidden;">
 									<a class="dropdown-toggle label-menu-corner" href="#" data-toggle="dropdown">
@@ -917,5 +1002,6 @@
 		<br />
 		<br />
 		<br />
+
 	</body>
 </html>
