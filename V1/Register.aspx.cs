@@ -117,15 +117,37 @@ public partial class V1_Register : System.Web.UI.Page
 				dc.SubmitChanges();
 				urlRedirect = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
 			}
-			else
+            else
 			{
 				//Send to the team list page and ask that they choose a team.
 				urlRedirect = "/V1/NonProfit/TeamList.aspx?team=false";
 			}
+			if (Request.QueryString["transactionId"] != null)
+			{
+				string transactionId = Request.QueryString["transactionId"].ToString();
+				var donationDetail = dc.Donations.FirstOrDefault(x => x.TransactionId == transactionId);
+				if (string.IsNullOrEmpty(donationDetail.FirstName) && string.IsNullOrEmpty(donationDetail.LastName) && string.IsNullOrEmpty(donationDetail.EmailAddress) && string.IsNullOrEmpty(donationDetail.PhoneNumber))
+				{
+					donationDetail.FirstName = firstName;
+					donationDetail.LastName = lastName;
+					donationDetail.EmailAddress = email;
+					donationDetail.PhoneNumber = phoneNumber;
+					donationDetail.UserId = new Guid(newUser.ProviderUserKey.ToString());
+					dc.SubmitChanges();
+				}
 
-			Roles.AddUserToRole(username, "Helper");
-			Roles.AddUserToRole(username, "Volunteer");
-			Roles.AddUserToRole(username, "Member");
+			}
+			string role = Request.QueryString["role"];
+            if (role.ToLower() == "donor")
+            {
+                Roles.AddUserToRole(username, "Donor");
+            }
+			else
+			{
+                Roles.AddUserToRole(username, "Helper");
+                Roles.AddUserToRole(username, "Volunteer");
+                Roles.AddUserToRole(username, "Member");
+            }
 
 			//Create a profile for this user.
 			Profile userProfile			= new Profile();

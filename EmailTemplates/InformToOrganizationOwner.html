@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            color: #4caf50;
+        }
+       
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Donation Received!</h1>
+        <p>Dear <% OwnerName %>,</p>
+        <p class="donation-details">We are excited to inform you that a generous donation of <strong>$<% donAmount %></strong> has been made to your organization.</p>
+        <p>Thank you for the incredible work you do. This donation reflects the trust and support of your community in your mission.</p>        
+        <p>Best regards,</p>
+        <p><em>Your Organization Team</em></p>
+    </div>
+</body>
+</html>

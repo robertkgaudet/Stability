@@ -129,4 +129,18 @@ public partial class V1_NonProfit_Settings : BaseWebForm
 		dc.SubmitChanges();
 		divUpdateMessage.Visible = true;
 	}
+
+    protected void btnPaymentConfig_Click(object sender, EventArgs e)
+    {
+        string organizationId = Request.QueryString["organizationId"];
+
+        if (!string.IsNullOrEmpty(organizationId))
+        {
+            Response.Redirect("~/V1/NonProfit/AddEditTransactionConfigSetting.aspx?organizationId=" + organizationId);
+        }
+        else
+        {
+            Response.Redirect("~/V1/NonProfit/AddEditTransactionConfigSetting.aspx");
+        }
+    }
 }
