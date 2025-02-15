@@ -416,15 +416,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertDonation(Donation instance);
   partial void UpdateDonation(Donation instance);
   partial void DeleteDonation(Donation instance);
-    #endregion
-
-    public CrowdReliefDBDataContext() :
-        base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
-    {
-        OnCreated();
-    }
-
-    public CrowdReliefDBDataContext(System.Data.IDbConnection connection) : 
   partial void InsertPostReactionType(PostReactionType instance);
   partial void UpdatePostReactionType(PostReactionType instance);
   partial void DeletePostReactionType(PostReactionType instance);
@@ -45739,7 +45730,7 @@ public partial class DonationCampaign : INotifyPropertyChanging, INotifyProperty
 	
 	private string _Description;
 	
-	private bool _IsDefault;
+	private System.Nullable<bool> _IsDefault;
 	
 	private EntitySet<Donation> _Donations;
 	
@@ -45890,7 +45881,7 @@ public partial class DonationCampaign : INotifyPropertyChanging, INotifyProperty
 	}
 	
 	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDefault", DbType="Bit")]
-	public bool IsDefault
+	public System.Nullable<bool> IsDefault
 	{
 		get
 		{
