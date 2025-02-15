@@ -95,7 +95,7 @@ public class BaseWebForm : System.Web.UI.Page, IRequiresSessionState
         return disasterDropDown;
     }
     public static bool AddNotifications(NotificationType notificationType, FeatureTypeEnum featureType, string title, string description,
-                                      DateTime date, Guid senderUserId, Guid recipientUserId, bool postToStream, string redirectURLParameters)
+                                     Guid recipientUserId, bool postToStream, string redirectURLParameters)
     {
         try
         {
@@ -111,7 +111,7 @@ public class BaseWebForm : System.Web.UI.Page, IRequiresSessionState
                         Title = title,
                         Description = description,
                         FeatureTypeId = featureTypeId,
-                        SenderUserId = senderUserId,
+                        SenderUserId = new Guid(Membership.GetUser().ProviderUserKey.ToString()),
                         RecipientUserId = recipientUserId,
                         PostToStream = postToStream,
                         CreatedOn = DateTime.Now,
