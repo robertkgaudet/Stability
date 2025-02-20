@@ -132,7 +132,7 @@
                 }
 
 				$('#<%=imgLogo.ClientID%>').click(function () {
-					window.location.href = '/Default.aspx';
+4                    window.location.href = '/V1/NonProfit/Default.aspx';
 					return false;
 				});
 
