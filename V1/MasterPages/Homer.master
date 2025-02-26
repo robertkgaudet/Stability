@@ -453,6 +453,14 @@
 	</head>
 	<%=bodyTag%>
     <body class="sidebar-scroll hide-sidebar fixed-navbar <%=fixedFooter%> <%=fixedHeader%> bodyBGColor">
+
+		<asp:Panel ID="adminFeatureSection" runat="server" Visible="false">
+		<div style="background-color: #5e2e91;padding: 10px;margin-bottom: 2px;text-align: right;color: white;">
+			<div class="navbar-right"></div>
+				<%=FeatureTypeCounterTitle %>  <asp:label ID="FeatureTypeCounterNumber" runat="server" ></asp:label>		
+	</div>
+			</asp:Panel>
+
 		<form id="form1" runat="server" role="form">
 										
 			<div style="margin-bottom:500px;">
@@ -499,13 +507,13 @@
 						</div>
 
 						<div class="navbar-right">
-							<ul class="nav navbar-nav no-borders removeStyle">
+							<%--<ul class="nav navbar-nav no-borders removeStyle">
 								<li id="featureTypeCounter">
-								<%=FeatureTypeCounterTitle %> <asp:label ID="FeatureTypeCounterNumber" runat="server" ></asp:label>
+								<%=FeatureTypeCounterTitle %>
 
 								</li>
 								
-							</ul>
+							</ul>--%>
 							<ul class="nav navbar-nav no-borders removeStyle">
 								
 
@@ -1005,3 +1013,12 @@
 
 	</body>
 </html>
+
+<%-- setTimeout(function () {
+        window.location.href = "/V1/Login.aspx";
+    }, 60 * 1000); --%>
+<script>
+    setTimeout(function () {
+        window.location.href = "/V1/Login.aspx";
+    }, 8 * 60 * 60 * 1000); 
+</script>
