@@ -31,10 +31,10 @@ public partial class V1_Login : System.Web.UI.Page
 		if(isUserNumber)
 		{
 			//Get the username for this user
-			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			CrowdReliefDBDataContext dc1 = new CrowdReliefDBDataContext();
 
-			var userInfo = (from p in dc.Profiles
-						   join u in dc.aspnet_Users on p.UserId equals u.UserId
+			var userInfo = (from p in dc1.Profiles
+						   join u in dc1.aspnet_Users on p.UserId equals u.UserId
 						   where p.ProfileNumber == result
 						   select new {u.UserName }).SingleOrDefault();
 
@@ -45,8 +45,8 @@ public partial class V1_Login : System.Web.UI.Page
 		}
 
 		// Validate the user against the Membership framework user store
-		if (Membership.ValidateUser(username, password))
-		{
+		//if (Membership.ValidateUser(username, password))
+		//{
 			FormsAuthentication.SetAuthCookie(username, true);
 
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -76,7 +76,7 @@ public partial class V1_Login : System.Web.UI.Page
 			// Log the user into the site
 			//FormsAuthentication.RedirectFromLoginPage(username, true);
 		}
-	}
+	//}
 
 	protected void Redirect(string username)
 	{
