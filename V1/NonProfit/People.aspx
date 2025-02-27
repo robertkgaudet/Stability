@@ -18,9 +18,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
 
-
-
-
     <style>
         .website {
             background-color: #5E2E91;
@@ -42,6 +39,10 @@
                 margin-bottom: 11px;
                     margin-left: 8px;
         }
+        .text-line{
+                 margin-left:-10px;  
+        }
+
     </style>
 
 
@@ -201,13 +202,13 @@
     <div class="row">
         <div class="col-md-4 mb-3">
             <label class="form-label model-search"></label>
-              <b>Select Skills:</b>
+              <b class="text-line">Select Skills:</b>
             <asp:ListBox ID="ddlSkills" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
         </div>
 
         <div class="col-md-4 mb-3">
             <label class="form-label model-search"></label>
-               <b>Select Resources:</b>
+               <b class="text-line">Select Resources:</b>
             <asp:ListBox ID="ddlResources" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
         </div>
     </div>
@@ -215,12 +216,12 @@
     <div class="row">
         <div class="col-md-4 mb-3">
             <label  class="form-label model-search"></label>
-               <b>Select Start Date:</b>
+               <b class="text-line">Select Start Date:</b>
             <asp:TextBox ID="StartDate" runat="server" CssClass="form-control datepicker" placeholder="Start Date" autocomplete="off" ClientIDMode="Static" />
         </div>
         <div class="col-md-4 mb-3">
             <label  class="form-label model-search"></label>
-              <b>Select End Date:</b>
+              <b class="text-line">Select End Date:</b>
             <asp:TextBox ID="EndDate" runat="server" CssClass="form-control datepicker" placeholder="End Date" autocomplete="off" ClientIDMode="Static" />
         </div>
     </div>
@@ -231,7 +232,7 @@
                     <div class="form-check">
                          <label class="form-check-label model-search">
                         <asp:CheckBox ID="txtIsVetted" runat="server" CssClass="form-check-input" />
-                            Is Vetted?
+                            Is Vetted
                         </label>
                     </div>
                 </div>
@@ -239,7 +240,7 @@
                     <div class="form-check">
                          <label class="form-check-label model-search">
                         <asp:CheckBox ID="txtOptedSMS" runat="server" CssClass="form-check-input" />                     
-                            Opted SMS?
+                            Opted SMS
                         </label>
                     </div>
                 </div>
@@ -247,7 +248,7 @@
                     <div class="form-check">
                          <label class="form-check-label model-search">
                         <asp:CheckBox ID="txtEmailconnect" runat="server" CssClass="form-check-input" />                       
-                            Email Connected?
+                            Email Connected
                         </label>
                     </div>
                 </div>
@@ -255,7 +256,7 @@
                     <div class="form-check">
                         <label class="form-check-label model-search">
                         <asp:CheckBox ID="txtIsVerified" runat="server" CssClass="form-check-input" />
-                         Is Verified?
+                         Is Verified
                         </label>
                     </div>                
                 </div>
