@@ -32,7 +32,7 @@
     font-size: 11px;
     color: #555555; }
 .checkbox input[type="checkbox"] {
-    opacity: 0;
+    opacity: 1;
     z-index: 1; }
 .checkbox input[type="checkbox"]:focus + label::before {
     outline: thin dotted;

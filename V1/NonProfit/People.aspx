@@ -43,7 +43,13 @@
                  margin-left:-10px;  
         }
 
-    </style>
+    .multiselect-container input[type="checkbox"] {
+        display: inline-block !important;
+        margin-right: 5px;
+    }
+</style>
+
+  
 
 
     <script>
@@ -190,11 +196,11 @@
            <div class="container mt-4">
     <div class="row">
         <div class="col-md-4  mb-3">
-            <b>SEARCH TO FILTER YOUR TEAM</b>
+            <b>Search To Filter Your Team :</b>
             <input type="text" class="form-control input-sm" id="filter" placeholder="Search in table">
         </div>
         <div class="col-md-4  mb-3">
-            <b>Location</b>
+            <b>Location :</b>
              <input type="text" class="form-control input-sm" id="txtlocation" placeholder="Enter Location">
         </div>
     </div>
@@ -202,13 +208,13 @@
     <div class="row">
         <div class="col-md-4 mb-3">
             <label class="form-label model-search"></label>
-              <b class="text-line">Select Skills:</b>
+              <b class="text-line">Select Skills :</b>
             <asp:ListBox ID="ddlSkills" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
         </div>
 
         <div class="col-md-4 mb-3">
             <label class="form-label model-search"></label>
-               <b class="text-line">Select Resources:</b>
+               <b class="text-line">Select Resources :</b>
             <asp:ListBox ID="ddlResources" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
         </div>
     </div>
@@ -216,12 +222,12 @@
     <div class="row">
         <div class="col-md-4 mb-3">
             <label  class="form-label model-search"></label>
-               <b class="text-line">Select Start Date:</b>
+               <b class="text-line">Available From :</b>
             <asp:TextBox ID="StartDate" runat="server" CssClass="form-control datepicker" placeholder="Start Date" autocomplete="off" ClientIDMode="Static" />
         </div>
         <div class="col-md-4 mb-3">
             <label  class="form-label model-search"></label>
-              <b class="text-line">Select End Date:</b>
+              <b class="text-line">Available To :</b>
             <asp:TextBox ID="EndDate" runat="server" CssClass="form-control datepicker" placeholder="End Date" autocomplete="off" ClientIDMode="Static" />
         </div>
     </div>
@@ -342,19 +348,19 @@
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function () {
-            $('.multiselect').multiselect({
-                includeSelectAllOption: true,  
-                enableFiltering: true,         
-                enableCaseInsensitiveFiltering: true,
-                buttonWidth: '100%',
-                maxHeight: 200,
-                nonSelectedText: 'Select Options', 
-                allSelectedText: 'All Selected',  
-                numberDisplayed: 2
-            });
-        });
-    </script>
+     <script>
+         $(document).ready(function () {
+             $('.multiselect').multiselect({
+                 includeSelectAllOption: true,
+                 enableFiltering: true,
+                 enableCaseInsensitiveFiltering: true,
+                 buttonWidth: '100%',
+                 maxHeight: 200,
+                 nonSelectedText: 'Select Options',
+                 allSelectedText: 'All Selected',
+                 numberDisplayed: 2
+             });
+         });
+     </script>
     <uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>
