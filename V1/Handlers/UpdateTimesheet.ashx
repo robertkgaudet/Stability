@@ -26,9 +26,9 @@ public class UpdateTimesheet : IHttpHandler, IReadOnlySessionState
 
             if (noCause)
             {
-                //User didn't have a cause yet.
+            
                 userOrganizationEventId = Guid.NewGuid().ToString();
-                //Update their cause.
+                //Update their se.cau
                 UserOrganizationEvent userOrganizationEvent = new UserOrganizationEvent();
                 userOrganizationEvent.UserOrganizationEventId = new Guid(userOrganizationEventId);
                 userOrganizationEvent.UserId = new Guid(userId);

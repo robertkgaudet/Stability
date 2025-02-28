@@ -486,7 +486,28 @@ public partial class V1_Profile_Profile : BaseOrganizationWebForm
 		}
 	}
 
-	protected void btnSumbit_Click(object sender, EventArgs e)
+
+    protected void btnUpdateLogo_Click(object sender, EventArgs e)
+    {
+
+        if (HttpContext.Current.User.Identity.IsAuthenticated)
+        {
+            userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+
+            using (var context = new CrowdReliefDBDataContext())
+            {
+                var userOrg = context.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
+
+                if (userOrg != null)
+                {
+                    userOrg.ShowTeamLogo = true;
+                    context.SubmitChanges();
+                }
+            }
+        }
+    }
+
+    protected void btnSumbit_Click(object sender, EventArgs e)
 	{
 		Guid _profileUserId = new Guid(hidProfileId.Value); //userId of the person on the profile Page
 		Guid _vettingUserId = userId;   //userId of the person doing thew work on users profile.

@@ -23,22 +23,50 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 	public bool _isSignedInUser = false;
 	public string _deploymentCount = string.Empty;
 	public int _connectionCount = 0;
-	public Tools.FriendStatus _friendStatus = Tools.FriendStatus.AddConnection;  //Default
+	public Tools.FriendStatus _friendStatus = Tools.FriendStatus.AddConnection; 
 	public string _badgeVettingStatus = "fa-pending-color";
 	public string _badgeCertificationStatus = "fa-pending-color";
 	public string _badgeDeployedStatus = "fa-pending-color";
 	public string _badgeHoursRecordedStatus = "fa-pending-color";
 	public string _badgeTOPStatus = "fa-pending-color";
 	public string faIdBadgeClick = string.Empty;
+    public string _teamLogo = string.Empty;
+    public bool _isShowTeamLogo = false;
+    public bool _isDisasterReadyCertified = false;
+	public string _purplebadge= string.Empty;
 
-	protected void Page_Load(object sender, EventArgs e)
+    protected void Page_Load(object sender, EventArgs e)
 	{
 		//string causePhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		string profilePhotoFolder		= System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
 		string coverPhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
-		_coverImage						= coverPhotoFolder + "Stability_Cover_V3.jpg";
-		litMemberName.Text				= _memberFullname;
-		imgMemberProfilePhoto.ImageUrl	= profilePhotoFolder + _memberProfileImageFilename;
+        string teamLogo = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
+        _coverImage = coverPhotoFolder + "Stability_Cover_V3.jpg";
+        _purplebadge= teamLogo+ "purplebadge.png";
+
+        //
+        if (_isShowTeamLogo)  
+        {
+            litMemberLogo.ImageUrl = teamLogo + _teamLogo;
+        }
+        else
+        {
+            litMemberLogo.ImageUrl = string.Empty;  
+        }
+
+       
+
+        if (_isDisasterReadyCertified) 
+        {
+			litMemberName.Text = _memberFullname;
+            litpurplebadge.ImageUrl = teamLogo + "purplebadge.png";
+        }
+        else
+        {
+            litMemberName.Text = _memberFullname; 
+        }
+
+        imgMemberProfilePhoto.ImageUrl	= profilePhotoFolder + _memberProfileImageFilename;
 		litMemberDescription.Text		= _memberDescription;
 		litTitle.Text					= !String.IsNullOrEmpty(_memberTitle) ? _memberTitle + "<br />" : string.Empty;
 		litLocation.Text				= _memberLocation;
@@ -149,7 +177,8 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		get { return _badgeVettingStatus; }
 		set { _badgeVettingStatus = value; }
 	}
-	public string BadgeCertificationStatus
+  
+    public string BadgeCertificationStatus
 	{
 		get { return _badgeCertificationStatus; }
 		set { _badgeCertificationStatus = value; }
@@ -170,8 +199,13 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		get { return _badgeTOPStatus; }
 		set { _badgeTOPStatus = value; }
 	}
-
-	public int ConnectionCount
+    public string TeamLogo
+    {
+        get { return _teamLogo; }
+        set { _teamLogo = value; }
+    }
+    
+    public int ConnectionCount
 	{
 		get { return _connectionCount; }
 		set { _connectionCount = value; }
@@ -201,7 +235,17 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		get { return _isSignedInUser; }
 		set { _isSignedInUser = value; }
 	}
-	public string UserId
+    public bool IsDisasterReadyCertified
+    {
+        get { return _isDisasterReadyCertified; }
+        set { _isDisasterReadyCertified = value; }
+    }
+    public bool IsShowTeamLogo
+    {
+        get { return _isShowTeamLogo; }
+        set { _isShowTeamLogo = value; }
+    }
+    public string UserId
 	{
 		get { return _userId; }
 		set { _userId = value; }

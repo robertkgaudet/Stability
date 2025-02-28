@@ -283,6 +283,8 @@
 						<div class="form-group">
 							<asp:Button ID="btnSumbit" CssClass="btn btn-lg btn-info" runat="server" Text="Update Member Status" OnClick="btnSumbit_Click" />
 						</div>
+                    <label class="col-sm-2 control-label custom-label" for="chkShowDonateButton">Show Team logo:</label>                    <div class="col-sm-10">                        <div class="i-checks">                            <asp:CheckBox ID="chkShowDonateButton" runat="server" CssClass="custom-checkbox" />                        </div>			                                          <asp:Button ID="txtlogoshow" CssClass="btn btn-lg btn-info" runat="server" Text="Update Logo" OnClick="btnUpdateLogo_Click" />
+                    </div>                </div>
 					</div>
 				</div>
 				<div class="panel-body no-padding m-t-lg">

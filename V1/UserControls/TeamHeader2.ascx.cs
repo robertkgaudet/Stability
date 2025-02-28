@@ -40,7 +40,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 		get { return _organizationId; }
 		set { _organizationId = value; }
 	}
-	public string URLFriendlyPageName
+	public string URLFrijggjjPageName
 	{
 		get { return _URLFriendlyPageName; }
 		set { _URLFriendlyPageName = value; }
@@ -68,7 +68,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 	public string TeamTitle
 	{
 		get { return _teamTitle; }
-		set { _teamTitle = value; }
+		set { _teamTitle =value; }
 	}
 	public string TeamDescription
 	{

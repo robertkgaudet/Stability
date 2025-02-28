@@ -74,7 +74,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			Master.FbDescription = organization.Description;
 			Master.FbImage = _coverImage;
 			Master.FbSite_name = organization.Name + " Programs on Stability";
-			ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
+			//ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
 		}
 
 		ucTeamFooter.TeamName = organization.Name;
@@ -226,8 +226,10 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr><a href=\"\\signin\">Sign in</a> to see the list of team members.";
 		}
 	}
+ 
 
-	protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
+
+    protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
 	{
 		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
 		{
