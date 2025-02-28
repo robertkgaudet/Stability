@@ -132,7 +132,7 @@
                 }
 
 				$('#<%=imgLogo.ClientID%>').click(function () {
-4                    window.location.href = '/V1/NonProfit/Default.aspx';
+                   window.location.href = '/V1/NonProfit/Default.aspx';
 					return false;
 				});
 
@@ -858,6 +858,7 @@
                                     </p>
                                     <asp:TextBox TextMode="MultiLine" Rows="4" Columns="40" ID="txtWorkCompleteDescription" runat="server"></asp:TextBox>
                                     <br />
+									<asp:HiddenField ID="litTimeIn" Value="" runat="server" />
                                     <button type="button" class="btn btn-warning" runat="server" id="btnSignOut" onclick="updateTime(false);">Sign Out</button>
                                 </div>
                                 <div class="row" id="timeEntry">
@@ -1005,3 +1006,21 @@
 
 	</body>
 </html>
+ and this is added in home.master
+ 
+ 
+ <script type="text/javascript">
+    function checkAndClickButton() {
+        // Get the value of the hidden field
+        var timeInValue = document.getElementById('<%= litTimeIn.ClientID %>').value;
+
+        // Check if the value is "true"
+        if (timeInValue.toLowerCase() === "true") {
+            // Trigger the button click
+            document.getElementById('<%= btnSignOut.ClientID %>').click();
+        }
+    }
+
+    // Call the function when the page loads
+    window.onload = checkAndClickButton;
+ </script>

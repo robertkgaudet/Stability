@@ -81,6 +81,42 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
             PlaceHolderContent.Controls.Add(litControl);
         }
 
+
+        if (HttpContext.Current.User.Identity.IsAuthenticated)
+        {
+            userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+            using (var dc = new CrowdReliefDBDataContext())
+            {
+                var latestTimesheet = (from t in dc.Timesheets
+                                       where t.UserId == userId && t.TimeOut == null
+                                       orderby t.TimeIn descending
+                                       select t).FirstOrDefault();
+
+                if (latestTimesheet != null)
+                {
+                    DateTime timeInValue = latestTimesheet.TimeIn;
+                    litTimeIn.Value = timeInValue.ToString("g");
+
+                    // Calculate the duration
+                    TimeSpan duration = DateTime.Now - timeInValue;
+
+                    //// Check if the duration is greater than 8 hours
+                    //bool shouldSignOut = duration.TotalHours > 8;
+                    // Check if the duration is greater than 1 minute
+                    bool shouldSignOut = duration.TotalMinutes > 1; // Change to 1 minute
+
+
+                    // Set the hidden field value based on the condition
+                    litTimeIn.Value = shouldSignOut ? "true" : "false";
+                }
+                else
+                {
+                    // Handle the case where there are no timesheets for the user
+                    litTimeIn.Value = "No timesheet entries found.";
+                }
+            }
+        }
+
         divMasterCover.Visible = false;
         if (!_hideMasterCover)
         {
