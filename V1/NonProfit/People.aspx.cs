@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IdentityModel.Metadata;
 using System.Linq;
 using System.Web;
@@ -309,68 +310,40 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                                   net.IsApproved,
                                   p.ReceiveDeploymentSMS
                               }).ToList();
-        
-            if (isStartDateValid && !isEndDateValid) 
-            {
-                peopleList = peopleList.Where(pl =>
-                    (pl.DateVettingStarted.HasValue && pl.DateVettingStarted.Value.Date == startDate.Date) ||
-                    (pl.DateVettingCompleted.HasValue && pl.DateVettingCompleted.Value.Date == startDate.Date)
-                ).ToList();
-            }
-            else if (!isStartDateValid && isEndDateValid) 
-            {
-                peopleList = peopleList.Where(pl =>
-                    (pl.DateVettingStarted.HasValue && pl.DateVettingStarted.Value.Date == endDate.Date) ||
-                    (pl.DateVettingCompleted.HasValue && pl.DateVettingCompleted.Value.Date == endDate.Date)
-                ).ToList();
-            }
-            else if (isStartDateValid && isEndDateValid) 
-            {
-                peopleList = peopleList.Where(pl =>
-                    (pl.DateVettingStarted.HasValue && pl.DateVettingStarted.Value.Date >= startDate.Date && pl.DateVettingStarted.Value.Date <= endDate.Date) ||
-                    (pl.DateVettingCompleted.HasValue && pl.DateVettingCompleted.Value.Date >= startDate.Date && pl.DateVettingCompleted.Value.Date <= endDate.Date)
-                ).ToList();
-            }
-
-            if (emailConnected)
-            {
-                peopleList = peopleList.Where(pl => !string.IsNullOrEmpty(pl.LoweredEmail)).ToList();
-            }
-
-            if (isVerified)
-            {
-                peopleList = peopleList.Where(pl => pl.IsApproved == true).ToList();
-            }
-
-            if (isVetted)
-            {
-                peopleList = peopleList.Where(pl => pl.VettingActive == true).ToList();
-            }
-
-            if (optedSMS)
-            {
-                peopleList = peopleList.Where(pl => pl.ReceiveDeploymentSMS == true).ToList();
-            }
+            HashSet<Guid> skillMatchedUsers = new HashSet<Guid>();
             if (selectedSkills.Any())
             {
-                peopleList = (from pl in peopleList
-                              join spl in dc.UserSkills on pl.UserId equals spl.UserId
-                              where selectedSkills.Contains(spl.SkillId.ToString())
-                              select pl).Distinct().ToList();
-
-                divFilterMessage.Visible = true;
-                litFilterMessage.Text = "<i class='fa fa-2x fa-hand-pointer-o'></i><hr>Filtered by selected skills.";
+                skillMatchedUsers = new HashSet<Guid>(
+                    (from us in dc.UserSkills
+                     where selectedSkills.Contains(us.SkillId.ToString())
+                     select us.UserId).Distinct().ToList());
             }
-
+            HashSet<Guid> resourceMatchedUsers = new HashSet<Guid>();
             if (selectedResources.Any())
             {
-                peopleList = (from pl in peopleList
-                              join rpl in dc.UserResources on pl.UserId equals rpl.UserId
-                              where selectedResources.Contains(rpl.ResourceId.ToString())
-                              select pl).Distinct().ToList();
-
+                resourceMatchedUsers = new HashSet<Guid>(
+                    (from ur in dc.UserResources
+                     where selectedResources.Contains(ur.ResourceId.ToString())
+                     select ur.UserId).Distinct().ToList());
+            }
+            peopleList = peopleList.Where(pl =>     
+         ((!selectedSkills.Any() || skillMatchedUsers.Contains(pl.UserId)) ||
+         (!selectedResources.Any() || resourceMatchedUsers.Contains(pl.UserId)) ||
+         (isStartDateValid || isEndDateValid ?
+             (pl.DateVettingStarted.HasValue && (!isStartDateValid || pl.DateVettingStarted.Value.Date >= startDate.Date)
+             && (!isEndDateValid || pl.DateVettingStarted.Value.Date <= endDate.Date)) ||
+             (pl.DateVettingCompleted.HasValue && (!isStartDateValid || pl.DateVettingCompleted.Value.Date >= startDate.Date)
+             && (!isEndDateValid || pl.DateVettingCompleted.Value.Date <= endDate.Date))
+         : true) ||
+         (emailConnected && !string.IsNullOrEmpty(pl.LoweredEmail)) ||
+         //(isVerified && (pl.IsApproved ?? false)) ||
+         (isVetted && (pl.VettingActive ?? false)) ||
+         (optedSMS && (pl.ReceiveDeploymentSMS ?? false)))
+ ).ToList();
+            if (selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS || isStartDateValid || isEndDateValid)
+            {
                 divFilterMessage.Visible = true;
-                litFilterMessage.Text = "<i class='fa fa-2x fa-truck'></i><hr>Filtered by selected resources.";
+                litFilterMessage.Text = "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options.";
             }
             rptVolunteers.DataSource = peopleList;
             rptVolunteers.DataBind();
@@ -387,7 +360,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         txtOptedSMS.Checked = false;
         txtEmailconnect.Checked = false;
         txtIsVerified.Checked = false;
-        rptVolunteers.DataSource = null;   
+        rptVolunteers.DataSource = null;
         divFilterMessage.Visible = false;
         litFilterMessage.Text = string.Empty;
     }
