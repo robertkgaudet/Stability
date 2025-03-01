@@ -132,7 +132,7 @@
                 }
 
 				$('#<%=imgLogo.ClientID%>').click(function () {
-4                    window.location.href = '/V1/NonProfit/Default.aspx';
+                  window.location.href = '/V1/NonProfit/Default.aspx';
 					return false;
 				});
 
@@ -160,10 +160,38 @@
                 //Remove the cause Divs
                 divChooseCause.hidden = true;
                 $("#btn-causeDropdownB.dropdown-chooseCauseB").html("<i class='fa fa-globe'></i> " + causeName);
+			}
+
+
+            function checkSignOutStatus() {
+                $.ajax({
+                    type: "GET",
+                    url: "/V1/Handlers/CheckSignOutStatus.ashx",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response && response.shouldSignOut) {
+                         
+                            document.getElementById('<%= btnSignOut.ClientID %>').click();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error checking sign-out status: " + error);
+            }
+        });
             }
 
+           
+            setInterval(checkSignOutStatus, 30000);
+
+          
+            $(document).ready(function () {
+                checkSignOutStatus();
+            });
+
             function updateTime(isUserActive)
-            {
+			{
+				
                 workDescription = document.getElementById('<%=txtWorkDescription.ClientID%>').value;
                 workCompleteDescription = document.getElementById('<%=txtWorkCompleteDescription.ClientID%>').value;
                 taskTypeId = document.getElementById('<%=hidTaskTypeId.ClientID%>').value;
@@ -178,7 +206,8 @@
                     workDescription = workCompleteDescription;
                 }
 
-                if (taskTypeId == "" && checkTaskType) {
+               
+                if (isUserActive && taskTypeId == "" && checkTaskType) {
                     toastr.error('Error - Please choose a Volunteer Role.');
                     return;
                 }
@@ -858,6 +887,7 @@
                                     </p>
                                     <asp:TextBox TextMode="MultiLine" Rows="4" Columns="40" ID="txtWorkCompleteDescription" runat="server"></asp:TextBox>
                                     <br />
+									<asp:HiddenField ID="litTimeIn" Value="" runat="server" />
                                     <button type="button" class="btn btn-warning" runat="server" id="btnSignOut" onclick="updateTime(false);">Sign Out</button>
                                 </div>
                                 <div class="row" id="timeEntry">
