@@ -64,6 +64,7 @@ public partial class V1_Profile_ProfilePhotoUpload : BaseOrganizationWebForm
 							profilePhoto.IsCurrrent			= true;
 							profilePhoto.PhotoId			= photoId;
 							profilePhoto.UserId				= userId;
+							profilePhoto.CreatedOn= DateTime.Now;
 							profilePhoto.ProfilePhotoId		= Guid.NewGuid();
 							dc.ProfilePhotos.InsertOnSubmit(profilePhoto);
 							dc.SubmitChanges();
