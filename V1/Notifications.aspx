@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Notifications" Language="C#" EnableViewState="true" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Notifications.aspx.cs" Inherits="V1_Notifications" %>
+﻿<%@ Page Title="Notifications" Language="C#" EnableViewState="true" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Notifications.aspx.cs" Inherits="V1_Notifications" ValidateRequest="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
              <style>

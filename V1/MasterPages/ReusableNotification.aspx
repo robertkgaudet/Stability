@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ReusableNotification.aspx.cs" Inherits="V1_MasterPages_ReusableNotification" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="ReusableNotification.aspx.cs" Inherits="V1_MasterPages_ReusableNotification" ValidateRequest="false" %>
 
 
 
