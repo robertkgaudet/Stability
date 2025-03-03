@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_8013_stability" Class="CrowdReliefDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_8013_staging" Class="CrowdReliefDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.aspnet_Membership" Member="aspnet_Memberships">
     <Type Name="aspnet_Membership">
       <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
@@ -58,7 +58,6 @@
       <Association Name="aspnet_User_aspnet_Membership" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" Cardinality="One" />
       <Association Name="aspnet_User_aspnet_UsersInRole" Member="aspnet_UsersInRoles" ThisKey="UserId" OtherKey="UserId" Type="aspnet_UsersInRole" />
       <Association Name="aspnet_User_RebuildPost" Member="RebuildPosts" ThisKey="UserId" OtherKey="UserId" Type="RebuildPost" />
-      <Association Name="aspnet_User_UserOrganization" Member="UserOrganizations" ThisKey="UserId" OtherKey="UserId" Type="UserOrganization" />
       <Association Name="aspnet_User_Rebuild" Member="Rebuilds" ThisKey="UserId" OtherKey="CreatedBy" Type="Rebuild" />
       <Association Name="aspnet_User_Rebuild1" Member="Rebuilds1" ThisKey="UserId" OtherKey="UpdatedBy" Type="Rebuild" />
       <Association Name="aspnet_User_Rebuild2" Member="Rebuilds2" ThisKey="UserId" OtherKey="SurvivorId" Type="Rebuild" />
@@ -105,7 +104,6 @@
       <Association Name="aspnet_User_OrganizationEventPositionDate" Member="OrganizationEventPositionDates" ThisKey="UserId" OtherKey="CreatedBy" Type="OrganizationEventPositionDate" />
       <Association Name="aspnet_User_OrganizationEventPosition" Member="OrganizationEventPositions" ThisKey="UserId" OtherKey="CreatedBy" Type="OrganizationEventPosition" />
       <Association Name="aspnet_User_OrganizationEventPosition1" Member="OrganizationEventPositions1" ThisKey="UserId" OtherKey="UpdatedBy" Type="OrganizationEventPosition" />
-      <Association Name="aspnet_User_Profile" Member="Profiles" ThisKey="UserId" OtherKey="UserId" Type="Profile" />
       <Association Name="aspnet_User_Event" Member="Events" ThisKey="UserId" OtherKey="CreatedBy" Type="Event" />
       <Association Name="aspnet_User_TicketProperty" Member="TicketProperties" ThisKey="UserId" OtherKey="UserId" Type="TicketProperty" />
       <Association Name="aspnet_User_TicketProperty1" Member="TicketProperties1" ThisKey="UserId" OtherKey="CreatedBy" Type="TicketProperty" />
@@ -116,6 +114,8 @@
       <Association Name="aspnet_User_PostTaggedUser" Member="PostTaggedUsers" ThisKey="UserId" OtherKey="TaggedUser" Type="PostTaggedUser" />
       <Association Name="aspnet_User_PostTaggedUser1" Member="PostTaggedUsers1" ThisKey="UserId" OtherKey="CreatedBy" Type="PostTaggedUser" />
       <Association Name="aspnet_User_ProfilePhoto" Member="ProfilePhotos" ThisKey="UserId" OtherKey="UserId" Type="ProfilePhoto" />
+      <Association Name="aspnet_User_Profile" Member="Profiles" ThisKey="UserId" OtherKey="UserId" Type="Profile" />
+      <Association Name="aspnet_User_UserOrganization" Member="UserOrganizations" ThisKey="UserId" OtherKey="UserId" Type="UserOrganization" />
       <Association Name="StreamDonation_aspnet_User" Member="StreamDonation" Storage="_Donation" ThisKey="UserId" OtherKey="UserId" Type="StreamDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User" Member="UserDonation" ThisKey="UserId" OtherKey="DonorId" Type="UserDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User1" Member="UserDonation1" ThisKey="UserId" OtherKey="RecipientId" Type="UserDonation" IsForeignKey="true" />
@@ -194,16 +194,6 @@
       <Column Name="IsVisible" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="aspnet_User_RebuildPost" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="Rebuild_RebuildPost" Member="Rebuild" ThisKey="RebuildId" OtherKey="RebuildId" Type="Rebuild" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.UserOrganization" Member="UserOrganizations">
-    <Type Name="UserOrganization">
-      <Column Name="UserOrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="IsPrimary" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Association Name="aspnet_User_UserOrganization" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
-      <Association Name="Organization_UserOrganization" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Slider" Member="Sliders">
@@ -1485,13 +1475,13 @@
       <Column Name="RespondToTickets" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="HideTeamList" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Association Name="Organization_OrganizationRebuild" Member="OrganizationRebuilds" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationRebuild" />
-      <Association Name="Organization_UserOrganization" Member="UserOrganizations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganization" />
       <Association Name="Organization_OrganizationProgram" Member="OrganizationPrograms" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationProgram" />
       <Association Name="Organization_UserOrganizationInvite" Member="UserOrganizationInvites" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganizationInvite" />
       <Association Name="Organization_OrganizationEvent" Member="OrganizationEvents" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationEvent" />
       <Association Name="Organization_OrganizationCase" Member="OrganizationCases" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationCase" />
       <Association Name="Organization_Position" Member="Positions" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Position" />
       <Association Name="Organization_PaymentConfiguration" Member="PaymentConfigurations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="PaymentConfiguration" />
+      <Association Name="Organization_UserOrganization" Member="UserOrganizations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganization" />
       <Association Name="aspnet_User_Organization" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="aspnet_User_Organization1" Member="aspnet_User1" ThisKey="OwnerId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
@@ -1714,47 +1704,6 @@
       <Association Name="LocationProfile_LocationProfilePetType" Member="LocationProfilePetTypes" ThisKey="LocationProfileId" OtherKey="LocationProfileId" Type="LocationProfilePetType" />
       <Association Name="Address_LocationProfile" Member="Address" ThisKey="AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
       <Association Name="LocationParentType_LocationProfile" Member="LocationParentType" ThisKey="LocationParentTypeId" OtherKey="LocationParentTypeId" Type="LocationParentType" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Profile" Member="Profiles">
-    <Type Name="Profile">
-      <Column Name="ProfileId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="ProfileNumber" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Firstname" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="Lastname" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Address" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="City" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="State" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Zip" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="ReceiveDeploymentSMS" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ContactMethod" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="DefaultEventId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="VolunteerReliefMoniker" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="DatesAvailable" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
-      <Column Name="NumberOfDaysAvailable" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
-      <Column Name="PreviousVolunteerExperience" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Age" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ZelloName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Title" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Photo" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="VettingActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="VettingComplete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="PassedVetting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="VettedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="VettingNotes" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-      <Column Name="DateVettingStarted" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="DateVettingCompleted" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="VolunteerApplicationIsComplete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="VolunteerApplicationDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="PhotoId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="AmazonWishListURL" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-      <Column Name="ShowOnWebsite" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="HideUserActionModal" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Association Name="Profile_ProfileAddress" Member="ProfileAddresses" ThisKey="ProfileId" OtherKey="ProfileId" Type="ProfileAddress" />
-      <Association Name="aspnet_User_Profile" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Event" Member="Events">
@@ -2102,6 +2051,59 @@
       <Column Name="IsCurrrent" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Association Name="aspnet_User_ProfilePhoto" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Profile" Member="Profiles">
+    <Type Name="Profile">
+      <Column Name="ProfileId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ProfileNumber" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Firstname" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Lastname" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="City" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="State" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Zip" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="ReceiveDeploymentSMS" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ContactMethod" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="DefaultEventId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="VolunteerReliefMoniker" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="DatesAvailable" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="NumberOfDaysAvailable" Type="System.String" DbType="VarChar(5)" CanBeNull="true" />
+      <Column Name="PreviousVolunteerExperience" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Age" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ZelloName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Title" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Photo" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="VettingActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="VettingComplete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="PassedVetting" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="VettedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="VettingNotes" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="DateVettingStarted" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DateVettingCompleted" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="VolunteerApplicationIsComplete" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="VolunteerApplicationDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="PhotoId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="AmazonWishListURL" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="ShowOnWebsite" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HideUserActionModal" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IsDisasterReadyCertified" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Profile_ProfileAddress" Member="ProfileAddresses" ThisKey="ProfileId" OtherKey="ProfileId" Type="ProfileAddress" />
+      <Association Name="aspnet_User_Profile" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserOrganization" Member="UserOrganizations">
+    <Type Name="UserOrganization">
+      <Column Name="UserOrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="IsPrimary" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ShowTeamLogo" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="aspnet_User_UserOrganization" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+      <Association Name="Organization_UserOrganization" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">
