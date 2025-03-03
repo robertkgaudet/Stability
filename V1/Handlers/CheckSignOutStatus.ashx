@@ -33,8 +33,8 @@ public class CheckSignOutStatus : IHttpHandler, IReadOnlySessionState
                         DateTime timeInValue = latestTimesheet.TimeIn;
                         TimeSpan duration = DateTime.Now - timeInValue;
 
-                        // Check if more than 1 minute has passed
-                        bool shouldSignOut = duration.TotalMinutes > 1;
+                       
+                        bool shouldSignOut = duration.TotalMinutes > 480;
 
                         // Return JSON response
                         context.Response.Write(JsonConvert.SerializeObject(new { shouldSignOut }));
