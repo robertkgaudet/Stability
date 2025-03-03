@@ -32,7 +32,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 	public bool isUserOnTeam = false;
 
 	protected void Page_Load(object sender, EventArgs e)
-	{
+	 {
 		//organizationId = Request.QueryString["organizationId"];
 		hypStream.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + organizationId;
 		hypTeamRoles.NavigateUrl = "/V1/NonProfit/TeamRoles.aspx?organizationId=" + organizationId;
@@ -50,10 +50,10 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 		hypSkillsets.NavigateUrl = "/V1/NonProfit/Skillsets.aspx?organizationId=" + organizationId;
 		hypResources.NavigateUrl = "/V1/NonProfit/AvailableResources.aspx?organizationId=" + organizationId;
 		hypDeploymentTeam.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + organizationId;
+        
+        //litTeamName.Text = _teamName;
 
-		//litTeamName.Text = _teamName;
-
-		switch (PageName)
+        switch (PageName)
 		{
 			case "teamRolesPage":
 				_teamRolesActive = "class=\"active\"";

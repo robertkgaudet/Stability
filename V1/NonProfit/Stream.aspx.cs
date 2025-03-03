@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.IdentityModel.Metadata;
 using System.Linq;
+using System.Net.PeerToPeer;
 using System.Web;
 using System.Web.Security;
+using System.Web.Services;
+using System.Web.Services.Description;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -43,7 +46,7 @@ public partial class V1_NonProfit_Stream : BaseWebForm
 		{
 			if (organization.CoverImage != null)
 			{
-			//	_coverImage = causePhotoFolder + organization.CoverImage;
+				//	_coverImage = causePhotoFolder + organization.CoverImage;
 			}
 
 			ucTeamHeader.CoverImage = _coverImage;
@@ -104,5 +107,34 @@ public partial class V1_NonProfit_Stream : BaseWebForm
 		////////////////////////
 		#endregion
 
+	}
+
+	[WebMethod]
+	public static void UploadPostReaction(string reactionId, string postId)
+	{
+		var userId = new Guid();
+		string username = HttpContext.Current.User.Identity.Name;
+		MembershipUser user = Membership.GetUser(username);
+		if (user != null)
+		{
+			userId = new Guid(user.ProviderUserKey.ToString());
+		}
+		using (var dc = new CrowdReliefDBDataContext())
+		{
+			var IsExists = dc.PostReactions.FirstOrDefault(f => f.CreatedBy == userId && f.PostId == new Guid(postId));
+			if (IsExists != null)
+			{
+				dc.PostReactions.DeleteOnSubmit(IsExists);
+			}
+			PostReaction pr = new PostReaction();
+			pr.PostReactionId = Guid.NewGuid();
+			pr.PostId = new Guid(postId);
+			pr.ReactionTypeId = new Guid(reactionId);
+			pr.CreatedBy = userId;
+			pr.CreatedOn = DateTime.Now;
+			pr.IsDeleted = false;
+			dc.PostReactions.InsertOnSubmit(pr);
+			dc.SubmitChanges();
+		}
 	}
 }

@@ -48,7 +48,7 @@
 			<div class="row">
 				<div class="col-sm-12 well">
 					<div class="form-horizontal">
-						<h1>Crop Your Profile Photo</h1>
+						<h1 runat="server" id="lbltext"></h1>
 						<div class="col-sm-12">
 							<div class="m-t-lg">
 								<div class="m-t-lg m-b-lg">

@@ -330,4 +330,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
 		organization.IsActive = updateActiveStatus;
 		dc.SubmitChanges();
 	}
+    protected void btnDonationsList_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("~/V1/Administration/DonationsList.aspx");
+    }
 }

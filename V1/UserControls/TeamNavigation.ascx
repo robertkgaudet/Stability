@@ -54,10 +54,14 @@
 							window.location.href = '/V1/NonProfitAdministration/RespondToEvent.aspx?organizationId=<%=organizationId%>';
 							return false;
 						});
+                        $('#<%=donatenow.ClientID%>').click(function () {
+                            window.location.href = '/V1/NonProfit/Donation.aspx?organizationId=<%=organizationId%>';
+                           return false;
+                       });
 					});
 
 
-				</script>
+                </script>
 
 				<style>
 					.deployment:hover
@@ -100,7 +104,7 @@
 						 <asp:HyperLink ID="hypMyProfile" runat="server" NavigateUrl="/V1/Member/Default.aspx"><i class="fa fa-id-badge"></i> My Profile</asp:HyperLink><br />
 						<asp:HyperLink runat="server" ID="hypGetHelp" CssClass="btn btn-danger btn-block"><i class='fa fa-check'></i> Get Help From This Team</asp:HyperLink>
 						<button class="btn panelNav btn-block" type="button" data-bs-toggle="collapseTeam" data-bs-target="#collapseTeamNavigation" aria-expanded="false" aria-controls="collapseTeamNavigation">
-							<span class="caret"></span> Team Navigation
+							<span class="caret"></span> Team Navigation 
 						</button>
 						<div class="collapseTeam mt-2" id="collapseTeamNavigation">
 							<ul class="mailbox-list">
@@ -173,5 +177,8 @@
 					</div>
 					<div id="divDeployment" runat="server" class="alert alert-success text-center deployment m-b-xs" visible="false">
 						<h5><i class="fa fa-street-view pe-2x"></i> <b>Create A New Deployment</b></h5>
+					</div>
+					<div id="donatenow" runat="server" class="alert alert-success text-center deployment m-b-xs" visible="true">
+						<h5><i class="fa fa-globe pe-2x"></i> <b>Donate Now</b></h5>
 					</div>
 				</div>
