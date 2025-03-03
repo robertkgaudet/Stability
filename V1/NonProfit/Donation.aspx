@@ -14,15 +14,24 @@
         </div>
     </div>
 
-
     <div class="container">
-        <% if (ShowDonationButton)
+    <% if (ShowDonationButton)
+        { 
+            if (DefaultCampaign == null || DefaultCampaign.DonationCampaignId == Guid.Empty) 
             { %>
-        <a href="DonationDetails.aspx?organizationId=<%=orgId%>&donationCampaignId=<%=DefaultCampaign.DonationCampaignId%>" class="donate-button">
-            <span class="heart-icon">&#10084;</span> DONATE NOW
-        </a>
-        <% } %>
-    </div>
+                <a class="donate-button" style="pointer-events: none;">
+                    <span class="heart-icon">&#10084;</span> DONATE NOW
+                </a>
+            <% } 
+            else 
+            { %>
+                <a href="DonationDetails.aspx?organizationId=<%=orgId%>&donationCampaignId=<%=DefaultCampaign.DonationCampaignId%>" class="donate-button">
+                    <span class="heart-icon">&#10084;</span> DONATE NOW
+                </a>
+            <% } 
+        } %>
+</div>
+
     <div class="address-with-divider">
         <h3 class="addressHeader">SEND A CHECK TO THIS ADDRESS</h3>
         <div class="divider"></div>
@@ -102,20 +111,32 @@
             </div>
         </div>
     </div>
-    <div class="container" style="display:inherit;">
-           <h2>Donate To Current Deployment</h2>
-        <% foreach (var campaign in DonationCampaigns.Where(x => x.IsDefault == false))
-            { %>
-   
-    <h3>
-      <a href="<%= ShowDonationButton ? "DonationDetails.aspx?organizationId=" + orgId + "&donationCampaignId=" + campaign.DonationCampaignId : "javascript:void(0);" %>">
-      <%=campaign.CampaignName%>
-     </a>
- </h3>
-            
-       
-        <% } %>
-    </div>
+   <div class="container" style="display:inherit;">
+    <h2>Donate To Current Deployment</h2>
+    <% 
+        if (DonationCampaigns != null)
+        {
+            foreach (var campaign in DonationCampaigns.Where(x => !x.IsDefault))
+            { 
+                if (campaign.DonationCampaignId == null)
+                {
+                    Response.Redirect("/V1/NonProfit/Donation.aspx");
+                }
+    %>
+                <h3>
+                    <a href="<%= ShowDonationButton ? "DonationDetails.aspx?organizationId=" + orgId + "&donationCampaignId=" + campaign.DonationCampaignId : "javascript:void(0);" %>">
+                        <%= campaign.CampaignName %>
+                    </a>
+                </h3>
+    <% 
+            }
+        }
+        else
+        {
+            Response.Redirect("/V1/NonProfit/Default.aspx"); 
+        }
+    %>
+</div>
 
     <!-- Add the following CSS in your head or external stylesheet -->
     <style>
