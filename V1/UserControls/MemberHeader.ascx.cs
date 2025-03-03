@@ -32,7 +32,7 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 	public string faIdBadgeClick = string.Empty;
     public string _teamLogo = string.Empty;
     public bool _isShowTeamLogo = false;
-    public bool _isDisasterReadyCertified = false;
+    //public bool _isDisasterReadyCertified = false;
     public string _purplebadge = string.Empty;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -56,15 +56,15 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 
 
 
-        if (_isDisasterReadyCertified)
-        {
+        //if (_isDisasterReadyCertified)
+        //{
+        //    litMemberName.Text = _memberFullname;
+        //    litpurplebadge.ImageUrl = teamLogo + "purplebadge.png";
+        //}
+        //else
+        //{
             litMemberName.Text = _memberFullname;
-            litpurplebadge.ImageUrl = teamLogo + "purplebadge.png";
-        }
-        else
-        {
-            litMemberName.Text = _memberFullname;
-        }
+        //}
 
         litMemberName.Text = _memberFullname;
 
@@ -198,11 +198,11 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		get { return _badgeHoursRecordedStatus; }
 		set { _badgeHoursRecordedStatus = value; }
 	}
-    public bool IsDisasterReadyCertified
-    {
-        get { return _isDisasterReadyCertified; }
-        set { _isDisasterReadyCertified = value; }
-    }
+    //public bool IsDisasterReadyCertified
+    //{
+    //    get { return _isDisasterReadyCertified; }
+    //    set { _isDisasterReadyCertified = value; }
+    //}
     public bool IsShowTeamLogo
     {
         get { return _isShowTeamLogo; }
