@@ -7,7 +7,7 @@
 	<script src="/V1/Scripts/JCrop/jquery.Jcrop.min.js"></script>
 	<link href="/V1/Styles/jquery.Jcrop.min.css" rel="stylesheet" />
 	<style>
-		#<%=imgProfilePhoto.ClientID%>
+		#<%=imgLogoPhoto.ClientID%>
 		{
 			max-width:100%;
 			max-height:100%;
@@ -25,10 +25,10 @@
 		function previewFile()
 		{
 			$("#<%=btnUpdate.ClientID%>").show();
-			//$("#<%=profilePhotoUpload.ClientID%>").hide();
+			//$("#<%=logoPhotoUpload.ClientID%>").hide();
 
-            var preview = document.querySelector('#<%=imgProfilePhoto.ClientID %>');
-            var file = document.querySelector('#<%=profilePhotoUpload.ClientID %>').files[0];
+            var preview = document.querySelector('#<%=imgLogoPhoto.ClientID %>');
+            var file = document.querySelector('#<%=logoPhotoUpload.ClientID %>').files[0];
 			var reader = new FileReader();
 
             reader.onloadend = function () {
@@ -53,9 +53,9 @@
 						<div class="col-sm-12">
 							<label class="col-md-3">(Logo should be <%=System.Configuration.ConfigurationManager.AppSettings["logoImageHeight"].ToString()%> x <%= System.Configuration.ConfigurationManager.AppSettings["logoImageWidth"].ToString()%>)</label>
 							<div class="m-t-lg">
-								<input ID="profilePhotoUpload" type="file" name="profilePhoto" onchange="previewFile()"  runat="server" />
+								<input ID="logoPhotoUpload" type="file" name="logoPhoto" onchange="previewFile()"  runat="server" />
 								<div class="m-t-lg m-b-lg">
-									<asp:Image ID="imgProfilePhoto" runat="server" ImageUrl="../Images/icons8-customer-64.png" />
+									<asp:Image ID="imgLogoPhoto" runat="server" ImageUrl="../Images/icons8-customer-64.png" />
 								</div>
 								<div class="m-b-md">
 									<asp:LinkButton ID="btnUpdate" runat="server" CssClass="btn btn-success pull-left" Text="Upload Logo" CausesValidation="false" OnClick="btnUpdate_Click" />
