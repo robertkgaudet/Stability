@@ -140,29 +140,47 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             //Get the users information.
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-
-            string FeatureTypeRedirectUrl = HttpContext.Current.Request.Url.AbsolutePath;
-
-            if (!string.IsNullOrEmpty(FeatureTypeRedirectUrl))
+            if (HttpContext.Current.User.IsInRole("Administrator"))
             {
-                var FeatreTypeCounters = dc.FeatureTypes
-                    .Where(x => x.RedirectURL.Contains(FeatureTypeRedirectUrl))
-                    .Select(x => new FeatureTypeCounter
-                    {
-                        Counter = (int)x.Counter,
-                        FeatureKey = x.DisplayText
-                    })
-                    .FirstOrDefault();
+                adminFeatureSection.Visible = true;
 
-                if (FeatreTypeCounters != null)
+                string FeatureTypeRedirectUrl = HttpContext.Current.Request.Url.AbsolutePath;
+
+                if (!string.IsNullOrEmpty(FeatureTypeRedirectUrl))
                 {
-                    FeatureTypeCounterTitle = FeatreTypeCounters.FeatureKey;
-                    FeatureTypeCounterNumber.Text = " : " + FeatreTypeCounters.Counter.ToString();
+                    var FeatreTypeCounters = dc.FeatureTypes
+                        .Where(x => x.RedirectURL.Contains(FeatureTypeRedirectUrl))
+                        .Select(x => new FeatureTypeCounter
+                        {
+                            Counter = (int)x.Counter,
+                            FeatureKey = x.DisplayText
+                        })
+                        .FirstOrDefault();
+
+                    if (FeatreTypeCounters != null)
+                    {
+                        FeatureTypeCounterTitle = FeatreTypeCounters.FeatureKey;
+                        FeatureTypeCounterNumber.Text = " : " + FeatreTypeCounters.Counter.ToString();
+                    }
+                    else
+                    {
+                        FeatureTypeCounterTitle = "";
+                        FeatureTypeCounterNumber.Text = "";
+                    }
                 }
                 else
                 {
-                    FeatureTypeCounterTitle = "";
-                    FeatureTypeCounterNumber.Text = "";
+                    adminFeatureSection.Visible = false;
+
+                }
+                // Add or remove the body style based on the visibility of the adminFeatureSection
+                if (adminFeatureSection.Visible)
+                {
+                    bodyStyle.Visible = true; // Show the style block
+                }
+                else
+                {
+                    bodyStyle.Visible = false; // Hide the style block
                 }
             }
 
