@@ -280,11 +280,28 @@
 						<div class="form-group">
 							<asp:TextBox ID="txtVettingNotes" TextMode="MultiLine" runat="server" CssClass="form-control" placeholder="Enter Vetting Notes"></asp:TextBox>
 						</div>
-						<div class="form-group">
-							<asp:Button ID="btnSumbit" CssClass="btn btn-lg btn-info" runat="server" Text="Update Member Status" OnClick="btnSumbit_Click" />
-						</div>
+											<div class="form-group">
+						<asp:Button ID="btnSumbit" CssClass="btn btn-lg btn-info" runat="server" Text="Update Member Status" OnClick="btnSumbit_Click" />
 					</div>
+   <div class="form-group">
+  
+    <div class="col-sm-10">
+        <div class="checkbox i-checks">
+            <asp:CheckBox ID="chkShowDonateButton" runat="server" CssClass="custom-checkbox" />
+            <label class="chkboxlist" for="<%= chkShowDonateButton.ClientID %>">Enable Team Logo</label>
+        </div>
+    </div>
+	 
+
+</div>
+	   <div class="form-group">
+    
+        <asp:Button ID="txtlogoshow" CssClass="btn btn-lg btn-info" runat="server" Text="Update Team Logo" OnClick="btnUpdateLogo_Click" />
+    
+</div>
+</div>
 				</div>
+</div>
 				<div class="panel-body no-padding m-t-lg">
 					<div class="chat-discussion" style="height: auto">
 							<asp:Image ID="imgNewPostLogo" runat="server" CssClass="post-logo" />

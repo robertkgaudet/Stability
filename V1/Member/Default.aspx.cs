@@ -95,7 +95,9 @@ public partial class V1_Member_Default : BaseWebForm
 
 
 				ucMemberHeader.MemberFullname = profile.p.Firstname + " " + profile.p.Lastname;
-				ucMemberHeader.MemberDescription = profile.p.Description;
+                ucMemberHeader.IsDisasterReadyCertified = profile.p.IsDisasterReadyCertified;
+
+                ucMemberHeader.MemberDescription = profile.p.Description;
 				ucMemberHeader.MemberLocation = profile.p.City + ", " + profile.p.State;
 				ucMemberHeader.MemberTitle = profile.p.Title;
 				bool passedVetting = Convert.ToBoolean(profile.p.PassedVetting != null ? profile.p.PassedVetting : false);
@@ -166,22 +168,30 @@ public partial class V1_Member_Default : BaseWebForm
 			//Count number of connections.
 			ucMemberHeader.ConnectionCount = Tools.MyConnections(new Guid(pageUserId), 0).Count();
 
-			//Get team information
-			var orgUser = (from o in dc.Organizations
-						  join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-						  where uo.UserId == new Guid(pageUserId)
-						   orderby o.CreatedOn descending
-						  select o).Take(1).SingleOrDefault();
+            //Get team information
+            var orgUser = (from o in dc.Organizations
+                           join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+                           where uo.UserId == new Guid(pageUserId)
+                           orderby o.CreatedOn descending
+                           select new
+                           {
+                               o.OrganizationId,
+                               o.Name,
+                               o.LogoSquare,
+                               uo.ShowTeamLogo  // Include the ShowTeamLogo field
+                           }).Take(1).SingleOrDefault();
+            if (orgUser != null)
+            {
+                //ucMemberNavigation.OrganizationId = orgUser.OrganizationId.ToString();
+                ucMemberHeader.TeamId = orgUser.OrganizationId.ToString();
+                ucMemberHeader.TeamName = orgUser.Name;
+                ucMemberHeader.TeamLogo = orgUser.LogoSquare;
+                ucMemberHeader.IsShowTeamLogo = orgUser.ShowTeamLogo ?? false;
+            }
 
-			if(orgUser != null)
-			{
-				//ucMemberNavigation.OrganizationId = orgUser.OrganizationId.ToString();
-				ucMemberHeader.TeamId = orgUser.OrganizationId.ToString();
-				ucMemberHeader.TeamName = orgUser.Name;
-			}
 
-			//Count deployments
-			var deployments = (from ue in dc.UserEvents
+            //Count deployments
+            var deployments = (from ue in dc.UserEvents
 							  join uoe in dc.UserOrganizationEvents on ue.UserId equals uoe.UserId
 							  join oe in dc.OrganizationEvents on uoe.OrganizationEventId equals oe.OrganizationEventId
 							  join org in dc.Organizations on oe.OrganizationId equals org.OrganizationId

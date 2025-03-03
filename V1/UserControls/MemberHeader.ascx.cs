@@ -30,15 +30,45 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 	public string _badgeHoursRecordedStatus = "fa-pending-color";
 	public string _badgeTOPStatus = "fa-pending-color";
 	public string faIdBadgeClick = string.Empty;
+    public string _teamLogo = string.Empty;
+    public bool _isShowTeamLogo = false;
+    public bool _isDisasterReadyCertified = false;
+    public string _purplebadge = string.Empty;
 
-	protected void Page_Load(object sender, EventArgs e)
+    protected void Page_Load(object sender, EventArgs e)
 	{
 		//string causePhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		string profilePhotoFolder		= System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
 		string coverPhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
-		_coverImage						= coverPhotoFolder + "Stability_Cover_V3.jpg";
-		litMemberName.Text				= _memberFullname;
-		imgMemberProfilePhoto.ImageUrl	= profilePhotoFolder + _memberProfileImageFilename;
+        string teamLogo = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
+        _coverImage = coverPhotoFolder + "Stability_Cover_V3.jpg";
+        _purplebadge = teamLogo + "purplebadge.png";
+
+       
+        if (_isShowTeamLogo)
+        {
+            litMemberLogo.ImageUrl = teamLogo + _teamLogo;
+        }
+        else
+        {
+            litMemberLogo.ImageUrl = string.Empty;
+        }
+
+
+
+        if (_isDisasterReadyCertified)
+        {
+            litMemberName.Text = _memberFullname;
+            litpurplebadge.ImageUrl = teamLogo + "purplebadge.png";
+        }
+        else
+        {
+            litMemberName.Text = _memberFullname;
+        }
+
+        litMemberName.Text = _memberFullname;
+
+        imgMemberProfilePhoto.ImageUrl	= profilePhotoFolder + _memberProfileImageFilename;
 		litMemberDescription.Text		= _memberDescription;
 		litTitle.Text					= !String.IsNullOrEmpty(_memberTitle) ? _memberTitle + "<br />" : string.Empty;
 		litLocation.Text				= _memberLocation;
@@ -143,8 +173,12 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		}
 	}
 
-
-	public string BadgeVettingStatus
+    public string TeamLogo
+    {
+        get { return _teamLogo; }
+        set { _teamLogo = value; }
+    }
+    public string BadgeVettingStatus
 	{
 		get { return _badgeVettingStatus; }
 		set { _badgeVettingStatus = value; }
@@ -164,8 +198,17 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		get { return _badgeHoursRecordedStatus; }
 		set { _badgeHoursRecordedStatus = value; }
 	}
-
-	public string BadgeTOPStatus
+    public bool IsDisasterReadyCertified
+    {
+        get { return _isDisasterReadyCertified; }
+        set { _isDisasterReadyCertified = value; }
+    }
+    public bool IsShowTeamLogo
+    {
+        get { return _isShowTeamLogo; }
+        set { _isShowTeamLogo = value; }
+    }
+    public string BadgeTOPStatus
 	{
 		get { return _badgeTOPStatus; }
 		set { _badgeTOPStatus = value; }
