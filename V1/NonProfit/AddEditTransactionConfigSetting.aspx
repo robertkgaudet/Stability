@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/Homer/vendor/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" />
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  
     <script>
         $(function () {
             $('#<%=txtCampaignSummary.ClientID%>').summernote({
@@ -212,7 +212,7 @@
                                 <asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Campaign" OnClick="SaveCampaign" />
                                 <%--        <button type="button" class="btn btn-secondary" data-dismiss="modal">close</button>   --%>
                                 <asp:Button
-                                    ID="Button1"
+                                    ID="btnClose"
                                     runat="server"
                                     Text="Close"
                                     CssClass="btn btn-secondary"
