@@ -17,8 +17,8 @@ public partial class V1_NonProfit_SquareLogoUpload : BaseOrganizationWebForm
     protected void btnUpdate_Click(object sender, EventArgs e)
     {
         string logoFolder = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
-        int logoImageWidth = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["logoImageWidth"].ToString());
-        int logoImageHeight = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["logoImageHeight"].ToString());
+        int logoImageWidth = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["squareLogoWidth"].ToString());
+        int logoImageHeight = Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["squareImageHeight"].ToString());
         string organizationId = Request.QueryString["organizationId"];
 
         try

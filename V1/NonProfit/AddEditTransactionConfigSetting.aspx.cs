@@ -67,6 +67,8 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             ddlOrganizationEvent.Items.Insert(0, new ListItem("Select Deployment", ""));
         }
     }
+
+
     protected void PaymentConfigration_Click(object sender, EventArgs e)
     {
         if (string.IsNullOrWhiteSpace(txtPayPal.Value) ||
@@ -104,6 +106,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             context.SubmitChanges();
         }
     }
+  
     protected void SaveCampaign(object sender, EventArgs e)
     {
         string organizationEventId = ddlOrganizationEvent.SelectedValue;
@@ -112,63 +115,64 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         string amount = textAmount.Value.Trim();
         string description = txtCampaignDescription.Text.Trim();
         bool isDefault = chkIsDefault.Checked;
-        if (isDefault)
+
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
-            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+ 
+            if (isDefault)
             {
                 var existingDefaultCampaign = dc.DonationCampaigns.SingleOrDefault(c => c.IsDefault == true);
-
                 if (existingDefaultCampaign != null)
                 {
                     existingDefaultCampaign.IsDefault = false;
                     dc.SubmitChanges();
                 }
             }
-        }
 
-        if (string.IsNullOrEmpty(hdnSelectedCampaignId.Value))
-        {
-            DonationCampaign newCampaign = new DonationCampaign
-            {
-                DonationCampaignId = Guid.NewGuid(),
-                OrganizationEventId = new Guid(organizationEventId),
-                Summary = summary,
-                Address = address,
-                Description = description,
-                Amount = amount,
-                IsDefault = isDefault
-            };
+            Guid? organizationEventGuid = !string.IsNullOrEmpty(organizationEventId)
+                                          ? new Guid(organizationEventId)
+                                          : (Guid?)null; 
 
-            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            if (string.IsNullOrEmpty(hdnSelectedCampaignId.Value))
             {
+                DonationCampaign newCampaign = new DonationCampaign
+                {
+                    DonationCampaignId = Guid.NewGuid(),
+                    OrganizationEventId = organizationEventGuid,
+                    Summary = summary,
+                    Address = address,
+                    Description = description,
+                    Amount = amount,
+                    IsDefault = isDefault
+                };
+
                 dc.DonationCampaigns.InsertOnSubmit(newCampaign);
-                dc.SubmitChanges();
             }
-        }
-        else
-        {
-            Guid campaignId = new Guid(hdnSelectedCampaignId.Value);
-
-            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            else 
             {
+                Guid campaignId = new Guid(hdnSelectedCampaignId.Value);
                 var existingCampaign = dc.DonationCampaigns.SingleOrDefault(c => c.DonationCampaignId == campaignId);
                 if (existingCampaign != null)
                 {
-                    existingCampaign.OrganizationEventId = new Guid(organizationEventId);
+                    existingCampaign.OrganizationEventId = isDefault ? null : organizationEventGuid; 
                     existingCampaign.Summary = summary;
                     existingCampaign.Address = address;
                     existingCampaign.Description = description;
                     existingCampaign.Amount = amount;
                     existingCampaign.IsDefault = isDefault;
-
-                    dc.SubmitChanges();
                 }
             }
+
+            dc.SubmitChanges();
         }
+
         ClearControls();
         BindDonationCampaigns();
         BindOrganizationEventDropDown();
     }
+
+
+
     private void ClearControls()
     {
         txtCampaignSummary.Text = string.Empty;
@@ -178,6 +182,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         ddlOrganizationEvent.ClearSelection();
         textAmount.Value = string.Empty;
         campaignId = null;
+        chkIsDefault.Checked = false;
         hdnSelectedCampaignId.Value = "";
     }
     private void BindDonationCampaigns()
@@ -244,6 +249,12 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             hdnSelectedCampaignId.Value = campaignId.ToString();
             ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenModal", "showDeleteModal();", true);
         }
+        else if (e.CommandName == "Preview")
+        {
+            int rowIndex = Convert.ToInt32(e.CommandArgument);
+
+            
+        }
     }
 
     protected void DeleteCampaign(object sender, EventArgs e)
@@ -287,7 +298,20 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             }
         }
     }
+    protected void btnCancel_Click(object sender, EventArgs e)
+    {
+        string organizationId = Request.QueryString["organizationId"];
 
-
-
+        if (!string.IsNullOrEmpty(organizationId))
+        {
+            Response.Redirect("~/V1/NonProfitAdministration/Settings.aspx?organizationId=" + organizationId);
+        }
+        else
+        {
+            Response.Redirect("~/V1/NonProfit/AddEditTransactionConfigSetting.aspx");
+        }
+    }
 }
+   
+
+
