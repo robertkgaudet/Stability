@@ -273,29 +273,7 @@
                 $('#deleteCampaignModal').modal('show');
             }, 1000);
         }
-      <%--  $(document).ready(function () {
-            debugger;
-            $('#<%= chkIsDefault.ClientID %>').change(function () {
-                if (this.checked) {
-                    $('#deploymentGroup').hide();
-                } else {
-                    $('#deploymentGroup').show();
-                }
-            });
 
-            if ($('#<%= chkIsDefault.ClientID %>').is(':checked')) {
-                $('#deploymentGroup').hide();
-            }
-        });--%>
-
-
-        <%-- $('#<%= chkIsDefault.ClientID %>').change(function () {
-            if ($(this).is(':checked')) {
-                //$('#deploymentGroup').hide();  // Hide the div when checked
-            } else {
-                //$('#deploymentGroup').show();  // Show the div when unchecked
-            }
-        });--%>
 
         var checkbox = document.getElementById('<%= chkIsDefault.ClientID %>');
         $(checkbox).change(function () {
