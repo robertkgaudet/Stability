@@ -152,6 +152,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             {
                 Guid campaignId = new Guid(hdnSelectedCampaignId.Value);
                 var existingCampaign = dc.DonationCampaigns.SingleOrDefault(c => c.DonationCampaignId == campaignId);
+
                 if (existingCampaign != null)
                 {
                     existingCampaign.OrganizationEventId = isDefault ? null : organizationEventGuid; 
@@ -192,23 +193,24 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             var campaigns = (from campaign in dc.DonationCampaigns
                              join orgEvent in dc.OrganizationEvents
                              on campaign.OrganizationEventId equals orgEvent.OrganizationEventId
-                             where orgEvent.OrganizationId == new Guid(organizationId) && orgEvent.IsActive == true
+                             into orgGroup 
+                             from orgEvent in orgGroup.DefaultIfEmpty() 
+                             where orgEvent == null || (orgEvent.OrganizationId == new Guid(organizationId) && orgEvent.IsActive == true) 
                              orderby orgEvent.BeginDate
                              select new
                              {
                                  campaign.DonationCampaignId,
-                                 OrganizationEventName = orgEvent.CampaignName,
-                                 //campaign.Amount,
+                                 OrganizationEventName = orgEvent != null ? orgEvent.CampaignName : "No Event",
+
                                  Amount = FormatAmount(campaign.Amount),
-                                 campaign.IsDefault,
-
-
+                                 campaign.IsDefault
                              });
 
             gvDonationCampaigns.DataSource = campaigns;
             gvDonationCampaigns.DataBind();
         }
     }
+
     private string FormatAmount(string amount)
     {
         if (string.IsNullOrEmpty(amount))
