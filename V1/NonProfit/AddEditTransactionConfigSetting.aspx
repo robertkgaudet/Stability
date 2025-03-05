@@ -142,8 +142,8 @@
                     </Columns>
                 </asp:GridView>
                 <div class="col-12" style="display: flex; justify-content: end; gap: 10px;">
-                    <asp:Button type="submit" class="save-btn" runat="server" CssClass="btn btn-primary btn-xs" Text="Save" OnClick="PaymentConfigration_Click" />
-                    <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="btn btn-secondary btn-xs" OnClick="btnCancel_Click" />
+                    <asp:Button type="submit" class="save-btn" runat="server" CssClass="btn btn-primary" Text="Save" OnClick="PaymentConfigration_Click" />
+                    <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="btn btn-secondary" OnClick="btnCancel_Click" />
                 </div>
                 <div id="campaignModal" class="modal fade" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-lg modal-fullscreen" role="document">
