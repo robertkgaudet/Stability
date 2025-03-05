@@ -89,29 +89,47 @@ public partial class Impactoid_CommunityPage : System.Web.UI.Page
 		rptPrograms.DataSource = programs;
 		rptPrograms.DataBind();
 
-		var causes = from oe in dc.OrganizationEvents
-						join ev in dc.Events on oe.EventId equals ev.EventId
-						where oe.OrganizationId == new Guid(organizationId)
-						&& oe.IsActive == true
-						orderby ev.BeginDate descending
-						select new { oe.OrganizationEventId, DisasterDescription = ev.Description, disasterDate = ev.BeginDate, oe.DonationURL, oe.VolunteerURL, oe.IsActive, oe.URLFriendlyCampaignName, ev.URLFriendlyName, oe.MissionPurpose, campaignName = oe.CampaignName, disasterName = ev.Name };
+        var causes = from oe in dc.OrganizationEvents
+                     join ev in dc.Events on oe.EventId equals ev.EventId
+                     join dca in dc.DonationCampaigns on oe.OrganizationEventId equals dca.OrganizationEventId into dcaGroup
+                     from dca in dcaGroup.DefaultIfEmpty() 
+                     where oe.OrganizationId == new Guid(organizationId)
+                     && oe.IsActive == true
+                     orderby ev.BeginDate descending
+                     select new
+                     {
+                         oe.OrganizationEventId,
+                         DisasterDescription = ev.Description,
+                         disasterDate = ev.BeginDate,
+                         DonationURL = dca != null
+                             ? "/V1/NonProfit/DonationDetails.aspx?organizationId=" + organizationId + "&donationCampaignId=" + dca.DonationCampaignId
+                             : null,
+                         oe.VolunteerURL,
+                         oe.IsActive,
+                         oe.URLFriendlyCampaignName,
+                         ev.URLFriendlyName,
+                         oe.MissionPurpose,
+                         campaignName = oe.CampaignName,
+                         disasterName = ev.Name,
+                         DonationCampaignId = dca != null ? dca.DonationCampaignId : (Guid?)null 
+                     };
 
-		if(causes.Count() == 0)
-		{
-			testimonial.Visible = false;
-		}
 
-		rptGalleryMenu.DataSource =	causes;
-		rptGalleryMenu.DataBind();
+        if (causes.Count() == 0)
+        {
+            testimonial.Visible = false;
+        }
 
+        rptGalleryMenu.DataSource = causes;
+        rptGalleryMenu.DataBind();
 
-		rptCauseSlider.DataSource = causes;
-		rptCauseSlider.DataBind();
+        rptCauseSlider.DataSource = causes;
+        rptCauseSlider.DataBind();
 
-		rptCauses.DataSource = causes.Take(4);
-		rptCauses.DataBind();
+        rptCauses.DataSource = causes.Take(4);
+        rptCauses.DataBind();
 
-		rptDisasters.DataSource = causes.Distinct();
+        rptDisasters.DataSource = causes.Distinct();
 		rptDisasters.DataBind();
 
 		var photos = from oep in dc.OrganizationEventPhotos
