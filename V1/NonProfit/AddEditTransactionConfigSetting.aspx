@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/Homer/vendor/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" />
 
-  
+
     <script>
         $(function () {
             $('#<%=txtCampaignSummary.ClientID%>').summernote({
@@ -132,11 +132,10 @@
                                 </a>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:ButtonField CommandName="EditRow" Text="Edit" ButtonType="Button" ControlStyle-CssClass="btn btn-primary  btn-xs" >                       
-                        </asp:ButtonField>
+                        <asp:ButtonField CommandName="EditRow" Text="Edit" ButtonType="Button" ControlStyle-CssClass="btn btn-primary  btn-xs"></asp:ButtonField>
                         <asp:TemplateField>
                             <ItemTemplate>
-                                <asp:Button ID="btnDelete" runat="server" Text=" Delete" CommandName="DeleteRow" CommandArgument='<%# Eval("DonationCampaignId") %>' CssClass="btn btn-danger  btn-xs"  />                
+                                <asp:Button ID="btnDelete" runat="server" Text=" Delete" CommandName="DeleteRow" CommandArgument='<%# Eval("DonationCampaignId") %>' CssClass="btn btn-danger  btn-xs" />
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
@@ -177,7 +176,7 @@
                                 <div class="form-group" id="deploymentGroup">
                                     <label class="col-sm-2 control-label">Deployment</label>
                                     <div class="col-sm-8">
-                                        <asp:DropDownList ID="ddlOrganizationEvent" runat="server" class="form-control">
+                                        <asp:DropDownList ID="ddlOrganizationEvent" required runat="server" class="form-control">
                                             <asp:ListItem Text="Select Deployment" Value="" />
                                         </asp:DropDownList>
                                     </div>
@@ -203,20 +202,21 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Amount($)</label>
                                     <div class="col-sm-8">
-                                        <input class="form-control" type="text" id="textAmount" placeholder="Enter Amount e.g. 10,30,50,100,500" runat="server" style="font-size: 18px;" />
+                                        <input class="form-control" type="text" id="textAmount"
+                                            placeholder="Enter Amount e.g. 10,30,50,100,500"
+                                            required runat="server"
+                                            style="font-size: 18px;"
+                                            oninput="validateAmount(this);" />
+                                        <span id="amountError" class="text-danger" style="display: none;">Please enter a valid Amount</span>
                                     </div>
                                 </div>
-                            
-                            </div>
+
+                           
                             <div class="modal-footer">
                                 <asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Campaign" OnClick="SaveCampaign" />
                                 <%--        <button type="button" class="btn btn-secondary" data-dismiss="modal">close</button>   --%>
-                                <asp:Button
-                                    ID="btnClose"
-                                    runat="server"
-                                    Text="Close"
-                                    CssClass="btn btn-secondary"
-                                    OnClick="btnClose_Click" />
+                                <asp:Button ID="btnClose" runat="server" CssClass=" btn btn-secondary" Text="Close" OnClick="btnClose_Click" />
+
                             </div>
                         </div>
                     </div>
@@ -275,14 +275,42 @@
         }
 
 
-        var checkbox = document.getElementById('<%= chkIsDefault.ClientID %>');
-        $(checkbox).change(function () {
-            if ($(this).is(':checked')) {
+        $(document).ready(function () {
+        var checkbox = $('#<%= chkIsDefault.ClientID %>');
+
+        // Function to toggle the visibility of the dropdown
+        function toggleDeploymentGroup() {
+            if (checkbox.is(':checked')) {
                 $('#deploymentGroup').hide();
             } else {
                 $('#deploymentGroup').show();
             }
+        }
+
+        // Run on page load
+        toggleDeploymentGroup();
+
+        // Run on checkbox change
+        checkbox.change(function () {
+            toggleDeploymentGroup();
         });
+    });
+
+
+   function validateAmount(input) {
+        // Regular expression: Allows numbers, commas, and decimals only
+        let regex = /^[0-9.,]+$/;
+        let isValid = regex.test(input.value);
+
+        // Show or hide the error message
+        document.getElementById("amountError").style.display = isValid ? "none" : "block";
+
+        // Remove invalid characters in real time
+        if (!isValid) {
+            input.value = input.value.replace(/[^0-9.,]/g, '');
+        }
+    }
+
 
     </script>
     <script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
