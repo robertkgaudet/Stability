@@ -165,24 +165,12 @@
                                             <!-- navbar-collapse -->
                                         </div>
                                         <div class="col-md-2 hidden-sm hidden-xs">
-                                            <% if (!ShowDonationButton)
-                                            { %>
+                                            <% if (ShowDonationButton && DonationCampaigns.Any(x => x.IsDefault))
+                                                { %>
                                             <div class="menu-btn">
-                                                <a href="<%= donateURL %>" class="btn-filled">Donate Now</a>
+                                                <a href="/V1/NonProfit/DonationDetails.aspx?organizationId=<%= organizationId %>&donationCampaignId=<%= DonationCampaigns.FirstOrDefault(x => x.IsDefault).DonationCampaignId %>" class="btn-filled">Donate Now</a>
                                             </div>
-                                            <% }
-                                            else
-                                            { %>
-                                            <div class="menu-btn">
-                                                <% 
-                                                    var campaign = DonationCampaigns.FirstOrDefault(x => !x.IsDefault);
-                                                    if (campaign != null)
-                                                    {
-                                                %>
-                                              
-                                                <a href="/V1/NonProfit/DonationDetails.aspx?organizationId=<%= organizationId %>&donationCampaignId=<%= campaign.DonationCampaignId %>" class="btn-filled">Donate Now</a>
-                                                <% } %>
-                                            </div>
+
                                             <% } %>
                                         </div>
 
@@ -331,25 +319,12 @@
                     <div class="col-md-12">
                         <div class="donate-txt">
                             <h3>TO CHANGE THE LIFE OF THOSE <span>WHO HAVE NO HOPE</span></h3>
-                           <% if (!ShowDonationButton)
-                                            { %>
-                                            <div class="menu-btn">
-                                                <a href="<%= donateURL %>" class="btn-filled">Donate Now</a>
-                                            </div>
-                                            <% }
-                                            else
-                                            { %>
-                                            <div class="menu-btn">
-                                                <% 
-                                                    var campaign = DonationCampaigns.FirstOrDefault(x => !x.IsDefault);
-                                                    if (campaign != null)
-                                                    {
-                                                %>
-                                              
-                                                <a href="/V1/NonProfit/DonationDetails.aspx?organizationId=<%= organizationId %>&donationCampaignId=<%= campaign.DonationCampaignId %>" class="btn-filled">Donate Now</a>
-                                                <% } %>
-                                            </div>
-                                            <% } %>
+                            <% if (ShowDonationButton && DonationCampaigns.Any(x => x.IsDefault))
+                                { %>
+                            <div class="menu-btn">
+                                <a href="/V1/NonProfit/DonationDetails.aspx?organizationId=<%= organizationId %>&donationCampaignId=<%= DonationCampaigns.FirstOrDefault(x => x.IsDefault).DonationCampaignId %>" class="btn-filled">Donate Now</a>
+                            </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>

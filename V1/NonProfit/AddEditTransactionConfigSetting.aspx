@@ -176,7 +176,7 @@
                                 <div class="form-group" id="deploymentGroup">
                                     <label class="col-sm-2 control-label">Deployment</label>
                                     <div class="col-sm-8">
-                                        <asp:DropDownList ID="ddlOrganizationEvent" required runat="server" class="form-control">
+                                        <asp:DropDownList ID="ddlOrganizationEvent" runat="server" class="form-control">
                                             <asp:ListItem Text="Select Deployment" Value="" />
                                         </asp:DropDownList>
                                     </div>
@@ -204,7 +204,7 @@
                                     <div class="col-sm-8">
                                         <input class="form-control" type="text" id="textAmount"
                                             placeholder="Enter Amount e.g. 10,30,50,100,500"
-                                            required runat="server"
+                                             runat="server"
                                             style="font-size: 18px;"
                                             oninput="validateAmount(this);" />
                                         <span id="amountError" class="text-danger" style="display: none;">Please enter a valid Amount</span>

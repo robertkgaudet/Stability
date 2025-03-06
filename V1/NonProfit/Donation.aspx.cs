@@ -29,10 +29,21 @@ public partial class V1_NonProfit_Donation : System.Web.UI.Page
         this.orgId = Request.QueryString["organizationId"].ToString();
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         PaymentConfiguration payConfig = dc.PaymentConfigurations.Where(x => x.OrganizationId == new Guid(this.organizationId.Value)).FirstOrDefault();
-        var donationCampaigns = (from oe in dc.OrganizationEvents
-                                 join dca in dc.DonationCampaigns on oe.OrganizationEventId equals dca.OrganizationEventId
-                                 where oe.OrganizationId == new Guid(this.organizationId.Value)
-                                 select new { oe.CampaignName, dca.DonationCampaignId, dca.IsDefault, dca.Address, dca.Summary, dca.Description }).ToList();
+
+        var donationCampaigns = (from dca in dc.DonationCampaigns
+                                 join oe in dc.OrganizationEvents
+                                 on dca.OrganizationEventId equals oe.OrganizationEventId into oeGroup
+                                 from oe in oeGroup.DefaultIfEmpty()
+                                 where dca.OrganizationId == new Guid(this.organizationId.Value)
+                                 select new DonationCampaignVM
+                                 {
+                                     CampaignName = oe != null ? oe.CampaignName : null,
+                                     DonationCampaignId = dca.DonationCampaignId,
+                                     IsDefault = dca.IsDefault,
+                                     Address = dca.Address,
+                                     Summary = dca.Summary,
+                                     Description = dca.Description
+                                 }).ToList();
 
         if (payConfig != null)
         {
@@ -48,10 +59,10 @@ public partial class V1_NonProfit_Donation : System.Web.UI.Page
                                         .Where(x => x.IsDefault == true)
                                         .Select(x => new DonationCampaignVM
                                         {
-                                            Summary=x.Summary,
-                                            Address=x.Address,
-                                            Description=x.Description,
-                                            DonationCampaignId=x.DonationCampaignId
+                                            Summary = x.Summary,
+                                            Address = x.Address,
+                                            Description = x.Description,
+                                            DonationCampaignId = x.DonationCampaignId
                                         }).FirstOrDefault();
         }
         if (donationCampaigns.Any(x => x.IsDefault == false))

@@ -135,8 +135,11 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                     string orgId = Request.QueryString["organizationId"].ToString();
                     string donationCampaignId = Request.QueryString["donationCampaignId"].ToString();
                     var organizationEventId = dbContext.DonationCampaigns.Where(x => x.DonationCampaignId == new Guid(donationCampaignId)).Select(x => x.OrganizationEventId).FirstOrDefault();
-                    var Campaign = dbContext.OrganizationEvents.Where(x => x.OrganizationEventId == new Guid(organizationEventId.ToString())).Select(x => x.CampaignName).FirstOrDefault();
-                    CampaignName = Campaign;
+                    if (organizationEventId != null)
+                    {
+                        var Campaign = dbContext.OrganizationEvents.Where(x => x.OrganizationEventId == new Guid(organizationEventId.ToString())).Select(x => x.CampaignName).FirstOrDefault();
+                        CampaignName = ", " + Campaign;
+                    }
                     OrganizationName = dbContext.Organizations.Where(x => x.OrganizationId == new Guid(orgId)).Select(x => x.Name).FirstOrDefault();
                 }
             }
@@ -152,7 +155,6 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
     {
         Guid donationCampaignId = new Guid(Request.QueryString["donationCampaignId"]);
         var request = HttpContext.Current.Request;
-
         // Get the domain URL
         string domainUrl = request.Url.GetLeftPart(UriPartial.Authority);
 
@@ -196,7 +198,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
         var donationAmount = Request.Form["txtDonationAmount"];
         Donation donation = new Donation()
         {
-            Amount = Decimal.Parse(donationAmount),
+            Amount = string.IsNullOrEmpty(coverfee.Text) ? Decimal.Parse(donationAmount) : Decimal.Parse(donationAmount) * Decimal.Parse("1.06"),
             EmailAddress = txtemail.Text,
             DonationId = Guid.NewGuid(),
             FirstName = txtfirstname.Text,
@@ -208,6 +210,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
             DonationCampaignId = donationCampaignId,
             IsTest = Convert.ToBoolean(ConfigurationManager.AppSettings["isTestPayment"])
         };
+
         dc.Donations.InsertOnSubmit(donation);
         dc.SubmitChanges();
 
@@ -227,7 +230,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                         PriceData = new SessionLineItemPriceDataOptions
                         {
                             Currency = "usd",
-                            UnitAmount = Convert.ToInt32(Decimal.Parse(donationAmount) * 100),
+                            UnitAmount = Convert.ToInt32(donation.Amount * 100),
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
                                 Name = "Donation to " + organization.Name, // Product Name

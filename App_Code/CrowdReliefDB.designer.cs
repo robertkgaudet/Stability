@@ -440,7 +440,7 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   #endregion
 	
 	public CrowdReliefDBDataContext() : 
-			base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString1"].ConnectionString, mappingSource)
+			base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
 	{
 		OnCreated();
 	}
