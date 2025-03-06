@@ -157,6 +157,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             {
                 Guid campaignId = new Guid(hdnSelectedCampaignId.Value);
                 var existingCampaign = dc.DonationCampaigns.SingleOrDefault(c => c.DonationCampaignId == campaignId);
+
                 if (existingCampaign != null)
                 {
                     existingCampaign.OrganizationEventId = isDefault ? null : organizationEventGuid;
@@ -213,8 +214,6 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             gvDonationCampaigns.DataBind();
         }
     }
-
-
     private string FormatAmount(string amount)
     {
         if (string.IsNullOrEmpty(amount))

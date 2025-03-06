@@ -489,15 +489,15 @@ public partial class V1_Profile_Profile : BaseOrganizationWebForm
     {
         if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
-            userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+            Guid _profileUserId = new Guid(hidProfileId.Value); //userId of the person on the profile Page
 
             using (var context = new CrowdReliefDBDataContext())
             {
-                var userOrg = context.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
+                var userOrg = context.UserOrganizations.FirstOrDefault(uo => uo.UserId == _profileUserId);
 
                 if (userOrg != null)
                 {
-                    // Save the checkbox state (true or false) to the database
+             
                     userOrg.ShowTeamLogo = chkShowDonateButton.Checked;
                     context.SubmitChanges();
                 }
