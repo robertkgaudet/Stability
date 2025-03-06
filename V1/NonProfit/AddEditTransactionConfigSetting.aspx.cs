@@ -57,6 +57,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
                           select new
                           {
                               orgEvent.OrganizationEventId,
+                              orgEvent.OrganizationId,
                               orgEvent.CampaignName
                           }).ToList();
 
@@ -106,7 +107,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             context.SubmitChanges();
         }
     }
-  
+
     protected void SaveCampaign(object sender, EventArgs e)
     {
         string organizationEventId = ddlOrganizationEvent.SelectedValue;
@@ -116,22 +117,25 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         string description = txtCampaignDescription.Text.Trim();
         bool isDefault = chkIsDefault.Checked;
 
+
+        string orgIdValue = Request.QueryString["organizationId"];
+        Guid? organizationGuid = !string.IsNullOrEmpty(orgIdValue) ? new Guid(orgIdValue) : (Guid?)null;
+
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
- 
-            if (isDefault)
-            {
-                var existingDefaultCampaign = dc.DonationCampaigns.SingleOrDefault(c => c.IsDefault == true);
-                if (existingDefaultCampaign != null)
-                {
-                    existingDefaultCampaign.IsDefault = false;
-                    dc.SubmitChanges();
-                }
-            }
+            //if (isDefault)
+            //{
+            //    var existingDefaultCampaign = dc.DonationCampaigns.SingleOrDefault(c => c.IsDefault == true);
+            //    if (existingDefaultCampaign != null)
+            //    {
+            //        existingDefaultCampaign.IsDefault = false;
+            //        dc.SubmitChanges();
+            //    }
+            //}
 
             Guid? organizationEventGuid = !string.IsNullOrEmpty(organizationEventId)
                                           ? new Guid(organizationEventId)
-                                          : (Guid?)null; 
+                                          : (Guid?)null;
 
             if (string.IsNullOrEmpty(hdnSelectedCampaignId.Value))
             {
@@ -139,6 +143,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
                 {
                     DonationCampaignId = Guid.NewGuid(),
                     OrganizationEventId = organizationEventGuid,
+                    OrganizationId = organizationGuid,
                     Summary = summary,
                     Address = address,
                     Description = description,
@@ -148,14 +153,15 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
 
                 dc.DonationCampaigns.InsertOnSubmit(newCampaign);
             }
-            else 
+            else
             {
                 Guid campaignId = new Guid(hdnSelectedCampaignId.Value);
                 var existingCampaign = dc.DonationCampaigns.SingleOrDefault(c => c.DonationCampaignId == campaignId);
 
                 if (existingCampaign != null)
                 {
-                    existingCampaign.OrganizationEventId = isDefault ? null : organizationEventGuid; 
+                    existingCampaign.OrganizationEventId = isDefault ? null : organizationEventGuid;
+                    existingCampaign.OrganizationId = organizationGuid;
                     existingCampaign.Summary = summary;
                     existingCampaign.Address = address;
                     existingCampaign.Description = description;
@@ -174,6 +180,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
 
 
 
+
     private void ClearControls()
     {
         txtCampaignSummary.Text = string.Empty;
@@ -188,34 +195,30 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
     }
     private void BindDonationCampaigns()
     {
+
+        var orgId = new Guid(organizationId);
+
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
             var campaigns = (from campaign in dc.DonationCampaigns
-                             join orgEvent in dc.OrganizationEvents
-                             on campaign.OrganizationEventId equals orgEvent.OrganizationEventId
-                             into orgGroup 
-                             from orgEvent in orgGroup.DefaultIfEmpty() 
-                             where orgEvent == null || (orgEvent.OrganizationId == new Guid(organizationId) && orgEvent.IsActive == true) 
-                             orderby orgEvent.BeginDate
+                             where campaign.OrganizationId == orgId
                              select new
                              {
-                                 campaign.DonationCampaignId,
-                                 OrganizationEventName = orgEvent != null ? orgEvent.CampaignName : "No Event",
-
+                                 DonationCampaignId = campaign.DonationCampaignId,
+                                 OrganizationEventName = campaign.OrganizationEventId == null ? "Default" : dc.OrganizationEvents.Where(x => x.OrganizationEventId == campaign.OrganizationEventId).FirstOrDefault().CampaignName,
                                  Amount = FormatAmount(campaign.Amount),
-                                 campaign.IsDefault
-                             });
+                                 IsDefault = campaign.IsDefault
+                             }).ToList();
 
             gvDonationCampaigns.DataSource = campaigns;
             gvDonationCampaigns.DataBind();
         }
     }
-
     private string FormatAmount(string amount)
     {
         if (string.IsNullOrEmpty(amount))
             return string.Empty;
-        string[] amounts = amount.Split(new[] { ',',' ' }, StringSplitOptions.RemoveEmptyEntries);
+        string[] amounts = amount.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
         for (int i = 0; i < amounts.Length; i++)
         {
             amounts[i] = "$" + amounts[i].Trim();
@@ -227,7 +230,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
     {
         if (e.CommandName == "EditRow")
         {
-            int rowIndex = Convert.ToInt32(e.CommandArgument); 
+            int rowIndex = Convert.ToInt32(e.CommandArgument);
             campaignId = new Guid(gvDonationCampaigns.DataKeys[rowIndex].Value.ToString());
             hdnSelectedCampaignId.Value = campaignId.ToString();
 
@@ -255,7 +258,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         {
             int rowIndex = Convert.ToInt32(e.CommandArgument);
 
-            
+
         }
     }
 
@@ -314,6 +317,6 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         }
     }
 }
-   
+
 
 
