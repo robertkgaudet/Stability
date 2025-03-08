@@ -13,9 +13,12 @@
 	}
 	.memberImageContainer
 	{
-        overflow: hidden;		display: flex;
-		margin-top: -125px; /* Default margin */		z-index: 1;
-		position: relative	}
+        overflow: hidden;
+		display: flex;
+		margin-top: -125px; /* Default margin */
+		z-index: 1;
+		position: relative
+	}
     @media (max-width: 767px) 
 	{
         .memberImageContainer
@@ -27,7 +30,8 @@
         }
     }
 	.memberPhoto
-	{		width: 150px;
+	{
+		width: 150px;
 		height: 150px;
 		border-radius: 50%;
 		object-fit: cover; /* Ensures the image covers the entire area */
@@ -35,7 +39,8 @@
 		position: relative
     }
 	.memberDetail
-	{		z-index: 0;
+	{
+		z-index: 0;
 		text-align:left;
 	}
 	.content
@@ -68,9 +73,6 @@
 	}
 	.fa:hover
 	{cursor:pointer;}
-	.teamPhoto{
-	height:22px;
-}
 </style>
 <script>
 	$(document).ready(function () {
@@ -135,9 +137,7 @@
 			<div class="row memberDetail">
                 <div class="col-xs-12 col-lg-8">
 					<div style="margin-top:10px; width:100%;">
-					<span style="color:darkslategrey; font-size:20px; font-weight:800; margin-right:10px;"><asp:Literal ID="litMemberName" runat="server"></asp:Literal><asp:Image runat="server" id="litpurplebadge" class="teamPhoto" /></span>
-					
-					<asp:Image runat="server" id="litMemberLogo" class="teamPhoto" />
+					<span style="color:darkslategrey; font-size:20px; font-weight:800; margin-right:10px;"><asp:Literal ID="litMemberName" runat="server"></asp:Literal></span>
 					<i class="fa fa-id-badge pe-2x <%=_badgeVettingStatus%> float-right <%=faIdBadgeClick%>" data-toggle="tooltip" data-placement="top" title="Activate Vetted ID Badge"></i>
 					<i class="fa fa-shield pe-2x <%=_badgeCertificationStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Earn Training Certifications To Activate"></i>
 					<i class="fa fa-certificate pe-2x <%=_badgeDeployedStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Deploy Once To Activate"></i>

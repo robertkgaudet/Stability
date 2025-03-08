@@ -8,6 +8,7 @@ using Stripe.Checkout;
 using Stripe;
 using System.Configuration;
 using SendGrid;
+using System.Web.UI.WebControls;
 
 public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
 {
@@ -44,10 +45,20 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
             }
             else
             {
+                ListItemCollection statesList = new ListItemCollection();
+                foreach (string state in States.Names())
+                {
+                    ListItem li = new ListItem(state, state);
+                    statesList.Add(li);
+                }
+
+                ddlState.DataSource = statesList;
+                ddlState.DataBind();
+               
                 if (User.Identity.IsAuthenticated)
                 {
                     string username = User.Identity.Name;
-
+                    
                     if (!string.IsNullOrEmpty(username))
                     {
                         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
@@ -79,7 +90,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                                     txtCity.Text = profile.City;
 
 
-                                    txtddlState.Text = profile.State;
+                                    ddlState.DataSource = statesList;
 
                                     txtZip.Text = profile.Zip;
 
@@ -174,7 +185,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                 Firstname = txtfirstname.Text,
                 Lastname = txtlastname.Text,
                 City = txtCity.Text,
-                State = txtddlState.Text,
+                State = ddlState.SelectedValue,
                 Zip = txtZip.Text,
 
                 UserId = organization.OwnerId.Value
@@ -186,7 +197,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                 AddressId = Guid.NewGuid(),
                 Address1 = txthomeaddress.Text,
                 City = txtCity.Text,
-                State = txtddlState.Text,
+                State = ddlState.SelectedValue,
                 Zip = txtZip.Text,
                 IsActive = true,
                 CreatedOn = DateTime.Now
@@ -199,6 +210,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
         Donation donation = new Donation()
         {
             Amount = string.IsNullOrEmpty(coverfee.Text) ? Decimal.Parse(donationAmount) : Decimal.Parse(donationAmount) * Decimal.Parse("1.06"),
+            TransactionFee = string.IsNullOrEmpty(coverfee.Text) ? 0 : Decimal.Parse(donationAmount) * 0.06M, 
             EmailAddress = txtemail.Text,
             DonationId = Guid.NewGuid(),
             FirstName = txtfirstname.Text,
@@ -240,15 +252,34 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                     },
                 },
             Mode = "payment",
-            SuccessUrl = domainUrl + "/V1/NonProfit/DonationSuccess.aspx?session_id={CHECKOUT_SESSION_ID}", // Redirect after successful payment,
+            SuccessUrl = domainUrl + "/V1/NonProfit/DonationSuccess.aspx?session_id={CHECKOUT_SESSION_ID}", 
         };
 
         var service = new SessionService();
         Session session = service.Create(options);
-        // Pass the session ID to the client
+      
         Response.Redirect(session.Url);
 
     }
+
+    protected void btnPrevious_Click(object sender, EventArgs e)
+    {
+        
+        if (Request.UrlReferrer != null)
+        {
+            Response.Redirect("~/V1/NonProfit/Donation.aspx?organizationId=" + organizationId);
+        }
+        else
+        {
+            Response.Redirect(Request.UrlReferrer.ToString());
+            
+        }
+    }
+    protected void btnCancel_Click(object sender, EventArgs e)
+    {
+        Response.Redirect(Request.UrlReferrer.ToString());
+    }
+
 }
 
 
@@ -267,7 +298,7 @@ public class TransactionData
     public string State { get; set; }
     public string Zip { get; set; }
     public string DonationNote { get; set; }
-    public int Frequency { get; set; }
+   // public int Frequency { get; set; }
     public bool IsCoverFee { get; set; }
     public bool NotShareName { get; set; }
     public bool IsHonorDonation { get; set; }
