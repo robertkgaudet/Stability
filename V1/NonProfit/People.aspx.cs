@@ -8,6 +8,8 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
+
+
 public partial class V1_NonProfit_People : BaseOrganizationWebForm
 {
 	public string _logo;
@@ -232,7 +234,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
 		{
 			RepeaterItem dataItem = (RepeaterItem)e.Item;
-			Guid userId = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId");
+
+
+          
+            Guid userId = Guid.Empty;
+            if (DataBinder.Eval(dataItem.DataItem, "UserId") != null)
+            {
+                userId = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId");
+            }
+      
 			String firstname = (String)DataBinder.Eval(dataItem.DataItem, "Firstname");
 			String lastname = (String)DataBinder.Eval(dataItem.DataItem, "Lastname");
 			String zelloName = (String)DataBinder.Eval(dataItem.DataItem, "ZelloName");
@@ -241,7 +251,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			String phoneNUmber = (String)DataBinder.Eval(dataItem.DataItem, "phoneNUmber");
 			String description = (String)DataBinder.Eval(dataItem.DataItem, "Description");
 
-			MembershipUser profileUser = Membership.GetUser(userId);
+         
+            V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
+            if (ucTeamLogo != null)
+            {
+                ucTeamLogo.UserId = userId;
+            }
+
+
+            MembershipUser profileUser = Membership.GetUser(userId);
 
 			bool isLockedOut = false;
 			HtmlGenericControl divFooter = (HtmlGenericControl)e.Item.FindControl("divFooter");
