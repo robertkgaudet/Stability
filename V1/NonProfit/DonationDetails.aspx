@@ -200,18 +200,17 @@
 
 
                     <asp:ValidationSummary ID="vsSummary" runat="server" ForeColor="Red" ValidationGroup="UserForm" />
-
-
-                    <div class="col-12" style="display: flex; justify-content: center; gap: 10px;">
-                        <asp:Button ID="btnPrevious" runat="server" CssClass="btn btn-secondary"
-                            Text="Previous" OnClick="btnPrevious_Click" />
-
-                        <asp:Button ID="btnEnterPayment" runat="server" CssClass="btn submit-btn"
+                <div class="d-flex justify-content-end gap-2">
+                     <asp:Button ID="btnEnterPayment" runat="server" CssClass="btn submit-btn"
                             Text="Enter Payment" OnClientClick="return validateForm();"
                             OnClick="AddTransactionDetails_Click" ValidationGroup="UserForm" />
 
-                        <asp:Button ID="btnCancel" runat="server" CssClass="btn cancle-btn"
-                            Text="Cancel" OnClick="btnCancel_Click" />
+
+                      <asp:Button ID="btnPrevious" runat="server" CssClass="btn btn-secondary"
+                            Text="Cancel" OnClick="btnCancel_Click"  CausesValidation="false" />
+
+                </div>
+
                     </div>
                 </div>
             </form>

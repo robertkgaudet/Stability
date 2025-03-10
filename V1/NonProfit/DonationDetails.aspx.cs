@@ -22,6 +22,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+
         bool showDonateButton = false;
 
         if (!IsPostBack)
@@ -54,11 +55,11 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
 
                 ddlState.DataSource = statesList;
                 ddlState.DataBind();
-               
+
                 if (User.Identity.IsAuthenticated)
                 {
                     string username = User.Identity.Name;
-                    
+
                     if (!string.IsNullOrEmpty(username))
                     {
                         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
@@ -206,11 +207,18 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
             dc.SubmitChanges();
         }
 
+
+
+
         var donationAmount = Request.Form["txtDonationAmount"];
+        decimal originalAmount = Decimal.Parse(donationAmount);
+        decimal transactionFee = string.IsNullOrEmpty(coverfee.Text) ? 0 : originalAmount * 0.06M;
+        decimal totalAmount = originalAmount + transactionFee; // For display only, not saved
+
         Donation donation = new Donation()
         {
-            Amount = string.IsNullOrEmpty(coverfee.Text) ? Decimal.Parse(donationAmount) : Decimal.Parse(donationAmount) * Decimal.Parse("1.06"),
-            TransactionFee = string.IsNullOrEmpty(coverfee.Text) ? 0 : Decimal.Parse(donationAmount) * 0.06M, 
+            Amount = originalAmount,
+            TransactionFee = transactionFee,
             EmailAddress = txtemail.Text,
             DonationId = Guid.NewGuid(),
             FirstName = txtfirstname.Text,
@@ -225,6 +233,12 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
 
         dc.Donations.InsertOnSubmit(donation);
         dc.SubmitChanges();
+
+
+        txtDonationAmount.Text = totalAmount.ToString("F2");
+
+
+
 
         StripeConfiguration.ApiKey = System.Configuration.ConfigurationManager.AppSettings["stripeSecretKey"].ToString();
         Dictionary<string, string> transactionInfo = new Dictionary<string, string>
@@ -242,43 +256,59 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                         PriceData = new SessionLineItemPriceDataOptions
                         {
                             Currency = "usd",
-                            UnitAmount = Convert.ToInt32(donation.Amount * 100),
-                            ProductData = new SessionLineItemPriceDataProductDataOptions
-                            {
-                                Name = "Donation to " + organization.Name, // Product Name
-                            },
+                            UnitAmount = Convert.ToInt32((donation.Amount + donation.TransactionFee) * 100), 
+                             ProductData = new SessionLineItemPriceDataProductDataOptions
+                             {
+                                Name = "Donation to " + organization.Name, 
+                             },
                         },
-                        Quantity = 1,
+                                        Quantity = 1,
+
                     },
                 },
             Mode = "payment",
-            SuccessUrl = domainUrl + "/V1/NonProfit/DonationSuccess.aspx?session_id={CHECKOUT_SESSION_ID}", 
+            SuccessUrl = domainUrl + "/V1/NonProfit/DonationSuccess.aspx?session_id={CHECKOUT_SESSION_ID}",
         };
 
         var service = new SessionService();
         Session session = service.Create(options);
-      
+
         Response.Redirect(session.Url);
 
     }
 
-    protected void btnPrevious_Click(object sender, EventArgs e)
+    //protected void btnPrevious_Click(object sender, EventArgs e)
+    //{
+
+    //    if (Request.UrlReferrer != null)
+    //    {
+    //        Response.Redirect("~/V1/NonProfit/Donation.aspx?organizationId=" + organizationId);
+    //    }
+    //    else
+    //    {
+    //        Response.Redirect(Request.UrlReferrer.ToString());
+
+    //    }
+    //}
+    protected void btnCancel_Click(object sender, EventArgs e)
     {
-        
-        if (Request.UrlReferrer != null)
+        string organizationId = Request.QueryString["organizationId"];
+
+        if (!string.IsNullOrEmpty(organizationId))
         {
             Response.Redirect("~/V1/NonProfit/Donation.aspx?organizationId=" + organizationId);
         }
         else
         {
-            Response.Redirect(Request.UrlReferrer.ToString());
-            
+            Response.Redirect("~/V1/NonProfit/Donation.aspx?organizationId.aspx");
         }
     }
-    protected void btnCancel_Click(object sender, EventArgs e)
-    {
-        Response.Redirect(Request.UrlReferrer.ToString());
-    }
+
+
+    //protected void btnCancel_Click(object sender, EventArgs e)
+    //{
+    //    Response.Redirect(Request.UrlReferrer.ToString());
+    //}
 
 }
 
@@ -298,7 +328,7 @@ public class TransactionData
     public string State { get; set; }
     public string Zip { get; set; }
     public string DonationNote { get; set; }
-   // public int Frequency { get; set; }
+    // public int Frequency { get; set; }
     public bool IsCoverFee { get; set; }
     public bool NotShareName { get; set; }
     public bool IsHonorDonation { get; set; }

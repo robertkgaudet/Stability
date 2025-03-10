@@ -97,7 +97,7 @@ body {
     color: black;
     justify-content: left;
     align-items: start;
-    padding: 40px 80px;
+    padding: 40px 50px;
     width: 50%;
     display: flex; /* Flexbox for content alignment */
     justify-content: flex-start; /* Align content to the left */
@@ -181,12 +181,15 @@ form {
     margin-bottom: 5px;
     font-size: 1rem;
     color: #333;
+    margin-left: 18px;
 }
+
 
 .formInput {
     padding: 8px;
     width: 100%;
     box-sizing: border-box;
+    margin-left: 17px;
 }
 
 .formInput:focus, .formInput:focus-within {
@@ -304,7 +307,8 @@ input[type="checkbox"] {
     margin-top: 5px;
 }
 
-.has-error input, .has-error select {
+.has-error 
+input, .has-error select {
     border: 2px solid red;
 }
 
@@ -313,6 +317,68 @@ input[type="checkbox"] {
     text-decoration:none;
     font-size:18px;
 }
-#txtdonationNote{
-    width:100%;
+#txtdonationNote {
+    width: 100%;
+    margin-left: 11px;
+}
+.input-group {
+    margin-bottom: 15px; /* Adjust spacing between rows */
+}
+
+
+.col-6 {
+    flex: 0 0 50%;
+   max-width: 50%;
+   
+}
+
+
+@media (max-width: 767.98px) {
+    .col-6
+
+{
+    flex: 0 0 100%;
+  max-width: 100%;
+  
+}
+
+.input-group {
+    margin-bottom: 15px;
+    
+}
+
+.legend {
+    font-size: 14px;
+ 
+}
+
+.formInput {
+    font-size: 14px;
+  padding: 6px 10px;
+    
+}
+}
+@media (max-width: 767.98px) {
+    .col-6
+
+{
+    flex: 0 0 100%;
+    max-width: 100%;
+   
+}
+
+.input-group {
+    margin-bottom: 15px;
+  
+}
+
+.legend {
+    font-size: 14px;
+   
+}
+
+.formInput {
+    font-size: 14px;
+   
+}
 }

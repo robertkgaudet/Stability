@@ -335,10 +335,10 @@ public partial class V1_NonProfit_Default : BaseWebForm
         if (!String.IsNullOrEmpty(DefaultCampaignId))
         {
             lbDonate.Visible = true;
-            lbDonate.PostBackUrl =string.Format("/V1/NonProfit/Donation.aspx?organizationId={0}",organizationId);
+            lbDonate.PostBackUrl = string.Format("/V1/NonProfit/Donation.aspx?organizationId={0}", organizationId);
             donateLink = lbDonate.PostBackUrl;
         }
-        
+
     }
     protected void btnChangePageStatus_Click(object sender, EventArgs e)
     {
@@ -362,8 +362,10 @@ public partial class V1_NonProfit_Default : BaseWebForm
         organization.IsActive = updateActiveStatus;
         dc.SubmitChanges();
     }
-    protected void btnDonationsList_Click(object sender, EventArgs e)
+    protected void btnDonationsDashboard_Click(object sender, EventArgs e)
     {
-        Response.Redirect("~/V1/Administration/DonationsList.aspx");
+        Response.Redirect("~/V1/NonProfit/DonationDashboard.aspx?organizationId=" + organizationId);
     }
+
+    
 }
