@@ -362,8 +362,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 	protected string GetSkills(Guid userId)
 	{
 		string skillList = string.Empty;
-
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+       
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 		var skills = from us in dc.UserSkills
 					 join s in dc.Skills on us.SkillId equals s.SkillId
@@ -495,9 +495,13 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 );
             }
 
+            //if (emailConnected)
+            //{
+            //    peopleListQuery = peopleListQuery.Where(pl => !string.IsNullOrEmpty(pl.LoweredEmail));
+            //}
             if (emailConnected)
             {
-                peopleListQuery = peopleListQuery.Where(pl => !string.IsNullOrEmpty(pl.LoweredEmail));
+                peopleListQuery = peopleListQuery.Where(pl => pl.LoweredEmail != null && pl.LoweredEmail != "");
             }
 
             if (isVetted)
