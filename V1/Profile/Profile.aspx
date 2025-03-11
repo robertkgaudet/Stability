@@ -283,16 +283,13 @@
 											<div class="form-group">
 						<asp:Button ID="btnSumbit" CssClass="btn btn-lg btn-info" runat="server" Text="Update Member Status" OnClick="btnSumbit_Click" />
 					</div>
-<div class="form-group">
+<div class="form-group">
     <div class="col-sm-10">
         <div class="checkbox i-checks">
             <asp:CheckBox ID="chkShowDonateButton" runat="server" CssClass="custom-checkbox" />
             <label class="chkboxlist" for="<%= chkShowDonateButton.ClientID %>">Enable Team Logo</label>
         </div>
     </div>
-</div>
-
-<div class="form-group">
     <div class="col-sm-10">
         <div class="checkbox i-checks">
             <asp:CheckBox ID="chkStabilityVerified" runat="server" CssClass="custom-checkbox" />
@@ -302,9 +299,10 @@
 </div>
 
 <div class="form-group">
-    <asp:Button ID="Button1" CssClass="btn btn-lg btn-info" runat="server" Text="Update" OnClick="btnUpdate_Click" />
+    <div class="col-sm-10">
+        <asp:Button ID="Button1" CssClass="btn btn-lg btn-info" runat="server" Text="Update" OnClick="btnUpdate_Click" />
+    </div>
 </div>
-
 						<%--//purple--%>
 
 
