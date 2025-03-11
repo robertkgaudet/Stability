@@ -73,6 +73,10 @@
 	.teamPhoto{
 	height:22px;
 }
+	.profile{
+        margin-right: 0px !important;
+    margin-top: 5px !important;
+}
 </style>
 <script>
 	$(document).ready(function () {
@@ -142,7 +146,7 @@
 					<span style="color:darkslategrey; font-size:20px; font-weight:800; margin-right:10px;">
 					<asp:Literal ID="litMemberName" runat="server"></asp:Literal>
 							
-                  <uc1:TeamLogo runat="server" ID="ucTeamLogo" />
+                  <uc1:TeamLogo  runat="server" ID="ucTeamLogo" />
 
 					</span>
 
