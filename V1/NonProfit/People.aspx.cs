@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoogleMapsAPI.Places;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Metadata;
 using System.Linq;
@@ -423,10 +424,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         bool isVerified = txtIsVerified.Checked;
         bool isVetted = txtIsVetted.Checked;
         bool optedSMS = txtOptedSMS.Checked;
-
+		
         DateTime startDate, endDate;
         bool isStartDateValid = DateTime.TryParse(StartDate.Text, out startDate);
         bool isEndDateValid = DateTime.TryParse(EndDate.Text, out endDate);
+        string nameSearchTerm = filter.Text.Trim().ToLower();
+
 
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
@@ -479,9 +482,24 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             if (selectedSkills.Any() || selectedResources.Any())
             {
                 peopleListQuery = peopleListQuery.AsEnumerable().Where(pl => allMatchedUsers.Contains(pl.UserId)).AsQueryable();
+			}
+
+            if (!string.IsNullOrEmpty(nameSearchTerm))
+            {
+
+                var searchTerms = nameSearchTerm.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+
+                peopleListQuery = peopleListQuery.AsEnumerable().Where(pl =>
+                    searchTerms.All(term =>
+                        (!string.IsNullOrEmpty(pl.Firstname) && pl.Firstname.ToLower().Contains(term)) ||
+                        (!string.IsNullOrEmpty(pl.Lastname) && pl.Lastname.ToLower().Contains(term))
+                    )
+                ).AsQueryable();
             }
 
-            
+
+
             if (isStartDateValid || isEndDateValid)
             {
                 peopleListQuery = peopleListQuery.Where(pl =>
@@ -543,6 +561,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         rptVolunteers.DataSource = null;
         divFilterMessage.Visible = false;
         litFilterMessage.Text = string.Empty;
+        filter.Text = string.Empty;
     }
 }
 

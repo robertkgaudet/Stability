@@ -177,12 +177,18 @@
             </div>
             <div class="container-search">
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                  <div class="col-md-6 mb-3">
+                <div class="form-group">
+                    <b>Search To Filter Your Team:</b>
+                    <asp:TextBox ID="filter" runat="server" CssClass="form-control" placeholder="Search in table"></asp:TextBox>
+                </div>
+            </div>
+                   <%-- <div class="col-md-6 mb-3">
                         <div class="form-group">
                             <b>Search To Filter Your Team :</b>
                             <input type="text" class="form-control" id="filter" placeholder="Search in table">
                         </div>
-                    </div>
+                    </div>--%>
                     <div class="col-md-6 mb-3">
                         <div class="form-group">
                             <b>Location :</b>
