@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GoogleMapsAPI.Places;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Metadata;
 using System.Linq;
@@ -31,7 +32,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 	public bool hideTeamList = false;
 	protected void Page_Load(object sender, EventArgs e)
 	{
-		ucTeamFooter.PageName = "peoplePage";
+
+        if (!IsPostBack)
+        {
+            LoadDropdowns();
+        }
+        ucTeamFooter.PageName = "peoplePage";
 		ucTeamHeader.PageName = "Team Members";
 
 		#region HEADER PROPERTIES
@@ -357,8 +363,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 	protected string GetSkills(Guid userId)
 	{
 		string skillList = string.Empty;
-
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+       
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 		var skills = from us in dc.UserSkills
 					 join s in dc.Skills on us.SkillId equals s.SkillId
@@ -385,7 +391,178 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
 		return skillList;
 	}
+    private List<string> GetSelectedValues(ListBox listBox)
+    {
+        return listBox.Items.Cast<ListItem>()
+            .Where(i => i.Selected)
+            .Select(i => i.Value)
+            .ToList();
+    }
+    private void LoadDropdowns()
+    {
+        using (var dc = new CrowdReliefDBDataContext())
+        {
+            var skills = dc.Skills.Select(s => new { s.SkillId, s.Name }).ToList();
+            ddlSkills.DataTextField = "Name";
+            ddlSkills.DataValueField = "SkillId";
+            ddlSkills.DataSource = skills;
+            ddlSkills.DataBind();
+            var resources = dc.Resources.Select(r => new { r.ResourceId, r.Name }).ToList();
+            ddlResources.DataTextField = "Name";
+            ddlResources.DataValueField = "ResourceId";
+            ddlResources.DataSource = resources;
+            ddlResources.DataBind();
+        }
 
+    }
+    protected void SearchButton_Click(object sender, EventArgs e)
+    {
+        List<string> selectedSkills = GetSelectedValues(ddlSkills);
+        List<string> selectedResources = GetSelectedValues(ddlResources);
+
+        bool emailConnected = txtEmailconnect.Checked;
+        bool isVerified = txtIsVerified.Checked;
+        bool isVetted = txtIsVetted.Checked;
+        bool optedSMS = txtOptedSMS.Checked;
+		
+        DateTime startDate, endDate;
+        bool isStartDateValid = DateTime.TryParse(StartDate.Text, out startDate);
+        bool isEndDateValid = DateTime.TryParse(EndDate.Text, out endDate);
+        string nameSearchTerm = filter.Text.Trim().ToLower();
+
+
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            // Fetch UserIds for Skills and Resources in Memory
+            var skillMatchedUsers = new HashSet<Guid>(
+                dc.UserSkills
+                .Where(us => selectedSkills.Contains(us.SkillId.ToString()))
+                .Select(us => us.UserId)
+                .ToList()
+            );
+
+            var resourceMatchedUsers = new HashSet<Guid>(
+                dc.UserResources
+                .Where(ur => selectedResources.Contains(ur.ResourceId.ToString()))
+                .Select(ur => ur.UserId)
+                .ToList()
+            ); 
+			
+			var allMatchedUsers = skillMatchedUsers.Union(resourceMatchedUsers).ToHashSet(); // Combine sets
+
+            var peopleListQuery = from uo in dc.UserOrganizations
+                                  join p in dc.Profiles on uo.UserId equals p.UserId
+                                  join net in dc.aspnet_Memberships on p.UserId equals net.UserId
+                                  join u in dc.aspnet_Users on p.UserId equals u.UserId
+                                  where uo.OrganizationId == new Guid(organizationId) && !net.IsLockedOut
+                                  select new
+                                  {
+                                      p.Firstname,
+                                      p.Lastname,
+                                      net.CreateDate,
+                                      p.Description,
+                                      net.LoweredEmail,
+                                      p.PhoneNumber,
+                                      p.UserId,
+                                      p.DateVettingCompleted,
+                                      p.DateVettingStarted,
+                                      p.VettingNotes,
+                                      p.VettingActive,
+                                      p.VettingComplete,
+                                      p.PassedVetting,
+                                      p.Title,
+                                      p.ZelloName,
+                                      u.LastActivityDate,
+                                      net.LastLoginDate,
+                                      net.IsApproved,
+                                      p.ReceiveDeploymentSMS
+                                  };
+
+            // Apply filtering in-memory (since we already loaded matched UserIds)
+            if (selectedSkills.Any() || selectedResources.Any())
+            {
+                peopleListQuery = peopleListQuery.AsEnumerable().Where(pl => allMatchedUsers.Contains(pl.UserId)).AsQueryable();
+			}
+
+            if (!string.IsNullOrEmpty(nameSearchTerm))
+            {
+
+                var searchTerms = nameSearchTerm.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+
+                peopleListQuery = peopleListQuery.AsEnumerable().Where(pl =>
+                    searchTerms.All(term =>
+                        (!string.IsNullOrEmpty(pl.Firstname) && pl.Firstname.ToLower().Contains(term)) ||
+                        (!string.IsNullOrEmpty(pl.Lastname) && pl.Lastname.ToLower().Contains(term))
+                    )
+                ).AsQueryable();
+            }
+
+
+
+            if (isStartDateValid || isEndDateValid)
+            {
+                peopleListQuery = peopleListQuery.Where(pl =>
+                    (pl.DateVettingStarted.HasValue &&
+                     (!isStartDateValid || pl.DateVettingStarted.Value.Date >= startDate.Date) &&
+                     (!isEndDateValid || pl.DateVettingStarted.Value.Date <= endDate.Date))
+                    ||
+                    (pl.DateVettingCompleted.HasValue &&
+                     (!isStartDateValid || pl.DateVettingCompleted.Value.Date >= startDate.Date) &&
+                     (!isEndDateValid || pl.DateVettingCompleted.Value.Date <= endDate.Date))
+                );
+            }
+
+            //if (emailConnected)
+            //{
+            //    peopleListQuery = peopleListQuery.Where(pl => !string.IsNullOrEmpty(pl.LoweredEmail));
+            //}
+            if (emailConnected)
+            {
+                peopleListQuery = peopleListQuery.Where(pl => pl.LoweredEmail != null && pl.LoweredEmail != "");
+            }
+
+            if (isVetted)
+            {
+                peopleListQuery = peopleListQuery.Where(pl => pl.VettingActive ?? false);
+            }
+
+            if (optedSMS)
+            {
+                peopleListQuery = peopleListQuery.Where(pl => pl.ReceiveDeploymentSMS ?? false);
+            }
+
+            // Execute Query with Sorting
+            var peopleList = peopleListQuery
+                .OrderByDescending(pl => pl.LastLoginDate)
+                .ToList();
+
+            // Show Filter Message if Any Filter Applied
+            divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS || isStartDateValid || isEndDateValid;
+            litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
+
+            // Bind Data
+            rptVolunteers.DataSource = peopleList;
+            rptVolunteers.DataBind();
+        }
+    }
+
+
+    protected void ClearButton_Click(object sender, EventArgs e)
+    {
+        ddlSkills.SelectedIndex = -1;
+        ddlResources.SelectedIndex = -1;
+        StartDate.Text = string.Empty;
+        EndDate.Text = string.Empty;
+        txtIsVetted.Checked = false;
+        txtOptedSMS.Checked = false;
+        txtEmailconnect.Checked = false;
+        txtIsVerified.Checked = false;
+        rptVolunteers.DataSource = null;
+        divFilterMessage.Visible = false;
+        litFilterMessage.Text = string.Empty;
+        filter.Text = string.Empty;
+    }
 }
 
 internal class PeopleList
