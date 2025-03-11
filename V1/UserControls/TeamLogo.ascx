@@ -1,15 +1,16 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="TeamLogo.ascx.cs" Inherits="V1_UserControls_TeamLogo" %>
 
 <style>
-    .team-logo, .stability-badge {
-         width: 20px;
-    height: 20px;
+ .team-logo, .stability-badge {
+    width: 16px; 
+    height: 16px;
     border-radius: 50%;
     margin-left: -3px;
-    vertical-align: middle;
-    margin-right:2px;
-  
-    }
+    vertical-align: text-top; 
+    margin-right: 2px;
+    margin-top: -2px; 
+}
+
     .volunteer-name{
 	margin-right:2px;
    }
@@ -19,7 +20,7 @@
 
    
 </style>
-<asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge" Visible="false" />
+<asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile " Visible="false" />
 
 
-<asp:Image ID="imgTeamLogo" runat="server" CssClass="team-logo" Visible="false" />
+<asp:Image ID="imgTeamLogo" runat="server" CssClass="team-logo profile" Visible="false" />
