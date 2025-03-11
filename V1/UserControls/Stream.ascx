@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="Stream.ascx.cs" Inherits="V1_UserControls_Stream" %>
+<%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
 <script>
 
     $(document).ready(function () {
@@ -427,8 +428,7 @@
 
     textarea::-webkit-scrollbar-track {
         background-color: #f1f1f1; /* Background color of the scrollbar track */
-    }
-
+    }StreamLink
     textarea {
         border: none; /* Remove the border */
         outline: none; /* Remove the outline that might appear on focus */
@@ -766,7 +766,9 @@
                         <div class="message">
                             <div class="block-profile-image-div clearfix" style="line-height: 1.3;">
                                 <img class="img-rounded" style="float: left; margin-right: 10px;" width="40" src="" runat="server" id="imgProfile" />
-                                <asp:HyperLink ID="hypCreatedBy" runat="server" CssClass="StreamLink"></asp:HyperLink><br />
+                                <asp:HyperLink ID="hypCreatedBy" runat="server" CssClass="StreamLink"></asp:HyperLink>
+                                <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
+                                <br />
                                 <asp:Label ID="lblMessageDate" runat="server" CssClass="message-date"></asp:Label>
                             </div>
                             <span class="message-content">

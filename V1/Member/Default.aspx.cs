@@ -95,7 +95,7 @@ public partial class V1_Member_Default : BaseWebForm
 
 
 				ucMemberHeader.MemberFullname = profile.p.Firstname + " " + profile.p.Lastname;
-                //ucMemberHeader.IsDisasterReadyCertified = profile.p.IsDisasterReadyCertified;
+             
 
                 ucMemberHeader.MemberDescription = profile.p.Description;
 				ucMemberHeader.MemberLocation = profile.p.City + ", " + profile.p.State;
@@ -186,7 +186,7 @@ public partial class V1_Member_Default : BaseWebForm
                 ucMemberHeader.TeamId = orgUser.OrganizationId.ToString();
                 ucMemberHeader.TeamName = orgUser.Name;
                 ucMemberHeader.TeamLogo = orgUser.LogoSquare;
-                ucMemberHeader.IsShowTeamLogo = orgUser.ShowTeamLogo ?? false;
+                
             }
 
 

@@ -231,6 +231,9 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 			String URLTitle = (String)DataBinder.Eval(dataItem.DataItem, "URLTitle");
 			String SharedURL = (String)DataBinder.Eval(dataItem.DataItem, "SharedURL");
 
+
+
+
 			HyperLink hypCreatedBy = (HyperLink)e.Item.FindControl("hypCreatedBy");
 			Label lblMessageDate = (Label)e.Item.FindControl("lblMessageDate");
 			Literal litMessage = (Literal)e.Item.FindControl("litMessage");
@@ -245,7 +248,18 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 			bool URLShared = false;
 			string URLLink = SharedURL;
 
-			if (!String.IsNullOrEmpty(SharedURL))
+       
+
+        
+            V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
+            if (ucTeamLogo != null)
+            {
+                
+                ucTeamLogo.UserId = createdBy;
+            }
+
+
+            if (!String.IsNullOrEmpty(SharedURL))
 			{
 				//A url was used.
 				//Make sure the URL is used to open the link.

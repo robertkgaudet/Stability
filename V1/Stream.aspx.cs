@@ -347,10 +347,19 @@ public partial class V1_Stream : BaseOrganizationWebForm
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
             var userId = new Guid();
             string username = HttpContext.Current.User.Identity.Name;
+
+
+           
             MembershipUser user = Membership.GetUser(username);
             if (user != null)
             {
                 userId = new Guid(user.ProviderUserKey.ToString());
+            }
+
+            V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
+            if (ucTeamLogo != null)
+            {
+                ucTeamLogo.UserId = userId;
             }
             RepeaterItem dataItem = (RepeaterItem)e.Item;
             Guid postId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostId");

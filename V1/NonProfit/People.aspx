@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
+<%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
@@ -23,6 +24,7 @@
 		{
 			margin-top:100px;
 		}
+		
 	</style>
 	<script>
 		// Step 1: Select all the buttons in the table
@@ -161,7 +163,10 @@
 													<div class="hpanel">
 														<div class="panel-body">
 															<h5 class="m-b-xs">
-																<asp:HyperLink ID="hypName" runat="server"></asp:HyperLink>
+																<asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
+																      <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
+                  
+
 															</h5>
 															<p>
 																<asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
