@@ -82,8 +82,8 @@ public partial class V1_NonProfit_DonationDashboard : System.Web.UI.Page
                                     {  
                                         FirstName = g.Key.FirstName,
                                         LastName = g.Key.LastName,
-                                        TotalAmount = g.Sum(x => x != null ? x.Amount : 0), // Handle null
-                                        LatestDonationDate = g.Max(x => x != null ? x.CreatedAt : (DateTime?)null) // Handle null
+                                        TotalAmount = g.Sum(x => x != null ? x.TotalAmount : 0), 
+                                        LatestDonationDate = g.Max(x => x != null ? x.CreatedAt : (DateTime?)null) 
                                     })
                                     .OrderByDescending(x => x.LatestDonationDate)
                                     .Take(5)

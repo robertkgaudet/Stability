@@ -213,12 +213,13 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
         var donationAmount = Request.Form["txtDonationAmount"];
         decimal originalAmount = Decimal.Parse(donationAmount);
         decimal transactionFee = string.IsNullOrEmpty(coverfee.Text) ? 0 : originalAmount * 0.06M;
-        decimal totalAmount = originalAmount + transactionFee; // For display only, not saved
+        decimal totalAmount = originalAmount + transactionFee; 
 
         Donation donation = new Donation()
         {
             Amount = originalAmount,
             TransactionFee = transactionFee,
+            TotalAmount = totalAmount,
             EmailAddress = txtemail.Text,
             DonationId = Guid.NewGuid(),
             FirstName = txtfirstname.Text,
@@ -290,7 +291,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
 
     //    }
     //}
-    protected void btnCancel_Click(object sender, EventArgs e)
+    protected void btnPrevious_Click(object sender, EventArgs e)
     {
         string organizationId = Request.QueryString["organizationId"];
 
