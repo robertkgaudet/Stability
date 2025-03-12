@@ -20,7 +20,14 @@
 
    
 </style>
-<asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile " Visible="false" />
+<script type="text/javascript">
+    function redirectToPage() {
+        window.location.href = '/V1/NonProfit/Default.aspx';
+    }
+</script>
+<asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile " Visible="false"  ToolTip="Stability Verified" />
 
 
-<asp:Image ID="imgTeamLogo" runat="server" CssClass="team-logo profile" Visible="false" />
+
+
+<asp:Image ID="imgTeamLogo" runat="server" CssClass="team-logo profile" Visible="false"  ToolTip="Verified" onclick="redirectToPage()" />
