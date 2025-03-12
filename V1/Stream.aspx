@@ -119,7 +119,6 @@
                 });
             }
 
-
             // Handle typing in the textarea
             $('.commentTextarea').on("keyup", function (e) {
                 const value = $(this).val();
@@ -240,16 +239,15 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
-                            debugger;
                             $('#thankTooltip').css('display', 'none');
                             $("[data-item-rid='" + postId + "']").html(response.d);
                             if (response.d === '') {
-                                $("[data-item-cid='" + postId + "']").html("&#128077; Thank");
+                                $("[data-item-cid='" + postId + "']").html("&#128077; Thanks");
                                 $("[data-item-cid='" + postId + "']").css('color', '#777');
                             }
                             else {
                                 if (reactionId === '463be049-a178-4327-948c-eb3e3e7dce73') {
-                                    $("[data-item-cid='" + postId + "']").html("&#128591; Thank");
+                                    $("[data-item-cid='" + postId + "']").html("&#128591; Thanks");
                                     $("[data-item-cid='" + postId + "']").css('color', '#286090');
                                 }
                                 else if (reactionId === 'b247efe7-3da7-44fa-9452-a331f71d337f') {
@@ -269,7 +267,7 @@
                                     $("[data-item-cid='" + postId + "']").css('color', '#eea236');
                                 }
                                 else {
-                                    $("[data-item-cid='" + postId + "']").html("&#128077; Thank");
+                                    $("[data-item-cid='" + postId + "']").html("&#128077; Thanks");
                                     $("[data-item-cid='" + postId + "']").css('color', '#777');
                                 }
                             }
@@ -860,22 +858,22 @@
         }
 
         #postInput {
-            width: 100%; /* Make sure the textarea takes the full width of its container */
-            resize: none; /* Disable manual resizing */
-            min-height: 50px; /* Set a minimum height */
-            max-height: 200px; /* Set a maximum height after which the scroll will appear */
-            overflow-y: auto; /* Hide the scrollbar */
-
+            width: 100%;
+            resize: none;
+            min-height: 50px;
+            max-height: 200px;
+            overflow-y: auto;
             position: relative;
-            padding: 8px;
-            border: 1px solid #ccc;
+            padding: 5px;
+            /*border: 1px dotted #ccc;*/
             z-index: 2;
             background-color: transparent;
             color: black;
             white-space: pre-wrap;
             word-wrap: break-word;
-            border: none; /* Remove the border */
-            outline: none; /* Remove the outline that might appear on focus */
+            border: none;
+            outline: none;
+            margin-top: 10px;
         }
 
             #postInput:focus {
@@ -911,13 +909,14 @@
         }
 
         select {
-            border-radius: 3px; /* Round the corners of the scrollbar thumb */
-            border: none; /* Remove the border */
-            background-color: #f0f0f0; /* Set background color to light grey */
-            min-width: fit-content; /* Make the width fit the content */
-            width: auto; /* Allow the width to adjust based on content */
-            padding: 5px; /* Optional: Add some padding for better appearance */
-            font-size: 12px; /* Optional: Adjust the font size */
+            border-radius: 3px;
+            border: none;
+            background-color: #f0f0f0;
+            min-width: fit-content;
+            width: auto;
+            padding: 5px;
+            font-size: 12px;
+            margin-left: -15px;
         }
 
             select option {
@@ -1033,9 +1032,8 @@
             width: 100%;
             max-width: 600px;
             max-height: 100px;
-            min-height: 100px;
-            height: 100px;
-            /* overflow-y: scroll; */
+            min-height: auto;
+            height: auto;
             margin: 0px auto;
             background: #fff;
             border-radius: 8px;
@@ -1061,15 +1059,15 @@
         .comment-section-repeater-show {
             width: 103%;
             max-height: 100px;
-            min-height: 100px;
-            height: 100px;
+            min-height: auto;
+            height: auto;
             overflow-x: hidden;
             overflow-y: auto;
             padding: 2px;
             position: relative;
             z-index: 0;
             scroll-behavior: smooth;
-            border-top: 1px solid #f0f0f0;
+            /*border-top: 1px solid #f0f0f0;*/
         }
         /* Customize the scrollbar */
         .comment-section-repeater::-webkit-scrollbar {
@@ -1302,8 +1300,7 @@
             $('.imagePost').hide();
             $('#btnImagePost').hide();
 
-            $('#previewButton').click(function () {
-            });
+            $('#previewButton').click(function () { });
 
             // Infinite scroll feature
             $('#postContent').on('scroll', function () {
@@ -1530,7 +1527,7 @@
         <div class="post-container">
             <div class="post-content">
                 <asp:Repeater ID="rptPosts" runat="server" OnItemDataBound="rptPosts_ItemDataBound">
-                    <itemtemplate>
+                    <ItemTemplate>
                         <div class="hpanel messageBody">
                             <div class="panel-body">
                                 <div class="message">
@@ -1552,7 +1549,7 @@
                                     <span data-item-rid='<%# Eval("postId") %>'>
                                         <asp:Literal ID="litReactionCount" runat="server"></asp:Literal>
                                     </span>
-                                    <span style="float: right">
+                                    <span style="float: right; margin-top: -23px">
                                         <div class="post-type-div commentSection" data-item-id='<%# Eval("postId") %>'>
                                             <asp:Literal ID="litCommentsCount" runat="server"></asp:Literal>
                                         </div>
@@ -1564,14 +1561,14 @@
                                         <asp:Literal ID="litReactionTitle" runat="server"></asp:Literal>
                                     </div>
                                     <div class="col-xs-3 post-type-div commentSection" data-item-id='<%# Eval("postId") %>'><i class="fa fa-sticky-note m-r-sm nowrap"></i>Comment</div>
-                                    <div class="col-xs-3 post-type-div" id="helpButton"><i class="fa fa-users m-r-sm"></i>Help</div>
-                                    <div class="col-xs-3 post-type-div" id="giveButton"><i class="fa fa-money m-r-sm"></i>Give</div>
+                                    <%--<div class="col-xs-3 post-type-div" id="helpButton"><i class="fa fa-users m-r-sm"></i>Help</div>
+                                    <div class="col-xs-3 post-type-div" id="giveButton"><i class="fa fa-money m-r-sm"></i>Give</div>--%>
                                 </div>
 
-                                <div class="comment-section-show">
+                                <div id="commentSectionShow" class="comment-section-show" runat="server">
                                     <div class="comment-section-repeater-show">
                                         <asp:Repeater ID="rptPostCommentsShow" runat="server">
-                                            <itemtemplate>
+                                            <ItemTemplate>
                                                 <ul class="comments">
                                                     <li>
                                                         <div class="userImage">
@@ -1587,13 +1584,15 @@
                                                         </div>
                                                     </li>
                                                 </ul>
-                                            </itemtemplate>
+                                            </ItemTemplate>
                                         </asp:Repeater>
                                     </div>
                                 </div>
+
+
                             </div>
                         </div>
-                    </itemtemplate>
+                    </ItemTemplate>
                 </asp:Repeater>
 
                 <div class="thankTooltip" id="thankTooltip">
@@ -1606,7 +1605,7 @@
                     <!-- Bump -->
                     <span id="6528BBD7-501B-475B-A15F-520BB0A3FFBF" class="large-icon thanksReaction" data-toggle="tooltip" data-placement="top" title="Be Strong">&#128074;</span>
                     <!-- Connect -->
-                    <span id="43142E57-F55B-4C8D-B024-84E0E5C664E9" class="large-icon thanksReaction" data-toggle="tooltip" data-placement="top" title="Wow">&#128558;</span>
+                    <span id="43142E57-F55B-4C8D-B024-="tooltip" data-placement="top" title="Wow">&#128558;</span>
                     <!-- Be Strong -->--%>
                 </div>
                 <div id="currentSelectedPost" val="" class="hidden"></div>
@@ -1625,14 +1624,15 @@
                     <b>
                         <asp:Literal ID="litFullName" runat="server"></asp:Literal>
                     </b>
-                    <select name="account" id="AudienceType" runat="server" clientidmode="static">
-                        <%--<option style="font-size:13px;" value="FA66D7CD-4B31-4A52-B15B-4E76FD2030C2"> Public</option>
-			                <option style="font-size:13px;" value="3499A4F5-08AE-4869-9DAC-8B2BE4E3B206"> Friends</option>
-			                <option style="font-size:13px;" value="6EB17B41-1FCC-4739-BB09-94AE7044A1F9"> My Team</option>
-			                <option style="font-size:13px;" value="82D78B09-A57B-4674-A14E-CD3EECBB6650"> Only Me</option>--%>
-                    </select>
                 </div>
                 <div class="modal-body">
+                    <div class="col-md-12">
+                        <select id="AudienceType" name="AudienceType" runat="server" clientidmode="static"></select>
+                    </div>
+                    <div class="col-md-12 m-t-sm">
+                        <select id="PortalTypes" name="PortalTypes" runat="server" clientidmode="static"></select>
+                    </div>
+
                     <div class="textPost">
                         <textarea id="postInput" clientidmode="Static" runat="server" style="resize: none;" name="post" rows="1" placeholder="Create A Post"></textarea>
                         <asp:Label ID="StatusLabel" runat="server" Text=""></asp:Label>
