@@ -77,7 +77,7 @@
             });
 
             $('#StartDate, #EndDate').datepicker({
-                format: 'dd/mm/yyyy',
+                format: 'mm/dd/yyyy',
                 autoclose: true,
             });
 
@@ -163,7 +163,14 @@
         <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
         <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank" Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
     </div>
-
+ <div class="d-flex align-items-center justify-content-between">
+    <h4 class="m-b" >Search</h4> 
+    <div class="text-right">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#searchFilters" aria-expanded="false" aria-controls="searchFilters">
+          <i class="fa fa-chevron-down"></i>
+        </button>
+    </div> 
+</div>
     <div class="panel-body">
         <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
             <asp:Literal ID="litMessage" runat="server"></asp:Literal>
@@ -175,97 +182,100 @@
             <div class="hpanel" runat="server" id="hpanelJoin" visible="true">
                 <a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
             </div>
-            <div class="container-search">
-                <div class="row">
-                  <div class="col-md-6 mb-3">
+         
+            
+
+<div class="container-search">
+    
+
+    <!-- Collapsible Search Filters -->
+    <div class="collapse" id="searchFilters">
+        <div class="row">
+            <div class="col-md-6 mb-3">
                 <div class="form-group">
                     <b>Search To Filter Your Team:</b>
                     <asp:TextBox ID="filter" runat="server" CssClass="form-control" placeholder="Search in table"></asp:TextBox>
                 </div>
             </div>
-                   <%-- <div class="col-md-6 mb-3">
-                        <div class="form-group">
-                            <b>Search To Filter Your Team :</b>
-                            <input type="text" class="form-control" id="filter" placeholder="Search in table">
-                        </div>
-                    </div>--%>
-                    <div class="col-md-6 mb-3">
-                        <div class="form-group">
-                            <b>Location :</b>
-                            <input type="text" class="form-control" id="txtlocation" placeholder="Enter Location">
-                        </div>
-                    </div>
+            <div class="col-md-6 mb-3">
+                <div class="form-group">
+                    <b>Location :</b>
+                    <input type="text" class="form-control" id="txtlocation" placeholder="Enter Location">
                 </div>
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="form-group">
+                    <b class="text-line">Select Skills :</b>
+                    <asp:ListBox ID="ddlSkills" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="form-group">
+                    <b class="text-line">Select Resources :</b>
+                    <asp:ListBox ID="ddlResources" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <div class="form-group">
+                    <b class="text-line">Available From :</b>
+                    <asp:TextBox ID="StartDate" runat="server" CssClass="form-control datepicker" placeholder="Start Date" autocomplete="off" ClientIDMode="Static" />
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="form-group">
+                    <b class="text-line">Available To :</b>
+                    <asp:TextBox ID="EndDate" runat="server" CssClass="form-control datepicker" placeholder="End Date" autocomplete="off" ClientIDMode="Static" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
                 <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <div class="form-group">
-                            <b class="text-line">Select Skills :</b>
-                            <asp:ListBox ID="ddlSkills" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
+                    <div class="col-sm-3 mb-2">
+                        <div class="form-check">
+                            <asp:CheckBox ID="txtIsVetted" runat="server" CssClass="form-check-input" />
+                            <label class="form-check-label" for="<%=txtIsVetted.ClientID%>">Is Vetted</label>
                         </div>
                     </div>
-
-                    <div class="col-md-6 mb-3">
-                        <div class="form-group">
-                            <b class="text-line">Select Resources :</b>
-                            <asp:ListBox ID="ddlResources" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
+                    <div class="col-sm-3 mb-2">
+                        <div class="form-check">
+                            <asp:CheckBox ID="txtOptedSMS" runat="server" CssClass="form-check-input" />
+                            <label class="form-check-label" for="<%=txtOptedSMS.ClientID%>">Opted SMS</label>
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <div class="form-group">
-                            <b class="text-line">Available From :</b>
-                            <asp:TextBox ID="StartDate" runat="server" CssClass="form-control datepicker" placeholder="Start Date" autocomplete="off" ClientIDMode="Static" />
+                    <div class="col-sm-3 mb-2">
+                        <div class="form-check">
+                            <asp:CheckBox ID="txtEmailconnect" runat="server" CssClass="form-check-input" />
+                            <label class="form-check-label" for="<%=txtEmailconnect.ClientID%>">Email Connected</label>
                         </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="form-group">
-                            <b class="text-line">Available To :</b>
-                            <asp:TextBox ID="EndDate" runat="server" CssClass="form-control datepicker" placeholder="End Date" autocomplete="off" ClientIDMode="Static" />
+                    <div class="col-sm-3 mb-2">
+                        <div class="form-check">
+                            <asp:CheckBox ID="txtIsVerified" runat="server" CssClass="form-check-input" />
+                            <label class="form-check-label" for="<%=txtIsVerified.ClientID%>">Is Verified</label>
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-sm-3 mb-2">
-                                <div class="form-check">
-                                    <asp:CheckBox ID="txtIsVetted" runat="server" CssClass="form-check-input" />
-                                    <label class="form-check-label" for="<%=txtIsVetted.ClientID%>">Is Vetted</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-3 mb-2">
-                                <div class="form-check">
-                                    <asp:CheckBox ID="txtOptedSMS" runat="server" CssClass="form-check-input" />
-                                    <label class="form-check-label" for="<%=txtOptedSMS.ClientID%>">Opted SMS</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-3 mb-2">
-                                <div class="form-check">
-                                    <asp:CheckBox ID="txtEmailconnect" runat="server" CssClass="form-check-input" />
-                                    <label class="form-check-label" for="<%=txtEmailconnect.ClientID%>">Email Connected</label>
-                                </div>
-                            </div>
-                            <div class="col-sm-3 mb-2">
-                                <div class="form-check">
-                                    <asp:CheckBox ID="txtIsVerified" runat="server" CssClass="form-check-input" />
-                                    <label class="form-check-label" for="<%=txtIsVerified.ClientID%>">Is Verified</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mt-4">
-                    <div class="col-md-12 text-right">
-                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClick="SearchButton_Click" />
-                        <asp:Button ID="ClearButton" runat="server" CssClass="btn btn-danger btn-sm" Text="Clear" OnClick="ClearButton_Click" />
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12 text-right">
+                <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClick="SearchButton_Click" />
+                <asp:Button ID="ClearButton" runat="server" CssClass="btn btn-danger btn-sm" Text="Clear" OnClick="ClearButton_Click" />
+            </div>
+        </div>
+    </div>
+</div>
+
 
             <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
                 <tbody>
