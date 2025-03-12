@@ -32,6 +32,15 @@
         {
             margin-bottom:10px;
         }
+        .panel-heading h4 {
+    margin-bottom: 0 !important;
+        margin-top: -4px;
+}
+
+.container-search {
+    margin-top: 5px !important;
+}
+
     </style>
     <script>
         // Step 1: Select all the buttons in the table
@@ -49,7 +58,7 @@
         var txtMessage;
 
         $(document).ready(function () {
-
+       
             // Initialize Example 1
             $('#tblVolunteers').footable();
 
@@ -80,7 +89,13 @@
                 format: 'mm/dd/yyyy',
                 autoclose: true,
             });
-
+                $(".toggle-search-btn").click(function () {
+                    var icon = $(this).find("i"); 
+                    var searchPanel = $("#searchFilters"); 
+                    icon.toggleClass("fa-chevron-down fa-chevron-up");
+                    searchPanel.collapse("toggle");                   
+                });
+           
             $('.multiselect').multiselect({
                 includeSelectAllOption: true,
                 enableFiltering: true,
@@ -163,15 +178,16 @@
         <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
         <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank" Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
     </div>
- <div class="d-flex align-items-center justify-content-between">
-    <h4 class="m-b" >Search</h4> 
-    <div class="text-right">
-        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#searchFilters" aria-expanded="false" aria-controls="searchFilters">
-          <i class="fa fa-chevron-down"></i>
-        </button>
-    </div> 
-</div>
-    <div class="panel-body">
+    <div class="panel-body" style="margin-bottom: -27px;">
+      <div class="col-lg-12">
+         <div class="row">
+        <div class="hpanel hblue">
+			<div class="panel-tools">
+                <button class="btn btn-link toggle-search-btn" type="button" data-toggle="collapse" data-target="#searchFilters" aria-expanded="false" aria-controls="searchFilters">
+    <i class="fa fa-chevron-down"></i>
+                                </button>
+									</div>
+								<h4 >Search</h4>	
         <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
             <asp:Literal ID="litMessage" runat="server"></asp:Literal>
         </div>
@@ -182,40 +198,35 @@
             <div class="hpanel" runat="server" id="hpanelJoin" visible="true">
                 <a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
             </div>
-         
-            
-
-<div class="container-search">
-    
-
+      <div class="container-search">
     <!-- Collapsible Search Filters -->
     <div class="collapse" id="searchFilters">
         <div class="row">
             <div class="col-md-6 mb-3">
                 <div class="form-group">
-                    <b>Search To Filter Your Team:</b>
-                    <asp:TextBox ID="filter" runat="server" CssClass="form-control" placeholder="Search in table"></asp:TextBox>
+                    <b>Search By Member  :</b>
+                    <asp:TextBox ID="filter" runat="server" CssClass="form-control" placeholder="Search By Member "></asp:TextBox>
                 </div>
-            </div>
+                </div>
+        
             <div class="col-md-6 mb-3">
                 <div class="form-group">
                     <b>Location :</b>
                     <input type="text" class="form-control" id="txtlocation" placeholder="Enter Location">
                 </div>
             </div>
-        </div>
-
+            </div>
         <div class="row">
             <div class="col-md-6 mb-3">
                 <div class="form-group">
-                    <b class="text-line">Select Skills :</b>
+                    <b class="text-line"> Skills :</b>
                     <asp:ListBox ID="ddlSkills" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
                 </div>
             </div>
 
             <div class="col-md-6 mb-3">
                 <div class="form-group">
-                    <b class="text-line">Select Resources :</b>
+                    <b class="text-line"> Resources :</b>
                     <asp:ListBox ID="ddlResources" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
                 </div>
             </div>
@@ -275,8 +286,11 @@
         </div>
     </div>
 </div>
-
-
+    </div>
+     </div>
+          </div>
+       </div>
+    	</div>
             <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
                 <tbody>
                     <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
@@ -320,9 +334,7 @@
                         </td>
                     </tr>
                 </tfoot>
-            </table>
-        </div>
-    </div>
+            </table>     
     <div class="modal fade" id="messageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
