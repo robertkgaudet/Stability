@@ -1,33 +1,26 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="TeamLogo.ascx.cs" Inherits="V1_UserControls_TeamLogo" %>
-
 <style>
- .team-logo, .stability-badge {
-    width: 16px; 
-    height: 16px;
-    border-radius: 50%;
-    margin-left: -3px;
-    vertical-align: text-top; 
-    margin-right: 2px;
-    margin-top: -2px; 
-}
-
-    .volunteer-name{
-	margin-right:2px;
-   }
-     .StreamLink {
-     margin-right:2px;
- }
-
-   
-</style>
-<script type="text/javascript">
-    function redirectToPage() {
-        window.location.href = '/V1/NonProfit/Default.aspx';
+    .team-logo, .stability-badge {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        margin-left: -3px;
+        vertical-align: text-top;
+        margin-right: 2px;
+        margin-top: -2px;
     }
-</script>
-<asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile " Visible="false"  ToolTip="Stability Verified" />
 
+    .volunteer-name {
+        margin-right: 2px;
+    }
 
-
-
-<asp:Image ID="imgTeamLogo" runat="server" CssClass="team-logo profile" Visible="false"  ToolTip="Verified" onclick="redirectToPage()" />
+    .StreamLink {
+        margin-right: 2px;
+    }
+</style>
+<asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile " Visible="false" ToolTip="Stability Verified" />
+<asp:HyperLink ID="hypTeamLogo" runat="server"
+    NavigateUrl="/V1/NonProfit/Default.aspx"
+    CssClass="team-logo profile" ToolTip="Verified">
+    <img src="path/to/logo.png" alt="Team Logo" />
+</asp:HyperLink>
