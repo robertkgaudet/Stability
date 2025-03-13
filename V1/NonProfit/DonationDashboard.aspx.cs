@@ -115,14 +115,14 @@ public partial class V1_NonProfit_DonationDashboard : System.Web.UI.Page
                                      from de in donationsGroup.DefaultIfEmpty()
                                      join E in dc.OrganizationEvents on d.OrganizationEventId equals E.OrganizationEventId into eventsGroup
                                      from E in eventsGroup.DefaultIfEmpty()
-                                     where E != null && E.CampaignName != null && E.CampaignName != ""
+                                     where E != null && E.CampaignName != null && E.CampaignName != "" && (de != null && de.Amount > 0)
                                      select new
                                      {
                                          Amount = de != null ? de.Amount : 0,
                                          CampaignName = E.CampaignName,
                                          CreatedAt = de != null ? de.CreatedAt.Date.ToString() : "N/A"
                                      }).ToList();
-
+               
 
                 foreach (var item in donationsData)
                 {
