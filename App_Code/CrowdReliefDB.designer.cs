@@ -21,7 +21,7 @@ using System.Reflection;
 
 
 
-[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_8013_stagingnew")]
+[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_8013_staging")]
 public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 {
 	
@@ -438,10 +438,8 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void UpdateDonation(Donation instance);
   partial void DeleteDonation(Donation instance);
     #endregion
-
-
     public CrowdReliefDBDataContext() :
-        base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
+            base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
     {
         OnCreated();
     }
