@@ -50,7 +50,8 @@ public partial class Administration_DonationsList : System.Web.UI.Page
         decimal parsedAmount;
         bool isAmountSearch = decimal.TryParse(amountSearchQuery, out parsedAmount);
 
-        var donationsQuery = dc.Donations.Where(d => d.IsTest == false && d.TransactionId != null && d.TransactionId != "");
+        //var donationsQuery = dc.Donations.Where(d => d.IsTest == false && d.TransactionId != null && d.TransactionId != "");
+        var donationsQuery = dc.Donations.Where(d => d.TransactionId != null && d.TransactionId != "");
 
         if (!string.IsNullOrEmpty(nameSearchQuery))
         {
