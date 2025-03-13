@@ -15,8 +15,12 @@
     .StreamLink {
         margin-right: 2px;
     }
+    .stability-badge {
+        margin-right: 6px; 
+    }
 </style>
-   <asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile " Visible="false" ToolTip="Stability Verified" />
-   <asp:HyperLink ID="hypTeamLogo" runat="server" NavigateUrl="/V1/NonProfit/Default.aspx"  CssClass="team-logo profile" Visible="false" ToolTip="Verified">
+
+<asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile" Visible="false" ToolTip="Stability Verified" />
+<asp:HyperLink ID="hypTeamLogo" runat="server" NavigateUrl="/V1/NonProfit/Default.aspx" CssClass="team-logo profile" Visible="false" ToolTip="Verified">
     <asp:Image ID="imgTeamLogo" runat="server" CssClass="team-logo profile" Visible="false" ToolTip="Verified" />
-   </asp:HyperLink>
+</asp:HyperLink>
