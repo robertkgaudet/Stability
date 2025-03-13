@@ -37,17 +37,16 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                    }).Take(1).SingleOrDefault();
 
                     if (orgUser != null)
-                    {
-                       
+                    {                     
                         if (orgUser.ShowTeamLogo ?? false)
                         {
-                            imgTeamLogo.ImageUrl = teamLogo + orgUser.LogoSquare;
-                            imgTeamLogo.Visible = true;
+                            imgTeamLogo.ImageUrl = teamLogo + orgUser.LogoSquare; 
+                            imgTeamLogo.Visible = true; 
+                            hypTeamLogo.Visible = true; 
                         }
                         else
                         {
-                            imgTeamLogo.Visible = false;
-                        }
+                            hypTeamLogo.Visible = false;                         }
                     }
                     if (profile.IsDisasterReadyCertified)
                     {
