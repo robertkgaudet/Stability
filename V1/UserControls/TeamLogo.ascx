@@ -9,18 +9,14 @@
         margin-right: 2px;
         margin-top: -2px;
     }
-
     .volunteer-name {
         margin-right: 2px;
     }
-
     .StreamLink {
         margin-right: 2px;
     }
 </style>
-<asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile " Visible="false" ToolTip="Stability Verified" />
-<asp:HyperLink ID="hypTeamLogo" runat="server"
-    NavigateUrl="/V1/NonProfit/Default.aspx"
-    CssClass="team-logo profile" ToolTip="Verified">
-    <img src="path/to/logo.png" alt="Team Logo" />
-</asp:HyperLink>
+   <asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile " Visible="false" ToolTip="Stability Verified" />
+   <asp:HyperLink ID="hypTeamLogo" runat="server" NavigateUrl="/V1/NonProfit/Default.aspx"  CssClass="team-logo profile" Visible="false" ToolTip="Verified">
+    <asp:Image ID="imgTeamLogo" runat="server" CssClass="team-logo profile" Visible="false" ToolTip="Verified" />
+   </asp:HyperLink>
