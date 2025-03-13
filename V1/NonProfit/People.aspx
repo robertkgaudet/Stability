@@ -40,6 +40,11 @@
 .container-search {
     margin-top: 5px !important;
 }
+.fix{
+        margin-right: 8px;
+        margin-left: 8px;
+}
+
 
     </style>
     <script>
@@ -178,7 +183,7 @@
         <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
         <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank" Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
     </div>
-    <div class="panel-body" style="margin-bottom: -27px;">
+    <div class="panel-body" style="margin-bottom: -27px;  padding: 0px;">
       <div class="col-lg-12">
          <div class="row">
         <div class="hpanel hblue">
@@ -187,7 +192,7 @@
     <i class="fa fa-chevron-down"></i>
                                 </button>
 									</div>
-								<h4 >Search</h4>	
+								<h4 style="margin-left: 7px;" >Search</h4>	
         <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
             <asp:Literal ID="litMessage" runat="server"></asp:Literal>
         </div>
@@ -203,14 +208,14 @@
     <div class="collapse" id="searchFilters">
         <div class="row">
             <div class="col-md-6 mb-3">
-                <div class="form-group">
+                <div class="form-group fix">
                     <b>Search By Member  :</b>
                     <asp:TextBox ID="filter" runat="server" CssClass="form-control" placeholder="Search By Member "></asp:TextBox>
                 </div>
                 </div>
         
             <div class="col-md-6 mb-3">
-                <div class="form-group">
+                <div class="form-group fix">
                     <b>Location :</b>
                     <input type="text" class="form-control" id="txtlocation" placeholder="Enter Location">
                 </div>
@@ -218,14 +223,14 @@
             </div>
         <div class="row">
             <div class="col-md-6 mb-3">
-                <div class="form-group">
+                <div class="form-group fix">
                     <b class="text-line"> Skills :</b>
                     <asp:ListBox ID="ddlSkills" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
                 </div>
             </div>
 
             <div class="col-md-6 mb-3">
-                <div class="form-group">
+                <div class="form-group fix">
                     <b class="text-line"> Resources :</b>
                     <asp:ListBox ID="ddlResources" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
                 </div>
@@ -234,13 +239,13 @@
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <div class="form-group">
+                <div class="form-group fix">
                     <b class="text-line">Available From :</b>
                     <asp:TextBox ID="StartDate" runat="server" CssClass="form-control datepicker" placeholder="Start Date" autocomplete="off" ClientIDMode="Static" />
                 </div>
             </div>
             <div class="col-md-6 mb-3">
-                <div class="form-group">
+                <div class="form-group fix">
                     <b class="text-line">Available To :</b>
                     <asp:TextBox ID="EndDate" runat="server" CssClass="form-control datepicker" placeholder="End Date" autocomplete="off" ClientIDMode="Static" />
                 </div>
@@ -251,7 +256,7 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-sm-3 mb-2">
-                        <div class="form-check">
+                        <div class="form-check fix">
                             <asp:CheckBox ID="txtIsVetted" runat="server" CssClass="form-check-input" />
                             <label class="form-check-label" for="<%=txtIsVetted.ClientID%>">Is Vetted</label>
                         </div>
@@ -278,8 +283,8 @@
             </div>
         </div>
 
-        <div class="row mt-4">
-            <div class="col-md-12 text-right">
+        <div class="row mt-4"  style="margin-right: 6px;">
+            <div class="col-md-12 text-right ">
                 <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClick="SearchButton_Click" />
                 <asp:Button ID="ClearButton" runat="server" CssClass="btn btn-danger btn-sm" Text="Clear" OnClick="ClearButton_Click" />
             </div>
