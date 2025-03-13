@@ -44,6 +44,14 @@
         margin-right: 8px;
         margin-left: 8px;
 }
+.input-group {
+    display: flex;
+    align-items: center;
+}
+
+.input-group-append {
+    margin-left: 10px;
+}
 
 
     </style>
@@ -110,8 +118,48 @@
                 nonSelectedText: 'Select Options',
                 allSelectedText: 'All Selected',
                 numberDisplayed: 2
-            });
+            }); 
+            //// Select All Checkbox Click Event
+            $('.select-all').change(function () {
+                debugger;
+                var isChecked = $('.select-all').prop('checked'); // Get Select All checkbox state
 
+                // If Select All is checked, check all checkboxes
+                if (isChecked) {
+                    $('.select-user').prop('checked', true);
+                }
+            });
+            // Individual Checkbox Click Event
+            $(document).on('change', '.select-user', function () {
+                // Check if all checkboxes are selected
+                var allChecked = $('.select-user').length === $('.select-user:checked').length;
+
+                // Update the Select All checkbox state
+                $('.select-all').prop('checked', allChecked);
+            });
+            //function updateHiddenField() {
+            //    var selectedUsers = [];
+
+            //    // Get all checked checkboxes and collect their UserID
+            //    $(".select-user:checked").each(function () {
+            //        selectedUsers.push($(this).data("userid"));
+            //    });
+
+            //    // Store IDs in the HiddenField
+            //    $("#hiddenSelectedUsers").val(selectedUsers.join(","));
+            //}
+
+            //// Select All Checkbox Event
+            //$('.select-all').change(function () {
+            //    var isChecked = $(this).prop('checked');
+            //    $('.select-user').prop('checked', isChecked);
+            //    updateHiddenField();
+            //});
+
+            //// Individual Checkbox Event
+            //$(document).on('change', '.select-user', function () {
+            //    updateHiddenField();
+            //});
         });
 
         function sendClick(object) {
@@ -175,9 +223,24 @@
         }
     </script>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
 
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">  
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
+ 
+    <div id="divEmail" runat="server" class="input-group">
+    <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" Placeholder="Enter Email Text"></asp:TextBox>
+    <div class="input-group-append">
+        <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary" Text="Submit"  OnClientClick="updateHiddenField();" OnClick="btnSendEmail_click" />
+    </div>
+</div>
+
+<div id="divSms" runat="server" class="input-group">
+    <asp:TextBox ID="txtsms" runat="server" CssClass="form-control" Placeholder="Enter Sms Text"></asp:TextBox>
+    <div class="input-group-append">
+        <asp:Button ID="btnSms" runat="server" CssClass="btn btn-primary" Text="Submit" OnClick="btnSendSms_click" />
+    </div>
+</div>
+
 
     <div class="panel-heading">
         <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
@@ -296,7 +359,7 @@
           </div>
        </div>
     	</div>
-            <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
+<%--            <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
                 <tbody>
                     <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
                         <ItemTemplate>
@@ -339,7 +402,57 @@
                         </td>
                     </tr>
                 </tfoot>
-            </table>     
+            </table>     --%>
+ <!-- Select All Checkbox where is your jquery cok -->
+<%--    <asp:HiddenField ID="hiddenSelectedUsers" runat="server" ClientIDMode="Static" />--%>
+
+
+<asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All"  />
+<table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
+    <tbody>     
+        <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
+            <ItemTemplate>
+                <tr>
+                    <td style="background-color: white;">
+                        <div class="hpanel">
+                            <div class="panel-body">
+                                <!-- Checkbox for each user -->
+                                <input type="checkbox" class="select-user" data-userid='<%# Eval("UserID") %>' />
+
+                                <h5 class="m-b-xs">
+                                    <asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
+                                    <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
+                                </h5>
+                                <p>
+                                    <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
+                                    <asp:Literal ID="litDescription" runat="server"></asp:Literal>
+                                </p>
+                                <div class="pull-right">
+                                    <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                </div>
+                                <asp:Literal ID="litSkills" runat="server"></asp:Literal>
+                                <asp:Literal ID="litResources" runat="server"></asp:Literal>
+                            </div>
+                            <div class="panel-footer" id="divFooter" runat="server" visible="false">
+                                <div class="text-muted small">
+                                    <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </ItemTemplate>
+        </asp:Repeater>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>
+                <br />
+                <ul class="pagination pull-right"></ul>
+            </td>
+        </tr>
+    </tfoot>
+</table>
     <div class="modal fade" id="messageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

@@ -1,4 +1,5 @@
-﻿using GoogleMapsAPI.Places;
+﻿using CrowdRelief;
+using GoogleMapsAPI.Places;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -36,8 +37,28 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
         if (!IsPostBack)
         {
+            string message = Request.QueryString["message"];
+
+            if (message == "SendEmail")
+            {
+                divEmail.Visible = true;
+                divSms.Visible = false;
+            }
+            else if (message == "SendSms")
+            {
+                divEmail.Visible = false;
+                divSms.Visible = true;
+            }
+            else
+            {
+                divEmail.Visible = false;
+                divSms.Visible = false;
+            }
+        }
+		{
             LoadDropdowns();
         }
+
         ucTeamFooter.PageName = "peoplePage";
 		ucTeamHeader.PageName = "Team Members";
 
@@ -386,7 +407,6 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 					btnColor = "btn-info";
 				}
 			}
-
 			skillList += "<button type=\"button\" id=\"button\" onclick=\"window.location.href='/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&skillId=" + skillIdLocal + "'\" class=\"btn btn-xs " + btnColor + " m-xs\">" + skillName + "</button>";
 		}
 
@@ -427,6 +447,14 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         }
 
         return null; 
+    }
+	protected void btnSendEmail_click(object sender, EventArgs e)
+	{      
+
+    }
+    protected void btnSendSms_click(object sender, EventArgs e)
+    {
+
     }
     protected void SearchButton_Click(object sender, EventArgs e)
     {

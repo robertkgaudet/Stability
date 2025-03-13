@@ -151,6 +151,12 @@
 							<hr runat="server" id="hrAdmin" visible="false"></hr>
 							<ul class="mailbox-list" runat="server" id="ulAdmin" visible="false">
 								<li><b>Administrative Tools</b></li>
+								<li <%=_teamMember%>>
+									<asp:HyperLink runat="server" ID="hypMail" Visible="true"><i class="fa fa-envelope"></i>Email Team Members </asp:HyperLink>
+								</li>
+								<li <%=_teamMember%>>
+									<asp:HyperLink runat="server" ID="hypSms" Visible="true"><i class="fa fa-file-text text-warning"></i>Text Team Members</asp:HyperLink>
+								</li>
 								<li <%=_ticketPageActive%>>
 									<asp:HyperLink runat="server" ID="hypTickets" Visible="false"><i class="fa fa-clipboard text-danger"></i> Tickets</asp:HyperLink>
 								</li>
@@ -160,6 +166,7 @@
 								<li <%=_settingsPageActive%>>
 									<asp:HyperLink runat="server" ID="hypSettings"><i class="fa fa-cog"></i> Settings</asp:HyperLink>
 								</li>
+
 							</ul>
 							<hr>
 							<ul class="mailbox-list">
