@@ -205,25 +205,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
             volunteerLink = "/Register/" + organizationId;
         }
 
-        if (User.IsInRole("Administrator") || isOwner)
-        {
-            if (organization.IsActive != true)
-            {
-                btnDeactivatePage.Text = "Re-activate This Team";
-            }
-
-            btnInviteTeamMembers.Visible = true;
-            divUnpublishedInformation.Visible = true;
-            divUploadLogoCover.Visible = true;
-            dtEIN.Visible = true;
-            ddEIN.Visible = true;
-            btnUploadLogo.Visible = true;
-            btnUploadSquare.Visible = true;
-            btnUploadCoverImage.Visible = true;
-            btnManagePhotos.Visible = true;
-            btnEditMyGroup.Visible = true;
-            editLink = "/V1/Administration/NonProfitNew.aspx?userActionModal=false&organizationId=" + organizationId;
-        }
 
         lblPointOfContactPerson.Text = organization.PointOfContactName;
         if (!String.IsNullOrEmpty(organization.PointOfContactPhoneNumber))
@@ -339,28 +320,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
             donateLink = lbDonate.PostBackUrl;
         }
 
-    }
-    protected void btnChangePageStatus_Click(object sender, EventArgs e)
-    {
-        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-
-        bool updateActiveStatus = true;
-
-        var organization = (from o in dc.Organizations
-                            where o.OrganizationId == new Guid(organizationId)
-                            select o).SingleOrDefault();
-
-        btnDeactivatePage.Text = "De-activate This Team";
-        divAlertPageMessage.Visible = false;
-        if (organization.IsActive == true)
-        {
-            updateActiveStatus = false;
-            btnDeactivatePage.Text = "Re-activate This Team";
-            divAlertPageMessage.Visible = true;
-        }
-
-        organization.IsActive = updateActiveStatus;
-        dc.SubmitChanges();
     }
     protected void btnDonationsDashboard_Click(object sender, EventArgs e)
     {
