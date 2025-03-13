@@ -12,9 +12,11 @@ using System.Drawing;
 using System.Web.Security;
 using System.Web.Services;
 using System.Text.RegularExpressions;
-using GoogleMapsAPI.Places;
-using Twilio.Base;
+using System.Xml.Linq;
 using System.Web.Services.Description;
+using GoogleMapsAPI.Places;
+using System.Security.Policy;
+using System.Activities.Statements;
 //using static System.Net.Mime.MediaTypeNames;
 
 public partial class V1_Stream : BaseOrganizationWebForm
@@ -355,6 +357,13 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			{
 				userId = new Guid(user.ProviderUserKey.ToString());
 			}
+
+			V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
+			if (ucTeamLogo != null)
+			{
+				ucTeamLogo.UserId = userId;
+			}
+
 			RepeaterItem dataItem = (RepeaterItem)e.Item;
 			Guid postId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostId");
 			Guid postTypeId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostTypeId");
