@@ -1,7 +1,7 @@
 ﻿.datepicker {
-    z-index: 1050 !important; /* Ensures the calendar is above other elements */
-    position: absolute !important; /* Ensures it stays near the input field */
-    background-color: white;
+    z-index: 1050 !important;
+     position: absolute !important;
+     background-color: white;
 }
 
 #housing:before {
@@ -17,15 +17,16 @@
 }
 
 :root {
-    --bs-gutter-x: 2rem; /* Horizontal gutters */
-    --bs-gutter-y: 1rem; /* Vertical gutters */
+    --bs-gutter-x: 2rem;
+   --bs-gutter-y: 1rem;
+   
 }
 
 .row {
-    display: flex; /* Enables flexbox layout */
-    flex-wrap: wrap; /* Allows columns to wrap onto the next line */
-
-    row-gap: var(--bs-gutter-y); /* Sets vertical spacing between rows (gutters) */
+    display: flex;
+    flex-wrap: wrap;
+   row-gap: var(--bs-gutter-y);
+    
 }
 
 * {
@@ -79,9 +80,9 @@ body {
     background-color: #47845C;
     color: white;
     width: 50%;
-    display: flex; /* Flexbox for content alignment */
-    justify-content: center; /* Center horizontally */
-    align-items: center;
+    display: flex;
+    justify-content: center;
+     align-items: center;
 }
 
 
@@ -99,9 +100,9 @@ body {
     align-items: start;
     padding: 40px 80px;
     width: 50%;
-    display: flex; /* Flexbox for content alignment */
-    justify-content: flex-start; /* Align content to the left */
-    align-items: flex-start;    
+    display: flex;
+    justify-content: flex-start;
+     align-items: flex-start;
 }
 
 .content.left p {
@@ -125,15 +126,17 @@ body {
 .logo {
     max-height: 60px;
     object-fit: contain;
-    margin: 0; /* Ensure no margin */
-    padding: 0; /* Ensure no padding */
-    display: inline-block; /* Forces the logo to behave like inline-block element */
+    margin: 0;
+     padding: 0;
+    display: inline-block;
+    
 }
 
 .title {
-    margin: 0; /* Removes margin */
-    padding: 0; /* Removes padding */
-    white-space: nowrap; /* Ensures text does not wrap and stays on one line */
+    margin: 0;
+     padding: 0;
+    white-space: nowrap;
+    
 }
 
 .leftImg {
@@ -143,9 +146,10 @@ body {
     background-repeat: no-repeat;
     width: 100%;
     margin: 0 auto 30px auto;
-    display: flex; /* Use Flexbox for centering */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
+    display: flex;
+  justify-content: center;
+   align-items: center;
+   
 }
 
 
@@ -156,10 +160,11 @@ input[type="radio"] {
 
 
 .radio-buttons {
-    display: flex; /* Align buttons horizontally */
-    gap: 0px; /* Add spacing between buttons */
-    justify-content: center; /* Center the group on the page */
-    margin: 20px 0; /* Add some margin around the group */
+    display: flex;
+    gap: 0px;
+   justify-content: center;
+    margin: 20px 0;
+  
 }
 
 form {
@@ -189,41 +194,41 @@ form {
     box-sizing: border-box;
 }
 
-.formInput:focus, .formInput:focus-within {
-    border: 2px solid #003f7e;
-}
+    .formInput:focus, .formInput:focus-within {
+        border: 2px solid #003f7e;
+    }
 
 .col-6 {
     flex: 0 0 auto;
     width: 45%;
-    margin-right: 2.5%; /* Adjust for horizontal gutters */
-    margin-left: 2.5%; /* Adjust for horizontal gutters */
+    margin-right: 2.5%;
+    margin-left: 2.5%;
+
 }
 
 .col-12 {
     flex: 0 0 auto;
     width: 95%;
-    margin-right: 2.5%; /* Adjust for horizontal gutters */
-    margin-left: 2.5%; /* Adjust for horizontal gutters */
+    margin-right: 2.5%;
+   margin-left: 2.5%;
+ 
 }
 
 .btn {
-    display: inline-block; /* Allows buttons to behave like inline elements */
-    font-weight: 400; /* Normal font weight */
-    color: black; /* Text color */
-    text-align: center; /* Centers text */
-    text-decoration: none; /* Removes underline from links */
-    vertical-align: middle; /* Aligns text vertically */
-    cursor: pointer; /* Changes cursor to pointer on hover */
-    user-select: none; /* Prevents text selection */
-    background-color: #e4e4e4; /* Default background */
-    border: 1px solid #e4e4e4; /* Default border */
-    padding: 0.375rem 0.75rem; /* Padding (top/bottom and left/right) */
-    font-size: 1rem; /* Default font size */
-    line-height: 1.5; /* Line height */
-    border-radius: 0.375rem; /* Rounded corners */
-    transition: color 0.15s ease-in-out, /* Smooth transition for text color */
-    background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    display: inline-block;
+      font-weight: 400;
+      color: black;
+    text-align: center;
+    text-decoration: none;
+  vertical-align: middle;
+cursor: pointer;
+      user-select: none;
+     background-color: #e4e4e4;
+    padding: 0.375rem 0.75rem;
+     font-size: 1rem;
+    line-height: 1.5;
+     border-radius: 0.375rem;
+     transition: color 0.15s ease-in-out,  background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .form-select {
@@ -271,7 +276,8 @@ form {
     }
 
     .item.selected, .freqLabel.selected {
-        border-color: #47845C; /* Highlight color */
+        border-color: #47845C;
+        / Highlight color /
     }
 
 @media (max-width: 991px) {
@@ -279,7 +285,7 @@ form {
         flex: 1 1 calc(50% - 10px);
     }
 
-    .left, .right {       
+    .left, .right {
         width: 100%
     }
 }
@@ -287,7 +293,7 @@ form {
 @media (min-width: 992px) {
     .containerLabel .item {
         flex: 1 1 calc(25% - 10px);
-    }    
+    }
 }
 
 .showHonor {
@@ -308,11 +314,11 @@ input[type="checkbox"] {
     border: 2px solid red;
 }
 
-#btn-login
-{
-    text-decoration:none;
-    font-size:18px;
+#btn-login {
+    text-decoration: none;
+    font-size: 18px;
 }
-#txtdonationNote{
-    width:100%;
+
+#txtdonationNote {
+    width: 100%;
 }

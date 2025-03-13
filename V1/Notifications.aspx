@@ -26,19 +26,20 @@
         border: none;
     }
     #notificationDropdown {
-        position: relative;
+        position: absolute;
     }
 
         #notificationDropdown .fa-bell {
             font-size: 22px;
             color: #fff;
-            position: relative;
+            position: absolute;
+            margin-left: 50px;
         }
 
         #notificationDropdown .badge {
             position: absolute;
-            top: 18px; 
-            right: 30px;
+            top: 13px; 
+            right: -39px;
             background-color: red;
             color: white;
             font-size: 11px;

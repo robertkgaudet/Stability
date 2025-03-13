@@ -328,12 +328,24 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 				volunteerLink = "/Register/" + organizationId;
 			}
 
-			if (!String.IsNullOrEmpty(organizationEvent.o.DonationURL))
-			{
-				lbDonate.Visible = true;
-				donateLink = organizationEvent.o.DonationURL;
-			}
-			if (!String.IsNullOrEmpty(organizationEvent.oe.HelpURL))
+			string CampaignId = dc.DonationCampaigns.Where(x => x.OrganizationEventId == new Guid(organizationEventId)).Select(x => x.DonationCampaignId.ToString()).FirstOrDefault();								
+
+            if (!String.IsNullOrEmpty(CampaignId))
+            {
+                lbDonate.Visible = true;
+                lbDonate.PostBackUrl = string.Format("/V1/NonProfit/DonationDetails.aspx?organizationId={0}&donationCampaignId={1}", organizationId, CampaignId);
+                donateLink = lbDonate.PostBackUrl;
+            }
+            else //if (!String.IsNullOrEmpty(organizationEvent.o.DonationURL))
+            {
+                lbDonate.Visible = true;
+                lbDonate.PostBackUrl = string.Format("/V1/NonProfit/Donation.aspx?organizationId={0}", organizationId);
+                donateLink = lbDonate.PostBackUrl;
+                //donateLink = organizationEvent.o.DonationURL;
+            }
+
+
+            if (!String.IsNullOrEmpty(organizationEvent.oe.HelpURL))
 			{
 				lbGetHelp.Visible = true;
 				getHelpLink = organizationEvent.oe.HelpURL;

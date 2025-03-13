@@ -1,5 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="MemberHeader.ascx.cs" Inherits="V1_UserControls_MemberHeader" %>
 
+<%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
+
 <style>
 	.divCover {
 		width: 100%;
@@ -71,6 +73,10 @@
 	.teamPhoto{
 	height:22px;
 }
+	.profile{
+        margin-right: 0px !important;
+    margin-top: 5px !important;
+}
 </style>
 <script>
 	$(document).ready(function () {
@@ -88,7 +94,9 @@
 		<div class="panel-body member-panel-body">
 			<div class="memberImageContainer col-xs-3 col-md-4">
 				<asp:Image runat="server" id="imgMemberProfilePhoto" class="memberPhoto" />
-				<a href="/V1/Profile/ProfilePhotoUpload.aspx?userId=<%=_userId%>" class="camera-icon" title="Edit" runat="server" id="linkCamera" visible="false"><i class="fa fa-camera"></i></a>
+				<a href="/V1/Profile/ProfilePhotoUpload.aspx?userId=<%=_userId%>"
+					class="camera-icon" title="Edit" runat="server" id="linkCamera" visible="false">
+					<i class="fa fa-camera"></i></a>
 			</div>	
             <div class="pull-right" id="divMemberEditControl" runat="server">
                 <div class="btn-group">
@@ -135,10 +143,16 @@
 			<div class="row memberDetail">
                 <div class="col-xs-12 col-lg-8">
 					<div style="margin-top:10px; width:100%;">
-					<span style="color:darkslategrey; font-size:20px; font-weight:800; margin-right:10px;"><asp:Literal ID="litMemberName" runat="server"></asp:Literal><asp:Image runat="server" id="litpurplebadge" class="teamPhoto" /></span>
-					
-					<asp:Image runat="server" id="litMemberLogo" class="teamPhoto" />
-					<i class="fa fa-id-badge pe-2x <%=_badgeVettingStatus%> float-right <%=faIdBadgeClick%>" data-toggle="tooltip" data-placement="top" title="Activate Vetted ID Badge"></i>
+					<span style="color:darkslategrey; font-size:20px; font-weight:800; margin-right:10px;">
+					<asp:Literal ID="litMemberName" runat="server"></asp:Literal>
+							
+                  <uc1:TeamLogo  runat="server" ID="ucTeamLogo" />
+
+					</span>
+
+				
+						
+				<i class="fa fa-id-badge pe-2x <%=_badgeVettingStatus%> float-right <%=faIdBadgeClick%>" data-toggle="tooltip" data-placement="top" title="Activate Vetted ID Badge"></i>
 					<i class="fa fa-shield pe-2x <%=_badgeCertificationStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Earn Training Certifications To Activate"></i>
 					<i class="fa fa-certificate pe-2x <%=_badgeDeployedStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Deploy Once To Activate"></i>
 					<i class="fa fa-check-circle pe-2x <%=_badgeHoursRecordedStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Record 8 Hours of Volunteer Time To Activate"></i>

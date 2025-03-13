@@ -1,11 +1,7 @@
-﻿using Braintree;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Metadata;
 using System.Linq;
-using System.Security.Policy;
 using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class Impactoid_Version_2_MasterPage : System.Web.UI.MasterPage
@@ -44,34 +40,39 @@ public partial class Impactoid_Version_2_MasterPage : System.Web.UI.MasterPage
             }
         }
 
-        
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        DonationCampaigns = (from dca in dc.DonationCampaigns
+                             join oe in dc.OrganizationEvents
+                             on dca.OrganizationEventId equals oe.OrganizationEventId into oeGroup
+                             from oe in oeGroup.DefaultIfEmpty()
+                             where dca.OrganizationId == new Guid(this.organizationId)
+                             select new DonationCampaignVM
+                             {
+                                 CampaignName = oe != null ? oe.CampaignName : null,
+                                 DonationCampaignId = dca.DonationCampaignId,
+                                 IsDefault = dca.IsDefault,
+                                 Address = dca.Address,
+                                 Summary = dca.Summary,
+                                 Description = dca.Description
+                             }).ToList();
 
-        var donationCampaigns = (from oe in dc.OrganizationEvents
-                                      join dca in dc.DonationCampaigns on oe.OrganizationEventId equals dca.OrganizationEventId
-                                      where oe.OrganizationId == new Guid(this.organizationId) && !dca.IsDefault
-                                 select new { oe.CampaignName, dca.DonationCampaignId, dca.IsDefault, dca.Address, dca.Summary, dca.Description }).ToList();
-
-
-       
-     
-        if (donationCampaigns.Any(x => x.IsDefault == false))
-        {
-            DonationCampaigns = donationCampaigns
-                                        .Where(x => x.IsDefault == false)
-                                        .Select(x => new DonationCampaignVM
-                                        {
-                                            CampaignName = x.CampaignName,
-                                            DonationCampaignId = x.DonationCampaignId,
-                                        }).ToList();
-        }
+        //if (donationCampaigns.Any(x => x.IsDefault == false))
+        //{
+        //    DonationCampaigns = donationCampaigns
+        //                                .Where(x => x.IsDefault == false)
+        //                                .Select(x => new DonationCampaignVM
+        //                                {
+        //                                    CampaignName = x.CampaignName,
+        //                                    DonationCampaignId = x.DonationCampaignId,
+        //                                }).ToList();
+        //}
         if (String.IsNullOrEmpty(organizationId) && String.IsNullOrEmpty(organizationName))
         {
             Response.Write("No Organization Id Was Provided. Contact site administrators at help@impactoid.com.");
             Response.End();
         }
 
-    
+
 
         Organization organization;
         if (String.IsNullOrEmpty(organizationId))

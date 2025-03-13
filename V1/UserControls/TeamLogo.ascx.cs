@@ -32,6 +32,7 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                    select new
                                    {
                                        o.LogoSquare,
+                                       o.OrganizationId,
                                        uo.ShowTeamLogo
                                    }).Take(1).SingleOrDefault();
 

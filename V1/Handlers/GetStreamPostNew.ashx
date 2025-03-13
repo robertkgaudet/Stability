@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Web.Configuration;
-//using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 
 [WebService(Namespace = "http://tempuri.org/")]
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
@@ -190,10 +190,41 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                         "<a id='ContentPlaceHolder1_rptPosts_hypCreatedBy_42' class='StreamLink' href='/V1/Profile/Profile.aspx?userId=" + post.UserId + "'>" + post.fullname + "</a><br>" +
                         "<span id='ContentPlaceHolder1_rptPosts_lblMessageDate_42' class='message-date'>" + CrowdRelief.Tools.GetElapsedTime(Convert.ToDateTime(post.CreatedOn)) + "</span></div>" +
                         "<span class='message-content'><p style='margin-top: 10px;'>" + postHtml + "</p></span></div></div><div class='panel-footer'>" +
-                        "<div class='row' style='margin: -5px 5px -18px 5px'><span>" + litReactionCount + "</span><span style='float: right'>"+ postCount +" comments</span></div><hr />" +
+                        "<div class='row' style='margin: -5px 5px -18px 5px'><span>" + litReactionCount + "</span><span style='float: right'>" + postCount + " comments</span></div><hr />" +
                         "<div class='row'><div class='col-xs-3 post-type-div thankButton text-muted' data-item-id='" + post.PostId + "'>" + litReactionTitle +
-                        "</div><div class='col-xs-3 post-type-div commentSection' data-item-id='"+ post.PostId +"'><i class='fa fa-sticky-note m-r-sm nowrap'></i>Comment</div><div class='col-xs-3 post-type-div' id='helpButton'>" +
-                        "<i class='fa fa-users m-r-sm'></i>Help</div><div class='col-xs-3 post-type-div' id='giveButton'><i class='fa fa-money m-r-sm'></i>Give</div></div></div></div>";
+                        "</div><div class='col-xs-3 post-type-div commentSection' data-item-id='" + post.PostId + "'><i class='fa fa-sticky-note m-r-sm nowrap'></i>Comment</div><div class='col-xs-3 post-type-div' id='helpButton'>" +
+                        "<i class='fa fa-users m-r-sm'></i>Help</div><div class='col-xs-3 post-type-div' id='giveButton'><i class='fa fa-money m-r-sm'></i>Give</div></div> <div class='comment-section-show'><div class='comment-section-repeater-show'>";
+
+                var postComments = (from pc in dc.PostComments
+                                    join c in dc.Comments on pc.CommentId equals c.CommentId
+                                    where pc.PostId == post.PostId
+                                          && c.ParentId == null
+                                          && c.IsDeleted == false
+                                    orderby c.CreatedOn descending
+                                    select new
+                                    {
+                                        Comment1 = ReplaceTaggedUsersWithLinks(c.Comment1),
+                                        timeAgo = GetTimeAgo(c.CreatedOn),
+                                        author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
+                                        ProfileUrl = "/V1/Profile/Profile.aspx?userId=" + c.CreatedBy,
+                                        ImgProfileUrl = profilePhotoFolder + (
+                                           (from rph in dc.ProfilePhotos
+                                            join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
+                                            where rph.UserId == c.CreatedBy
+                                            select rp.FilenameCropped).FirstOrDefault() ?? "profilepicture.png")
+                                    }).Take(2).ToList();
+
+
+                foreach (var item in postComments)
+                {
+                    results += "<ul class='comments'><li><div class='userImage'><a target='_blank' href='"+ item.ProfileUrl +"'>" +
+                        "<img class='img-rounded' src='"+ item.ImgProfileUrl +"'/></a></div><div class='commentReact'>" +
+                        "<span style='font-weight: bold; width: 70%'>" +
+                        "<a target='_blank' href='" + item.ProfileUrl + "' class='author-link'>" + item.author + "</a>" +
+                        "</span><span style='float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;'>" + item.timeAgo + "</span>" +
+                        "<span>" + item.Comment1 + "</span></div></li></ul>";
+                }
+                results += "</div></div></div></div>";
             }
         }
         catch (Exception ex)
@@ -204,114 +235,64 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
         context.Response.Write(results);
     }
 
-    //public static string GetTimeAgo(DateTime pastDate)
-    //{
-    //    TimeSpan timeDifference = DateTime.Now - pastDate;
-    //    double yearsDifference = timeDifference.TotalDays / 365.25;
-    //    if (yearsDifference >= 1)
-    //    {
-    //        int years = (int)yearsDifference;
-    //        return years + " y";
-    //    }
-    //    else if (timeDifference.TotalDays >= 1)
-    //    {
-    //        int days = (int)timeDifference.TotalDays;
-    //        return days + " d";
-    //    }
-    //    else if (timeDifference.TotalHours >= 1)
-    //    {
-    //        int hours = (int)timeDifference.TotalHours;
-    //        return hours + " h";
-    //    }
-    //    else if (timeDifference.TotalMinutes >= 1)
-    //    {
-    //        int minutes = (int)timeDifference.TotalMinutes;
-    //        return minutes + " m";
-    //    }
-    //    else
-    //    {
-    //        return "Just Now";
-    //    }
-    //}
+    private static string ReplaceTaggedUsersWithLinks(string comment)
+    {
+        if (string.IsNullOrEmpty(comment)) return comment;
 
-    //private static List<Profile> ExtractTaggedUser(string commentText, List<Profile> _users)
-    //{
-    //    List<Profile> taggedUsers = new List<Profile>();
-    //    var regex = new Regex(@"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\s([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b");
-    //    foreach (Match match in regex.Matches(commentText))
-    //    {
-    //        var name = match.Groups[1].Value.Trim();
-    //        var words = name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-    //        name = string.Join(" ", words.Take(2));
-    //        var user = _users.FirstOrDefault(u => (u.Firstname + " " + u.Lastname).Trim().ToLower().Contains(name.ToLower()));
-    //        if (user != null)
-    //        {
-    //            taggedUsers.Add(user);
-    //        }
-    //    }
-    //    return taggedUsers;
-    //}
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        var regex = new Regex(@"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\s([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b");
 
-    //private static string ExtractTaggedMessage(string commentText, List<Profile> _users)
-    //{
-    //    var regex = new Regex(@"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\s([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b");
-    //    var matches = regex.Matches(commentText);
+        return regex.Replace(comment, match =>
+        {
+            var html = "";
+            string fullName = match.Groups[1].Value.Trim();
+            var words = fullName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (words.Length > 2)
+            {
+                fullName = string.Join(" ", words.Take(2));
+            }
 
-    //    string processedComment = regex.Replace(commentText, match =>
-    //    {
-    //        var html = "";
-    //        string fullName = match.Groups[1].Value.Trim();
-    //        var words = fullName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var user = dc.Profiles.FirstOrDefault(u => (u.Firstname + " " + u.Lastname).Trim().ToLower().Contains(fullName.ToLower()));
 
-    //        if (words.Length > 2)
-    //        {
-    //            fullName = string.Join(" ", words.Take(2));
-    //        }
+            if (user != null)
+            {
+                html = "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>" + "@@" + fullName + "</a>";
+            }
 
-    //        var user = _users.FirstOrDefault(u => (u.Firstname + " " + u.Lastname).Trim().ToLower().Contains(fullName.ToLower()));
-    //        if (user != null)
-    //        {
-    //            html = "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>" + user.Firstname + " " + user.Lastname + "</a>";
-    //        }
+            return user != null ? html : match.Value;
+            //return user != null ? "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>@@" + fullName + "</a>" : match.Value;
+        });
+    }
 
-    //        if (words.Length > 2)
-    //        {
-    //            html = html + " " + string.Join(" ", words.Skip(2));
-    //        }
-
-    //        return user != null ? html : match.Value;
-    //    });
-    //    return processedComment;
-    //}
-
-    //string ReplaceTaggedUsersWithLinks(string comment)
-    //{
-    //    if (string.IsNullOrEmpty(comment)) return comment;
-
-    //    CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-    //    var regex = new Regex(@"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\s([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b");
-
-    //    return regex.Replace(comment, match =>
-    //    {
-    //        var html = "";
-    //        string fullName = match.Groups[1].Value.Trim();
-    //        var words = fullName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-    //        if (words.Length > 2)
-    //        {
-    //            fullName = string.Join(" ", words.Take(2));
-    //        }
-
-    //        var user = dc.Profiles.FirstOrDefault(u => (u.Firstname + " " + u.Lastname).Trim().ToLower().Contains(fullName.ToLower()));
-
-    //        if (user != null)
-    //        {
-    //            html = "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>" + "@@" + fullName + "</a>";
-    //        }
-
-    //        return user != null ? html : match.Value;
-    //        //return user != null ? "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>@@" + fullName + "</a>" : match.Value;
-    //    });
-    //}
+    public static string GetTimeAgo(DateTime pastDate)
+    {
+        TimeSpan timeDifference = DateTime.Now - pastDate;
+        double yearsDifference = timeDifference.TotalDays / 365.25;
+        if (yearsDifference >= 1)
+        {
+            int years = (int)yearsDifference;
+            return years + " y";
+        }
+        else if (timeDifference.TotalDays >= 1)
+        {
+            int days = (int)timeDifference.TotalDays;
+            return days + " d";
+        }
+        else if (timeDifference.TotalHours >= 1)
+        {
+            int hours = (int)timeDifference.TotalHours;
+            return hours + " h";
+        }
+        else if (timeDifference.TotalMinutes >= 1)
+        {
+            int minutes = (int)timeDifference.TotalMinutes;
+            return minutes + " m";
+        }
+        else
+        {
+            return "Just Now";
+        }
+    }
 
     public bool IsReusable
     {

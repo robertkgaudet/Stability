@@ -39,7 +39,11 @@
             $('.logoUploadButton').click(function () {
                 window.location.href = '/V1/NonProfit/LogoUpload.aspx?organizationId=<%=organizationId%>';
                 return false;
-            });
+			});
+            $('.donationDashboard').click(function () {
+				window.location.href = '/V1/NonProfit/DonationDashboard.aspx?organizationId=<%=organizationId%>';
+                 return false;
+             });
 
             $('.volunteerButton').click(function () {
                 window.location.href = '<%=volunteerLink%>';
@@ -142,7 +146,8 @@
 												<asp:Button id="btnUploadCoverImage" runat="server" Visible="false" CssClass="btn btn-primary coverUploadButton" Text="Upload Cover Image" />
 												<asp:Button id="btnManagePhotos" runat="server" Visible="false" CssClass="btn btn-primary managePhotosButton" Text="Manage Photos" />
 												<asp:Button id="btnDeactivatePage" OnClick="btnChangePageStatus_Click" runat="server" CssClass="btn btn-primary" Text="De-activate This Team" />
-												<asp:Button id="btnDonationsList" OnClick="btnDonationsList_Click" runat="server" CssClass="btn btn-primary " Text="View Donations List" />
+												<asp:Button id="btnDonationsDashboard" OnClick="btnDonationsDashboard_Click" runat="server" CssClass="btn btn-primary " Text=" Donations Dashboard" />
+
 												<br />List of members who have been invited.
 											</div>
 										</div>

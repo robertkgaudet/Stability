@@ -50,7 +50,7 @@ public partial class Administration_DonationsList : System.Web.UI.Page
         decimal parsedAmount;
         bool isAmountSearch = decimal.TryParse(amountSearchQuery, out parsedAmount);
 
-        var donationsQuery = dc.Donations.Where(d => d.IsTest == false);
+        var donationsQuery = dc.Donations.Where(d => d.IsTest == false && d.TransactionId != null && d.TransactionId != "");
 
         if (!string.IsNullOrEmpty(nameSearchQuery))
         {
@@ -72,7 +72,8 @@ public partial class Administration_DonationsList : System.Web.UI.Page
         }
         if (isEndDateValid)
         {
-            donationsQuery = donationsQuery.Where(d => d.CreatedAt.Date <= parsedEndDate.Date);
+            parsedEndDate = parsedEndDate.Date.AddDays(1);
+            donationsQuery = donationsQuery.Where(d => d.CreatedAt.Date <= parsedEndDate);
         }
 
         if (isAmountSearch)

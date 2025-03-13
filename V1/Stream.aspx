@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" ValidateRequest="false" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Stream.aspx.cs" Inherits="V1_Stream" %>
 
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
-
+<%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <script src="Scripts/infinite-scroll.pkgd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/#.#.#/jquery.jscroll.min.js"></script>
@@ -24,7 +24,6 @@
             let cursorPosition = 0;
 
             $(document).on('click', '.commentSection', function () {
-                debugger;
                 let postId = $(this).data("item-id");
                 $('#postIdForComments').val(postId);
                 loadComments(postId);
@@ -43,7 +42,6 @@
                     success: function (response) {
                         $('#rptPostComments').html('');
                         var html = ""
-                        debugger;
                         if (response.d) {
                             if (response.d.length > 0) {
                                 for (let i = 0; i < response.d.length; ++i) {
@@ -242,37 +240,39 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
-                            reloadPage();
-                            //if (response.d) {
-                            //    $("[data-item-id='" + postId + "']").html("&#128077; Thank");
-                            //    $("[data-item-id='" + postId + "']").css('color', '#777');
-                            //}
-                            //else {
-                            //    if (reactionId === '463be049-a178-4327-948c-eb3e3e7dce73') {
-                            //        $("[data-item-id='" + postId + "']").html("&#128591; Thank");
-                            //        $("[data-item-id='" + postId + "']").css('color', '#286090');
-                            //    }
-                            //    else if (reactionId === 'b247efe7-3da7-44fa-9452-a331f71d337f') {
-                            //        $("[data-item-id='" + postId + "']").html("&#10084; Love");
-                            //        $("[data-item-id='" + postId + "']").css('color', '#FF0000');
-                            //    }
-                            //    else if (reactionId === '8fe324d4-3694-4b7d-b710-df277c74b1c4') {
-                            //        $("[data-item-id='" + postId + "']").html("&#128171; Bump");
-                            //        $("[data-item-id='" + postId + "']").css('color', '#f0ad4e');
-                            //    }
-                            //    else if (reactionId === '6528bbd7-501b-475b-a15f-520bb0a3ffbf') {
-                            //        $("[data-item-id='" + postId + "']").html("&#128074; Be Strong");
-                            //        $("[data-item-id='" + postId + "']").css('color', '#f0ad4e');
-                            //    }
-                            //    else if (reactionId === '43142e57-f55b-4c8d-b024-84e0e5c664e9') {
-                            //        $("[data-item-id='" + postId + "']").html("&#128558; Wow");
-                            //        $("[data-item-id='" + postId + "']").css('color', '#eea236');
-                            //    }
-                            //    else {
-                            //        $("[data-item-id='" + postId + "']").html("&#128077; Thank");
-                            //        $("[data-item-id='" + postId + "']").css('color', '#777');
-                            //    }
-                            //}
+                            debugger;
+                            $('#thankTooltip').css('display', 'none');
+                            $("[data-item-rid='" + postId + "']").html(response.d);
+                            if (response.d === '') {
+                                $("[data-item-cid='" + postId + "']").html("&#128077; Thank");
+                                $("[data-item-cid='" + postId + "']").css('color', '#777');
+                            }
+                            else {
+                                if (reactionId === '463be049-a178-4327-948c-eb3e3e7dce73') {
+                                    $("[data-item-cid='" + postId + "']").html("&#128591; Thank");
+                                    $("[data-item-cid='" + postId + "']").css('color', '#286090');
+                                }
+                                else if (reactionId === 'b247efe7-3da7-44fa-9452-a331f71d337f') {
+                                    $("[data-item-cid='" + postId + "']").html("&#10084; Love");
+                                    $("[data-item-cid='" + postId + "']").css('color', '#FF0000');
+                                }
+                                else if (reactionId === '8fe324d4-3694-4b7d-b710-df277c74b1c4') {
+                                    $("[data-item-cid='" + postId + "']").html("&#128171; Bump");
+                                    $("[data-item-cid='" + postId + "']").css('color', '#f0ad4e');
+                                }
+                                else if (reactionId === '6528bbd7-501b-475b-a15f-520bb0a3ffbf') {
+                                    $("[data-item-cid='" + postId + "']").html("&#128074; Be Strong");
+                                    $("[data-item-cid='" + postId + "']").css('color', '#f0ad4e');
+                                }
+                                else if (reactionId === '43142e57-f55b-4c8d-b024-84e0e5c664e9') {
+                                    $("[data-item-cid='" + postId + "']").html("&#128558; Wow");
+                                    $("[data-item-cid='" + postId + "']").css('color', '#eea236');
+                                }
+                                else {
+                                    $("[data-item-cid='" + postId + "']").html("&#128077; Thank");
+                                    $("[data-item-cid='" + postId + "']").css('color', '#777');
+                                }
+                            }
                         },
                         error: function (xhr, status, error) {
                             console.error("Error: " + error);
@@ -388,7 +388,6 @@
             });
 
             $(document).on('click', '.addReplyReply', function () {
-                debugger;
                 var parentDiv = $(this).closest(".reply-input");
                 var postId = $("#postIdForComments").val();
                 var commentId = $(this).data('item-id').slice(0, -10);
@@ -460,7 +459,6 @@
 
                     // Select suggestion
                     $('.suggestionReply').on('click', function () {
-                        debugger;
                         const userName = $(this).text();
                         // Insert selected user at caret position
                         const text = $("textarea[data-item-id='" + itemId + "-reply" + "']").val();
@@ -530,7 +528,7 @@
 
         let tooltipTimeout; // Declare a variable to hold the timeout reference
         $(document).on('mouseenter', '.thankButton', function () {
-            $("#currentSelectedPost").val($(this).data("item-id"));
+            $("#currentSelectedPost").val($(this).data("item-cid"));
             var tooltip = $('#thankTooltip');
             var buttonOffset = $(this).offset(); // Get the button's position
             // Set tooltip text or modify as needed
@@ -580,7 +578,7 @@
             z-index: 999;
         }
 
-        span{
+        span {
             word-wrap: break-word;
         }
 
@@ -651,12 +649,13 @@
         }
 
         .checkboxlist-item {
-            margin-left: 10px; /* Adjust the margin as needed */
+            margin-left: 10px; 
         }
 
         .StreamLink {
             color: #050505;
             font-weight: bold;
+           
         }
 
             .StreamLink:hover {
@@ -1031,6 +1030,21 @@
             position: relative;
         }
 
+        .comment-section-show {
+            width: 100%;
+            max-width: 600px;
+            max-height: 100px;
+            min-height: 100px;
+            height: 100px;
+            /* overflow-y: scroll; */
+            margin: 0px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            position: relative;
+        }
+
         .comment-section-repeater {
             width: 103%;
             max-height: 480px;
@@ -1044,23 +1058,37 @@
             scroll-behavior: smooth;
             border-top: 1px solid #f0f0f0;
         }
-            /* Customize the scrollbar */
-            .comment-section-repeater::-webkit-scrollbar {
-                width: 8px; /* Width of the scrollbar */
-            }
 
-            .comment-section-repeater::-webkit-scrollbar-track {
-                background: #f1f1f1; /* Track background */
-            }
+        .comment-section-repeater-show {
+            width: 103%;
+            max-height: 100px;
+            min-height: 100px;
+            height: 100px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 2px;
+            position: relative;
+            z-index: 0;
+            scroll-behavior: smooth;
+            border-top: 1px solid #f0f0f0;
+        }
+        /* Customize the scrollbar */
+        .comment-section-repeater::-webkit-scrollbar {
+            width: 8px; /* Width of the scrollbar */
+        }
 
-            .comment-section-repeater::-webkit-scrollbar-thumb {
-                background: #888; /* Color of the thumb */
-                border-radius: 4px;
-            }
+        .comment-section-repeater::-webkit-scrollbar-track {
+            background: #f1f1f1; /* Track background */
+        }
 
-                .comment-section-repeater::-webkit-scrollbar-thumb:hover {
-                    background: #555; /* Color of the thumb when hovering */
-                }
+        .comment-section-repeater::-webkit-scrollbar-thumb {
+            background: #888; /* Color of the thumb */
+            border-radius: 4px;
+        }
+
+            .comment-section-repeater::-webkit-scrollbar-thumb:hover {
+                background: #555; /* Color of the thumb when hovering */
+            }
 
         .loadComments {
             text-decoration: underline;
@@ -1510,6 +1538,7 @@
                                     <div class="block-profile-image-div clearfix" style="line-height: 1.3;">
                                         <img class="img-rounded" style="float: left; margin-right: 10px" width="40" src="" runat="server" id="imgProfile" />
                                         <asp:HyperLink ID="hypCreatedBy" runat="server" CssClass="StreamLink"></asp:HyperLink>
+                                           <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
                                         <br />
                                         <asp:Label ID="lblMessageDate" runat="server" CssClass="message-date"></asp:Label>
                                     </div>
@@ -1522,21 +1551,47 @@
                             </div>
                             <div class="panel-footer">
                                 <div class="row" style="margin: -5px 5px -18px 5px">
-                                    <span>
-                                        <asp:Literal ID="litReactionCount" runat="server"></asp:Literal></span>
+                                    <span data-item-rid='<%# Eval("postId") %>'>
+                                        <asp:Literal ID="litReactionCount" runat="server"></asp:Literal>
+                                    </span>
                                     <span style="float: right">
-                                        <asp:Literal ID="litCommentsCount" runat="server"></asp:Literal></span>
+                                        <div class="post-type-div commentSection" data-item-id='<%# Eval("postId") %>'>
+                                            <asp:Literal ID="litCommentsCount" runat="server"></asp:Literal>
+                                        </div>
+                                    </span>
                                 </div>
-
                                 <hr />
-
                                 <div class="row">
-                                    <div class="col-xs-3 post-type-div thankButton text-muted" data-item-id='<%# Eval("postId") %>'>
+                                    <div class="col-xs-3 post-type-div thankButton text-muted" data-item-cid='<%# Eval("postId") %>'>
                                         <asp:Literal ID="litReactionTitle" runat="server"></asp:Literal>
                                     </div>
                                     <div class="col-xs-3 post-type-div commentSection" data-item-id='<%# Eval("postId") %>'><i class="fa fa-sticky-note m-r-sm nowrap"></i>Comment</div>
                                     <div class="col-xs-3 post-type-div" id="helpButton"><i class="fa fa-users m-r-sm"></i>Help</div>
                                     <div class="col-xs-3 post-type-div" id="giveButton"><i class="fa fa-money m-r-sm"></i>Give</div>
+                                </div>
+
+                                <div class="comment-section-show">
+                                    <div class="comment-section-repeater-show">
+                                        <asp:Repeater ID="rptPostCommentsShow" runat="server">
+                                            <itemtemplate>
+                                                <ul class="comments">
+                                                    <li>
+                                                        <div class="userImage">
+                                                            <a target="_blank" href="<%# Eval("ProfileUrl") %>">
+                                                                <img class="img-rounded" src='<%# Eval("imgProfileUrl") %>' /></a>
+                                                        </div>
+                                                        <div class="commentReact">
+                                                            <span style="font-weight: bold; width: 70%">
+                                                                <a target="_blank" href="<%# Eval("ProfileUrl") %>" class="author-link"><%# Eval("author") %></a>
+                                                            </span>
+                                                            <span style="float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;"><%# Eval("timeAgo") %></span>
+                                                            <span><%# Eval("Comment1") %></span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </itemtemplate>
+                                        </asp:Repeater>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1613,7 +1668,7 @@
         <input type="hidden" clientidmode="Static" id="postTypeId" runat="server" />
     </div>
 
-    <div class="modal fade" id="newComments" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal fade" id="newComments" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="overflow: hidden">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header" style="padding: 5px">
