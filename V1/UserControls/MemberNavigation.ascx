@@ -13,15 +13,55 @@
         <asp:HyperLink ID="hypPositions" runat="server" NavigateUrl="/V1/Member/Positions.aspx">My Scheduled Positions</asp:HyperLink><br />
         <asp:HyperLink ID="hypDeployments" CssClass="font-weight-bold" runat="server">Find Open Positions</asp:HyperLink><br />
         <h5>Settings</h5>
-        <asp:HyperLink ID="hypAccountSettings" runat="server" NavigateUrl="/V1/Profile/AccountSettings.aspx">Account Settings</asp:HyperLink><br />
-        <asp:HyperLink ID="hypPrivacySettings" runat="server" NavigateUrl="/V1/Profile/PrivacySettings.aspx">Privacy Settings</asp:HyperLink><br />
-        <a href="/IDCard">ID Card</a><br />
-        <a href="/V1/Profile/Time.aspx">Time Sheet</a><br />
-        <a href="/V1/Profile/AvailableDates.aspx"><i class="fa fa-calendar"></i>Calendar</a><br />
-        <a href="/V1/Profile/EditNonProfitCauses.aspx"><i class="fa fa-street-view"></i>Deployments</a><br />
-        <a href="/V1/Profile/EditDisasters.aspx"><i class="fa fa-map-marker"></i>Portals</a><br />
-        <a href="/V1/Profile/EditSkills.aspx"><i class="fa fa-hand-pointer-o"></i>Skills</a><br />
-        <a href="/V1/Profile/EditResources.aspx"><i class="fa fa-truck"></i>Resources</a><br />
-        <a href="/V1/SignOut.aspx">Sign Out</a><br />
+        <asp:HyperLink ID="hypAccountSettings" runat="server"
+            NavigateUrl="/V1/Profile/AccountSettings.aspx">
+    Account Settings
+        </asp:HyperLink><br />
+
+        <asp:HyperLink ID="hypPrivacySettings" runat="server"
+            NavigateUrl="/V1/Profile/PrivacySettings.aspx">
+    Privacy Settings
+        </asp:HyperLink><br />
+
+        <asp:HyperLink ID="hypIDCard" runat="server"
+            NavigateUrl="/IDCard">
+    ID Card
+        </asp:HyperLink><br />
+
+        <asp:HyperLink ID="hypTimeSheet" runat="server"
+            NavigateUrl="/V1/Profile/Time.aspx">
+    Time Sheet
+        </asp:HyperLink><br />
+
+        <asp:HyperLink ID="hypCalendar" runat="server"
+            NavigateUrl="/V1/Profile/AvailableDates.aspx">
+    <i class="fa fa-calendar"></i> Calendar
+        </asp:HyperLink><br />
+
+        <asp:HyperLink ID="HyperLink1" runat="server"
+            NavigateUrl="/V1/Profile/EditNonProfitCauses.aspx">
+    <i class="fa fa-street-view"></i> Deployments
+        </asp:HyperLink><br />
+
+        <asp:HyperLink ID="hypPortals" runat="server"
+            NavigateUrl="/V1/Profile/EditDisasters.aspx">
+    <i class="fa fa-map-marker"></i> Portals
+        </asp:HyperLink><br />
+
+        <asp:HyperLink ID="hypSkills" runat="server"
+            NavigateUrl="/V1/Profile/EditSkills.aspx">
+    <i class="fa fa-hand-pointer-o"></i> Skills
+        </asp:HyperLink><br />
+
+        <asp:HyperLink ID="hypResources" runat="server"
+            NavigateUrl="/V1/Profile/EditResources.aspx">
+    <i class="fa fa-truck"></i> Resources
+        </asp:HyperLink><br />
+
+        <asp:HyperLink ID="hypSignOut" runat="server"
+            NavigateUrl="/V1/SignOut.aspx">
+       Sign Out
+        </asp:HyperLink><br />
+
     </div>
 </div>
