@@ -1,4 +1,5 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="TeamNavigation.ascx.cs" Inherits="V1_UserControls_TeamNavigation" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="TeamNavigation.ascx.cs"
+    Inherits="V1_UserControls_TeamNavigation" %>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -95,6 +96,13 @@
     .text-website {
         color: white;
     }
+
+    .v1 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: 20px;
+    }
 </style>
 <div class="hpanel">
     <div class="panel-body">
@@ -187,7 +195,7 @@
                     <i class="fa fa-camera text-primary"></i> Manage Photos
                     </asp:HyperLink>
                 </li>
-                  <hr runat="server" id="hr3"></hr>
+                <hr runat="server" id="hr3"></hr>
 
                 <li <%=_ticketPageActive%>>
                     <asp:HyperLink runat="server" ID="hypTickets" Visible="false"><i class="fa fa-clipboard text-danger"></i> Tickets</asp:HyperLink>
@@ -224,14 +232,15 @@
 </div>
 <div id="desktopNavigation">
     <div id="divWebsite" runat="server" class="alert alert-info text-center website m-b-xs">
-        <h5><i class="fa fa-globe pe-2x"></i><b>Team Member Website</b></h5>
+        <h5 class="v1"><i class="fa fa-globe pe-2x"></i><b>Team Member Website</b></h5>
     </div>
     <div id="divDeployment" runat="server" class="alert alert-success text-center deployment m-b-xs"
         visible="false">
-        <h5><i class="fa fa-street-view pe-2x"></i><b>Create A New Deployment</b></h5>
+        <h5 class="v1"><i class="fa fa-street-view pe-2x"></i><b>Create A New Deployment</b>
+        </h5>
     </div>
     <div id="donatenow" runat="server" class="alert alert-success text-center deployment m-b-xs"
         visible="true">
-        <h5><i class="fa fa-globe pe-2x"></i><b>Donate Now</b></h5>
+        <h5 class="v1"><i class="fa fa-globe pe-2x"></i><b>Donate Now</b></h5>
     </div>
 </div>
