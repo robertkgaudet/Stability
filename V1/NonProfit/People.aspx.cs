@@ -1,7 +1,6 @@
 ﻿using GoogleMapsAPI.Places;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IdentityModel.Metadata;
 using System.Linq;
 using System.Web;
@@ -416,18 +415,6 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         }
 
     }
-    private DateTime? ParseDate(string dateText)
-    {
-        DateTime parsedDate;
-        string[] expectedFormats = { "MM/dd/yyyy" }; 
-
-        if (DateTime.TryParseExact(dateText, expectedFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedDate))
-        {
-            return parsedDate.Date; 
-        }
-
-        return null; 
-    }
     protected void SearchButton_Click(object sender, EventArgs e)
     {
         List<string> selectedSkills = GetSelectedValues(ddlSkills);
@@ -437,18 +424,16 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         bool isVerified = txtIsVerified.Checked;
         bool isVetted = txtIsVetted.Checked;
         bool optedSMS = txtOptedSMS.Checked;
-
-        string startDateText = Request.Form[StartDate.UniqueID];
-        string endDateText = Request.Form[EndDate.UniqueID];
-
-        DateTime? startDate = ParseDate(startDateText);
-        DateTime? endDate = ParseDate(endDateText);
+		
+        DateTime startDate, endDate;
+        bool isStartDateValid = DateTime.TryParse(StartDate.Text, out startDate);
+        bool isEndDateValid = DateTime.TryParse(EndDate.Text, out endDate);
         string nameSearchTerm = filter.Text.Trim().ToLower();
 
 
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
-  
+            // Fetch UserIds for Skills and Resources in Memory
             var skillMatchedUsers = new HashSet<Guid>(
                 dc.UserSkills
                 .Where(us => selectedSkills.Contains(us.SkillId.ToString()))
@@ -463,14 +448,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 .ToList()
             ); 
 			
-			var allMatchedUsers = skillMatchedUsers.Union(resourceMatchedUsers).ToHashSet();
+			var allMatchedUsers = skillMatchedUsers.Union(resourceMatchedUsers).ToHashSet(); // Combine sets
 
             var peopleListQuery = from uo in dc.UserOrganizations
                                   join p in dc.Profiles on uo.UserId equals p.UserId
                                   join net in dc.aspnet_Memberships on p.UserId equals net.UserId
                                   join u in dc.aspnet_Users on p.UserId equals u.UserId
-                                  join uad in dc.UserAvailableDates on p.UserId equals uad.UserId into uadGroup
-                                  from uad in uadGroup.DefaultIfEmpty() 
                                   where uo.OrganizationId == new Guid(organizationId) && !net.IsLockedOut
                                   select new
                                   {
@@ -492,28 +475,10 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                                       u.LastActivityDate,
                                       net.LastLoginDate,
                                       net.IsApproved,
-                                      p.ReceiveDeploymentSMS,
-                                      DateAvailable = uad != null ? uad.DateAvailable : (DateTime?)null // Handle null values
+                                      p.ReceiveDeploymentSMS
                                   };
 
-            if (startDate.HasValue || endDate.HasValue)
-            {
-                if (startDate.HasValue)
-                {
-
-                    peopleListQuery = peopleListQuery.Where(p =>
-                        p.DateAvailable != null && p.DateAvailable >= startDate.Value.Date
-                    );
-                }
-                if (endDate.HasValue)
-                {
-
-                    peopleListQuery = peopleListQuery.Where(p =>
-                        p.DateAvailable != null && p.DateAvailable <= endDate.Value.Date
-                    );
-                }
-            }
-			
+            // Apply filtering in-memory (since we already loaded matched UserIds)
             if (selectedSkills.Any() || selectedResources.Any())
             {
                 peopleListQuery = peopleListQuery.AsEnumerable().Where(pl => allMatchedUsers.Contains(pl.UserId)).AsQueryable();
@@ -532,7 +497,21 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                     )
                 ).AsQueryable();
             }
-           
+
+
+
+            if (isStartDateValid || isEndDateValid)
+            {
+                peopleListQuery = peopleListQuery.Where(pl =>
+                    (pl.DateVettingStarted.HasValue &&
+                     (!isStartDateValid || pl.DateVettingStarted.Value.Date >= startDate.Date) &&
+                     (!isEndDateValid || pl.DateVettingStarted.Value.Date <= endDate.Date))
+                    ||
+                    (pl.DateVettingCompleted.HasValue &&
+                     (!isStartDateValid || pl.DateVettingCompleted.Value.Date >= startDate.Date) &&
+                     (!isEndDateValid || pl.DateVettingCompleted.Value.Date <= endDate.Date))
+                );
+            }
 
             //if (emailConnected)
             //{
@@ -555,12 +534,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
             // Execute Query with Sorting
             var peopleList = peopleListQuery
-                .OrderByDescending(pl => pl.LastLoginDate).Distinct()
+                .OrderByDescending(pl => pl.LastLoginDate)
                 .ToList();
 
-            //// Show Filter Message if Any Filter Applied
-            //divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS || isStartDateValid || isEndDateValid;
-            //litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
+            // Show Filter Message if Any Filter Applied
+            divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS || isStartDateValid || isEndDateValid;
+            litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
 
             // Bind Data
             rptVolunteers.DataSource = peopleList;

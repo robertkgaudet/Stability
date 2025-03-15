@@ -12,11 +12,9 @@ using System.Drawing;
 using System.Web.Security;
 using System.Web.Services;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using System.Web.Services.Description;
 using GoogleMapsAPI.Places;
-using System.Security.Policy;
-using System.Activities.Statements;
+using Twilio.Base;
+using System.Web.Services.Description;
 //using static System.Net.Mime.MediaTypeNames;
 
 public partial class V1_Stream : BaseOrganizationWebForm
@@ -333,58 +331,60 @@ public partial class V1_Stream : BaseOrganizationWebForm
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-		PostImage postImage = new PostImage();
-		postImage.PostImageId = Guid.NewGuid();
-		postImage.CreatedBy = userId;
-		postImage.CreatedOn = DateTime.Now;
-		postImage.ImageFilepath = filePath;
-		postImage.ImageFilename = fileName;
-		postImage.IsDeleted = false;
-		postImage.PostId = postId;
-		dc.PostImages.InsertOnSubmit(postImage);
-		dc.SubmitChanges();
-		LoadPosts();
-	}
-	protected void rptPosts_ItemDataBound(object sender, RepeaterItemEventArgs e)
-	{
-		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-		{
-			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-			var userId = new Guid();
-			string username = HttpContext.Current.User.Identity.Name;
-			MembershipUser user = Membership.GetUser(username);
-			if (user != null)
-			{
-				userId = new Guid(user.ProviderUserKey.ToString());
-			}
+        PostImage postImage = new PostImage();
+        postImage.PostImageId = Guid.NewGuid();
+        postImage.CreatedBy = userId;
+        postImage.CreatedOn = DateTime.Now;
+        postImage.ImageFilepath = filePath;
+        postImage.ImageFilename = fileName;
+        postImage.IsDeleted = false;
+        postImage.PostId = postId;
+        dc.PostImages.InsertOnSubmit(postImage);
+        dc.SubmitChanges();
+        LoadPosts();
+    }
 
-			V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
-			if (ucTeamLogo != null)
-			{
-				ucTeamLogo.UserId = userId;
-			}
+    protected void rptPosts_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        {
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            var userId = new Guid();
+            string username = HttpContext.Current.User.Identity.Name;
 
-			RepeaterItem dataItem = (RepeaterItem)e.Item;
-			Guid postId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostId");
-			Guid postTypeId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostTypeId");
-			DateTime createdOn = (DateTime)DataBinder.Eval(dataItem.DataItem, "CreatedOn");
-			String fullname = (String)DataBinder.Eval(dataItem.DataItem, "Fullname");
-			String message = (String)DataBinder.Eval(dataItem.DataItem, "Message");
-			Guid createdBy = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId");
-			String URLImage = (String)DataBinder.Eval(dataItem.DataItem, "URLImage");
-			String URLDescription = (String)DataBinder.Eval(dataItem.DataItem, "URLDescription");
-			String URLTitle = (String)DataBinder.Eval(dataItem.DataItem, "URLTitle");
-			String SharedURL = (String)DataBinder.Eval(dataItem.DataItem, "SharedURL");
-			HyperLink hypCreatedBy = (HyperLink)e.Item.FindControl("hypCreatedBy");
-			Label lblMessageDate = (Label)e.Item.FindControl("lblMessageDate");
-			Literal litMessage = (Literal)e.Item.FindControl("litMessage");
-			Literal litReactionTitle = (Literal)e.Item.FindControl("litReactionTitle");
-			Repeater rptPostCommentsShow = (Repeater)e.Item.FindControl("rptPostCommentsShow");
-			HtmlGenericControl commentSectionShow = (HtmlGenericControl)e.Item.FindControl("commentSectionShow");
-			Literal litReactionCount = (Literal)e.Item.FindControl("litReactionCount");
-			Literal litCommentsCount = (Literal)e.Item.FindControl("litCommentsCount");
-			HtmlImage imgProfile = (HtmlImage)e.Item.FindControl("imgProfile");
-			//int postCount = (int)DataBinder.Eval(dataItem.DataItem, "postCount");
+
+           
+            MembershipUser user = Membership.GetUser(username);
+            if (user != null)
+            {
+                userId = new Guid(user.ProviderUserKey.ToString());
+            }
+
+            V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
+            if (ucTeamLogo != null)
+            {
+                ucTeamLogo.UserId = userId;
+            }
+            RepeaterItem dataItem = (RepeaterItem)e.Item;
+            Guid postId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostId");
+            Guid postTypeId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostTypeId");
+            DateTime createdOn = (DateTime)DataBinder.Eval(dataItem.DataItem, "CreatedOn");
+            String fullname = (String)DataBinder.Eval(dataItem.DataItem, "Fullname");
+            String message = (String)DataBinder.Eval(dataItem.DataItem, "Message");
+            Guid createdBy = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId");
+            String URLImage = (String)DataBinder.Eval(dataItem.DataItem, "URLImage");
+            String URLDescription = (String)DataBinder.Eval(dataItem.DataItem, "URLDescription");
+            String URLTitle = (String)DataBinder.Eval(dataItem.DataItem, "URLTitle");
+            String SharedURL = (String)DataBinder.Eval(dataItem.DataItem, "SharedURL");
+            HyperLink hypCreatedBy = (HyperLink)e.Item.FindControl("hypCreatedBy");
+            Label lblMessageDate = (Label)e.Item.FindControl("lblMessageDate");
+            Literal litMessage = (Literal)e.Item.FindControl("litMessage");
+            Literal litReactionTitle = (Literal)e.Item.FindControl("litReactionTitle");
+            Repeater rptPostCommentsShow = (Repeater)e.Item.FindControl("rptPostCommentsShow");
+            Literal litReactionCount = (Literal)e.Item.FindControl("litReactionCount");
+            Literal litCommentsCount = (Literal)e.Item.FindControl("litCommentsCount");
+            HtmlImage imgProfile = (HtmlImage)e.Item.FindControl("imgProfile");
+            //int postCount = (int)DataBinder.Eval(dataItem.DataItem, "postCount");
 
 			lblMessageDate.Text = GetElapsedTime(createdOn);
 			hypCreatedBy.Text = fullname;
@@ -648,7 +648,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		string postText = String.IsNullOrEmpty(postInput.Value) ? null : postInput.Value;
 		string _postTypeId = String.IsNullOrEmpty(postTypeId.Value) ? "8D8CDB63-28D9-4265-AC78-AF06BA6AC582" : postTypeId.Value;
 		string audienceTypeId = String.IsNullOrEmpty(AudienceType.Value) ? "FA66D7CD-4B31-4A52-B15B-4E76FD2030C2" : AudienceType.Value; //Default to public
-		string portalId = String.IsNullOrEmpty(PortalTypes.Value) ? null : PortalTypes.Value;
+		string eventId = String.IsNullOrEmpty(PortalTypes.Value) ? null : PortalTypes.Value;
 
 		if (!String.IsNullOrEmpty(postText))
 		{
@@ -678,9 +678,9 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		post.CreatedBy = userId;
 		post.SharedURL = URL;
 		post.AudienceTypeId = new Guid(audienceTypeId);
-		if (portalId != null)
+		if (eventId != null)
 		{
-			post.EventId = new Guid(portalId);
+			post.EventId = new Guid(eventId);
 		}
 		post.PostTypeId = new Guid(_postTypeId);
 		dc.Posts.InsertOnSubmit(post);

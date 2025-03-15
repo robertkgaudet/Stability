@@ -158,9 +158,9 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
         }
     }
 
-    
 
-    
+
+
 
 
     protected void AddTransactionDetails_Click(object sender, EventArgs e)
@@ -206,14 +206,15 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
             dc.Addresses.InsertOnSubmit(address);
             dc.SubmitChanges();
         }
-        
+
+
+
 
         var donationAmount = Request.Form["txtDonationAmount"];
         decimal originalAmount = Decimal.Parse(donationAmount);
         decimal transactionFee = string.IsNullOrEmpty(coverfee.Text) ? 0 : originalAmount * 0.06M;
-        decimal totalAmount = originalAmount + transactionFee;
+        decimal totalAmount = originalAmount + transactionFee; 
 
-    
         Donation donation = new Donation()
         {
             Amount = originalAmount,
@@ -221,7 +222,6 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
             TotalAmount = totalAmount,
             EmailAddress = txtemail.Text,
             DonationId = Guid.NewGuid(),
-            TransactionId = Guid.NewGuid().ToString(),
             FirstName = txtfirstname.Text,
             LastName = txtlastname.Text,
             ItemCount = 1,
@@ -239,7 +239,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
         txtDonationAmount.Text = totalAmount.ToString("F2");
 
 
-        
+
 
         StripeConfiguration.ApiKey = System.Configuration.ConfigurationManager.AppSettings["stripeSecretKey"].ToString();
         Dictionary<string, string> transactionInfo = new Dictionary<string, string>

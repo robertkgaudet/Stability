@@ -32,21 +32,21 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                    select new
                                    {
                                        o.LogoSquare,
-                                       o.OrganizationId,
                                        uo.ShowTeamLogo
                                    }).Take(1).SingleOrDefault();
 
                     if (orgUser != null)
-                    {                     
+                    {
+                       
                         if (orgUser.ShowTeamLogo ?? false)
                         {
-                            imgTeamLogo.ImageUrl = teamLogo + orgUser.LogoSquare; 
-                            imgTeamLogo.Visible = true; 
-                            hypTeamLogo.Visible = true; 
+                            imgTeamLogo.ImageUrl = teamLogo + orgUser.LogoSquare;
+                            imgTeamLogo.Visible = true;
                         }
                         else
                         {
-                            hypTeamLogo.Visible = false;                         }
+                            imgTeamLogo.Visible = false;
+                        }
                     }
                     if (profile.IsDisasterReadyCertified)
                     {

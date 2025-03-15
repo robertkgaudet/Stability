@@ -51,9 +51,9 @@
                     <table class="table table-bordered" style="width: 100%; table-layout: fixed;">
                         <thead>
                             <tr>
-                                <th style="width:50%">Donor Name</th>
-                                <th style="width:25%">Donation Date</th>
-                                <th style="width:25%">Total Amount</th>
+                                <th>Donor Name</th>
+                                <th>Donation Date</th>
+                                <th>Total Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,17 +61,12 @@
                 <ItemTemplate>
                     <tr>
                         <td>
-                            
-                                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 400px;">
-                                <span style=" display: flex;justify-content: center;align-items: center;width: 35px;height: 35px;border-radius: 50%; background-color: #4a4e69;color: #fff;font-weight: bold;font-size: 12px;margin-right: 10px;flex-shrink: 0;">
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #4a4e69; color: #fff; display: flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">
                                     <%# !string.IsNullOrEmpty(Eval("FirstName").ToString()) ? Eval("FirstName").ToString().Substring(0, 1) : "" %>
-                                    </span>
-
-                                      <span style="flex-grow: 1;  min-width: 0; font-size: clamp(12px, 2vw, 13px); word-wrap: break-word;">
-                                                <%# Eval("FirstName") %> <%# Eval("LastName") %></span>
                                 </div>
-                               
-                            
+                                <%# Eval("FirstName") %> <%# Eval("LastName") %>
+                            </div>
                         </td>
                         <td>
                             <div style="display: flex; align-items: center;">
@@ -92,12 +87,10 @@
             </asp:Repeater>
         </div>
     </div>
-   
+
     <!-- Right Section -->
     <div style="flex: 1;">
-        <h3 style="display: flex; align-items: center; gap: 10px;">
-    <div style="flex-grow: 1;">Deployment's Donations</div>
-    <asp:Button ID="Donationlist" type="submit" class="save-btn" runat="server" Text="Donation List" OnClick="btnDonationsList_Click" />
+        <h3> Deployment's Donations       <asp:Button ID="Donationlist" type="submit" class="save-btn" runat="server"  Text="Donation List" OnClick="btnDonationsList_Click" />
 </h3>
         <div class="recent-donors" style="flex: 1;">
              <asp:Label ID="AdditionalInfoRepeaterNoData" runat="server"></asp:Label>
@@ -106,9 +99,9 @@
                     <table class="table table-bordered" style="width: 100%; table-layout: fixed;">
                         <thead>
                             <tr>
-                                <th style="width:50%">Deployment Name</th>
-                                <th style="width:25%"> Total Amount</th>
-                                <th style="width:25%">Latest Donation Date</th>
+                                <th>Deployment Name</th>
+                                <th> Total Amount</th>
+                                <th>Latest Donation Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -116,14 +109,12 @@
                 <ItemTemplate>
                     <tr>   
                         <td>
-                             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 400px;">
-                              <span style=" display: flex; justify-content: center; align-items: center; width: 35px; height: 35px; border-radius: 50%; background-color: #4a4e69;color: #fff; font-weight: bold; font-size: 12px; margin-right: 10px;flex-shrink: 0; ">
+                             <div style="display: flex; align-items: center;">
+                              <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #4a4e69; color: #fff; display: flex; justify-content: center; align-items: center; margin-right: 10px; font-weight: bold;">
                                   <%# !string.IsNullOrEmpty(Eval("CampaignName").ToString()) ? Eval("CampaignName").ToString().Substring(0, 1) : "" %>
                                  
-                            </span>
-                                 <span style="flex-grow: 1;  min-width: 0; font-size: clamp(12px, 2vw, 13px); word-wrap: break-word;">
-                                     <%# Eval("CampaignName") %></span>
-                                  
+                            </div>
+                                  <%# Eval("CampaignName") %>
                             </div>
                         </td>
                         <td>$<%#Eval("Amount") %></td>

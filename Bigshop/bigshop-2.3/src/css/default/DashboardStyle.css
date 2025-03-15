@@ -18,7 +18,7 @@
     .save-btn:hover {
         background-color: #4b2173 !important; /* Darker Shade on Hover */
     }
-  
+
 /* General Dashboard Layout */
 .dashboard {
     max-width: 1200px;
@@ -177,37 +177,32 @@
     .recent-donors th {
         background: linear-gradient(135deg, #5e2e91, #5e2e91);
         color: white;
-        padding: 20px;
+        padding: 12px;
         text-align: left;
-        font-size: 1.2rem;
-       
+        font-size: 1.1rem;
     }
 
     .recent-donors td {
-        padding: 20px;
-        border-bottom: 2px solid #ddd;
-        font-size: 13px;
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        font-size: 1rem;
         color: #333;
-        padding-right: 10px;
-        text-align: center;
-        height: 40px;
-        width: 40px;
-    }   
-    
+    }
+
     .recent-donors tr:nth-child(even) {
         background-color: #f0f8ff;
     }
-    
+
     .recent-donors tr:nth-child(odd) {
         background-color: #ffffff;
-    } 
-   
+    }
+
     .recent-donors tr:hover {
         background-color: #d4e3fc !important;
         transition: background-color 0.3s ease-in-out;
     }
-     
-   
+
+
 
 /* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
