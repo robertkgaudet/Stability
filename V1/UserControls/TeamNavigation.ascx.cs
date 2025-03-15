@@ -50,7 +50,13 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypSkillsets.NavigateUrl = "/V1/NonProfit/Skillsets.aspx?organizationId=" + organizationId;
         hypResources.NavigateUrl = "/V1/NonProfit/AvailableResources.aspx?organizationId=" + organizationId;
         hypDeploymentTeam.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + organizationId;
-
+        hypInviteTeam.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + organizationId;
+        hypDonationDashboard.NavigateUrl = "/V1/NonProfit/DonationDashboard.aspx?organizationId=" + organizationId;
+        hypLogoUpload.NavigateUrl = "/V1/NonProfit/LogoUpload.aspx?organizationId=" + organizationId;
+        hypSquareLogoUpload.NavigateUrl = "/V1/NonProfit/SquareLogoUpload.aspx?organizationId=" + organizationId;
+        hypCoverImageUpload.NavigateUrl = "/V1/NonProfitAdministration/CoverImage1600x600.aspx?organizationId=" + organizationId;
+        hypManagePhotos.NavigateUrl = "/V1/NonProfitAdministration/ManagePhotos.aspx?organizationId=" + organizationId;
+        hypUpdateTeamInfo.NavigateUrl = "/V1/Administration/NonProfitNew.aspx?userActionModal=false&organizationId=" + organizationId;
         //litTeamName.Text = _teamName;
 
         switch (PageName)
@@ -187,6 +193,10 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                 }
                 if (HttpContext.Current.User.IsInRole("Administrator") || isOwner)
                 {
+                    if (organization.IsActive != true)
+                    {
+                        btnDeactivatePage.Text = "<i class='fa fa-ban text-danger'></i> Re-activate This Team";
+                    }
                     ulAdmin.Visible = true;
                     hrAdmin.Visible = true;
                     divDeployment.Visible = true;
@@ -211,13 +221,13 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 
         if (organization != null)
         {
-           
+
             btnDeactivatePage.Text = "<i class='fa fa-ban text-danger'></i> De-activate This Team";
 
             if (organization.IsActive == true)
             {
                 updateActiveStatus = false;
-               
+
                 btnDeactivatePage.Text = "<i class='fa fa-ban text-danger'></i> Re-activate This Team";
             }
 
