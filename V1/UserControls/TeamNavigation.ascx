@@ -150,45 +150,45 @@
             <ul class="mailbox-list" runat="server" id="ulAdmin" visible="false">
                 <li><b>Administrative Tools</b></li>
                 <li>
-                    <asp:HyperLink runat="server" ID="hypInviteTeam" NavigateUrl="/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=<%=organizationId%>" CssClass="inviteButton">
+                    <asp:HyperLink runat="server" ID="hypInviteTeam" NavigateUrl="/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=<%=organizationId%>"
+                        CssClass="inviteButton">
                     <i class="fa fa-users text-success"></i> Invite Team Members
                     </asp:HyperLink>
                 </li>
+
                 <li>
-                    <asp:HyperLink runat="server" ID="hypUpdateTeamInfo" NavigateUrl="/V1/Administration/NonProfitNew.aspx?userActionModal=false&organizationId=<%=organizationId%>" CssClass="editButton">
-                    <i class="fa fa-pencil text-warning"></i> Update Team Information
+                    <asp:HyperLink runat="server" ID="hypDonationDashboard" NavigateUrl="/V1/NonProfit/DonationDashboard.aspx?organizationId=<%=organizationId%>"
+                        CssClass="donationDashboard">
+                      <i class="fa fa-tachometer text-primary"></i> Donations Dashboard
                     </asp:HyperLink>
                 </li>
+
                 <li>
-                    <asp:HyperLink runat="server" ID="hypLogoUpload" NavigateUrl="/V1/NonProfit/LogoUpload.aspx?organizationId=<%=organizationId%>" CssClass="logoUploadButton">
+                    <asp:HyperLink runat="server" ID="hypLogoUpload" NavigateUrl="/V1/NonProfit/LogoUpload.aspx?organizationId=<%=organizationId%>"
+                        CssClass="logoUploadButton">
                    <i class="fa fa-upload text-primary"></i> Upload Logo
                     </asp:HyperLink>
                 </li>
                 <li>
-                    <asp:HyperLink runat="server" ID="hypSquareLogoUpload" NavigateUrl="/V1/NonProfit/SquareLogoUpload.aspx?organizationId=<%=organizationId%>" CssClass="squareLogoUploadButton">
+                    <asp:HyperLink runat="server" ID="hypSquareLogoUpload" NavigateUrl="/V1/NonProfit/SquareLogoUpload.aspx?organizationId=<%=organizationId%>"
+                        CssClass="squareLogoUploadButton">
                     <i class="fa fa-square text-primary"></i> Upload Square Logo
                     </asp:HyperLink>
                 </li>
                 <li>
-                    <asp:HyperLink runat="server" ID="hypCoverImageUpload" NavigateUrl="/V1/NonProfitAdministration/CoverImage1600x600.aspx?organizationId=<%=organizationId%>" CssClass="coverUploadButton">
+                    <asp:HyperLink runat="server" ID="hypCoverImageUpload" NavigateUrl="/V1/NonProfitAdministration/CoverImage1600x600.aspx?organizationId=<%=organizationId%>"
+                        CssClass="coverUploadButton">
                     <i class="fa fa-image text-primary"></i> Upload Cover Image
                     </asp:HyperLink>
                 </li>
                 <li>
-                    <asp:HyperLink runat="server" ID="hypManagePhotos" NavigateUrl="/V1/NonProfitAdministration/ManagePhotos.aspx?organizationId=<%=organizationId%>" CssClass="managePhotosButton">
+                    <asp:HyperLink runat="server" ID="hypManagePhotos" NavigateUrl="/V1/NonProfitAdministration/ManagePhotos.aspx?organizationId=<%=organizationId%>"
+                        CssClass="managePhotosButton">
                     <i class="fa fa-camera text-primary"></i> Manage Photos
                     </asp:HyperLink>
                 </li>
-                <li>
-                    <asp:LinkButton ID="btnDeactivatePage" runat="server" CssClass="deactivateButton" OnClick="btnChangePageStatus_Click">
-                    <i class="fa fa-ban text-danger"></i> De-activate This Team
-                    </asp:LinkButton>
-                 </li>
-                <li>
-                    <asp:HyperLink runat="server" ID="hypDonationDashboard" NavigateUrl="/V1/NonProfit/DonationDashboard.aspx?organizationId=<%=organizationId%>" CssClass="donationDashboard">
-                    <i class="fa fa-tachometer text-primary"></i> Donations Dashboard
-                    </asp:HyperLink>
-                </li>
+                  <hr runat="server" id="hr3"></hr>
+
                 <li <%=_ticketPageActive%>>
                     <asp:HyperLink runat="server" ID="hypTickets" Visible="false"><i class="fa fa-clipboard text-danger"></i> Tickets</asp:HyperLink>
                 </li>
@@ -197,6 +197,18 @@
                 </li>
                 <li <%=_settingsPageActive%>>
                     <asp:HyperLink runat="server" ID="hypSettings"><i class="fa fa-cog"></i> Settings</asp:HyperLink>
+                </li>
+                <li>
+                    <asp:HyperLink runat="server" ID="hypUpdateTeamInfo" NavigateUrl="/V1/Administration/NonProfitNew.aspx?userActionModal=false&organizationId=<%=organizationId%>"
+                        CssClass="editButton">
+                    <i class="fa fa-pencil text-warning"></i> Update Team Information
+                    </asp:HyperLink>
+                </li>
+                <li>
+                    <asp:LinkButton ID="btnDeactivatePage" runat="server" CssClass="deactivateButton"
+                        OnClick="btnChangePageStatus_Click">
+                    <i class="fa fa-ban text-danger"></i> De-activate This Team
+                    </asp:LinkButton>
                 </li>
             </ul>
 
