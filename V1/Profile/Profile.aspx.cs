@@ -55,7 +55,7 @@ public partial class V1_Profile_Profile : BaseOrganizationWebForm
 		dc.SubmitChanges();
 	}
 
- 
+
     public void LoadPage()
     {
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -206,10 +206,14 @@ public partial class V1_Profile_Profile : BaseOrganizationWebForm
                 var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == _profileUserId);
                 if (userOrg != null)
                 {
-                    chkShowDonateButton.Checked = userOrg.ShowTeamLogo??false; // Set the checkbox state
+                    chkShowDonateButton.Checked = userOrg.ShowTeamLogo ?? false; 
                 }
 
                 chkStabilityVerified.Checked = profile.IsDisasterReadyCertified; // Set the checkbox state
+
+              
+                string currentVettingStatus = GetCurrentVettingStatus(profile);
+                rblUserStatus.SelectedValue = currentVettingStatus;
             }
 
             string[] userRoles = Roles.GetRolesForUser(profileUser.UserName);
@@ -293,6 +297,27 @@ public partial class V1_Profile_Profile : BaseOrganizationWebForm
                 this.Master.FbImage = profilePhotoFolder + profilePhoto.FilenameCropped;
                 this.Master.FbSite_name = "Stability - " + profile.Firstname + " " + profile.Lastname + " Profile Page";
             }
+        }
+    }
+
+    private string GetCurrentVettingStatus(Profile profile)
+    {
+      
+        if (profile.VettingActive.GetValueOrDefault() && profile.DateVettingStarted != null)
+        {
+            return "VettingStarted";
+        }
+        else if (profile.VettingComplete.GetValueOrDefault() && !profile.PassedVetting.GetValueOrDefault())
+        {
+            return "VettingComplete_Failed";
+        }
+        else if (profile.VettingComplete.GetValueOrDefault() && profile.PassedVetting.GetValueOrDefault())
+        {
+            return "VettingComplete_Passed";
+        }
+        else
+        {
+            return "VettingStarted"; 
         }
     }
 

@@ -2,6 +2,7 @@
 
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <script src="Scripts/infinite-scroll.pkgd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/#.#.#/jquery.jscroll.min.js"></script>
@@ -647,13 +648,12 @@
         }
 
         .checkboxlist-item {
-            margin-left: 10px; 
+            margin-left: 10px; /* Adjust the margin as needed */
         }
 
         .StreamLink {
             color: #050505;
             font-weight: bold;
-           
         }
 
             .StreamLink:hover {
