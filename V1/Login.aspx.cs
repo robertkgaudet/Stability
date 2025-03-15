@@ -94,7 +94,7 @@ public partial class V1_Login : System.Web.UI.Page
 			
 			if (user != null)
 			{
-				urlRedirect = "/MapZone";
+				urlRedirect = "/feed";
 
 				//Does the user belong to a team yet?
 				//If not, send to the team page.
