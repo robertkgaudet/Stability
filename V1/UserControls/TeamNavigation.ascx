@@ -174,13 +174,13 @@
                 <li>
                     <asp:HyperLink runat="server" ID="hypLogoUpload" NavigateUrl="/V1/NonProfit/LogoUpload.aspx?organizationId=<%=organizationId%>"
                         CssClass="logoUploadButton">
-                   <i class="fa fa-upload text-primary"></i> Upload Logo
+                   <i class="fa fa-upload text-primary"></i> Upload Team Profile Logo
                     </asp:HyperLink>
                 </li>
                 <li>
                     <asp:HyperLink runat="server" ID="hypSquareLogoUpload" NavigateUrl="/V1/NonProfit/SquareLogoUpload.aspx?organizationId=<%=organizationId%>"
                         CssClass="squareLogoUploadButton">
-                    <i class="fa fa-square text-primary"></i> Upload Square Logo
+                    <i class="fa fa-square text-primary"></i> Upload Website Logo
                     </asp:HyperLink>
                 </li>
                 <li>
