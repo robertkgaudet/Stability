@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="MemberNavigation.ascx.cs" Inherits="V1_UserControls_MemberNavigation" %>
 <div class="hpanel" runat="server" id="divMemberNavigation" visible="false">
     <div class="panel-body">
-        <h5><i class="fa fa-user-circle"></i> Account</h5>
+        <h5> Account</h5>
         <ul class="mailbox-list">
             <li>
                 <asp:HyperLink ID="hypMyProfile" runat="server" NavigateUrl="/V1/Member/Default.aspx">
@@ -11,7 +11,7 @@
         </ul>
         <hr runat="server" id="hr1"></hr>
 
-        <h5><i class="fa fa-link"></i> Connect</h5>
+        <h5> Connect</h5>
         <ul class="mailbox-list">
             <li>
                 <a href="/V1/Member/Connections.aspx?userId=<%=_userId %>">
@@ -31,7 +31,7 @@
         </ul>
         <hr runat="server" id="hr2"></hr>
 
-        <h5><i class="fa fa-users"></i> Group/Team</h5>
+        <h5>Group/Team</h5>
         <ul class="mailbox-list">
             <li>
                 <asp:HyperLink ID="hypMyTeam" runat="server">
@@ -51,7 +51,7 @@
         </ul>
         <hr runat="server" id="hr3"></hr>
 
-        <h5><i class="fa fa-cog"></i> Settings</h5>
+        <h5>Settings</h5>
         <ul class="mailbox-list">
             <li>
                 <asp:HyperLink ID="hypTimeSheet" runat="server" NavigateUrl="/V1/Profile/Time.aspx">
