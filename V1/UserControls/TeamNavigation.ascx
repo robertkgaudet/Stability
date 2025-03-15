@@ -180,7 +180,7 @@
                 <li>
                     <asp:HyperLink runat="server" ID="hypSquareLogoUpload" NavigateUrl="/V1/NonProfit/SquareLogoUpload.aspx?organizationId=<%=organizationId%>"
                         CssClass="squareLogoUploadButton">
-                    <i class="fa fa-square text-primary"></i> Upload Website Logo
+                    <i class="fa fa-upload text-primary"></i>Upload Website Logo
                     </asp:HyperLink>
                 </li>
                 <li>
