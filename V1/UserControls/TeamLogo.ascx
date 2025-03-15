@@ -16,7 +16,14 @@
         margin-right: 2px;
     }
 </style>
-   <asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile " Visible="false" ToolTip="Stability Verified" />
-   <asp:HyperLink ID="hypTeamLogo" runat="server" NavigateUrl="/V1/NonProfit/Default.aspx"  CssClass="team-logo profile" Visible="false" ToolTip="Verified">
-    <asp:Image ID="imgTeamLogo" runat="server" CssClass="team-logo profile" Visible="false" ToolTip="Verified" />
-   </asp:HyperLink>
+
+
+<asp:Label ID="lblprofileusername" runat="server" CssClass="additional-name" Visible="false"></asp:Label>
+
+<asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile" Visible="false"
+    data-toggle="tooltip" data-placement="top" title="Stability Verified" />
+<asp:HyperLink ID="hypTeamLogo" runat="server" NavigateUrl="/V1/NonProfit/Default.aspx" CssClass="team-logo profile" Visible="false">
+    <asp:Image ID="imgTeamLogo" runat="server" CssClass="team-logo profile" Visible="false"
+        data-toggle="tooltip" data-placement="top" />
+</asp:HyperLink>
+

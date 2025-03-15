@@ -16,6 +16,8 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
             LoadBadges();
         }
     }
+
+
     public void LoadBadges()
     {
         if (UserId != Guid.Empty)
@@ -25,6 +27,9 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                 var profile = dc.Profiles.FirstOrDefault(p => p.UserId == UserId);
                 if (profile != null)
                 {
+                    lblprofileusername.Text = profile.Firstname +""+ profile.Lastname;
+                    lblprofileusername.Visible = true;
+
                     var orgUser = (from o in dc.Organizations
                                    join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
                                    where uo.UserId == UserId
@@ -33,21 +38,26 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                    {
                                        o.LogoSquare,
                                        o.OrganizationId,
+                                       o.Name,
                                        uo.ShowTeamLogo
                                    }).Take(1).SingleOrDefault();
 
                     if (orgUser != null)
-                    {                     
+                    {
                         if (orgUser.ShowTeamLogo ?? false)
                         {
-                            imgTeamLogo.ImageUrl = teamLogo + orgUser.LogoSquare; 
-                            imgTeamLogo.Visible = true; 
-                            hypTeamLogo.Visible = true; 
+                            imgTeamLogo.ImageUrl = teamLogo + orgUser.LogoSquare;
+                            imgTeamLogo.Visible = true;
+                            imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
+                            hypTeamLogo.Visible = true;
                         }
                         else
                         {
-                            hypTeamLogo.Visible = false;                         }
+                            hypTeamLogo.Visible = false;
+                           
+                        }
                     }
+
                     if (profile.IsDisasterReadyCertified)
                     {
                         imgStabilityBadge.ImageUrl = teamLogo + "purplebadge.png";
@@ -61,4 +71,5 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
             }
         }
     }
+
 }
