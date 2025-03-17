@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IdentityModel.Metadata;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -449,9 +451,61 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         return null; 
     }
 	protected void btnSendEmail_click(object sender, EventArgs e)
-	{      
+	{
+        string selectedUserIds = hdnSelectedUsers.Value; // Get selected users from hidden field
 
+        if (!string.IsNullOrEmpty(selectedUserIds))
+        {
+            string[] userIds = selectedUserIds.Split(',');
+
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                foreach (string userId in userIds)
+                {
+                    try
+                    {
+                        Guid userGuid = new Guid(userId); // Convert string UserId to Guid
+
+                        // Fetch user email from aspnet_Membership based on UserId
+                        var userEmail = (from m in dc.aspnet_Memberships
+                                         where m.UserId == userGuid
+                                         && m.Email.EndsWith("@gmail.com") // Check if it's a Gmail address
+                                         select m.Email).FirstOrDefault();
+
+                        if (!string.IsNullOrEmpty(userEmail))
+                        {
+                            SendEmail(userEmail); // Send email only if found
+                        }
+                    }
+                    catch
+                    {
+                        // Ignore invalid UserId format errors (if any)
+                    }
+                }
+            }
+        }
     }
+
+    private void SendEmail(string email)
+    {
+        // Email sending logic
+        MailMessage mail = new MailMessage();
+        mail.To.Add(email);
+        mail.From = new MailAddress("your@email.com");
+        mail.Subject = "Your Subject";
+        mail.Body = "Your Email Body";
+        mail.IsBodyHtml = true;
+
+        SmtpClient smtp = new SmtpClient();
+        smtp.Host = "smtp.yourserver.com"; // Replace with your SMTP server
+        smtp.EnableSsl = true;
+        smtp.Credentials = new NetworkCredential("your@email.com", "yourpassword");
+        smtp.Port = 587;
+
+        smtp.Send(mail);
+    }
+
+
     protected void btnSendSms_click(object sender, EventArgs e)
     {
 
