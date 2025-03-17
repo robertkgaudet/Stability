@@ -29,6 +29,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
     public string _streamActive;
     public string _deploymentTeamActive;
     public string organizationId;
+    public string _teamMember;
     public bool isUserOnTeam = false;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -46,10 +47,13 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypSupport.NavigateUrl = "/V1/NonProfit/Support.aspx?organizationId=" + organizationId;
         hypTickets.NavigateUrl = "/V1/NonProfitAdministration/Tickets.aspx?organizationId=" + organizationId;
         hypReports.NavigateUrl = "/V1/NonProfitAdministration/Reports.aspx?organizationId=" + organizationId;
+        hypMail.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&message=SendEmail";
+        hypSms.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&message=SendSMS";
         //hypWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + organizationId;
         hypSkillsets.NavigateUrl = "/V1/NonProfit/Skillsets.aspx?organizationId=" + organizationId;
         hypResources.NavigateUrl = "/V1/NonProfit/AvailableResources.aspx?organizationId=" + organizationId;
         hypDeploymentTeam.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + organizationId;
+
 
         //litTeamName.Text = _teamName;
 

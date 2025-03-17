@@ -141,6 +141,12 @@
                 <li <%=_peoplePageActive%>>
                     <asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-vcard"></i> Team Members</asp:HyperLink>
                 </li>
+                <li <%=_teamMember%>>
+				<asp:HyperLink runat="server" ID="hypMail" Visible="true"><i class="fa fa-envelope"></i>Email Team Members </asp:HyperLink>
+				</li>
+				<li <%=_teamMember%>>
+				<asp:HyperLink runat="server" ID="hypSms" Visible="true"><i class="fa fa-file-text text-warning"></i>Text Team Members</asp:HyperLink>
+								</li>
                 <li <%=_teamRolesActive%>>
                     <asp:HyperLink runat="server" ID="hypTeamRoles"><i class="fa fa-vcard"></i> Training</asp:HyperLink>
                 </li>
