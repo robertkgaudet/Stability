@@ -15,15 +15,25 @@
     .StreamLink {
         margin-right: 2px;
     }
+    .stability-badge {
+        margin-right: 6px; 
+    }
+    .additional-name {
+        margin-right: 5px; 
+        color: #050505;
+        font-weight: bold;
+    }
 </style>
 
+<!-- Hyperlink for the user's name -->
+<asp:HyperLink ID="hypName" runat="server" CssClass="StreamLink" Visible="false">
+    <asp:Label ID="lblprofileusername" runat="server" CssClass="additional-name" Visible="false"></asp:Label>
+    <asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile" Visible="false"
+        data-toggle="tooltip" data-placement="top" title="Stability Verified" />
+</asp:HyperLink>
 
-<asp:Label ID="lblprofileusername" runat="server" CssClass="additional-name" Visible="false"></asp:Label>
-
-<asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile" Visible="false"
-    data-toggle="tooltip" data-placement="top" title="Stability Verified" />
+<!-- Team Logo -->
 <asp:HyperLink ID="hypTeamLogo" runat="server" NavigateUrl="/V1/NonProfit/Default.aspx" CssClass="team-logo profile" Visible="false">
     <asp:Image ID="imgTeamLogo" runat="server" CssClass="team-logo profile" Visible="false"
         data-toggle="tooltip" data-placement="top" />
 </asp:HyperLink>
-

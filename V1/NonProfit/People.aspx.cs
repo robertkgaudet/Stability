@@ -251,11 +251,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			String phoneNUmber = (String)DataBinder.Eval(dataItem.DataItem, "phoneNUmber");
 			String description = (String)DataBinder.Eval(dataItem.DataItem, "Description");
 
-         
+
             V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
+
             if (ucTeamLogo != null)
             {
+                
                 ucTeamLogo.UserId = userId;
+                ucTeamLogo.PageName = "people";
+                ucTeamLogo.LoadNameWithBadges();
             }
 
 
@@ -303,8 +307,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			Literal litSkills = (Literal)e.Item.FindControl("litSkills");
 			Literal litResources = (Literal)e.Item.FindControl("litResources");
 
-			hypName.Text = firstname + " " + lastname;
-			hypName.NavigateUrl = "/V1/Member/Default.aspx?userId=" + userId;
+			//hypName.Text = firstname + " " + lastname;
+			//hypName.NavigateUrl = "/V1/Member/Default.aspx?userId=" + userId;
 
 			btnContact.Attributes.Add("data-name", firstname + " " + lastname);
 			btnContact.Attributes.Add("data-email", loweredEmail);

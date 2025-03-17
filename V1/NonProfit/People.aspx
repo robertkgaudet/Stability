@@ -24,7 +24,6 @@
 		{
 			margin-top:100px;
 		}
-		
 	</style>
 	<script>
 		// Step 1: Select all the buttons in the table
@@ -163,10 +162,7 @@
 													<div class="hpanel">
 														<div class="panel-body">
 															<h5 class="m-b-xs">
-																<asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
-																      <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
-                  
-
+											                <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
 															</h5>
 															<p>
 																<asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>

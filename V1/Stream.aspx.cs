@@ -39,8 +39,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
                 postField.Visible = true;
                 lblPostMessage.Text = "";
                 lblPostMessage.Visible = false;
-
-
                 CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
                 var profile = (from p in dc.Profiles
@@ -356,11 +354,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
                 userId = new Guid(user.ProviderUserKey.ToString());
             }
 
-            V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
-            if (ucTeamLogo != null)
-            {
-                ucTeamLogo.UserId = userId;
-            }
+         
             RepeaterItem dataItem = (RepeaterItem)e.Item;
             Guid postId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostId");
             Guid postTypeId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostTypeId");
@@ -383,9 +377,18 @@ public partial class V1_Stream : BaseOrganizationWebForm
             //int postCount = (int)DataBinder.Eval(dataItem.DataItem, "postCount");
 
             lblMessageDate.Text = GetElapsedTime(createdOn);
-            hypCreatedBy.Text = fullname;
-            hypCreatedBy.NavigateUrl = "/V1/Profile/Profile.aspx?userId=" + createdBy;
+            //hypCreatedBy.Text = fullname;
+            //hypCreatedBy.NavigateUrl = "/V1/Profile/Profile.aspx?userId=" + createdBy;
 
+
+
+            V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
+            if (ucTeamLogo != null)
+            {
+                ucTeamLogo.UserId = createdBy;
+                ucTeamLogo.PageName = "profile";
+                ucTeamLogo.LoadNameWithBadges();
+            }
             var postReaction = from pr in dc.PostReactions
                                join p in dc.Profiles on pr.CreatedBy equals p.UserId
                                where pr.PostId == postId

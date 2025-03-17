@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="MemberHeader.ascx.cs" Inherits="V1_UserControls_MemberHeader" %>
 
-<%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
+<%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="LoadNameWithBadges" %>
 
 <style>
 	.divCover {
@@ -77,6 +77,17 @@
         margin-right: 0px !important;
     margin-top: 5px !important;
 }
+
+	.additional-name {
+        color: darkslategrey !important;
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    margin-right: 6px !important;
+
+}
+	.StreamLink {
+    text-decoration:none !important;
+}
 </style>
 <script>
 	$(document).ready(function () {
@@ -144,9 +155,9 @@
                 <div class="col-xs-12 col-lg-8">
 					<div style="margin-top:10px; width:100%;">
 					<span style="color:darkslategrey; font-size:20px; font-weight:800; margin-right:10px;">
-					<asp:Literal ID="litMemberName" runat="server"></asp:Literal>
+				<%--	<asp:Literal ID="litMemberName" runat="server"></asp:Literal>--%>
 							
-                  <uc1:TeamLogo  runat="server" ID="ucTeamLogo" />
+                  <uc1:LoadNameWithBadges  runat="server" ID="ucTeamLogo" />
 
 					</span>
 

@@ -40,7 +40,7 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		string coverPhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
         string teamLogo = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
         _coverImage = coverPhotoFolder + "Stability_Cover_V3.jpg";
-		litMemberName.Text = _memberFullname;
+		//litMemberName.Text = _memberFullname;
 		imgMemberProfilePhoto.ImageUrl	= profilePhotoFolder + _memberProfileImageFilename;
 		litMemberDescription.Text		= _memberDescription;
 		litTitle.Text					= !String.IsNullOrEmpty(_memberTitle) ? _memberTitle + "<br />" : string.Empty;
@@ -56,7 +56,7 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
         if (!IsPostBack)
         {
             ucTeamLogo.UserId = new Guid(_userId);
-            ucTeamLogo.LoadBadges();
+            ucTeamLogo.LoadNameWithBadges();
         }
 
         

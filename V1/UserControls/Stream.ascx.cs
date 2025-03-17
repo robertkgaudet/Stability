@@ -241,9 +241,7 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 			HtmlImage imgProfile = (HtmlImage)e.Item.FindControl("imgProfile");
 
 			lblMessageDate.Text = CrowdRelief.Tools.GetElapsedTime(createdOn);
-			hypCreatedBy.Text = fullname;
-			hypCreatedBy.NavigateUrl = "/V1/Member/Default.aspx?userId=" + createdBy;
-
+		
 			string postHtml = string.Empty;
 			bool URLShared = false;
 			string URLLink = SharedURL;
@@ -256,6 +254,8 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
             {
                 
                 ucTeamLogo.UserId = createdBy;
+                ucTeamLogo.PageName = "people";
+                ucTeamLogo.LoadNameWithBadges();
             }
 
 
