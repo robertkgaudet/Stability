@@ -7,7 +7,6 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
     public string PageName { get; set; }
     public string UserName { get; set; }
     string teamLogo = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
-
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -15,7 +14,6 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
             LoadNameWithBadges();
         }
     }
-
     public void LoadNameWithBadges()
     {
         if (UserId != Guid.Empty)
@@ -44,12 +42,9 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                         }
                     }
                     else
-                    {
-                      
+                    {    
                         hypName.Visible = true; 
                     }
-
-                
                     var orgUser = (from o in dc.Organizations
                                    join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
                                    where uo.UserId == UserId
@@ -61,7 +56,6 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                        o.Name,
                                        uo.ShowTeamLogo
                                    }).Take(1).SingleOrDefault();
-
                     if (orgUser != null)
                     {
                         if (orgUser.ShowTeamLogo ?? false)
@@ -76,8 +70,6 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                             hypTeamLogo.Visible = false;
                         }
                     }
-
-                    // Set the badge (if applicable)
                     if (profile.IsDisasterReadyCertified)
                     {
                         imgStabilityBadge.ImageUrl = teamLogo + "purplebadge.png";
@@ -91,5 +83,4 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
             }
         }
     }
-
 }

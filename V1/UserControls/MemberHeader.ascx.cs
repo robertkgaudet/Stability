@@ -31,8 +31,6 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 	public string _badgeTOPStatus = "fa-pending-color";
 	public string faIdBadgeClick = string.Empty;
     public string _teamLogo = string.Empty;
-
-
     protected void Page_Load(object sender, EventArgs e)
 	{
 		//string causePhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
@@ -58,8 +56,6 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
             ucTeamLogo.UserId = new Guid(_userId);
             ucTeamLogo.LoadNameWithBadges();
         }
-
-        
         if (!String.IsNullOrEmpty(_teamId))
 		{
 			litTeamBreak.Text =         "<br />";

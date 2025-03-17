@@ -230,35 +230,22 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 			String URLDescription = (String)DataBinder.Eval(dataItem.DataItem, "URLDescription");
 			String URLTitle = (String)DataBinder.Eval(dataItem.DataItem, "URLTitle");
 			String SharedURL = (String)DataBinder.Eval(dataItem.DataItem, "SharedURL");
-
-
-
-
 			HyperLink hypCreatedBy = (HyperLink)e.Item.FindControl("hypCreatedBy");
 			Label lblMessageDate = (Label)e.Item.FindControl("lblMessageDate");
 			Literal litMessage = (Literal)e.Item.FindControl("litMessage");
 			Literal litReactionTitle = (Literal)e.Item.FindControl("litReactionTitle");
 			HtmlImage imgProfile = (HtmlImage)e.Item.FindControl("imgProfile");
-
 			lblMessageDate.Text = CrowdRelief.Tools.GetElapsedTime(createdOn);
-		
 			string postHtml = string.Empty;
 			bool URLShared = false;
 			string URLLink = SharedURL;
-
-       
-
-        
             V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
             if (ucTeamLogo != null)
-            {
-                
+            {     
                 ucTeamLogo.UserId = createdBy;
                 ucTeamLogo.PageName = "people";
                 ucTeamLogo.LoadNameWithBadges();
             }
-
-
             if (!String.IsNullOrEmpty(SharedURL))
 			{
 				//A url was used.

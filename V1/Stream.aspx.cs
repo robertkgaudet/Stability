@@ -357,9 +357,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			{
 				userId = new Guid(user.ProviderUserKey.ToString());
 			}
-
-			
-
             RepeaterItem dataItem = (RepeaterItem)e.Item;
 			Guid postId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostId");
 			Guid postTypeId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostTypeId");
@@ -381,8 +378,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			Literal litCommentsCount = (Literal)e.Item.FindControl("litCommentsCount");
 			HtmlImage imgProfile = (HtmlImage)e.Item.FindControl("imgProfile");
             //int postCount = (int)DataBinder.Eval(dataItem.DataItem, "postCount");
-
-
             V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
             if (ucTeamLogo != null)
             {
@@ -390,11 +385,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
                 ucTeamLogo.PageName = "profile";
                 ucTeamLogo.LoadNameWithBadges();
             }
-
             lblMessageDate.Text = GetElapsedTime(createdOn);
-			//hypCreatedBy.Text = fullname;
-			//hypCreatedBy.NavigateUrl = "/V1/Profile/Profile.aspx?userId=" + createdBy;
-
 			var postReaction = from pr in dc.PostReactions
 							   join p in dc.Profiles on pr.CreatedBy equals p.UserId
 							   where pr.PostId == postId

@@ -766,7 +766,6 @@
                         <div class="message">
                             <div class="block-profile-image-div clearfix" style="line-height: 1.3;">
                                 <img class="img-rounded" style="float: left; margin-right: 10px;" width="40" src="" runat="server" id="imgProfile" />
-                             
                                 <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
                                 <br />
                                 <asp:Label ID="lblMessageDate" runat="server" CssClass="message-date"></asp:Label>
