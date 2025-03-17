@@ -32,6 +32,7 @@
         .container-search {
             margin-bottom: 10px;
         }
+
         .panel-heading h4 {
             margin-bottom: 0 !important;
             margin-top: -4px;

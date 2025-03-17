@@ -3,25 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "CrowdRelief", ".", "{03D1A72D-A3D5-4465-8551-9E36A3CFD885}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Stability App", ".", "{03D1A72D-A3D5-4465-8551-9E36A3CFD885}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8.1"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.8"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_64915"
-		Debug.AspNetCompiler.PhysicalPath = "..\Stability\"
+		Debug.AspNetCompiler.PhysicalPath = "..\Stability App\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_64915\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/localhost_64915"
-		Release.AspNetCompiler.PhysicalPath = "..\Stability\"
+		Release.AspNetCompiler.PhysicalPath = "..\Stability App\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_64915\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "64915"
-		SlnRelativePath = "..\Stability\"
+		SlnRelativePath = "..\Stability App\"
 	EndProjectSection
 EndProject
 Global
