@@ -28,24 +28,24 @@
         .modal-dialog {
             margin-top: 100px;
         }
-        .container-search
-        {
-            margin-bottom:10px;
+
+        .container-search {
+            margin-bottom: 10px;
         }
+
         .panel-heading h4 {
-    margin-bottom: 0 !important;
-        margin-top: -4px;
-}
+            margin-bottom: 0 !important;
+            margin-top: -4px;
+        }
 
-.container-search {
-    margin-top: 5px !important;
-}
-.fix{
-        margin-right: 8px;
-        margin-left: 8px;
-}
+        .container-search {
+            margin-top: 5px !important;
+        }
 
-
+        .fix {
+            margin-right: 8px;
+            margin-left: 8px;
+        }
     </style>
     <script>
         // Step 1: Select all the buttons in the table
@@ -63,7 +63,7 @@
         var txtMessage;
 
         $(document).ready(function () {
-       
+
             // Initialize Example 1
             $('#tblVolunteers').footable();
 
@@ -94,13 +94,13 @@
                 format: 'mm/dd/yyyy',
                 autoclose: true,
             });
-                $(".toggle-search-btn").click(function () {
-                    var icon = $(this).find("i"); 
-                    var searchPanel = $("#searchFilters"); 
-                    icon.toggleClass("fa-chevron-down fa-chevron-up");
-                    searchPanel.collapse("toggle");                   
-                });
-           
+            $(".toggle-search-btn").click(function () {
+                var icon = $(this).find("i");
+                var searchPanel = $("#searchFilters");
+                icon.toggleClass("fa-chevron-down fa-chevron-up");
+                searchPanel.collapse("toggle");
+            });
+
             $('.multiselect').multiselect({
                 includeSelectAllOption: true,
                 enableFiltering: true,
@@ -183,163 +183,163 @@
         <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
         <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank" Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
     </div>
-    <div class="panel-body" style="margin-bottom: -27px;  padding: 0px;">
-      <div class="col-lg-12">
-         <div class="row">
-        <div class="hpanel hblue">
-			<div class="panel-tools">
-                <button class="btn btn-link toggle-search-btn" type="button" data-toggle="collapse" data-target="#searchFilters" aria-expanded="false" aria-controls="searchFilters">
-    <i class="fa fa-chevron-down"></i>
-                                </button>
-									</div>
-								<h4 style="margin-left: 7px;" >Search</h4>	
-        <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
-            <asp:Literal ID="litMessage" runat="server"></asp:Literal>
-        </div>
-        <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;" visible="false">
-            <asp:Literal ID="litFilterMessage" runat="server"></asp:Literal>
-        </div>
-        <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers" visible="false">
-            <div class="hpanel" runat="server" id="hpanelJoin" visible="true">
-                <a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
-            </div>
-      <div class="container-search">
-    <!-- Collapsible Search Filters -->
-    <div class="collapse" id="searchFilters">
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="form-group fix">
-                    <b>Search By Member  :</b>
-                    <asp:TextBox ID="filter" runat="server" CssClass="form-control" placeholder="Search By Member "></asp:TextBox>
-                </div>
-                </div>
-        
-            <div class="col-md-6 mb-3">
-                <div class="form-group fix">
-                    <b>Location :</b>
-                    <input type="text" class="form-control" id="txtlocation" placeholder="Enter Location">
-                </div>
-            </div>
-            </div>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="form-group fix">
-                    <b class="text-line"> Skills :</b>
-                    <asp:ListBox ID="ddlSkills" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="form-group fix">
-                    <b class="text-line"> Resources :</b>
-                    <asp:ListBox ID="ddlResources" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="form-group fix">
-                    <b class="text-line">Available From :</b>
-                    <asp:TextBox ID="StartDate" runat="server" CssClass="form-control datepicker" placeholder="Start Date" autocomplete="off" ClientIDMode="Static" />
-                </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <div class="form-group fix">
-                    <b class="text-line">Available To :</b>
-                    <asp:TextBox ID="EndDate" runat="server" CssClass="form-control datepicker" placeholder="End Date" autocomplete="off" ClientIDMode="Static" />
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-sm-3 mb-2">
-                        <div class="form-check fix">
-                            <asp:CheckBox ID="txtIsVetted" runat="server" CssClass="form-check-input" />
-                            <label class="form-check-label" for="<%=txtIsVetted.ClientID%>">Is Vetted</label>
-                        </div>
+    <div class="panel-body" style="margin-bottom: -27px; padding: 0px;">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="hpanel hblue">
+                    <div class="panel-tools">
+                        <button class="btn btn-link toggle-search-btn" type="button" data-toggle="collapse" data-target="#searchFilters" aria-expanded="false" aria-controls="searchFilters">
+                            <i class="fa fa-chevron-down"></i>
+                        </button>
                     </div>
-                    <div class="col-sm-3 mb-2">
-                        <div class="form-check">
-                            <asp:CheckBox ID="txtOptedSMS" runat="server" CssClass="form-check-input" />
-                            <label class="form-check-label" for="<%=txtOptedSMS.ClientID%>">Opted SMS</label>
-                        </div>
+                    <h4 style="margin-left: 18px;">Search</h4>
+                    <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
+                        <asp:Literal ID="litMessage" runat="server"></asp:Literal>
                     </div>
-                    <div class="col-sm-3 mb-2">
-                        <div class="form-check">
-                            <asp:CheckBox ID="txtEmailconnect" runat="server" CssClass="form-check-input" />
-                            <label class="form-check-label" for="<%=txtEmailconnect.ClientID%>">Email Connected</label>
-                        </div>
+                    <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;" visible="false">
+                        <asp:Literal ID="litFilterMessage" runat="server"></asp:Literal>
                     </div>
-                    <div class="col-sm-3 mb-2">
-                        <div class="form-check">
-                            <asp:CheckBox ID="txtIsVerified" runat="server" CssClass="form-check-input" />
-                            <label class="form-check-label" for="<%=txtIsVerified.ClientID%>">Is Verified</label>
+                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers" visible="false">
+                        <div class="hpanel" runat="server" id="hpanelJoin" visible="true">
+                            <a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-4"  style="margin-right: 6px;">
-            <div class="col-md-12 text-right ">
-                <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClick="SearchButton_Click" />
-                <asp:Button ID="ClearButton" runat="server" CssClass="btn btn-danger btn-sm" Text="Clear" OnClick="ClearButton_Click" />
-            </div>
-        </div>
-    </div>
-</div>
-    </div>
-     </div>
-          </div>
-       </div>
-    	</div>
-            <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
-                <tbody>
-                    <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
-                        <ItemTemplate>
-                            <tr>
-                                <td style="background-color: white;">
-                                    <div class="hpanel">
-                                        <div class="panel-body">
-                                            <h5 class="m-b-xs">
-                                                <asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
-                                                <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
-
-
-                                            </h5>
-                                            <p>
-                                                <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
-                                                <asp:Literal ID="litDescription" runat="server"></asp:Literal>
-                                            </p>
-                                            <div class="pull-right">
-                                                <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
-                                            </div>
-                                            <asp:Literal ID="litSkills" runat="server"></asp:Literal>
-                                            <asp:Literal ID="litResources" runat="server"></asp:Literal>
+                        <div class="container-search">
+                            <!-- Collapsible Search Filters -->
+                            <div class="collapse col-sm-12" id="searchFilters">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group fix">
+                                            <b>Search By Member  :</b>
+                                            <asp:TextBox ID="filter" runat="server" CssClass="form-control" placeholder="Search By Member "></asp:TextBox>
                                         </div>
-                                        <div class="panel-footer" id="divFooter" runat="server" visible="false">
-                                            <div class="text-muted small">
-                                                <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group fix">
+                                            <b>Location :</b>
+                                            <input type="text" class="form-control" id="txtlocation" placeholder="Enter Location">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group fix">
+                                            <b class="text-line">Skills :</b>
+                                            <asp:ListBox ID="ddlSkills" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group fix">
+                                            <b class="text-line">Resources :</b>
+                                            <asp:ListBox ID="ddlResources" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group fix">
+                                            <b class="text-line">Available From :</b>
+                                            <asp:TextBox ID="StartDate" runat="server" CssClass="form-control datepicker" placeholder="Start Date" autocomplete="off" ClientIDMode="Static" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group fix">
+                                            <b class="text-line">Available To :</b>
+                                            <asp:TextBox ID="EndDate" runat="server" CssClass="form-control datepicker" placeholder="End Date" autocomplete="off" ClientIDMode="Static" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-sm-3 mb-2">
+                                                <div class="form-check fix">
+                                                    <asp:CheckBox ID="txtIsVetted" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtIsVetted.ClientID%>">Is Vetted</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 mb-2">
+                                                <div class="form-check">
+                                                    <asp:CheckBox ID="txtOptedSMS" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtOptedSMS.ClientID%>">Opted SMS</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 mb-2">
+                                                <div class="form-check">
+                                                    <asp:CheckBox ID="txtEmailconnect" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtEmailconnect.ClientID%>">Email Connected</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 mb-2">
+                                                <div class="form-check">
+                                                    <asp:CheckBox ID="txtIsVerified" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtIsVerified.ClientID%>">Is Verified</label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </td>
-                            </tr>
-                        </ItemTemplate>
-                    </asp:Repeater>
-                </tbody>
-                <tfoot>
+                                </div>
+
+                                <div class="row mt-4" style="margin-right: 6px;">
+                                    <div class="col-md-12 text-right ">
+                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClick="SearchButton_Click" />
+                                        <asp:Button ID="ClearButton" runat="server" CssClass="btn btn-danger btn-sm" Text="Clear" OnClick="ClearButton_Click" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
+        <tbody>
+            <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
+                <ItemTemplate>
                     <tr>
-                        <td>
-                            <br />
-                            <ul class="pagination pull-right"></ul>
+                        <td style="background-color: white;">
+                            <div class="hpanel">
+                                <div class="panel-body">
+                                    <h5 class="m-b-xs">
+                                        <asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
+                                        <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
+
+
+                                    </h5>
+                                    <p>
+                                        <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
+                                        <asp:Literal ID="litDescription" runat="server"></asp:Literal>
+                                    </p>
+                                    <div class="pull-right">
+                                        <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                    </div>
+                                    <asp:Literal ID="litSkills" runat="server"></asp:Literal>
+                                    <asp:Literal ID="litResources" runat="server"></asp:Literal>
+                                </div>
+                                <div class="panel-footer" id="divFooter" runat="server" visible="false">
+                                    <div class="text-muted small">
+                                        <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
-                </tfoot>
-            </table>     
+                </ItemTemplate>
+            </asp:Repeater>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <br />
+                    <ul class="pagination pull-right"></ul>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
     <div class="modal fade" id="messageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

@@ -187,6 +187,10 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                 }
                 if (HttpContext.Current.User.IsInRole("Administrator") || isOwner)
                 {
+                    if (organization.IsActive != true)
+                    {
+                        btnDeactivatePage.Text = "Re-activate This Team";
+                    }
                     ulAdmin.Visible = true;
                     hrAdmin.Visible = true;
                     divDeployment.Visible = true;
