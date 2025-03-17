@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"
+    CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
 
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
@@ -180,26 +181,32 @@
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
 
     <div class="panel-heading">
-        <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
-        <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank" Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
+        <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members"
+            CssClass="btn btn-sm btn-info"></asp:HyperLink>
+        <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank"
+            Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
     </div>
     <div class="panel-body" style="margin-bottom: -27px; padding: 0px;">
         <div class="col-lg-12">
             <div class="row">
                 <div class="hpanel hblue">
                     <div class="panel-tools">
-                        <button class="btn btn-link toggle-search-btn" type="button" data-toggle="collapse" data-target="#searchFilters" aria-expanded="false" aria-controls="searchFilters">
+                        <button class="btn btn-link toggle-search-btn" type="button" data-toggle="collapse"
+                            data-target="#searchFilters" aria-expanded="false" aria-controls="searchFilters">
                             <i class="fa fa-chevron-down"></i>
                         </button>
                     </div>
                     <h4 style="margin-left: 18px;">Search</h4>
-                    <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
+                    <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center"
+                        style="margin-bottom: 20px;" visible="false">
                         <asp:Literal ID="litMessage" runat="server"></asp:Literal>
                     </div>
-                    <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;" visible="false">
+                    <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;"
+                        visible="false">
                         <asp:Literal ID="litFilterMessage" runat="server"></asp:Literal>
                     </div>
-                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers" visible="false">
+                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers"
+                        visible="false">
                         <div class="hpanel" runat="server" id="hpanelJoin" visible="true">
                             <a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
                         </div>
@@ -217,7 +224,24 @@
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
                                             <b>Location :</b>
-                                            <input type="text" class="form-control" id="txtlocation" placeholder="Enter Location">
+                                            <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group fix">
+                                            <b class="text-line">Available From :</b>
+                                            <asp:TextBox ID="StartDate" runat="server" CssClass="form-control datepicker" placeholder="Start Date"
+          autocomplete="off" ClientIDMode="Static" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group fix">
+                                            <b class="text-line">Available To :</b>
+                                            <asp:TextBox ID="EndDate" runat="server" CssClass="form-control datepicker" placeholder="End Date"
+                                                autocomplete="off" ClientIDMode="Static" />
                                         </div>
                                     </div>
                                 </div>
@@ -225,33 +249,25 @@
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
                                             <b class="text-line">Skills :</b>
-                                            <asp:ListBox ID="ddlSkills" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
+                                            <asp:ListBox ID="ddlSkills" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple"
+                                                AppendDataBoundItems="true"></asp:ListBox>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
                                             <b class="text-line">Resources :</b>
-                                            <asp:ListBox ID="ddlResources" runat="server" CssClass="form-control multiselect" SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <div class="form-group fix">
-                                            <b class="text-line">Available From :</b>
-                                            <asp:TextBox ID="StartDate" runat="server" CssClass="form-control datepicker" placeholder="Start Date" autocomplete="off" ClientIDMode="Static" />
+                                            <asp:ListBox ID="ddlResources" runat="server" CssClass="form-control multiselect"
+                                                SelectionMode="Multiple" AppendDataBoundItems="true"></asp:ListBox>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
-                                            <b class="text-line">Available To :</b>
-                                            <asp:TextBox ID="EndDate" runat="server" CssClass="form-control datepicker" placeholder="End Date" autocomplete="off" ClientIDMode="Static" />
+                                            <b>Training :</b>
+                                            <asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-control"></asp:DropDownList>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="row">
@@ -282,7 +298,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row mt-4" style="margin-right: 6px;">
                                     <div class="col-md-12 text-right ">
                                         <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClick="SearchButton_Click" />
@@ -315,7 +330,8 @@
                                         <asp:Literal ID="litDescription" runat="server"></asp:Literal>
                                     </p>
                                     <div class="pull-right">
-                                        <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                        <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton"
+                                            data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
                                     </div>
                                     <asp:Literal ID="litSkills" runat="server"></asp:Literal>
                                     <asp:Literal ID="litResources" runat="server"></asp:Literal>
@@ -362,7 +378,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnSend" onclick="return sendClick(this);">Send</button>
+                    <button type="button" class="btn btn-primary" id="btnSend" onclick="return sendClick(this);">
+                        Send</button>
                 </div>
             </div>
         </div>
