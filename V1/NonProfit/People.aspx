@@ -305,7 +305,7 @@
                             <div class="hpanel">
                                 <div class="panel-body">
                                     <h5 class="m-b-xs">
-                                        <asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
+                                        
                                         <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
 
 

@@ -16,7 +16,7 @@
         margin-right: 2px;
     }
     .stability-badge {
-        margin-right: 6px; 
+        margin-right: 3px; 
     }
     .additional-name {
         margin-right: 5px; 
