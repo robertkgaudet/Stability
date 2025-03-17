@@ -74,7 +74,7 @@
 	height:22px;
 }
 	.profile{
-        margin-right: 0px !important;
+      margin-right: 2px !important;
     margin-top: 5px !important;
 }
 
