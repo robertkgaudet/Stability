@@ -54,6 +54,16 @@
         .input-group-append {
             margin-left: 10px;
         }
+        .chkSelectAll{
+                margin-top: 9px;
+
+        }
+        input#ContentPlaceHolder1_chkSelectAll {
+            margin-top:10px;
+            margin-right:10px;
+        }
+         
+
       </style>
     <script>
         // Step 1: Select all the buttons in the table
@@ -229,16 +239,16 @@
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
     <asp:HiddenField ID="hdnSelectedUsers" runat="server" />
     <div id="divEmail" runat="server" class="input-group">
-        <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" Placeholder="Enter Email Text"></asp:TextBox>
+        <textarea id="txtemail" runat="server" Cssclass="form-control" placeholder="Enter Email Text" rows="2" cols="100"></textarea>
         <div class="input-group-append">
-            <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary" Text="Submit" OnClientClick="updateHiddenField();" OnClick="btnSendEmail_click" />
+            <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary" Text="Send Email" OnClientClick="updateHiddenField();" OnClick="btnSendEmail_click" />
         </div>
     </div>
 
     <div id="divSms" runat="server" class="input-group">
-        <asp:TextBox ID="txtsms" runat="server" CssClass="form-control" Placeholder="Enter Sms Text"></asp:TextBox>
+       <textarea ID="txtsms" runat="server" CssClass="form-control" Placeholder="Enter SMS Text"  rows="2" cols="100" ></textarea>
         <div class="input-group-append">
-            <asp:Button ID="btnSms" runat="server" CssClass="btn btn-primary" Text="Submit" OnClick="btnSendSms_click" />
+            <asp:Button ID="btnSms" runat="server" CssClass="btn btn-primary" Text="Send SMS" OnClick="btnSendSms_click" />
         </div>
     </div>
 
@@ -360,7 +370,7 @@
             </div>
         </div>
     </div>
-    <asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All" />
+    <asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All"  />
     <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
         <tbody>
             <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
@@ -368,11 +378,9 @@
                     <tr>
                         <td style="background-color: white;">
                             <div class="hpanel">
-                                <div class="panel-body">
-                                    <!-- Checkbox for each user -->
-                                    <input type="checkbox" class="select-user" data-userid='<%# Eval("UserID") %>' />
-
+                                <div class="panel-body">                             
                                     <h5 class="m-b-xs">
+                                          <input type="checkbox" class="select-user" data-userid='<%# Eval("UserID") %>' />
                                         <asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
                                         <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
                                     </h5>

@@ -12,8 +12,8 @@ using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-
-
+using System.Collections.Specialized;
+using System.Configuration;
 
 public partial class V1_NonProfit_People : BaseOrganizationWebForm
 {
@@ -46,7 +46,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 divEmail.Visible = true;
                 divSms.Visible = false;
             }
-            else if (message == "SendSms")
+            else if (message == "SendSMS")
             {
                 divEmail.Visible = false;
                 divSms.Visible = true;
@@ -450,65 +450,77 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
         return null; 
     }
-	protected void btnSendEmail_click(object sender, EventArgs e)
-	{
-        string selectedUserIds = hdnSelectedUsers.Value; // Get selected users from hidden field
-
+    protected void btnSendEmail_click(object sender, EventArgs e)
+    {
+        string selectedUserIds = hdnSelectedUsers.Value; 
+        string userMessage = txtemail.Value; 
         if (!string.IsNullOrEmpty(selectedUserIds))
         {
             string[] userIds = selectedUserIds.Split(',');
-
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
                 foreach (string userId in userIds)
                 {
-                    try
-                    {
-                        Guid userGuid = new Guid(userId); // Convert string UserId to Guid
-
-                        // Fetch user email from aspnet_Membership based on UserId
+                        Guid userGuid = new Guid(userId);
                         var userEmail = (from m in dc.aspnet_Memberships
                                          where m.UserId == userGuid
-                                         && m.Email.EndsWith("@gmail.com") // Check if it's a Gmail address
                                          select m.Email).FirstOrDefault();
-
                         if (!string.IsNullOrEmpty(userEmail))
                         {
-                            SendEmail(userEmail); // Send email only if found
-                        }
-                    }
-                    catch
-                    {
-                        // Ignore invalid UserId format errors (if any)
-                    }
+                            ListDictionary ldEmailBodyReplacements = new ListDictionary();
+                            ldEmailBodyReplacements.Add("<% UserId %>", userId.ToString());
+                            ldEmailBodyReplacements.Add("<% Message %>", userMessage); 
+
+                            string error = string.Empty;
+                            Tools.SendEmail(
+                                userMessage, 
+                                "Stability User Has Signed In",
+                                ldEmailBodyReplacements,
+                                "robertkgaudet@gmail.com",
+                                "Stability Login Alert",
+                                string.Empty,
+                                string.Empty,
+                                "~\\EmailTemplates\\SignIn.html",
+                                out error
+                            );
+
+                            if (string.IsNullOrEmpty(error))
+                            {
+                                emailSent = true;
+                            }
+                        }          
                 }
             }
         }
+        txtemail.Value = "";
     }
-
-    private void SendEmail(string email)
-    {
-        // Email sending logic
-        MailMessage mail = new MailMessage();
-        mail.To.Add(email);
-        mail.From = new MailAddress("your@email.com");
-        mail.Subject = "Your Subject";
-        mail.Body = "Your Email Body";
-        mail.IsBodyHtml = true;
-
-        SmtpClient smtp = new SmtpClient();
-        smtp.Host = "smtp.yourserver.com"; // Replace with your SMTP server
-        smtp.EnableSsl = true;
-        smtp.Credentials = new NetworkCredential("your@email.com", "yourpassword");
-        smtp.Port = 587;
-
-        smtp.Send(mail);
-    }
-
-
     protected void btnSendSms_click(object sender, EventArgs e)
     {
-
+        string selectedUserIds = hdnSelectedUsers.Value;
+        string smsMessage = txtsms.Value.Trim(); 
+        if (!string.IsNullOrEmpty(selectedUserIds) && !string.IsNullOrEmpty(smsMessage))
+        {
+            string[] userIds = selectedUserIds.Split(',');
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                foreach (string userId in userIds)
+                {                   
+                        Guid userGuid = new Guid(userId); 
+                        var phoneNumber = (from p in dc.Profiles
+                                           where p.UserId == userGuid  
+                                           select p.PhoneNumber).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(phoneNumber))
+                        {
+                            string accountSid = ConfigurationManager.AppSettings["twilioAccountSID"].ToString();
+                            string authToken = ConfigurationManager.AppSettings["twilioAuthToken"].ToString();
+                            string fromNumber = ConfigurationManager.AppSettings["twilioPhoneNumber"].ToString();
+                            var tools = new Tools(accountSid, authToken, fromNumber);
+                            tools.SendSms(smsMessage, new string[] { phoneNumber });
+                        }
+                }
+            }
+        }
+        txtsms.Value = "";
     }
     protected void SearchButton_Click(object sender, EventArgs e)
     {
@@ -665,6 +677,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         divFilterMessage.Visible = false;
         litFilterMessage.Text = string.Empty;
         filter.Text = string.Empty;
+
     }
 }
 
