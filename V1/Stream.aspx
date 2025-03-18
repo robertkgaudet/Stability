@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" ValidateRequest="false" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Stream.aspx.cs" Inherits="V1_Stream" %>
+
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -1592,30 +1593,30 @@
                         <div class="hpanel messageBody">
                             <div class="panel-body">
                                 <div class="message">
-                                    <div class="block-profile-image-div clearfix" style="        line-height: 1.3;">
-                                        <a href="" style="float: left; margin-right: 10px; display: none;" id="linkProfile" runat="server">
+                                    <div class="block-profile-image-div clearfix" style="line-height: 1.3;">
+                                        <a href="" style="float: left; margin-right: 10px; display: none;"
+                                            id="linkProfile" runat="server">
                                             <img class="img-rounded" width="40" src="" runat="server" id="imgProfile" />
                                         </a>
-                                        <asp:HyperLink ID="hypCreatedBy" runat="server" CssClass="StreamLink"></asp:HyperLink>
+                                        <uc1:TeamLogo runat="server" CssClass="StreamLink" ID="ucUserNameWithBadges" />
+                                        <%--<asp:HyperLink ID="hypCreatedBy" runat="server" CssClass="StreamLink"></asp:HyperLink>--%>
                                         <asp:HyperLink ID="hypPortalLink" runat="server" CssClass="StreamPortalLink"></asp:HyperLink>
-                                        <uc1:TeamLogo runat="server"  CssClass="StreamLink" ID="ucUserNameWithBadges" />
                                         <br />
                                         <asp:Label ID="lblMessageDate" runat="server" CssClass="message-date"></asp:Label>
                                     </div>
                                     <span class="message-content">
-                                        <p style="        margin-top: 10px;">
+                                        <p style ="margin-top: 10px;">
                                             <asp:Literal ID="litMessage" runat="server"></asp:Literal>
                                         </p>
                                     </span>
                                 </div>
                             </div>
                             <div class="panel-footer">
-                                <div class="row" style="        margin: -5px 5px -18px 5px">
+                                <div class="row"         style ="margin: -5px 5px -18px 5px">
                                     <span data-item-rid='<%# Eval("postId") %>'>
                                         <asp:Literal ID="litReactionCount" runat="server"></asp:Literal>
                                     </span>
-                                    <span style="        float: right;
-        margin-top: -23px">
+                                    <span         style ="float: right; margin-top: -23px">
                                         <div class="post-type-div commentSection" data-item-id='<%# Eval("postId") %>'>
                                             <asp:Literal ID="litCommentsCount" runat="server"></asp:Literal>
                                         </div>
@@ -1642,14 +1643,10 @@
                                                                 <img class="img-rounded" src='<%# Eval("imgProfileUrl") %>' /></a>
                                                         </div>
                                                         <div class="commentReact">
-                                                            <span style="        font-weight: bold;
-        width: 70%">
+                                                            <span         style ="font-weight: bold; width: 70%">
                                                                 <a target="_blank" href="<%# Eval("ProfileUrl") %>" class="author-link"><%# Eval("author") %></a>
                                                             </span>
-                                                            <span style="        float: right;
-        width: 12%;
-        text-align: right;
-        margin: 0px 5px 0px 0px;"><%# Eval("timeAgo") %></span>
+                                                            <span         style ="float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;"><%# Eval("timeAgo") %></span>
                                                             <span><%# Eval("Comment1") %></span>
                                                         </div>
                                                     </li>
@@ -1694,7 +1691,7 @@
                     </div>
 
                     <div class="textPost">
-                        <textarea id="postInput" clientidmode="Static" runat="server" style="        resize: none;" name="post" rows="1" placeholder="Create A Post"></textarea>
+                        <textarea id="postInput" clientidmode="Static" runat="server"         style ="resize: none;" name="post" rows="1" placeholder="Create A Post"></textarea>
                         <asp:Label ID="StatusLabel" runat="server" Text=""></asp:Label>
                         <div id="postContent"></div>
                         <div class="upload-div" id="thumbnails"></div>
@@ -1702,8 +1699,8 @@
                     <div class="imagePost centered-image-div" onclick="triggerFileUpload();">
                         Add Photos
                     </div>
-                    <asp:FileUpload ID="FileUpload1" ClientIDMode="Static" name="files" multiple="multiple" runat="server" Style="        display: none;" />
-                    <input type="file" id="fileInput" clientidmode="Static" accept="image/*" name="files" multiple="multiple" style="        display: none;" runat="server" />
+                    <asp:FileUpload ID="FileUpload1" ClientIDMode="Static" name="files" multiple="multiple" runat="server"         Style ="display: none;" />
+                    <input type="file" id="fileInput" clientidmode="Static" accept="image/*" name="files" multiple="multiple"         style ="display: none;" runat="server" />
                 </div>
                 <div class="modal-footer">
                     <div class="postType">
@@ -1726,18 +1723,15 @@
         <input type="hidden" clientidmode="Static" id="postTypeId" runat="server" />
     </div>
 
-    <div class="modal fade" id="newComments" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="        overflow: hidden">
+    <div class="modal fade" id="newComments" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false"         style ="overflow: hidden">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header" style="        padding: 5px">
+                <div class="modal-header"         style ="padding: 5px">
                     <center>
                         <h4>Comments</h4>
                     </center>
                 </div>
-                <div class="modal-body" id="commentList" style="        padding: 10px;
-        height: 570px;
-        max-height: 570px;
-        min-height: 570px;">
+                <div class="modal-body" id="commentList"         style ="padding: 10px; height: 570px; max-height: 570px; min-height: 570px;">
                     <div class="textPost">
                         <div class="comment-section">
                             <div class="comment-input">
@@ -1748,13 +1742,13 @@
                             <div class="comment-section-repeater">
                                 <br />
                                 <div id="rptPostComments">
-                                    <strong style="        margin-left: 120px">Comments are Loading... </strong>
+                                    <strong         style ="margin-left: 120px">Comments are Loading... </strong>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer" style="        padding: 5px;">
+                <div class="modal-footer"         style ="padding: 5px;">
                     <button type="button" class="btn btn-danger btn-sm closeComment">Close</button>
                 </div>
             </div>

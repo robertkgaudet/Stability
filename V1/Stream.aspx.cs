@@ -370,7 +370,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			String URLDescription = (String)DataBinder.Eval(dataItem.DataItem, "URLDescription");
 			String URLTitle = (String)DataBinder.Eval(dataItem.DataItem, "URLTitle");
 			String SharedURL = (String)DataBinder.Eval(dataItem.DataItem, "SharedURL");
-			HyperLink hypCreatedBy = (HyperLink)e.Item.FindControl("hypCreatedBy");
+			//HyperLink hypCreatedBy = (HyperLink)e.Item.FindControl("hypCreatedBy");
 			HyperLink hypPortalLink = (HyperLink)e.Item.FindControl("hypPortalLink");
 			Label lblMessageDate = (Label)e.Item.FindControl("lblMessageDate");
 			Literal litMessage = (Literal)e.Item.FindControl("litMessage");
@@ -384,8 +384,8 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			//int postCount = (int)DataBinder.Eval(dataItem.DataItem, "postCount");
 
 			lblMessageDate.Text = GetElapsedTime(createdOn);
-			hypCreatedBy.Text = fullname;
-			hypCreatedBy.NavigateUrl = "/V1/Member/Default.aspx?userid=" + createdBy;
+			//hypCreatedBy.Text = fullname;
+			//hypCreatedBy.NavigateUrl = "/V1/Member/Default.aspx?userid=" + createdBy;
 
 			if (eventId != null)
 			{
