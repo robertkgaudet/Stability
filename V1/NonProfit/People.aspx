@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People"  ValidateRequest="false" %>
+
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
@@ -10,6 +11,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
     <link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
     <script src="/Homer/vendor/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote.css" />
+    <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />
+    <script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
+ 
+
     <style>
         .website {
             background-color: #5E2E91;
@@ -44,7 +50,27 @@
             margin-right: 8px;
             margin-left: 8px;
         }
-    </style>
+        .input-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group-append {
+            margin-left: 10px;
+        }
+        .chkSelectAll{
+                margin-top: 9px;
+
+        }
+        input#ContentPlaceHolder1_chkSelectAll {
+            margin-top:10px;
+            margin-right:10px;
+        }
+        .b2{
+            margin-bottom: 160px;
+        }
+
+      </style>
     <script>
         // Step 1: Select all the buttons in the table
 
@@ -61,7 +87,19 @@
         var txtMessage;
 
         $(document).ready(function () {
-
+            $('#<%=txtemail.ClientID%>').summernote({
+                toolbar: [
+                    ['style', ['bold', 'italic']],
+                    ['alignment', ['ul', 'ol', 'paragraph']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link', 'table']],
+                   
+                ],
+                height: 100
+            });
             // Initialize Example 1
             $('#tblVolunteers').footable();
 
@@ -109,7 +147,43 @@
                 allSelectedText: 'All Selected',
                 numberDisplayed: 2
             });
+      
+            window.onload = function () {
+                var selectAllCheckbox = document.getElementById("<%= chkSelectAll.ClientID %>");
+    var userCheckboxes = document.querySelectorAll(".select-user");
+                var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
 
+                function updateSelectedUsers() {
+                    var selectedUserIds = [];
+                    for (var i = 0; i < userCheckboxes.length; i++) {
+                        if (userCheckboxes[i].checked) {
+                            selectedUserIds.push(userCheckboxes[i].getAttribute("data-userid"));
+                        }
+                    }
+                    hiddenField.value = selectedUserIds.join(",");
+                }
+                selectAllCheckbox.onclick = function () {
+                    for (var i = 0; i < userCheckboxes.length; i++) {
+                        userCheckboxes[i].checked = this.checked;
+                    }
+                    updateSelectedUsers(); 
+                };
+                for (var i = 0; i < userCheckboxes.length; i++) {
+                    userCheckboxes[i].onclick = function () {
+                        var allChecked = true;
+                        for (var j = 0; j < userCheckboxes.length; j++) {
+                            if (!userCheckboxes[j].checked) {
+                                allChecked = false;
+                                break;
+                            }
+                        }
+                        selectAllCheckbox.checked = allChecked;
+                        updateSelectedUsers(); 
+                    };
+                }
+            };
+
+          
         });
 
         function sendClick(object) {
@@ -173,10 +247,22 @@
         }
     </script>
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
-
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
-
+    <asp:HiddenField ID="hdnSelectedUsers" runat="server" />
+    <div id="divEmail" runat="server" class="input-group">
+    <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" placeholder="Enter Email Text" ClientIDMode="Static" TextMode="MultiLine"  ValidateRequestMode="Disabled"></asp:TextBox>
+    <div class="input-group-append">
+        <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary b2" Text="Send Email" OnClientClick="updateHiddenField();" OnClick="btnSendEmail_click" />
+    </div>
+</div>
+    <div id="divSms" runat="server" class="input-group">
+       <textarea ID="txtsms" runat="server" CssClass="form-control" Placeholder="Enter SMS Text"  rows="2" cols="100" ></textarea>
+        <div class="input-group-append">
+            <asp:Button ID="btnSms" runat="server" CssClass="btn btn-primary" Text="Send SMS" OnClick="btnSendSms_click" />
+        </div>
+    </div>
     <div class="panel-heading">
         <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
         <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank" Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
@@ -190,7 +276,7 @@
                             <i class="fa fa-chevron-down"></i>
                         </button>
                     </div>
-                    <h4 style="margin-left: 18px;">Search</h4>
+                    <h4 style="margin-left: 7px;">Search</h4>
                     <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
                         <asp:Literal ID="litMessage" runat="server"></asp:Literal>
                     </div>
@@ -203,7 +289,7 @@
                         </div>
                         <div class="container-search">
                             <!-- Collapsible Search Filters -->
-                            <div class="collapse col-sm-12" id="searchFilters">
+                            <div class="collapse" id="searchFilters">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
@@ -294,6 +380,7 @@
             </div>
         </div>
     </div>
+    <asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All"  />
     <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
         <tbody>
             <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
@@ -301,8 +388,10 @@
                     <tr>
                         <td style="background-color: white;">
                             <div class="hpanel">
-                                <div class="panel-body">
-                                    <h5 class="m-b-xs">       
+                                <div class="panel-body">                             
+                                    <h5 class="m-b-xs">
+                                          <input type="checkbox" class="select-user" data-userid='<%# Eval("UserID") %>' />
+                                        <asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
                                         <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
                                     </h5>
                                     <p>

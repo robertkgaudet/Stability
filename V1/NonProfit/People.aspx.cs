@@ -1,16 +1,19 @@
-﻿using GoogleMapsAPI.Places;
+﻿using CrowdRelief;
+using GoogleMapsAPI.Places;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IdentityModel.Metadata;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-
-
+using System.Collections.Specialized;
+using System.Configuration;
 
 public partial class V1_NonProfit_People : BaseOrganizationWebForm
 {
@@ -36,8 +39,28 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
         if (!IsPostBack)
         {
+            string type = Request.QueryString["type"];
+
+            if (type == "email")
+            {
+                divEmail.Visible = true;
+                divSms.Visible = false;
+            }
+            else if (type == "sms")
+            {
+                divEmail.Visible = false;
+                divSms.Visible = true;
+            }
+            else
+            {
+                divEmail.Visible = false;
+                divSms.Visible = false;
+            }
+        }
+		{
             LoadDropdowns();
         }
+
         ucTeamFooter.PageName = "peoplePage";
 		ucTeamHeader.PageName = "Team Members";
 
@@ -376,7 +399,6 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 					btnColor = "btn-info";
 				}
 			}
-
 			skillList += "<button type=\"button\" id=\"button\" onclick=\"window.location.href='/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&skillId=" + skillIdLocal + "'\" class=\"btn btn-xs " + btnColor + " m-xs\">" + skillName + "</button>";
 		}
 
@@ -417,6 +439,73 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         }
 
         return null; 
+    }
+    protected void btnSendEmail_click(object sender, EventArgs e)
+    {
+        string selectedUserIds = hdnSelectedUsers.Value; 
+        string userMessage = txtemail.Text; 
+        if (!string.IsNullOrEmpty(selectedUserIds))
+        {
+            string[] userIds = selectedUserIds.Split(',');
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                foreach (string userId in userIds)
+                {
+                        Guid userGuid = new Guid(userId);
+                        var userEmail = (from m in dc.aspnet_Memberships
+                                         where m.UserId == userGuid
+                                         select m.Email).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(userEmail))
+                        {
+                            ListDictionary ldEmailBodyReplacements = new ListDictionary();
+                            ldEmailBodyReplacements.Add("<% UserId %>", userId.ToString());
+                            ldEmailBodyReplacements.Add("<% Message %>", userMessage); 
+
+                            string error = string.Empty;
+                            Tools.SendEmail(
+                                userMessage, 
+                                "Stability User Has Signed In",
+                                ldEmailBodyReplacements,
+                                "robertkgaudet@gmail.com",
+                                "Stability Login Alert",
+                                string.Empty,
+                                string.Empty,
+                                "~\\EmailTemplates\\SignIn.html",
+                                out error
+                            );                         
+                        }          
+                }
+            }
+        }
+        txtemail.Text = "";
+    }
+    protected void btnSendSms_click(object sender, EventArgs e)
+    {
+        string selectedUserIds = hdnSelectedUsers.Value;
+        string smsMessage = txtsms.Value.Trim(); 
+        if (!string.IsNullOrEmpty(selectedUserIds) && !string.IsNullOrEmpty(smsMessage))
+        {
+            string[] userIds = selectedUserIds.Split(',');
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                foreach (string userId in userIds)
+                {                   
+                        Guid userGuid = new Guid(userId); 
+                        var phoneNumber = (from p in dc.Profiles
+                                           where p.UserId == userGuid  
+                                           select p.PhoneNumber).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(phoneNumber))
+                        {
+                            string accountSid = ConfigurationManager.AppSettings["twilioAccountSID"].ToString();
+                            string authToken = ConfigurationManager.AppSettings["twilioAuthToken"].ToString();
+                            string fromNumber = ConfigurationManager.AppSettings["twilioPhoneNumber"].ToString();
+                            var tools = new Tools(accountSid, authToken, fromNumber);
+                            tools.SendSms(smsMessage, new string[] { phoneNumber });
+                        }
+                }
+            }
+        }
+        txtsms.Value = "";
     }
     protected void SearchButton_Click(object sender, EventArgs e)
     {
@@ -573,6 +662,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         divFilterMessage.Visible = false;
         litFilterMessage.Text = string.Empty;
         filter.Text = string.Empty;
+
     }
 }
 

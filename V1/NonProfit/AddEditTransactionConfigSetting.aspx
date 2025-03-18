@@ -16,42 +16,36 @@
                 toolbar: [
                     ['style', ['bold', 'italic']],
                     ['alignment', ['ul', 'ol', 'paragraph']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
                     ['fontname', ['fontname']],
                     ['fontsize', ['fontsize']],
                     ['color', ['color']],
                     ['height', ['height']],
-                    ['insert', ['picture', 'link', 'video', 'table', 'hr']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
+                    ['insert', ['picture', 'link', 'table']],
                 ],
                 height: 100
             });
             $('#<%=txtCampaignDescription.ClientID%>').summernote({
                 toolbar: [
-                    ['style', ['bold', 'italic', 'underline']],
+                    ['style', ['bold', 'italic']],
                     ['alignment', ['ul', 'ol', 'paragraph']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['color', ['color']],
                     ['fontname', ['fontname']],
                     ['fontsize', ['fontsize']],
+                    ['color', ['color']],
                     ['height', ['height']],
-                    ['insert', ['picture', 'link', 'video', 'table', 'hr']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
+                    ['insert', ['picture', 'link', 'table']],
                 ],
                 height: 125
             });
 
             $('#<%=txtCampaignMailingAddress.ClientID%>').summernote({
                 toolbar: [
-                    ['style', ['bold', 'italic', 'underline']],
+                    ['style', ['bold', 'italic']],
                     ['alignment', ['ul', 'ol', 'paragraph']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['color', ['color']],
                     ['fontname', ['fontname']],
                     ['fontsize', ['fontsize']],
+                    ['color', ['color']],
                     ['height', ['height']],
-                    ['insert', ['picture', 'link', 'video', 'table', 'hr']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
+                    ['insert', ['picture', 'link', 'table']],
                 ],
                 height: 125
             });
