@@ -58,7 +58,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             }
         }
 		{
+
+            
             LoadDropdowns();
+            LoadEvents();
+            organizationId = Request.QueryString["organizationId"];
+            LoadPositions(new Guid(organizationId));
         }
 
         ucTeamFooter.PageName = "peoplePage";
@@ -259,7 +264,45 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 		}
 	}
 
-	protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    private void LoadPositions(Guid organizationId)
+    {
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            var positions = (from pos in dc.Positions
+                             where pos.OrganizationId == organizationId
+                             select new
+                             {
+                                 pos.PositionId,
+                                 pos.Name
+                             }).ToList();
+
+            ddlTraining.DataSource = positions;
+            ddlTraining.DataTextField = "Name";
+            ddlTraining.DataValueField = "PositionId";
+            ddlTraining.DataBind();
+            ddlTraining.Items.Insert(0, new ListItem(" Select Training  ", ""));
+        }
+    }
+
+    private void LoadEvents()
+    {
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            var events = (from ev in dc.Events
+                          where ev.IsActive == true
+                          select new
+                          {
+                              ev.EventId,
+                              ev.Name
+                          }).ToList();
+            ddlEvent.DataSource = events;
+            ddlEvent.DataTextField = "Name";
+            ddlEvent.DataValueField = "EventId";
+            ddlEvent.DataBind();
+            ddlEvent.Items.Insert(0, new ListItem("  Select Location ", ""));
+        }
+    }
+    protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
 	{
 		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
 		{
@@ -507,148 +550,149 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         }
         txtsms.Value = "";
     }
-    protected void SearchButton_Click(object sender, EventArgs e)
-    {
-        List<string> selectedSkills = GetSelectedValues(ddlSkills);
-        List<string> selectedResources = GetSelectedValues(ddlResources);
-
+	protected void SearchButton_Click(object sender, EventArgs e)
+	{
+		List<string> selectedSkills = GetSelectedValues(ddlSkills);
+		List<string> selectedResources = GetSelectedValues(ddlResources);
+        string selectedLocation = ddlEvent.SelectedValue;
+        int selectedRadius = int.Parse(Request.Form["radiusSlider"]); // Get the slider value from t
         bool emailConnected = txtEmailconnect.Checked;
-        bool isVerified = txtIsVerified.Checked;
-        bool isVetted = txtIsVetted.Checked;
-        bool optedSMS = txtOptedSMS.Checked;
+		bool isVerified = txtIsVerified.Checked;
+		bool isVetted = txtIsVetted.Checked;
+		bool optedSMS = txtOptedSMS.Checked;
 
-        string startDateText = Request.Form[StartDate.UniqueID];
-        string endDateText = Request.Form[EndDate.UniqueID];
+		string startDateText = Request.Form[StartDate.UniqueID];
+		string endDateText = Request.Form[EndDate.UniqueID];
 
-        DateTime? startDate = ParseDate(startDateText);
-        DateTime? endDate = ParseDate(endDateText);
-        string nameSearchTerm = filter.Text.Trim().ToLower();
+		DateTime? startDate = ParseDate(startDateText);
+		DateTime? endDate = ParseDate(endDateText);
+		string nameSearchTerm = filter.Text.Trim().ToLower();
 
 
-        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
-        {
-  
-            var skillMatchedUsers = new HashSet<Guid>(
-                dc.UserSkills
-                .Where(us => selectedSkills.Contains(us.SkillId.ToString()))
-                .Select(us => us.UserId)
-                .ToList()
-            );
+		using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+		{
 
-            var resourceMatchedUsers = new HashSet<Guid>(
-                dc.UserResources
-                .Where(ur => selectedResources.Contains(ur.ResourceId.ToString()))
-                .Select(ur => ur.UserId)
-                .ToList()
-            ); 
-			
+			var skillMatchedUsers = new HashSet<Guid>(
+				dc.UserSkills
+				.Where(us => selectedSkills.Contains(us.SkillId.ToString()))
+				.Select(us => us.UserId)
+				.ToList()
+			);
+
+			var resourceMatchedUsers = new HashSet<Guid>(
+				dc.UserResources
+				.Where(ur => selectedResources.Contains(ur.ResourceId.ToString()))
+				.Select(ur => ur.UserId)
+				.ToList()
+			);
+
 			var allMatchedUsers = skillMatchedUsers.Union(resourceMatchedUsers).ToHashSet();
 
-            var peopleListQuery = from uo in dc.UserOrganizations
-                                  join p in dc.Profiles on uo.UserId equals p.UserId
-                                  join net in dc.aspnet_Memberships on p.UserId equals net.UserId
-                                  join u in dc.aspnet_Users on p.UserId equals u.UserId
-                                  join uad in dc.UserAvailableDates on p.UserId equals uad.UserId into uadGroup
-                                  from uad in uadGroup.DefaultIfEmpty() 
-                                  where uo.OrganizationId == new Guid(organizationId) && !net.IsLockedOut
-                                  select new
-                                  {
-                                      p.Firstname,
-                                      p.Lastname,
-                                      net.CreateDate,
-                                      p.Description,
-                                      net.LoweredEmail,
-                                      p.PhoneNumber,
-                                      p.UserId,
-                                      p.DateVettingCompleted,
-                                      p.DateVettingStarted,
-                                      p.VettingNotes,
-                                      p.VettingActive,
-                                      p.VettingComplete,
-                                      p.PassedVetting,
-                                      p.Title,
-                                      p.ZelloName,
-                                      u.LastActivityDate,
-                                      net.LastLoginDate,
-                                      net.IsApproved,
-                                      p.ReceiveDeploymentSMS,
-                                      DateAvailable = uad != null ? uad.DateAvailable : (DateTime?)null // Handle null values
-                                  };
+			var peopleListQuery = from uo in dc.UserOrganizations
+								  join p in dc.Profiles on uo.UserId equals p.UserId
+								  join net in dc.aspnet_Memberships on p.UserId equals net.UserId
+								  join u in dc.aspnet_Users on p.UserId equals u.UserId
+								  join uad in dc.UserAvailableDates on p.UserId equals uad.UserId into uadGroup
+								  from uad in uadGroup.DefaultIfEmpty()
+								  where uo.OrganizationId == new Guid(organizationId) && !net.IsLockedOut
+								  select new
+								  {
+									  p.Firstname,
+									  p.Lastname,
+									  net.CreateDate,
+									  p.Description,
+									  net.LoweredEmail,
+									  p.PhoneNumber,
+									  p.UserId,
+									  p.DateVettingCompleted,
+									  p.DateVettingStarted,
+									  p.VettingNotes,
+									  p.VettingActive,
+									  p.VettingComplete,
+									  p.PassedVetting,
+									  p.Title,
+									  p.ZelloName,
+									  u.LastActivityDate,
+									  net.LastLoginDate,
+									  net.IsApproved,
+									  p.ReceiveDeploymentSMS,
+									  DateAvailable = uad != null ? uad.DateAvailable : (DateTime?)null // Handle null values
+								  };
 
-            if (startDate.HasValue || endDate.HasValue)
-            {
-                if (startDate.HasValue)
-                {
+			if (startDate.HasValue || endDate.HasValue)
+			{
+				if (startDate.HasValue)
+				{
 
-                    peopleListQuery = peopleListQuery.Where(p =>
-                        p.DateAvailable != null && p.DateAvailable >= startDate.Value.Date
-                    );
-                }
-                if (endDate.HasValue)
-                {
+					peopleListQuery = peopleListQuery.Where(p =>
+						p.DateAvailable != null && p.DateAvailable >= startDate.Value.Date
+					);
+				}
+				if (endDate.HasValue)
+				{
 
-                    peopleListQuery = peopleListQuery.Where(p =>
-                        p.DateAvailable != null && p.DateAvailable <= endDate.Value.Date
-                    );
-                }
-            }
-			
-            if (selectedSkills.Any() || selectedResources.Any())
-            {
-                peopleListQuery = peopleListQuery.AsEnumerable().Where(pl => allMatchedUsers.Contains(pl.UserId)).AsQueryable();
+					peopleListQuery = peopleListQuery.Where(p =>
+						p.DateAvailable != null && p.DateAvailable <= endDate.Value.Date
+					);
+				}
 			}
 
-            if (!string.IsNullOrEmpty(nameSearchTerm))
-            {
+			if (selectedSkills.Any() || selectedResources.Any())
+			{
+				peopleListQuery = peopleListQuery.AsEnumerable().Where(pl => allMatchedUsers.Contains(pl.UserId)).AsQueryable();
+			}
 
-                var searchTerms = nameSearchTerm.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			if (!string.IsNullOrEmpty(nameSearchTerm))
+			{
 
-
-                peopleListQuery = peopleListQuery.AsEnumerable().Where(pl =>
-                    searchTerms.All(term =>
-                        (!string.IsNullOrEmpty(pl.Firstname) && pl.Firstname.ToLower().Contains(term)) ||
-                        (!string.IsNullOrEmpty(pl.Lastname) && pl.Lastname.ToLower().Contains(term))
-                    )
-                ).AsQueryable();
-            }
-           
-
-            //if (emailConnected)
-            //{
-            //    peopleListQuery = peopleListQuery.Where(pl => !string.IsNullOrEmpty(pl.LoweredEmail));
-            //}
-            if (emailConnected)
-            {
-                peopleListQuery = peopleListQuery.Where(pl => pl.LoweredEmail != null && pl.LoweredEmail != "");
-            }
-
-            if (isVetted)
-            {
-                peopleListQuery = peopleListQuery.Where(pl => pl.VettingActive ?? false);
-            }
-
-            if (optedSMS)
-            {
-                peopleListQuery = peopleListQuery.Where(pl => pl.ReceiveDeploymentSMS ?? false);
-            }
-
-            // Execute Query with Sorting
-            var peopleList = peopleListQuery
-                .OrderByDescending(pl => pl.LastLoginDate).Distinct()
-                .ToList();
-
-            //// Show Filter Message if Any Filter Applied
-            //divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS || isStartDateValid || isEndDateValid;
-            //litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
-
-            // Bind Data
-            rptVolunteers.DataSource = peopleList;
-            rptVolunteers.DataBind();
-        }
-    }
+				var searchTerms = nameSearchTerm.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
 
-    protected void ClearButton_Click(object sender, EventArgs e)
+				peopleListQuery = peopleListQuery.AsEnumerable().Where(pl =>
+					searchTerms.All(term =>
+						(!string.IsNullOrEmpty(pl.Firstname) && pl.Firstname.ToLower().Contains(term)) ||
+						(!string.IsNullOrEmpty(pl.Lastname) && pl.Lastname.ToLower().Contains(term))
+					)
+				).AsQueryable();
+			}
+
+
+			//if (emailConnected)
+			//{
+			//    peopleListQuery = peopleListQuery.Where(pl => !string.IsNullOrEmpty(pl.LoweredEmail));
+			//}
+			if (emailConnected)
+			{
+				peopleListQuery = peopleListQuery.Where(pl => pl.LoweredEmail != null && pl.LoweredEmail != "");
+			}
+
+			if (isVetted)
+			{
+				peopleListQuery = peopleListQuery.Where(pl => pl.VettingActive ?? false);
+			}
+
+			if (optedSMS)
+			{
+				peopleListQuery = peopleListQuery.Where(pl => pl.ReceiveDeploymentSMS ?? false);
+			}
+
+			// Execute Query with Sorting
+			var peopleList = peopleListQuery
+				.OrderByDescending(pl => pl.LastLoginDate).Distinct()
+				.ToList();
+
+			//// Show Filter Message if Any Filter Applied
+			//divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS || isStartDateValid || isEndDateValid;
+			//litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
+
+			// Bind Data
+			rptVolunteers.DataSource = peopleList;
+			rptVolunteers.DataBind();
+		}
+	}
+
+
+	protected void ClearButton_Click(object sender, EventArgs e)
     {
         ddlSkills.SelectedIndex = -1;
         ddlResources.SelectedIndex = -1;

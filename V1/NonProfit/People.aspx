@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People"  ValidateRequest="false" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" ValidateRequest="false" %>
 
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote.css" />
     <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />
     <script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
- 
+
 
     <style>
         .website {
@@ -50,6 +50,7 @@
             margin-right: 8px;
             margin-left: 8px;
         }
+
         .input-group {
             display: flex;
             align-items: center;
@@ -58,19 +59,20 @@
         .input-group-append {
             margin-left: 10px;
         }
-        .chkSelectAll{
-                margin-top: 9px;
 
+        .chkSelectAll {
+            margin-top: 9px;
         }
+
         input#ContentPlaceHolder1_chkSelectAll {
-            margin-top:10px;
-            margin-right:10px;
+            margin-top: 10px;
+            margin-right: 10px;
         }
-        .b2{
+
+        .b2 {
             margin-bottom: 160px;
         }
-
-      </style>
+    </style>
     <script>
         // Step 1: Select all the buttons in the table
 
@@ -96,9 +98,22 @@
                     ['color', ['color']],
                     ['height', ['height']],
                     ['insert', ['picture', 'link', 'table']],
-                   
+
                 ],
                 height: 100
+            });
+            var radiusSlider = document.getElementById("radiusSlider");
+            var radiusValue = document.getElementById("radiusValue");
+            var hiddenRadius = document.getElementById("hiddenRadius");
+
+            radiusSlider.oninput = function () {
+                radiusValue.innerHTML = this.value + " km";
+                hiddenRadius.value = this.value;
+            }
+
+            $("#<%=SearchButton.ClientID%>").click(function () {
+                var selectedRadius = radiusSlider.value;
+                console.log("Selected Radius: " + selectedRadius + " km");
             });
             // Initialize Example 1
             $('#tblVolunteers').footable();
@@ -135,8 +150,15 @@
                 var searchPanel = $("#searchFilters");
                 icon.toggleClass("fa-chevron-down fa-chevron-up");
                 searchPanel.collapse("toggle");
-            });
+            });  
 
+                $("#<%= ddlEvent.ClientID %>").change(function () {
+                    if ($(this).val()) {
+                        $("#radiusSection").show();
+                    } else {
+                        $("#radiusSection").hide();
+                    }
+                });
             $('.multiselect').multiselect({
                 includeSelectAllOption: true,
                 enableFiltering: true,
@@ -147,10 +169,10 @@
                 allSelectedText: 'All Selected',
                 numberDisplayed: 2
             });
-      
+
             window.onload = function () {
                 var selectAllCheckbox = document.getElementById("<%= chkSelectAll.ClientID %>");
-    var userCheckboxes = document.querySelectorAll(".select-user");
+                var userCheckboxes = document.querySelectorAll(".select-user");
                 var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
 
                 function updateSelectedUsers() {
@@ -166,7 +188,7 @@
                     for (var i = 0; i < userCheckboxes.length; i++) {
                         userCheckboxes[i].checked = this.checked;
                     }
-                    updateSelectedUsers(); 
+                    updateSelectedUsers();
                 };
                 for (var i = 0; i < userCheckboxes.length; i++) {
                     userCheckboxes[i].onclick = function () {
@@ -178,12 +200,12 @@
                             }
                         }
                         selectAllCheckbox.checked = allChecked;
-                        updateSelectedUsers(); 
+                        updateSelectedUsers();
                     };
                 }
             };
 
-          
+
         });
 
         function sendClick(object) {
@@ -252,13 +274,13 @@
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
     <asp:HiddenField ID="hdnSelectedUsers" runat="server" />
     <div id="divEmail" runat="server" class="input-group">
-    <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" placeholder="Enter Email Text" ClientIDMode="Static" TextMode="MultiLine"  ValidateRequestMode="Disabled"></asp:TextBox>
-    <div class="input-group-append">
-        <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary b2" Text="Send Email" OnClientClick="updateHiddenField();" OnClick="btnSendEmail_click" />
+        <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" placeholder="Enter Email Text" ClientIDMode="Static" TextMode="MultiLine" ValidateRequestMode="Disabled"></asp:TextBox>
+        <div class="input-group-append">
+            <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary b2" Text="Send Email" OnClientClick="updateHiddenField();" OnClick="btnSendEmail_click" />
+        </div>
     </div>
-</div>
     <div id="divSms" runat="server" class="input-group">
-       <textarea ID="txtsms" runat="server" CssClass="form-control" Placeholder="Enter SMS Text"  rows="2" cols="100" ></textarea>
+        <textarea id="txtsms" runat="server" cssclass="form-control" placeholder="Enter SMS Text" rows="2" cols="100"></textarea>
         <div class="input-group-append">
             <asp:Button ID="btnSms" runat="server" CssClass="btn btn-primary" Text="Send SMS" OnClick="btnSendSms_click" />
         </div>
@@ -297,11 +319,10 @@
                                             <asp:TextBox ID="filter" runat="server" CssClass="form-control" placeholder="Search By Member "></asp:TextBox>
                                         </div>
                                     </div>
-
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
-                                            <b>Location :</b>
-                                            <input type="text" class="form-control" id="txtlocation" placeholder="Enter Location">
+                                            <b>Training :</b>
+                                            <asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-control"></asp:DropDownList>
                                         </div>
                                     </div>
                                 </div>
@@ -332,6 +353,34 @@
                                         <div class="form-group fix">
                                             <b class="text-line">Available To :</b>
                                             <asp:TextBox ID="EndDate" runat="server" CssClass="form-control datepicker" placeholder="End Date" autocomplete="off" ClientIDMode="Static" />
+                                        </div>
+                                    </div>
+                                    <%-- <div class="col-md-6 mb-3">
+                                            <div class="form-group fix">
+                                                <b>Location :</b>
+                                                <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-group fix">
+                                                <b>Radius (km):</b>
+                                                <input type="range" id="radiusSlider" min="10" max="100" step="10" value="10" class="form-control">
+                                                <span id="radiusValue">10 km</span>
+                                                <input type="hidden" id="hiddenRadius" name="radiusSlider" value="10" />
+                                            </div>
+                                        </div>--%>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group fix">
+                                            <b>Location :</b>
+                                            <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3" id="radiusSection" style="display: none;">
+                                        <div class="form-group fix">
+                                            <b>Radius (km):</b>
+                                            <input type="range" id="radiusSlider" min="10" max="100" step="10" value="10" class="form-control">
+                                            <span id="radiusValue">10 km</span>
+                                            <input type="hidden" id="hiddenRadius" name="radiusSlider" value="10" />
                                         </div>
                                     </div>
                                 </div>
@@ -380,7 +429,7 @@
             </div>
         </div>
     </div>
-    <asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All"  />
+    <asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All" />
     <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
         <tbody>
             <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
@@ -388,9 +437,9 @@
                     <tr>
                         <td style="background-color: white;">
                             <div class="hpanel">
-                                <div class="panel-body">                             
+                                <div class="panel-body">
                                     <h5 class="m-b-xs">
-                                          <input type="checkbox" class="select-user" data-userid='<%# Eval("UserID") %>' />
+                                        <input type="checkbox" class="select-user" data-userid='<%# Eval("UserID") %>' />
                                         <asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
                                         <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
                                     </h5>
