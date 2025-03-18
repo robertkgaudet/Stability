@@ -39,14 +39,14 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
         if (!IsPostBack)
         {
-            string message = Request.QueryString["message"];
+            string type = Request.QueryString["type"];
 
-            if (message == "SendEmail")
+            if (type == "email")
             {
                 divEmail.Visible = true;
                 divSms.Visible = false;
             }
-            else if (message == "SendSMS")
+            else if (type == "sms")
             {
                 divEmail.Visible = false;
                 divSms.Visible = true;

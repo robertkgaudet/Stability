@@ -47,8 +47,8 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypSupport.NavigateUrl = "/V1/NonProfit/Support.aspx?organizationId=" + organizationId;
         hypTickets.NavigateUrl = "/V1/NonProfitAdministration/Tickets.aspx?organizationId=" + organizationId;
         hypReports.NavigateUrl = "/V1/NonProfitAdministration/Reports.aspx?organizationId=" + organizationId;
-        hypMail.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&message=SendEmail";
-        hypSms.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&message=SendSMS";
+        hypMail.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&type=email";
+        hypSms.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&type=sms";
         //hypWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + organizationId;
         hypSkillsets.NavigateUrl = "/V1/NonProfit/Skillsets.aspx?organizationId=" + organizationId;
         hypResources.NavigateUrl = "/V1/NonProfit/AvailableResources.aspx?organizationId=" + organizationId;
