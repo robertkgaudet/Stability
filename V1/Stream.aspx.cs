@@ -382,7 +382,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
             if (ucTeamLogo != null)
             {
                 ucTeamLogo.UserId = createdBy;
-                ucTeamLogo.PageName = "profile";
                 ucTeamLogo.LoadNameWithBadges();
             }
             lblMessageDate.Text = GetElapsedTime(createdOn);
