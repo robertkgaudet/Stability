@@ -52,7 +52,14 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                     {
                         if (orgUser.ShowTeamLogo ?? false)
                         {
-                            imgTeamLogo.ImageUrl = teamLogo + orgUser.LogoSquare;
+                            if (!String.IsNullOrEmpty(orgUser.LogoSquare))
+                            {
+                                imgTeamLogo.ImageUrl = teamLogo + orgUser.LogoSquare;
+                            }
+                            else
+                            {                  
+                                imgTeamLogo.ImageUrl = "/V1/Images/DefaultLogo.png";
+                            }
                             imgTeamLogo.Visible = true;
                             imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
                             hypTeamLogo.Visible = true;
