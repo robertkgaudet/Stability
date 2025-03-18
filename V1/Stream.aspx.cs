@@ -358,14 +358,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			{
 				userId = new Guid(user.ProviderUserKey.ToString());
 			}
-
-			V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
-			if (ucTeamLogo != null)
-			{
-				ucTeamLogo.UserId = userId;
-			}
-
-			RepeaterItem dataItem = (RepeaterItem)e.Item;
+            RepeaterItem dataItem = (RepeaterItem)e.Item;
 			Guid postId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostId");
 			Guid eventId = (Guid)DataBinder.Eval(dataItem.DataItem, "EventId");
 			Guid postTypeId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostTypeId");
@@ -402,6 +395,14 @@ public partial class V1_Stream : BaseOrganizationWebForm
 					hypPortalLink.Text = sEvent.Name;
 				}
 			}
+
+			V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
+			if (ucTeamLogo != null)
+			{
+				ucTeamLogo.UserId = createdBy;
+				ucTeamLogo.LoadNameWithBadges();
+			}
+			lblMessageDate.Text = GetElapsedTime(createdOn);
 
 			var postReaction = from pr in dc.PostReactions
 							   join p in dc.Profiles on pr.CreatedBy equals p.UserId

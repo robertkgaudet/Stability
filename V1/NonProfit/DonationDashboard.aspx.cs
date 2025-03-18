@@ -22,7 +22,7 @@ public partial class V1_NonProfit_DonationDashboard : System.Web.UI.Page
         public string CreatedAt { get; set; }
         public string Amount { get; set; }
     }
-    class specificsdeployment
+    class Deployment
     {
 
         public string CampaignName { get; set; }
@@ -92,7 +92,7 @@ public partial class V1_NonProfit_DonationDashboard : System.Web.UI.Page
                                     .ToList();
 
                 var sstotalDonationQuery = dc.Donations.Where(d => d.TransactionId != null && d.TransactionId != "" && d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded));
-                totalDonation = sstotalDonationQuery.Any()? sstotalDonationQuery.Sum(x=>x.Amount) : 0;
+                totalDonation = sstotalDonationQuery.Any() ? sstotalDonationQuery.Sum(x => x.Amount) : 0;
 
                 foreach (var item in groupedDonors)
                 {
@@ -110,33 +110,47 @@ public partial class V1_NonProfit_DonationDashboard : System.Web.UI.Page
                 RecentDonorsRepeater.DataBind();
 
 
-                List<specificsdeployment> specificsdeployments = new List<specificsdeployment>();
+                List<Deployment> deployments = new List<Deployment>();
+
                 var donationsData = (from d in dc.DonationCampaigns
-                                     join de in dc.Donations.Where(d => d.TransactionId != null && d.TransactionId != "" && d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded)) on d.DonationCampaignId equals de.DonationCampaignId into donationsGroup
+                                     join de in dc.Donations
+                                         .Where(d => d.TransactionId != null && d.TransactionId != "" &&
+                                                     d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded))
+                                         on d.DonationCampaignId equals de.DonationCampaignId into donationsGroup
                                      from de in donationsGroup.DefaultIfEmpty()
-                                     join E in dc.OrganizationEvents on d.OrganizationEventId equals E.OrganizationEventId into eventsGroup
+                                     join E in dc.OrganizationEvents
+                                         on d.OrganizationEventId equals E.OrganizationEventId into eventsGroup
                                      from E in eventsGroup.DefaultIfEmpty()
-                                     where E != null && E.CampaignName != null && E.CampaignName != "" && (de != null && de.Amount > 0)
+                                     where E != null && E.CampaignName != null && E.CampaignName != "" // Replaced IsNullOrEmpty
+                                     && (de != null && de.Amount > 0)
+                                     group new { de, E } by new { E.CampaignName } into groupedData
                                      select new
                                      {
-                                         Amount = de != null ? de.Amount : 0,
-                                         CampaignName = E.CampaignName,
-                                         CreatedAt = de != null ? de.CreatedAt.Date.ToString() : "N/A"
-                                     }).ToList();
+                                         CampaignName = groupedData.Key.CampaignName,
+                                         CreatedAt = groupedData.Max(x => x.E.CreatedOn), // Keep as DateTime? for now
+                                         TotalAmount = groupedData.Sum(g => g.de != null ? g.de.Amount : 0)
+                                     })
+                      .ToList() // Execute query first
+                      .Select(x => new
+                      {
+                          x.CampaignName,
+                          CreatedAt = x.CreatedAt.HasValue ? x.CreatedAt.Value.ToString("yyyy-MM-dd") : "N/A", // Format in-memory
+                          x.TotalAmount
+                      }).ToList(); // Convert formatted data to list
 
 
                 foreach (var item in donationsData)
                 {
-                    var data = new specificsdeployment
+                    var data = new Deployment
                     {
                         CampaignName = item.CampaignName,
-                        CreatedAt = item.CreatedAt.ToString(),
-                        Amount = item.Amount.ToString()
+                        CreatedAt = item.CreatedAt,
+                        Amount = item.TotalAmount.ToString()
                     };
-                    specificsdeployments.Add(data);
+                    deployments.Add(data);
                 }
 
-                AdditionalInfoRepeater.DataSource = specificsdeployments;
+                AdditionalInfoRepeater.DataSource = deployments;
                 AdditionalInfoRepeater.DataBind();
 
             }

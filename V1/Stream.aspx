@@ -1,8 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" ValidateRequest="false" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Stream.aspx.cs" Inherits="V1_Stream" %>
-
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
-
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <script src="Scripts/infinite-scroll.pkgd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/#.#.#/jquery.jscroll.min.js"></script>
@@ -1600,7 +1598,7 @@
                                         </a>
                                         <asp:HyperLink ID="hypCreatedBy" runat="server" CssClass="StreamLink"></asp:HyperLink>
                                         <asp:HyperLink ID="hypPortalLink" runat="server" CssClass="StreamPortalLink"></asp:HyperLink>
-                                        <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
+                                        <uc1:TeamLogo runat="server"  CssClass="StreamLink" ID="ucUserNameWithBadges" />
                                         <br />
                                         <asp:Label ID="lblMessageDate" runat="server" CssClass="message-date"></asp:Label>
                                     </div>
