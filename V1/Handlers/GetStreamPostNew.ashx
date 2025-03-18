@@ -143,7 +143,7 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
 
                 if (reactionTypeID == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"))
                 {
-                    litReactionTitle = "<span style='color: #286090'> &#128591; Thank </span>";
+                    litReactionTitle = "<span style='color: #286090'> &#128591; Like </span>";
                 }
                 else if (reactionTypeID == new Guid("b247efe7-3da7-44fa-9452-a331f71d337f"))
                 {
@@ -163,7 +163,7 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                 }
                 else
                 {
-                    litReactionTitle = "<span style='color: #777'> &#128077; Thank </span>";
+                    litReactionTitle = "<span style='color: #777'> &#128077; Like </span>";
                 }
 
                 if (postImages != null && postImages.Count() > 0)
@@ -187,7 +187,7 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                 var postCount = dc.PostComments.Where(f => f.PostId == post.PostId).ToList().Count.ToString();
                 results += "<div class='hpanel messageBody'><div class='panel-body'><div class='message'><div class='block-profile-image-div clearfix' style='line-height: 1.3;'>" +
                         "<img src=" + imageTag + " id='ContentPlaceHolder1_rptPosts_imgProfile_49' class='img-rounded' style='float: left; margin-right: 10px;' width='40'>" +
-                        "<a id='ContentPlaceHolder1_rptPosts_hypCreatedBy_42' class='StreamLink' href='/V1/Profile/Profile.aspx?userId=" + post.UserId + "'>" + post.fullname + "</a><br>" +
+                        "<a id='ContentPlaceHolder1_rptPosts_hypCreatedBy_42' class='StreamLink' href='/V1/Member/Default.aspx?userid=" + post.UserId + "'>" + post.fullname + "</a><br>" +
                         "<span id='ContentPlaceHolder1_rptPosts_lblMessageDate_42' class='message-date'>" + CrowdRelief.Tools.GetElapsedTime(Convert.ToDateTime(post.CreatedOn)) + "</span></div>" +
                         "<span class='message-content'><p style='margin-top: 10px;'>" + postHtml + "</p></span></div></div><div class='panel-footer'>" +
                         "<div class='row' style='margin: -5px 5px -18px 5px'><span>" + litReactionCount + "</span><span style='float: right'>" + postCount + " comments</span></div><hr />" +
@@ -206,11 +206,12 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                                         Comment1 = ReplaceTaggedUsersWithLinks(c.Comment1),
                                         timeAgo = GetTimeAgo(c.CreatedOn),
                                         author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
-                                        ProfileUrl = "/V1/Profile/Profile.aspx?userId=" + c.CreatedBy,
+                                        ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
                                         ImgProfileUrl = profilePhotoFolder + (
                                            (from rph in dc.ProfilePhotos
                                             join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
                                             where rph.UserId == c.CreatedBy
+                                            orderby rp.CreatedOn descending
                                             select rp.FilenameCropped).FirstOrDefault() ?? "profilepicture.png")
                                     }).Take(2).ToList();
 
@@ -256,11 +257,11 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
 
             if (user != null)
             {
-                html = "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>" + "@@" + fullName + "</a>";
+                html = "<a target='_blank' href='/V1/Member/Default.aspx?userid=" + user.UserId + "'>" + "@@" + fullName + "</a>";
             }
 
             return user != null ? html : match.Value;
-            //return user != null ? "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>@@" + fullName + "</a>" : match.Value;
+            //return user != null ? "<a target='_blank' href='/V1/Member/Default.aspx?userid=" + user.UserId + "'>@@" + fullName + "</a>" : match.Value;
         });
     }
 
