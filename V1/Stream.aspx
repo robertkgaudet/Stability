@@ -127,13 +127,16 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        var div = document.querySelector(`.comment-section-repeater-show[data-item-id="${postId}-showComments"]`);
+                        var div = $('[data-item-id="' + postId + '-showComments"]');
+                        //var div = document.querySelector(`.comment-section-repeater-show[data-item-id="${postId}-showComments"]`);
                         var html = ""
                         if (response.d) {
                             if (response.d.length > 0) {
                                 if (div) {
-                                    var parentDiv = div.parentElement; // This gives you the parent div
-                                    parentDiv.style.display = 'block';
+                                    //var parentDiv = div.parentElement; // This gives you the parent div
+                                    var parentDiv = div.parent();
+                                    parentDiv.show();
+                                    //parentDiv.style.display = 'block';
                                 }
                                 for (let i = 0; i < response.d.length; ++i) {
                                     let item = response.d[i];
@@ -370,13 +373,12 @@
 
             $(document).on('click', '.addComment', function () {
                 let postId = $("#postIdForComments").val();
-                const commentText = $(".commentTextarea").val();
+                const text = $(".commentTextarea").val();
                 debugger;
-                var urlRegex = /\b((?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)\b/g;
-                var latestUrl = null;
-                commentText.replace(urlRegex, function (url) {
-                    latestUrl = url; // Store the last detected URL
-                    return url; // Return the URL as is
+                var urlPattern = /\b((?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)\b/g;
+                //var urlPattern = /(https?:\/\/[^\s]+)/g;
+                var commentText = text.replace(urlPattern, function (url) {
+                    return '<a href="' + url + '" target="_blank">' + url + '</a>';
                 });
 
                 let commentId = gCommentId;
@@ -609,745 +611,748 @@
 
     </script>
     <style>
-    .suggestions {
-        border: 1px solid #ccc;
-        max-height: 150px;
-        overflow-y: auto;
-        position: absolute;
-        width: 300px;
-        display: none;
-        background-color: white;
-        z-index: 999;
-    }
-
-    span {
-        word-wrap: break-word;
-    }
-
-    .suggestion-item {
-        padding: 8px;
-        cursor: pointer;
-    }
-
-        .suggestion-item:hover {
-            background-color: #f0f0f0;
+        .suggestions {
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            width: 300px;
+            display: none;
+            background-color: white;
+            z-index: 999;
         }
 
-    .bold-purple-star {
-        font-weight: bold;
-        color: red;
-    }
+        span {
+            word-wrap: break-word;
+        }
 
-    .large-icon:hover {
-        transform: scale(1.5); /* Slightly increase the size */
-    }
+        .suggestion-item {
+            padding: 8px;
+            cursor: pointer;
+        }
 
-    .large-icon {
-        font-size: 24px;
-        display: inline-block; /* Ensure it responds to transforms */
-        transition: transform 0.2s ease-in-out; /* Smooth transition effect */
-        cursor: pointer; /* Hand cursor */
-        padding: 0px 5px;
-    }
+            .suggestion-item:hover {
+                background-color: #f0f0f0;
+            }
 
-    .tooltip {
-        display: none;
-        position: absolute;
-        background-color: #333;
-        color: #fff;
-        padding: 5px;
-        border-radius: 3px;
-        font-size: 12px;
-    }
+        .bold-purple-star {
+            font-weight: bold;
+            color: red;
+        }
 
-    .hover-button {
-        margin: 50px;
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
+        .large-icon:hover {
+            transform: scale(1.5); /* Slightly increase the size */
+        }
 
-    .commentList {
-        padding: 10px;
-        height: 570px;
-        max-height: 570px;
-        min-height: 570px;
-    }
+        .large-icon {
+            font-size: 24px;
+            display: inline-block; /* Ensure it responds to transforms */
+            transition: transform 0.2s ease-in-out; /* Smooth transition effect */
+            cursor: pointer; /* Hand cursor */
+            padding: 0px 5px;
+        }
 
-    .thankTooltip {
-        display: none;
-        position: absolute;
-        background-color: #fff; /* White background */
-        color: #333; /* Dark text color */
-        padding: 3px 8px 3px 8px;
-        border-radius: 50px; /* Completely rounded corners */
-        font-size: 12px;
-        white-space: nowrap;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Drop shadow */
-        border: none; /* Remove border */
-        z-index: 9999;
-    }
+        .tooltip {
+            display: none;
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            padding: 5px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
 
-    .checkboxlist-item {
-        margin-left: 10px; /* Adjust the margin as needed */
-    }
+        .hover-button {
+            margin: 50px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
 
-    .StreamLink {
-        color: #050505;
-        font-weight: bold;
-    }
+        .commentList {
+            padding: 10px;
+            height: auto;
+            max-height: 500px;
+            min-height: 300px;
+        }
 
-        .StreamLink:hover {
+        .thankTooltip {
+            display: none;
+            position: absolute;
+            background-color: #fff; /* White background */
+            color: #333; /* Dark text color */
+            padding: 3px 8px 3px 8px;
+            border-radius: 50px; /* Completely rounded corners */
+            font-size: 12px;
+            white-space: nowrap;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Drop shadow */
+            border: none; /* Remove border */
+            z-index: 9999;
+        }
+
+        .checkboxlist-item {
+            margin-left: 10px; /* Adjust the margin as needed */
+        }
+
+        .StreamLink {
             color: #050505;
+            font-weight: bold;
+        }
+
+            .StreamLink:hover {
+                color: #050505;
+                text-decoration: underline;
+            }
+
+
+        .StreamPortalLink {
+            float: right;
+            text-align: right;
+            color: #6A6C6F;
+            font-size: 90%;
+        }
+
+            .StreamPortalLink:hover {
+                color: #6A6C6F;
+                text-decoration: none;
+            }
+
+            .StreamPortalLink::after {
+                content: none; /* This removes the arrow if it's added via pseudo-element */
+            }
+
+        .panel-body {
+            border-top-left-radius: 10px !important;
+            border-top-right-radius: 10px !important;
+        }
+
+        .panel-footer {
+            border-bottom-left-radius: 10px !important;
+            border-bottom-right-radius: 10px !important;
+        }
+
+        .postOpen {
+            border-radius: 10px !important;
+        }
+
+        .postContainer {
+            position: fixed !important;
+            z-index: 500;
+        }
+
+        .postrow {
+            width: 100%;
+            height: 120px;
+            margin-left: -1px;
+            margin-top: -25px;
+            position: fixed;
+            display: flex;
+            justify-content: center;
+            /*background-image: url('/V1/Images/CausePhotos/stabilityevent.png');*/ /* Path to your image */
+            background-size: cover; /* Scale the image to cover the entire div */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+            background-color: #E8D3FE;
+        }
+
+        .contentFeed {
+            margin-top: 100px !important;
+        }
+
+        .modal-dialog {
+            display: flex;
+            justify-content: center; /* Centers horizontally */
+        }
+
+        .modal-content {
+            background-color: #FFF !important;
+            width: 450px !important;
+        }
+
+        .modal-header {
+            /*background-color: #FFF !important;*/
+            background-color: #5e2e91 !important;
+            /* border-top-left-radius: 10px !important;
+            border-top-right-radius: 10px !important;*/
+            color: #fff;
+        }
+
+        .modal-footer {
+            background-color: #FFF !important;
+            border-bottom-left-radius: 10px !important;
+            border-bottom-right-radius: 10px !important;
+        }
+
+        .modal-body {
+            text-align: left;
+        }
+
+        .modal {
+            margin-top: 5px;
+        }
+
+        .image-container {
+            margin-top: 25px;
+            width: 100%; /* The container will take up the full width of its parent */
+            max-width: 600px; /* Optional: set a maximum width for the container */
+        }
+
+        .text-container {
+            border-bottom-left-radius: 5px !important;
+            border-bottom-right-radius: 5px !important;
+            width: 100%; /* The container will take up the full width of its parent */
+            max-width: 600px; /* Optional: set a maximum width for the container */
+            border: 1px solid #ccc; /* Optional: border to visualize the container */
+            padding: 10px; /* Optional: padding around the image */
+            box-sizing: border-box; /* Ensures padding is included in the width calculation */
+            background-color: #F4F4F4;
+        }
+
+        .responsive-image {
+            border-top-left-radius: 5px !important;
+            border-top-right-radius: 5px !important;
+            width: 100%; /* Image will take up the full width of the container */
+            height: auto; /* Maintains the image's aspect ratio */
+            display: block; /* Removes any inline spacing below the image */
+        }
+
+        .post {
+            border-radius: 100px !important;
+        }
+
+        .URLPost:hover {
+            cursor: pointer;
+        }
+
+        .reply {
+            margin: 0 0 10px 50px;
+            position: relative;
+        }
+
+            .reply::before {
+                border-left: 2px solid #efefef;
+                content: "";
+                height: 78px;
+                width: 1px;
+                position: absolute;
+                left: -35px;
+                top: -65px;
+            }
+
+            .reply::after {
+                border-bottom: 2px solid #efefef;
+                border-radius: 0 0 0 .8rem;
+                content: "";
+                height: 20px;
+                width: 35px;
+                position: absolute;
+                left: -35px;
+                top: -3px;
+            }
+
+        .post-container {
+            margin-top: 90px !important;
+            display: flex;
+            justify-content: center; /* Centers horizontally */
+        }
+
+        .post-content {
+            margin-bottom: 1px !important;
+            margin-top: 1px !important;
+            width: 100%;
+            max-width: 100%; /* Ensure it doesn't exceed the width of the container */
+            margin: 0 auto; /* Center the div */
+        }
+
+        @media only screen and (min-width: 768px) {
+            .post-content {
+                max-width: 610px; /* Limit width to 610px on larger screens */
+                margin: 0 auto; /* Center the div on the page */
+            }
+        }
+
+        .message, .message-content {
+            padding: 0px !important;
+            word-wrap: break-word; /* Breaks long words onto the next line */
+            word-break: break-all; /* Forces a line break at any point within the word */
+            overflow-wrap: break-word; /* Ensures compatibility with modern browsers */
+        }
+
+        .messageBody {
+            margin-bottom: 15px !important;
+        }
+
+        .block-profile-image-div {
+            clear: both; /* Prevents floating elements from wrapping around */
+            width: 100%; /* Ensure the div takes up the full width */
+        }
+
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .message-date {
+            font-size: smaller;
+        }
+
+        p, div {
+            /*word-wrap: break-word;*/ /* Breaks long words onto the next line */
+            /*word-break: break-all;*/ /* Forces a line break at any point within the word */
+            /*overflow-wrap: break-word;*/ /* Ensures compatibility with modern browsers */
+        }
+
+        #highlighted-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #fff;
+            background-color: white;
+            color: transparent;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #postInput {
+            width: 100%;
+            resize: none;
+            min-height: 50px;
+            max-height: 200px;
+            overflow-y: auto;
+            position: relative;
+            padding: 5px;
+            /*border: 1px dotted #ccc;*/
+            z-index: 2;
+            background-color: transparent;
+            color: black;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: none;
+            outline: none;
+            margin-top: 10px;
+        }
+
+            #postInput:focus {
+                border: none; /* Remove the border */
+                outline: none; /* Remove the outline that might appear on focus */
+            }
+
+        .highlighted-url {
+            color: rebeccapurple;
             text-decoration: underline;
         }
-
-
-    .StreamPortalLink {
-        float: right;
-        text-align: right;
-        color: #6A6C6F;
-        font-size: 90%;
-    }
-
-        .StreamPortalLink:hover {
-            color: #6A6C6F;
-            text-decoration: none;
+        /* Custom scrollbar styles for WebKit browsers (Chrome, Safari, Edge) */
+        textarea::-webkit-scrollbar {
+            width: 8px; /* Adjust the width of the scrollbar */
         }
 
-        .StreamPortalLink::after {
-            content: none; /* This removes the arrow if it's added via pseudo-element */
+        textarea::-webkit-scrollbar-thumb {
+            background-color: #888; /* Color of the scrollbar thumb */
+            border-radius: 4px; /* Round the corners of the scrollbar thumb */
         }
 
-    .panel-body {
-        border-top-left-radius: 10px !important;
-        border-top-right-radius: 10px !important;
-    }
+            textarea::-webkit-scrollbar-thumb:hover {
+                background-color: #555; /* Darker color when hovering over the scrollbar thumb */
+            }
 
-    .panel-footer {
-        border-bottom-left-radius: 10px !important;
-        border-bottom-right-radius: 10px !important;
-    }
-
-    .postOpen {
-        border-radius: 10px !important;
-    }
-
-    .postContainer {
-        position: fixed !important;
-        z-index: 500;
-    }
-
-    .postrow {
-        width: 100%;
-        height: 120px;
-        margin-left: -1px;
-        margin-top: -25px;
-        position: fixed;
-        display: flex;
-        justify-content: center;
-        /*background-image: url('/V1/Images/CausePhotos/stabilityevent.png');*/ /* Path to your image */
-        background-size: cover; /* Scale the image to cover the entire div */
-        background-position: center; /* Center the image */
-        background-repeat: no-repeat; /* Prevent the image from repeating */
-        background-color: #E8D3FE;
-    }
-
-    .contentFeed {
-        margin-top: 100px !important;
-    }
-
-    .modal-dialog {
-        display: flex;
-        justify-content: center; /* Centers horizontally */
-    }
-
-    .modal-content {
-        background-color: #FFF !important;
-        width: 450px !important;
-    }
-
-    .modal-header {
-        /*background-color: #FFF !important;*/
-        background-color: #5e2e91 !important;
-        /* border-top-left-radius: 10px !important;
-            border-top-right-radius: 10px !important;*/
-        color: #fff;
-    }
-
-    .modal-footer {
-        background-color: #FFF !important;
-        border-bottom-left-radius: 10px !important;
-        border-bottom-right-radius: 10px !important;
-    }
-
-    .modal-body {
-        text-align: left;
-    }
-
-    .modal {
-        margin-top: 5px;
-    }
-
-    .image-container {
-        margin-top: 25px;
-        width: 100%; /* The container will take up the full width of its parent */
-        max-width: 600px; /* Optional: set a maximum width for the container */
-    }
-
-    .text-container {
-        border-bottom-left-radius: 5px !important;
-        border-bottom-right-radius: 5px !important;
-        width: 100%; /* The container will take up the full width of its parent */
-        max-width: 600px; /* Optional: set a maximum width for the container */
-        border: 1px solid #ccc; /* Optional: border to visualize the container */
-        padding: 10px; /* Optional: padding around the image */
-        box-sizing: border-box; /* Ensures padding is included in the width calculation */
-        background-color: #F4F4F4;
-    }
-
-    .responsive-image {
-        border-top-left-radius: 5px !important;
-        border-top-right-radius: 5px !important;
-        width: 100%; /* Image will take up the full width of the container */
-        height: auto; /* Maintains the image's aspect ratio */
-        display: block; /* Removes any inline spacing below the image */
-    }
-
-    .post {
-        border-radius: 100px !important;
-    }
-
-    .URLPost:hover {
-        cursor: pointer;
-    }
-
-    .reply {
-        margin: 0 0 10px 50px;
-        position: relative;
-    }
-
-        .reply::before {
-            border-left: 2px solid #efefef;
-            content: "";
-            height: 78px;
-            width: 1px;
-            position: absolute;
-            left: -35px;
-            top: -65px;
+        textarea::-webkit-scrollbar-track {
+            background-color: #f1f1f1; /* Background color of the scrollbar track */
         }
 
-        .reply::after {
-            border-bottom: 2px solid #efefef;
-            border-radius: 0 0 0 .8rem;
-            content: "";
-            height: 20px;
-            width: 35px;
-            position: absolute;
-            left: -35px;
-            top: -3px;
-        }
-
-    .post-container {
-        margin-top: 90px !important;
-        display: flex;
-        justify-content: center; /* Centers horizontally */
-    }
-
-    .post-content {
-        margin-bottom: 1px !important;
-        margin-top: 1px !important;
-        width: 100%;
-        max-width: 100%; /* Ensure it doesn't exceed the width of the container */
-        margin: 0 auto; /* Center the div */
-    }
-
-    @media only screen and (min-width: 768px) {
-        .post-content {
-            max-width: 610px; /* Limit width to 610px on larger screens */
-            margin: 0 auto; /* Center the div on the page */
-        }
-    }
-
-    .message, .message-content {
-        padding: 0px !important;
-        word-wrap: break-word; /* Breaks long words onto the next line */
-        word-break: break-all; /* Forces a line break at any point within the word */
-        overflow-wrap: break-word; /* Ensures compatibility with modern browsers */
-    }
-
-    .messageBody {
-        margin-bottom: 15px !important;
-    }
-
-    .block-profile-image-div {
-        clear: both; /* Prevents floating elements from wrapping around */
-        width: 100%; /* Ensure the div takes up the full width */
-    }
-
-    .clearfix::after {
-        content: "";
-        display: table;
-        clear: both;
-    }
-
-    .message-date {
-        font-size: smaller;
-    }
-
-    p, div {
-        /*word-wrap: break-word;*/ /* Breaks long words onto the next line */
-        /*word-break: break-all;*/ /* Forces a line break at any point within the word */
-        /*overflow-wrap: break-word;*/ /* Ensures compatibility with modern browsers */
-    }
-
-    #highlighted-text {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #fff;
-        background-color: white;
-        color: transparent;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        pointer-events: none;
-        z-index: 1;
-    }
-
-    #postInput {
-        width: 100%;
-        resize: none;
-        min-height: 50px;
-        max-height: 200px;
-        overflow-y: auto;
-        position: relative;
-        padding: 5px;
-        /*border: 1px dotted #ccc;*/
-        z-index: 2;
-        background-color: transparent;
-        color: black;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        border: none;
-        outline: none;
-        margin-top: 10px;
-    }
-
-        #postInput:focus {
+        textarea {
             border: none; /* Remove the border */
             outline: none; /* Remove the outline that might appear on focus */
         }
 
-    .highlighted-url {
-        color: rebeccapurple;
-        text-decoration: underline;
-    }
-    /* Custom scrollbar styles for WebKit browsers (Chrome, Safari, Edge) */
-    textarea::-webkit-scrollbar {
-        width: 8px; /* Adjust the width of the scrollbar */
-    }
-
-    textarea::-webkit-scrollbar-thumb {
-        background-color: #888; /* Color of the scrollbar thumb */
-        border-radius: 4px; /* Round the corners of the scrollbar thumb */
-    }
-
-        textarea::-webkit-scrollbar-thumb:hover {
-            background-color: #555; /* Darker color when hovering over the scrollbar thumb */
-        }
-
-    textarea::-webkit-scrollbar-track {
-        background-color: #f1f1f1; /* Background color of the scrollbar track */
-    }
-
-    textarea {
-        border: none; /* Remove the border */
-        outline: none; /* Remove the outline that might appear on focus */
-    }
-
-    select {
-        border-radius: 3px;
-        border: none;
-        background-color: #f0f0f0;
-        min-width: fit-content;
-        width: auto;
-        padding: 5px;
-        font-size: 12px;
-        margin-left: -15px;
-    }
-
-        select option {
-            border: none; /* Remove the border */
-            padding: 8px; /* Add padding to create space inside the options */
-            margin: 5px 0; /* Vertical margin between options (works in some browsers) */
-        }
-
-    .post-type-div {
-        display: flex;
-        justify-content: center; /* Centers horizontally */
-        align-items: center; /* Centers vertically */
-        padding: 4px;
-        transition: background-color 0.3s ease; /* Smooth transition for hover effect */
-    }
-
-        /* Hover effect to slightly darken the background color */
-        .post-type-div:hover {
-            cursor: pointer;
-            background-color: #e0e0e0; /* Slightly darker grey on hover */
-        }
-
-    .imagePost {
-        height: 100px;
-        background-color: #F1F3F6;
-        padding: 5px;
-        border: solid 1px #ccc;
-        cursor: pointer;
-    }
-
-    .centered-image-div {
-        display: flex;
-        justify-content: center; /* Horizontal centering */
-        align-items: center; /* Vertical centering */
-    }
-
-
-
-    .upload-div {
-        width: 100%;
-        display: flex;
-        flex-wrap: wrap; /* Ensures the thumbnails wrap to the next line when space runs out */
-        gap: 10px; /* Adds some space between the thumbnail containers */
-        margin-top: 20px;
-    }
-
-    .thumbnail {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain; /* Ensure the image fits within the container without being cropped */
-    }
-
-    .thumbnail-container {
-        width: 120px; /* Width of the thumbnail container */
-        height: 120px; /* Height of the thumbnail container */
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .single-thumbnail-container {
-        width: 100%; /* Width of the thumbnail container */
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .file-input-wrapper {
-        display: inline-block;
-    }
-
-    .image-container {
-        width: 100%; /* Full width of the container */
-        overflow: hidden; /* Hide any overflow */
-    }
-
-    .image-container-post {
-        width: 100%; /* Full width of the container */
-        overflow: hidden; /* Hide any overflow */
-    }
-
-    .image-container img {
-        width: 100%; /* Make the image full width */
-        height: 100%; /* Make the image fill the container height */
-        object-fit: cover; /* Ensures the image covers the area without distortion */
-    }
-
-    .tooltipButton {
-        margin-top: 5px;
-        padding: 5px 10px;
-        background-color: #f00;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-    }
-
-    .comment-section {
-        width: 100%;
-        max-width: 600px;
-        max-height: 550px;
-        min-height: 550px;
-        height: 550px;
-        /*overflow-y: scroll;*/
-        margin: 0px auto;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 5px;
-        position: relative;
-    }
-
-    .comment-section-show {
-        width: 100%;
-        max-width: 600px;
-        max-height: 100px;
-        min-height: auto;
-        height: auto;
-        margin: 0px auto;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 10px;
-        position: relative;
-    }
-
-    .comment-section-repeater {
-        width: 103%;
-        max-height: 480px;
-        min-height: 480px;
-        height: 480px;
-        overflow-x: hidden;
-        overflow-y: auto;
-        padding: 0px;
-        position: relative;
-        z-index: 0;
-        scroll-behavior: smooth;
-        border-top: 1px solid #f0f0f0;
-    }
-
-    .comment-section-repeater-show {
-        width: 103%;
-        max-height: 100px;
-        min-height: auto;
-        height: auto;
-        overflow-x: hidden;
-        overflow-y: auto;
-        padding: 2px;
-        position: relative;
-        z-index: 0;
-        scroll-behavior: smooth;
-        /*border-top: 1px solid #f0f0f0;*/
-    }
-    /* Customize the scrollbar */
-    .comment-section-repeater::-webkit-scrollbar {
-        width: 8px; /* Width of the scrollbar */
-    }
-
-    .comment-section-repeater::-webkit-scrollbar-track {
-        background: #f1f1f1; /* Track background */
-    }
-
-    .comment-section-repeater::-webkit-scrollbar-thumb {
-        background: #888; /* Color of the thumb */
-        border-radius: 4px;
-    }
-
-        .comment-section-repeater::-webkit-scrollbar-thumb:hover {
-            background: #555; /* Color of the thumb when hovering */
-        }
-
-    .loadComments {
-        text-decoration: underline;
-        position: absolute;
-        z-index: 999;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 7px;
-        text-align: center;
-        background-color: #fff;
-        color: #000;
-    }
-
-    .comment-header {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-
-    .comment-input {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-
-        .comment-input textarea {
-            flex: 1;
-            resize: none;
+        select {
+            border-radius: 3px;
+            border: none;
+            background-color: #f0f0f0;
+            min-width: fit-content;
+            width: auto;
             padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
             font-size: 12px;
-            height: 40px;
-            font-size: 1.4rem;
-            padding: 10px;
-            border-radius: 20px;
-            overflow: hidden;
+            margin-left: -15px;
         }
 
-        .comment-input button {
-            padding: 0px 15px;
-            background-color: #1877f2;
-            color: #fff;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 14px;
-            margin: 5px 0px 5px 0px;
-        }
-
-            .comment-input button:hover {
-                background-color: #145db2;
+            select option {
+                border: none; /* Remove the border */
+                padding: 8px; /* Add padding to create space inside the options */
+                margin: 5px 0; /* Vertical margin between options (works in some browsers) */
             }
 
-
-
-    .reply-input {
-        display: flex;
-        gap: 5px;
-        margin-bottom: 20px;
-        position: relative;
-    }
-
-        .reply-input textarea {
-            flex: 1;
-            resize: none;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            font-size: 12px;
-            height: 30px;
-            margin-left: 50px;
-            padding: 5px 60px 5px 5px;
+        .post-type-div {
+            display: flex;
+            justify-content: center; /* Centers horizontally */
+            align-items: center; /* Centers vertically */
+            padding: 4px;
+            transition: background-color 0.3s ease; /* Smooth transition for hover effect */
         }
 
-        .reply-input button {
-            padding: 0px 10px;
-            background-color: #1877f2;
-            color: #fff;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 12px;
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            top: 0;
-        }
-
-            .reply-input button:hover {
-                background-color: #145db2;
+            /* Hover effect to slightly darken the background color */
+            .post-type-div:hover {
+                cursor: pointer;
+                background-color: #e0e0e0; /* Slightly darker grey on hover */
             }
 
-    .comments {
-        list-style: none;
-        padding: 0;
-    }
-
-    .comment {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        margin-bottom: 15px;
-    }
-
-        .comment img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        .imagePost {
+            height: 100px;
+            background-color: #F1F3F6;
+            padding: 5px;
+            border: solid 1px #ccc;
+            cursor: pointer;
         }
 
-    .comment-content {
-        background: #f0f2f5;
-        border-radius: 8px;
-        padding: 10px;
-        font-size: 14px;
-        line-height: 1.4;
-    }
-
-    .comments li {
-        width: 100%;
-        display: flex;
-        margin: 0 0 10px 0;
-    }
-
-    .userImage,
-    .replyImg {
-        width: 40px;
-        float: left;
-        margin-right: 0px;
-    }
-
-        .userImage img {
-            border-radius: 20px;
-            width: 30px;
-            position: relative;
-            z-index: 99;
-            border: 1px solid #ccc;
+        .centered-image-div {
+            display: flex;
+            justify-content: center; /* Horizontal centering */
+            align-items: center; /* Vertical centering */
         }
 
-        .replyImg img {
-            border-radius: 20px;
-            width: 25px;
-            position: relative;
-            z-index: 99;
-            border: 1px solid #ccc;
-        }
 
-    .commentReact {
-        float: left;
-        width: calc(100% - 50px);
-    }
 
-        .commentReact span,
-        .replyContent span,
-        .reaction {
-            margin: 0;
+        .upload-div {
             width: 100%;
-            display: block;
-            font-weight: normal;
+            display: flex;
+            flex-wrap: wrap; /* Ensures the thumbnails wrap to the next line when space runs out */
+            gap: 10px; /* Adds some space between the thumbnail containers */
+            margin-top: 20px;
         }
 
-        .commentReact .reaction {
+        .thumbnail {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Ensure the image fits within the container without being cropped */
+        }
+
+        .thumbnail-container {
+            width: 120px; /* Width of the thumbnail container */
+            height: 120px; /* Height of the thumbnail container */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .single-thumbnail-container {
+            width: 100%; /* Width of the thumbnail container */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .file-input-wrapper {
+            display: inline-block;
+        }
+
+        .image-container {
+            width: 100%; /* Full width of the container */
+            overflow: hidden; /* Hide any overflow */
+        }
+
+        .image-container-post {
+            width: 100%; /* Full width of the container */
+            overflow: hidden; /* Hide any overflow */
+        }
+
+        .image-container img {
+            width: 100%; /* Make the image full width */
+            height: 100%; /* Make the image fill the container height */
+            object-fit: cover; /* Ensures the image covers the area without distortion */
+        }
+
+        .tooltipButton {
+            margin-top: 5px;
+            padding: 5px 10px;
+            background-color: #f00;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .comment-section {
+            width: 100%;
+            max-width: 600px;
+            max-height: 550px;
+            min-height: 550px;
+            height: 550px;
+            /*overflow-y: scroll;*/
+            margin: 0px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 5px;
+            position: relative;
+        }
+
+        .comment-section-show {
+            width: 100%;
+            max-width: 600px;
+            max-height: 110px;
+            min-height: auto;
+            height: auto;
+            margin: 0px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            position: relative;
+        }
+
+        .comment-section-repeater {
+            width: 103%;
+            max-height: 480px;
+            min-height: 480px;
+            height: 480px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 0px;
+            position: relative;
+            z-index: 0;
+            scroll-behavior: smooth;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .comment-section-repeater-show {
+            width: 103%;
+            max-height: 110px;
+            min-height: auto;
+            height: auto;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 2px;
+            position: relative;
+            z-index: 0;
+            scroll-behavior: smooth;
+            /*border-top: 1px solid #f0f0f0;*/
+        }
+        /* Customize the scrollbar */
+        .comment-section-repeater::-webkit-scrollbar {
+            width: 8px; /* Width of the scrollbar */
+        }
+
+        .comment-section-repeater::-webkit-scrollbar-track {
+            background: #f1f1f1; /* Track background */
+        }
+
+        .comment-section-repeater::-webkit-scrollbar-thumb {
+            background: #888; /* Color of the thumb */
+            border-radius: 4px;
+        }
+
+            .comment-section-repeater::-webkit-scrollbar-thumb:hover {
+                background: #555; /* Color of the thumb when hovering */
+            }
+
+        .loadComments {
+            text-decoration: underline;
+            position: absolute;
+            z-index: 999;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 7px;
+            text-align: center;
+            background-color: #fff;
+            color: #000;
+        }
+
+        .comment-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .comment-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+            .comment-input textarea {
+                flex: 1;
+                resize: none;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 12px;
+                height: 40px;
+                font-size: 1.4rem;
+                padding: 10px;
+                border-radius: 20px;
+                overflow: hidden;
+            }
+
+            .comment-input button {
+                padding: 0px 15px;
+                background-color: #1877f2;
+                color: #fff;
+                border: none;
+                border-radius: 15px;
+                cursor: pointer;
+                font-size: 14px;
+                margin: 5px 0px 5px 0px;
+            }
+
+                .comment-input button:hover {
+                    background-color: #145db2;
+                }
+
+
+
+        .reply-input {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+            .reply-input textarea {
+                flex: 1;
+                resize: none;
+                border: 1px solid #ccc;
+                border-radius: 20px;
+                font-size: 12px;
+                height: 30px;
+                margin-left: 50px;
+                padding: 5px 60px 5px 5px;
+            }
+
+            .reply-input button {
+                padding: 0px 10px;
+                background-color: #1877f2;
+                color: #fff;
+                border: none;
+                border-radius: 20px;
+                cursor: pointer;
+                font-size: 12px;
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                top: 0;
+            }
+
+                .reply-input button:hover {
+                    background-color: #145db2;
+                }
+
+        .comments {
+            list-style: none;
+            padding: 0;
+        }
+
+        .comment {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+            .comment img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+            }
+
+        .comment-content {
+            background: #f0f2f5;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .comments li {
+            width: 100%;
+            display: flex;
+            margin: 0 0 10px 0;
+        }
+
+        .userImage,
+        .replyImg {
+            width: 40px;
+            float: left;
+            margin-right: 0px;
+        }
+
+            .userImage img {
+                border-radius: 20px;
+                width: 30px;
+                position: relative;
+                z-index: 99;
+                border: 1px solid #ccc;
+            }
+
+            .replyImg img {
+                border-radius: 20px;
+                width: 25px;
+                position: relative;
+                z-index: 99;
+                border: 1px solid #ccc;
+            }
+
+        .commentReact {
+            float: left;
+            width: calc(100% - 50px);
+        }
+
+            .commentReact span,
+            .replyContent span,
+            .reaction {
+                margin: 0;
+                width: 100%;
+                display: block;
+                font-weight: normal;
+            }
+
+                .commentReact span:first-child {
+                    font-weight: bold;
+                }
+
+            .commentReact .reaction {
+                /*border: 1px solid #ccc;*/
+                display: inline-flex;
+                margin: 5px 0 0 0;
+            }
+
+        .replyContent .reaction {
             /*border: 1px solid #ccc;*/
             display: inline-flex;
-            margin: 5px 0 0 0;
+            margin: 5px 0 0 40px;
         }
 
-    .replyContent .reaction {
-        /*border: 1px solid #ccc;*/
-        display: inline-flex;
-        margin: 5px 0 0 40px;
-    }
-
-    .reaction .EditPostComment,
-    .reaction .DeletePostComment,
-    .reaction .ReplyPostComment,
-    .reaction .EditPostReply,
-    .reaction .DeletePostReply,
-    .reaction .ReplyPostComment {
-        padding: 5px 10px;
-        font-size: 10px;
-        /*border-right: 1px solid #ccc;*/
-        cursor: pointer;
-    }
-
-        .reaction .ReplyPostComment:hover,
-        .reaction .ReplyPostComment:hover {
-            color: #007bff
+        .reaction .EditPostComment,
+        .reaction .DeletePostComment,
+        .reaction .ReplyPostComment,
+        .reaction .EditPostReply,
+        .reaction .DeletePostReply,
+        .reaction .ReplyPostComment {
+            padding: 5px 10px;
+            font-size: 10px;
+            /*border-right: 1px solid #ccc;*/
+            cursor: pointer;
         }
 
-        .reaction .EditPostComment:hover,
-        .reaction .EditPostReply:hover {
-            color: #17a2b8;
-        }
+            .reaction .ReplyPostComment:hover,
+            .reaction .ReplyPostComment:hover {
+                color: #007bff
+            }
 
-        .reaction .DeletePostComment:hover,
-        .reaction .DeletePostReply:hover {
-            color: #dc3545;
-        }
+            .reaction .EditPostComment:hover,
+            .reaction .EditPostReply:hover {
+                color: #17a2b8;
+            }
 
+            .reaction .DeletePostComment:hover,
+            .reaction .DeletePostReply:hover {
+                color: #dc3545;
+            }
     </style>
 
     <script>
@@ -1605,25 +1610,25 @@
                                         <asp:Label ID="lblMessageDate" runat="server" CssClass="message-date"></asp:Label>
                                     </div>
                                     <span class="message-content">
-                                        <p style ="margin-top: 10px;">
+                                        <p style="margin-top: 10px;">
                                             <asp:Literal ID="litMessage" runat="server"></asp:Literal>
                                         </p>
                                     </span>
                                 </div>
                             </div>
                             <div class="panel-footer">
-                                <div class="row"         style ="margin: -5px 5px -18px 5px">
+                                <div class="row" style="margin: -5px 5px -18px 5px">
                                     <span data-item-rid='<%# Eval("postId") %>'>
                                         <asp:Literal ID="litReactionCount" runat="server"></asp:Literal>
                                     </span>
-                                    <span         style ="float: right; margin-top: -23px">
+                                    <span style="float: right; margin-top: -23px">
                                         <div class="post-type-div commentSection" data-item-id='<%# Eval("postId") %>'>
                                             <asp:Literal ID="litCommentsCount" runat="server"></asp:Literal>
                                         </div>
                                     </span>
                                 </div>
                                 <hr />
-                                <div class="row">
+                                <div class="row" style="margin-top: -18px !important">
                                     <div class="col-xs-3 post-type-div thankButton text-muted" data-item-cid='<%# Eval("postId") %>'>
                                         <asp:Literal ID="litReactionTitle" runat="server"></asp:Literal>
                                     </div>
@@ -1634,7 +1639,7 @@
 
                                 <div id="commentSectionShow" class="comment-section-show" runat="server">
                                     <div class="comment-section-repeater-show" data-item-id='<%# Eval("postId") %>-showComments'>
-                                        <asp:Repeater ID="rptPostCommentsShow" runat="server">
+                                        <asp:Repeater ID="rptPostCommentsShow" runat="server" OnItemDataBound="rptPostCommentsShow_ItemDataBound">
                                             <ItemTemplate>
                                                 <ul class="comments">
                                                     <li>
@@ -1643,10 +1648,11 @@
                                                                 <img class="img-rounded" src='<%# Eval("imgProfileUrl") %>' /></a>
                                                         </div>
                                                         <div class="commentReact">
-                                                            <span         style ="font-weight: bold; width: 70%">
-                                                                <a target="_blank" href="<%# Eval("ProfileUrl") %>" class="author-link"><%# Eval("author") %></a>
+                                                            <span style="font-weight: bold; width: 70%; height: 22px;">
+                                                                <uc1:TeamLogo runat="server" ID="ucTeamLogo" UserId='<%# Eval("UserId") %>' PageName="feed" />
+                                                                <%--<a target="_blank" href="<%# Eval("ProfileUrl") %>" class="author-link"><%# Eval("author") %></a>--%>
                                                             </span>
-                                                            <span         style ="float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;"><%# Eval("timeAgo") %></span>
+                                                            <span style="float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;"><%# Eval("timeAgo") %></span>
                                                             <span><%# Eval("Comment1") %></span>
                                                         </div>
                                                     </li>
@@ -1655,8 +1661,6 @@
                                         </asp:Repeater>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
                     </ItemTemplate>
@@ -1691,7 +1695,7 @@
                     </div>
 
                     <div class="textPost">
-                        <textarea id="postInput" clientidmode="Static" runat="server"         style ="resize: none;" name="post" rows="1" placeholder="Create A Post"></textarea>
+                        <textarea id="postInput" clientidmode="Static" runat="server" style="resize: none;" name="post" rows="1" placeholder="Create A Post"></textarea>
                         <asp:Label ID="StatusLabel" runat="server" Text=""></asp:Label>
                         <div id="postContent"></div>
                         <div class="upload-div" id="thumbnails"></div>
@@ -1699,8 +1703,8 @@
                     <div class="imagePost centered-image-div" onclick="triggerFileUpload();">
                         Add Photos
                     </div>
-                    <asp:FileUpload ID="FileUpload1" ClientIDMode="Static" name="files" multiple="multiple" runat="server"         Style ="display: none;" />
-                    <input type="file" id="fileInput" clientidmode="Static" accept="image/*" name="files" multiple="multiple"         style ="display: none;" runat="server" />
+                    <asp:FileUpload ID="FileUpload1" ClientIDMode="Static" name="files" multiple="multiple" runat="server" Style="display: none;" />
+                    <input type="file" id="fileInput" clientidmode="Static" accept="image/*" name="files" multiple="multiple" style="display: none;" runat="server" />
                 </div>
                 <div class="modal-footer">
                     <div class="postType">
@@ -1723,15 +1727,15 @@
         <input type="hidden" clientidmode="Static" id="postTypeId" runat="server" />
     </div>
 
-    <div class="modal fade" id="newComments" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false"         style ="overflow: hidden">
+    <div class="modal fade" id="newComments" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="overflow: hidden">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header"         style ="padding: 5px">
+                <div class="modal-header" style="padding: 5px">
                     <center>
                         <h4>Comments</h4>
                     </center>
                 </div>
-                <div class="modal-body" id="commentList"         style ="padding: 10px; height: 570px; max-height: 570px; min-height: 570px;">
+                <div class="modal-body" id="commentList" style="padding: 10px; height: 570px; max-height: 570px; min-height: 570px;">
                     <div class="textPost">
                         <div class="comment-section">
                             <div class="comment-input">
@@ -1742,13 +1746,13 @@
                             <div class="comment-section-repeater">
                                 <br />
                                 <div id="rptPostComments">
-                                    <strong         style ="margin-left: 120px">Comments are Loading... </strong>
+                                    <strong style="margin-left: 120px">Comments are Loading... </strong>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer"         style ="padding: 5px;">
+                <div class="modal-footer" style="padding: 5px;">
                     <button type="button" class="btn btn-danger btn-sm closeComment">Close</button>
                 </div>
             </div>

@@ -62,7 +62,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		LoadPosts();
 		BindDropdown();
 	}
-
 	public void BindDropdown()
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -101,7 +100,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		}
 		PostReactionTypesId.Controls.Add(div);
 	}
-
 	public void BindDropdownForPostBack()
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -257,7 +255,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		int streamPostPageSize = int.Parse(ConfigurationManager.AppSettings["streamPostPageSize"].ToString()) + 10;
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-		var posts = from p in dc.Posts
+		var posts = (from p in dc.Posts
 					join pr in dc.Profiles on p.CreatedBy equals pr.UserId
 					where p.IsVisible == true
 					orderby p.CreatedOn descending
@@ -275,7 +273,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 						pr.UserId,
 						EventId = p.EventId ?? new Guid(),
 						fullname = pr.Firstname + " " + pr.Lastname
-					};
+					}).Take(10);
 		rptPosts.DataSource = posts;
 		rptPosts.DataBind();
 	}
@@ -382,7 +380,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			HtmlImage imgProfile = (HtmlImage)e.Item.FindControl("imgProfile");
 			HtmlAnchor linkProfile = (HtmlAnchor)e.Item.FindControl("linkProfile");
 			//int postCount = (int)DataBinder.Eval(dataItem.DataItem, "postCount");
-
 			lblMessageDate.Text = GetElapsedTime(createdOn);
 			//hypCreatedBy.Text = fullname;
 			//hypCreatedBy.NavigateUrl = "/V1/Member/Default.aspx?userid=" + createdBy;
@@ -402,7 +399,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				ucTeamLogo.UserId = createdBy;
 				ucTeamLogo.LoadNameWithBadges();
 			}
-			lblMessageDate.Text = GetElapsedTime(createdOn);
 
 			var postReaction = from pr in dc.PostReactions
 							   join p in dc.Profiles on pr.CreatedBy equals p.UserId
@@ -624,6 +620,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 											  {
 												  Comment1 = ReplaceTaggedUsersWithLinks(c.Comment1),
 												  timeAgo = GetTimeAgo(c.CreatedOn),
+												  UserId = c.CreatedBy,
 												  author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
 												  ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
 												  ImgProfileUrl = profilePhotoFolder + (
@@ -644,6 +641,20 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				commentSectionShow.Style["display"] = "";  // Show the div
 			}
 			litCommentsCount.Text = dc.PostComments.Where(f => f.PostId == postId).ToList().Count.ToString() + " Comments";
+		}
+	}
+
+	protected void rptPostCommentsShow_ItemDataBound(object sender, RepeaterItemEventArgs e)
+	{
+		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+		{
+			RepeaterItem dataItem = (RepeaterItem)e.Item;
+			var ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucTeamLogo");
+			if (ucTeamLogo != null)
+			{
+				ucTeamLogo.UserId = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId");
+				ucTeamLogo.LoadNameWithBadges();
+			}
 		}
 	}
 
