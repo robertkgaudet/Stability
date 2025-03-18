@@ -453,7 +453,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     protected void btnSendEmail_click(object sender, EventArgs e)
     {
         string selectedUserIds = hdnSelectedUsers.Value; 
-        string userMessage = txtemail.Value; 
+        string userMessage = txtemail.Text; 
         if (!string.IsNullOrEmpty(selectedUserIds))
         {
             string[] userIds = selectedUserIds.Split(',');
@@ -482,17 +482,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                                 string.Empty,
                                 "~\\EmailTemplates\\SignIn.html",
                                 out error
-                            );
-
-                            if (string.IsNullOrEmpty(error))
-                            {
-                                emailSent = true;
-                            }
+                            );                         
                         }          
                 }
             }
         }
-        txtemail.Value = "";
+        txtemail.Text = "";
     }
     protected void btnSendSms_click(object sender, EventArgs e)
     {

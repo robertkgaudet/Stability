@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People"  ValidateRequest="false" %>
 
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
@@ -12,6 +12,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
     <link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
     <script src="/Homer/vendor/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote.css" />
+    <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />
+    <script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
+ 
+
     <style>
         .website {
             background-color: #5E2E91;
@@ -62,7 +67,9 @@
             margin-top:10px;
             margin-right:10px;
         }
-         
+        .b2{
+            margin-bottom: 160px;
+        }
 
       </style>
     <script>
@@ -81,7 +88,19 @@
         var txtMessage;
 
         $(document).ready(function () {
-
+            $('#<%=txtemail.ClientID%>').summernote({
+                toolbar: [
+                    ['style', ['bold', 'italic']],
+                    ['alignment', ['ul', 'ol', 'paragraph']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link', 'table']],
+                   
+                ],
+                height: 100
+            });
             // Initialize Example 1
             $('#tblVolunteers').footable();
 
@@ -129,7 +148,7 @@
                 allSelectedText: 'All Selected',
                 numberDisplayed: 2
             });
-           
+      
             window.onload = function () {
                 var selectAllCheckbox = document.getElementById("<%= chkSelectAll.ClientID %>");
     var userCheckboxes = document.querySelectorAll(".select-user");
@@ -144,16 +163,12 @@
                     }
                     hiddenField.value = selectedUserIds.join(",");
                 }
-
-                // "Select All" Checkbox Click Event (No Change)
                 selectAllCheckbox.onclick = function () {
                     for (var i = 0; i < userCheckboxes.length; i++) {
                         userCheckboxes[i].checked = this.checked;
                     }
-                    updateSelectedUsers(); // Update hidden field
+                    updateSelectedUsers(); 
                 };
-
-                // Individual "User" Checkbox Click Event (No Change)
                 for (var i = 0; i < userCheckboxes.length; i++) {
                     userCheckboxes[i].onclick = function () {
                         var allChecked = true;
@@ -164,13 +179,12 @@
                             }
                         }
                         selectAllCheckbox.checked = allChecked;
-                        updateSelectedUsers(); // Update hidden field
+                        updateSelectedUsers(); 
                     };
                 }
             };
 
-
-
+          
         });
 
         function sendClick(object) {
@@ -239,20 +253,17 @@
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
     <asp:HiddenField ID="hdnSelectedUsers" runat="server" />
     <div id="divEmail" runat="server" class="input-group">
-        <textarea id="txtemail" runat="server" Cssclass="form-control" placeholder="Enter Email Text" rows="2" cols="100"></textarea>
-        <div class="input-group-append">
-            <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary" Text="Send Email" OnClientClick="updateHiddenField();" OnClick="btnSendEmail_click" />
-        </div>
+    <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" placeholder="Enter Email Text" ClientIDMode="Static" TextMode="MultiLine"  ValidateRequestMode="Disabled"></asp:TextBox>
+    <div class="input-group-append">
+        <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary b2" Text="Send Email" OnClientClick="updateHiddenField();" OnClick="btnSendEmail_click" />
     </div>
-
+</div>
     <div id="divSms" runat="server" class="input-group">
        <textarea ID="txtsms" runat="server" CssClass="form-control" Placeholder="Enter SMS Text"  rows="2" cols="100" ></textarea>
         <div class="input-group-append">
             <asp:Button ID="btnSms" runat="server" CssClass="btn btn-primary" Text="Send SMS" OnClick="btnSendSms_click" />
         </div>
     </div>
-
-
     <div class="panel-heading">
         <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
         <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank" Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
