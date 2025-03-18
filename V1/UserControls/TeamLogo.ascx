@@ -8,6 +8,7 @@
         vertical-align: text-top;
         margin-right: 2px;
         margin-top: -2px;
+        margin-right: 3px;
     }
     .team-logo {
         width: 16px;
@@ -23,9 +24,6 @@
     }
     .StreamLink {
         margin-right: 2px;
-    }
-    .stability-badge {
-        margin-right: 3px;
     }
     .user-name {
         margin-right: 8px;
