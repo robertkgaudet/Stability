@@ -4,7 +4,6 @@
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
-
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <link rel="stylesheet" href="/Homer/vendor/fooTable/css/footable.core.min.css" />
     <script src="/Homer/vendor/fooTable/dist/footable.all.min.js"></script>

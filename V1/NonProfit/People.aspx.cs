@@ -280,17 +280,14 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			String loweredEmail = (String)DataBinder.Eval(dataItem.DataItem, "LoweredEmail");
 			String phoneNUmber = (String)DataBinder.Eval(dataItem.DataItem, "phoneNUmber");
 			String description = (String)DataBinder.Eval(dataItem.DataItem, "Description");
-
-         
             V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
             if (ucTeamLogo != null)
-            {
+            {      
                 ucTeamLogo.UserId = userId;
+                ucTeamLogo.PageName = "people";
+                ucTeamLogo.LoadNameWithBadges();
             }
-
-
             MembershipUser profileUser = Membership.GetUser(userId);
-
 			bool isLockedOut = false;
 			HtmlGenericControl divFooter = (HtmlGenericControl)e.Item.FindControl("divFooter");
 			Button btnContact = (Button)e.Item.FindControl("btnContact");
@@ -324,18 +321,11 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
 				litVettingInfo.Text = vettingCompleted;
 			}
-
-
-
 			HyperLink hypName = (HyperLink)e.Item.FindControl("hypName");
 			Literal litMemberInfo = (Literal)e.Item.FindControl("litMemberInfo");
 			Literal litDescription = (Literal)e.Item.FindControl("litDescription");
 			Literal litSkills = (Literal)e.Item.FindControl("litSkills");
 			Literal litResources = (Literal)e.Item.FindControl("litResources");
-
-			hypName.Text = firstname + " " + lastname;
-			hypName.NavigateUrl = "/V1/Member/Default.aspx?userId=" + userId;
-
 			btnContact.Attributes.Add("data-name", firstname + " " + lastname);
 			btnContact.Attributes.Add("data-email", loweredEmail);
 			btnContact.Attributes.Add("onclick", "return btnClick(this);");

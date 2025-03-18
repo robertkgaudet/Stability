@@ -1,7 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="MemberHeader.ascx.cs" Inherits="V1_UserControls_MemberHeader" %>
-
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
-
 <style>
 	.divCover {
 		width: 100%;
@@ -77,7 +75,17 @@
       margin-right: 2px !important;
     margin-top: 5px !important;
 }
-	  
+
+	.user-name {
+        color: darkslategrey !important;
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    margin-right: 6px !important;
+
+}
+	.StreamLink {
+    text-decoration:none !important;
+}
 </style>
 <script>
 	$(document).ready(function () {
@@ -144,15 +152,9 @@
 			<div class="row memberDetail">
                 <div class="col-xs-12 col-lg-8">
 					<div style="margin-top:10px; width:100%;">
-					<span style="color:darkslategrey; font-size:20px; font-weight:800; margin-right:10px;">
-					<asp:Literal ID="litMemberName" runat="server"></asp:Literal>
-							
-                  <uc1:TeamLogo  runat="server" ID="ucTeamLogo" />
-
-					</span>
-
-				
-						
+					<span style="color:darkslategrey; font-size:20px; font-weight:800; margin-right:10px;">		
+                    <uc1:TeamLogo  runat="server" ID="ucTeamLogo" />
+					</span>		
 				<i class="fa fa-id-badge pe-2x <%=_badgeVettingStatus%> float-right <%=faIdBadgeClick%>" data-toggle="tooltip" data-placement="top" title="Activate Vetted ID Badge"></i>
 					<i class="fa fa-shield pe-2x <%=_badgeCertificationStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Earn Training Certifications To Activate"></i>
 					<i class="fa fa-certificate pe-2x <%=_badgeDeployedStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Deploy Once To Activate"></i>
