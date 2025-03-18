@@ -90,34 +90,31 @@ public partial class V1_NonProfitAdministration_Participants : BaseWebForm
 		}
 	}
 
-	protected void rptParticipants_ItemDataBound(object sender, RepeaterItemEventArgs e)
-	{
-		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-		{
-			RepeaterItem dataItem = (RepeaterItem)e.Item;
+    protected void rptParticipants_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        {
+            RepeaterItem dataItem = (RepeaterItem)e.Item;
+            Literal litParticipantEmail = (Literal)e.Item.FindControl("litParticipantEmail");
+            Literal litPositionCount = (Literal)e.Item.FindControl("litPositionCount");
+            Literal litLastActiveDateTime = (Literal)e.Item.FindControl("litLastActiveDateTime");
+            Button btnDelete = (Button)e.Item.FindControl("btnDelete");
+            string email = (string)DataBinder.Eval(dataItem.DataItem, "Email");
+            int positionCount = (int)DataBinder.Eval(dataItem.DataItem, "PositionCount");
+            DateTime lastLoginDate = (DateTime)DataBinder.Eval(dataItem.DataItem, "LastLoginDate");
+            litParticipantEmail.Text = email;
+            litLastActiveDateTime.Text = lastLoginDate.ToLongDateString();
+            litPositionCount.Text = "Positions " + positionCount.ToString();
+            var ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucTeamLogo");
+            if (ucTeamLogo != null)
+            {
+                ucTeamLogo.UserId = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId");
+                ucTeamLogo.LoadNameWithBadges();
+            }
+        }
+    }
 
-			Literal litParticipantName = (Literal)e.Item.FindControl("litParticipantName");
-			Literal litParticipantEmail = (Literal)e.Item.FindControl("litParticipantEmail");
-			Literal litPositionCount = (Literal)e.Item.FindControl("litPositionCount");
-			Literal litLastActiveDateTime = (Literal)e.Item.FindControl("litLastActiveDateTime");
-			Button btnDelete = (Button)e.Item.FindControl("btnDelete");
-
-			string firstname = (string)DataBinder.Eval(dataItem.DataItem, "Firstname");
-			string lastname = (string)DataBinder.Eval(dataItem.DataItem, "Lastname");
-			string email = (string)DataBinder.Eval(dataItem.DataItem, "Email");
-			int positionCount = (int)DataBinder.Eval(dataItem.DataItem, "PositionCount");
-			DateTime lastLoginDate = (DateTime)DataBinder.Eval(dataItem.DataItem, "LastLoginDate");
-
-			litParticipantEmail.Text = email;
-			litLastActiveDateTime.Text = lastLoginDate.ToLongDateString();
-			litParticipantName.Text = firstname + " " + lastname;
-			litPositionCount.Text = "Positions " + positionCount.ToString();
-			
-
-		}
-	}
-
-	[WebMethod]
+    [WebMethod]
 	public static object GetUserEventPositions(string userId, string organizationEventId)
 	{
 		//CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
