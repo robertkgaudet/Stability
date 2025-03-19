@@ -14,6 +14,7 @@ using System.Web.Services;
 using System.Text.RegularExpressions;
 using GoogleMapsAPI.Places;
 //using static System.Net.Mime.MediaTypeNames;
+//using static System.Net.Mime.MediaTypeNames;
 
 public partial class V1_Stream : BaseOrganizationWebForm
 {
@@ -172,54 +173,109 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		}
 		return taggedUsers;
 	}
+	//private static string ExtractTaggedMessage(string commentText, List<Profile> _users)
+	//{
+	//	var regex = new Regex(@"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\s([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b");
+	//	var matches = regex.Matches(commentText);
+
+	//	//string urlPattern = @"\b(?:https?|ftp)://(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(?:/[^\s]*)?\b";
+	//	var urlPattern = @"\b((?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)\b";
+	//	Regex urlRegex = new Regex(urlPattern);
+	//	MatchCollection matchesUrl = urlRegex.Matches(commentText);
+
+	//	//List<string> urls = new List<string>();
+	//	//foreach (Match match in matchesUrl)
+	//	//{
+	//	//	urls.Add(match.Value);
+	//	//}
+
+
+	//	// Replace URLs with the corresponding <a> tag
+	//	commentText = Regex.Replace(commentText, urlPattern, match =>
+	//	{
+	//		string url = match.Value;
+	//		// Add "http://" if the URL doesn't already have a scheme
+	//		if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+	//		{
+	//			url = "http://" + url; // Prepend "http://" if not present
+	//		}
+	//		return "<a href='" + url + "' target='_blank'>" + url + "</a>";
+	//	});
+
+	//	foreach (Match match in matchesUrl)
+	//	{
+	//		string url = match.Value;
+	//		string anchorTag = "<a target='_blank' href='" + url + "'>" + url + "</a>";
+	//		// Replace URL with the anchor tag in the comment text
+	//		commentText = commentText.Replace(url, anchorTag);
+	//	}
+
+	//	string processedComment = regex.Replace(commentText, match =>
+	//	{
+	//		var html = "";
+	//		string fullName = match.Groups[1].Value.Trim();
+	//		var words = fullName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+	//		if (words.Length > 2)
+	//		{
+	//			fullName = string.Join(" ", words.Take(2));
+	//		}
+
+	//		var user = _users.FirstOrDefault(u => (u.Firstname + " " + u.Lastname).Trim().ToLower().Contains(fullName.ToLower()));
+	//		if (user != null)
+	//		{
+	//			html = "<a target='_blank' href='/V1/Member/Default.aspx?userid=" + user.UserId + "'>" + user.Firstname + " " + user.Lastname + "</a>";
+	//		}
+
+	//		if (words.Length > 2)
+	//		{
+	//			html = html + " " + string.Join(" ", words.Skip(2));
+	//		}
+
+	//		return user != null ? html : match.Value;
+	//	});
+	//	return processedComment;
+	//}
+
 	private static string ExtractTaggedMessage(string commentText, List<Profile> _users)
 	{
-		var regex = new Regex(@"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\s([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b");
-		var matches = regex.Matches(commentText);
-
-
-		string urlPattern = @"\b(?:https?|ftp)://(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(?:/[^\s]*)?\b";
+		// URL pattern for matching URLs
+		string urlPattern = @"\b((?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)\b";
 		Regex urlRegex = new Regex(urlPattern);
-		MatchCollection matchesUrl = urlRegex.Matches(commentText);
-
-		//List<string> urls = new List<string>();
-		//foreach (Match match in matchesUrl)
-		//{
-		//	urls.Add(match.Value);
-		//}
-
-		foreach (Match match in matchesUrl)
+		// Replace URLs with the corresponding <a> tag
+		commentText = urlRegex.Replace(commentText, match =>
 		{
 			string url = match.Value;
-			string anchorTag = "<a target='_blank' href='" + url + "'>" + url + "</a>";
-			// Replace URL with the anchor tag in the comment text
-			commentText = commentText.Replace(url, anchorTag);
-		}
+			// Add "http://" if the URL doesn't already have a scheme
+			if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+			{
+				url = "http://" + url; // Prepend "http://" if not present
+			}
+			return "<a href='" + url + "' target='_blank'>" + url + "</a>";
+		});
 
-		string processedComment = regex.Replace(commentText, match =>
+		// Regex for user mentions like @firstname lastname or @username
+		var userPattern = @"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b";
+		Regex userRegex = new Regex(userPattern);
+		// Replace user mentions with the corresponding profile link
+		string processedComment = userRegex.Replace(commentText, match =>
 		{
-			var html = "";
 			string fullName = match.Groups[1].Value.Trim();
 			var words = fullName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
 			if (words.Length > 2)
 			{
-				fullName = string.Join(" ", words.Take(2));
+				fullName = string.Join(" ", words.Take(2)); // Use first name and last name
 			}
-
 			var user = _users.FirstOrDefault(u => (u.Firstname + " " + u.Lastname).Trim().ToLower().Contains(fullName.ToLower()));
 			if (user != null)
 			{
-				html = "<a target='_blank' href='/V1/Member/Default.aspx?userid=" + user.UserId + "'>" + user.Firstname + " " + user.Lastname + "</a>";
+				// If user is found, replace with a link to the user's profile
+				return "<a target='_blank' href='/V1/Member/Default.aspx?userid="+ user.UserId +"'>" + user.Firstname + " " + user.Lastname + "</a>";
 			}
-
-			if (words.Length > 2)
-			{
-				html = html + " " + string.Join(" ", words.Skip(2));
-			}
-
-			return user != null ? html : match.Value;
+			// If user not found, keep the mention as is
+			return match.Value;
 		});
+
 		return processedComment;
 	}
 	private static string ReplaceTaggedUsersWithLinks(string comment)
@@ -490,7 +546,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			}
 			else
 			{
-				litReactionCount.Text = "";
+				litReactionCount.Text = "<div style=color:#fff;>0</div>";
 			}
 
 			string postHtml = string.Empty;
@@ -796,7 +852,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				}
 				dc.SubmitChanges();
 
-
 				#region Get Reaction Count
 				var postReaction = from prc in dc.PostReactions
 								   join p in dc.Profiles on prc.CreatedBy equals p.UserId
@@ -814,8 +869,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 							reactionTypeID = (Guid)dataExist.ReactionTypeId;
 						}
 					}
-
-
 
 					var showReaction = "";
 					var BeStrong = "<span class='m-r-n-xs' title='Be Strong'>&#128074;</span>";
@@ -889,7 +942,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				}
 				else
 				{
-					totalReaction = "";
+					totalReaction = "<div style=color:#fff;>0</div>";
 				}
 				#endregion
 			}
@@ -1062,7 +1115,8 @@ public partial class V1_Stream : BaseOrganizationWebForm
 							IsDelete = (role == "ContentManager" ? true : c.CreatedBy == userId),
 							PostId = pc.PostId,
 							TimeAgo = GetTimeAgo(c.CreatedOn),
-							Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
+							Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Lastname,
+							//Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
 							ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
 							ImgProfileUrl = profilePhotoFolder + (
 												(from rph in dc.ProfilePhotos
@@ -1085,7 +1139,8 @@ public partial class V1_Stream : BaseOrganizationWebForm
 											PostId = pc.PostId,
 											ParentCommentId = c.CommentId,
 											ProfileUrl = "/V1/Member/Default.aspx?userid=" + reply.CreatedBy,
-											Author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname,
+											Author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Lastname,
+											//Author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname,
 											ImgProfileUrl = profilePhotoFolder + (
 														 (from rph in dc.ProfilePhotos
 														  join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
@@ -1145,37 +1200,15 @@ public partial class V1_Stream : BaseOrganizationWebForm
 							IsDelete = (role == "ContentManager" ? true : c.CreatedBy == userId),
 							PostId = pc.PostId,
 							TimeAgo = GetTimeAgo(c.CreatedOn),
-							Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
+							Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Lastname,
 							ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
+							TotalPostComments = dc.PostComments.Where(f => f.PostId == new Guid(postId)).ToList().Count.ToString() + " Comments",
 							ImgProfileUrl = profilePhotoFolder + (
 												(from rph in dc.ProfilePhotos
 												 join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
 												 where rph.UserId == c.CreatedBy
 												 orderby rp.CreatedOn descending
 												 select rp.FilenameCropped).FirstOrDefault() ?? "profilepicture.png"),
-							//Replies = dc.Comments
-							//			.Where(f => f.ParentId == c.CommentId && f.IsDeleted == false)
-							//			.OrderBy(f => f.CreatedOn)
-							//			.Select(reply => new Reply
-							//			{
-							//				PostCommentId = pc.PostCommentId,
-							//				CommentId = reply.CommentId,
-							//				Comment1 = ReplaceTaggedUsersWithLinks(reply.Comment1),
-							//				CreatedOn = reply.CreatedOn,
-							//				TimeAgo = GetTimeAgo(reply.CreatedOn),
-							//				IsEdit = c.CreatedBy == userId,
-							//				IsDelete = (role == "ContentManager" ? true : c.CreatedBy == userId),
-							//				PostId = pc.PostId,
-							//				ParentCommentId = c.CommentId,
-							//				ProfileUrl = "/V1/Member/Default.aspx?userid=" + reply.CreatedBy,
-							//				Author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname,
-							//				ImgProfileUrl = profilePhotoFolder + (
-							//							 (from rph in dc.ProfilePhotos
-							//							  join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
-							//							  where rph.UserId == reply.CreatedBy
-							//							  orderby rp.CreatedOn descending
-							//							  select rp.FilenameCropped).FirstOrDefault() ?? "profilepicture.png")
-							//			}).ToList()
 						}).OrderByDescending(f => f.CreatedOn).Take(2).ToList();
 		}
 		return comments;

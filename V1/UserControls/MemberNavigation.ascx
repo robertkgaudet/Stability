@@ -2,6 +2,15 @@
     Inherits="V1_UserControls_MemberNavigation" %>
 <div class="hpanel" runat="server" id="divMemberNavigation" visible="false">
     <div class="panel-body">
+        <ul class="mailbox-list">
+            <li>
+                <asp:HyperLink ID="hypFeeds" runat="server" NavigateUrl="/feed">
+                    <i class="fa fa-th-list"></i> Feed
+                </asp:HyperLink>
+            </li>
+        </ul>
+        <hr />
+
         <h5>MY ACCOUNT</h5>
         <ul class="mailbox-list">
             <li>

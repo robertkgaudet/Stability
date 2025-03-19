@@ -181,28 +181,34 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                     }
                 }
 
-
-                if (postReaction.FirstOrDefault(f => f.CreatedBy == new Guid(userId)) != null)
+                if (postReaction.Count() > 0)
                 {
-                    if ((postReaction.Count() - 1) > 0)
+                    if (postReaction.FirstOrDefault(f => f.CreatedBy == new Guid(userId)) != null)
                     {
-                        litReactionCount = "<div>" + showReaction + "<span> &nbsp; You + " + (postReaction.Count() - 1).ToString() + "</span></div>";
+                        if ((postReaction.Count() - 1) > 0)
+                        {
+                            litReactionCount = "<div>" + showReaction + "<span> &nbsp; You + " + (postReaction.Count() - 1).ToString() + "</span></div>";
+                        }
+                        else
+                        {
+                            litReactionCount = "<div>" + showReaction + "<span> &nbsp; You </span></div>";
+                        }
                     }
                     else
                     {
-                        litReactionCount = "<div>" + showReaction + "<span> &nbsp; You </span></div>";
+                        if ((postReaction.Count() - 1) > 0)
+                        {
+                            litReactionCount = "<div>" + showReaction + "<span> &nbsp; " + (postReaction.Count() - 1).ToString() + "</span></div>";
+                        }
+                        else
+                        {
+                            litReactionCount = "<div>" + showReaction + "</div>";
+                        }
                     }
                 }
                 else
                 {
-                    if ((postReaction.Count() - 1) > 0)
-                    {
-                        litReactionCount = "<div>" + showReaction + "<span> &nbsp; " + (postReaction.Count() - 1).ToString() + "</span></div>";
-                    }
-                    else
-                    {
-                        litReactionCount = "<div>" + showReaction + "</div>";
-                    }
+                    litReactionCount = "<div style=color:#fff;>0</div>";
                 }
 
                 if (reactionTypeID == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"))
@@ -335,7 +341,7 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                 htmlContent += "                <div>" + litReactionCount + "</div>";
                 htmlContent += "            </span>";
                 htmlContent += "            <span style=\"float: right; margin-top: -23px\">";
-                htmlContent += "                <div class=\"post-type-div commentSection\" data-item-id=" + post.PostId + ">";
+                htmlContent += "                <div class=\"post-type-div commentSection showCommentsCount\" data-item-id=" + post.PostId + ">";
                 htmlContent += "                    " + postCount + " Comments";
                 htmlContent += "                </div>";
                 htmlContent += "            </span>";
