@@ -249,6 +249,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             {
                 userId = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId");
             }
+
       
 			String firstname = (String)DataBinder.Eval(dataItem.DataItem, "Firstname");
 			String lastname = (String)DataBinder.Eval(dataItem.DataItem, "Lastname");
@@ -268,7 +269,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			bool isLockedOut = false;
 			HtmlGenericControl divFooter = (HtmlGenericControl)e.Item.FindControl("divFooter");
 			Button btnContact = (Button)e.Item.FindControl("btnContact");
-			Literal litVettingInfo = (Literal)e.Item.FindControl("litVettingInfo");
+            Button btnManage = (Button)e.Item.FindControl("btnManage");
+            Literal litVettingInfo = (Literal)e.Item.FindControl("litVettingInfo");
 			Literal litActiveDate = (Literal)e.Item.FindControl("litActiveDate");
 			if (User.IsInRole("Administrator") || userIsOwner)
 			{
@@ -282,7 +284,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 				DateTime? lastActivityDate = (DateTime?)DataBinder.Eval(dataItem.DataItem, "LastLoginDate");
 				divFooter.Visible = true;
 				btnContact.Visible = true;
-				isLockedOut = !profileUser.IsApproved;
+				btnManage.Visible = true;
+                isLockedOut = !profileUser.IsApproved;
 				vettingComplete = vettingComplete == null ? false : vettingComplete;
 				passedVetting = passedVetting == null ? false : passedVetting;
 				vettingActive = vettingActive == null ? false : vettingActive;
@@ -317,6 +320,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			litSkills.Text = !String.IsNullOrEmpty(skills) ? "<h6>Skills:</h6> " + skills + "</br>" : "";
 			litResources.Text = !String.IsNullOrEmpty(resources) ? "<h6>Resources:</h6> " + resources + "</br>" : "";
 			litDescription.Text = description;
+
 		}
 	}
 	protected string GetResources(Guid userId)
