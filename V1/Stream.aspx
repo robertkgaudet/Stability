@@ -119,7 +119,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (response) {
-                        debugger;
                         var div = $('[data-item-id="' + postId + '-showComments"]');
                         let totalComments = "";
                         //var div = document.querySelector(`.comment-section-repeater-show[data-item-id="${postId}-showComments"]`);
