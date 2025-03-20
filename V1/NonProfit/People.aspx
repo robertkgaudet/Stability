@@ -103,8 +103,8 @@
     }
 ///script for training search
 document.addEventListener("DOMContentLoaded", function () {
-    var dropdown = document.getElementById("ddlTraining"); 
-    var hiddenField = document.getElementById("selectedTraining");
+    var dropdown = document.getElementById("iygg"); 
+    var hiddenField = document.getElementById("gfgj");
 
     if (dropdown && hiddenField) {
         dropdown.addEventListener("change", function () {
@@ -113,7 +113,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Ensure hidden field is updated before form submission
     var form = document.querySelector("form");
     if (form) {
         form.addEventListener("submit", function () {
@@ -134,26 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 ],
                 height: 100
             });
- <%--$("#<%=ddlEvent.ClientID%>").change(function () {
-        if ($(this).val()) {
-            $("#radiusSection").show();
-        } else {
-            $("#radiusSection").hide();
-        }
-    });
-            var radiusSlider = document.getElementById("radiusSlider");
-            var radiusValue = document.getElementById("radiusValue");
-            var hiddenRadius = document.getElementById("hiddenRadius");
 
-            radiusSlider.oninput = function () {
-                radiusValue.innerHTML = this.value + " km";
-                hiddenRadius.value = this.value;
-            }
-
-            $("#<%=SearchButton.ClientID%>").click(function () {
-                var selectedRadius = radiusSlider.value;
-                console.log("Selected Radius: " + selectedRadius + " km");
-            });--%>
   $(document).ready(function () {
         var radiusSlider = document.getElementById("radiusSlider");
         var radiusValue = document.getElementById("radiusValue");
@@ -166,21 +146,20 @@ document.addEventListener("DOMContentLoaded", function () {
             hiddenRadius.value = this.value; // Ensure hidden field updates
         };
 
-        // Show/hide radius section based on dropdown selection
         $("#<%=ddlEvent.ClientID%>").change(function () {
             if ($(this).val()) {
                 $("#radiusSection").show();
-                hiddenEvent.value = $(this).val(); // Ensure hidden field updates
+                hiddenEvent.value = $(this).val(); 
             } else {
                 $("#radiusSection").hide();
-                hiddenEvent.value = ""; // Clear event value if not selected
+                hiddenEvent.value = ""; 
             }
         });
 
-        // Ensure values are updated before search button submission
+
         $("#<%=SearchButton.ClientID%>").click(function () {
-            hiddenRadius.value = radiusSlider.value; // Update hidden field
-            hiddenEvent.value = $("#<%=ddlEvent.ClientID%>").val(); // Store selected event
+            hiddenRadius.value = radiusSlider.value;
+            hiddenEvent.value = $("#<%=ddlEvent.ClientID%>").val(); 
             console.log("Final Selected Radius: " + hiddenRadius.value + " km");
             console.log("Final Selected Event: " + hiddenEvent.value);
         });
@@ -221,14 +200,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 icon.toggleClass("fa-chevron-down fa-chevron-up");
                 searchPanel.collapse("toggle");
             });  
-
-               <%-- $("#<%= ddlEvent.ClientID %>").change(function () {
-                    if ($(this).val()) {
-                        $("#radiusSection").show();
-                    } else {
-                        $("#radiusSection").hide();
-                    }
-                });--%>
             $('.multiselect').multiselect({
                 includeSelectAllOption: true,
                 enableFiltering: true,
@@ -398,26 +369,13 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <b>Search By Member  :</b>
                                             <asp:TextBox ID="filter" runat="server" CssClass="form-control" placeholder="Search By Member "></asp:TextBox>
                                         </div>
-                                    </div>
-                                    <%-- <div class="col-md-6 mb-3">
-                                        <div class="form-group fix">
-                                            <b>Training :</b>
-                                            <asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-control" onchange="updateHiddenField(this)"></asp:DropDownList>
-                                          <!-- Hidden field to store selected training -->
-                                              <input type="hidden" id="selectedTraining" name="selectedTraining" />
-                                        </div>
-                                    </div>--%>
+                                    </div>                                  
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
                                             <b>Training :</b>
-                                            <asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-control" ClientIDMode="Static"></asp:DropDownList>
-
-                                            <!-- Hidden field to store selected training -->
-                                            <input type="hidden" id="selectedTraining" name="selectedTraining" />
+                                            <asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-control"></asp:DropDownList>                                           
                                         </div>
                                     </div>
-
-
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
@@ -451,35 +409,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <asp:TextBox ID="EndDate" runat="server" CssClass="form-control datepicker" placeholder="End Date"
                                                 autocomplete="off" ClientIDMode="Static" />
                                         </div>
-                                    </div>
-                                    <%-- <div class="col-md-6 mb-3">
-                                            <div class="form-group fix">
-                                                <b>Location :</b>
-                                                <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <div class="form-group fix">
-                                                <b>Radius (km):</b>
-                                                <input type="range" id="radiusSlider" min="10" max="100" step="10" value="10" class="form-control">
-                                                <span id="radiusValue">10 km</span>
-                                                <input type="hidden" id="hiddenRadius" name="radiusSlider" value="10" />
-                                            </div>
-                                        </div>--%>
-                                    <%-- <div class="col-md-6 mb-3">
-                                        <div class="form-group fix">
-                                            <b>Location :</b>
-                                            <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3" id="radiusSection" style="display: none;">
-                                        <div class="form-group fix">
-                                            <b>Radius (km):</b>
-                                            <input type="range" id="radiusSlider" min="10" max="100" step="10" value="10" class="form-control">
-                                            <span id="radiusValue">10 km</span>
-                                            <input type="hidden" id="hiddenRadius" name="radiusSlider" value="10" />
-                                        </div>
-                                    </div>--%>
+                                    </div>                                
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
                                             <b>Location :</b>
@@ -490,9 +420,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         <div class="form-group fix">
                                             <b>Radius (km):</b>
                                             <input type="range" id="radiusSlider" min="100" max="1000" step="100" value="1000" class="form-control">
-                                            <span id="radiusValue">10 km</span>
-                                            <!-- Hidden field to store the slider value -->
-                                            <%--    <input type="hidden" id="hiddenRadius" name="radiusSlider" value="10" runat="server" />--%>
+                                            <span id="radiusValue">100 km</span>                                   
                                             <input type="hidden" id="hiddenRadius" name="radiusSlider" value="10" />
                                             <input type="hidden" id="hiddenEvent" name="selectedEvent" />
 
