@@ -13,6 +13,7 @@ using System.Web.Security;
 using System.Web.Services;
 using System.Text.RegularExpressions;
 using GoogleMapsAPI.Places;
+using System.Web.Services.Description;
 //using static System.Net.Mime.MediaTypeNames;
 //using static System.Net.Mime.MediaTypeNames;
 
@@ -425,7 +426,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			String URLTitle = (String)DataBinder.Eval(dataItem.DataItem, "URLTitle");
 			String SharedURL = (String)DataBinder.Eval(dataItem.DataItem, "SharedURL");
 			//HyperLink hypCreatedBy = (HyperLink)e.Item.FindControl("hypCreatedBy");
-			HyperLink hypPortalLink = (HyperLink)e.Item.FindControl("hypPortalLink");
+			Label hypPortalLink = (Label)e.Item.FindControl("hypPortalLink");
 			Label lblMessageDate = (Label)e.Item.FindControl("lblMessageDate");
 			Literal litMessage = (Literal)e.Item.FindControl("litMessage");
 			Literal litReactionTitle = (Literal)e.Item.FindControl("litReactionTitle");
@@ -696,7 +697,8 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			{
 				commentSectionShow.Style["display"] = "";  // Show the div
 			}
-			litCommentsCount.Text = dc.PostComments.Where(f => f.PostId == postId).ToList().Count.ToString() + " Comments";
+			litCommentsCount.Text = dc.PostComments.Where(r => r.PostId == postId && !r.Comment.IsDeleted && r.Comment.ParentId == null).Count() + " Comments";
+			//litCommentsCount.Text = dc.PostComments.Where(f => f.PostId == postId).ToList().Count.ToString() + " Comments";
 		}
 	}
 
@@ -1115,6 +1117,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 							IsDelete = (role == "ContentManager" ? true : c.CreatedBy == userId),
 							PostId = pc.PostId,
 							TimeAgo = GetTimeAgo(c.CreatedOn),
+							UserId = c.CreatedBy,
 							Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Lastname,
 							//Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
 							ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
@@ -1139,6 +1142,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 											PostId = pc.PostId,
 											ParentCommentId = c.CommentId,
 											ProfileUrl = "/V1/Member/Default.aspx?userid=" + reply.CreatedBy,
+											UserId = c.CreatedBy,
 											Author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Lastname,
 											//Author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname,
 											ImgProfileUrl = profilePhotoFolder + (
@@ -1202,7 +1206,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 							TimeAgo = GetTimeAgo(c.CreatedOn),
 							Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Lastname,
 							ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
-							TotalPostComments = dc.PostComments.Where(f => f.PostId == new Guid(postId)).ToList().Count.ToString() + " Comments",
+							TotalPostComments = dc.PostComments.Where(r => r.PostId == new Guid(postId) && !r.Comment.IsDeleted && r.Comment.ParentId == null).Count().ToString() + " Comments",
 							ImgProfileUrl = profilePhotoFolder + (
 												(from rph in dc.ProfilePhotos
 												 join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
@@ -1212,6 +1216,26 @@ public partial class V1_Stream : BaseOrganizationWebForm
 						}).OrderByDescending(f => f.CreatedOn).Take(2).ToList();
 		}
 		return comments;
+	}
+
+	[WebMethod]
+	public static string RenderTeamLogo(string userId)
+	{
+		try
+		{
+			V1_UserControls_TeamLogo teamLogo = new V1_UserControls_TeamLogo();
+			teamLogo.UserId = new Guid(userId);
+			teamLogo.LoadNameWithBadges();
+			using (var sw = new StringWriter())
+			{
+				teamLogo.RenderControl(new HtmlTextWriter(sw));
+				return sw.ToString(); // Return the HTML of the rendered control
+			}
+		}
+		catch (Exception ex)
+		{
+			return ex.ToString();
+		}
 	}
 
 	[WebMethod]
