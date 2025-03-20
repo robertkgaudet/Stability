@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" ValidateRequest="false" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Stream.aspx.cs" Inherits="V1_Stream" %>
+
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -6,21 +7,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/#.#.#/jquery.jscroll.min.js"></script>
     <script>
         $(document).ready(function () {
-            //$('.container').infiniteScroll({
-            //  // options
-            //  path: '.pagination__next',
-            //  append: '.post',
-            //  history: false,
-            //});
-
             var pageNumber = 1;
-
             var gCommentId = "";
             var isEditComment = false;
-            loadUser();
-
             const users = [];
             let cursorPosition = 0;
+
+            loadUser();
 
             $(document).on('click', '.commentSection', function () {
                 let postId = $(this).data("item-id");
@@ -114,6 +107,47 @@
                     error: function (xhr, status, error) {
                         console.error("Error: " + error);
                         $('#rptPostComments').html('<div class="error">Error loading comments. Please try again.</div>');
+                    }
+                });
+            }
+
+            function loadCommentsUnderPost(postId) {
+                $.ajax({
+                    type: "POST",
+                    url: "/V1/Stream.aspx/GetCommentsUnderPostById",
+                    data: JSON.stringify({ postId: postId }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        var div = $('[data-item-id="' + postId + '-showComments"]');
+                        let totalComments = "";
+                        //var div = document.querySelector(`.comment-section-repeater-show[data-item-id="${postId}-showComments"]`);
+                        var html = ""
+                        if (response.d) {
+                            if (response.d.length > 0) {
+                                if (div) {
+                                    //var parentDiv = div.parentElement; // This gives you the parent div
+                                    var parentDiv = div.parent();
+                                    parentDiv.show();
+                                    //parentDiv.style.display = 'block';
+                                }
+                                for (let i = 0; i < response.d.length; ++i) {
+                                    let item = response.d[i];
+                                    totalComments = item.TotalPostComments;
+                                    html += "<ul class=\"comments\">\n<li>\n<div class=\"userImage\">\n" +
+                                        "<a target=\"_blank\" href=\"" + item.ProfileUrl + "\">\n<img class=\"img-rounded\" " +
+                                        "src=\"" + item.ImgProfileUrl + "\" />\n</a>\n</div>\n<div class=\"commentReact\">\n" +
+                                        "<span style=\"font-weight: bold; width: 70%\">\n<a target=\"_blank\" href=\"" + item.ProfileUrl + "\" " +
+                                        "class=\"author-link\">" + item.Author + "</a>\n</span>\n<span style=\"float: right; width: 12%; " +
+                                        "text-align: right; margin: 0px 5px 0px 0px;\">" + item.TimeAgo + "</span>\n<span>" + item.Comment1 + "</span></div></li></ul>";
+                                }
+                            }
+                        }
+                        $(div).html(html);
+                        $('.showCommentsCount[data-item-id="' + postId + '"]').empty().append(totalComments);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error: " + error);
                     }
                 });
             }
@@ -240,13 +274,13 @@
                         success: function (response) {
                             $('#thankTooltip').css('display', 'none');
                             $("[data-item-rid='" + postId + "']").html(response.d);
-                            if (response.d === '') {
-                                $("[data-item-cid='" + postId + "']").html("&#128077; Thanks");
+                            if (response.d === "<div style=color:#fff;>0</div>") {
+                                $("[data-item-cid='" + postId + "']").html("&#128077; Like");
                                 $("[data-item-cid='" + postId + "']").css('color', '#777');
                             }
                             else {
                                 if (reactionId === '463be049-a178-4327-948c-eb3e3e7dce73') {
-                                    $("[data-item-cid='" + postId + "']").html("&#128591; Thanks");
+                                    $("[data-item-cid='" + postId + "']").html("&#128591; Like");
                                     $("[data-item-cid='" + postId + "']").css('color', '#286090');
                                 }
                                 else if (reactionId === 'b247efe7-3da7-44fa-9452-a331f71d337f') {
@@ -266,7 +300,7 @@
                                     $("[data-item-cid='" + postId + "']").css('color', '#eea236');
                                 }
                                 else {
-                                    $("[data-item-cid='" + postId + "']").html("&#128077; Thanks");
+                                    $("[data-item-cid='" + postId + "']").html("&#128077; Like");
                                     $("[data-item-cid='" + postId + "']").css('color', '#777');
                                 }
                             }
@@ -278,13 +312,12 @@
                 }
             );
 
-            let tooltipTimeout; // Declare a variable to hold the timeout reference
-            //$('.thankButton').hover(
+            //let tooltipTimeout; // Declare a variable to hold the timeout reference
+            //$('.thankButton').click(
             //    function () {
-            //        $("#currentSelectedPost").val($(this).data("item-id"));
+            //        $("#currentSelectedPost").val($(this).data("item-cid"));
             //        var tooltip = $('#thankTooltip');
             //        var buttonOffset = $(this).offset(); // Get the button's position
-
             //        // Set tooltip text or modify as needed
             //        //tooltip.text('Tooltip for ' + $(this).text())
             //        //	.append('<button class="tooltipButton" id="closeTooltip">Close</button>'); // Adding a close button for demonstration
@@ -310,17 +343,17 @@
             //        // Set a timeout to hide the tooltip after 8 seconds
             //        tooltipTimeout = setTimeout(function () {
             //            tooltip.css('display', 'none');
-            //        }, 10000); // 8000 milliseconds = 8 seconds
+            //        }, 4000); // 8000 milliseconds = 8 seconds
             //    },
             //);
 
             //Hide tooltip on clicking outside or on clicking the button inside the tooltip
-            $(document).on('click', function (event) {
-                if (!$(event.target).closest('#thankTooltip').length && !$(event.target).is('.thankButton')) {
-                    $('#thankTooltip').css('display', 'none');
-                    clearTimeout(tooltipTimeout); // Clear the timeout when hiding the tooltip manually
-                }
-            });
+            //$(document).on('click', function (event) {
+            //    if (!$(event.target).closest('#thankTooltip').length && !$(event.target).is('.thankButton')) {
+            //        $('#thankTooltip').css('display', 'none');
+            //        clearTimeout(tooltipTimeout); // Clear the timeout when hiding the tooltip manually
+            //    }
+            //});
 
             // Close button click event inside the tooltip
             $(document).on('click', '#closeTooltip', function () {
@@ -350,6 +383,7 @@
                         gCommentId = "";
                         isEditComment = false;
                         loadComments($("#postIdForComments").val());
+                        loadCommentsUnderPost($("#postIdForComments").val());
                     },
                     error: function (xhr, status, error) {
                         console.error("Error: " + error);
@@ -487,7 +521,6 @@
 
             });
 
-
             $(document).on('click', '.DeletePostComment', function () {
                 let postCommentId = $(this).data("item-id");
                 $.ajax({
@@ -524,7 +557,13 @@
         });
 
         let tooltipTimeout; // Declare a variable to hold the timeout reference
-        $(document).on('mouseenter', '.thankButton', function () {
+
+        //$('.thankButton').on('click', function () {
+        //    // Code for click action
+        //    alert('Thank button clicked!');
+        //});
+
+        $(document).on('click', '.thankButton', function (e) {
             $("#currentSelectedPost").val($(this).data("item-cid"));
             var tooltip = $('#thankTooltip');
             var buttonOffset = $(this).offset(); // Get the button's position
@@ -533,12 +572,34 @@
             //	.append('<button class="tooltipButton" id="closeTooltip">Close</button>'); // Adding a close button for demonstration
 
             // Calculate top position
-            var topPosition = buttonOffset.top - tooltip.outerHeight() - 70;
-            var leftPosition = 480;
-            if (window.innerWidth <= 768) { // Adjust top position for mobile
-                topPosition -= 120; // Modify by 120 pixels for mobile
-                leftPosition -= 100;
+            //var topPosition = buttonOffset.top - tooltip.outerHeight() - 70;
+            //var leftPosition = 480;
+            //if (window.innerWidth <= 768) { // Adjust top position for mobile
+            //    topPosition -= 120; // Modify by 120 pixels for mobile
+            //    leftPosition -= 100;
+            //}
+
+            // Calculate base positions for tooltip
+            var buttonOffset = $(this).offset(); // Get the button's position
+            var tooltipHeight = tooltip.outerHeight(); // Get the height of the tooltip
+            var tooltipWidth = tooltip.outerWidth(); // Get the width of the tooltip
+            var buttonHeight = $(this).outerHeight(); // Get the height of the button
+
+            // Calculate base positions for tooltip
+            var topPosition = buttonOffset.top - tooltipHeight - 50; // Position it above the button
+            var leftPosition = buttonOffset.left; // Position based on button's left position
+
+            // Adjust for mobile view (e.g., width <= 768px)
+            if (window.innerWidth <= 768) {
+                // For mobile, let's adjust the top and left position a bit more
+                topPosition -= 20; // Move the tooltip up more on smaller screens
+                leftPosition = Math.max(10, leftPosition - 50); // Ensure tooltip doesn't go off-screen on left side
+            } else {
+                // For larger screens (web view)
+                topPosition -= 10; // Small gap from the button
+                leftPosition = Math.min(leftPosition, $(window).width() - tooltipWidth - 10); // Ensure tooltip stays within the viewport (right alignment)
             }
+
 
             // Position and show tooltip
             tooltip.css({
@@ -553,16 +614,16 @@
             // Set a timeout to hide the tooltip after 8 seconds
             tooltipTimeout = setTimeout(function () {
                 tooltip.css('display', 'none');
-            }, 10000); // 8000 milliseconds = 8 seconds
+            }, 2000); // 8000 milliseconds = 8 seconds
+            e.preventDefault();
         });
-
 
         $(document).on('click', '#commentButton', function () {
             var cDiv = $(this).data('item-id').replace('cbutton', 'cdiv');
             $("div[data-item-id='" + cDiv + "']").removeClass("hidden");
         });
-
     </script>
+
     <style>
         .suggestions {
             border: 1px solid #ccc;
@@ -626,9 +687,9 @@
 
         .commentList {
             padding: 10px;
-            height: 570px;
-            max-height: 570px;
-            min-height: 570px;
+            height: auto;
+            max-height: 500px;
+            min-height: 300px;
         }
 
         .thankTooltip {
@@ -657,6 +718,23 @@
             .StreamLink:hover {
                 color: #050505;
                 text-decoration: underline;
+            }
+
+
+        .StreamPortalLink {
+            float: right;
+            text-align: right;
+            color: #6A6C6F;
+            font-size: 90%;
+        }
+
+            .StreamPortalLink:hover {
+                color: #6A6C6F;
+                text-decoration: none;
+            }
+
+            .StreamPortalLink::after {
+                content: none; /* This removes the arrow if it's added via pseudo-element */
             }
 
         .panel-body {
@@ -1030,7 +1108,7 @@
         .comment-section-show {
             width: 100%;
             max-width: 600px;
-            max-height: 100px;
+            max-height: 110px;
             min-height: auto;
             height: auto;
             margin: 0px auto;
@@ -1057,7 +1135,7 @@
 
         .comment-section-repeater-show {
             width: 103%;
-            max-height: 100px;
+            max-height: 110px;
             min-height: auto;
             height: auto;
             overflow-x: hidden;
@@ -1246,6 +1324,12 @@
                 display: block;
                 font-weight: normal;
             }
+
+                .commentReact span:first-child {
+                    font-weight: bold;
+                    color: #337ab7;
+                    text-decoration: none;
+                }
 
             .commentReact .reaction {
                 /*border: 1px solid #ccc;*/
@@ -1499,9 +1583,9 @@
             });
 
         });
-
     </script>
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div class="postContainer">
         <div class="row postrow">
@@ -1526,13 +1610,18 @@
         <div class="post-container">
             <div class="post-content">
                 <asp:Repeater ID="rptPosts" runat="server" OnItemDataBound="rptPosts_ItemDataBound">
-                    <ItemTemplate>
+                    <itemtemplate>
                         <div class="hpanel messageBody">
                             <div class="panel-body">
                                 <div class="message">
                                     <div class="block-profile-image-div clearfix" style="line-height: 1.3;">
-                                        <img class="img-rounded" style="float: left; margin-right: 10px" width="40" src="" runat="server" id="imgProfile" />                                     
-                                           <uc1:TeamLogo runat="server"  CssClass="StreamLink" ID="ucUserNameWithBadges" />
+                                        <a href="" style="float: left; margin-right: 10px; display: none;"
+                                            id="linkProfile" runat="server">
+                                            <img class="img-rounded" width="40" src="" runat="server" id="imgProfile" />
+                                        </a>
+                                        <uc1:teamlogo runat="server" cssclass="StreamLink" id="ucUserNameWithBadges" />
+                                        <%--<asp:HyperLink ID="hypCreatedBy" runat="server" CssClass="StreamLink"></asp:HyperLink>--%>
+                                        <asp:HyperLink ID="hypPortalLink" runat="server" CssClass="StreamPortalLink"></asp:HyperLink>
                                         <br />
                                         <asp:Label ID="lblMessageDate" runat="server" CssClass="message-date"></asp:Label>
                                     </div>
@@ -1549,13 +1638,13 @@
                                         <asp:Literal ID="litReactionCount" runat="server"></asp:Literal>
                                     </span>
                                     <span style="float: right; margin-top: -23px">
-                                        <div class="post-type-div commentSection" data-item-id='<%# Eval("postId") %>'>
+                                        <div class="post-type-div commentSection showCommentsCount" data-item-id='<%# Eval("postId") %>'>
                                             <asp:Literal ID="litCommentsCount" runat="server"></asp:Literal>
                                         </div>
                                     </span>
                                 </div>
                                 <hr />
-                                <div class="row">
+                                <div class="row" style="margin-top: -18px !important">
                                     <div class="col-xs-3 post-type-div thankButton text-muted" data-item-cid='<%# Eval("postId") %>'>
                                         <asp:Literal ID="litReactionTitle" runat="server"></asp:Literal>
                                     </div>
@@ -1565,9 +1654,9 @@
                                 </div>
 
                                 <div id="commentSectionShow" class="comment-section-show" runat="server">
-                                    <div class="comment-section-repeater-show">
-                                        <asp:Repeater ID="rptPostCommentsShow" runat="server">
-                                            <ItemTemplate>
+                                    <div class="comment-section-repeater-show" data-item-id='<%# Eval("postId") %>-showComments'>
+                                        <asp:Repeater ID="rptPostCommentsShow" runat="server" OnItemDataBound="rptPostCommentsShow_ItemDataBound">
+                                            <itemtemplate>
                                                 <ul class="comments">
                                                     <li>
                                                         <div class="userImage">
@@ -1575,37 +1664,26 @@
                                                                 <img class="img-rounded" src='<%# Eval("imgProfileUrl") %>' /></a>
                                                         </div>
                                                         <div class="commentReact">
-                                                            <span style="font-weight: bold; width: 70%">
-                                                                <a target="_blank" href="<%# Eval("ProfileUrl") %>" class="author-link"><%# Eval("author") %></a>
+                                                            <span style="font-weight: bold; width: 70%; height: 22px;">
+                                                                <uc1:teamlogo runat="server" id="ucTeamLogo" userid='<%# Eval("UserId") %>' pagename="feed" />
+                                                                <%--<a target="_blank" href="<%# Eval("ProfileUrl") %>" class="author-link"><%# Eval("author") %></a>--%>
                                                             </span>
                                                             <span style="float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;"><%# Eval("timeAgo") %></span>
                                                             <span><%# Eval("Comment1") %></span>
                                                         </div>
                                                     </li>
                                                 </ul>
-                                            </ItemTemplate>
+                                            </itemtemplate>
                                         </asp:Repeater>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
-                    </ItemTemplate>
+                    </itemtemplate>
                 </asp:Repeater>
 
                 <div class="thankTooltip" id="thankTooltip">
                     <asp:PlaceHolder ID="PostReactionTypesId" runat="server"></asp:PlaceHolder>
-                    <%-- <span id="463BE049-A178-4327-948C-EB3E3E7DCE73" class="large-icon thanksReaction" data-toggle="tooltip" data-placement="top" title="Thank">&#128591;</span>
-                    <!-- Thank -->
-                    <span id="B247EFE7-3DA7-44FA-9452-A331F71D337F" class="large-icon text-danger thanksReaction" data-toggle="tooltip" data-placement="top" title="Love">&#10084;</span>
-                    <!-- Love -->
-                    <span id="8FE324D4-3694-4B7D-B710-DF277C74B1C4" class="large-icon bold-purple-star thanksReaction" data-toggle="tooltip" data-placement="top" title="Bump">&#128171;</span>
-                    <!-- Bump -->
-                    <span id="6528BBD7-501B-475B-A15F-520BB0A3FFBF" class="large-icon thanksReaction" data-toggle="tooltip" data-placement="top" title="Be Strong">&#128074;</span>
-                    <!-- Connect -->
-                    <span id="43142E57-F55B-4C8D-B024-="tooltip" data-placement="top" title="Wow">&#128558;</span>
-                    <!-- Be Strong -->--%>
                 </div>
                 <div id="currentSelectedPost" val="" class="hidden"></div>
             </div>

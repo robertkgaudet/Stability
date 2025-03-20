@@ -12,11 +12,8 @@ using System.Drawing;
 using System.Web.Security;
 using System.Web.Services;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
-using System.Web.Services.Description;
 using GoogleMapsAPI.Places;
-using System.Security.Policy;
-using System.Activities.Statements;
+//using static System.Net.Mime.MediaTypeNames;
 //using static System.Net.Mime.MediaTypeNames;
 
 public partial class V1_Stream : BaseOrganizationWebForm
@@ -28,11 +25,9 @@ public partial class V1_Stream : BaseOrganizationWebForm
 	public string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
 	protected void Page_Load(object sender, EventArgs e)
 	{
-		LoadPosts();
 		if (!this.IsPostBack)
 		{
-			BindDropdown();
-
+			BindDropdownForPostBack();
 			postField.Visible = false;
 			lblPostMessage.Text = "Sign in to post";
 			if (User.Identity.IsAuthenticated)
@@ -65,8 +60,9 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		else
 		{
 		}
+		LoadPosts();
+		BindDropdown();
 	}
-
 	public void BindDropdown()
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -76,15 +72,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		{
 			ListItem item = new ListItem(option.Type.ToString(), option.AudienceTypeId.ToString());
 			AudienceType.Items.Add(item);
-		}
-
-		PortalTypes.Items.Clear();
-		PortalTypes.Items.Add(new ListItem("Select Portal...", ""));
-		var portals = dc.Events.Where(f => f.IsActive).OrderByDescending(f => f.BeginDate).ToList();
-		foreach (var portal in portals)
-		{
-			ListItem item = new ListItem(portal.Name.ToString(), portal.EventId.ToString());
-			PortalTypes.Items.Add(item);
 		}
 
 		var PostReactionTypes = dc.PostReactionTypes.OrderBy(f => f.OrderId).ToList();
@@ -113,6 +100,18 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			div.Controls.Add(newDiv);
 		}
 		PostReactionTypesId.Controls.Add(div);
+	}
+	public void BindDropdownForPostBack()
+	{
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		PortalTypes.Items.Clear();
+		PortalTypes.Items.Add(new ListItem("Select Portal...", ""));
+		var portals = dc.Events.Where(f => f.IsActive).OrderByDescending(f => f.BeginDate).ToList();
+		foreach (var portal in portals)
+		{
+			ListItem item = new ListItem(portal.Name.ToString(), portal.EventId.ToString());
+			PortalTypes.Items.Add(item);
+		}
 	}
 	public static string GetTimeAgo(DateTime pastDate)
 	{
@@ -174,54 +173,109 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		}
 		return taggedUsers;
 	}
+	//private static string ExtractTaggedMessage(string commentText, List<Profile> _users)
+	//{
+	//	var regex = new Regex(@"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\s([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b");
+	//	var matches = regex.Matches(commentText);
+
+	//	//string urlPattern = @"\b(?:https?|ftp)://(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(?:/[^\s]*)?\b";
+	//	var urlPattern = @"\b((?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)\b";
+	//	Regex urlRegex = new Regex(urlPattern);
+	//	MatchCollection matchesUrl = urlRegex.Matches(commentText);
+
+	//	//List<string> urls = new List<string>();
+	//	//foreach (Match match in matchesUrl)
+	//	//{
+	//	//	urls.Add(match.Value);
+	//	//}
+
+
+	//	// Replace URLs with the corresponding <a> tag
+	//	commentText = Regex.Replace(commentText, urlPattern, match =>
+	//	{
+	//		string url = match.Value;
+	//		// Add "http://" if the URL doesn't already have a scheme
+	//		if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+	//		{
+	//			url = "http://" + url; // Prepend "http://" if not present
+	//		}
+	//		return "<a href='" + url + "' target='_blank'>" + url + "</a>";
+	//	});
+
+	//	foreach (Match match in matchesUrl)
+	//	{
+	//		string url = match.Value;
+	//		string anchorTag = "<a target='_blank' href='" + url + "'>" + url + "</a>";
+	//		// Replace URL with the anchor tag in the comment text
+	//		commentText = commentText.Replace(url, anchorTag);
+	//	}
+
+	//	string processedComment = regex.Replace(commentText, match =>
+	//	{
+	//		var html = "";
+	//		string fullName = match.Groups[1].Value.Trim();
+	//		var words = fullName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+	//		if (words.Length > 2)
+	//		{
+	//			fullName = string.Join(" ", words.Take(2));
+	//		}
+
+	//		var user = _users.FirstOrDefault(u => (u.Firstname + " " + u.Lastname).Trim().ToLower().Contains(fullName.ToLower()));
+	//		if (user != null)
+	//		{
+	//			html = "<a target='_blank' href='/V1/Member/Default.aspx?userid=" + user.UserId + "'>" + user.Firstname + " " + user.Lastname + "</a>";
+	//		}
+
+	//		if (words.Length > 2)
+	//		{
+	//			html = html + " " + string.Join(" ", words.Skip(2));
+	//		}
+
+	//		return user != null ? html : match.Value;
+	//	});
+	//	return processedComment;
+	//}
+
 	private static string ExtractTaggedMessage(string commentText, List<Profile> _users)
 	{
-		var regex = new Regex(@"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\s([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b");
-		var matches = regex.Matches(commentText);
-
-
-		string urlPattern = @"\b(?:https?|ftp)://(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6}(?:/[^\s]*)?\b";
+		// URL pattern for matching URLs
+		string urlPattern = @"\b((?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(?:\/[^\s]*)?)\b";
 		Regex urlRegex = new Regex(urlPattern);
-		MatchCollection matchesUrl = urlRegex.Matches(commentText);
-
-		//List<string> urls = new List<string>();
-		//foreach (Match match in matchesUrl)
-		//{
-		//	urls.Add(match.Value);
-		//}
-
-		foreach (Match match in matchesUrl)
+		// Replace URLs with the corresponding <a> tag
+		commentText = urlRegex.Replace(commentText, match =>
 		{
 			string url = match.Value;
-			string anchorTag = "<a target='_blank' href='" + url + "'>" + url + "</a>";
-			// Replace URL with the anchor tag in the comment text
-			commentText = commentText.Replace(url, anchorTag);
-		}
+			// Add "http://" if the URL doesn't already have a scheme
+			if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+			{
+				url = "http://" + url; // Prepend "http://" if not present
+			}
+			return "<a href='" + url + "' target='_blank'>" + url + "</a>";
+		});
 
-		string processedComment = regex.Replace(commentText, match =>
+		// Regex for user mentions like @firstname lastname or @username
+		var userPattern = @"@([A-Za-z0-9]+(?:[-\s][A-Za-z0-9]+)*)\b";
+		Regex userRegex = new Regex(userPattern);
+		// Replace user mentions with the corresponding profile link
+		string processedComment = userRegex.Replace(commentText, match =>
 		{
-			var html = "";
 			string fullName = match.Groups[1].Value.Trim();
 			var words = fullName.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
 			if (words.Length > 2)
 			{
-				fullName = string.Join(" ", words.Take(2));
+				fullName = string.Join(" ", words.Take(2)); // Use first name and last name
 			}
-
 			var user = _users.FirstOrDefault(u => (u.Firstname + " " + u.Lastname).Trim().ToLower().Contains(fullName.ToLower()));
 			if (user != null)
 			{
-				html = "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>" + user.Firstname + " " + user.Lastname + "</a>";
+				// If user is found, replace with a link to the user's profile
+				return "<a target='_blank' href='/V1/Member/Default.aspx?userid="+ user.UserId +"'>" + user.Firstname + " " + user.Lastname + "</a>";
 			}
-
-			if (words.Length > 2)
-			{
-				html = html + " " + string.Join(" ", words.Skip(2));
-			}
-
-			return user != null ? html : match.Value;
+			// If user not found, keep the mention as is
+			return match.Value;
 		});
+
 		return processedComment;
 	}
 	private static string ReplaceTaggedUsersWithLinks(string comment)
@@ -245,11 +299,11 @@ public partial class V1_Stream : BaseOrganizationWebForm
 
 			if (user != null)
 			{
-				html = "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>" + "@@" + fullName + "</a>";
+				html = "<a target='_blank' href='/V1/Member/Default.aspx?userid=" + user.UserId + "'>" + "@@" + fullName + "</a>";
 			}
 
 			return user != null ? html : match.Value;
-			//return user != null ? "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>@@" + fullName + "</a>" : match.Value;
+			//return user != null ? "<a target='_blank' href='/V1/Member/Default.aspx?userid=" + user.UserId + "'>@@" + fullName + "</a>" : match.Value;
 		});
 	}
 	public void LoadPosts()
@@ -257,7 +311,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		int streamPostPageSize = int.Parse(ConfigurationManager.AppSettings["streamPostPageSize"].ToString()) + 10;
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-		var posts = from p in dc.Posts
+		var posts = (from p in dc.Posts
 					join pr in dc.Profiles on p.CreatedBy equals pr.UserId
 					where p.IsVisible == true
 					orderby p.CreatedOn descending
@@ -273,8 +327,9 @@ public partial class V1_Stream : BaseOrganizationWebForm
 						p.CreatedOn,
 						p.Message,
 						pr.UserId,
+						EventId = p.EventId ?? new Guid(),
 						fullname = pr.Firstname + " " + pr.Lastname
-					};
+					}).Take(10);
 		rptPosts.DataSource = posts;
 		rptPosts.DataBind();
 	}
@@ -359,6 +414,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			}
             RepeaterItem dataItem = (RepeaterItem)e.Item;
 			Guid postId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostId");
+			Guid eventId = (Guid)DataBinder.Eval(dataItem.DataItem, "EventId");
 			Guid postTypeId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostTypeId");
 			DateTime createdOn = (DateTime)DataBinder.Eval(dataItem.DataItem, "CreatedOn");
 			String fullname = (String)DataBinder.Eval(dataItem.DataItem, "Fullname");
@@ -368,7 +424,8 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			String URLDescription = (String)DataBinder.Eval(dataItem.DataItem, "URLDescription");
 			String URLTitle = (String)DataBinder.Eval(dataItem.DataItem, "URLTitle");
 			String SharedURL = (String)DataBinder.Eval(dataItem.DataItem, "SharedURL");
-			HyperLink hypCreatedBy = (HyperLink)e.Item.FindControl("hypCreatedBy");
+			//HyperLink hypCreatedBy = (HyperLink)e.Item.FindControl("hypCreatedBy");
+			HyperLink hypPortalLink = (HyperLink)e.Item.FindControl("hypPortalLink");
 			Label lblMessageDate = (Label)e.Item.FindControl("lblMessageDate");
 			Literal litMessage = (Literal)e.Item.FindControl("litMessage");
 			Literal litReactionTitle = (Literal)e.Item.FindControl("litReactionTitle");
@@ -377,15 +434,28 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			Literal litReactionCount = (Literal)e.Item.FindControl("litReactionCount");
 			Literal litCommentsCount = (Literal)e.Item.FindControl("litCommentsCount");
 			HtmlImage imgProfile = (HtmlImage)e.Item.FindControl("imgProfile");
-            //int postCount = (int)DataBinder.Eval(dataItem.DataItem, "postCount");
-            V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
-            if (ucTeamLogo != null)
-            {
-                ucTeamLogo.UserId = createdBy;
-                ucTeamLogo.PageName = "profile";
-                ucTeamLogo.LoadNameWithBadges();
-            }
-            lblMessageDate.Text = GetElapsedTime(createdOn);
+			HtmlAnchor linkProfile = (HtmlAnchor)e.Item.FindControl("linkProfile");
+			//int postCount = (int)DataBinder.Eval(dataItem.DataItem, "postCount");
+			lblMessageDate.Text = GetElapsedTime(createdOn);
+			//hypCreatedBy.Text = fullname;
+			//hypCreatedBy.NavigateUrl = "/V1/Member/Default.aspx?userid=" + createdBy;
+
+			if (eventId != null)
+			{
+				var sEvent = dc.Events.FirstOrDefault(f => f.EventId == eventId);
+				if (sEvent != null)
+				{
+					hypPortalLink.Text = sEvent.Name;
+				}
+			}
+
+			V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
+			if (ucTeamLogo != null)
+			{
+				ucTeamLogo.UserId = createdBy;
+				ucTeamLogo.LoadNameWithBadges();
+			}
+
 			var postReaction = from pr in dc.PostReactions
 							   join p in dc.Profiles on pr.CreatedBy equals p.UserId
 							   where pr.PostId == postId
@@ -408,7 +478,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				var Wow = "<span class='m-r-n-xs' title='Wow'>&#128558;</span>";
 				var Love = "<span class='m-r-n-xs text-danger' title='Love'>&#10084;</span>";
 				var Bump = "<span class='m-r-n-xs' title='Bump'>&#128171;</span>";
-				var Thanks = "<span class='m-r-n-xs' title='Thanks'>&#128591;</span>";
+				var Like = "<span class='m-r-n-xs' title='Like'>&#128591;</span>";
 
 				var thanksCount = postReaction.Count(f => f.ReactionTypeId == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"));
 				var loveCount = postReaction.Count(f => f.ReactionTypeId == new Guid("b247efe7-3da7-44fa-9452-a331f71d337f"));
@@ -418,7 +488,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 
 				var reactionCounts = new[]
 				{
-					new { Reaction = "Thanks", Count = thanksCount },
+					new { Reaction = "Like", Count = thanksCount },
 					new { Reaction = "Love", Count = loveCount },
 					new { Reaction = "Bump", Count = bumpCount },
 					new { Reaction = "Be Strong", Count = beStrongCount },
@@ -429,9 +499,9 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				// Display the top 3 reactions
 				foreach (var reaction in top3Counts)
 				{
-					if (reaction.Reaction == "Thanks")
+					if (reaction.Reaction == "Like")
 					{
-						showReaction += Thanks;
+						showReaction += Like;
 					}
 					else if (reaction.Reaction == "Love")
 					{
@@ -476,7 +546,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			}
 			else
 			{
-				litReactionCount.Text = "";
+				litReactionCount.Text = "<div style=color:#fff;>0</div>";
 			}
 
 			string postHtml = string.Empty;
@@ -507,22 +577,15 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				{
 					postHtml += "<div onclick =\'window.open(\"" + URLLink + "\", \"_blank\")\' class=\"image-container URLPost\"><img class=\"responsive-image\" src=\"" + URLImage + "\" alt=\"Image\"></div>";
 				}
-
 				postHtml += "<div class=\"text-container URLPost\"><small class=\"text-muted\">" + SharedURL + "</small></br>";
 				postHtml += "<b>" + URLTitle + "</b>";
 				postHtml += "<p>" + URLDescription + "</p></div>";
 			}
 
 			string divSingleImage = string.Empty;
-			//If they shared images, show them too.
-
-
 			var postImages = from pi in dc.PostImages
 							 where pi.PostId == postId
 							 select new { pi.ImageFilename, pi.PostImageId };
-
-			//dc.PostReactions
-
 			if (postImages.Count() > 0)
 			{
 				foreach (var postImage in postImages)
@@ -556,13 +619,15 @@ public partial class V1_Stream : BaseOrganizationWebForm
 
 			if (profileImage != null)
 			{
-				//Get the users profile image
 				imgProfile.Src = profilePhotoFolder + profileImage.FilenameCropped;
+				linkProfile.HRef = "/V1/Member/Default.aspx?userid=" + createdBy;
+				linkProfile.Target = "_blank";
+				linkProfile.Style["display"] = "inline";
 			}
 
 			if (reactionTypeID == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"))
 			{
-				litReactionTitle.Text = "<span style='color: #286090'> &#128591; Thanks </span>";
+				litReactionTitle.Text = "<span style='color: #286090'> &#128591; Like </span>";
 			}
 			else if (reactionTypeID == new Guid("b247efe7-3da7-44fa-9452-a331f71d337f"))
 			{
@@ -582,7 +647,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			}
 			else
 			{
-				litReactionTitle.Text = "<span style='color: #777'> &#128077; Thanks </span>";
+				litReactionTitle.Text = "<span style='color: #777'> &#128077; Like </span>";
 			}
 
 			//var profileImage = (from ph in dc.ProfilePhotos
@@ -611,12 +676,14 @@ public partial class V1_Stream : BaseOrganizationWebForm
 											  {
 												  Comment1 = ReplaceTaggedUsersWithLinks(c.Comment1),
 												  timeAgo = GetTimeAgo(c.CreatedOn),
+												  UserId = c.CreatedBy,
 												  author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
-												  ProfileUrl = "/V1/Profile/Profile.aspx?userId=" + c.CreatedBy,
+												  ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
 												  ImgProfileUrl = profilePhotoFolder + (
 													 (from rph in dc.ProfilePhotos
 													  join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
 													  where rph.UserId == c.CreatedBy
+													  orderby rp.CreatedOn descending
 													  select rp.FilenameCropped).FirstOrDefault() ?? "profilepicture.png")
 											  }).Take(2).ToList();
 			rptPostCommentsShow.DataBind();
@@ -630,6 +697,20 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				commentSectionShow.Style["display"] = "";  // Show the div
 			}
 			litCommentsCount.Text = dc.PostComments.Where(f => f.PostId == postId).ToList().Count.ToString() + " Comments";
+		}
+	}
+
+	protected void rptPostCommentsShow_ItemDataBound(object sender, RepeaterItemEventArgs e)
+	{
+		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+		{
+			RepeaterItem dataItem = (RepeaterItem)e.Item;
+			var ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucTeamLogo");
+			if (ucTeamLogo != null)
+			{
+				ucTeamLogo.UserId = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId");
+				ucTeamLogo.LoadNameWithBadges();
+			}
 		}
 	}
 
@@ -771,7 +852,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				}
 				dc.SubmitChanges();
 
-
 				#region Get Reaction Count
 				var postReaction = from prc in dc.PostReactions
 								   join p in dc.Profiles on prc.CreatedBy equals p.UserId
@@ -790,14 +870,12 @@ public partial class V1_Stream : BaseOrganizationWebForm
 						}
 					}
 
-
-
 					var showReaction = "";
 					var BeStrong = "<span class='m-r-n-xs' title='Be Strong'>&#128074;</span>";
 					var Wow = "<span class='m-r-n-xs' title='Wow'>&#128558;</span>";
 					var Love = "<span class='m-r-n-xs text-danger' title='Love'>&#10084;</span>";
 					var Bump = "<span class='m-r-n-xs' title='Bump'>&#128171;</span>";
-					var Thanks = "<span class='m-r-n-xs' title='Thanks'>&#128591;</span>";
+					var Like = "<span class='m-r-n-xs' title='Like'>&#128591;</span>";
 
 					var thanksCount = postReaction.Count(f => f.ReactionTypeId == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"));
 					var loveCount = postReaction.Count(f => f.ReactionTypeId == new Guid("b247efe7-3da7-44fa-9452-a331f71d337f"));
@@ -807,7 +885,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 
 					var reactionCounts = new[]
 						{
-							new { Reaction = "Thanks", Count = thanksCount },
+							new { Reaction = "Like", Count = thanksCount },
 							new { Reaction = "Love", Count = loveCount },
 							new { Reaction = "Bump", Count = bumpCount },
 							new { Reaction = "Be Strong", Count = beStrongCount },
@@ -817,9 +895,9 @@ public partial class V1_Stream : BaseOrganizationWebForm
 					// Display the top 3 reactions
 					foreach (var reaction in top3Counts)
 					{
-						if (reaction.Reaction == "Thanks")
+						if (reaction.Reaction == "Like")
 						{
-							showReaction += Thanks;
+							showReaction += Like;
 						}
 						else if (reaction.Reaction == "Love")
 						{
@@ -864,7 +942,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				}
 				else
 				{
-					totalReaction = "";
+					totalReaction = "<div style=color:#fff;>0</div>";
 				}
 				#endregion
 			}
@@ -1037,12 +1115,14 @@ public partial class V1_Stream : BaseOrganizationWebForm
 							IsDelete = (role == "ContentManager" ? true : c.CreatedBy == userId),
 							PostId = pc.PostId,
 							TimeAgo = GetTimeAgo(c.CreatedOn),
-							Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
-							ProfileUrl = "/V1/Profile/Profile.aspx?userId=" + c.CreatedBy,
+							Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Lastname,
+							//Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
+							ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
 							ImgProfileUrl = profilePhotoFolder + (
 												(from rph in dc.ProfilePhotos
 												 join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
 												 where rph.UserId == c.CreatedBy
+												 orderby rp.CreatedOn descending
 												 select rp.FilenameCropped).FirstOrDefault() ?? "profilepicture.png"),
 							Replies = dc.Comments
 										.Where(f => f.ParentId == c.CommentId && f.IsDeleted == false)
@@ -1058,12 +1138,14 @@ public partial class V1_Stream : BaseOrganizationWebForm
 											IsDelete = (role == "ContentManager" ? true : c.CreatedBy == userId),
 											PostId = pc.PostId,
 											ParentCommentId = c.CommentId,
-											ProfileUrl = "/V1/Profile/Profile.aspx?userId=" + reply.CreatedBy,
-											Author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname,
+											ProfileUrl = "/V1/Member/Default.aspx?userid=" + reply.CreatedBy,
+											Author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Lastname,
+											//Author = dc.Profiles.FirstOrDefault(f => f.UserId == reply.CreatedBy).Firstname,
 											ImgProfileUrl = profilePhotoFolder + (
 														 (from rph in dc.ProfilePhotos
 														  join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
 														  where rph.UserId == reply.CreatedBy
+														  orderby rp.CreatedOn descending
 														  select rp.FilenameCropped).FirstOrDefault() ?? "profilepicture.png")
 										}).ToList()
 						}).ToList();
@@ -1078,6 +1160,56 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			//});
 			//rptPostComments.DataBind();
 			//rptPostComments.RenderControl(writer);
+		}
+		return comments;
+	}
+
+	[WebMethod]
+	public static List<PostCommentsModel> GetCommentsUnderPostById(string postId)
+	{
+		StringWriter sw = new StringWriter();
+		HtmlTextWriter writer = new HtmlTextWriter(sw);
+		var comments = new List<PostCommentsModel>();
+		using (var dc = new CrowdReliefDBDataContext())
+		{
+			var userId = new Guid();
+			string username = HttpContext.Current.User.Identity.Name;
+			MembershipUser user = Membership.GetUser(username);
+			if (user != null)
+			{
+				userId = new Guid(user.ProviderUserKey.ToString());
+			}
+
+			var roleId = dc.aspnet_UsersInRoles.FirstOrDefault(f => f.UserId == userId).RoleId;
+			var role = dc.aspnet_Roles.FirstOrDefault(f => f.RoleId == roleId).RoleName;
+
+			string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
+			comments = (from pc in dc.PostComments
+						join c in dc.Comments on pc.CommentId equals c.CommentId
+						where pc.PostId == new Guid(postId)
+							  && c.ParentId == null
+							  && c.IsDeleted == false
+						orderby c.CreatedOn descending
+						select new PostCommentsModel
+						{
+							PostCommentId = pc.PostCommentId,
+							Comment1 = ReplaceTaggedUsersWithLinks(c.Comment1),
+							CreatedOn = c.CreatedOn,
+							CommentId = c.CommentId,
+							IsEdit = c.CreatedBy == userId,
+							IsDelete = (role == "ContentManager" ? true : c.CreatedBy == userId),
+							PostId = pc.PostId,
+							TimeAgo = GetTimeAgo(c.CreatedOn),
+							Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Lastname,
+							ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
+							TotalPostComments = dc.PostComments.Where(f => f.PostId == new Guid(postId)).ToList().Count.ToString() + " Comments",
+							ImgProfileUrl = profilePhotoFolder + (
+												(from rph in dc.ProfilePhotos
+												 join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
+												 where rph.UserId == c.CreatedBy
+												 orderby rp.CreatedOn descending
+												 select rp.FilenameCropped).FirstOrDefault() ?? "profilepicture.png"),
+						}).OrderByDescending(f => f.CreatedOn).Take(2).ToList();
 		}
 		return comments;
 	}

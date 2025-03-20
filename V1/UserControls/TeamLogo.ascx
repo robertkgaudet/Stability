@@ -1,6 +1,16 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="TeamLogo.ascx.cs" Inherits="V1_UserControls_TeamLogo" %>
 <style>
-    .team-logo, .stability-badge {
+    .stability-badge {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        margin-left: -3px;
+        vertical-align: text-top;
+        margin-right: 2px;
+        margin-top: -2px;
+        margin-right: 3px;
+    }
+    .team-logo {
         width: 16px;
         height: 16px;
         border-radius: 50%;
@@ -15,11 +25,8 @@
     .StreamLink {
         margin-right: 2px;
     }
-    .stability-badge {
-        margin-right: 3px; 
-    }
     .user-name {
-        margin-right: 5px; 
+        margin-right: 8px;
         color: #050505;
         font-weight: bold;
     }

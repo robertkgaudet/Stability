@@ -20,6 +20,7 @@ namespace GoogleMapsAPI.Places
 		public string ProfileUrl { get; set; }
 		public string ImgProfileUrl { get; set; }
 		public List<Reply> Replies { get; set; } // Replies as a list of Reply objects
+		public string TotalPostComments { get; set; }
 	}
 
 	public class Reply

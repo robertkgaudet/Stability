@@ -243,7 +243,6 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
             if (ucTeamLogo != null)
             {     
                 ucTeamLogo.UserId = createdBy;
-                ucTeamLogo.PageName = "people";
                 ucTeamLogo.LoadNameWithBadges();
             }
             if (!String.IsNullOrEmpty(SharedURL))
