@@ -47,7 +47,7 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                              pr.UserId,
                              fullname = pr.Firstname + " " + pr.Lastname,
                              p.EventId,
-                         }).Skip((streamPostPageSize + 10) + (streamPostPageSize * pageNumber)).Take(streamPostPageSize);
+                         }).Skip((streamPostPageSize + 5) + (streamPostPageSize * pageNumber)).Take(streamPostPageSize);
 
             foreach (var post in posts)
             {
@@ -254,7 +254,9 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                 }
                 postHtml += divSingleImage;
                 postHtml += "</div>";
-                var postCount = dc.PostComments.Where(f => f.PostId == post.PostId).ToList().Count.ToString();
+                //var postCount = dc.PostComments.Where(f => f.PostId == post.PostId).ToList().Count.ToString();
+                var postCount = dc.PostComments.Where(r => r.PostId == post.PostId && !r.Comment.IsDeleted && r.Comment.ParentId == null).Count().ToString();
+
                 //results += "<div class='hpanel messageBody'><div class='panel-body'><div class='message'><div class='block-profile-image-div clearfix' style='line-height: 1.3;'>" +
                 //        "<img src=" + imageTag + " id='ContentPlaceHolder1_rptPosts_imgProfile_49' class='img-rounded' style='margin-right: 10px;' width='40'>" +
                 //        "<a id='ContentPlaceHolder1_rptPosts_hypCreatedBy_42' class='StreamLink' href='/V1/Member/Default.aspx?userid=" + post.UserId + "'>" + post.fullname + "</a><br>" +
@@ -280,6 +282,7 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                                     {
                                         Comment1 = ReplaceTaggedUsersWithLinks(c.Comment1),
                                         timeAgo = GetTimeAgo(c.CreatedOn),
+                                        UserId = c.CreatedBy,
                                         author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
                                         ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
                                         ImgProfileUrl = profilePhotoFolder + (
@@ -324,9 +327,11 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                 htmlContent += "                    <img src=" + imageTag + " id=\"ContentPlaceHolder1_rptPosts_imgProfile_9\" class=\"img-rounded\" width=\"40\">";
                 htmlContent += "                </a>";
                 htmlContent += "                <a id=\"ContentPlaceHolder1_rptPosts_ucUserNameWithBadges_9_hypName_9\" class=\"StreamLink\" href=\"/V1/Member/Default.aspx?userId=" + post.UserId + "><span id=\"ContentPlaceHolder1_rptPosts_ucUserNameWithBadges_9_lblprofileusername_9\" class=\"user-name\">" + post.fullname + "</span></a>";
-                htmlContent += "                <a id=\"ContentPlaceHolder1_rptPosts_hypPortalLink_9\" class=\"StreamPortalLink\">" + hypPortalLink + "</a>";
+                //htmlContent += "                <a id=\"ContentPlaceHolder1_rptPosts_hypPortalLink_9\" class=\"StreamPortalLink\">" + hypPortalLink + "</a>";
                 htmlContent += "                <br>";
                 htmlContent += "                <span id=\"ContentPlaceHolder1_rptPosts_lblMessageDate_9\" class=\"message-date\">" + CrowdRelief.Tools.GetElapsedTime(Convert.ToDateTime(post.CreatedOn)) + "</span>";
+                htmlContent += "                <br>";
+                htmlContent += "                <span id=\"ContentPlaceHolder1_rptPosts_hypPortalLink_9\" class=\"message-date\">" + hypPortalLink + "</span>";
                 htmlContent += "            </div>";
                 htmlContent += "            <span class=\"message-content\">";
                 htmlContent += "                <p style=\"margin-top: 10px;\">";
