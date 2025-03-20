@@ -38,11 +38,16 @@
                             if (response.d.length > 0) {
                                 for (let i = 0; i < response.d.length; ++i) {
                                     let item = response.d[i];
+
                                     html += "<ul class=\"comments\" data-item-id=\"" + item.CommentId + "\">\n<li>\n<div class=\"userImage\">\n" +
                                         "<a target=\"_blank\" href=\"" + item.ProfileUrl + "\">\n<img class=\"img-rounded\" " +
                                         "src=\"" + item.ImgProfileUrl + "\" />\n</a>\n</div>\n<div class=\"commentReact\">\n" +
-                                        "<span style=\"font-weight: bold; width: 70%\">\n<a target=\"_blank\" href=\"" + item.ProfileUrl + "\" " +
-                                        "class=\"author-link\">" + item.Author + "</a>\n</span>\n<span style=\"float: right; width: 20%; " +
+                                        "<span style=\"font-weight: bold; width: 70%; height: 22px;\">\n" +
+
+                                        //"<span id='teamLogo_" + item.UserId + "'></span>" +
+                                        "<a target=\"_blank\" href=\"" + item.ProfileUrl + "\" class=\"author-link\">" + item.Author + "</a>\n" +
+                                        
+                                        "</span>\n<span style=\"float: right; width: 20%;" +
                                         "text-align: right; margin: -20px 0px 0px 0px;\">" + item.TimeAgo + "</span>\n<span style=\"margin-top: 10px\" " +
                                         "data-item-id=\"" + item.CommentId + "-comments\">" + item.Comment1 + "</span>\n\n<div class=\"reaction\">\n" +
                                         "<div class=\"ReplyPostComment\" data-item-id=\"" + item.CommentId + "\">\n<i class=\"fa fa-reply\"></i>" +
@@ -66,14 +71,34 @@
                                         "data-item-id=\"" + item.CommentId + "-postReply\">\n<i class=\"fa fa-reply\"></i>&nbsp;Reply\n</button>\n" +
                                         "<div style='z-index:999' id=\"replySuggestions\" class=\"suggestions replySuggestions\"></div>\n</div>\n\n";
 
+                                     // Fetch the team logo for each comment
+                                     //$.ajax({
+                                     //    url: '/V1/Stream.aspx/RenderTeamLogo',
+                                     //    type: 'POST',
+                                     //    data: JSON.stringify({ userId: item.UserId }),
+                                     //    contentType: 'application/json; charset=utf-8',
+                                     //    success: function (response) {
+                                     //        debugger;
+                                     //        $('#teamLogo_' + item.UserId).html(response);
+                                     //    },
+                                     //    error: function (xhr, status, error) {
+                                     //        $('#teamLogo_' + item.UserId).html('<a target=\"_blank\" href=\"' + item.ProfileUrl + '\" class=\"author-link\">' + item.Author + '</a>\n'); 
+                                     //    }
+                                     //});
+
+
+
                                     for (let j = 0; j < item.Replies.length; ++j) {
                                         let reply = item.Replies[j];
                                         html += "<div class=\"reply\">\n<div class=\"replyImg\">\n" +
                                             "<a target=\"_blank\" href=\"" + reply.ProfileUrl + "\">\n<img class=\"img-rounded\" style=\"float: left; " +
                                             "margin-right: 10px; border-radius: 20px\" width=\"40\" src=\"" + reply.ImgProfileUrl + "\" />\n</a>\n" +
                                             "</div>\n<div class=\"replyContent\">\n<span style=\"font-weight: bold; width: 70%\">\n" +
-                                            "<a target=\"_blank\" href=\"" + reply.ProfileUrl + "\" class=\"author-link\">" + reply.Author + "</a>\n</span>\n" +
-                                            "<span style=\"float: right; width: 20%; text-align: right; margin: -20px 10px 0px 0px;\">" + reply.TimeAgo + "</span>\n" +
+
+                                            //"<span id='teamLogo_" + reply.UserId + "'></span>" +
+                                            "<a target=\"_blank\" href=\"" + reply.ProfileUrl + "\" class=\"author-link\">" + reply.Author + "</a>\n" +
+
+                                            "</span><span style=\"float: right; width: 20%; text-align: right; margin: -20px 10px 0px 0px;\">" + reply.TimeAgo + "</span>\n" +
                                             "<span style=\"margin: 10px 0px 0px 40px;width: 90%;\" data-item-id=\"" + reply.CommentId + "-comments\">" + reply.Comment1 + "</span>\n" +
                                             "\n<div class=\"reaction\">\n<div class=\"ReplyPostComment\" data-item-id=\"" + reply.CommentId + "\">\n<i class=\"fa fa-reply\">" +
                                             "</i>&nbsp;Reply\n</div>\n";
@@ -94,6 +119,22 @@
                                             "<span class=\"hidden\" data-item-id=\"" + item.CommentId + "\"></span>\n" +
                                             "<button type=\"button\" class=\"addReplyReply\" data-item-id=\"" + reply.CommentId + "-postReply\">\n" +
                                             "<i class=\"fa fa-reply\"></i>&nbsp;Reply\n</button>\n<div id=\"replySuggestions\" class=\"suggestions replySuggestions\"></div>\n</div>";
+
+                                            // Fetch the team logo for each comment
+                                            //$.ajax({
+                                            //    url: '/V1/Stream.aspx/RenderTeamLogo',
+                                            //    type: 'POST',
+                                            //    data: JSON.stringify({ userId: reply.UserId }),
+                                            //    contentType: 'application/json; charset=utf-8',
+                                            //    success: function (response) {
+                                            //        debugger;
+                                            //        $('#teamLogo_' + reply.UserId).html(response);
+                                            //    },
+                                            //    error: function (xhr, status, error) {
+                                            //        $('#teamLogo_' + reply.UserId).html('<a target=\"_blank\" href=\"' + reply.ProfileUrl + '\" class=\"author-link\">' + reply.Author + '</a>\n'); 
+                                            //    }
+                                            //});
+
                                     }
                                     html += "</ul>";
                                 }
@@ -531,6 +572,7 @@
                     dataType: "json",
                     success: function (response) {
                         loadComments($("#postIdForComments").val());
+                        loadCommentsUnderPost($("#postIdForComments").val());
                     },
                     error: function (xhr, status, error) {
                         console.error("Error: " + error);
@@ -1610,7 +1652,7 @@
         <div class="post-container">
             <div class="post-content">
                 <asp:Repeater ID="rptPosts" runat="server" OnItemDataBound="rptPosts_ItemDataBound">
-                    <itemtemplate>
+                    <ItemTemplate>
                         <div class="hpanel messageBody">
                             <div class="panel-body">
                                 <div class="message">
@@ -1619,11 +1661,13 @@
                                             id="linkProfile" runat="server">
                                             <img class="img-rounded" width="40" src="" runat="server" id="imgProfile" />
                                         </a>
-                                        <uc1:teamlogo runat="server" cssclass="StreamLink" id="ucUserNameWithBadges" />
+                                        <uc1:TeamLogo runat="server" cssclass="StreamLink" ID="ucUserNameWithBadges" />
                                         <%--<asp:HyperLink ID="hypCreatedBy" runat="server" CssClass="StreamLink"></asp:HyperLink>--%>
-                                        <asp:HyperLink ID="hypPortalLink" runat="server" CssClass="StreamPortalLink"></asp:HyperLink>
+                                        <%--<asp:HyperLink ID="hypPortalLink" runat="server" CssClass="StreamPortalLink"></asp:HyperLink>--%>
                                         <br />
                                         <asp:Label ID="lblMessageDate" runat="server" CssClass="message-date"></asp:Label>
+                                        <br />
+                                        <asp:Label ID="hypPortalLink" runat="server" CssClass="message-date"></asp:Label>
                                     </div>
                                     <span class="message-content">
                                         <p style="margin-top: 10px;">
@@ -1656,7 +1700,7 @@
                                 <div id="commentSectionShow" class="comment-section-show" runat="server">
                                     <div class="comment-section-repeater-show" data-item-id='<%# Eval("postId") %>-showComments'>
                                         <asp:Repeater ID="rptPostCommentsShow" runat="server" OnItemDataBound="rptPostCommentsShow_ItemDataBound">
-                                            <itemtemplate>
+                                            <ItemTemplate>
                                                 <ul class="comments">
                                                     <li>
                                                         <div class="userImage">
@@ -1665,7 +1709,7 @@
                                                         </div>
                                                         <div class="commentReact">
                                                             <span style="font-weight: bold; width: 70%; height: 22px;">
-                                                                <uc1:teamlogo runat="server" id="ucTeamLogo" userid='<%# Eval("UserId") %>' pagename="feed" />
+                                                                <uc1:TeamLogo runat="server" ID="ucTeamLogo" UserId='<%# Eval("UserId") %>' pagename="feed" />
                                                                 <%--<a target="_blank" href="<%# Eval("ProfileUrl") %>" class="author-link"><%# Eval("author") %></a>--%>
                                                             </span>
                                                             <span style="float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;"><%# Eval("timeAgo") %></span>
@@ -1673,13 +1717,13 @@
                                                         </div>
                                                     </li>
                                                 </ul>
-                                            </itemtemplate>
+                                            </ItemTemplate>
                                         </asp:Repeater>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </itemtemplate>
+                    </ItemTemplate>
                 </asp:Repeater>
 
                 <div class="thankTooltip" id="thankTooltip">

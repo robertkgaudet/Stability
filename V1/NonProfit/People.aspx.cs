@@ -256,9 +256,9 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 ucTeamLogo.LoadNameWithBadges();
             }
             MembershipUser profileUser = Membership.GetUser(userId);
-            bool isLockedOut = false;
-            HtmlGenericControl divFooter = (HtmlGenericControl)e.Item.FindControl("divFooter");
-            Button btnContact = (Button)e.Item.FindControl("btnContact");
+			bool isLockedOut = false;
+			HtmlGenericControl divFooter = (HtmlGenericControl)e.Item.FindControl("divFooter");
+			Button btnContact = (Button)e.Item.FindControl("btnContact");
             Button btnManage = (Button)e.Item.FindControl("btnManage");
             Literal litVettingInfo = (Literal)e.Item.FindControl("litVettingInfo");
             Literal litActiveDate = (Literal)e.Item.FindControl("litActiveDate");
@@ -303,18 +303,18 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             //zelloName = !String.IsNullOrEmpty(zelloName) ? " Zello: " + zelloName + "</br>" : "";
             description = !String.IsNullOrEmpty(description) ? description + "</br>" : "";
 
-            litMemberInfo.Text = title;
-            string skills = GetSkills(userId);
-            string resources = GetResources(userId);
-            litSkills.Text = !String.IsNullOrEmpty(skills) ? "<h6>Skills:</h6> " + skills + "</br>" : "";
-            litResources.Text = !String.IsNullOrEmpty(resources) ? "<h6>Resources:</h6> " + resources + "</br>" : "";
-            litDescription.Text = description;
+			litMemberInfo.Text = title;
+			string skills = GetSkills(userId);
+			string resources = GetResources(userId);
+			litSkills.Text = !String.IsNullOrEmpty(skills) ? "<h6>Skills:</h6> " + skills + "</br>" : "";
+			litResources.Text = !String.IsNullOrEmpty(resources) ? "<h6>Resources:</h6> " + resources + "</br>" : "";
+			litDescription.Text = description;
 
-        }
-    }
-    protected string GetResources(Guid userId)
-    {
-        string resourceList = string.Empty;
+		}
+	}
+	protected string GetResources(Guid userId)
+	{
+		string resourceList = string.Empty;
 
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
