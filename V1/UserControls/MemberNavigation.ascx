@@ -21,12 +21,12 @@
             </li>
             <li>
                 <asp:HyperLink ID="hypSkills" runat="server" NavigateUrl="/V1/Profile/EditSkills.aspx">
-                <i class="fa fa-cogs"></i> Skills
+                <i class="fa fa-hand-pointer-o"></i> Skills
                 </asp:HyperLink>
             </li>
             <li>
                 <asp:HyperLink ID="hypResources" runat="server" NavigateUrl="/V1/Profile/EditResources.aspx">
-        <i class="fa fa-cubes"></i> Resources
+        <i class="fa fa-truck"></i> Resources
                 </asp:HyperLink>
             </li>
             <li>
