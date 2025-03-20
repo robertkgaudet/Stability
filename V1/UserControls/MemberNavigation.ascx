@@ -2,6 +2,15 @@
     Inherits="V1_UserControls_MemberNavigation" %>
 <div class="hpanel" runat="server" id="divMemberNavigation" visible="false">
     <div class="panel-body">
+        <ul class="mailbox-list">
+            <li>
+                <asp:HyperLink ID="hypFeeds" runat="server" NavigateUrl="/feed">
+                    <i class="fa fa-th-list"></i> Feed
+                </asp:HyperLink>
+            </li>
+        </ul>
+        <hr />
+
         <h5>MY ACCOUNT</h5>
         <ul class="mailbox-list">
             <li>
@@ -21,12 +30,12 @@
             </li>
             <li>
                 <asp:HyperLink ID="hypSkills" runat="server" NavigateUrl="/V1/Profile/EditSkills.aspx">
-                <i class="fa fa-cogs"></i> Skills
+                <i class="fa fa-hand-pointer-o"></i> Skills
                 </asp:HyperLink>
             </li>
             <li>
                 <asp:HyperLink ID="hypResources" runat="server" NavigateUrl="/V1/Profile/EditResources.aspx">
-        <i class="fa fa-cubes"></i> Resources
+        <i class="fa fa-truck"></i> Resources
                 </asp:HyperLink>
             </li>
             <li>

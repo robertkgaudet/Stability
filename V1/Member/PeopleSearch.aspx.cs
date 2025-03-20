@@ -39,18 +39,18 @@ public partial class V1_Member_PeopleSearch : BaseWebForm
 		}
 	}
 
-	public void LoadConnections(string searchTerm, int recordCount)
-	{
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+    public void LoadConnections(string searchTerm, int recordCount)
+    {
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-		_hideConnectionButton = "style='display:none;'";
-		//MY ACCEPTED CONNECTIONS
-		List<Tools.FriendInfo> PeopleSearch = Tools.PeopleSearch(searchTerm, recordCount);
-		ConnectionsDataList.DataSource = PeopleSearch;
-		ConnectionsDataList.DataBind();
-	}
+        _hideConnectionButton = "style='display:none;'";
+        //MY ACCEPTED CONNECTIONS
+        List<Tools.FriendInfo> PeopleSearch = Tools.PeopleSearch(searchTerm, recordCount);
+        ConnectionsDataList.DataSource = PeopleSearch;
+        ConnectionsDataList.DataBind();
+    }
 
-	protected void btnSubmit_Click(object sender, EventArgs e)
+    protected void btnSubmit_Click(object sender, EventArgs e)
 	{
 		searchTerm = txtSearchBox.Text;
 		if (!String.IsNullOrEmpty(searchTerm))
@@ -59,24 +59,29 @@ public partial class V1_Member_PeopleSearch : BaseWebForm
 		}
 	}
 
-	protected void ConnectionsDataList_ItemDataBound(object sender, RepeaterItemEventArgs e)
-	{
-		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-		{
-			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-			RepeaterItem dataItem = (RepeaterItem)e.Item;
-			Boolean PassedVetting = (Boolean)DataBinder.Eval(dataItem.DataItem, "PassedVetting");
-			Literal litPassedVetting = (Literal)e.Item.FindControl("litPassedVetting");
+    protected void ConnectionsDataList_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        {
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            RepeaterItem dataItem = (RepeaterItem)e.Item;
+            Boolean PassedVetting = (Boolean)DataBinder.Eval(dataItem.DataItem, "PassedVetting");
+            Literal litPassedVetting = (Literal)e.Item.FindControl("litPassedVetting");
 
-			string passedVettingStyle = " fa-pending-color";
-			string vettingMessage = string.Empty;
-			if (PassedVetting)
-			{
-				vettingMessage = "Vetting Complete";
-				passedVettingStyle = " fa-approved-color";
-			}
-			litPassedVetting.Text = "<i class=\"fa fa-id-badge pe-1x float-right" + passedVettingStyle + "\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"" + vettingMessage + "\"></i>";
-
-		}
-	}
+            string passedVettingStyle = " fa-pending-color";
+            string vettingMessage = string.Empty;
+            if (PassedVetting)
+            {
+                vettingMessage = "Vetting Complete";
+                passedVettingStyle = " fa-approved-color";
+            }
+            litPassedVetting.Text = "<i class=\"fa fa-id-badge pe-1x float-right" + passedVettingStyle + "\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"" + vettingMessage + "\"></i>";
+            var ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucTeamLogo");
+            if (ucTeamLogo != null)
+            {
+                ucTeamLogo.UserId = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId");
+                ucTeamLogo.LoadNameWithBadges(); // Ensure the control loads the data
+            }
+        }
+    }
 }

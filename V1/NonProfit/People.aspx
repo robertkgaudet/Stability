@@ -38,6 +38,10 @@
             margin-bottom: 10px;
         }
 
+        .team-logo {
+            margin-left: -176px !important;
+        }
+
         .panel-heading h4 {
             margin-bottom: 0 !important;
             margin-top: -4px;
@@ -75,8 +79,6 @@
         }
     </style>
     <script>
-        // Step 1: Select all the buttons in the table
-
         var recipientsName;
         var recipientsEmail;
         var message;
@@ -88,7 +90,6 @@
         var btnSend;
         var messageModelTitle;
         var txtMessage;
-
         $(document).ready(function () {
 
 
@@ -166,10 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
             // Initialize Example 1
             $('#tblVolunteers').footable();
-
-
             messageModelTitle = document.getElementById('messageModelTitle');
-            txtMessage = document.getElementById('<%=txtMessage.ClientID%>');
             divMessageTextBox = document.getElementById('messageTextBox');
             btnSend = document.getElementById('btnSend');
             divMessageError = document.getElementById('divMessageError');
@@ -211,44 +209,124 @@ document.addEventListener("DOMContentLoaded", function () {
                 numberDisplayed: 2
             });
 
-            window.onload = function () {
-                var selectAllCheckbox = document.getElementById("<%= chkSelectAll.ClientID %>");
-                var userCheckboxes = document.querySelectorAll(".select-user");
-                var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
-
-                function updateSelectedUsers() {
-                    var selectedUserIds = [];
-                    for (var i = 0; i < userCheckboxes.length; i++) {
-                        if (userCheckboxes[i].checked) {
-                            selectedUserIds.push(userCheckboxes[i].getAttribute("data-userid"));
-                        }
-                    }
-                    hiddenField.value = selectedUserIds.join(",");
-                }
-                selectAllCheckbox.onclick = function () {
-                    for (var i = 0; i < userCheckboxes.length; i++) {
-                        userCheckboxes[i].checked = this.checked;
-                    }
-                    updateSelectedUsers();
-                };
-                for (var i = 0; i < userCheckboxes.length; i++) {
-                    userCheckboxes[i].onclick = function () {
-                        var allChecked = true;
-                        for (var j = 0; j < userCheckboxes.length; j++) {
-                            if (!userCheckboxes[j].checked) {
-                                allChecked = false;
-                                break;
-                            }
-                        }
-                        selectAllCheckbox.checked = allChecked;
-                        updateSelectedUsers();
-                    };
-                }
-            };
-
-
         });
 
+        var currentUserId = null;
+
+        function setUserId(button) {
+            debugger;
+            currentUserId = button.getAttribute('data-userid');
+            return false;
+        }
+        function fetchUserData() {
+            debugger;
+            if (!currentUserId) {
+                alert("User ID not set.");
+                return;
+            }
+
+            $.ajax({
+                type: "GET",
+                url: "/V1/Handlers/UpdateMemberInfo.ashx",
+                data: { action: "fetch", userId: currentUserId },
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        // Populate modal fields with fetched data
+                        $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
+                        $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
+                        $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
+                        $('#<%= chkManageShowDonateButton.ClientID %>').prop('checked', response.showTeamLogo);
+
+                        console.log("User data fetched successfully:", response);
+                    } else {
+                        alert("Failed to fetch user data.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching user data:", error);
+                    alert("An error occurred while fetching user data.");
+                }
+            });
+        }
+        function saveChanges() {
+            if (!currentUserId) {
+                alert("No user selected.");
+                return;
+            }
+            var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
+            var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
+            var stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
+            var showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
+            updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo);
+        }
+        function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo) {
+            var data = {
+                action: "update",
+                userId: userId,
+                vettingStatus: vettingStatus,
+                vettingNotes: vettingNotes,
+                stabilityVerified: stabilityVerified,
+                showTeamLogo: showTeamLogo
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/V1/Handlers/UpdateMemberInfo.ashx",
+                data: data,
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        $('#manageMemberModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alert("Error: " + response.error);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred while updating member information.");
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+    window.onload = function () {
+        var selectAllCheckbox = document.getElementById("<%= chkSelectAll.ClientID %>");
+        var userCheckboxes = document.querySelectorAll(".select-user");
+        var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
+
+        function updateSelectedUsers() {
+            var selectedUserIds = [];
+            for (var i = 0; i < userCheckboxes.length; i++) {
+                if (userCheckboxes[i].checked) {
+                    selectedUserIds.push(userCheckboxes[i].getAttribute("data-userid"));
+                }
+            }
+            hiddenField.value = selectedUserIds.join(",");
+        }
+        selectAllCheckbox.onclick = function () {
+            for (var i = 0; i < userCheckboxes.length; i++) {
+                userCheckboxes[i].checked = this.checked;
+            }
+            updateSelectedUsers();
+        };
+        for (var i = 0; i < userCheckboxes.length; i++) {
+            userCheckboxes[i].onclick = function () {
+                var allChecked = true;
+                for (var j = 0; j < userCheckboxes.length; j++) {
+                    if (!userCheckboxes[j].checked) {
+                        allChecked = false;
+                        break;
+                    }
+                }
+                selectAllCheckbox.checked = allChecked;
+                updateSelectedUsers();
+            };
+        }
+    };
+
+
+});
         function sendClick(object) {
             message = txtMessage.value;
             teamName = '<%=teamName%>';
@@ -276,7 +354,6 @@ document.addEventListener("DOMContentLoaded", function () {
             messageModelTitle.innerHTML = "This will send " + recipientsName + " an email from the Stability platform.";
             return false;
         }
-
         function sendMessage(signedInUserFullName, organizationId, recipientsName, recipientsEmail, teamName, message) {
             $.ajax
                 (
@@ -310,7 +387,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     </script>
 </asp:Content>
-
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
     <asp:HiddenField ID="hdnSelectedUsers" runat="server" />
@@ -362,7 +438,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                         <div class="container-search">
                             <!-- Collapsible Search Filters -->
-                            <div class="collapse" id="searchFilters">
+                            <div class="collapse col-sm-12" id="searchFilters">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
@@ -487,6 +563,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                         <input type="checkbox" class="select-user" data-userid='<%# Eval("UserID") %>' />
                                         <asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
                                         <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
+                                        <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton float-right"
+                                            data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
                                     </h5>
                                     <p>
                                         <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
@@ -499,11 +577,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                     <asp:Literal ID="litSkills" runat="server"></asp:Literal>
                                     <asp:Literal ID="litResources" runat="server"></asp:Literal>
                                 </div>
-                                <div class="panel-footer" id="divFooter" runat="server" visible="false">
-                                    <div class="text-muted small">
+                                <div class="panel-footer d-flex justify-content-between align-items-center" id="divFooter"
+                                    runat="server" visible="false">
+                                    <div class="pull-right">
+                                        <asp:Button ID="btnManage" runat="server" Text="Manage" CssClass="btn btn-primary manageButton float-end"
+                                            data-toggle="modal" data-target="#manageMemberModal"
+                                            data-userid='<%# Eval("UserID") %>'
+                                            OnClientClick="setUserId(this); fetchUserData(); return false;"></asp:Button>
+                                    </div>
+
+                                    <div class="text-muted small" style="width: 100%;">
                                         <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
                                     </div>
                                 </div>
+                            </div>
                             </div>
                         </td>
                     </tr>
@@ -547,7 +634,70 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
         </div>
     </div>
+    <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal header with a more prominent title -->
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title w-100 text-center">Manage Member</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
+                <!-- Alert message area -->
+                <div id="divManageVettingMessage" class="alert alert-info text-center" role="alert"
+                    visible="false" runat="server">
+                    <asp:Label ID="lblManageReviewStatus" runat="server"></asp:Label>
+                </div>
 
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <!-- Section header -->
+                    <div class="text-muted font-weight-bold text-center mb-3">
+                        Update Member Status
+                    </div>
+
+                    <!-- User Status Radio Buttons -->
+                    <div class="form-group">
+                        <label for="rblManageUserStatus">User Status:</label>
+                        <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
+                            <asp:ListItem Text="Active" Value="Active" CssClass="form-check-input"></asp:ListItem>
+                            <asp:ListItem Text="Inactive" Value="Inactive" CssClass="form-check-input"></asp:ListItem>
+                            <asp:ListItem Text="Pending" Value="Pending" CssClass="form-check-input"></asp:ListItem>
+                        </asp:RadioButtonList>
+                    </div>
+
+                    <!-- Vetting Notes Textarea -->
+                    <div class="form-group">
+                        <label for="txtManageVettingNotes">Vetting Notes:</label>
+                        <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
+                            placeholder="Enter Vetting Notes"></asp:TextBox>
+                    </div>
+
+                    <!-- Checkboxes -->
+                    <div class="form-group form-check">
+                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
+                        <label class="form-check-label" for="<%= chkManageShowDonateButton.ClientID %>">
+                            Enable
+                            Team Logo</label>
+                    </div>
+                    <div class="form-group form-check">
+                        <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
+                        <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
+                            Stability
+                            Verified</label>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
+                        Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>
