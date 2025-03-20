@@ -15,6 +15,7 @@ using System.Web.UI.WebControls;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Reflection;
+using System.Data.SqlClient;
 
 public partial class V1_NonProfit_People : BaseOrganizationWebForm
 {
@@ -571,13 +572,13 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         DateTime? endDate = ParseDate(Request.Form[EndDate.UniqueID]);
         string nameSearchTerm = filter.Text.Trim().ToLower();
         string selectedTraining = Request.Form["selectedTraining"];
+
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
             double eventLatitude = 0, eventLongitude = 0;
             Guid? eventGuid = null;
-
             Guid parsedEventGuid;
-            if (!string.IsNullOrEmpty(selectedLocation) && Guid.TryParse(selectedLocation, out parsedEventGuid))
+            if (!string.IsNullOrEmpty(selectedLocation) && Guid.TryParse(selectedLocation, out  parsedEventGuid))
             {
                 eventGuid = parsedEventGuid;
                 var selectedEvent = dc.Events.FirstOrDefault(ea => ea.EventId == eventGuid.Value);
@@ -587,6 +588,27 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                     double.TryParse(selectedEvent.Longitude, out eventLongitude);
                 }
             }
+
+            // SQL query to find nearby locations
+            string sqlQuery = string.Format(@"
+SELECT a.AddressId, a.Latitude, a.Longitude, p.FirstName, p.LastName,
+    (6371 * ACOS(COS(RADIANS({0})) * COS(RADIANS(Latitude)) 
+    * COS(RADIANS(Longitude) - RADIANS({1})) + SIN(RADIANS({0})) 
+    * SIN(RADIANS(Latitude)))) AS DistanceKm
+FROM Address a 
+INNER JOIN ProfileAddress pa ON a.AddressId = pa.AddressId
+INNER JOIN Profile p ON p.ProfileId = pa.ProfileId
+INNER JOIN aspnet_Users u ON p.UserId = u.UserId
+WHERE (6371 * ACOS(COS(RADIANS({0})) * COS(RADIANS(Latitude)) 
+    * COS(RADIANS(Longitude) - RADIANS({1})) + SIN(RADIANS({0})) 
+    * SIN(RADIANS(Latitude)))) <= {2}
+ORDER BY DistanceKm;",
+                eventLatitude, eventLongitude, selectedRadius);
+
+            Console.WriteLine("Generated SQL Query: " + sqlQuery);
+
+            // Execute the SQL query to get nearby locations
+            var nearLocation = dc.ExecuteQuery<NearAddress>(sqlQuery).ToList();
 
             var peopleListQuery = from uo in dc.UserOrganizations
                                   join p in dc.Profiles on uo.UserId equals p.UserId
@@ -604,297 +626,73 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                                       net.LoweredEmail,
                                       p.PhoneNumber,
                                       p.UserId,
-                                      p.DateVettingCompleted,
-                                      p.DateVettingStarted,
-                                      p.VettingNotes,
-                                      p.VettingActive,
-                                      p.VettingComplete,
-                                      p.PassedVetting,
                                       p.Title,
-                                      p.ZelloName,
-                                      u.LastActivityDate,
-                                      net.LastLoginDate,
-                                      net.IsApproved,
-                                      p.ReceiveDeploymentSMS,
                                       a.Latitude,
                                       a.Longitude
                                   };
+
             if (!string.IsNullOrEmpty(nameSearchTerm))
             {
                 var searchTerms = nameSearchTerm.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 peopleListQuery = peopleListQuery.Where(pl => searchTerms.All(term =>
-                    (!string.IsNullOrEmpty(pl.Firstname) && pl.Firstname.ToLower().Contains(term)) ||
-                    (!string.IsNullOrEmpty(pl.Lastname) && pl.Lastname.ToLower().Contains(term))
+                    (pl.Firstname != null && pl.Firstname.ToLower().Contains(term)) ||
+                    (pl.Lastname != null && pl.Lastname.ToLower().Contains(term))
                 ));
             }
 
             if (selectedSkills.Any())
             {
-                var skillMatchedUsers = dc.UserSkills.Where(us => selectedSkills.Contains(us.SkillId.ToString())).Select(us => us.UserId).ToList();
+                var skillMatchedUsers = dc.UserSkills
+                    .Where(us => selectedSkills.Contains(us.SkillId.ToString()))
+                    .Select(us => us.UserId)
+                    .ToList();
                 peopleListQuery = peopleListQuery.Where(p => skillMatchedUsers.Contains(p.UserId));
-            }
-
-            if (selectedResources.Any())
-            {
-                var resourceMatchedUsers = dc.UserResources.Where(ur => selectedResources.Contains(ur.ResourceId.ToString())).Select(ur => ur.UserId).ToList();
-                peopleListQuery = peopleListQuery.Where(p => resourceMatchedUsers.Contains(p.UserId));
             }
 
             if (emailConnected)
             {
-                peopleListQuery = peopleListQuery.Where(pl => pl.LoweredEmail != null && pl.LoweredEmail != "");
-            }
-
-            if (isVetted)
-            {
-                peopleListQuery = peopleListQuery.Where(pl => pl.VettingActive ?? false);
-            }
-
-            if (optedSMS)
-            {
-                peopleListQuery = peopleListQuery.Where(pl => pl.ReceiveDeploymentSMS ?? false);
-            }
-
-            if (startDate.HasValue)
-            {
-                peopleListQuery = peopleListQuery.Where(p => p.DateVettingStarted >= startDate.Value.Date);
-            }
-
-            if (endDate.HasValue)
-            {
-                peopleListQuery = peopleListQuery.Where(p => p.DateVettingStarted <= endDate.Value.Date);
-            }
-
-            if (!string.IsNullOrEmpty(selectedTraining))
-            {
-                Guid positionGuid = new Guid(selectedTraining);
-                var usersInSelectedPosition = dc.UserOrganizationEventPositions
-                                                .Where(uep => uep.OrganizationEventPositionId == positionGuid)
-                                                .Select(uep => uep.UserId)
-                                                .ToList();
-                peopleListQuery = peopleListQuery.Where(p => usersInSelectedPosition.Contains(p.UserId));
+                peopleListQuery = peopleListQuery.Where(pl => !string.IsNullOrEmpty(pl.LoweredEmail));
             }
 
             var peopleListData = peopleListQuery.ToList();
 
-            List<object> filteredPeople = new List<object>();
+            // Get the list of nearby address IDs from nearLocation
+            var nearbyAddressIds = nearLocation.Select(nl => nl.AddressId).ToList();
 
-            foreach (var p in peopleListData)
-            {
-                if (!string.IsNullOrEmpty(p.Latitude) && !string.IsNullOrEmpty(p.Longitude))
-                {
-                    double latUser, lonUser;
-                    if (double.TryParse(p.Latitude, out latUser) && double.TryParse(p.Longitude, out lonUser))
-                    {
-                        if (CalculateDistance(eventLatitude, eventLongitude, latUser, lonUser) <= selectedRadius)
-                        {
-                            filteredPeople.Add(p);
-                        }
-                    }
-                }
-            }
+            // Combine peopleListData with nearLocation users by matching AddressId from ProfileAddress table
+            var filteredPeople = (from pl in peopleListData
+                                  join pa in dc.ProfileAddresses on pl.UserId equals pa.ProfileId
+                                  join a in dc.Addresses on pa.AddressId equals a.AddressId
+                                  where nearbyAddressIds.Contains(a.AddressId)
+                                  orderby pl.CreateDate descending
+                                  select pl)
+                                 .Distinct()
+                                 .ToList();
 
-            rptVolunteers.DataSource = filteredPeople.OrderByDescending(pl => ((dynamic)pl).LastLoginDate).Distinct().ToList();
+            rptVolunteers.DataSource = filteredPeople;
             rptVolunteers.DataBind();
         }
     }
-    //protected void SearchButton_Click(object sender, EventArgs e)
-    //{
-
-    //        List<string> selectedSkills = GetSelectedValues(ddlSkills);
-    //        List<string> selectedResources = GetSelectedValues(ddlResources);
-    //    string selectedLocation = Request.Form["selectedEvent"];
-    //    if (string.IsNullOrEmpty(selectedLocation))
-    //    {
-    //        selectedLocation = ddlEvent.SelectedValue; // Fallback to default method
-    //    }
-
-    //    // Correctly retrieve the radius value from the form
-    //    string radiusValue = Request.Form["radiusSlider"];
-    //        int selectedRadius = 0; // Default value if parsing fails
-    //        if (!string.IsNullOrEmpty(radiusValue) && int.TryParse(radiusValue, out selectedRadius))
-    //        {
-    //            // Successfully parsed the radius value
-    //        }
-    //        else
-    //        {
-    //            // Handle the case where the radius value is invalid or not provided
-    //        }
-
-    //        bool emailConnected = txtEmailconnect.Checked;
-    //        bool isVerified = txtIsVerified.Checked;
-    //        bool isVetted = txtIsVetted.Checked;
-    //        bool optedSMS = txtOptedSMS.Checked;
-
-    //        string startDateText = Request.Form[StartDate.UniqueID];
-    //        string endDateText = Request.Form[EndDate.UniqueID];
-
-    //        DateTime? startDate = ParseDate(startDateText);
-    //        DateTime? endDate = ParseDate(endDateText);
-    //        string nameSearchTerm = filter.Text.Trim().ToLower();
-
-    //        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
-    //        {
-    //            // Get the selected event's location
-    //            var selectedEvent = dc.Events.FirstOrDefault(ea => ea.EventId == new Guid(selectedLocation));
-    //            double eventLatitude = 0;
-    //            double eventLongitude = 0;
-
-    //            if (selectedEvent != null)
-    //            {
-    //                // Parse Latitude and Longitude from string to double
-    //                if (!string.IsNullOrEmpty(selectedEvent.Latitude) && double.TryParse(selectedEvent.Latitude, out eventLatitude))
-    //                {
-    //                    // Successfully parsed Latitude
-    //                }
-    //                else
-    //                {
-    //                    // Handle invalid Latitude value
-    //                    eventLatitude = 0;
-    //                }
-
-    //                if (!string.IsNullOrEmpty(selectedEvent.Longitude) && double.TryParse(selectedEvent.Longitude, out eventLongitude))
-    //                {
-    //                    // Successfully parsed Longitude
-    //                }
-    //                else
-    //                {
-    //                    // Handle invalid Longitude value
-    //                    eventLongitude = 0;
-    //                }
-    //            }
-
-    //            // Base query
-    //            var peopleListQuery = from uo in dc.UserOrganizations
-    //                                  join p in dc.Profiles on uo.UserId equals p.UserId
-    //                                  join net in dc.aspnet_Memberships on p.UserId equals net.UserId
-    //                                  join u in dc.aspnet_Users on p.UserId equals u.UserId
-    //                                  join pa in dc.ProfileAddresses on p.UserId equals pa.ProfileId
-    //                                  join a in dc.Addresses on pa.AddressId equals a.AddressId
-    //                                  where uo.OrganizationId == new Guid(organizationId) && !net.IsLockedOut
-    //                                  select new
-    //                                  {
-    //                                      p.Firstname,
-    //                                      p.Lastname,
-    //                                      net.CreateDate,
-    //                                      p.Description,
-    //                                      net.LoweredEmail,
-    //                                      p.PhoneNumber,
-    //                                      p.UserId,
-    //                                      p.DateVettingCompleted,
-    //                                      p.DateVettingStarted,
-    //                                      p.VettingNotes,
-    //                                      p.VettingActive,
-    //                                      p.VettingComplete,
-    //                                      p.PassedVetting,
-    //                                      p.Title,
-    //                                      p.ZelloName,
-    //                                      u.LastActivityDate,
-    //                                      net.LastLoginDate,
-    //                                      net.IsApproved,
-    //                                      p.ReceiveDeploymentSMS,
-    //                                      a.Latitude,
-    //                                      a.Longitude
-    //                                  };
-
-    //            // Apply filters
-    //            if (!string.IsNullOrEmpty(nameSearchTerm))
-    //            {
-    //                var searchTerms = nameSearchTerm.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-    //                peopleListQuery = peopleListQuery.AsEnumerable().Where(pl =>
-    //                    searchTerms.All(term =>
-    //                        (!string.IsNullOrEmpty(pl.Firstname) && pl.Firstname.ToLower().Contains(term)) ||
-    //                        (!string.IsNullOrEmpty(pl.Lastname) && pl.Lastname.ToLower().Contains(term))
-    //                    )
-    //                ).AsQueryable();
-    //            }
-
-    //            if (selectedSkills.Any())
-    //            {
-    //                var skillMatchedUsers = dc.UserSkills
-    //                    .Where(us => selectedSkills.Contains(us.SkillId.ToString()))
-    //                    .Select(us => us.UserId)
-    //                    .ToList();
-    //                peopleListQuery = peopleListQuery.Where(p => skillMatchedUsers.Contains(p.UserId));
-    //            }
-
-    //            if (selectedResources.Any())
-    //            {
-    //                var resourceMatchedUsers = dc.UserResources
-    //                    .Where(ur => selectedResources.Contains(ur.ResourceId.ToString()))
-    //                    .Select(ur => ur.UserId)
-    //                    .ToList();
-    //                peopleListQuery = peopleListQuery.Where(p => resourceMatchedUsers.Contains(p.UserId));
-    //            }
-
-    //            if (emailConnected)
-    //            {
-    //                peopleListQuery = peopleListQuery.Where(pl => pl.LoweredEmail != null && pl.LoweredEmail != "");
-    //            }
-
-    //            if (isVetted)
-    //            {
-    //                peopleListQuery = peopleListQuery.Where(pl => pl.VettingActive ?? false);
-    //            }
-
-    //            if (optedSMS)
-    //            {
-    //                peopleListQuery = peopleListQuery.Where(pl => pl.ReceiveDeploymentSMS ?? false);
-    //            }
-
-    //            if (startDate.HasValue)
-    //            {
-    //                peopleListQuery = peopleListQuery.Where(p => p.DateVettingStarted >= startDate.Value.Date);
-    //            }
-
-    //            if (endDate.HasValue)
-    //            {
-    //                peopleListQuery = peopleListQuery.Where(p => p.DateVettingStarted <= endDate.Value.Date);
-    //            }
-    //        // Fetch data first (forcing execution in memory with .ToList())
-    //        var peopleListData = peopleListQuery.ToList();
 
 
+    private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+    {
+        var R = 6371; // Radius of the earth in km
+        var dLat = Deg2Rad(lat2 - lat1);
+        var dLon = Deg2Rad(lon2 - lon1);
+        var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                Math.Cos(Deg2Rad(lat1)) * Math.Cos(Deg2Rad(lat2)) *
+                Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+        var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+        var d = R * c; // Distance in km
+        return d;
+    }
 
-    //        foreach (var p in peopleListData)
-    //        {
-    //            if (!string.IsNullOrEmpty(p.Latitude) && !string.IsNullOrEmpty(p.Longitude))
-    //            {
-    //                double lat, lon;
-    //                if (double.TryParse(p.Latitude, out lat) && double.TryParse(p.Longitude, out lon))
-    //                {
-    //                    if (CalculateDistance(eventLatitude, eventLongitude, lat, lon) <= selectedRadius)
-    //                    {
-    //                        peopleListData.Add(p);
-    //                    }
-    //                }
-    //            }
-    //        }
-
-    //        // Execute Query with Sorting
-    //        var peopleList = peopleListQuery
-    //            .OrderByDescending(pl => pl.LastLoginDate)
-    //            .Distinct()
-    //            .ToList();
-    //        // Bind Data
-    //        rptVolunteers.DataSource = peopleList;
-    //            rptVolunteers.DataBind();
-    //        }
-    //    }
-
-
-    private static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
-	{
-		const double R = 6371; // Radius of the Earth in km
-		var dLat = (lat2 - lat1) * Math.PI / 180;
-		var dLon = (lon2 - lon1) * Math.PI / 180;
-		var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
-				Math.Cos(lat1 * Math.PI / 180) * Math.Cos(lat2 * Math.PI / 180) *
-				Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
-		var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
-		return R * c; // Distance in km
-	}
-	protected void ClearButton_Click(object sender, EventArgs e)
+    private double Deg2Rad(double deg)
+    {
+        return deg * (Math.PI / 180);
+    }
+    protected void ClearButton_Click(object sender, EventArgs e)
     {
         ddlSkills.SelectedIndex = -1;
         ddlResources.SelectedIndex = -1;
@@ -999,5 +797,15 @@ internal class PeopleList
 		hashCode = hashCode * -1521134295 + LastActivityDate.GetHashCode();
 		hashCode = hashCode * -1521134295 + IsApproved.GetHashCode();
 		return hashCode;
-	}
+	}    
+}
+
+public class NearAddress
+{
+    public Guid AddressId { get; set; }
+    public string Latitude { get; set; }
+    public string Longitude { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public double DistanceKm { get; set; }
 }
