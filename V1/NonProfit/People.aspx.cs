@@ -13,8 +13,7 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Reflection;
 using System.Data.SqlClient;
-
-
+using CrowdRelief;
 
 public partial class V1_NonProfit_People : BaseOrganizationWebForm
 {
@@ -303,39 +302,39 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             if (ucTeamLogo != null)
             {
                 ucTeamLogo.UserId = userId;
-                ucTeamLogo.PageName = "people";
+                //ucTeamLogo.PageName = "people";
                 ucTeamLogo.LoadNameWithBadges();
             }
             MembershipUser profileUser = Membership.GetUser(userId);
-			bool isLockedOut = false;
-			HtmlGenericControl divFooter = (HtmlGenericControl)e.Item.FindControl("divFooter");
-			Button btnContact = (Button)e.Item.FindControl("btnContact");
+            bool isLockedOut = false;
+            HtmlGenericControl divFooter = (HtmlGenericControl)e.Item.FindControl("divFooter");
+            Button btnContact = (Button)e.Item.FindControl("btnContact");
             Button btnManage = (Button)e.Item.FindControl("btnManage");
             Literal litVettingInfo = (Literal)e.Item.FindControl("litVettingInfo");
-			Literal litActiveDate = (Literal)e.Item.FindControl("litActiveDate");
-			if (User.IsInRole("Administrator") || userIsOwner)
-			{
-				bool? vettingComplete = (bool?)DataBinder.Eval(dataItem.DataItem, "VettingComplete");
-				bool? passedVetting = (bool?)DataBinder.Eval(dataItem.DataItem, "PassedVetting");
-				bool? vettingActive = (bool?)DataBinder.Eval(dataItem.DataItem, "VettingActive");
-				//bool? isLockedOut = (bool?)DataBinder.Eval(dataItem.DataItem, "IsLockedOut");
-				String vettingNotes = (String)DataBinder.Eval(dataItem.DataItem, "VettingNotes");
-				DateTime? dateVettingCompleted = (DateTime?)DataBinder.Eval(dataItem.DataItem, "DateVettingCompleted");
-				DateTime? dateVettingStarted = (DateTime?)DataBinder.Eval(dataItem.DataItem, "DateVettingStarted");
-				DateTime? lastActivityDate = (DateTime?)DataBinder.Eval(dataItem.DataItem, "LastLoginDate");
-				divFooter.Visible = true;
-				btnContact.Visible = true;
-				btnManage.Visible = true;
+            Literal litActiveDate = (Literal)e.Item.FindControl("litActiveDate");
+            if (User.IsInRole("Administrator") || userIsOwner)
+            {
+                bool? vettingComplete = (bool?)DataBinder.Eval(dataItem.DataItem, "VettingComplete");
+                bool? passedVetting = (bool?)DataBinder.Eval(dataItem.DataItem, "PassedVetting");
+                bool? vettingActive = (bool?)DataBinder.Eval(dataItem.DataItem, "VettingActive");
+                //bool? isLockedOut = (bool?)DataBinder.Eval(dataItem.DataItem, "IsLockedOut");
+                String vettingNotes = (String)DataBinder.Eval(dataItem.DataItem, "VettingNotes");
+                DateTime? dateVettingCompleted = (DateTime?)DataBinder.Eval(dataItem.DataItem, "DateVettingCompleted");
+                DateTime? dateVettingStarted = (DateTime?)DataBinder.Eval(dataItem.DataItem, "DateVettingStarted");
+                DateTime? lastActivityDate = (DateTime?)DataBinder.Eval(dataItem.DataItem, "LastLoginDate");
+                divFooter.Visible = true;
+                btnContact.Visible = true;
+                btnManage.Visible = true;
                 isLockedOut = !profileUser.IsApproved;
-				vettingComplete = vettingComplete == null ? false : vettingComplete;
-				passedVetting = passedVetting == null ? false : passedVetting;
-				vettingActive = vettingActive == null ? false : vettingActive;
-				DateTime dateVettingCompletedString = dateVettingCompleted == null ? DateTime.MinValue : (DateTime)dateVettingCompleted;
-				DateTime dateVettingStartedString = dateVettingStarted == null ? DateTime.MinValue : (DateTime)dateVettingStarted;
-				DateTime lastActivityDateString = lastActivityDate == null ? DateTime.MinValue : (DateTime)lastActivityDate;
-				String dateVettingComplete = dateVettingCompletedString == DateTime.MinValue ? "Not Complete" : dateVettingCompletedString.ToLongDateString();
-				String dateVettingStarts = dateVettingStartedString == DateTime.MinValue ? "Not Started" : dateVettingStartedString.ToLongDateString();
-				String lastActivitysDate = lastActivityDateString == DateTime.MinValue ? "Not Started" : lastActivityDateString.ToShortDateString() + " " + lastActivityDateString.ToLongDateString() + " at " + lastActivityDateString.ToLongTimeString();
+                vettingComplete = vettingComplete == null ? false : vettingComplete;
+                passedVetting = passedVetting == null ? false : passedVetting;
+                vettingActive = vettingActive == null ? false : vettingActive;
+                DateTime dateVettingCompletedString = dateVettingCompleted == null ? DateTime.MinValue : (DateTime)dateVettingCompleted;
+                DateTime dateVettingStartedString = dateVettingStarted == null ? DateTime.MinValue : (DateTime)dateVettingStarted;
+                DateTime lastActivityDateString = lastActivityDate == null ? DateTime.MinValue : (DateTime)lastActivityDate;
+                String dateVettingComplete = dateVettingCompletedString == DateTime.MinValue ? "Not Complete" : dateVettingCompletedString.ToLongDateString();
+                String dateVettingStarts = dateVettingStartedString == DateTime.MinValue ? "Not Started" : dateVettingStartedString.ToLongDateString();
+                String lastActivitysDate = lastActivityDateString == DateTime.MinValue ? "Not Started" : lastActivityDateString.ToShortDateString() + " " + lastActivityDateString.ToLongDateString() + " at " + lastActivityDateString.ToLongTimeString();
 
                 string vettingCompleted = (bool)vettingComplete ? "VETTING COMPLETE: " + ((bool)passedVetting ? "<span style='color:yellowgreen'>PASSED</span>" : "<span style='color:orange'>FAILED</span>") : (bool)vettingActive ? "VETTING: PENDING" : "VETTING: NO ACTION TAKEN";
                 vettingCompleted += ((bool)isLockedOut ? "<br><span style='color:orange'>LOCKED OUT</span>" : "<br><span style='color:yellowgreen'>HAS ACCESS</span>") + ("<br>Notes:" + vettingNotes + "<br>Date Started: " + dateVettingStarts + "<br>Date Completed: " + dateVettingComplete + "<br>Last Activity Date: " + lastActivitysDate + "<br>Phone Number: " + phoneNUmber + "<br>Email: " + loweredEmail);
@@ -479,7 +478,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     protected void btnSendEmail_click(object sender, EventArgs e)
     {
         string selectedUserIds = hdnSelectedUsers.Value;
-        string userMessage = txtemail.Text;
+        string userMessage = txtEmail.Text;
         if (!string.IsNullOrEmpty(selectedUserIds))
         {
             string[] userIds = selectedUserIds.Split(',');
@@ -513,7 +512,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 }
             }
         }
-        txtemail.Text = "";
+        txtEmail.Text = "";
     }
     protected void btnSendSms_click(object sender, EventArgs e)
     {
@@ -581,6 +580,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                     double.TryParse(selectedEvent.Longitude, out eventLongitude);
                 }
             }
+            var skillMatchedUsers = new HashSet<Guid>(
+                dc.UserSkills
+                .Where(us => selectedSkills.Contains(us.SkillId.ToString()))
+                .Select(us => us.UserId)
+                .ToList()
+            );
 
             var resourceMatchedUsers = new HashSet<Guid>(
                 dc.UserResources
@@ -622,35 +627,43 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                                       net.IsApproved,
                                       p.ReceiveDeploymentSMS,
                                       a.Latitude,
-                                      a.Longitude
+                                      a.Longitude,
+                                      DateAvailable = uad != null ? uad.DateAvailable : (DateTime?)null // Handle null values
                                   };
-            if (!string.IsNullOrEmpty(nameSearchTerm))
+            if (startDate.HasValue || endDate.HasValue)
             {
-                var searchTerms = nameSearchTerm.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                peopleListQuery = peopleListQuery.Where(pl => searchTerms.All(term =>
-                    (!string.IsNullOrEmpty(pl.Firstname) && pl.Firstname.ToLower().Contains(term)) ||
-                    (!string.IsNullOrEmpty(pl.Lastname) && pl.Lastname.ToLower().Contains(term))
-                ));
-            }
+                if (startDate.HasValue)
+                {
+
+                    peopleListQuery = peopleListQuery.Where(p =>
+                        p.DateAvailable != null && p.DateAvailable >= startDate.Value.Date
+                    );
+                }
+                if (endDate.HasValue)
+                {
 
                     peopleListQuery = peopleListQuery.Where(p =>
                         p.DateAvailable != null && p.DateAvailable <= endDate.Value.Date
                     );
                 }
             }
-
             if (selectedSkills.Any() || selectedResources.Any())
             {
-                var skillMatchedUsers = dc.UserSkills.Where(us => selectedSkills.Contains(us.SkillId.ToString())).Select(us => us.UserId).ToList();
-                peopleListQuery = peopleListQuery.Where(p => skillMatchedUsers.Contains(p.UserId));
+                peopleListQuery = peopleListQuery.AsEnumerable().Where(pl => allMatchedUsers.Contains(pl.UserId)).AsQueryable();
             }
 
-            if (selectedResources.Any())
+            if (!string.IsNullOrEmpty(nameSearchTerm))
             {
-                var resourceMatchedUsers = dc.UserResources.Where(ur => selectedResources.Contains(ur.ResourceId.ToString())).Select(ur => ur.UserId).ToList();
-                peopleListQuery = peopleListQuery.Where(p => resourceMatchedUsers.Contains(p.UserId));
-            }
+                var searchTerms = nameSearchTerm.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
+
+                peopleListQuery = peopleListQuery.AsEnumerable().Where(pl =>
+                    searchTerms.All(term =>
+                        (!string.IsNullOrEmpty(pl.Firstname) && pl.Firstname.ToLower().Contains(term)) ||
+                        (!string.IsNullOrEmpty(pl.Lastname) && pl.Lastname.ToLower().Contains(term))
+                    )
+                ).AsQueryable();
+            }
             if (emailConnected)
             {
                 peopleListQuery = peopleListQuery.Where(pl => pl.LoweredEmail != null && pl.LoweredEmail != "");
@@ -719,6 +732,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             rptVolunteers.DataBind();
         }
     }
+
 
     //    protected void SearchButton_Click(object sender, EventArgs e)
     //    {
@@ -1009,12 +1023,12 @@ internal class PeopleList
     }
 
 }
-public class NearAddress
-{
-    public Guid AddressId { get; set; }
-    public string Latitude { get; set; }
-    public string Longitude { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public double DistanceKm { get; set; }
-}
+//public class NearAddress
+//{
+//    public Guid AddressId { get; set; }
+//    public string Latitude { get; set; }
+//    public string Longitude { get; set; }
+//    public string FirstName { get; set; }
+//    public string LastName { get; set; }
+//    public double DistanceKm { get; set; }
+//}

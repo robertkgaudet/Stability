@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"
-    CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" ValidateRequest="false" %>
+    CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" ValidateRequest="false"  enableEventValidation="false" %>
 
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
-            $('#<%=txtemail.ClientID%>').summernote({
+            $('#<%=txtEmail.ClientID%>').summernote({
                 toolbar: [
                     ['style', ['bold', 'italic']],
                     ['alignment', ['ul', 'ol', 'paragraph']],
@@ -391,7 +391,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
     <asp:HiddenField ID="hdnSelectedUsers" runat="server" />
     <div id="divEmail" runat="server" class="input-group">
-        <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" placeholder="Enter Email Text"
+        <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" placeholder="Enter Email Text"
             ClientIDMode="Static" TextMode="MultiLine" ValidateRequestMode="Disabled"></asp:TextBox>
         <div class="input-group-append">
             <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary b2" Text="Send Email"
@@ -550,6 +550,8 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
         </div>
     </div>
+
+
     <asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All" />
     <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
         <tbody>
@@ -563,8 +565,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                         <input type="checkbox" class="select-user" data-userid='<%# Eval("UserID") %>' />
                                         <asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
                                         <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
-                                        <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton float-right"
-                                            data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                       <%-- <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton float-right"
+                                            data-toggle="modal" data-target="#messageMemberModal"></asp:Button>--%>
                                     </h5>
                                     <p>
                                         <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
