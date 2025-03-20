@@ -195,15 +195,22 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                     //Hide team list from nonadmin and nonowner
                     //hypPeople.Visible = false;
                 }
-                if (HttpContext.Current.User.IsInRole("Administrator") || isOwner)
-                {
-                    if (organization.IsActive != true)
-                    {
-                        btnDeactivatePage.Text = "<i class='fa fa-ban text-danger'></i> Re-activate This Team";
-                    }
+                if (HttpContext.Current.User.IsInRole("Administrator") || isOwner || HttpContext.Current.User.IsInRole("Team Administrator"))
+                {                
                     ulAdmin.Visible = true;
                     hrAdmin.Visible = true;
                     divDeployment.Visible = true;
+                }
+                if (HttpContext.Current.User.IsInRole("Administrator"))
+                {
+                    btnDeactivatePage.Visible = true;
+                    btnDeactivatePage.Text = organization.IsActive != true
+                        ? "<i class='fa fa-ban text-danger'></i> Re-activate This Team"
+                        : "<i class='fa fa-ban text-danger'></i> De-activate This Team";
+                }
+                else
+                {
+                    btnDeactivatePage.Visible = false;
                 }
             }
         }

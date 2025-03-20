@@ -37,6 +37,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             }
             bool stabilityVerified = profile.IsDisasterReadyCertified;
             bool showTeamLogo = userOrg.ShowTeamLogo ?? false;
+            bool makeTeamAdministrator = dc.aspnet_UsersInRoles.Any(r => r.UserId == userId && r.RoleId == new Guid("103F53B2-9B88-4E5A-B023-C66F26E9E9DE"));
             string vettingStatus = "";
             if (profile.VettingActive == true)
             {
@@ -52,7 +53,8 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                 vettingStatus = vettingStatus,
                 vettingNotes = profile.VettingNotes,
                 stabilityVerified = stabilityVerified,
-                showTeamLogo = showTeamLogo
+                showTeamLogo = showTeamLogo,
+                makeTeamAdministrator = makeTeamAdministrator
             };
             context.Response.Write(Newtonsoft.Json.JsonConvert.SerializeObject(response));
         }
@@ -64,7 +66,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
         string vettingNotes = context.Request.Form["vettingNotes"];
         bool stabilityVerified = bool.Parse(context.Request.Form["stabilityVerified"]);
         bool showTeamLogo = bool.Parse(context.Request.Form["showTeamLogo"]);
-
+        bool makeTeamAdministrator = bool.Parse(context.Request.Form["makeTeamAdministrator"]);
         using (var dc = new CrowdReliefDBDataContext())
         {
             var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
@@ -93,19 +95,26 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                         break;
                 }
             }
+            if (makeTeamAdministrator)
+            {
+                 var existingRole = dc.aspnet_UsersInRoles.FirstOrDefault(ur => ur.UserId == userId);
 
+                    if (existingRole != null)
+                    {
+                        // Update the RoleId
+                        existingRole.RoleId = new Guid("103F53B2-9B88-4E5A-B023-C66F26E9E9DE");
+                        dc.SubmitChanges(); 
+                        
+                    }   
+            }     
             var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
             if (userOrg != null)
             {
                 userOrg.ShowTeamLogo = showTeamLogo;
             }
-
             dc.SubmitChanges();
         }
-
-        context.Response.Write("{\"success\": true}");
     }
-
     public bool IsReusable
     {
         get

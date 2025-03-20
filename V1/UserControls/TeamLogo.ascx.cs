@@ -23,6 +23,23 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                 if (profile != null)
                 {
                     UserName = profile.Firstname + " " + profile.Lastname;
+                    var userRole = (from ur in dc.aspnet_UsersInRoles
+                                    join r in dc.aspnet_Roles on ur.RoleId equals r.RoleId
+                                    where ur.UserId == UserId
+                                    select r.RoleName).FirstOrDefault();
+
+                    // Append role to the username if present
+                    if (!string.IsNullOrEmpty(userRole))
+                    {
+                        if (userRole == "Team Administrator")
+                        {
+                            UserName += " (Team Administrator)";
+                        }
+                        else if (userRole == "Administrator")
+                        {
+                            UserName += " (Team Owner)";
+                        }
+                    }
                     lblprofileusername.Text = UserName;
                     lblprofileusername.Visible = true;
                     string currentPageUrl = HttpContext.Current.Request.Url.AbsolutePath;
@@ -33,9 +50,9 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                     }
                     else
                     {
-                        hypName.Visible = true; 
-                        hypName.NavigateUrl = string.Empty; 
-                        hypName.Attributes.Remove("href"); 
+                        hypName.Visible = true;
+                        hypName.NavigateUrl = string.Empty;
+                        hypName.Attributes.Remove("href");
                     }
                     var orgUser = (from o in dc.Organizations
                                    join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
@@ -52,14 +69,9 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                     {
                         if (orgUser.ShowTeamLogo ?? false)
                         {
-                            if (!String.IsNullOrEmpty(orgUser.LogoSquare))
-                            {
-                                imgTeamLogo.ImageUrl = teamLogo + orgUser.LogoSquare;
-                            }
-                            else
-                            {                  
-                                imgTeamLogo.ImageUrl = "/V1/Images/DefaultLogo.png";
-                            }
+                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare) ?
+                                teamLogo + orgUser.LogoSquare :
+                                "/V1/Images/DefaultLogo.png";
                             imgTeamLogo.Visible = true;
                             imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
                             hypTeamLogo.Visible = true;
