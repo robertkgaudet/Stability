@@ -262,7 +262,6 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             if (ucTeamLogo != null)
             {
                 ucTeamLogo.UserId = userId;
-                ucTeamLogo.PageName = "people";
                 ucTeamLogo.LoadNameWithBadges();
             }
             MembershipUser profileUser = Membership.GetUser(userId);
