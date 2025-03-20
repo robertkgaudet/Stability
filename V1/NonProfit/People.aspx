@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" CodeFile="People.aspx.cs" ValidateRequest="false"  Inherits="V1_NonProfit_People" %>
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
@@ -10,6 +10,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
     <link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
     <script src="/Homer/vendor/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js"></script>
+     <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote.css" />
+    <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />
+    <script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
     <style>
         .website {
             background-color: #5E2E91;
@@ -35,6 +38,9 @@
             margin-bottom: 0 !important;
             margin-top: -4px;
         }
+         .team-logo {
+            margin-left: -176px !important;
+        }
 
         .container-search {
             margin-top: 5px !important;
@@ -49,13 +55,28 @@
             margin-bottom: 0;
         }
 
+
         .messageButton {
             margin-left: auto;
             padding: 5px 15px;
             font-size: 14px;
             border-radius: 5px;
         }
+          .input-group {
+           display: flex;
+            align-items: center;
+            }
+        .input-group-append {
+            margin-left: 10px;
+        }
+        .chkSelectAll {
+            margin-top: 9px;
+        }
+         input#ContentPlaceHolder1_chkSelectAll {
+            margin-top: 10px;
+            margin-right: 10px;
 
+        }
         .stability-badge {
             margin-right: 4px !important;
         }
@@ -63,8 +84,14 @@
         .form-check label {
             margin-left: 3px;
         }
+        
+        .b2 {
+            margin-bottom: 160px;
+        }
     </style>
     <script>
+        // Step 1: Select all the buttons in the table
+
         var recipientsName;
         var recipientsEmail;
         var message;
@@ -76,9 +103,88 @@
         var btnSend;
         var messageModelTitle;
         var txtMessage;
+
         $(document).ready(function () {
+
+
+
+          var radiusSlider = document.getElementById("radiusSlider");
+    var radiusValue = document.getElementById("radiusValue");
+    var hiddenRadius = document.getElementById("hiddenRadius");
+
+    radiusSlider.oninput = function () {
+        radiusValue.innerHTML = this.value + " km";
+        hiddenRadius.value = this.value;
+    }
+///script for training search
+document.addEventListener("DOMContentLoaded", function () {
+    var dropdown = document.getElementById("iygg"); 
+    var hiddenField = document.getElementById("gfgj");
+
+    if (dropdown && hiddenField) {
+        dropdown.addEventListener("change", function () {
+            hiddenField.value = dropdown.value;
+            console.log("Hidden Field Updated:", hiddenField.value);
+        });
+    }
+
+    var form = document.querySelector("form");
+    if (form) {
+        form.addEventListener("submit", function () {
+            hiddenField.value = dropdown.value;
+        });
+    }
+});
+            $('#<%=txtEmail.ClientID%>').summernote({
+                toolbar: [
+                    ['style', ['bold', 'italic']],
+                    ['alignment', ['ul', 'ol', 'paragraph']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link', 'table']],
+
+                ],
+                height: 100
+            });
+
+  $(document).ready(function () {
+        var radiusSlider = document.getElementById("radiusSlider");
+        var radiusValue = document.getElementById("radiusValue");
+        var hiddenRadius = document.getElementById("hiddenRadius");
+        var hiddenEvent = document.getElementById("hiddenEvent");
+
+        // Update hidden radius value when slider changes
+        radiusSlider.oninput = function () {
+            radiusValue.innerHTML = this.value + " km";
+            hiddenRadius.value = this.value; // Ensure hidden field updates
+        };
+
+        $("#<%=ddlEvent.ClientID%>").change(function () {
+            if ($(this).val()) {
+                $("#radiusSection").show();
+                hiddenEvent.value = $(this).val(); 
+            } else {
+                $("#radiusSection").hide();
+                hiddenEvent.value = ""; 
+            }
+        });
+
+
+        $("#<%=SearchButton.ClientID%>").click(function () {
+            hiddenRadius.value = radiusSlider.value;
+            hiddenEvent.value = $("#<%=ddlEvent.ClientID%>").val(); 
+            console.log("Final Selected Radius: " + hiddenRadius.value + " km");
+            console.log("Final Selected Event: " + hiddenEvent.value);
+        });
+    });
+            // Initialize Example 1
             $('#tblVolunteers').footable();
+
+
             messageModelTitle = document.getElementById('messageModelTitle');
+            txtMessage = document.getElementById('<%=txtMessage.ClientID%>');
             divMessageTextBox = document.getElementById('messageTextBox');
             btnSend = document.getElementById('btnSend');
             divMessageError = document.getElementById('divMessageError');
@@ -108,8 +214,7 @@
                 var searchPanel = $("#searchFilters");
                 icon.toggleClass("fa-chevron-down fa-chevron-up");
                 searchPanel.collapse("toggle");
-            });
-
+            });  
             $('.multiselect').multiselect({
                 includeSelectAllOption: true,
                 enableFiltering: true,
@@ -121,84 +226,44 @@
                 numberDisplayed: 2
             });
 
+            window.onload = function () {
+                var selectAllCheckbox = document.getElementById("<%= chkSelectAll.ClientID %>");
+                var userCheckboxes = document.querySelectorAll(".select-user");
+                var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
+
+                function updateSelectedUsers() {
+                    var selectedUserIds = [];
+                    for (var i = 0; i < userCheckboxes.length; i++) {
+                        if (userCheckboxes[i].checked) {
+                            selectedUserIds.push(userCheckboxes[i].getAttribute("data-userid"));
+                        }
+                    }
+                    hiddenField.value = selectedUserIds.join(",");
+                }
+                selectAllCheckbox.onclick = function () {
+                    for (var i = 0; i < userCheckboxes.length; i++) {
+                        userCheckboxes[i].checked = this.checked;
+                    }
+                    updateSelectedUsers();
+                };
+                for (var i = 0; i < userCheckboxes.length; i++) {
+                    userCheckboxes[i].onclick = function () {
+                        var allChecked = true;
+                        for (var j = 0; j < userCheckboxes.length; j++) {
+                            if (!userCheckboxes[j].checked) {
+                                allChecked = false;
+                                break;
+                            }
+                        }
+                        selectAllCheckbox.checked = allChecked;
+                        updateSelectedUsers();
+                    };
+                }
+            };
+
+
         });
 
-        var currentUserId = null;
-
-        function setUserId(button) {      
-            currentUserId = button.getAttribute('data-userid');
-            return false;
-        }
-        function fetchUserData() {         
-            if (!currentUserId) {
-                alert("User ID not set.");
-                return;
-            }
-
-            $.ajax({
-                type: "GET",
-                url: "/V1/Handlers/UpdateMemberInfo.ashx",
-                data: { action: "fetch", userId: currentUserId },
-                dataType: "json",
-                success: function (response) {
-                    if (response.success) {
-                        // Populate modal fields with fetched data
-                        $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
-                        $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
-                        $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
-                        $('#<%= chkManageShowDonateButton.ClientID %>').prop('checked', response.showTeamLogo);
-                        $('#<%= chkManageTeamAdministrator.ClientID %>').prop('checked', response.makeTeamAdministrator);
-                        console.log("User data fetched successfully:", response);
-                    } else {
-                        alert("Failed to fetch user data.");
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error fetching user data:", error);
-                    alert("An error occurred while fetching user data.");
-                }
-            });
-        }
-        function saveChanges() {
-            if (!currentUserId) {
-                alert("No user selected.");
-                return;
-            }
-            var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
-            var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
-            var stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
-            var showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
-            var makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
-            updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
-        }
-        function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator) {
-            var data = {
-                action: "update",
-                userId: userId,
-                vettingStatus: vettingStatus,
-                vettingNotes: vettingNotes,
-                stabilityVerified: stabilityVerified,
-                showTeamLogo: showTeamLogo,
-                makeTeamAdministrator: makeTeamAdministrator
-            };
-            $.ajax({
-                type: "POST",
-                url: "/V1/Handlers/UpdateMemberInfo.ashx",
-                data: data,
-                contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                dataType: "json",
-                success: function (response) {
-                    if (response.success) {
-                        $('#manageMemberModal').modal('hide');
-                        location.reload();
-                    } else {
-                        alert("Error: " + response.error);
-                    }
-                },
-                error: function (xhr, status, error) {
-                }
-            });
-        }
         function sendClick(object) {
             message = txtMessage.value;
             teamName = '<%=teamName%>';
@@ -226,6 +291,7 @@
             messageModelTitle.innerHTML = "This will send " + recipientsName + " an email from the Stability platform.";
             return false;
         }
+
         function sendMessage(signedInUserFullName, organizationId, recipientsName, recipientsEmail, teamName, message) {
             $.ajax
                 (
@@ -258,9 +324,27 @@
                 );
         }
     </script>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
+     <asp:HiddenField ID="hdnSelectedUsers" runat="server" />
+    <div id="divEmail" runat="server" class="input-group">
+        <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" placeholder="Enter Email Text"
+            ClientIDMode="Static" TextMode="MultiLine" ValidateRequestMode="Disabled"></asp:TextBox>
+        <div class="input-group-append">
+            <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary b2" Text="Send Email"
+                OnClientClick="updateHiddenField();" OnClick="btnSendEmail_click" />
+        </div>
+    </div>
+    <div id="divSms" runat="server" class="input-group">
+        <textarea id="txtsms" runat="server" cssclass="form-control" placeholder="Enter SMS Text"
+            rows="2" cols="100"></textarea>
+        <div class="input-group-append">
+            <asp:Button ID="btnSms" runat="server" CssClass="btn btn-primary" Text="Send SMS"
+                OnClick="btnSendSms_click" />
+        </div>
+    </div>
     <div class="panel-heading">
         <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members"
             CssClass="btn btn-sm btn-info"></asp:HyperLink>
@@ -277,7 +361,7 @@
                             <i class="fa fa-chevron-down"></i>
                         </button>
                     </div>
-                    <h4 style="margin-left: 18px;">Search</h4>
+                    <h4 style="margin-left: 7px;">Search</h4>
                     <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center"
                         style="margin-bottom: 20px;" visible="false">
                         <asp:Literal ID="litMessage" runat="server"></asp:Literal>
@@ -304,8 +388,8 @@
 
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
-                                            <b>Location :</b>
-                                            <input type="text" class="form-control" id="txtlocation" placeholder="Enter Location">
+                                              <b>Training :</b>
+                                            <asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-control"></asp:DropDownList>  
                                         </div>
                                     </div>
                                 </div>
@@ -342,8 +426,22 @@
                                                 autocomplete="off" ClientIDMode="Static" />
                                         </div>
                                     </div>
+                                     </div>                                
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-group fix">
+                                            <b class="text-line">Location :</b>
+                                            <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3" id="radiusSection" style="display: none;">
+                                        <div class="form-group fix">
+                                            <b>Radius (km):</b>
+                                            <input type="range" id="radiusSlider" min="100" max="1000" step="100" value="1000" class="form-control">
+                                            <span id="radiusValue">100 km</span>                                   
+                                            <input type="hidden" id="hiddenRadius" name="radiusSlider" value="10" />
+                                            <input type="hidden" id="hiddenEvent" name="selectedEvent" />
+                                        </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="row">
@@ -390,6 +488,7 @@
             </div>
         </div>
     </div>
+      <asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All" />
     <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
         <tbody>
             <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
@@ -398,7 +497,9 @@
                         <td style="background-color: white;">
                             <div class="hpanel">
                                 <div class="panel-body">
-                                    <h5 class="m-b-xs" style="display: flex; align-items: center; justify-content: space-between;">
+                                      <h5 class="m-b-xs">
+                                        <input type="checkbox" class="select-user" data-userid='<%# Eval("UserID") %>' />
+                                        <asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
                                         <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
                                         <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton"
                                             data-toggle="modal" data-target="#messageMemberModal"></asp:Button>

@@ -9,6 +9,11 @@ using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using System.Collections.Specialized;
+using System.Configuration;
+using System.Reflection;
+using System.Data.SqlClient;
+using CrowdRelief;
 public partial class V1_NonProfit_People : BaseOrganizationWebForm
 {
     public string _logo;
@@ -30,10 +35,28 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     public bool hideTeamList = false;
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        organizationId = Request.QueryString["organizationId"];
         if (!IsPostBack)
         {
-            LoadDropdowns();
+            string type = Request.QueryString["type"];
+            if (type == "email")
+            {
+                divEmail.Visible = true;
+                divSms.Visible = false;
+            }
+            else if (type == "sms")
+            {
+                divEmail.Visible = false;
+                divSms.Visible = true;
+            }
+            else
+            {
+                divEmail.Visible = false;
+                divSms.Visible = false;
+            }
+            LoadDropdowns(new Guid(organizationId));
+            LoadEvents();
+
         }
         ucTeamFooter.PageName = "peoplePage";
         ucTeamHeader.PageName = "Team Members";
@@ -43,7 +66,6 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         //BEGIN HEADER PROPERTIES
         ////////////////////////
 
-        organizationId = Request.QueryString["organizationId"];
         skillId = Request.QueryString["skillId"];
         resourceId = Request.QueryString["resourceId"];
         string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
@@ -232,6 +254,26 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr><a href=\"\\signin\">Sign in</a> to see the list of team members.";
         }
     }
+    private void LoadEvents()
+    {
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            var events = (from ev in dc.Events
+                          where ev.IsActive == true
+                          select new
+                          {
+                              ev.EventId,
+                              ev.Name
+                          }).ToList();
+            ddlEvent.DataSource = events;
+            ddlEvent.DataTextField = "Name";
+            ddlEvent.DataValueField = "EventId";
+            ddlEvent.DataBind();
+            ddlEvent.Items.Insert(0, new ListItem("  Select Location ", ""));
+
+        }
+
+    }
     protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
     {
         if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -382,7 +424,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             .Select(i => i.Value)
             .ToList();
     }
-    private void LoadDropdowns()
+    private void LoadDropdowns(Guid organizationId)
     {
         using (var dc = new CrowdReliefDBDataContext())
         {
@@ -396,6 +438,19 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             ddlResources.DataValueField = "ResourceId";
             ddlResources.DataSource = resources;
             ddlResources.DataBind();
+
+            var positions = (from pos in dc.Positions
+                             where pos.OrganizationId == organizationId
+                             select new
+                             {
+                                 pos.PositionId,
+                                 pos.Name
+                             }).ToList();
+            ddlTraining.DataSource = positions;
+            ddlTraining.DataTextField = "Name";
+            ddlTraining.DataValueField = "PositionId";
+            ddlTraining.DataBind();
+            ddlTraining.Items.Insert(0, new ListItem("Select Training", ""));
         }
 
     }
@@ -411,11 +466,154 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
         return null;
     }
+    protected void btnSendEmail_click(object sender, EventArgs e)
+
+    {
+
+        string selectedUserIds = hdnSelectedUsers.Value;
+
+        string userMessage = txtEmail.Text;
+
+        if (!string.IsNullOrEmpty(selectedUserIds))
+
+        {
+
+            string[] userIds = selectedUserIds.Split(',');
+
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+
+            {
+
+                foreach (string userId in userIds)
+
+                {
+
+                    Guid userGuid = new Guid(userId);
+
+                    var userEmail = (from m in dc.aspnet_Memberships
+
+                                     where m.UserId == userGuid
+
+                                     select m.Email).FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(userEmail))
+
+                    {
+
+                        ListDictionary ldEmailBodyReplacements = new ListDictionary();
+
+                        ldEmailBodyReplacements.Add("<% UserId %>", userId.ToString());
+
+                        ldEmailBodyReplacements.Add("<% Message %>", userMessage);
+
+
+
+                        string error = string.Empty;
+
+                        Tools.SendEmail(
+
+                            userMessage,
+
+                            "Stability User Has Signed In",
+
+                            ldEmailBodyReplacements,
+
+                            "robertkgaudet@gmail.com",
+
+                            "Stability Login Alert",
+
+                            string.Empty,
+
+                            string.Empty,
+
+                            "~\\EmailTemplates\\SignIn.html",
+
+                            out error
+
+                        );
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        txtEmail.Text = "";
+
+    }
+
+    protected void btnSendSms_click(object sender, EventArgs e)
+
+    {
+
+        string selectedUserIds = hdnSelectedUsers.Value;
+
+        string smsMessage = txtsms.Value.Trim();
+
+        if (!string.IsNullOrEmpty(selectedUserIds) && !string.IsNullOrEmpty(smsMessage))
+
+        {
+
+            string[] userIds = selectedUserIds.Split(',');
+
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+
+            {
+
+                foreach (string userId in userIds)
+
+                {
+
+                    Guid userGuid = new Guid(userId);
+
+                    var phoneNumber = (from p in dc.Profiles
+
+                                       where p.UserId == userGuid
+
+                                       select p.PhoneNumber).FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(phoneNumber))
+
+                    {
+
+                        string accountSid = ConfigurationManager.AppSettings["twilioAccountSID"].ToString();
+
+                        string authToken = ConfigurationManager.AppSettings["twilioAuthToken"].ToString();
+
+                        string fromNumber = ConfigurationManager.AppSettings["twilioPhoneNumber"].ToString();
+
+                        var tools = new Tools(accountSid, authToken, fromNumber);
+
+                        tools.SendSms(smsMessage, new string[] { phoneNumber });
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        txtsms.Value = "";
+
+    }
     protected void SearchButton_Click(object sender, EventArgs e)
     {
+        string selectedTraining = ddlTraining.SelectedValue;
+        int selectedIndex = ddlTraining.SelectedIndex;
         List<string> selectedSkills = GetSelectedValues(ddlSkills);
         List<string> selectedResources = GetSelectedValues(ddlResources);
+        string selectedLocation = Request.Form["selectedEvent"] ?? ddlEvent.SelectedValue;
 
+        int selectedRadius = 0;
+        int radius;
+        if (int.TryParse(Request.Form["radiusSlider"], out radius))
+
+        {
+            selectedRadius = radius;
+        }
         bool emailConnected = txtEmailconnect.Checked;
         bool isVerified = txtIsVerified.Checked;
         bool isVetted = txtIsVetted.Checked;
@@ -431,7 +629,19 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
-
+            double eventLatitude = 0, eventLongitude = 0;
+            Guid? eventGuid = null;
+            Guid parsedEventGuid;
+            if (!string.IsNullOrEmpty(selectedLocation) && Guid.TryParse(selectedLocation, out parsedEventGuid))
+            {
+                eventGuid = parsedEventGuid;
+                var selectedEvent = dc.Events.FirstOrDefault(ea => ea.EventId == eventGuid.Value);
+                if (selectedEvent != null)
+                {
+                    double.TryParse(selectedEvent.Latitude, out eventLatitude);
+                    double.TryParse(selectedEvent.Longitude, out eventLongitude);
+                }
+            }
             var skillMatchedUsers = new HashSet<Guid>(
                 dc.UserSkills
                 .Where(us => selectedSkills.Contains(us.SkillId.ToString()))
@@ -447,13 +657,14 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             );
 
             var allMatchedUsers = skillMatchedUsers.Union(resourceMatchedUsers).ToHashSet();
-
             var peopleListQuery = from uo in dc.UserOrganizations
                                   join p in dc.Profiles on uo.UserId equals p.UserId
                                   join net in dc.aspnet_Memberships on p.UserId equals net.UserId
                                   join u in dc.aspnet_Users on p.UserId equals u.UserId
                                   join uad in dc.UserAvailableDates on p.UserId equals uad.UserId into uadGroup
                                   from uad in uadGroup.DefaultIfEmpty()
+                                  join pa in dc.ProfileAddresses on p.ProfileId equals pa.ProfileId
+                                  join a in dc.Addresses on pa.AddressId equals a.AddressId
                                   where uo.OrganizationId == new Guid(organizationId) && !net.IsLockedOut
                                   select new
                                   {
@@ -476,6 +687,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                                       net.LastLoginDate,
                                       net.IsApproved,
                                       p.ReceiveDeploymentSMS,
+                                      a.Latitude,
+                                      a.Longitude,
                                       DateAvailable = uad != null ? uad.DateAvailable : (DateTime?)null // Handle null values
                                   };
 
@@ -535,6 +748,47 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             {
                 peopleListQuery = peopleListQuery.Where(pl => pl.ReceiveDeploymentSMS ?? false);
             }
+            if (startDate.HasValue)
+
+            {
+                peopleListQuery = peopleListQuery.Where(p => p.DateVettingStarted >= startDate.Value.Date);
+            }
+
+            if (endDate.HasValue)
+
+            {
+                peopleListQuery = peopleListQuery.Where(p => p.DateVettingStarted <= endDate.Value.Date);
+            }
+            if (!string.IsNullOrEmpty(selectedTraining))
+            {
+                Guid positionGuid = new Guid(selectedTraining);
+                var usersInSelectedPosition = dc.UserOrganizationEventPositions
+                                                                .Where(uep => dc.OrganizationEventPositions
+                                                                .Where(oep => oep.PositionId == positionGuid)
+                                                   .Select(oep => oep.OrganizationEventPositionId)
+                                              .Contains(uep.OrganizationEventPositionId))
+                                         .Select(uep => uep.UserId)
+                                        .ToList();
+                peopleListQuery = peopleListQuery.Where(p => usersInSelectedPosition.Contains(p.UserId));
+
+            }
+            var peopleListData = peopleListQuery.ToList();
+
+            //List<object> filteredPeople = new List<object>();
+            foreach (var p in peopleListData)
+            {
+                if (!string.IsNullOrEmpty(p.Latitude) && !string.IsNullOrEmpty(p.Longitude))
+                {
+                    double latUser, lonUser;
+                    if (double.TryParse(p.Latitude, out latUser) && double.TryParse(p.Longitude, out lonUser))
+                    {
+                        if (CalculateDistance(eventLatitude, eventLongitude, latUser, lonUser) <= selectedRadius)
+                        {
+                            //filteredPeople.Add(p);
+                        }
+                    }
+                }
+            }
 
             // Execute Query with Sorting
             var peopleList = peopleListQuery
@@ -547,10 +801,21 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
             // Bind Data
             rptVolunteers.DataSource = peopleList;
+            //rptVolunteers.DataSource = filteredPeople.OrderByDescending(pl => ((dynamic)pl).LastLoginDate).Distinct().ToList();
             rptVolunteers.DataBind();
         }
     }
-
+    private static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+    {
+        const double R = 6371; // Radius of the Earth in km
+        var dLat = (lat2 - lat1) * Math.PI / 180;
+        var dLon = (lon2 - lon1) * Math.PI / 180;
+        var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                Math.Cos(lat1 * Math.PI / 180) * Math.Cos(lat2 * Math.PI / 180) *
+                Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+        var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+        return R * c; // Distance in km
+    }
 
     protected void ClearButton_Click(object sender, EventArgs e)
     {
@@ -566,6 +831,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         divFilterMessage.Visible = false;
         litFilterMessage.Text = string.Empty;
         filter.Text = string.Empty;
+        ddlTraining.Text = string.Empty;
+        ddlEvent.Text = string.Empty;
     }
 }
 
