@@ -271,7 +271,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			if (user != null)
 			{
 				// If user is found, replace with a link to the user's profile
-				return "<a target='_blank' href='/V1/Member/Default.aspx?userid="+ user.UserId +"'>" + user.Firstname + " " + user.Lastname + "</a>";
+				return "<a target='_blank' href='/V1/Member/Default.aspx?userid=" + user.UserId + "'>" + user.Firstname + " " + user.Lastname + "</a>";
 			}
 			// If user not found, keep the mention as is
 			return match.Value;
@@ -313,24 +313,24 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 		var posts = (from p in dc.Posts
-					join pr in dc.Profiles on p.CreatedBy equals pr.UserId
-					where p.IsVisible == true
-					orderby p.CreatedOn descending
-					select new
-					{
-						p.CreatedBy,
-						p.PostId,
-						p.PostTypeId,
-						p.URLImage,
-						p.URLTitle,
-						p.URLDescription,
-						p.SharedURL,
-						p.CreatedOn,
-						p.Message,
-						pr.UserId,
-						EventId = p.EventId ?? new Guid(),
-						fullname = pr.Firstname + " " + pr.Lastname
-					}).Take(10);
+					 join pr in dc.Profiles on p.CreatedBy equals pr.UserId
+					 where p.IsVisible == true
+					 orderby p.CreatedOn descending
+					 select new
+					 {
+						 p.CreatedBy,
+						 p.PostId,
+						 p.PostTypeId,
+						 p.URLImage,
+						 p.URLTitle,
+						 p.URLDescription,
+						 p.SharedURL,
+						 p.CreatedOn,
+						 p.Message,
+						 pr.UserId,
+						 EventId = p.EventId ?? new Guid(),
+						 fullname = pr.Firstname + " " + pr.Lastname
+					 }).Take(10);
 		rptPosts.DataSource = posts;
 		rptPosts.DataBind();
 	}
@@ -413,7 +413,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			{
 				userId = new Guid(user.ProviderUserKey.ToString());
 			}
-            RepeaterItem dataItem = (RepeaterItem)e.Item;
+			RepeaterItem dataItem = (RepeaterItem)e.Item;
 			Guid postId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostId");
 			Guid eventId = (Guid)DataBinder.Eval(dataItem.DataItem, "EventId");
 			Guid postTypeId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostTypeId");
@@ -678,7 +678,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 												  Comment1 = ReplaceTaggedUsersWithLinks(c.Comment1),
 												  timeAgo = GetTimeAgo(c.CreatedOn),
 												  UserId = c.CreatedBy,
-												  author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
+												  author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Lastname,
 												  ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
 												  ImgProfileUrl = profilePhotoFolder + (
 													 (from rph in dc.ProfilePhotos
@@ -959,6 +959,11 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		var userId = new Guid();
 		string username = HttpContext.Current.User.Identity.Name;
 		MembershipUser user = Membership.GetUser(username);
+
+		if (!String.IsNullOrEmpty(comment))
+		{
+			comment = comment.Replace("\n", "<br/>");
+		}
 
 		if (user != null)
 		{
