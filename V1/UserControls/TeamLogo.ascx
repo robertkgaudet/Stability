@@ -4,20 +4,16 @@
         width: 16px;
         height: 16px;
         border-radius: 50%;
-        margin-left: -3px;
-        vertical-align: text-top;
-        margin-right: 2px;
-        margin-top: -2px;
-        margin-right: 3px;
+        vertical-align: middle;
+        margin-right: 0px;
     }
+
     .team-logo {
-        width: 16px;
-        height: 16px;
+        width: 20px;
+        height: 20px;
         border-radius: 50%;
-        margin-left: -3px;
-        vertical-align: text-top;
-        margin-right: 2px;
-        margin-top: -2px;
+        vertical-align: middle;
+        margin-right: 5px;
     }
     .volunteer-name {
         margin-right: 2px;
@@ -29,9 +25,13 @@
         margin-right: 8px;
         color: #050505;
         font-weight: bold;
+        vertical-align: middle;
+    }
+    .Userlink {
+        text-decoration: none !important;
     }
 </style>
-<asp:HyperLink ID="hypName" runat="server" CssClass="StreamLink" Visible="false">
+<asp:HyperLink ID="hypName" runat="server" CssClass="Userlink" Visible="false">
     <asp:Label ID="lblprofileusername" runat="server" CssClass="user-name" Visible="false"></asp:Label>
     <asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge profile" Visible="false" data-toggle="tooltip" data-placement="top" title="Stability Verified" />
 </asp:HyperLink>

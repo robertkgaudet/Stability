@@ -204,7 +204,7 @@
                     </asp:HyperLink>
                 </li>
                 <li>
-                    <asp:LinkButton ID="btnDeactivatePage" runat="server" CssClass="deactivateButton" OnClick="btnChangePageStatus_Click"> <i class="fa fa-ban text-danger"></i> De-activate This Team
+                    <asp:LinkButton ID="btnDeactivatePage" runat="server" Visible="false" CssClass="deactivateButton" OnClick="btnChangePageStatus_Click"> <i class="fa fa-ban text-danger"></i> De-activate This Team
                     </asp:LinkButton>
                 </li>
             </ul>

@@ -9,9 +9,6 @@ using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-
-
-
 public partial class V1_NonProfit_People : BaseOrganizationWebForm
 {
     public string _logo;
@@ -235,29 +232,23 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr><a href=\"\\signin\">Sign in</a> to see the list of team members.";
         }
     }
-
     protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
     {
         if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
         {
             RepeaterItem dataItem = (RepeaterItem)e.Item;
-
-
-
             Guid userId = Guid.Empty;
             if (DataBinder.Eval(dataItem.DataItem, "UserId") != null)
             {
                 userId = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId");
             }
-
-      
-			String firstname = (String)DataBinder.Eval(dataItem.DataItem, "Firstname");
-			String lastname = (String)DataBinder.Eval(dataItem.DataItem, "Lastname");
-			String zelloName = (String)DataBinder.Eval(dataItem.DataItem, "ZelloName");
-			String title = (String)DataBinder.Eval(dataItem.DataItem, "Title");
-			String loweredEmail = (String)DataBinder.Eval(dataItem.DataItem, "LoweredEmail");
-			String phoneNUmber = (String)DataBinder.Eval(dataItem.DataItem, "phoneNUmber");
-			String description = (String)DataBinder.Eval(dataItem.DataItem, "Description");
+            String firstname = (String)DataBinder.Eval(dataItem.DataItem, "Firstname");
+            String lastname = (String)DataBinder.Eval(dataItem.DataItem, "Lastname");
+            String zelloName = (String)DataBinder.Eval(dataItem.DataItem, "ZelloName");
+            String title = (String)DataBinder.Eval(dataItem.DataItem, "Title");
+            String loweredEmail = (String)DataBinder.Eval(dataItem.DataItem, "LoweredEmail");
+            String phoneNUmber = (String)DataBinder.Eval(dataItem.DataItem, "phoneNUmber");
+            String description = (String)DataBinder.Eval(dataItem.DataItem, "Description");
             V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
             if (ucTeamLogo != null)
             {
@@ -270,31 +261,30 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			Button btnContact = (Button)e.Item.FindControl("btnContact");
             Button btnManage = (Button)e.Item.FindControl("btnManage");
             Literal litVettingInfo = (Literal)e.Item.FindControl("litVettingInfo");
-			Literal litActiveDate = (Literal)e.Item.FindControl("litActiveDate");
-			if (User.IsInRole("Administrator") || userIsOwner)
-			{
-				bool? vettingComplete = (bool?)DataBinder.Eval(dataItem.DataItem, "VettingComplete");
-				bool? passedVetting = (bool?)DataBinder.Eval(dataItem.DataItem, "PassedVetting");
-				bool? vettingActive = (bool?)DataBinder.Eval(dataItem.DataItem, "VettingActive");
-				//bool? isLockedOut = (bool?)DataBinder.Eval(dataItem.DataItem, "IsLockedOut");
-				String vettingNotes = (String)DataBinder.Eval(dataItem.DataItem, "VettingNotes");
-				DateTime? dateVettingCompleted = (DateTime?)DataBinder.Eval(dataItem.DataItem, "DateVettingCompleted");
-				DateTime? dateVettingStarted = (DateTime?)DataBinder.Eval(dataItem.DataItem, "DateVettingStarted");
-				DateTime? lastActivityDate = (DateTime?)DataBinder.Eval(dataItem.DataItem, "LastLoginDate");
-				divFooter.Visible = true;
-				btnContact.Visible = true;
-				btnManage.Visible = true;
+            Literal litActiveDate = (Literal)e.Item.FindControl("litActiveDate");
+            if (User.IsInRole("Administrator") || userIsOwner || User.IsInRole("Team Administrator"))
+            {
+                bool? vettingComplete = (bool?)DataBinder.Eval(dataItem.DataItem, "VettingComplete");
+                bool? passedVetting = (bool?)DataBinder.Eval(dataItem.DataItem, "PassedVetting");
+                bool? vettingActive = (bool?)DataBinder.Eval(dataItem.DataItem, "VettingActive");
+                //bool? isLockedOut = (bool?)DataBinder.Eval(dataItem.DataItem, "IsLockedOut");
+                String vettingNotes = (String)DataBinder.Eval(dataItem.DataItem, "VettingNotes");
+                DateTime? dateVettingCompleted = (DateTime?)DataBinder.Eval(dataItem.DataItem, "DateVettingCompleted");
+                DateTime? dateVettingStarted = (DateTime?)DataBinder.Eval(dataItem.DataItem, "DateVettingStarted");
+                DateTime? lastActivityDate = (DateTime?)DataBinder.Eval(dataItem.DataItem, "LastLoginDate");
+                divFooter.Visible = true;
+                btnContact.Visible = true;
+                btnManage.Visible = true;
                 isLockedOut = !profileUser.IsApproved;
-				vettingComplete = vettingComplete == null ? false : vettingComplete;
-				passedVetting = passedVetting == null ? false : passedVetting;
-				vettingActive = vettingActive == null ? false : vettingActive;
-				DateTime dateVettingCompletedString = dateVettingCompleted == null ? DateTime.MinValue : (DateTime)dateVettingCompleted;
-				DateTime dateVettingStartedString = dateVettingStarted == null ? DateTime.MinValue : (DateTime)dateVettingStarted;
-				DateTime lastActivityDateString = lastActivityDate == null ? DateTime.MinValue : (DateTime)lastActivityDate;
-				String dateVettingComplete = dateVettingCompletedString == DateTime.MinValue ? "Not Complete" : dateVettingCompletedString.ToLongDateString();
-				String dateVettingStarts = dateVettingStartedString == DateTime.MinValue ? "Not Started" : dateVettingStartedString.ToLongDateString();
-				String lastActivitysDate = lastActivityDateString == DateTime.MinValue ? "Not Started" : lastActivityDateString.ToShortDateString() + " " + lastActivityDateString.ToLongDateString() + " at " + lastActivityDateString.ToLongTimeString();
-
+                vettingComplete = vettingComplete == null ? false : vettingComplete;
+                passedVetting = passedVetting == null ? false : passedVetting;
+                vettingActive = vettingActive == null ? false : vettingActive;
+                DateTime dateVettingCompletedString = dateVettingCompleted == null ? DateTime.MinValue : (DateTime)dateVettingCompleted;
+                DateTime dateVettingStartedString = dateVettingStarted == null ? DateTime.MinValue : (DateTime)dateVettingStarted;
+                DateTime lastActivityDateString = lastActivityDate == null ? DateTime.MinValue : (DateTime)lastActivityDate;
+                String dateVettingComplete = dateVettingCompletedString == DateTime.MinValue ? "Not Complete" : dateVettingCompletedString.ToLongDateString();
+                String dateVettingStarts = dateVettingStartedString == DateTime.MinValue ? "Not Started" : dateVettingStartedString.ToLongDateString();
+                String lastActivitysDate = lastActivityDateString == DateTime.MinValue ? "Not Started" : lastActivityDateString.ToShortDateString() + " " + lastActivityDateString.ToLongDateString() + " at " + lastActivityDateString.ToLongTimeString();
                 string vettingCompleted = (bool)vettingComplete ? "VETTING COMPLETE: " + ((bool)passedVetting ? "<span style='color:yellowgreen'>PASSED</span>" : "<span style='color:orange'>FAILED</span>") : (bool)vettingActive ? "VETTING: PENDING" : "VETTING: NO ACTION TAKEN";
                 vettingCompleted += ((bool)isLockedOut ? "<br><span style='color:orange'>LOCKED OUT</span>" : "<br><span style='color:yellowgreen'>HAS ACCESS</span>") + ("<br>Notes:" + vettingNotes + "<br>Date Started: " + dateVettingStarts + "<br>Date Completed: " + dateVettingComplete + "<br>Last Activity Date: " + lastActivitysDate + "<br>Phone Number: " + phoneNUmber + "<br>Email: " + loweredEmail);
 
