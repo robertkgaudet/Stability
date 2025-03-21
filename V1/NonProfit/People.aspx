@@ -46,6 +46,11 @@
             margin-right: 8px;
             margin-left: 8px;
         }
+
+        .justify-content-center {
+            display: flex !important;
+            justify-content: center !important;
+        }
     </style>
     <script>
         // Step 1: Select all the buttons in the table
@@ -119,6 +124,7 @@
             teamName = '<%=teamName%>';
             signedInUserFullName = '<%=signedInUserFullName%>';
             organizationId = '<%=organizationId%>';
+            organizationId = '<%=organizationId%>';
             sendMessage(signedInUserFullName, organizationId, recipientsName, recipientsEmail, teamName, message);
         }
 
@@ -174,6 +180,118 @@
                 );
         }
     </script>
+    <script type="text/javascript">
+        var currentPagination = '';
+        $(document).ready(function () {
+            // Function to handle the "Next" button click
+            $(document).on("click", "#nextBtn", function () {
+                if (!$('#nextBtn').hasClass('disabled')) {
+                    var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
+                    var currentPage = Math.max(...$(".pagination .page-link").map(function () {
+                        return parseInt($(this).attr("tabindex")) || 0;
+                    }).get());
+
+                    // Increment the current page number
+                    if (currentPage <= totalPages) {
+
+                        // Update tabindex for each page link
+                        $('.page-item a').each(function (index) {
+                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
+                                $(this).attr('tabindex', index + currentPage - 2);
+                                $(this).text(index + currentPage - 2);
+                                $(this).attr("onclick", `triggerSearch(${(index + currentPage - 2)}); return false;`);
+                            }
+                        });
+
+                        // Enable Previous button if not on the first page
+                        if (currentPage > 2) {
+                            $('#previousBtn').removeClass('disabled');
+                        }
+                    }
+
+                    // Disable Next button if on the last page
+                    if (currentPage == totalPages) {
+                        $('#nextBtn').addClass('disabled');
+                    } else {
+                        $('#nextBtn').removeClass('disabled');
+                    }
+                }
+            });
+
+            // Function to handle the "Previous" button click
+            $(document).on("click", "#previousBtn", function () {
+                if (!$('#previousBtn').hasClass('disabled')) {
+                    var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
+                    var currentPage = Math.max(...$(".pagination .page-link").map(function () {
+                        return parseInt($(this).attr("tabindex")) || 0;
+                    }).get());
+                    // Decrease the current page number
+                    var firstPage = 1 + currentPage - 4;
+                    if (firstPage >= 1) {
+
+
+                        // Update tabindex for each page link
+                        $('.page-item a').each(function (index) {
+                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
+                                $(this).attr('tabindex', index + currentPage - 4);
+                                $(this).text(index + currentPage - 4);
+                                $(this).attr("onclick", `triggerSearch(${(index + currentPage - 4)}); return false;`);
+                            }
+                        });
+
+                        // Enable Next button if not on the last page
+                        if (firstPage + 2 < totalPages) {
+                            $('#nextBtn').removeClass('disabled');
+                        }
+
+                        // Disable Previous button if on the first page                    
+                    }
+                    if (firstPage == 1) {
+                        $('#previousBtn').addClass('disabled');
+                    } else {
+                        $('#previousBtn').removeClass('disabled');
+                    }
+                }
+
+            });
+        });
+
+
+        function triggerSearch(pn) {
+            // Set a value to the hidden field            
+            document.getElementById('<%= currentPageValue.ClientID %>').value = pn; // Set custom value here
+            // Remove "active" class from all <li> elements
+            $(".pagination .page-item").removeClass("active");
+
+            // Find the <a> tag with matching tabindex and add "active" to its parent <li>
+            $(".pagination .page-link[tabindex='" + pn + "']").closest(".page-item").addClass("active");
+            currentPagination = $('.navClass').html();
+            // Trigger the search button click event
+            __doPostBack('<%= SearchButton.UniqueID %>', '');
+        }
+        function searchButton() {
+            // Set a value to the hidden field
+            document.getElementById('<%= currentPageValue.ClientID %>').value = 1; // Set custom value here    
+        }
+        function updatePagination() {
+            var totalPage = document.getElementById('<%= totalPageValue.ClientID %>').value;
+            var currentPage = document.getElementById('<%= currentPageValue.ClientID %>').value;
+            if (currentPage == '1') {
+                $(".page-item").not("#previousBtn, #nextBtn").remove();
+                var newPageItem = ''
+                for (var i = 0; i < parseFloat(totalPage); i++) {
+                    if (i == 3) break;
+                    newPageItem += '<li class="page-item'+(i == 0 ? " active" : "")+'" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                }
+                if (newPageItem != '') $('#previousBtn').after(newPageItem);
+                if (totalPage <= 3) $('#nextBtn').addClass('disabled');
+                else $('#nextBtn').removeClass('disabled');
+            }
+            else {
+                $('.navClass').html(currentPagination);
+            }
+        }
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
 
@@ -183,6 +301,7 @@
         <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
         <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank" Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
     </div>
+    <asp:ScriptManager runat="server" ID="ScriptManager1" />
     <div class="panel-body" style="margin-bottom: -27px; padding: 0px;">
         <div class="col-lg-12">
             <div class="row">
@@ -193,12 +312,20 @@
                         </button>
                     </div>
                     <h4 style="margin-left: 18px;">Search</h4>
-                    <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
-                        <asp:Literal ID="litMessage" runat="server"></asp:Literal>
-                    </div>
-                    <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;" visible="false">
-                        <asp:Literal ID="litFilterMessage" runat="server"></asp:Literal>
-                    </div>
+                    <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
+                                <asp:Literal ID="litMessage" runat="server"></asp:Literal>
+                            </div>
+                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;" visible="false">
+                                <asp:Literal ID="litFilterMessage" runat="server"></asp:Literal>
+                            </div>
+                        </ContentTemplate>
+                        <Triggers>
+                            <asp:AsyncPostBackTrigger ControlID="SearchButton" EventName="Click" />
+                        </Triggers>
+                    </asp:UpdatePanel>
+
                     <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers" visible="false">
                         <div class="hpanel" runat="server" id="hpanelJoin" visible="true">
                             <a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
@@ -285,7 +412,7 @@
 
                                 <div class="row mt-4" style="margin-right: 6px;">
                                     <div class="col-md-12 text-right ">
-                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClick="SearchButton_Click" />
+                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
                                         <asp:Button ID="ClearButton" runat="server" CssClass="btn btn-danger btn-sm" Text="Clear" OnClick="ClearButton_Click" />
                                     </div>
                                 </div>
@@ -296,50 +423,76 @@
             </div>
         </div>
     </div>
-    <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
-        <tbody>
-            <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
-                <ItemTemplate>
-                    <tr>
-                        <td style="background-color: white;">
-                            <div class="hpanel">
-                                <div class="panel-body">
-                                    <h5 class="m-b-xs">
-                                        <asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
-                                        <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
+    <asp:UpdatePanel runat="server" ID="updatePeopleList" UpdateMode="Conditional">
+        <ContentTemplate>
+            <asp:Panel runat="server" ID="pnlTable">
+                <asp:HiddenField ID="currentPageValue" runat="server" />
+                <asp:HiddenField ID="totalPageValue" runat="server" />
+                <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
+                    <tbody>
+                        <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
+                            <ItemTemplate>
+                                <tr>
+                                    <td style="background-color: white;">
+                                        <div class="hpanel">
+                                            <div class="panel-body">
+                                                <h5 class="m-b-xs">
+                                                    <asp:HyperLink ID="hypName" runat="server" class="volunteer-name"></asp:HyperLink>
+                                                    <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
 
 
-                                    </h5>
-                                    <p>
-                                        <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
-                                        <asp:Literal ID="litDescription" runat="server"></asp:Literal>
-                                    </p>
-                                    <div class="pull-right">
-                                        <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
-                                    </div>
-                                    <asp:Literal ID="litSkills" runat="server"></asp:Literal>
-                                    <asp:Literal ID="litResources" runat="server"></asp:Literal>
-                                </div>
-                                <div class="panel-footer" id="divFooter" runat="server" visible="false">
-                                    <div class="text-muted small">
-                                        <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </ItemTemplate>
-            </asp:Repeater>
-        </tbody>
-        <tfoot>
-            <tr>
-                <td>
-                    <br />
-                    <ul class="pagination pull-right"></ul>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+                                                </h5>
+                                                <p>
+                                                    <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
+                                                    <asp:Literal ID="litDescription" runat="server"></asp:Literal>
+                                                </p>
+                                                <div class="pull-right">
+                                                    <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                                </div>
+                                                <asp:Literal ID="litSkills" runat="server"></asp:Literal>
+                                                <asp:Literal ID="litResources" runat="server"></asp:Literal>
+                                            </div>
+                                            <div class="panel-footer" id="divFooter" runat="server" visible="false">
+                                                <div class="text-muted small">
+                                                    <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <br />
+                                <%--<asp:Button ID="TriggerSearchButton" runat="server" Text="Trigger Search" OnClientClick="triggerSearch(1); return false;" />--%>
+                                <nav class="navClass" aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item disabled" id="previousBtn">
+                                            <a class="page-link" href="javascript:void(0)" tabindex="-1">Previous</a>
+                                        </li>
+
+                                        <li class="page-item" id="nextBtn">
+                                            <a class="page-link" href="javascript:void(0)" tabindex="0">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </asp:Panel>
+        </ContentTemplate>
+        <Triggers>
+            <asp:AsyncPostBackTrigger ControlID="SearchButton" EventName="Click" />
+        </Triggers>
+    </asp:UpdatePanel>
+
+
+
     <div class="modal fade" id="messageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

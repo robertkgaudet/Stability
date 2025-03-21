@@ -33,11 +33,10 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 	public bool hideTeamList = false;
 	protected void Page_Load(object sender, EventArgs e)
 	{
-
-        if (!IsPostBack)
-        {
-            LoadDropdowns();
-        }
+        organizationId = Request.QueryString["organizationId"];
+        skillId = Request.QueryString["skillId"];
+        resourceId = Request.QueryString["resourceId"];
+        
         ucTeamFooter.PageName = "peoplePage";
 		ucTeamHeader.PageName = "Team Members";
 
@@ -46,9 +45,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 		//BEGIN HEADER PROPERTIES
 		////////////////////////
 
-		organizationId = Request.QueryString["organizationId"];
-		skillId = Request.QueryString["skillId"];
-		resourceId = Request.QueryString["resourceId"];
+
 		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		_coverImage = causePhotoFolder + "businesscoverimage.png";
 
@@ -166,39 +163,16 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 				//If user is on team or an admin or the owner they can see this team.
 				hypPrintableTeamList.Visible = true;
 				hypPrintableTeamList.NavigateUrl = "/V1/NonProfitAdministration/PrintableTeamList.aspx?organizationId=" + organizationId + "&skillId=" + skillId + "&resourceId=" + resourceId;
-				IEnumerable<PeopleList> peopleList;
+				
 				//ADMIN SEES ALL USERS
-				peopleList = from uo in dc.UserOrganizations
-							 join p in dc.Profiles on uo.UserId equals p.UserId
-							 join net in dc.aspnet_Memberships on p.UserId equals net.UserId
-							 join u in dc.aspnet_Users on p.UserId equals u.UserId
-							 where uo.OrganizationId == new Guid(organizationId) && net.IsLockedOut == false
-							 orderby net.LastLoginDate descending
-							 select new PeopleList(p.Firstname, net.CreateDate, p.Description, net.LoweredEmail, 
-							 p.PhoneNumber,
-							 p.Lastname, p.UserId, p.DateVettingCompleted, p.DateVettingStarted, 
-							 p.VettingNotes, p.VettingActive, p.VettingComplete, p.PassedVetting, 
-							 p.Title, p.ZelloName, u.LastActivityDate, net.LastLoginDate, net.IsApproved);
+				
 
-				if (isUserOnTeam && !User.IsInRole("Administrator") && !userIsOwner)
-				{
-					//User is on team but it's not the admin or team owner so limit what they can see.
-					//Hide unapproved users and unvetted users
-					peopleList = from pl in peopleList
-								 where pl.IsApproved == true && pl.PassedVetting == true
-								 orderby pl.LastLoginDate descending
-								 select pl;
-				}
+				
 				if (!String.IsNullOrEmpty(skillId))
 				{
 					var skillName = (from s in dc.Skills
 									 where s.SkillId == new Guid(skillId)
-									 select new { s.Name }).SingleOrDefault();
-
-					peopleList = from pl in peopleList
-								 join spl in dc.UserSkills on pl.UserId equals spl.UserId
-								 where spl.SkillId == new Guid(skillId)
-								 select pl;
+									 select new { s.Name }).SingleOrDefault();					
 
 					divFilterMessage.Visible = true;
 					litFilterMessage.Text = "<i class=\"fa fa-2x fa-hand-pointer-o\"></i><hr>Showing team members with the '" + skillName.Name + "' skillset.";
@@ -207,18 +181,13 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 				{
 					var resouceName = (from r in dc.Resources
 									   where r.ResourceId == new Guid(resourceId)
-									   select new { r.Name }).SingleOrDefault();
-
-					peopleList = from pl in peopleList
-								 join rpl in dc.UserResources on pl.UserId equals rpl.UserId
-								 where rpl.ResourceId == new Guid(resourceId)
-								 select pl;
+									   select new { r.Name }).SingleOrDefault();					
 
 					divFilterMessage.Visible = true;
 					litFilterMessage.Text = "<i class=\"fa fa-2x fa-truck\"></i><hr>Showing team members with a '" + resouceName.Name + "' as an available resource.";
 				}
 				hpanelMembers.Visible = true;
-				rptVolunteers.DataSource = peopleList;
+				rptVolunteers.DataSource = new List<PeopleList>();
 				rptVolunteers.DataBind();
 			}
 			else
@@ -234,7 +203,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			divUpdateMessage.Visible = true;
 			litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr><a href=\"\\signin\">Sign in</a> to see the list of team members.";
 		}
-	}
+
+        if (!IsPostBack)
+        {
+            LoadDropdowns();
+            //SearchButton_Click(SearchButton, EventArgs.Empty); // Calls the search function
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdatePanelTrigger", "setTimeout(function() { __doPostBack('" + SearchButton.UniqueID + "', ''); }, 100);", true);
+
+        }
+    }
 
 	protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
 	{
@@ -430,144 +407,60 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     }
     protected void SearchButton_Click(object sender, EventArgs e)
     {
-        List<string> selectedSkills = GetSelectedValues(ddlSkills);
-        List<string> selectedResources = GetSelectedValues(ddlResources);
+		if (isUserOnTeam || User.IsInRole("Administrator") || userIsOwner)
+		{
+            //If user is on team or an admin or the owner they can see this team.
+            List<string> selectedSkills = GetSelectedValues(ddlSkills);
+            List<string> selectedResources = GetSelectedValues(ddlResources);
 
-        bool emailConnected = txtEmailconnect.Checked;
-        bool isVerified = txtIsVerified.Checked;
-        bool isVetted = txtIsVetted.Checked;
-        bool optedSMS = txtOptedSMS.Checked;
+            bool emailConnected = txtEmailconnect.Checked;
+            bool isVerified = txtIsVerified.Checked;
+            bool isVetted = txtIsVetted.Checked;
+            bool optedSMS = txtOptedSMS.Checked;
 
-        string startDateText = Request.Form[StartDate.UniqueID];
-        string endDateText = Request.Form[EndDate.UniqueID];
+            string startDateText = Request.Form[StartDate.UniqueID];
+            string endDateText = Request.Form[EndDate.UniqueID];
 
-        DateTime? startDate = ParseDate(startDateText);
-        DateTime? endDate = ParseDate(endDateText);
-        string nameSearchTerm = filter.Text.Trim().ToLower();
+            DateTime? startDate = ParseDate(startDateText);
+            DateTime? endDate = ParseDate(endDateText);
+            string nameSearchTerm = filter.Text.Trim().ToLower();
 
 
-        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
-        {
-  
-            var skillMatchedUsers = new HashSet<Guid>(
-                dc.UserSkills
-                .Where(us => selectedSkills.Contains(us.SkillId.ToString()))
-                .Select(us => us.UserId)
-                .ToList()
-            );
-
-            var resourceMatchedUsers = new HashSet<Guid>(
-                dc.UserResources
-                .Where(ur => selectedResources.Contains(ur.ResourceId.ToString()))
-                .Select(ur => ur.UserId)
-                .ToList()
-            ); 
-			
-			var allMatchedUsers = skillMatchedUsers.Union(resourceMatchedUsers).ToHashSet();
-
-            var peopleListQuery = from uo in dc.UserOrganizations
-                                  join p in dc.Profiles on uo.UserId equals p.UserId
-                                  join net in dc.aspnet_Memberships on p.UserId equals net.UserId
-                                  join u in dc.aspnet_Users on p.UserId equals u.UserId
-                                  join uad in dc.UserAvailableDates on p.UserId equals uad.UserId into uadGroup
-                                  from uad in uadGroup.DefaultIfEmpty() 
-                                  where uo.OrganizationId == new Guid(organizationId) && !net.IsLockedOut
-                                  select new
-                                  {
-                                      p.Firstname,
-                                      p.Lastname,
-                                      net.CreateDate,
-                                      p.Description,
-                                      net.LoweredEmail,
-                                      p.PhoneNumber,
-                                      p.UserId,
-                                      p.DateVettingCompleted,
-                                      p.DateVettingStarted,
-                                      p.VettingNotes,
-                                      p.VettingActive,
-                                      p.VettingComplete,
-                                      p.PassedVetting,
-                                      p.Title,
-                                      p.ZelloName,
-                                      u.LastActivityDate,
-                                      net.LastLoginDate,
-                                      net.IsApproved,
-                                      p.ReceiveDeploymentSMS,
-                                      DateAvailable = uad != null ? uad.DateAvailable : (DateTime?)null // Handle null values
-                                  };
-
-            if (startDate.HasValue || endDate.HasValue)
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
-                if (startDate.HasValue)
+                
+                var selectedSkillsParam = !selectedSkills.Any() ? skillId == null ? "" : skillId : string.Join(",", selectedSkills);
+                var selectedResourcesParam = !selectedResources.Any() ? resourceId == null ? "" : resourceId : string.Join(",", selectedResources);
+                var nameSearchTermParam = string.IsNullOrEmpty(nameSearchTerm) ? "" : nameSearchTerm;
+
+                // Execute stored procedure and return mapped results
+                dc.CommandTimeout = 300;
+                var result = dc.ExecuteQuery<PeopleList>(
+                    "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, emailConnected, isVetted, optedSMS).ToList();				
+
+				// Show Filter Message if Any Filter Applied
+				divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS;
+				litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
+
+				if (isUserOnTeam && !User.IsInRole("Administrator") && !userIsOwner)
                 {
-
-                    peopleListQuery = peopleListQuery.Where(p =>
-                        p.DateAvailable != null && p.DateAvailable >= startDate.Value.Date
-                    );
+					//User is on team but it's not the admin or team owner so limit what they can see.
+					//Hide unapproved users and unvetted users
+					result = result.Where(x => x.IsApproved == true && x.PassedVetting == true).ToList();
                 }
-                if (endDate.HasValue)
-                {
 
-                    peopleListQuery = peopleListQuery.Where(p =>
-                        p.DateAvailable != null && p.DateAvailable <= endDate.Value.Date
-                    );
-                }
-            }
-			
-            if (selectedSkills.Any() || selectedResources.Any())
-            {
-                peopleListQuery = peopleListQuery.AsEnumerable().Where(pl => allMatchedUsers.Contains(pl.UserId)).AsQueryable();
-			}
-
-            if (!string.IsNullOrEmpty(nameSearchTerm))
-            {
-
-                var searchTerms = nameSearchTerm.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-
-                peopleListQuery = peopleListQuery.AsEnumerable().Where(pl =>
-                    searchTerms.All(term =>
-                        (!string.IsNullOrEmpty(pl.Firstname) && pl.Firstname.ToLower().Contains(term)) ||
-                        (!string.IsNullOrEmpty(pl.Lastname) && pl.Lastname.ToLower().Contains(term))
-                    )
-                ).AsQueryable();
-            }
-           
-
-            //if (emailConnected)
-            //{
-            //    peopleListQuery = peopleListQuery.Where(pl => !string.IsNullOrEmpty(pl.LoweredEmail));
-            //}
-            if (emailConnected)
-            {
-                peopleListQuery = peopleListQuery.Where(pl => pl.LoweredEmail != null && pl.LoweredEmail != "");
-            }
-
-            if (isVetted)
-            {
-                peopleListQuery = peopleListQuery.Where(pl => pl.VettingActive ?? false);
-            }
-
-            if (optedSMS)
-            {
-                peopleListQuery = peopleListQuery.Where(pl => pl.ReceiveDeploymentSMS ?? false);
-            }
-
-            // Execute Query with Sorting
-            var peopleList = peopleListQuery
-                .OrderByDescending(pl => pl.LastLoginDate).Distinct()
-                .ToList();
-
-            //// Show Filter Message if Any Filter Applied
-            //divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS || isStartDateValid || isEndDateValid;
-            //litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
-
-            // Bind Data
-            rptVolunteers.DataSource = peopleList;
-            rptVolunteers.DataBind();
-        }
+                // Bind Data.
+                currentPageValue.Value = currentPageValue.Value == "" ? "1" : currentPageValue.Value;
+                var pNumber = Convert.ToInt32(currentPageValue.Value);
+                totalPageValue.Value = Convert.ToString(Math.Ceiling((double)result.Count / 20));
+                rptVolunteers.DataSource = result.Skip(20 * (pNumber - 1)).Take(20);
+                rptVolunteers.DataBind();
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "CallMyFunction", "updatePagination();", true);
+            }            
+		}
+        
     }
-
+	// sir we don't have to turn on the tracker 
 
     protected void ClearButton_Click(object sender, EventArgs e)
     {
@@ -629,7 +522,11 @@ internal class PeopleList
 		IsApproved = isApproved;
 	}
 
-	public override bool Equals(object obj)
+    public PeopleList()
+    {
+			
+    }
+    public override bool Equals(object obj)
 	{
 		PeopleList other = obj as PeopleList;
 		return !ReferenceEquals(other, null) &&
