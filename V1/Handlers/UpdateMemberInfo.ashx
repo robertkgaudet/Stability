@@ -1,9 +1,12 @@
 ﻿<%@ WebHandler Language="C#" Class="UpdateMemberInfo" %>
 using System;
 using System.Web;
-using System.Linq;
+using System.Web.Services;
 using System.Web.SessionState;
-
+using System.Linq;
+using System.Web.Script.Serialization;
+[WebService(Namespace = "http://tempuri.org/")]
+[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
 {
     public void ProcessRequest(HttpContext context)
@@ -37,6 +40,9 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             }
             bool stabilityVerified = profile.IsDisasterReadyCertified;
             bool showTeamLogo = userOrg.ShowTeamLogo ?? false;
+            var teamAdministratorRole = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
+            Guid teamAdministratorRoleId = teamAdministratorRole.RoleId;
+            bool makeTeamAdministrator = dc.aspnet_UsersInRoles.Any(r => r.UserId == userId && r.RoleId == teamAdministratorRoleId);
             string vettingStatus = "";
             if (profile.VettingActive == true)
             {
@@ -52,60 +58,106 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                 vettingStatus = vettingStatus,
                 vettingNotes = profile.VettingNotes,
                 stabilityVerified = stabilityVerified,
-                showTeamLogo = showTeamLogo
+                showTeamLogo = showTeamLogo,
+                makeTeamAdministrator = makeTeamAdministrator
             };
             context.Response.Write(Newtonsoft.Json.JsonConvert.SerializeObject(response));
         }
     }
     private void UpdateUserData(HttpContext context)
     {
-        Guid userId = new Guid(context.Request.Form["userId"]);
-        string vettingStatus = context.Request.Form["vettingStatus"];
-        string vettingNotes = context.Request.Form["vettingNotes"];
-        bool stabilityVerified = bool.Parse(context.Request.Form["stabilityVerified"]);
-        bool showTeamLogo = bool.Parse(context.Request.Form["showTeamLogo"]);
-
-        using (var dc = new CrowdReliefDBDataContext())
+        context.Response.ContentType = "application/json";
+        try
         {
-            var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
-            if (profile != null)
+            Guid userId = new Guid(context.Request.Form["userId"]);
+            string vettingStatus = context.Request.Form["vettingStatus"];
+            string vettingNotes = context.Request.Form["vettingNotes"];
+            bool stabilityVerified = bool.Parse(context.Request.Form["stabilityVerified"]);
+            bool showTeamLogo = bool.Parse(context.Request.Form["showTeamLogo"]);
+            bool makeTeamAdministrator = bool.Parse(context.Request.Form["makeTeamAdministrator"]);
+            using (var dc = new CrowdReliefDBDataContext())
             {
-                profile.VettingNotes = vettingNotes;
-                profile.IsDisasterReadyCertified = stabilityVerified;
-
-                switch (vettingStatus)
+                var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
+                if (profile != null)
                 {
-                    case "VettingStarted":
-                        profile.DateVettingStarted = DateTime.Now;
-                        profile.VettingActive = true;
-                        break;
-                    case "VettingComplete_Failed":
-                        profile.DateVettingCompleted = DateTime.Now;
-                        profile.VettingActive = false;
-                        profile.VettingComplete = true;
-                        profile.PassedVetting = false;
-                        break;
-                    case "VettingComplete_Passed":
-                        profile.DateVettingCompleted = DateTime.Now;
-                        profile.VettingActive = false;
-                        profile.VettingComplete = true;
-                        profile.PassedVetting = true;
-                        break;
+                    profile.VettingNotes = vettingNotes;
+                    profile.IsDisasterReadyCertified = stabilityVerified;
+
+                    switch (vettingStatus)
+                    {
+                        case "VettingStarted":
+                            profile.DateVettingStarted = DateTime.Now;
+                            profile.VettingActive = true;
+                            break;
+                        case "VettingComplete_Failed":
+                            profile.DateVettingCompleted = DateTime.Now;
+                            profile.VettingActive = false;
+                            profile.VettingComplete = true;
+                            profile.PassedVetting = false;
+                            break;
+                        case "VettingComplete_Passed":
+                            profile.DateVettingCompleted = DateTime.Now;
+                            profile.VettingActive = false;
+                            profile.VettingComplete = true;
+                            profile.PassedVetting = true;
+                            break;
+                    }
                 }
-            }
+                if (makeTeamAdministrator)
+                {
+                    var role = dc.aspnet_Roles
+                                  .FirstOrDefault(r => r.RoleName == "Team Administrator");
 
-            var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
-            if (userOrg != null)
-            {
-                userOrg.ShowTeamLogo = showTeamLogo;
-            }
+                    if (role != null)
+                    {
 
-            dc.SubmitChanges();
+                        var existingRole = dc.aspnet_UsersInRoles
+                                             .FirstOrDefault(ur => ur.UserId == userId && ur.RoleId == role.RoleId);
+                        if (existingRole == null)
+                        {
+                            var newRoleAssignment = new aspnet_UsersInRole
+                            {
+                                UserId = userId,
+                                RoleId = role.RoleId
+                            };
+                            dc.aspnet_UsersInRoles.InsertOnSubmit(newRoleAssignment);
+                            dc.SubmitChanges();
+                        }
+                    }
+                }
+                else
+                {
+                    var role = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
+                    if (role != null)
+                    {
+                        var userRole = dc.aspnet_UsersInRoles.FirstOrDefault(ur => ur.UserId == userId && ur.RoleId == role.RoleId);
+                        if (userRole != null)
+                        {
+                            dc.aspnet_UsersInRoles.DeleteOnSubmit(userRole);
+                            dc.SubmitChanges();
+                        }
+                    }
+                }
+                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
+                if (userOrg != null)
+                {
+                    userOrg.ShowTeamLogo = showTeamLogo;
+                }
+                dc.SubmitChanges();
+            }
+            var data = new { Success = true, Message = "Role updated successfully." };
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string json = js.Serialize(data);
+            context.Response.Write(json);
         }
-
-        context.Response.Write("{\"success\": true}");
+        catch (Exception ex)
+        {
+            var data = new { Success = false, Message = ex.Message };
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string json = js.Serialize(data);
+            context.Response.Write(json);
+        }
     }
-
     public bool IsReusable
     {
         get
