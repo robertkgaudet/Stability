@@ -183,7 +183,7 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
 
                 if (postReaction.Count() > 0)
                 {
-                    if (postReaction.FirstOrDefault(f => f.CreatedBy == new Guid(userId)) != null)
+                    if (userId != null && postReaction.FirstOrDefault(f => f.CreatedBy == new Guid(userId)) != null)
                     {
                         if ((postReaction.Count() - 1) > 0)
                         {
