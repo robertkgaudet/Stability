@@ -23,22 +23,17 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                 if (profile != null)
                 {
                     UserName = profile.Firstname + " " + profile.Lastname;
-                    var userRole = (from ur in dc.aspnet_UsersInRoles
+                    var userRoles = from ur in dc.aspnet_UsersInRoles
                                     join r in dc.aspnet_Roles on ur.RoleId equals r.RoleId
                                     where ur.UserId == UserId
-                                    select r.RoleName).FirstOrDefault();
-
-                    // Append role to the username if present
-                    if (!string.IsNullOrEmpty(userRole))
+                                    select r.RoleName; 
+                    if (userRoles.Contains("Team Administrator"))
                     {
-                        if (userRole == "Team Administrator")
-                        {
-                            UserName += " (Team Administrator)";
-                        }
-                        else if (userRole == "Administrator")
-                        {
-                            UserName += " (Team Owner)";
-                        }
+                        UserName += " (Team Administrator)";
+                    }
+                    else if (userRoles.Contains("Administrator"))
+                    {
+                        UserName += " (Team Owner)";
                     }
                     lblprofileusername.Text = UserName;
                     lblprofileusername.Visible = true;

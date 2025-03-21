@@ -41,7 +41,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             bool stabilityVerified = profile.IsDisasterReadyCertified;
             bool showTeamLogo = userOrg.ShowTeamLogo ?? false;
             var teamAdministratorRole = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
-            Guid teamAdministratorRoleId = teamAdministratorRole.RoleId; 
+            Guid teamAdministratorRoleId = teamAdministratorRole.RoleId;
             bool makeTeamAdministrator = dc.aspnet_UsersInRoles.Any(r => r.UserId == userId && r.RoleId == teamAdministratorRoleId);
             string vettingStatus = "";
             if (profile.VettingActive == true)
@@ -107,17 +107,14 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                 {
                     var role = dc.aspnet_Roles
                                   .FirstOrDefault(r => r.RoleName == "Team Administrator");
+
                     if (role != null)
                     {
-                        var existingRole = dc.aspnet_UsersInRoles.FirstOrDefault(ur => ur.UserId == userId && ur.RoleId == role.RoleId);
+
+                        var existingRole = dc.aspnet_UsersInRoles
+                                             .FirstOrDefault(ur => ur.UserId == userId && ur.RoleId == role.RoleId);
                         if (existingRole == null)
                         {
-                            var userRole = dc.aspnet_UsersInRoles.FirstOrDefault(ur => ur.UserId == userId);
-                            if (userRole != null)
-                            {
-                                dc.aspnet_UsersInRoles.DeleteOnSubmit(userRole);
-                                dc.SubmitChanges();
-                            }
                             var newRoleAssignment = new aspnet_UsersInRole
                             {
                                 UserId = userId,
@@ -130,28 +127,13 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                 }
                 else
                 {
-                    var role = dc.aspnet_Roles
-                                  .FirstOrDefault(r => r.RoleName == "Member");
+                    var role = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
                     if (role != null)
                     {
-                        var existingRole = dc.aspnet_UsersInRoles
-                                             .FirstOrDefault(ur => ur.UserId == userId && ur.RoleId == role.RoleId);
-                        if (existingRole == null)
+                        var userRole = dc.aspnet_UsersInRoles.FirstOrDefault(ur => ur.UserId == userId && ur.RoleId == role.RoleId);
+                        if (userRole != null)
                         {
-                            var userRole = dc.aspnet_UsersInRoles
-                                             .FirstOrDefault(ur => ur.UserId == userId);
-
-                            if (userRole != null)
-                            {
-                                dc.aspnet_UsersInRoles.DeleteOnSubmit(userRole);
-                                dc.SubmitChanges();
-                            }
-                            var newRoleAssignment = new aspnet_UsersInRole
-                            {
-                                UserId = userId,
-                                RoleId = role.RoleId
-                            };
-                            dc.aspnet_UsersInRoles.InsertOnSubmit(newRoleAssignment);
+                            dc.aspnet_UsersInRoles.DeleteOnSubmit(userRole);
                             dc.SubmitChanges();
                         }
                     }
