@@ -80,7 +80,6 @@
                                     //    data: JSON.stringify({ userId: item.UserId }),
                                     //    contentType: 'application/json; charset=utf-8',
                                     //    success: function (response) {
-                                    //        debugger;
                                     //        $('#teamLogo_' + item.UserId).html(response);
                                     //    },
                                     //    error: function (xhr, status, error) {
@@ -129,7 +128,6 @@
                                         //    data: JSON.stringify({ userId: reply.UserId }),
                                         //    contentType: 'application/json; charset=utf-8',
                                         //    success: function (response) {
-                                        //        debugger;
                                         //        $('#teamLogo_' + reply.UserId).html(response);
                                         //    },
                                         //    error: function (xhr, status, error) {
@@ -416,7 +414,6 @@
             });
 
             $(document).on('click', '.addComment', function () {
-                debugger;
                 let postId = $("#postIdForComments").val();
                 const commentText = $(".commentTextarea").val();
                 let commentId = gCommentId;
