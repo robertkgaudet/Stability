@@ -40,7 +40,9 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             }
             bool stabilityVerified = profile.IsDisasterReadyCertified;
             bool showTeamLogo = userOrg.ShowTeamLogo ?? false;
-            bool makeTeamAdministrator = dc.aspnet_UsersInRoles.Any(r => r.UserId == userId && r.RoleId == new Guid("103F53B2-9B88-4E5A-B023-C66F26E9E9DE"));
+            var teamAdministratorRole = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
+            Guid teamAdministratorRoleId = teamAdministratorRole.RoleId; 
+            bool makeTeamAdministrator = dc.aspnet_UsersInRoles.Any(r => r.UserId == userId && r.RoleId == teamAdministratorRoleId);
             string vettingStatus = "";
             if (profile.VettingActive == true)
             {
@@ -134,7 +136,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                     {
                         var existingRole = dc.aspnet_UsersInRoles
                                              .FirstOrDefault(ur => ur.UserId == userId && ur.RoleId == role.RoleId);
-                        if (existingRole == null) 
+                        if (existingRole == null)
                         {
                             var userRole = dc.aspnet_UsersInRoles
                                              .FirstOrDefault(ur => ur.UserId == userId);
