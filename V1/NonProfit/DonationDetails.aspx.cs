@@ -72,6 +72,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                             {
                                 Guid userId = user.UserId;
                                 var profile = (from p in dc.Profiles
+                                               join d in dc.Donations on p.UserId equals d.UserId
                                                where p.UserId == userId
                                                select new
                                                {
@@ -80,13 +81,14 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                                                    p.Address,
                                                    p.City,
                                                    p.State,
-                                                   p.Zip
+                                                   p.Zip,
+                                                   d.EmailAddress 
                                                }).SingleOrDefault();
                                 if (profile != null)
                                 {
                                     txtfirstname.Text = profile.Firstname;
                                     txtlastname.Text = profile.Lastname;
-                                    txtemail.Text = username;
+                                    txtemail.Text = profile.EmailAddress;
                                     txthomeaddress.Text = profile.Address;
                                     txtCity.Text = profile.City;
 

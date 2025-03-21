@@ -67,9 +67,8 @@
         <div class="icon">✔️</div>
         <h1>Thank You!</h1>
         <p>Your donation was successful. We greatly appreciate your support!</p>
-        <p><strong> <%=TransactionId%> </strong></p>
-        <a href="/" class="btn">Return to Homepage</a>
-        <% if (ShowRegisterButton == false)
+        <a href="/V1/Member/Default.aspx" class="btn">Return to Homepage</a>
+       <% if (ShowRegisterButton == false)
             { %>
         <a href="/V1/Register.aspx?role=Donor&transactionId=<%=TransactionId%>" id="btnRegister" class="btn">Register</a>
         <% } %>
