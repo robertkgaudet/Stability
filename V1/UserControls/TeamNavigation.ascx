@@ -171,15 +171,14 @@
                     <asp:HyperLink runat="server" ID="hypDonationDashboard" CssClass="donationDashboard"> <i class="fa fa-tachometer text-primary"></i> Donations Dashboard
                     </asp:HyperLink>
                 </li>
-
-                <li>
-                    <asp:HyperLink runat="server" ID="hypLogoUpload" CssClass="logoUploadButton"> <i class="fa fa-upload text-primary"></i> Upload Team Profile Logo
-                    </asp:HyperLink>
-                </li>
                 <li>
                     <asp:HyperLink runat="server" ID="hypSquareLogoUpload"  CssClass="squareLogoUploadButton">  <i class="fa fa-upload text-primary"></i>Upload Website Logo
                     </asp:HyperLink>
                 </li>
+                <li>
+                    <asp:HyperLink runat="server" ID="hypLogoUpload" CssClass="logoUploadButton"> <i class="fa fa-upload text-primary"></i> Upload Team Profile Logo
+                    </asp:HyperLink>
+                </li>         
                 <li>
                     <asp:HyperLink runat="server" ID="hypCoverImageUpload" CssClass="coverUploadButton">  <i class="fa fa-image text-primary"></i> Upload Cover Image
                     </asp:HyperLink>

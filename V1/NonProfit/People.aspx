@@ -309,8 +309,8 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
-                                            <b>Search By Member  :</b>
-                                            <asp:TextBox ID="filter" runat="server" CssClass="form-control" placeholder="Search By Member "></asp:TextBox>
+                                            <b>Search By Member Name  :</b>
+                                            <asp:TextBox ID="filter" runat="server" CssClass="form-control" placeholder="Search By Member Name "></asp:TextBox>
                                         </div>
                                     </div>
 
