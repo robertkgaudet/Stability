@@ -72,7 +72,7 @@
 	height:22px;
 }
 	.profile{
-      margin-right: 2px !important;
+      margin-right: -2px !important;
     margin-top: 5px !important;
 }
 
@@ -86,6 +86,9 @@
 	.StreamLink {
     text-decoration:none !important;
 }
+	.team-logo{
+     margin-bottom: 4px !important;
+	}
 </style>
 <script>
 	$(document).ready(function () {

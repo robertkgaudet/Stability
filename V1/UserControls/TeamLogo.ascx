@@ -7,10 +7,9 @@
         vertical-align: middle;
         margin-right: 0px;
     }
-
     .team-logo {
-        width: 20px;
-        height: 20px;
+        width: 16px;
+        height: 16px;
         border-radius: 50%;
         vertical-align: middle;
         margin-right: 5px;
