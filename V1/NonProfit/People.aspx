@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
+
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
@@ -125,16 +126,15 @@
 
         var currentUserId = null;
 
-        function setUserId(button) {      
+        function setUserId(button) {
             currentUserId = button.getAttribute('data-userid');
             return false;
         }
-        function fetchUserData() {         
+        function fetchUserData() {
             if (!currentUserId) {
                 alert("User ID not set.");
                 return;
             }
-
             $.ajax({
                 type: "GET",
                 url: "/V1/Handlers/UpdateMemberInfo.ashx",
@@ -166,9 +166,16 @@
             }
             var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
             var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
-            var stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
             var showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
-            var makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
+
+            var stabilityVerified = false;
+            var makeTeamAdministrator = false;
+
+             <% if (User.IsInRole("Administrator"))
+        { %>
+            stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
+            makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
+    <% } %>
             updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
         }
         function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator) {
@@ -188,14 +195,19 @@
                 contentType: "application/x-www-form-urlencoded; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    if (response.success) {
+                    if (response.Success) {
                         $('#manageMemberModal').modal('hide');
                         location.reload();
                     } else {
-                        alert("Error: " + response.error);
+                        alert("Error: " + response.Message);
                     }
                 },
                 error: function (xhr, status, error) {
+                    divMessageError.style.visibility = 'visible';
+                    divErrorMessage.style.visibility = 'visible';
+                    divMessageError.hidden = false;
+                    divErrorMessage.hidden = false;
+                    divErrorMessage.innerHTML += xhr.responseText;
                 }
             });
         }
@@ -398,10 +410,12 @@
                         <td style="background-color: white;">
                             <div class="hpanel">
                                 <div class="panel-body">
-                                    <h5 class="m-b-xs" style="display: flex; align-items: center; justify-content: space-between;">
+                                    <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: space-between;">
                                         <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
                                         <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton"
                                             data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                        <asp:Button ID="Button1" runat="server" Text="Manage" Visible="false" CssClass="btn btn-primary">
+                                        </asp:Button>
                                     </h5>
                                     <p>
                                         <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
@@ -473,7 +487,7 @@
                 <div class="color-line"></div>
                 <div class="modal-header text-center">
                     <h5 class="modal-title">Update Member Status</h5>
-                   
+
                 </div>
                 <!-- Success and Error Messages -->
                 <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
@@ -484,7 +498,7 @@
                     <div id="divManageErrorMessage"></div>
                 </div>
                 <!-- Modal body -->
-                <div class="modal-body"> 
+                <div class="modal-body">
                     <div class="form-group">
                         <label for="rblManageUserStatus">Update Member Vetting Status:</label>
                         <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
@@ -504,19 +518,22 @@
                     <!-- Checkboxes -->
                     <div class="form-group form-check">
                         <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageShowDonateButton.ClientID %>">Enable
+                        <label class="form-check-label" for="<%= chkManageShowDonateButton.ClientID %>">
+                            Enable
                             Team Logo</label>
                     </div>
                     <% if (User.IsInRole("Administrator"))
                         { %>
                     <div class="form-group form-check">
                         <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">Stability
+                        <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
+                            Stability
                             Verified</label>
                     </div>
                     <div class="form-group form-check">
                         <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">Make
+                        <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
+                            Make
                             Team Administrator</label>
                     </div>
                     <% } %>

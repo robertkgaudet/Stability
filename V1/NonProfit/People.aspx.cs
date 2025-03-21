@@ -259,6 +259,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 			bool isLockedOut = false;
 			HtmlGenericControl divFooter = (HtmlGenericControl)e.Item.FindControl("divFooter");
 			Button btnContact = (Button)e.Item.FindControl("btnContact");
+            HtmlGenericControl h5Container = (HtmlGenericControl)e.Item.FindControl("h5Container");
             Button btnManage = (Button)e.Item.FindControl("btnManage");
             Literal litVettingInfo = (Literal)e.Item.FindControl("litVettingInfo");
             Literal litActiveDate = (Literal)e.Item.FindControl("litActiveDate");
@@ -274,6 +275,14 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 DateTime? lastActivityDate = (DateTime?)DataBinder.Eval(dataItem.DataItem, "LastLoginDate");
                 divFooter.Visible = true;
                 btnContact.Visible = true;
+                if (btnContact.Visible || btnManage.Visible)
+                {
+                    h5Container.Style["display"] = "flex"; 
+                }
+                else
+                {
+                    h5Container.Style.Remove("display"); 
+                }
                 btnManage.Visible = true;
                 isLockedOut = !profileUser.IsApproved;
                 vettingComplete = vettingComplete == null ? false : vettingComplete;
