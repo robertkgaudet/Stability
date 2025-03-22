@@ -273,6 +273,28 @@
             // Set a value to the hidden field
             document.getElementById('<%= currentPageValue.ClientID %>').value = 1; // Set custom value here    
         }
+        function resetSearch() {
+            // Set a value to the hidden field            
+            document.getElementById('<%= currentPageValue.ClientID %>').value = 1; // Set custom value here                        
+            document.getElementById('<%= filter.ClientID %>').value = ''; // Set custom value here                        
+            document.getElementById('txtlocation').value = ''; // Set custom value here                        
+            document.getElementById('<%= txtIsVetted.ClientID %>').checked = false;// Set custom value here                        
+            document.getElementById('<%= txtOptedSMS.ClientID %>').checked = false; // Set custom value here                        
+            document.getElementById('<%= txtEmailconnect.ClientID %>').checked = false; // Set custom value here                        
+            document.getElementById('<%= txtIsVerified.ClientID %>').checked = false; // Set custom value here
+
+          
+            $('#StartDate, #EndDate').val('').datepicker('update');
+           
+            $('#ContentPlaceHolder1_ddlSkills').multiselect('deselectAll', false);
+            $('#ContentPlaceHolder1_ddlSkills').multiselect('refresh');
+
+            $('#ContentPlaceHolder1_ddlResources').multiselect('deselectAll', false);
+            $('#ContentPlaceHolder1_ddlResources').multiselect('refresh');
+            
+            // Trigger the search button click event
+            __doPostBack('<%= SearchButton.UniqueID %>', '');
+        }
         function updatePagination() {
             var totalPage = document.getElementById('<%= totalPageValue.ClientID %>').value;
             var currentPage = document.getElementById('<%= currentPageValue.ClientID %>').value;
@@ -281,7 +303,7 @@
                 var newPageItem = ''
                 for (var i = 0; i < parseFloat(totalPage); i++) {
                     if (i == 3) break;
-                    newPageItem += '<li class="page-item'+(i == 0 ? " active" : "")+'" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                    newPageItem += '<li class="page-item' + (i == 0 ? " active" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
                 }
                 if (newPageItem != '') $('#previousBtn').after(newPageItem);
                 if (totalPage <= 3) $('#nextBtn').addClass('disabled');
@@ -363,7 +385,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
@@ -413,7 +434,8 @@
                                 <div class="row mt-4" style="margin-right: 6px;">
                                     <div class="col-md-12 text-right ">
                                         <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
-                                        <asp:Button ID="ClearButton" runat="server" CssClass="btn btn-danger btn-sm" Text="Clear" OnClick="ClearButton_Click" />
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="resetSearch()">Clear</button>
+                                        <%--<asp:Button ID="ClearButton" OnClientClick="resetSearch()" runat="server" CssClass="btn btn-danger btn-sm" Text="Clear"  />                                        --%>
                                     </div>
                                 </div>
                             </div>
