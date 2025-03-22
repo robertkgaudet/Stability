@@ -35,7 +35,6 @@
                     dataType: "json",
                     success: function (response) {
                         $('#rptPostComments').html('');
-                        debugger;
                         var html = ""
                         if (response.d) {
                             if (response.d.Comments.length > 0) {
