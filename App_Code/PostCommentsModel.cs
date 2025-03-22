@@ -22,6 +22,7 @@ namespace GoogleMapsAPI.Places
 		public List<Reply> Replies { get; set; } // Replies as a list of Reply objects
 		public string TotalPostComments { get; set; }
 		public Guid UserId { get; set; }
+		public bool IsUserSignIn { get; set; }
 
 	}
 

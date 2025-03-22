@@ -621,10 +621,14 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			if (profileImage != null)
 			{
 				imgProfile.Src = profilePhotoFolder + profileImage.FilenameCropped;
-				linkProfile.HRef = "/V1/Member/Default.aspx?userid=" + createdBy;
-				linkProfile.Target = "_blank";
-				linkProfile.Style["display"] = "inline";
 			}
+			else
+			{
+				imgProfile.Src = profilePhotoFolder + "profilepicture.png";
+			}
+			linkProfile.HRef = "/V1/Member/Default.aspx?userid=" + createdBy;
+			linkProfile.Target = "_blank";
+			linkProfile.Style["display"] = "inline";
 
 			if (reactionTypeID == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"))
 			{
@@ -1095,15 +1099,15 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		using (var dc = new CrowdReliefDBDataContext())
 		{
 			var userId = new Guid();
+			var role = "";
 			string username = HttpContext.Current.User.Identity.Name;
 			MembershipUser user = Membership.GetUser(username);
 			if (user != null)
 			{
 				userId = new Guid(user.ProviderUserKey.ToString());
+				var roleId = dc.aspnet_UsersInRoles.FirstOrDefault(f => f.UserId == userId).RoleId;
+				role = dc.aspnet_Roles.FirstOrDefault(f => f.RoleId == roleId).RoleName;
 			}
-
-			var roleId = dc.aspnet_UsersInRoles.FirstOrDefault(f => f.UserId == userId).RoleId;
-			var role = dc.aspnet_Roles.FirstOrDefault(f => f.RoleId == roleId).RoleName;
 
 			string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
 			comments = (from pc in dc.PostComments
@@ -1123,6 +1127,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 							PostId = pc.PostId,
 							TimeAgo = GetTimeAgo(c.CreatedOn),
 							UserId = c.CreatedBy,
+							IsUserSignIn = user == null ? false : true,
 							Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Lastname,
 							//Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
 							ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
