@@ -85,6 +85,7 @@
         $(document).ready(function () {
             $('#tblVolunteers').footable();
             messageModelTitle = document.getElementById('messageModelTitle');
+            txtMessage = document.getElementById('<%=txtMessage.ClientID%>');
             divMessageTextBox = document.getElementById('messageTextBox');
             btnSend = document.getElementById('btnSend');
             divMessageError = document.getElementById('divMessageError');
@@ -220,7 +221,6 @@
             message = txtMessage.value;
             teamName = '<%=teamName%>';
             signedInUserFullName = '<%=signedInUserFullName%>';
-            organizationId = '<%=organizationId%>';
             organizationId = '<%=organizationId%>';
             sendMessage(signedInUserFullName, organizationId, recipientsName, recipientsEmail, teamName, message);
         }
@@ -570,7 +570,7 @@
                                                 <asp:Literal ID="litDescription" runat="server"></asp:Literal>
                                             </p>
                                             <div class="pull-right">                                                
-                                                <asp:Button ID="btnContact" OnClientClick="return false;" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                                <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
                                             </div>
                                             <asp:Literal ID="litSkills" runat="server"></asp:Literal>
                                             <asp:Literal ID="litResources" runat="server"></asp:Literal>
