@@ -558,7 +558,7 @@
                                 <td style="background-color: white;">
                                     <div class="hpanel">
                                         <div class="panel-body">
-                                            <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: space-between;">
+                                            <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: normal;">
                                                 
 
                                                 <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
@@ -569,8 +569,8 @@
                                                 <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
                                                 <asp:Literal ID="litDescription" runat="server"></asp:Literal>
                                             </p>
-                                            <div class="pull-right">
-                                                <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                            <div class="pull-right">                                                
+                                                <asp:Button ID="btnContact" OnClientClick="return false;" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
                                             </div>
                                             <asp:Literal ID="litSkills" runat="server"></asp:Literal>
                                             <asp:Literal ID="litResources" runat="server"></asp:Literal>
