@@ -1091,10 +1091,11 @@ public partial class V1_Stream : BaseOrganizationWebForm
 	}
 
 	[WebMethod]
-	public static List<PostCommentsModel> GetCommentsByPostId(string postId)
+	public static PostCommentsViewModel GetCommentsByPostId(string postId)
 	{
 		StringWriter sw = new StringWriter();
 		HtmlTextWriter writer = new HtmlTextWriter(sw);
+		var viewModel = new PostCommentsViewModel();
 		var comments = new List<PostCommentsModel>();
 		using (var dc = new CrowdReliefDBDataContext())
 		{
@@ -1102,11 +1103,13 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			var role = "";
 			string username = HttpContext.Current.User.Identity.Name;
 			MembershipUser user = Membership.GetUser(username);
+			viewModel.IsUserSignIn = false;
 			if (user != null)
 			{
 				userId = new Guid(user.ProviderUserKey.ToString());
 				var roleId = dc.aspnet_UsersInRoles.FirstOrDefault(f => f.UserId == userId).RoleId;
 				role = dc.aspnet_Roles.FirstOrDefault(f => f.RoleId == roleId).RoleName;
+				viewModel.IsUserSignIn = true;
 			}
 
 			string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
@@ -1127,7 +1130,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 							PostId = pc.PostId,
 							TimeAgo = GetTimeAgo(c.CreatedOn),
 							UserId = c.CreatedBy,
-							IsUserSignIn = user == null ? false : true,
 							Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Lastname,
 							//Author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
 							ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
@@ -1175,7 +1177,8 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			//rptPostComments.DataBind();
 			//rptPostComments.RenderControl(writer);
 		}
-		return comments;
+		viewModel.Comments = comments;
+		return viewModel;
 	}
 
 	[WebMethod]
