@@ -29,6 +29,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
     public string _streamActive;
     public string _deploymentTeamActive;
     public string organizationId;
+    public string _teamMember;
     public bool isUserOnTeam = false;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -46,11 +47,20 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypSupport.NavigateUrl = "/V1/NonProfit/Support.aspx?organizationId=" + organizationId;
         hypTickets.NavigateUrl = "/V1/NonProfitAdministration/Tickets.aspx?organizationId=" + organizationId;
         hypReports.NavigateUrl = "/V1/NonProfitAdministration/Reports.aspx?organizationId=" + organizationId;
+        hypMail.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&type=email";
+        hypSms.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&type=sms";
         //hypWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + organizationId;
         hypSkillsets.NavigateUrl = "/V1/NonProfit/Skillsets.aspx?organizationId=" + organizationId;
         hypResources.NavigateUrl = "/V1/NonProfit/AvailableResources.aspx?organizationId=" + organizationId;
         hypDeploymentTeam.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + organizationId;
 
+        hypInviteTeam.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + organizationId;
+        hypDonationDashboard.NavigateUrl = "/V1/NonProfit/DonationDashboard.aspx?organizationId=" + organizationId;
+        hypLogoUpload.NavigateUrl = "/V1/NonProfit/LogoUpload.aspx?organizationId=" + organizationId;
+        hypSquareLogoUpload.NavigateUrl = "/V1/NonProfit/SquareLogoUpload.aspx?organizationId=" + organizationId;
+        hypCoverImageUpload.NavigateUrl = "/V1/NonProfitAdministration/CoverImage1600x600.aspx?organizationId=" + organizationId;
+        hypManagePhotos.NavigateUrl = "/V1/NonProfitAdministration/ManagePhotos.aspx?organizationId=" + organizationId;
+        hypUpdateTeamInfo.NavigateUrl = "/V1/Administration/NonProfitNew.aspx?userActionModal=false&organizationId=" + organizationId;
         //litTeamName.Text = _teamName;
 
         switch (PageName)
@@ -185,15 +195,22 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                     //Hide team list from nonadmin and nonowner
                     //hypPeople.Visible = false;
                 }
-                if (HttpContext.Current.User.IsInRole("Administrator") || isOwner)
-                {
-                    if (organization.IsActive != true)
-                    {
-                        btnDeactivatePage.Text = "Re-activate This Team";
-                    }
+                if (HttpContext.Current.User.IsInRole("Administrator") || isOwner || HttpContext.Current.User.IsInRole("Team Administrator"))
+                {                
                     ulAdmin.Visible = true;
                     hrAdmin.Visible = true;
                     divDeployment.Visible = true;
+                }
+                if (HttpContext.Current.User.IsInRole("Administrator"))
+                {
+                    btnDeactivatePage.Visible = true;
+                    btnDeactivatePage.Text = organization.IsActive != true
+                        ? "<i class='fa fa-ban text-danger'></i> Re-activate This Team"
+                        : "<i class='fa fa-ban text-danger'></i> De-activate This Team";
+                }
+                else
+                {
+                    btnDeactivatePage.Visible = false;
                 }
             }
         }
@@ -215,13 +232,13 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 
         if (organization != null)
         {
-           
+
             btnDeactivatePage.Text = "<i class='fa fa-ban text-danger'></i> De-activate This Team";
 
             if (organization.IsActive == true)
             {
                 updateActiveStatus = false;
-               
+
                 btnDeactivatePage.Text = "<i class='fa fa-ban text-danger'></i> Re-activate This Team";
             }
 

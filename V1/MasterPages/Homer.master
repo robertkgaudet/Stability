@@ -70,7 +70,8 @@
                 });
             });
 
-            $(document).ready(function () {
+			$(document).ready(function () {
+                $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 
 				<%=_showUserActionModal%>
 
@@ -474,7 +475,20 @@
 				padding:9px 0px !important;
 				margin:8px 8px 8px 0px !important;
 			}
-			
+           .desktop-logo {
+                display: inline-block;
+            }
+           .mobile-logo {
+                display: none;
+            }
+           @media (max-width: 767px) {
+                  .desktop-logo {
+                 display: none;
+              }
+	    	.mobile-logo {
+            display: inline-block;
+            }
+           }
 		</style>
 
 	<asp:ContentPlaceHolder id="head" runat="server">
@@ -503,8 +517,12 @@
 			<div style="margin-bottom:500px;">
 				<div id="header" runat="server">
 					<nav role="navigation">
-						<asp:Image ID="imgLogo" CssClass="pull-left" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png" />
-						<div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs"></i></div>
+						<asp:Image ID="imgLogo" CssClass="pull-left desktop-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png" />
+                        <asp:Image ID="imgresponsive" CssClass="pull-left mobile-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/mobile-logo.png" />
+	                    <div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs"></i></div>					
+                        <div class="header-link text-white" onclick="window.location.href='/feed';">
+                        <i class="fa fa-home fa-2x m-t-xs"></i>
+                  </div>
 						<div class="header-link load-map text-white" onclick="window.location.href='/V1/Member/Default.aspx';"><i class="fa fa-user fa-2x m-t-xs"></i></div>
 						<div class="header-link load-map text-white" onclick="window.location.href='/V1/NonProfit/Default.aspx';"><i class="fa fa-users fa-2x m-t-xs"></i></div>
 						<div class="header-link load-map text-white" onclick="window.location.href='/MapZone';"><i class="fa fa-map fa-2x m-t-xs"></i></div>

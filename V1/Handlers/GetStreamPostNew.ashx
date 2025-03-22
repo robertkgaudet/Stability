@@ -46,7 +46,9 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                              p.Message,
                              pr.UserId,
                              fullname = pr.Firstname + " " + pr.Lastname,
-                         }).Skip((streamPostPageSize + 10) + (streamPostPageSize * pageNumber)).Take(streamPostPageSize);
+                             p.EventId,
+                         }).Skip((streamPostPageSize + 5) + (streamPostPageSize * pageNumber)).Take(streamPostPageSize);
+
             foreach (var post in posts)
             {
                 string username = HttpContext.Current.User.Identity.Name;
@@ -65,8 +67,17 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
 
                 if (profileImage != null)
                 {
-                    //Get the users profile image
                     imageTag = profilePhotoFolder + profileImage.FilenameCropped;
+                }
+
+                var hypPortalLink = "";
+                if (post.EventId != null)
+                {
+                    var sEvent = dc.Events.FirstOrDefault(f => f.EventId == post.EventId);
+                    if (sEvent != null)
+                    {
+                        hypPortalLink = sEvent.Name;
+                    }
                 }
 
                 //if (post.ProfilePhoto != "")
@@ -121,29 +132,88 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                                  select new { pi.ImageFilename, pi.PostImageId };
                 Guid reactionTypeID = new Guid();
 
-                if (postReaction != null && postReaction.Count() > 0)
+
+                var showReaction = "";
+                var BeStrong = "<span class='m-r-n-xs' title='Be Strong'>&#128074;</span>";
+                var Wow = "<span class='m-r-n-xs' title='Wow'>&#128558;</span>";
+                var Love = "<span class='m-r-n-xs text-danger' title='Love'>&#10084;</span>";
+                var Bump = "<span class='m-r-n-xs' title='Bump'>&#128171;</span>";
+                var Like = "<span class='m-r-n-xs' title='Like'>&#128591;</span>";
+
+                var thanksCount = postReaction.Count(f => f.ReactionTypeId == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"));
+                var loveCount = postReaction.Count(f => f.ReactionTypeId == new Guid("b247efe7-3da7-44fa-9452-a331f71d337f"));
+                var bumpCount = postReaction.Count(f => f.ReactionTypeId == new Guid("8fe324d4-3694-4b7d-b710-df277c74b1c4"));
+                var beStrongCount = postReaction.Count(f => f.ReactionTypeId == new Guid("6528bbd7-501b-475b-a15f-520bb0a3ffbf"));
+                var wowCount = postReaction.Count(f => f.ReactionTypeId == new Guid("43142e57-f55b-4c8d-b024-84e0e5c664e9"));
+
+                var reactionCounts = new[]
                 {
-                    if (!string.IsNullOrEmpty(username))
+                new { Reaction = "Like", Count = thanksCount },
+                new { Reaction = "Love", Count = loveCount },
+                new { Reaction = "Bump", Count = bumpCount },
+                new { Reaction = "Be Strong", Count = beStrongCount },
+                new { Reaction = "Wow", Count = wowCount }
+                };
+                var top3Counts = reactionCounts.Where(f => f.Count > 0).OrderByDescending(r => r.Count).Take(3).ToList();
+
+                // Display the top 3 reactions
+                foreach (var reaction in top3Counts)
+                {
+                    if (reaction.Reaction == "Like")
                     {
-                        var dataExist = postReaction.FirstOrDefault(f => f.CreatedBy == new Guid(userId));
-                        if (dataExist != null)
-                        {
-                            reactionTypeID = (Guid)dataExist.ReactionTypeId;
-                        }
+                        showReaction += Like;
                     }
-                    if (postReaction.FirstOrDefault(f => f.CreatedBy == new Guid(userId)) != null)
+                    else if (reaction.Reaction == "Love")
                     {
-                        litReactionCount = "You and " + (postReaction.Count() - 1).ToString() + " others";
+                        showReaction += Love;
+                    }
+                    else if (reaction.Reaction == "Be Strong")
+                    {
+                        showReaction += BeStrong;
+                    }
+                    else if (reaction.Reaction == "Wow")
+                    {
+                        showReaction += Wow;
+                    }
+                    else if (reaction.Reaction == "Bump")
+                    {
+                        showReaction += Bump;
+                    }
+                }
+
+                if (postReaction.Count() > 0)
+                {
+                    if (userId != null && postReaction.FirstOrDefault(f => f.CreatedBy == new Guid(userId)) != null)
+                    {
+                        if ((postReaction.Count() - 1) > 0)
+                        {
+                            litReactionCount = "<div>" + showReaction + "<span> &nbsp; You + " + (postReaction.Count() - 1).ToString() + "</span></div>";
+                        }
+                        else
+                        {
+                            litReactionCount = "<div>" + showReaction + "<span> &nbsp; You </span></div>";
+                        }
                     }
                     else
                     {
-                        litReactionCount = postReaction.FirstOrDefault().Firstname + " and " + (postReaction.Count() - 1).ToString() + " others";
+                        if ((postReaction.Count() - 1) > 0)
+                        {
+                            litReactionCount = "<div>" + showReaction + "<span> &nbsp; " + (postReaction.Count() - 1).ToString() + "</span></div>";
+                        }
+                        else
+                        {
+                            litReactionCount = "<div>" + showReaction + "</div>";
+                        }
                     }
+                }
+                else
+                {
+                    litReactionCount = "<div style=color:#fff;>0</div>";
                 }
 
                 if (reactionTypeID == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"))
                 {
-                    litReactionTitle = "<span style='color: #286090'> &#128591; Thank </span>";
+                    litReactionTitle = "<span style='color: #286090'> &#128591; Like </span>";
                 }
                 else if (reactionTypeID == new Guid("b247efe7-3da7-44fa-9452-a331f71d337f"))
                 {
@@ -163,7 +233,7 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                 }
                 else
                 {
-                    litReactionTitle = "<span style='color: #777'> &#128077; Thank </span>";
+                    litReactionTitle = "<span style='color: #777'> &#128077; Like </span>";
                 }
 
                 if (postImages != null && postImages.Count() > 0)
@@ -184,16 +254,23 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                 }
                 postHtml += divSingleImage;
                 postHtml += "</div>";
-                var postCount = dc.PostComments.Where(f => f.PostId == post.PostId).ToList().Count.ToString();
-                results += "<div class='hpanel messageBody'><div class='panel-body'><div class='message'><div class='block-profile-image-div clearfix' style='line-height: 1.3;'>" +
-                        "<img src=" + imageTag + " id='ContentPlaceHolder1_rptPosts_imgProfile_49' class='img-rounded' style='float: left; margin-right: 10px;' width='40'>" +
-                        "<a id='ContentPlaceHolder1_rptPosts_hypCreatedBy_42' class='StreamLink' href='/V1/Profile/Profile.aspx?userId=" + post.UserId + "'>" + post.fullname + "</a><br>" +
-                        "<span id='ContentPlaceHolder1_rptPosts_lblMessageDate_42' class='message-date'>" + CrowdRelief.Tools.GetElapsedTime(Convert.ToDateTime(post.CreatedOn)) + "</span></div>" +
-                        "<span class='message-content'><p style='margin-top: 10px;'>" + postHtml + "</p></span></div></div><div class='panel-footer'>" +
-                        "<div class='row' style='margin: -5px 5px -18px 5px'><span>" + litReactionCount + "</span><span style='float: right'>" + postCount + " comments</span></div><hr />" +
-                        "<div class='row'><div class='col-xs-3 post-type-div thankButton text-muted' data-item-id='" + post.PostId + "'>" + litReactionTitle +
-                        "</div><div class='col-xs-3 post-type-div commentSection' data-item-id='" + post.PostId + "'><i class='fa fa-sticky-note m-r-sm nowrap'></i>Comment</div><div class='col-xs-3 post-type-div' id='helpButton'>" +
-                        "<i class='fa fa-users m-r-sm'></i>Help</div><div class='col-xs-3 post-type-div' id='giveButton'><i class='fa fa-money m-r-sm'></i>Give</div></div> <div class='comment-section-show'><div class='comment-section-repeater-show'>";
+                //var postCount = dc.PostComments.Where(f => f.PostId == post.PostId).ToList().Count.ToString();
+                var postCount = dc.PostComments.Where(r => r.PostId == post.PostId && !r.Comment.IsDeleted && r.Comment.ParentId == null).Count().ToString();
+
+                //results += "<div class='hpanel messageBody'><div class='panel-body'><div class='message'><div class='block-profile-image-div clearfix' style='line-height: 1.3;'>" +
+                //        "<img src=" + imageTag + " id='ContentPlaceHolder1_rptPosts_imgProfile_49' class='img-rounded' style='margin-right: 10px;' width='40'>" +
+                //        "<a id='ContentPlaceHolder1_rptPosts_hypCreatedBy_42' class='StreamLink' href='/V1/Member/Default.aspx?userid=" + post.UserId + "'>" + post.fullname + "</a><br>" +
+                //        "<a id='hypPortalLink' class='StreamPortalLink'>" + hypPortalLink + "</a>" +
+                //        "<span id='ContentPlaceHolder1_rptPosts_lblMessageDate_42' class='message-date'>" + CrowdRelief.Tools.GetElapsedTime(Convert.ToDateTime(post.CreatedOn)) + "</span></div>" +
+                //        "<span class='message-content'><p style='margin-top: 10px;'>" + postHtml + "</p></span></div></div><div class='panel-footer'>" +
+                //        "<div class='row' style='margin: -5px 5px -18px 5px'><span data-item-rid='" + post.PostId + "'>" + litReactionCount + "</span><span style='float: right; margin-top: -23px'>" +
+                //        "<div class='post-type-div commentSection' data-item-id='" + post.PostId + "'>" + postCount + " comments</div></span></div><hr />" +
+                //        "<div class='row' style='margin-top: -18px !important'><div class='col-xs-3 post-type-div thankButton text-muted' data-item-cid='" + post.PostId + "'>" + litReactionTitle +
+                //        "</div><div class='col-xs-3 post-type-div commentSection' data-item-id='" + post.PostId + "'><i class='fa fa-sticky-note m-r-sm nowrap'></i>Comment</div></div>";
+                //+
+                //"<div class='col-xs-3 post-type-div' id='helpButton'>" +
+                //"<i class='fa fa-users m-r-sm'></i>Help</div><div class='col-xs-3 post-type-div' id='giveButton'><i class='fa fa-money m-r-sm'></i>Give</div></div> " +
+                //"";
 
                 var postComments = (from pc in dc.PostComments
                                     join c in dc.Comments on pc.CommentId equals c.CommentId
@@ -205,26 +282,116 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
                                     {
                                         Comment1 = ReplaceTaggedUsersWithLinks(c.Comment1),
                                         timeAgo = GetTimeAgo(c.CreatedOn),
+                                        UserId = c.CreatedBy,
                                         author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
-                                        ProfileUrl = "/V1/Profile/Profile.aspx?userId=" + c.CreatedBy,
+                                        ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
                                         ImgProfileUrl = profilePhotoFolder + (
                                            (from rph in dc.ProfilePhotos
                                             join rp in dc.Photos on rph.PhotoId equals rp.PhotoId
                                             where rph.UserId == c.CreatedBy
+                                            orderby rp.CreatedOn descending
                                             select rp.FilenameCropped).FirstOrDefault() ?? "profilepicture.png")
                                     }).Take(2).ToList();
 
+                //if (postComments.Count > 0)
+                //{
+                //    results += "<div id='commentSectionShow' class='comment-section-show'><div class='comment-section-repeater-show' data-item-id='" + post.PostId + "-showComments>";
 
+                //    foreach (var item in postComments)
+                //    {
+                //        //results += "<ul class='comments'><li><div class='userImage'><a target='_blank' href='" + item.ProfileUrl + "'>" +
+                //        //    "<img class='img-rounded' src='" + item.ImgProfileUrl + "'/></a></div><div class='commentReact'>" +
+                //        //    "<span style='font-weight: bold; width: 70%'>" +
+                //        //    "<a target='_blank' href='" + item.ProfileUrl + "' class='author-link'>" + item.author + "</a>" +
+                //        //    "</span><span style='float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;'>" + item.timeAgo + "</span>" +
+                //        //    "<span>" + item.Comment1 + "</span></div></li></ul>";
+
+                //        results += "<ul class='comments'><li><div class='userImage'>" +
+                //                "<a target='_blank' href=\"" + item.ProfileUrl + "'><img class='img-rounded'" +
+                //                "src=" + item.ImgProfileUrl + "/></a></div><div class='commentReact'>" +
+                //                "<span style='font-weight: bold; width: 70%'>\n<a target='_blank' href='" + item.ProfileUrl + "'" +
+                //                "class='author-link'>" + item.author + "</a></span><span style='float: right; width: 12%; " +
+                //                "text-align: right; margin: 0px 5px 0px 0px;'>" + item.timeAgo + "</span><span>" + item.Comment1 + "</span></div></li></ul>";
+                //    }
+                //    results += "</div></div>";
+                //}
+                //results += "</div></div>";
+
+
+                string htmlContent = "";
+                htmlContent += "<div class=\"hpanel messageBody\">";
+                htmlContent += "    <div class=\"panel-body\">";
+                htmlContent += "        <div class=\"message\">";
+                htmlContent += "            <div class=\"block-profile-image-div clearfix\" style=\"line-height: 1.3;\">";
+                htmlContent += "                <a id=\"ContentPlaceHolder1_rptPosts_linkProfile_9\" style=\"float: left; margin-right: 10px; display: none;\">";
+                htmlContent += "                    <img src=" + imageTag + " id=\"ContentPlaceHolder1_rptPosts_imgProfile_9\" class=\"img-rounded\" width=\"40\">";
+                htmlContent += "                </a>";
+                htmlContent += "                <a id=\"ContentPlaceHolder1_rptPosts_ucUserNameWithBadges_9_hypName_9\" class=\"StreamLink\" href=\"/V1/Member/Default.aspx?userId=" + post.UserId + "><span id=\"ContentPlaceHolder1_rptPosts_ucUserNameWithBadges_9_lblprofileusername_9\" class=\"user-name\">" + post.fullname + "</span></a>";
+                //htmlContent += "                <a id=\"ContentPlaceHolder1_rptPosts_hypPortalLink_9\" class=\"StreamPortalLink\">" + hypPortalLink + "</a>";
+                htmlContent += "                <br>";
+                htmlContent += "                <span id=\"ContentPlaceHolder1_rptPosts_lblMessageDate_9\" class=\"message-date\">" + CrowdRelief.Tools.GetElapsedTime(Convert.ToDateTime(post.CreatedOn)) + "</span>";
+                htmlContent += "                <br>";
+                htmlContent += "                <span id=\"ContentPlaceHolder1_rptPosts_hypPortalLink_9\" class=\"message-date\">" + hypPortalLink + "</span>";
+                htmlContent += "            </div>";
+                htmlContent += "            <span class=\"message-content\">";
+                htmlContent += "                <p style=\"margin-top: 10px;\">";
+                htmlContent += "                </p><div class=\"post\"><p>" + postHtml + "</p></div>";
+                htmlContent += "                <p></p>";
+                htmlContent += "            </span>";
+                htmlContent += "        </div>";
+                htmlContent += "    </div>";
+                htmlContent += "    <div class=\"panel-footer\">";
+                htmlContent += "        <div class=\"row\" style=\"margin: -5px 5px -18px 5px\">";
+                htmlContent += "            <span data-item-rid=" + post.PostId + ">";
+                htmlContent += "                <div>" + litReactionCount + "</div>";
+                htmlContent += "            </span>";
+                htmlContent += "            <span style=\"float: right; margin-top: -23px\">";
+                htmlContent += "                <div class=\"post-type-div commentSection showCommentsCount\" data-item-id=" + post.PostId + ">";
+                htmlContent += "                    " + postCount + " Comments";
+                htmlContent += "                </div>";
+                htmlContent += "            </span>";
+                htmlContent += "        </div>";
+                htmlContent += "        <hr>";
+                htmlContent += "        <div class=\"row\" style=\"margin-top: -18px !important\">";
+                htmlContent += "            <div class=\"col-xs-3 post-type-div thankButton text-muted\" data-item-cid=" + post.PostId + ">";
+                htmlContent += "                " + litReactionTitle + "";
+                htmlContent += "            </div>";
+                htmlContent += "            <div class=\"col-xs-3 post-type-div commentSection\" data-item-id=" + post.PostId + "><i class=\"fa fa-sticky-note m-r-sm nowrap\"></i>Comment</div>";
+                htmlContent += "        </div>";
+
+                if (postComments.Count > 0)
+                {
+                    htmlContent += "        <div id=\"ContentPlaceHolder1_rptPosts_commentSectionShow_9\" class=\"comment-section-show\">";
+                }
+                else
+                {
+                    htmlContent += "        <div id=\"ContentPlaceHolder1_rptPosts_commentSectionShow_9\" class=\"comment-section-show\" style=\"display:none;\">";
+                }
+                htmlContent += "            <div class=\"comment-section-repeater-show\" data-item-id=" + post.PostId + "-showComments>";
                 foreach (var item in postComments)
                 {
-                    results += "<ul class='comments'><li><div class='userImage'><a target='_blank' href='"+ item.ProfileUrl +"'>" +
-                        "<img class='img-rounded' src='"+ item.ImgProfileUrl +"'/></a></div><div class='commentReact'>" +
-                        "<span style='font-weight: bold; width: 70%'>" +
-                        "<a target='_blank' href='" + item.ProfileUrl + "' class='author-link'>" + item.author + "</a>" +
-                        "</span><span style='float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;'>" + item.timeAgo + "</span>" +
-                        "<span>" + item.Comment1 + "</span></div></li></ul>";
+                    htmlContent += "                <ul class=\"comments\">";
+                    htmlContent += "                    <li>";
+                    htmlContent += "                        <div class=\"userImage\">";
+                    htmlContent += "                            <a target=\"_blank\" href=" + item.ProfileUrl + ">";
+                    htmlContent += "                                <img class=\"img-rounded\" src=" + item.ImgProfileUrl + "></a>";
+                    htmlContent += "                        </div>";
+                    htmlContent += "                        <div class=\"commentReact\">";
+                    htmlContent += "                            <span style=\"font-weight: bold; width: 70%; height: 22px;\">";
+                    htmlContent += "                                <a id=\"ContentPlaceHolder1_rptPosts_rptPostCommentsShow_9_ucTeamLogo_0_hypName_0\" class=\"StreamLink\" href=" + item.ProfileUrl + "><span id=\"ContentPlaceHolder1_rptPosts_rptPostCommentsShow_9_ucTeamLogo_0_lblprofileusername_0\" class=\"user-name\">" + item.author + "</span></a>";
+                    htmlContent += "                            </span>";
+                    htmlContent += "                            <span style=\"float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;\">" + item.timeAgo + "</span>";
+                    htmlContent += "                            <span>" + item.Comment1 + "</span>";
+                    htmlContent += "                        </div>";
+                    htmlContent += "                    </li>";
+                    htmlContent += "                </ul>";
                 }
-                results += "</div></div></div></div>";
+                htmlContent += "            </div>";
+                htmlContent += "        </div>";
+                htmlContent += "    </div>";
+                htmlContent += "</div>";
+
+                results = htmlContent;
             }
         }
         catch (Exception ex)
@@ -256,11 +423,11 @@ public class GetStreamPostNew : IHttpHandler, IReadOnlySessionState
 
             if (user != null)
             {
-                html = "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>" + "@@" + fullName + "</a>";
+                html = "<a target='_blank' href='/V1/Member/Default.aspx?userid=" + user.UserId + "'>" + "@@" + fullName + "</a>";
             }
 
             return user != null ? html : match.Value;
-            //return user != null ? "<a target='_blank' href='/V1/Profile/Profile.aspx?userId=" + user.UserId + "'>@@" + fullName + "</a>" : match.Value;
+            //return user != null ? "<a target='_blank' href='/V1/Member/Default.aspx?userid=" + user.UserId + "'>@@" + fullName + "</a>" : match.Value;
         });
     }
 
