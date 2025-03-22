@@ -1808,7 +1808,7 @@
                         <select id="AudienceType" name="AudienceType" runat="server" clientidmode="static"></select>
                     </div>
                     <div class="col-md-12 m-t-sm">
-                        <select id="PortalTypes" name="PortalTypes" runat="server" clientidmode="static"></select>
+                        <select id="PortalTypes" name="PortalTypes" runat="server" clientidmode="static" style="width:100%"></select>
                     </div>
 
                     <div class="textPost">
