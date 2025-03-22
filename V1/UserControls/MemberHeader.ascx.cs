@@ -53,9 +53,12 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		}
         if (!IsPostBack)
         {
-            ucTeamLogo.UserId = new Guid(_userId);
-            ucTeamLogo.LoadNameWithBadges();
-        }
+			if(!String.IsNullOrEmpty(_userId))
+			{ 
+				ucTeamLogo.UserId = new Guid(_userId);
+				ucTeamLogo.LoadNameWithBadges();
+			}
+		}
         if (!String.IsNullOrEmpty(_teamId))
 		{
 			litTeamBreak.Text =         "<br />";
