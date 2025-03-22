@@ -6,6 +6,12 @@ using System.Collections.Generic;
 /// </summary>
 namespace GoogleMapsAPI.Places
 {
+	public class PostCommentsViewModel
+	{
+		public bool IsUserSignIn { get; set; }
+		public List<PostCommentsModel> Comments { get; set; }
+	}
+
 	public class PostCommentsModel
 	{
 		public Guid PostCommentId { get; set; }
@@ -22,8 +28,6 @@ namespace GoogleMapsAPI.Places
 		public List<Reply> Replies { get; set; } // Replies as a list of Reply objects
 		public string TotalPostComments { get; set; }
 		public Guid UserId { get; set; }
-		public bool IsUserSignIn { get; set; }
-
 	}
 
 	public class Reply
