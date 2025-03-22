@@ -572,7 +572,7 @@
                                             <div class="pull-right">
                                                 <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
                                             </div>
-                                            <asp: Literal ID="litSkills" runat="server"></asp:Literal>
+                                            <asp:Literal ID="litSkills" runat="server"></asp:Literal>
                                             <asp:Literal ID="litResources" runat="server"></asp:Literal>
                                         </div>
                                          <div class="panel-footer d-flex justify-content-between align-items-center" id="divFooter"
