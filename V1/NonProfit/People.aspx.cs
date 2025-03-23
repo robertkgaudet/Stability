@@ -603,7 +603,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 // Execute stored procedure and return mapped results
                 dc.CommandTimeout = 300;
                 var result = dc.ExecuteQuery<PeopleList>(
-                    "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, emailConnected, isVetted, optedSMS).ToList();				
+                    "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS).ToList();				
 
 				// Show Filter Message if Any Filter Applied
 				divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS;

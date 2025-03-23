@@ -38,10 +38,7 @@
         .panel-heading h4 {
             margin-bottom: 0 !important;
             margin-top: -4px;
-        }
-         .team-logo {
-            margin-left: -176px !important;
-        }
+        }         
 
         .container-search {
             margin-top: 5px !important;
@@ -186,6 +183,7 @@
 
             $('#tblVolunteers').footable();
             messageModelTitle = document.getElementById('messageModelTitle');
+            txtMessage = document.getElementById('<%=txtMessage.ClientID%>');
             divMessageTextBox = document.getElementById('messageTextBox');
             btnSend = document.getElementById('btnSend');
             divMessageError = document.getElementById('divMessageError');
@@ -354,7 +352,6 @@
             message = txtMessage.value;
             teamName = '<%=teamName%>';
             signedInUserFullName = '<%=signedInUserFullName%>';
-            organizationId = '<%=organizationId%>';
             organizationId = '<%=organizationId%>';
             sendMessage(signedInUserFullName, organizationId, recipientsName, recipientsEmail, teamName, message);
         }
@@ -675,8 +672,8 @@
                                         <div class="form-group fix">
                                             <b>Radius (km):</b>
                                             <input type="range" id="radiusSlider" min="100" max="1000" step="100" value="1000" class="form-control">
-                                            <span id="radiusValue">100 km</span>                                   
-                                            <input type="hidden" id="hiddenRadius" name="radiusSlider" value="10" />
+                                            <span id="radiusValue">1000 km</span>                                   
+                                            <input type="hidden" id="hiddenRadius" name="radiusSlider" value="0" />
                                             <input type="hidden" id="hiddenEvent" name="selectedEvent" />
                                         </div>
                                 </div>
@@ -742,7 +739,7 @@
                                             <input type="checkbox" runat="server" ID="chkSingleUser" class="select-user" 
                                             data-userid='<%# Eval("UserID") %>' visible='<%# (Request.QueryString["type"] == "email" || Request.QueryString["type"] == "sms") %>' />
 
-                                            <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: space-between;">
+                                            <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: normal;">
 
 
                                                                                               
@@ -755,7 +752,7 @@
                                                 <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
                                                 <asp:Literal ID="litDescription" runat="server"></asp:Literal>
                                             </p>
-                                            <div class="pull-right">
+                                            <div class="pull-right">                                                
                                                 <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
                                             </div>
                                             <asp:Literal ID="litSkills" runat="server"></asp:Literal>

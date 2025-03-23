@@ -37,9 +37,9 @@
                         $('#rptPostComments').html('');
                         var html = ""
                         if (response.d) {
-                            if (response.d.length > 0) {
-                                for (let i = 0; i < response.d.length; ++i) {
-                                    let item = response.d[i];
+                            if (response.d.Comments.length > 0) {
+                                for (let i = 0; i < response.d.Comments.length; ++i) {
+                                    let item = response.d.Comments[i];
 
                                     html += "<ul class=\"comments\" data-item-id=\"" + item.CommentId + "\">\n<li>\n<div class=\"userImage\">\n" +
                                         "<a target=\"_blank\" href=\"" + item.ProfileUrl + "\">\n<img class=\"img-rounded\" " +
@@ -144,7 +144,7 @@
                             }
                         }
                         $("#rptPostComments").html(html);
-                        if (!response.d[0].IsUserSignIn) {
+                        if (!response.d.IsUserSignIn) {
                             $(".addComment").hide();
                             $(".ReplyPostComment").hide();
                             $(".EditPostComment").hide();
@@ -1808,7 +1808,7 @@
                         <select id="AudienceType" name="AudienceType" runat="server" clientidmode="static"></select>
                     </div>
                     <div class="col-md-12 m-t-sm">
-                        <select id="PortalTypes" name="PortalTypes" runat="server" clientidmode="static"></select>
+                        <select id="PortalTypes" name="PortalTypes" runat="server" clientidmode="static" style="width:100%"></select>
                     </div>
 
                     <div class="textPost">
