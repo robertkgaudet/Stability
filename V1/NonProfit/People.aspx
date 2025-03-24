@@ -220,7 +220,7 @@
                 allSelectedText: 'All Selected',
                 numberDisplayed: 2
             });
-            window.onload = function () {
+             window.onload = function () {
                 var selectAllCheckbox = document.getElementById("<%= chkSelectAll.ClientID %>");
                 var userCheckboxes = document.querySelectorAll(".select-user");
                 var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
@@ -674,7 +674,7 @@
                                         <div class="form-group fix">
                                             <b>Radius (km):</b>
                                             <input type="range" id="radiusSlider" min="100" max="1000" step="100" value="100" class="form-control">
-                                            <span id="radiusValue">1000 km</span>                                   
+                                            <span id="radiusValue">100 km</span>                                   
                                             <input type="hidden" id="hiddenRadius" name="radiusSlider" value="0" />
                                             <input type="hidden" id="hiddenEvent" name="selectedEvent" />
                                         </div>
