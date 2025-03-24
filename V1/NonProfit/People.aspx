@@ -509,6 +509,8 @@
             document.getElementById('<%= txtOptedSMS.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtEmailconnect.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtIsVerified.ClientID %>').checked = false; // Set custom value here
+            document.getElementById('<%= ddlEvent.ClientID %>').value = ''; // Set custom value here
+            document.getElementById('<%= ddlTraining.ClientID %>').value = ''; // Set custom value here
 
           
             $('#StartDate, #EndDate').val('').datepicker('update');
@@ -671,7 +673,7 @@
                                     <div class="col-md-6 mb-3" id="radiusSection" style="display: none;">
                                         <div class="form-group fix">
                                             <b>Radius (km):</b>
-                                            <input type="range" id="radiusSlider" min="100" max="1000" step="100" value="1000" class="form-control">
+                                            <input type="range" id="radiusSlider" min="100" max="1000" step="100" value="100" class="form-control">
                                             <span id="radiusValue">1000 km</span>                                   
                                             <input type="hidden" id="hiddenRadius" name="radiusSlider" value="0" />
                                             <input type="hidden" id="hiddenEvent" name="selectedEvent" />
