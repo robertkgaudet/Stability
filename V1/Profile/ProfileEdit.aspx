@@ -41,31 +41,31 @@
 						<div class="panel-body">
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label">First Name</label>
+								<label class="col-sm-3 control-label">First Name  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
 								<div class="col-sm-9"><input type="text" required runat="server" id="txtFirstname" class="form-control" placeholder="First Name"></div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Last Name</label>
+								<label class="col-sm-3 control-label">Last Name <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
 								<div class="col-sm-9"><input type="text" required runat="server" id="txtLastname" class="form-control" placeholder="Last Name"></div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Address</label>
+								<label class="col-sm-3 control-label">Address <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
 								<div class="col-sm-9"><input type="text" required runat="server" id="txtAddress" class="form-control" placeholder="Address"></div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">City</label>
+								<label class="col-sm-3 control-label">City <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
 								<div class="col-sm-9"><input type="text" required runat="server" id="txtCity" class="form-control" placeholder="City"></div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">State</label>
+								<label class="col-sm-3 control-label">State <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span> </label>
 								<div class="col-sm-9">
 									<asp:DropDownList ID="ddlState" runat="server" DataTextField="Text" DataValueField="Value" CssClass="form-control" required=""></asp:DropDownList>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Zip</label>
+								<label class="col-sm-3 control-label">Zip <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
 								<div class="col-sm-9"><input type="text" required runat="server" id="txtZipCode" class="form-control" placeholder="Zip Code"></div>
 							</div>
 						</div>
@@ -84,12 +84,12 @@
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Phone Number</label>
+								<label class="col-sm-3 control-label">Phone Number <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
 								<div class="col-sm-9"><input type="text" maxlength="10" required runat="server" id="txtPhonenumber" class="form-control" placeholder="Phone Number" name="number"></div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-3 control-label">Zello Handle</label>
+								<label class="col-sm-3 control-label">Zello Handle <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
 								<div class="col-sm-9"><input type="text" runat="server" id="txtZello" class="form-control" placeholder="Zello Handle"></div>
 							</div>
 

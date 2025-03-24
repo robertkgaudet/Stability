@@ -72,7 +72,6 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                             {
                                 Guid userId = user.UserId;
                                 var profile = (from p in dc.Profiles
-                                               join d in dc.Donations on p.UserId equals d.UserId
                                                where p.UserId == userId
                                                select new
                                                {
@@ -82,7 +81,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                                                    p.City,
                                                    p.State,
                                                    p.Zip,
-                                                   d.EmailAddress 
+                                                   EmailAddress = dc.Donations.Any(x => x.UserId == userId) ? dc.Donations.Where(x => x.UserId == userId).OrderByDescending(x => x.CreatedAt).FirstOrDefault().EmailAddress : ""
                                                }).SingleOrDefault();
                                 if (profile != null)
                                 {
@@ -160,9 +159,9 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
         }
     }
 
-    
 
-    
+
+
 
 
     protected void AddTransactionDetails_Click(object sender, EventArgs e)
@@ -208,14 +207,14 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
             dc.Addresses.InsertOnSubmit(address);
             dc.SubmitChanges();
         }
-        
+
 
         var donationAmount = Request.Form["txtDonationAmount"];
         decimal originalAmount = Decimal.Parse(donationAmount);
         decimal transactionFee = string.IsNullOrEmpty(coverfee.Text) ? 0 : originalAmount * 0.06M;
         decimal totalAmount = originalAmount + transactionFee;
 
-    
+
         Donation donation = new Donation()
         {
             Amount = originalAmount,
@@ -241,7 +240,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
         txtDonationAmount.Text = totalAmount.ToString("F2");
 
 
-        
+
 
         StripeConfiguration.ApiKey = System.Configuration.ConfigurationManager.AppSettings["stripeSecretKey"].ToString();
         Dictionary<string, string> transactionInfo = new Dictionary<string, string>
@@ -259,10 +258,10 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                         PriceData = new SessionLineItemPriceDataOptions
                         {
                             Currency = "usd",
-                            UnitAmount = Convert.ToInt32((donation.Amount + donation.TransactionFee) * 100), 
+                            UnitAmount = Convert.ToInt32((donation.Amount + donation.TransactionFee) * 100),
                              ProductData = new SessionLineItemPriceDataProductDataOptions
                              {
-                                Name = "Donation to " + organization.Name, 
+                                Name = "Donation to " + organization.Name,
                              },
                         },
                                         Quantity = 1,

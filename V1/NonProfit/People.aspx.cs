@@ -357,7 +357,21 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 {
                     h5Container.Style.Remove("display");
                 }
-
+                CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+                var organization = (from o in dc.Organizations
+                                    where o.OrganizationId == new Guid(organizationId)
+                                    select o).SingleOrDefault();
+                if (organization != null && organization.EnableTeamMemberVerification.HasValue)
+                {
+                    
+                    chkManageShowDonateButton.Visible = true;
+                    chkManageShowDonatelabel.Visible = true;
+                }
+                else
+                {
+                    chkManageShowDonateButton.Visible = false;
+                    chkManageShowDonatelabel.Visible = false;
+                }
                 btnManage.Visible = true;
                 isLockedOut = !profileUser.IsApproved;
                 vettingComplete = vettingComplete == null ? false : vettingComplete;
