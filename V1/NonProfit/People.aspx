@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"  EnableEventValidation="false" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
 
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
@@ -378,15 +378,15 @@
             document.getElementById('<%= txtEmailconnect.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtIsVerified.ClientID %>').checked = false; // Set custom value here
 
-          
+
             $('#StartDate, #EndDate').val('').datepicker('update');
-           
+
             $('#ContentPlaceHolder1_ddlSkills').multiselect('deselectAll', false);
             $('#ContentPlaceHolder1_ddlSkills').multiselect('refresh');
 
             $('#ContentPlaceHolder1_ddlResources').multiselect('deselectAll', false);
             $('#ContentPlaceHolder1_ddlResources').multiselect('refresh');
-            
+
             // Trigger the search button click event
             __doPostBack('<%= SearchButton.UniqueID %>', '');
         }
@@ -432,10 +432,12 @@
                     <h4 style="margin-left: 18px;">Search</h4>
                     <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-                            <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
+                            <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center"
+                                style="margin-bottom: 20px;" visible="false">
                                 <asp:Literal ID="litMessage" runat="server"></asp:Literal>
                             </div>
-                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;" visible="false">
+                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;"
+                                visible="false">
                                 <asp:Literal ID="litFilterMessage" runat="server"></asp:Literal>
                             </div>
                         </ContentTemplate>
@@ -444,7 +446,8 @@
                         </Triggers>
                     </asp:UpdatePanel>
 
-                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers" visible="false">
+                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers"
+                        visible="false">
                         <div class="hpanel" runat="server" id="hpanelJoin" visible="true">
                             <a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
                         </div>
@@ -533,8 +536,9 @@
 
                                 <div class="row mt-4" style="margin-right: 6px;">
                                     <div class="col-md-12 text-right ">
-                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="resetSearch()">Clear</button>                                        
+                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2"
+                                            Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="resetSearch()">Clear</button>
                                     </div>
                                 </div>
                             </div>
@@ -545,81 +549,82 @@
         </div>
     </div>
     <asp:UpdatePanel runat="server" ID="updatePeopleList" UpdateMode="Conditional">
-    <ContentTemplate>
-        <asp:Panel runat="server" ID="pnlTable">
-            <asp:HiddenField ID="currentPageValue" runat="server" />
-            <asp:HiddenField ID="totalPageValue" runat="server" />
-            <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
-                <tbody>
-                    <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
-                        <ItemTemplate>
-                            <tr>
-                                <td style="background-color: white;">
-                                    <div class="hpanel">
-                                        <div class="panel-body">
-                                            <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: normal;">
-                                                
-
-                                                <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
+        <ContentTemplate>
+            <asp:Panel runat="server" ID="pnlTable">
+                <asp:HiddenField ID="currentPageValue" runat="server" />
+                <asp:HiddenField ID="totalPageValue" runat="server" />
+                <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
+                    <tbody>
+                        <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
+                            <ItemTemplate>
+                                <tr>
+                                    <td style="background-color: white;">
+                                        <div class="hpanel">
+                                            <div class="panel-body">
+                                                <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: normal;">
 
 
-                                            </h5>
-                                            <p>
-                                                <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
-                                                <asp:Literal ID="litDescription" runat="server"></asp:Literal>
-                                            </p>
-                                            <div class="pull-right">                                                
-                                                <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                                    <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
+
+
+                                                </h5>
+                                                <p>
+                                                    <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
+                                                    <asp:Literal ID="litDescription" runat="server"></asp:Literal>
+                                                </p>
+                                                <div class="pull-right">
+                                                    <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton"
+                                                        data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                                </div>
+                                                <asp:Literal ID="litSkills" runat="server"></asp:Literal>
+                                                <asp:Literal ID="litResources" runat="server"></asp:Literal>
                                             </div>
-                                            <asp:Literal ID="litSkills" runat="server"></asp:Literal>
-                                            <asp:Literal ID="litResources" runat="server"></asp:Literal>
+                                            <div class="panel-footer d-flex justify-content-between align-items-center" id="divFooter"
+                                                runat="server" visible="false">
+                                                <div class="pull-right">
+                                                    <asp:Button ID="btnManage" runat="server" Text="Manage" CssClass="btn btn-primary manageButton float-end"
+                                                        data-toggle="modal" data-target="#manageMemberModal"
+                                                        data-userid='<%# Eval("UserID") %>'
+                                                        OnClientClick="setUserId(this); fetchUserData(); return false;"></asp:Button>
+                                                </div>
+
+                                                <div class="text-muted small" style="width: 100%;">
+                                                    <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
+                                                </div>
+                                            </div>
                                         </div>
-                                         <div class="panel-footer d-flex justify-content-between align-items-center" id="divFooter"
-                                runat="server" visible="false">
-                                <div class="pull-right">
-                                    <asp:Button ID="btnManage" runat="server" Text="Manage" CssClass="btn btn-primary manageButton float-end"
-                                        data-toggle="modal" data-target="#manageMemberModal"
-                                        data-userid='<%# Eval("UserID") %>'
-                                        OnClientClick="setUserId(this); fetchUserData(); return false;"></asp:Button>
-                                </div>
+                                    </td>
+                                </tr>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <br />
+                                <%--<asp:Button ID="TriggerSearchButton" runat="server" Text="Trigger Search" OnClientClick="triggerSearch(1); return false;" />--%>
+                                <nav class="navClass" aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item disabled" id="previousBtn">
+                                            <a class="page-link" href="javascript:void(0)" tabindex="-1">Previous</a>
+                                        </li>
 
-                                <div class="text-muted small" style="width: 100%;">
-                                    <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
-                                </div>
-                            </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ItemTemplate>
-                    </asp:Repeater>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td>
-                            <br />
-                            <%--<asp:Button ID="TriggerSearchButton" runat="server" Text="Trigger Search" OnClientClick="triggerSearch(1); return false;" />--%>
-                            <nav class="navClass" aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item disabled" id="previousBtn">
-                                        <a class="page-link" href="javascript:void(0)" tabindex="-1">Previous</a>
-                                    </li>
+                                        <li class="page-item" id="nextBtn">
+                                            <a class="page-link" href="javascript:void(0)" tabindex="0">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
 
-                                    <li class="page-item" id="nextBtn">
-                                        <a class="page-link" href="javascript:void(0)" tabindex="0">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
-
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
-        </asp:Panel>
-    </ContentTemplate>
-    <Triggers>
-        <asp:AsyncPostBackTrigger ControlID="SearchButton" EventName="Click" />
-    </Triggers>
-</asp:UpdatePanel>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </asp:Panel>
+        </ContentTemplate>
+        <Triggers>
+            <asp:AsyncPostBackTrigger ControlID="SearchButton" EventName="Click" />
+        </Triggers>
+    </asp:UpdatePanel>
 
 
 
@@ -685,9 +690,11 @@
                             placeholder="Enter Vetting Notes"></asp:TextBox>
                     </div>
                     <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" Visible="false" />
-                        <asp:Label ID="chkManageShowDonatelabel" runat="server" class="form-check-label"  Visible="false" AssociatedControlID="chkManageShowDonateButton">    Enable Team Logo
-                        </asp:Label>
+                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input"
+                            Visible="false" />
+                        <label class="form-check-label" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>"  visible="false">
+                            Enable Team Logo
+                        </label>
                     </div>
                     <% if (User.IsInRole("Administrator"))
                         { %>

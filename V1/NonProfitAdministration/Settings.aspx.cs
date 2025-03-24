@@ -107,7 +107,7 @@ public partial class V1_NonProfit_Settings : BaseWebForm
 		{
 			bool respondToTickets = organization.RespondToTickets != null ? (bool)organization.RespondToTickets : false;
 			bool hideTeamList = organization.HideTeamList != null ? (bool)organization.HideTeamList : false;
-            bool teamMemberVerification = organization.EnableTeamMemberVerification != null ? (bool)organization.RespondToTickets : false;
+            bool teamMemberVerification = organization.EnableTeamMemberVerification != null ? (bool)organization.EnableTeamMemberVerification : false;
             chkEnableTicketing.Checked = respondToTickets;
 			chkHideTeamList.Checked = hideTeamList;
 			chkEnableTeamVerification.Checked = teamMemberVerification;
