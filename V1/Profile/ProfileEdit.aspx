@@ -59,7 +59,7 @@
 								<div class="col-sm-9"><input type="text" required runat="server" id="txtCity" class="form-control" placeholder="City"></div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">State </label>
+								<label class="col-sm-3 control-label">State <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span> </label>
 								<div class="col-sm-9">
 									<asp:DropDownList ID="ddlState" runat="server" DataTextField="Text" DataValueField="Value" CssClass="form-control" required=""></asp:DropDownList>
 								</div>
