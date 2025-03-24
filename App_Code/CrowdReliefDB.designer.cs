@@ -335,9 +335,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertUserAvailableDate(UserAvailableDate instance);
   partial void UpdateUserAvailableDate(UserAvailableDate instance);
   partial void DeleteUserAvailableDate(UserAvailableDate instance);
-  partial void InsertOrganization(Organization instance);
-  partial void UpdateOrganization(Organization instance);
-  partial void DeleteOrganization(Organization instance);
   partial void InsertAudienceType(AudienceType instance);
   partial void UpdateAudienceType(AudienceType instance);
   partial void DeleteAudienceType(AudienceType instance);
@@ -437,15 +434,16 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertPost(Post instance);
   partial void UpdatePost(Post instance);
   partial void DeletePost(Post instance);
-	#endregion
-
-	public CrowdReliefDBDataContext() :
-		base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
-	{
-		OnCreated();
-	}
-
-	public CrowdReliefDBDataContext(string connection) : 
+  partial void InsertOrganization(Organization instance);
+  partial void UpdateOrganization(Organization instance);
+  partial void DeleteOrganization(Organization instance);
+    #endregion
+    public CrowdReliefDBDataContext() :
+        base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
+    {
+        OnCreated();
+    }
+    public CrowdReliefDBDataContext(string connection) : 
 			base(connection, mappingSource)
 	{
 		OnCreated();
@@ -1285,14 +1283,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		}
 	}
 	
-	public System.Data.Linq.Table<Organization> Organizations
-	{
-		get
-		{
-			return this.GetTable<Organization>();
-		}
-	}
-	
 	public System.Data.Linq.Table<AudienceType> AudienceTypes
 	{
 		get
@@ -1554,6 +1544,14 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<Post>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Organization> Organizations
+	{
+		get
+		{
+			return this.GetTable<Organization>();
 		}
 	}
 	
@@ -2721,10 +2719,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private EntitySet<UserAvailableDate> _UserAvailableDates;
 	
-	private EntitySet<Organization> _Organizations;
-	
-	private EntitySet<Organization> _Organizations1;
-	
 	private EntitySet<PostImage> _PostImages;
 	
 	private EntitySet<UserUser> _UserUsers;
@@ -2762,6 +2756,10 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	private EntitySet<UserOrganization> _UserOrganizations;
 	
 	private EntitySet<Post> _Posts;
+	
+	private EntitySet<Organization> _Organizations;
+	
+	private EntitySet<Organization> _Organizations1;
 	
 	private EntityRef<StreamDonation> _Donation;
 	
@@ -2831,8 +2829,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		this._UserEvents = new EntitySet<UserEvent>(new Action<UserEvent>(this.attach_UserEvents), new Action<UserEvent>(this.detach_UserEvents));
 		this._UserResources = new EntitySet<UserResource>(new Action<UserResource>(this.attach_UserResources), new Action<UserResource>(this.detach_UserResources));
 		this._UserAvailableDates = new EntitySet<UserAvailableDate>(new Action<UserAvailableDate>(this.attach_UserAvailableDates), new Action<UserAvailableDate>(this.detach_UserAvailableDates));
-		this._Organizations = new EntitySet<Organization>(new Action<Organization>(this.attach_Organizations), new Action<Organization>(this.detach_Organizations));
-		this._Organizations1 = new EntitySet<Organization>(new Action<Organization>(this.attach_Organizations1), new Action<Organization>(this.detach_Organizations1));
 		this._PostImages = new EntitySet<PostImage>(new Action<PostImage>(this.attach_PostImages), new Action<PostImage>(this.detach_PostImages));
 		this._UserUsers = new EntitySet<UserUser>(new Action<UserUser>(this.attach_UserUsers), new Action<UserUser>(this.detach_UserUsers));
 		this._UserOrganizationEventPositions = new EntitySet<UserOrganizationEventPosition>(new Action<UserOrganizationEventPosition>(this.attach_UserOrganizationEventPositions), new Action<UserOrganizationEventPosition>(this.detach_UserOrganizationEventPositions));
@@ -2852,6 +2848,8 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		this._Profiles = new EntitySet<Profile>(new Action<Profile>(this.attach_Profiles), new Action<Profile>(this.detach_Profiles));
 		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
 		this._Posts = new EntitySet<Post>(new Action<Post>(this.attach_Posts), new Action<Post>(this.detach_Posts));
+		this._Organizations = new EntitySet<Organization>(new Action<Organization>(this.attach_Organizations), new Action<Organization>(this.detach_Organizations));
+		this._Organizations1 = new EntitySet<Organization>(new Action<Organization>(this.attach_Organizations1), new Action<Organization>(this.detach_Organizations1));
 		this._Donation = default(EntityRef<StreamDonation>);
 		this._UserDonation = default(EntityRef<UserDonation>);
 		this._UserDonation1 = default(EntityRef<UserDonation>);
@@ -3539,32 +3537,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Organization", Storage="_Organizations", ThisKey="UserId", OtherKey="CreatedBy")]
-	public EntitySet<Organization> Organizations
-	{
-		get
-		{
-			return this._Organizations;
-		}
-		set
-		{
-			this._Organizations.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Organization1", Storage="_Organizations1", ThisKey="UserId", OtherKey="OwnerId")]
-	public EntitySet<Organization> Organizations1
-	{
-		get
-		{
-			return this._Organizations1;
-		}
-		set
-		{
-			this._Organizations1.Assign(value);
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostImage", Storage="_PostImages", ThisKey="UserId", OtherKey="CreatedBy")]
 	public EntitySet<PostImage> PostImages
 	{
@@ -3809,6 +3781,32 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		set
 		{
 			this._Posts.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Organization", Storage="_Organizations", ThisKey="UserId", OtherKey="CreatedBy")]
+	public EntitySet<Organization> Organizations
+	{
+		get
+		{
+			return this._Organizations;
+		}
+		set
+		{
+			this._Organizations.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Organization1", Storage="_Organizations1", ThisKey="UserId", OtherKey="OwnerId")]
+	public EntitySet<Organization> Organizations1
+	{
+		get
+		{
+			return this._Organizations1;
+		}
+		set
+		{
+			this._Organizations1.Assign(value);
 		}
 	}
 	
@@ -4402,30 +4400,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		entity.aspnet_User = null;
 	}
 	
-	private void attach_Organizations(Organization entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = this;
-	}
-	
-	private void detach_Organizations(Organization entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = null;
-	}
-	
-	private void attach_Organizations1(Organization entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User1 = this;
-	}
-	
-	private void detach_Organizations1(Organization entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User1 = null;
-	}
-	
 	private void attach_PostImages(PostImage entity)
 	{
 		this.SendPropertyChanging();
@@ -4652,6 +4626,30 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	{
 		this.SendPropertyChanging();
 		entity.aspnet_User = null;
+	}
+	
+	private void attach_Organizations(Organization entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_Organizations(Organization entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_Organizations1(Organization entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User1 = this;
+	}
+	
+	private void detach_Organizations1(Organization entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User1 = null;
 	}
 }
 
@@ -33364,1526 +33362,6 @@ public partial class UserAvailableDate : INotifyPropertyChanging, INotifyPropert
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Organization")]
-public partial class Organization : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _OrganizationId;
-	
-	private string _Name;
-	
-	private string _URLFriendlyName;
-	
-	private string _Description;
-	
-	private string _PurposeMission;
-	
-	private string _History;
-	
-	private string _VolunteerInstructions;
-	
-	private string _WhoWeHelp;
-	
-	private string _ProgramsOverview;
-	
-	private string _AFewWordsAboutUs;
-	
-	private System.DateTime _CreatedOn;
-	
-	private System.Guid _CreatedBy;
-	
-	private System.Nullable<System.Guid> _OwnerId;
-	
-	private string _Address;
-	
-	private string _City;
-	
-	private string _State;
-	
-	private string _Zip;
-	
-	private string _Country;
-	
-	private string _PrimaryPhone;
-	
-	private string _SecondaryPhone;
-	
-	private System.Nullable<System.Guid> _ParentOrganizationId;
-	
-	private string _Logo;
-	
-	private string _LogoSquare;
-	
-	private string _FacebookURL;
-	
-	private string _FacebookGroupURL;
-	
-	private string _TwitterURL;
-	
-	private string _InstagramURL;
-	
-	private string _YouTubeURL;
-	
-	private string _TikTokURL;
-	
-	private System.Nullable<bool> @__501c3Status;
-	
-	private System.Nullable<bool> _IsActive;
-	
-	private System.Nullable<bool> _IsVoadMember;
-	
-	private string _PointOfContactName;
-	
-	private System.Nullable<System.Guid> _PointOfContactUserId;
-	
-	private string _PointOfContactEmail;
-	
-	private string _PointOfContactPhoneNumber;
-	
-	private string _Website;
-	
-	private string _PublicPhoneNumber;
-	
-	private string _PublicEmail;
-	
-	private string _YearFounded;
-	
-	private string _CoverImage;
-	
-	private string _EIN;
-	
-	private string _BlogURL;
-	
-	private string _DonationURL;
-	
-	private string _VolunteerURL;
-	
-	private string _HelpURL;
-	
-	private System.Nullable<bool> _IsWebsiteActive;
-	
-	private System.Nullable<bool> _RespondToTickets;
-	
-	private System.Nullable<bool> _HideTeamList;
-	
-	private EntitySet<OrganizationRebuild> _OrganizationRebuilds;
-	
-	private EntitySet<OrganizationProgram> _OrganizationPrograms;
-	
-	private EntitySet<UserOrganizationInvite> _UserOrganizationInvites;
-	
-	private EntitySet<OrganizationEvent> _OrganizationEvents;
-	
-	private EntitySet<OrganizationCase> _OrganizationCases;
-	
-	private EntitySet<Position> _Positions;
-	
-	private EntitySet<PaymentConfiguration> _PaymentConfigurations;
-	
-	private EntitySet<UserOrganization> _UserOrganizations;
-	
-	private EntityRef<aspnet_User> _aspnet_User;
-	
-	private EntityRef<aspnet_User> _aspnet_User1;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnOrganizationIdChanging(System.Guid value);
-    partial void OnOrganizationIdChanged();
-    partial void OnNameChanging(string value);
-    partial void OnNameChanged();
-    partial void OnURLFriendlyNameChanging(string value);
-    partial void OnURLFriendlyNameChanged();
-    partial void OnDescriptionChanging(string value);
-    partial void OnDescriptionChanged();
-    partial void OnPurposeMissionChanging(string value);
-    partial void OnPurposeMissionChanged();
-    partial void OnHistoryChanging(string value);
-    partial void OnHistoryChanged();
-    partial void OnVolunteerInstructionsChanging(string value);
-    partial void OnVolunteerInstructionsChanged();
-    partial void OnWhoWeHelpChanging(string value);
-    partial void OnWhoWeHelpChanged();
-    partial void OnProgramsOverviewChanging(string value);
-    partial void OnProgramsOverviewChanged();
-    partial void OnAFewWordsAboutUsChanging(string value);
-    partial void OnAFewWordsAboutUsChanged();
-    partial void OnCreatedOnChanging(System.DateTime value);
-    partial void OnCreatedOnChanged();
-    partial void OnCreatedByChanging(System.Guid value);
-    partial void OnCreatedByChanged();
-    partial void OnOwnerIdChanging(System.Nullable<System.Guid> value);
-    partial void OnOwnerIdChanged();
-    partial void OnAddressChanging(string value);
-    partial void OnAddressChanged();
-    partial void OnCityChanging(string value);
-    partial void OnCityChanged();
-    partial void OnStateChanging(string value);
-    partial void OnStateChanged();
-    partial void OnZipChanging(string value);
-    partial void OnZipChanged();
-    partial void OnCountryChanging(string value);
-    partial void OnCountryChanged();
-    partial void OnPrimaryPhoneChanging(string value);
-    partial void OnPrimaryPhoneChanged();
-    partial void OnSecondaryPhoneChanging(string value);
-    partial void OnSecondaryPhoneChanged();
-    partial void OnParentOrganizationIdChanging(System.Nullable<System.Guid> value);
-    partial void OnParentOrganizationIdChanged();
-    partial void OnLogoChanging(string value);
-    partial void OnLogoChanged();
-    partial void OnLogoSquareChanging(string value);
-    partial void OnLogoSquareChanged();
-    partial void OnFacebookURLChanging(string value);
-    partial void OnFacebookURLChanged();
-    partial void OnFacebookGroupURLChanging(string value);
-    partial void OnFacebookGroupURLChanged();
-    partial void OnTwitterURLChanging(string value);
-    partial void OnTwitterURLChanged();
-    partial void OnInstagramURLChanging(string value);
-    partial void OnInstagramURLChanged();
-    partial void OnYouTubeURLChanging(string value);
-    partial void OnYouTubeURLChanged();
-    partial void OnTikTokURLChanging(string value);
-    partial void OnTikTokURLChanged();
-    partial void On_501c3StatusChanging(System.Nullable<bool> value);
-    partial void On_501c3StatusChanged();
-    partial void OnIsActiveChanging(System.Nullable<bool> value);
-    partial void OnIsActiveChanged();
-    partial void OnIsVoadMemberChanging(System.Nullable<bool> value);
-    partial void OnIsVoadMemberChanged();
-    partial void OnPointOfContactNameChanging(string value);
-    partial void OnPointOfContactNameChanged();
-    partial void OnPointOfContactUserIdChanging(System.Nullable<System.Guid> value);
-    partial void OnPointOfContactUserIdChanged();
-    partial void OnPointOfContactEmailChanging(string value);
-    partial void OnPointOfContactEmailChanged();
-    partial void OnPointOfContactPhoneNumberChanging(string value);
-    partial void OnPointOfContactPhoneNumberChanged();
-    partial void OnWebsiteChanging(string value);
-    partial void OnWebsiteChanged();
-    partial void OnPublicPhoneNumberChanging(string value);
-    partial void OnPublicPhoneNumberChanged();
-    partial void OnPublicEmailChanging(string value);
-    partial void OnPublicEmailChanged();
-    partial void OnYearFoundedChanging(string value);
-    partial void OnYearFoundedChanged();
-    partial void OnCoverImageChanging(string value);
-    partial void OnCoverImageChanged();
-    partial void OnEINChanging(string value);
-    partial void OnEINChanged();
-    partial void OnBlogURLChanging(string value);
-    partial void OnBlogURLChanged();
-    partial void OnDonationURLChanging(string value);
-    partial void OnDonationURLChanged();
-    partial void OnVolunteerURLChanging(string value);
-    partial void OnVolunteerURLChanged();
-    partial void OnHelpURLChanging(string value);
-    partial void OnHelpURLChanged();
-    partial void OnIsWebsiteActiveChanging(System.Nullable<bool> value);
-    partial void OnIsWebsiteActiveChanged();
-    partial void OnRespondToTicketsChanging(System.Nullable<bool> value);
-    partial void OnRespondToTicketsChanged();
-    partial void OnHideTeamListChanging(System.Nullable<bool> value);
-    partial void OnHideTeamListChanged();
-    #endregion
-	
-	public Organization()
-	{
-		this._OrganizationRebuilds = new EntitySet<OrganizationRebuild>(new Action<OrganizationRebuild>(this.attach_OrganizationRebuilds), new Action<OrganizationRebuild>(this.detach_OrganizationRebuilds));
-		this._OrganizationPrograms = new EntitySet<OrganizationProgram>(new Action<OrganizationProgram>(this.attach_OrganizationPrograms), new Action<OrganizationProgram>(this.detach_OrganizationPrograms));
-		this._UserOrganizationInvites = new EntitySet<UserOrganizationInvite>(new Action<UserOrganizationInvite>(this.attach_UserOrganizationInvites), new Action<UserOrganizationInvite>(this.detach_UserOrganizationInvites));
-		this._OrganizationEvents = new EntitySet<OrganizationEvent>(new Action<OrganizationEvent>(this.attach_OrganizationEvents), new Action<OrganizationEvent>(this.detach_OrganizationEvents));
-		this._OrganizationCases = new EntitySet<OrganizationCase>(new Action<OrganizationCase>(this.attach_OrganizationCases), new Action<OrganizationCase>(this.detach_OrganizationCases));
-		this._Positions = new EntitySet<Position>(new Action<Position>(this.attach_Positions), new Action<Position>(this.detach_Positions));
-		this._PaymentConfigurations = new EntitySet<PaymentConfiguration>(new Action<PaymentConfiguration>(this.attach_PaymentConfigurations), new Action<PaymentConfiguration>(this.detach_PaymentConfigurations));
-		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
-		this._aspnet_User = default(EntityRef<aspnet_User>);
-		this._aspnet_User1 = default(EntityRef<aspnet_User>);
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid OrganizationId
-	{
-		get
-		{
-			return this._OrganizationId;
-		}
-		set
-		{
-			if ((this._OrganizationId != value))
-			{
-				this.OnOrganizationIdChanging(value);
-				this.SendPropertyChanging();
-				this._OrganizationId = value;
-				this.SendPropertyChanged("OrganizationId");
-				this.OnOrganizationIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="VarChar(500) NOT NULL", CanBeNull=false)]
-	public string Name
-	{
-		get
-		{
-			return this._Name;
-		}
-		set
-		{
-			if ((this._Name != value))
-			{
-				this.OnNameChanging(value);
-				this.SendPropertyChanging();
-				this._Name = value;
-				this.SendPropertyChanged("Name");
-				this.OnNameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_URLFriendlyName", DbType="VarChar(500)")]
-	public string URLFriendlyName
-	{
-		get
-		{
-			return this._URLFriendlyName;
-		}
-		set
-		{
-			if ((this._URLFriendlyName != value))
-			{
-				this.OnURLFriendlyNameChanging(value);
-				this.SendPropertyChanging();
-				this._URLFriendlyName = value;
-				this.SendPropertyChanged("URLFriendlyName");
-				this.OnURLFriendlyNameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(MAX)")]
-	public string Description
-	{
-		get
-		{
-			return this._Description;
-		}
-		set
-		{
-			if ((this._Description != value))
-			{
-				this.OnDescriptionChanging(value);
-				this.SendPropertyChanging();
-				this._Description = value;
-				this.SendPropertyChanged("Description");
-				this.OnDescriptionChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PurposeMission", DbType="VarChar(MAX)")]
-	public string PurposeMission
-	{
-		get
-		{
-			return this._PurposeMission;
-		}
-		set
-		{
-			if ((this._PurposeMission != value))
-			{
-				this.OnPurposeMissionChanging(value);
-				this.SendPropertyChanging();
-				this._PurposeMission = value;
-				this.SendPropertyChanged("PurposeMission");
-				this.OnPurposeMissionChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_History", DbType="VarChar(350)")]
-	public string History
-	{
-		get
-		{
-			return this._History;
-		}
-		set
-		{
-			if ((this._History != value))
-			{
-				this.OnHistoryChanging(value);
-				this.SendPropertyChanging();
-				this._History = value;
-				this.SendPropertyChanged("History");
-				this.OnHistoryChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerInstructions", DbType="VarChar(350)")]
-	public string VolunteerInstructions
-	{
-		get
-		{
-			return this._VolunteerInstructions;
-		}
-		set
-		{
-			if ((this._VolunteerInstructions != value))
-			{
-				this.OnVolunteerInstructionsChanging(value);
-				this.SendPropertyChanging();
-				this._VolunteerInstructions = value;
-				this.SendPropertyChanged("VolunteerInstructions");
-				this.OnVolunteerInstructionsChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WhoWeHelp", DbType="VarChar(350)")]
-	public string WhoWeHelp
-	{
-		get
-		{
-			return this._WhoWeHelp;
-		}
-		set
-		{
-			if ((this._WhoWeHelp != value))
-			{
-				this.OnWhoWeHelpChanging(value);
-				this.SendPropertyChanging();
-				this._WhoWeHelp = value;
-				this.SendPropertyChanged("WhoWeHelp");
-				this.OnWhoWeHelpChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProgramsOverview", DbType="VarChar(350)")]
-	public string ProgramsOverview
-	{
-		get
-		{
-			return this._ProgramsOverview;
-		}
-		set
-		{
-			if ((this._ProgramsOverview != value))
-			{
-				this.OnProgramsOverviewChanging(value);
-				this.SendPropertyChanging();
-				this._ProgramsOverview = value;
-				this.SendPropertyChanged("ProgramsOverview");
-				this.OnProgramsOverviewChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AFewWordsAboutUs", DbType="VarChar(350)")]
-	public string AFewWordsAboutUs
-	{
-		get
-		{
-			return this._AFewWordsAboutUs;
-		}
-		set
-		{
-			if ((this._AFewWordsAboutUs != value))
-			{
-				this.OnAFewWordsAboutUsChanging(value);
-				this.SendPropertyChanging();
-				this._AFewWordsAboutUs = value;
-				this.SendPropertyChanged("AFewWordsAboutUs");
-				this.OnAFewWordsAboutUsChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
-	public System.DateTime CreatedOn
-	{
-		get
-		{
-			return this._CreatedOn;
-		}
-		set
-		{
-			if ((this._CreatedOn != value))
-			{
-				this.OnCreatedOnChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedOn = value;
-				this.SendPropertyChanged("CreatedOn");
-				this.OnCreatedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid CreatedBy
-	{
-		get
-		{
-			return this._CreatedBy;
-		}
-		set
-		{
-			if ((this._CreatedBy != value))
-			{
-				if (this._aspnet_User.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnCreatedByChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedBy = value;
-				this.SendPropertyChanged("CreatedBy");
-				this.OnCreatedByChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OwnerId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> OwnerId
-	{
-		get
-		{
-			return this._OwnerId;
-		}
-		set
-		{
-			if ((this._OwnerId != value))
-			{
-				if (this._aspnet_User1.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnOwnerIdChanging(value);
-				this.SendPropertyChanging();
-				this._OwnerId = value;
-				this.SendPropertyChanged("OwnerId");
-				this.OnOwnerIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="VarChar(500)")]
-	public string Address
-	{
-		get
-		{
-			return this._Address;
-		}
-		set
-		{
-			if ((this._Address != value))
-			{
-				this.OnAddressChanging(value);
-				this.SendPropertyChanging();
-				this._Address = value;
-				this.SendPropertyChanged("Address");
-				this.OnAddressChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_City", DbType="VarChar(50)")]
-	public string City
-	{
-		get
-		{
-			return this._City;
-		}
-		set
-		{
-			if ((this._City != value))
-			{
-				this.OnCityChanging(value);
-				this.SendPropertyChanging();
-				this._City = value;
-				this.SendPropertyChanged("City");
-				this.OnCityChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="VarChar(50)")]
-	public string State
-	{
-		get
-		{
-			return this._State;
-		}
-		set
-		{
-			if ((this._State != value))
-			{
-				this.OnStateChanging(value);
-				this.SendPropertyChanging();
-				this._State = value;
-				this.SendPropertyChanged("State");
-				this.OnStateChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Zip", DbType="VarChar(10)")]
-	public string Zip
-	{
-		get
-		{
-			return this._Zip;
-		}
-		set
-		{
-			if ((this._Zip != value))
-			{
-				this.OnZipChanging(value);
-				this.SendPropertyChanging();
-				this._Zip = value;
-				this.SendPropertyChanged("Zip");
-				this.OnZipChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Country", DbType="VarChar(50)")]
-	public string Country
-	{
-		get
-		{
-			return this._Country;
-		}
-		set
-		{
-			if ((this._Country != value))
-			{
-				this.OnCountryChanging(value);
-				this.SendPropertyChanging();
-				this._Country = value;
-				this.SendPropertyChanged("Country");
-				this.OnCountryChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PrimaryPhone", DbType="VarChar(15)")]
-	public string PrimaryPhone
-	{
-		get
-		{
-			return this._PrimaryPhone;
-		}
-		set
-		{
-			if ((this._PrimaryPhone != value))
-			{
-				this.OnPrimaryPhoneChanging(value);
-				this.SendPropertyChanging();
-				this._PrimaryPhone = value;
-				this.SendPropertyChanged("PrimaryPhone");
-				this.OnPrimaryPhoneChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SecondaryPhone", DbType="VarChar(15)")]
-	public string SecondaryPhone
-	{
-		get
-		{
-			return this._SecondaryPhone;
-		}
-		set
-		{
-			if ((this._SecondaryPhone != value))
-			{
-				this.OnSecondaryPhoneChanging(value);
-				this.SendPropertyChanging();
-				this._SecondaryPhone = value;
-				this.SendPropertyChanged("SecondaryPhone");
-				this.OnSecondaryPhoneChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ParentOrganizationId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> ParentOrganizationId
-	{
-		get
-		{
-			return this._ParentOrganizationId;
-		}
-		set
-		{
-			if ((this._ParentOrganizationId != value))
-			{
-				this.OnParentOrganizationIdChanging(value);
-				this.SendPropertyChanging();
-				this._ParentOrganizationId = value;
-				this.SendPropertyChanged("ParentOrganizationId");
-				this.OnParentOrganizationIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Logo", DbType="VarChar(500)")]
-	public string Logo
-	{
-		get
-		{
-			return this._Logo;
-		}
-		set
-		{
-			if ((this._Logo != value))
-			{
-				this.OnLogoChanging(value);
-				this.SendPropertyChanging();
-				this._Logo = value;
-				this.SendPropertyChanged("Logo");
-				this.OnLogoChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LogoSquare", DbType="VarChar(500)")]
-	public string LogoSquare
-	{
-		get
-		{
-			return this._LogoSquare;
-		}
-		set
-		{
-			if ((this._LogoSquare != value))
-			{
-				this.OnLogoSquareChanging(value);
-				this.SendPropertyChanging();
-				this._LogoSquare = value;
-				this.SendPropertyChanged("LogoSquare");
-				this.OnLogoSquareChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FacebookURL", DbType="VarChar(500)")]
-	public string FacebookURL
-	{
-		get
-		{
-			return this._FacebookURL;
-		}
-		set
-		{
-			if ((this._FacebookURL != value))
-			{
-				this.OnFacebookURLChanging(value);
-				this.SendPropertyChanging();
-				this._FacebookURL = value;
-				this.SendPropertyChanged("FacebookURL");
-				this.OnFacebookURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FacebookGroupURL", DbType="VarChar(500)")]
-	public string FacebookGroupURL
-	{
-		get
-		{
-			return this._FacebookGroupURL;
-		}
-		set
-		{
-			if ((this._FacebookGroupURL != value))
-			{
-				this.OnFacebookGroupURLChanging(value);
-				this.SendPropertyChanging();
-				this._FacebookGroupURL = value;
-				this.SendPropertyChanged("FacebookGroupURL");
-				this.OnFacebookGroupURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TwitterURL", DbType="VarChar(500)")]
-	public string TwitterURL
-	{
-		get
-		{
-			return this._TwitterURL;
-		}
-		set
-		{
-			if ((this._TwitterURL != value))
-			{
-				this.OnTwitterURLChanging(value);
-				this.SendPropertyChanging();
-				this._TwitterURL = value;
-				this.SendPropertyChanged("TwitterURL");
-				this.OnTwitterURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_InstagramURL", DbType="VarChar(500)")]
-	public string InstagramURL
-	{
-		get
-		{
-			return this._InstagramURL;
-		}
-		set
-		{
-			if ((this._InstagramURL != value))
-			{
-				this.OnInstagramURLChanging(value);
-				this.SendPropertyChanging();
-				this._InstagramURL = value;
-				this.SendPropertyChanged("InstagramURL");
-				this.OnInstagramURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_YouTubeURL", DbType="VarChar(500)")]
-	public string YouTubeURL
-	{
-		get
-		{
-			return this._YouTubeURL;
-		}
-		set
-		{
-			if ((this._YouTubeURL != value))
-			{
-				this.OnYouTubeURLChanging(value);
-				this.SendPropertyChanging();
-				this._YouTubeURL = value;
-				this.SendPropertyChanged("YouTubeURL");
-				this.OnYouTubeURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TikTokURL", DbType="VarChar(500)")]
-	public string TikTokURL
-	{
-		get
-		{
-			return this._TikTokURL;
-		}
-		set
-		{
-			if ((this._TikTokURL != value))
-			{
-				this.OnTikTokURLChanging(value);
-				this.SendPropertyChanging();
-				this._TikTokURL = value;
-				this.SendPropertyChanged("TikTokURL");
-				this.OnTikTokURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[501c3Status]", Storage="__501c3Status", DbType="Bit")]
-	public System.Nullable<bool> _501c3Status
-	{
-		get
-		{
-			return this.@__501c3Status;
-		}
-		set
-		{
-			if ((this.@__501c3Status != value))
-			{
-				this.On_501c3StatusChanging(value);
-				this.SendPropertyChanging();
-				this.@__501c3Status = value;
-				this.SendPropertyChanged("_501c3Status");
-				this.On_501c3StatusChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit")]
-	public System.Nullable<bool> IsActive
-	{
-		get
-		{
-			return this._IsActive;
-		}
-		set
-		{
-			if ((this._IsActive != value))
-			{
-				this.OnIsActiveChanging(value);
-				this.SendPropertyChanging();
-				this._IsActive = value;
-				this.SendPropertyChanged("IsActive");
-				this.OnIsActiveChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsVoadMember", DbType="Bit")]
-	public System.Nullable<bool> IsVoadMember
-	{
-		get
-		{
-			return this._IsVoadMember;
-		}
-		set
-		{
-			if ((this._IsVoadMember != value))
-			{
-				this.OnIsVoadMemberChanging(value);
-				this.SendPropertyChanging();
-				this._IsVoadMember = value;
-				this.SendPropertyChanged("IsVoadMember");
-				this.OnIsVoadMemberChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PointOfContactName", DbType="VarChar(100)")]
-	public string PointOfContactName
-	{
-		get
-		{
-			return this._PointOfContactName;
-		}
-		set
-		{
-			if ((this._PointOfContactName != value))
-			{
-				this.OnPointOfContactNameChanging(value);
-				this.SendPropertyChanging();
-				this._PointOfContactName = value;
-				this.SendPropertyChanged("PointOfContactName");
-				this.OnPointOfContactNameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PointOfContactUserId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> PointOfContactUserId
-	{
-		get
-		{
-			return this._PointOfContactUserId;
-		}
-		set
-		{
-			if ((this._PointOfContactUserId != value))
-			{
-				this.OnPointOfContactUserIdChanging(value);
-				this.SendPropertyChanging();
-				this._PointOfContactUserId = value;
-				this.SendPropertyChanged("PointOfContactUserId");
-				this.OnPointOfContactUserIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PointOfContactEmail", DbType="VarChar(500)")]
-	public string PointOfContactEmail
-	{
-		get
-		{
-			return this._PointOfContactEmail;
-		}
-		set
-		{
-			if ((this._PointOfContactEmail != value))
-			{
-				this.OnPointOfContactEmailChanging(value);
-				this.SendPropertyChanging();
-				this._PointOfContactEmail = value;
-				this.SendPropertyChanged("PointOfContactEmail");
-				this.OnPointOfContactEmailChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PointOfContactPhoneNumber", DbType="VarChar(50)")]
-	public string PointOfContactPhoneNumber
-	{
-		get
-		{
-			return this._PointOfContactPhoneNumber;
-		}
-		set
-		{
-			if ((this._PointOfContactPhoneNumber != value))
-			{
-				this.OnPointOfContactPhoneNumberChanging(value);
-				this.SendPropertyChanging();
-				this._PointOfContactPhoneNumber = value;
-				this.SendPropertyChanged("PointOfContactPhoneNumber");
-				this.OnPointOfContactPhoneNumberChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Website", DbType="VarChar(500)")]
-	public string Website
-	{
-		get
-		{
-			return this._Website;
-		}
-		set
-		{
-			if ((this._Website != value))
-			{
-				this.OnWebsiteChanging(value);
-				this.SendPropertyChanging();
-				this._Website = value;
-				this.SendPropertyChanged("Website");
-				this.OnWebsiteChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PublicPhoneNumber", DbType="VarChar(50)")]
-	public string PublicPhoneNumber
-	{
-		get
-		{
-			return this._PublicPhoneNumber;
-		}
-		set
-		{
-			if ((this._PublicPhoneNumber != value))
-			{
-				this.OnPublicPhoneNumberChanging(value);
-				this.SendPropertyChanging();
-				this._PublicPhoneNumber = value;
-				this.SendPropertyChanged("PublicPhoneNumber");
-				this.OnPublicPhoneNumberChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PublicEmail", DbType="VarChar(500)")]
-	public string PublicEmail
-	{
-		get
-		{
-			return this._PublicEmail;
-		}
-		set
-		{
-			if ((this._PublicEmail != value))
-			{
-				this.OnPublicEmailChanging(value);
-				this.SendPropertyChanging();
-				this._PublicEmail = value;
-				this.SendPropertyChanged("PublicEmail");
-				this.OnPublicEmailChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_YearFounded", DbType="VarChar(4)")]
-	public string YearFounded
-	{
-		get
-		{
-			return this._YearFounded;
-		}
-		set
-		{
-			if ((this._YearFounded != value))
-			{
-				this.OnYearFoundedChanging(value);
-				this.SendPropertyChanging();
-				this._YearFounded = value;
-				this.SendPropertyChanged("YearFounded");
-				this.OnYearFoundedChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CoverImage", DbType="VarChar(50)")]
-	public string CoverImage
-	{
-		get
-		{
-			return this._CoverImage;
-		}
-		set
-		{
-			if ((this._CoverImage != value))
-			{
-				this.OnCoverImageChanging(value);
-				this.SendPropertyChanging();
-				this._CoverImage = value;
-				this.SendPropertyChanged("CoverImage");
-				this.OnCoverImageChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EIN", DbType="VarChar(50)")]
-	public string EIN
-	{
-		get
-		{
-			return this._EIN;
-		}
-		set
-		{
-			if ((this._EIN != value))
-			{
-				this.OnEINChanging(value);
-				this.SendPropertyChanging();
-				this._EIN = value;
-				this.SendPropertyChanged("EIN");
-				this.OnEINChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BlogURL", DbType="VarChar(500)")]
-	public string BlogURL
-	{
-		get
-		{
-			return this._BlogURL;
-		}
-		set
-		{
-			if ((this._BlogURL != value))
-			{
-				this.OnBlogURLChanging(value);
-				this.SendPropertyChanging();
-				this._BlogURL = value;
-				this.SendPropertyChanged("BlogURL");
-				this.OnBlogURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DonationURL", DbType="VarChar(500)")]
-	public string DonationURL
-	{
-		get
-		{
-			return this._DonationURL;
-		}
-		set
-		{
-			if ((this._DonationURL != value))
-			{
-				this.OnDonationURLChanging(value);
-				this.SendPropertyChanging();
-				this._DonationURL = value;
-				this.SendPropertyChanged("DonationURL");
-				this.OnDonationURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerURL", DbType="VarChar(500)")]
-	public string VolunteerURL
-	{
-		get
-		{
-			return this._VolunteerURL;
-		}
-		set
-		{
-			if ((this._VolunteerURL != value))
-			{
-				this.OnVolunteerURLChanging(value);
-				this.SendPropertyChanging();
-				this._VolunteerURL = value;
-				this.SendPropertyChanged("VolunteerURL");
-				this.OnVolunteerURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HelpURL", DbType="VarChar(500)")]
-	public string HelpURL
-	{
-		get
-		{
-			return this._HelpURL;
-		}
-		set
-		{
-			if ((this._HelpURL != value))
-			{
-				this.OnHelpURLChanging(value);
-				this.SendPropertyChanging();
-				this._HelpURL = value;
-				this.SendPropertyChanged("HelpURL");
-				this.OnHelpURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsWebsiteActive", DbType="Bit")]
-	public System.Nullable<bool> IsWebsiteActive
-	{
-		get
-		{
-			return this._IsWebsiteActive;
-		}
-		set
-		{
-			if ((this._IsWebsiteActive != value))
-			{
-				this.OnIsWebsiteActiveChanging(value);
-				this.SendPropertyChanging();
-				this._IsWebsiteActive = value;
-				this.SendPropertyChanged("IsWebsiteActive");
-				this.OnIsWebsiteActiveChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RespondToTickets", DbType="Bit")]
-	public System.Nullable<bool> RespondToTickets
-	{
-		get
-		{
-			return this._RespondToTickets;
-		}
-		set
-		{
-			if ((this._RespondToTickets != value))
-			{
-				this.OnRespondToTicketsChanging(value);
-				this.SendPropertyChanging();
-				this._RespondToTickets = value;
-				this.SendPropertyChanged("RespondToTickets");
-				this.OnRespondToTicketsChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HideTeamList", DbType="Bit")]
-	public System.Nullable<bool> HideTeamList
-	{
-		get
-		{
-			return this._HideTeamList;
-		}
-		set
-		{
-			if ((this._HideTeamList != value))
-			{
-				this.OnHideTeamListChanging(value);
-				this.SendPropertyChanging();
-				this._HideTeamList = value;
-				this.SendPropertyChanged("HideTeamList");
-				this.OnHideTeamListChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationRebuild", Storage="_OrganizationRebuilds", ThisKey="OrganizationId", OtherKey="OrganizationId")]
-	public EntitySet<OrganizationRebuild> OrganizationRebuilds
-	{
-		get
-		{
-			return this._OrganizationRebuilds;
-		}
-		set
-		{
-			this._OrganizationRebuilds.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationProgram", Storage="_OrganizationPrograms", ThisKey="OrganizationId", OtherKey="OrganizationId")]
-	public EntitySet<OrganizationProgram> OrganizationPrograms
-	{
-		get
-		{
-			return this._OrganizationPrograms;
-		}
-		set
-		{
-			this._OrganizationPrograms.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganizationInvite", Storage="_UserOrganizationInvites", ThisKey="OrganizationId", OtherKey="OrganizationId")]
-	public EntitySet<UserOrganizationInvite> UserOrganizationInvites
-	{
-		get
-		{
-			return this._UserOrganizationInvites;
-		}
-		set
-		{
-			this._UserOrganizationInvites.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationEvent", Storage="_OrganizationEvents", ThisKey="OrganizationId", OtherKey="OrganizationId")]
-	public EntitySet<OrganizationEvent> OrganizationEvents
-	{
-		get
-		{
-			return this._OrganizationEvents;
-		}
-		set
-		{
-			this._OrganizationEvents.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationCase", Storage="_OrganizationCases", ThisKey="OrganizationId", OtherKey="OrganizationId")]
-	public EntitySet<OrganizationCase> OrganizationCases
-	{
-		get
-		{
-			return this._OrganizationCases;
-		}
-		set
-		{
-			this._OrganizationCases.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_Position", Storage="_Positions", ThisKey="OrganizationId", OtherKey="OrganizationId")]
-	public EntitySet<Position> Positions
-	{
-		get
-		{
-			return this._Positions;
-		}
-		set
-		{
-			this._Positions.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_PaymentConfiguration", Storage="_PaymentConfigurations", ThisKey="OrganizationId", OtherKey="OrganizationId")]
-	public EntitySet<PaymentConfiguration> PaymentConfigurations
-	{
-		get
-		{
-			return this._PaymentConfigurations;
-		}
-		set
-		{
-			this._PaymentConfigurations.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganization", Storage="_UserOrganizations", ThisKey="OrganizationId", OtherKey="OrganizationId")]
-	public EntitySet<UserOrganization> UserOrganizations
-	{
-		get
-		{
-			return this._UserOrganizations;
-		}
-		set
-		{
-			this._UserOrganizations.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Organization", Storage="_aspnet_User", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
-	public aspnet_User aspnet_User
-	{
-		get
-		{
-			return this._aspnet_User.Entity;
-		}
-		set
-		{
-			aspnet_User previousValue = this._aspnet_User.Entity;
-			if (((previousValue != value) 
-						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._aspnet_User.Entity = null;
-					previousValue.Organizations.Remove(this);
-				}
-				this._aspnet_User.Entity = value;
-				if ((value != null))
-				{
-					value.Organizations.Add(this);
-					this._CreatedBy = value.UserId;
-				}
-				else
-				{
-					this._CreatedBy = default(System.Guid);
-				}
-				this.SendPropertyChanged("aspnet_User");
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Organization1", Storage="_aspnet_User1", ThisKey="OwnerId", OtherKey="UserId", IsForeignKey=true)]
-	public aspnet_User aspnet_User1
-	{
-		get
-		{
-			return this._aspnet_User1.Entity;
-		}
-		set
-		{
-			aspnet_User previousValue = this._aspnet_User1.Entity;
-			if (((previousValue != value) 
-						|| (this._aspnet_User1.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._aspnet_User1.Entity = null;
-					previousValue.Organizations1.Remove(this);
-				}
-				this._aspnet_User1.Entity = value;
-				if ((value != null))
-				{
-					value.Organizations1.Add(this);
-					this._OwnerId = value.UserId;
-				}
-				else
-				{
-					this._OwnerId = default(Nullable<System.Guid>);
-				}
-				this.SendPropertyChanged("aspnet_User1");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-	
-	private void attach_OrganizationRebuilds(OrganizationRebuild entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = this;
-	}
-	
-	private void detach_OrganizationRebuilds(OrganizationRebuild entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = null;
-	}
-	
-	private void attach_OrganizationPrograms(OrganizationProgram entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = this;
-	}
-	
-	private void detach_OrganizationPrograms(OrganizationProgram entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = null;
-	}
-	
-	private void attach_UserOrganizationInvites(UserOrganizationInvite entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = this;
-	}
-	
-	private void detach_UserOrganizationInvites(UserOrganizationInvite entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = null;
-	}
-	
-	private void attach_OrganizationEvents(OrganizationEvent entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = this;
-	}
-	
-	private void detach_OrganizationEvents(OrganizationEvent entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = null;
-	}
-	
-	private void attach_OrganizationCases(OrganizationCase entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = this;
-	}
-	
-	private void detach_OrganizationCases(OrganizationCase entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = null;
-	}
-	
-	private void attach_Positions(Position entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = this;
-	}
-	
-	private void detach_Positions(Position entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = null;
-	}
-	
-	private void attach_PaymentConfigurations(PaymentConfiguration entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = this;
-	}
-	
-	private void detach_PaymentConfigurations(PaymentConfiguration entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = null;
-	}
-	
-	private void attach_UserOrganizations(UserOrganization entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = this;
-	}
-	
-	private void detach_UserOrganizations(UserOrganization entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = null;
-	}
-}
-
 [global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AudienceType")]
 public partial class AudienceType : INotifyPropertyChanging, INotifyPropertyChanged
 {
@@ -37408,9 +35886,9 @@ public partial class OrganizationEvent : INotifyPropertyChanging, INotifyPropert
 	
 	private EntityRef<County> _County;
 	
-	private EntityRef<Organization> _Organization;
-	
 	private EntityRef<Event> _Event;
+	
+	private EntityRef<Organization> _Organization;
 	
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -37498,8 +35976,8 @@ public partial class OrganizationEvent : INotifyPropertyChanging, INotifyPropert
 		this._OrganizationEventPositionDates = new EntitySet<OrganizationEventPositionDate>(new Action<OrganizationEventPositionDate>(this.attach_OrganizationEventPositionDates), new Action<OrganizationEventPositionDate>(this.detach_OrganizationEventPositionDates));
 		this._OrganizationEventPositions = new EntitySet<OrganizationEventPosition>(new Action<OrganizationEventPosition>(this.attach_OrganizationEventPositions), new Action<OrganizationEventPosition>(this.detach_OrganizationEventPositions));
 		this._County = default(EntityRef<County>);
-		this._Organization = default(EntityRef<Organization>);
 		this._Event = default(EntityRef<Event>);
+		this._Organization = default(EntityRef<Organization>);
 		OnCreated();
 	}
 	
@@ -38334,40 +36812,6 @@ public partial class OrganizationEvent : INotifyPropertyChanging, INotifyPropert
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationEvent", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
-	public Organization Organization
-	{
-		get
-		{
-			return this._Organization.Entity;
-		}
-		set
-		{
-			Organization previousValue = this._Organization.Entity;
-			if (((previousValue != value) 
-						|| (this._Organization.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Organization.Entity = null;
-					previousValue.OrganizationEvents.Remove(this);
-				}
-				this._Organization.Entity = value;
-				if ((value != null))
-				{
-					value.OrganizationEvents.Add(this);
-					this._OrganizationId = value.OrganizationId;
-				}
-				else
-				{
-					this._OrganizationId = default(System.Guid);
-				}
-				this.SendPropertyChanged("Organization");
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Event_OrganizationEvent", Storage="_Event", ThisKey="EventId", OtherKey="EventId", IsForeignKey=true)]
 	public Event Event
 	{
@@ -38398,6 +36842,40 @@ public partial class OrganizationEvent : INotifyPropertyChanging, INotifyPropert
 					this._EventId = default(Nullable<System.Guid>);
 				}
 				this.SendPropertyChanged("Event");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationEvent", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
+	public Organization Organization
+	{
+		get
+		{
+			return this._Organization.Entity;
+		}
+		set
+		{
+			Organization previousValue = this._Organization.Entity;
+			if (((previousValue != value) 
+						|| (this._Organization.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Organization.Entity = null;
+					previousValue.OrganizationEvents.Remove(this);
+				}
+				this._Organization.Entity = value;
+				if ((value != null))
+				{
+					value.OrganizationEvents.Add(this);
+					this._OrganizationId = value.OrganizationId;
+				}
+				else
+				{
+					this._OrganizationId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Organization");
 			}
 		}
 	}
@@ -42174,8 +40652,6 @@ public partial class OrganizationCase : INotifyPropertyChanging, INotifyProperty
 	
 	private EntityRef<aspnet_User> _aspnet_User;
 	
-	private EntityRef<Organization> _Organization;
-	
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -42201,7 +40677,6 @@ public partial class OrganizationCase : INotifyPropertyChanging, INotifyProperty
 	public OrganizationCase()
 	{
 		this._aspnet_User = default(EntityRef<aspnet_User>);
-		this._Organization = default(EntityRef<Organization>);
 		OnCreated();
 	}
 	
@@ -42236,10 +40711,6 @@ public partial class OrganizationCase : INotifyPropertyChanging, INotifyProperty
 		{
 			if ((this._OrganizationId != value))
 			{
-				if (this._Organization.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
 				this.OnOrganizationIdChanging(value);
 				this.SendPropertyChanging();
 				this._OrganizationId = value;
@@ -42407,40 +40878,6 @@ public partial class OrganizationCase : INotifyPropertyChanging, INotifyProperty
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationCase", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
-	public Organization Organization
-	{
-		get
-		{
-			return this._Organization.Entity;
-		}
-		set
-		{
-			Organization previousValue = this._Organization.Entity;
-			if (((previousValue != value) 
-						|| (this._Organization.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Organization.Entity = null;
-					previousValue.OrganizationCases.Remove(this);
-				}
-				this._Organization.Entity = value;
-				if ((value != null))
-				{
-					value.OrganizationCases.Add(this);
-					this._OrganizationId = value.OrganizationId;
-				}
-				else
-				{
-					this._OrganizationId = default(System.Guid);
-				}
-				this.SendPropertyChanged("Organization");
-			}
-		}
-	}
-	
 	public event PropertyChangingEventHandler PropertyChanging;
 	
 	public event PropertyChangedEventHandler PropertyChanged;
@@ -42512,9 +40949,9 @@ public partial class Position : INotifyPropertyChanging, INotifyPropertyChanged
 	
 	private EntitySet<ProgramPosition> _ProgramPositions;
 	
-	private EntityRef<Organization> _Organization;
-	
 	private EntityRef<Position> _Position1;
+	
+	private EntityRef<Organization> _Organization;
 	
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -42565,8 +41002,8 @@ public partial class Position : INotifyPropertyChanging, INotifyPropertyChanged
 		this._OrganizationEventPositions = new EntitySet<OrganizationEventPosition>(new Action<OrganizationEventPosition>(this.attach_OrganizationEventPositions), new Action<OrganizationEventPosition>(this.detach_OrganizationEventPositions));
 		this._Position2 = default(EntityRef<Position>);
 		this._ProgramPositions = new EntitySet<ProgramPosition>(new Action<ProgramPosition>(this.attach_ProgramPositions), new Action<ProgramPosition>(this.detach_ProgramPositions));
-		this._Organization = default(EntityRef<Organization>);
 		this._Position1 = default(EntityRef<Position>);
+		this._Organization = default(EntityRef<Organization>);
 		OnCreated();
 	}
 	
@@ -43013,40 +41450,6 @@ public partial class Position : INotifyPropertyChanging, INotifyPropertyChanged
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_Position", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
-	public Organization Organization
-	{
-		get
-		{
-			return this._Organization.Entity;
-		}
-		set
-		{
-			Organization previousValue = this._Organization.Entity;
-			if (((previousValue != value) 
-						|| (this._Organization.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Organization.Entity = null;
-					previousValue.Positions.Remove(this);
-				}
-				this._Organization.Entity = value;
-				if ((value != null))
-				{
-					value.Positions.Add(this);
-					this._OrganizationId = value.OrganizationId;
-				}
-				else
-				{
-					this._OrganizationId = default(Nullable<System.Guid>);
-				}
-				this.SendPropertyChanged("Organization");
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Position_Position", Storage="_Position1", ThisKey="PositionId", OtherKey="PositionId", IsForeignKey=true)]
 	public Position Position1
 	{
@@ -43077,6 +41480,40 @@ public partial class Position : INotifyPropertyChanging, INotifyPropertyChanged
 					this._PositionId = default(System.Guid);
 				}
 				this.SendPropertyChanged("Position1");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_Position", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
+	public Organization Organization
+	{
+		get
+		{
+			return this._Organization.Entity;
+		}
+		set
+		{
+			Organization previousValue = this._Organization.Entity;
+			if (((previousValue != value) 
+						|| (this._Organization.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Organization.Entity = null;
+					previousValue.Positions.Remove(this);
+				}
+				this._Organization.Entity = value;
+				if ((value != null))
+				{
+					value.Positions.Add(this);
+					this._OrganizationId = value.OrganizationId;
+				}
+				else
+				{
+					this._OrganizationId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("Organization");
 			}
 		}
 	}
@@ -49175,6 +47612,1522 @@ public partial class Post : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this.SendPropertyChanging();
 		entity.Post = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Organization")]
+public partial class Organization : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _OrganizationId;
+	
+	private string _Name;
+	
+	private string _URLFriendlyName;
+	
+	private string _Description;
+	
+	private string _PurposeMission;
+	
+	private string _History;
+	
+	private string _VolunteerInstructions;
+	
+	private string _WhoWeHelp;
+	
+	private string _ProgramsOverview;
+	
+	private string _AFewWordsAboutUs;
+	
+	private System.DateTime _CreatedOn;
+	
+	private System.Guid _CreatedBy;
+	
+	private System.Nullable<System.Guid> _OwnerId;
+	
+	private string _Address;
+	
+	private string _City;
+	
+	private string _State;
+	
+	private string _Zip;
+	
+	private string _Country;
+	
+	private string _PrimaryPhone;
+	
+	private string _SecondaryPhone;
+	
+	private System.Nullable<System.Guid> _ParentOrganizationId;
+	
+	private string _Logo;
+	
+	private string _LogoSquare;
+	
+	private string _FacebookURL;
+	
+	private string _FacebookGroupURL;
+	
+	private string _TwitterURL;
+	
+	private string _InstagramURL;
+	
+	private string _YouTubeURL;
+	
+	private string _TikTokURL;
+	
+	private System.Nullable<bool> @__501c3Status;
+	
+	private System.Nullable<bool> _IsActive;
+	
+	private System.Nullable<bool> _IsVoadMember;
+	
+	private string _PointOfContactName;
+	
+	private System.Nullable<System.Guid> _PointOfContactUserId;
+	
+	private string _PointOfContactEmail;
+	
+	private string _PointOfContactPhoneNumber;
+	
+	private string _Website;
+	
+	private string _PublicPhoneNumber;
+	
+	private string _PublicEmail;
+	
+	private string _YearFounded;
+	
+	private string _CoverImage;
+	
+	private string _EIN;
+	
+	private string _BlogURL;
+	
+	private string _DonationURL;
+	
+	private string _VolunteerURL;
+	
+	private string _HelpURL;
+	
+	private System.Nullable<bool> _IsWebsiteActive;
+	
+	private System.Nullable<bool> _RespondToTickets;
+	
+	private System.Nullable<bool> _HideTeamList;
+	
+	private System.Nullable<bool> _EnableTeamMemberVerification;
+	
+	private EntitySet<OrganizationRebuild> _OrganizationRebuilds;
+	
+	private EntitySet<OrganizationProgram> _OrganizationPrograms;
+	
+	private EntitySet<UserOrganizationInvite> _UserOrganizationInvites;
+	
+	private EntitySet<OrganizationEvent> _OrganizationEvents;
+	
+	private EntitySet<Position> _Positions;
+	
+	private EntitySet<PaymentConfiguration> _PaymentConfigurations;
+	
+	private EntitySet<UserOrganization> _UserOrganizations;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+	private EntityRef<aspnet_User> _aspnet_User1;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnOrganizationIdChanging(System.Guid value);
+    partial void OnOrganizationIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnURLFriendlyNameChanging(string value);
+    partial void OnURLFriendlyNameChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnPurposeMissionChanging(string value);
+    partial void OnPurposeMissionChanged();
+    partial void OnHistoryChanging(string value);
+    partial void OnHistoryChanged();
+    partial void OnVolunteerInstructionsChanging(string value);
+    partial void OnVolunteerInstructionsChanged();
+    partial void OnWhoWeHelpChanging(string value);
+    partial void OnWhoWeHelpChanged();
+    partial void OnProgramsOverviewChanging(string value);
+    partial void OnProgramsOverviewChanged();
+    partial void OnAFewWordsAboutUsChanging(string value);
+    partial void OnAFewWordsAboutUsChanged();
+    partial void OnCreatedOnChanging(System.DateTime value);
+    partial void OnCreatedOnChanged();
+    partial void OnCreatedByChanging(System.Guid value);
+    partial void OnCreatedByChanged();
+    partial void OnOwnerIdChanging(System.Nullable<System.Guid> value);
+    partial void OnOwnerIdChanged();
+    partial void OnAddressChanging(string value);
+    partial void OnAddressChanged();
+    partial void OnCityChanging(string value);
+    partial void OnCityChanged();
+    partial void OnStateChanging(string value);
+    partial void OnStateChanged();
+    partial void OnZipChanging(string value);
+    partial void OnZipChanged();
+    partial void OnCountryChanging(string value);
+    partial void OnCountryChanged();
+    partial void OnPrimaryPhoneChanging(string value);
+    partial void OnPrimaryPhoneChanged();
+    partial void OnSecondaryPhoneChanging(string value);
+    partial void OnSecondaryPhoneChanged();
+    partial void OnParentOrganizationIdChanging(System.Nullable<System.Guid> value);
+    partial void OnParentOrganizationIdChanged();
+    partial void OnLogoChanging(string value);
+    partial void OnLogoChanged();
+    partial void OnLogoSquareChanging(string value);
+    partial void OnLogoSquareChanged();
+    partial void OnFacebookURLChanging(string value);
+    partial void OnFacebookURLChanged();
+    partial void OnFacebookGroupURLChanging(string value);
+    partial void OnFacebookGroupURLChanged();
+    partial void OnTwitterURLChanging(string value);
+    partial void OnTwitterURLChanged();
+    partial void OnInstagramURLChanging(string value);
+    partial void OnInstagramURLChanged();
+    partial void OnYouTubeURLChanging(string value);
+    partial void OnYouTubeURLChanged();
+    partial void OnTikTokURLChanging(string value);
+    partial void OnTikTokURLChanged();
+    partial void On_501c3StatusChanging(System.Nullable<bool> value);
+    partial void On_501c3StatusChanged();
+    partial void OnIsActiveChanging(System.Nullable<bool> value);
+    partial void OnIsActiveChanged();
+    partial void OnIsVoadMemberChanging(System.Nullable<bool> value);
+    partial void OnIsVoadMemberChanged();
+    partial void OnPointOfContactNameChanging(string value);
+    partial void OnPointOfContactNameChanged();
+    partial void OnPointOfContactUserIdChanging(System.Nullable<System.Guid> value);
+    partial void OnPointOfContactUserIdChanged();
+    partial void OnPointOfContactEmailChanging(string value);
+    partial void OnPointOfContactEmailChanged();
+    partial void OnPointOfContactPhoneNumberChanging(string value);
+    partial void OnPointOfContactPhoneNumberChanged();
+    partial void OnWebsiteChanging(string value);
+    partial void OnWebsiteChanged();
+    partial void OnPublicPhoneNumberChanging(string value);
+    partial void OnPublicPhoneNumberChanged();
+    partial void OnPublicEmailChanging(string value);
+    partial void OnPublicEmailChanged();
+    partial void OnYearFoundedChanging(string value);
+    partial void OnYearFoundedChanged();
+    partial void OnCoverImageChanging(string value);
+    partial void OnCoverImageChanged();
+    partial void OnEINChanging(string value);
+    partial void OnEINChanged();
+    partial void OnBlogURLChanging(string value);
+    partial void OnBlogURLChanged();
+    partial void OnDonationURLChanging(string value);
+    partial void OnDonationURLChanged();
+    partial void OnVolunteerURLChanging(string value);
+    partial void OnVolunteerURLChanged();
+    partial void OnHelpURLChanging(string value);
+    partial void OnHelpURLChanged();
+    partial void OnIsWebsiteActiveChanging(System.Nullable<bool> value);
+    partial void OnIsWebsiteActiveChanged();
+    partial void OnRespondToTicketsChanging(System.Nullable<bool> value);
+    partial void OnRespondToTicketsChanged();
+    partial void OnHideTeamListChanging(System.Nullable<bool> value);
+    partial void OnHideTeamListChanged();
+    partial void OnEnableTeamMemberVerificationChanging(System.Nullable<bool> value);
+    partial void OnEnableTeamMemberVerificationChanged();
+    #endregion
+	
+	public Organization()
+	{
+		this._OrganizationRebuilds = new EntitySet<OrganizationRebuild>(new Action<OrganizationRebuild>(this.attach_OrganizationRebuilds), new Action<OrganizationRebuild>(this.detach_OrganizationRebuilds));
+		this._OrganizationPrograms = new EntitySet<OrganizationProgram>(new Action<OrganizationProgram>(this.attach_OrganizationPrograms), new Action<OrganizationProgram>(this.detach_OrganizationPrograms));
+		this._UserOrganizationInvites = new EntitySet<UserOrganizationInvite>(new Action<UserOrganizationInvite>(this.attach_UserOrganizationInvites), new Action<UserOrganizationInvite>(this.detach_UserOrganizationInvites));
+		this._OrganizationEvents = new EntitySet<OrganizationEvent>(new Action<OrganizationEvent>(this.attach_OrganizationEvents), new Action<OrganizationEvent>(this.detach_OrganizationEvents));
+		this._Positions = new EntitySet<Position>(new Action<Position>(this.attach_Positions), new Action<Position>(this.detach_Positions));
+		this._PaymentConfigurations = new EntitySet<PaymentConfiguration>(new Action<PaymentConfiguration>(this.attach_PaymentConfigurations), new Action<PaymentConfiguration>(this.detach_PaymentConfigurations));
+		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		this._aspnet_User1 = default(EntityRef<aspnet_User>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="VarChar(500) NOT NULL", CanBeNull=false)]
+	public string Name
+	{
+		get
+		{
+			return this._Name;
+		}
+		set
+		{
+			if ((this._Name != value))
+			{
+				this.OnNameChanging(value);
+				this.SendPropertyChanging();
+				this._Name = value;
+				this.SendPropertyChanged("Name");
+				this.OnNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_URLFriendlyName", DbType="VarChar(500)")]
+	public string URLFriendlyName
+	{
+		get
+		{
+			return this._URLFriendlyName;
+		}
+		set
+		{
+			if ((this._URLFriendlyName != value))
+			{
+				this.OnURLFriendlyNameChanging(value);
+				this.SendPropertyChanging();
+				this._URLFriendlyName = value;
+				this.SendPropertyChanged("URLFriendlyName");
+				this.OnURLFriendlyNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(MAX)")]
+	public string Description
+	{
+		get
+		{
+			return this._Description;
+		}
+		set
+		{
+			if ((this._Description != value))
+			{
+				this.OnDescriptionChanging(value);
+				this.SendPropertyChanging();
+				this._Description = value;
+				this.SendPropertyChanged("Description");
+				this.OnDescriptionChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PurposeMission", DbType="VarChar(MAX)")]
+	public string PurposeMission
+	{
+		get
+		{
+			return this._PurposeMission;
+		}
+		set
+		{
+			if ((this._PurposeMission != value))
+			{
+				this.OnPurposeMissionChanging(value);
+				this.SendPropertyChanging();
+				this._PurposeMission = value;
+				this.SendPropertyChanged("PurposeMission");
+				this.OnPurposeMissionChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_History", DbType="VarChar(350)")]
+	public string History
+	{
+		get
+		{
+			return this._History;
+		}
+		set
+		{
+			if ((this._History != value))
+			{
+				this.OnHistoryChanging(value);
+				this.SendPropertyChanging();
+				this._History = value;
+				this.SendPropertyChanged("History");
+				this.OnHistoryChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerInstructions", DbType="VarChar(350)")]
+	public string VolunteerInstructions
+	{
+		get
+		{
+			return this._VolunteerInstructions;
+		}
+		set
+		{
+			if ((this._VolunteerInstructions != value))
+			{
+				this.OnVolunteerInstructionsChanging(value);
+				this.SendPropertyChanging();
+				this._VolunteerInstructions = value;
+				this.SendPropertyChanged("VolunteerInstructions");
+				this.OnVolunteerInstructionsChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WhoWeHelp", DbType="VarChar(350)")]
+	public string WhoWeHelp
+	{
+		get
+		{
+			return this._WhoWeHelp;
+		}
+		set
+		{
+			if ((this._WhoWeHelp != value))
+			{
+				this.OnWhoWeHelpChanging(value);
+				this.SendPropertyChanging();
+				this._WhoWeHelp = value;
+				this.SendPropertyChanged("WhoWeHelp");
+				this.OnWhoWeHelpChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProgramsOverview", DbType="VarChar(350)")]
+	public string ProgramsOverview
+	{
+		get
+		{
+			return this._ProgramsOverview;
+		}
+		set
+		{
+			if ((this._ProgramsOverview != value))
+			{
+				this.OnProgramsOverviewChanging(value);
+				this.SendPropertyChanging();
+				this._ProgramsOverview = value;
+				this.SendPropertyChanged("ProgramsOverview");
+				this.OnProgramsOverviewChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AFewWordsAboutUs", DbType="VarChar(350)")]
+	public string AFewWordsAboutUs
+	{
+		get
+		{
+			return this._AFewWordsAboutUs;
+		}
+		set
+		{
+			if ((this._AFewWordsAboutUs != value))
+			{
+				this.OnAFewWordsAboutUsChanging(value);
+				this.SendPropertyChanging();
+				this._AFewWordsAboutUs = value;
+				this.SendPropertyChanged("AFewWordsAboutUs");
+				this.OnAFewWordsAboutUsChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OwnerId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> OwnerId
+	{
+		get
+		{
+			return this._OwnerId;
+		}
+		set
+		{
+			if ((this._OwnerId != value))
+			{
+				if (this._aspnet_User1.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnOwnerIdChanging(value);
+				this.SendPropertyChanging();
+				this._OwnerId = value;
+				this.SendPropertyChanged("OwnerId");
+				this.OnOwnerIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="VarChar(500)")]
+	public string Address
+	{
+		get
+		{
+			return this._Address;
+		}
+		set
+		{
+			if ((this._Address != value))
+			{
+				this.OnAddressChanging(value);
+				this.SendPropertyChanging();
+				this._Address = value;
+				this.SendPropertyChanged("Address");
+				this.OnAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_City", DbType="VarChar(50)")]
+	public string City
+	{
+		get
+		{
+			return this._City;
+		}
+		set
+		{
+			if ((this._City != value))
+			{
+				this.OnCityChanging(value);
+				this.SendPropertyChanging();
+				this._City = value;
+				this.SendPropertyChanged("City");
+				this.OnCityChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="VarChar(50)")]
+	public string State
+	{
+		get
+		{
+			return this._State;
+		}
+		set
+		{
+			if ((this._State != value))
+			{
+				this.OnStateChanging(value);
+				this.SendPropertyChanging();
+				this._State = value;
+				this.SendPropertyChanged("State");
+				this.OnStateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Zip", DbType="VarChar(10)")]
+	public string Zip
+	{
+		get
+		{
+			return this._Zip;
+		}
+		set
+		{
+			if ((this._Zip != value))
+			{
+				this.OnZipChanging(value);
+				this.SendPropertyChanging();
+				this._Zip = value;
+				this.SendPropertyChanged("Zip");
+				this.OnZipChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Country", DbType="VarChar(50)")]
+	public string Country
+	{
+		get
+		{
+			return this._Country;
+		}
+		set
+		{
+			if ((this._Country != value))
+			{
+				this.OnCountryChanging(value);
+				this.SendPropertyChanging();
+				this._Country = value;
+				this.SendPropertyChanged("Country");
+				this.OnCountryChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PrimaryPhone", DbType="VarChar(15)")]
+	public string PrimaryPhone
+	{
+		get
+		{
+			return this._PrimaryPhone;
+		}
+		set
+		{
+			if ((this._PrimaryPhone != value))
+			{
+				this.OnPrimaryPhoneChanging(value);
+				this.SendPropertyChanging();
+				this._PrimaryPhone = value;
+				this.SendPropertyChanged("PrimaryPhone");
+				this.OnPrimaryPhoneChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SecondaryPhone", DbType="VarChar(15)")]
+	public string SecondaryPhone
+	{
+		get
+		{
+			return this._SecondaryPhone;
+		}
+		set
+		{
+			if ((this._SecondaryPhone != value))
+			{
+				this.OnSecondaryPhoneChanging(value);
+				this.SendPropertyChanging();
+				this._SecondaryPhone = value;
+				this.SendPropertyChanged("SecondaryPhone");
+				this.OnSecondaryPhoneChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ParentOrganizationId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> ParentOrganizationId
+	{
+		get
+		{
+			return this._ParentOrganizationId;
+		}
+		set
+		{
+			if ((this._ParentOrganizationId != value))
+			{
+				this.OnParentOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._ParentOrganizationId = value;
+				this.SendPropertyChanged("ParentOrganizationId");
+				this.OnParentOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Logo", DbType="VarChar(500)")]
+	public string Logo
+	{
+		get
+		{
+			return this._Logo;
+		}
+		set
+		{
+			if ((this._Logo != value))
+			{
+				this.OnLogoChanging(value);
+				this.SendPropertyChanging();
+				this._Logo = value;
+				this.SendPropertyChanged("Logo");
+				this.OnLogoChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LogoSquare", DbType="VarChar(500)")]
+	public string LogoSquare
+	{
+		get
+		{
+			return this._LogoSquare;
+		}
+		set
+		{
+			if ((this._LogoSquare != value))
+			{
+				this.OnLogoSquareChanging(value);
+				this.SendPropertyChanging();
+				this._LogoSquare = value;
+				this.SendPropertyChanged("LogoSquare");
+				this.OnLogoSquareChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FacebookURL", DbType="VarChar(500)")]
+	public string FacebookURL
+	{
+		get
+		{
+			return this._FacebookURL;
+		}
+		set
+		{
+			if ((this._FacebookURL != value))
+			{
+				this.OnFacebookURLChanging(value);
+				this.SendPropertyChanging();
+				this._FacebookURL = value;
+				this.SendPropertyChanged("FacebookURL");
+				this.OnFacebookURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FacebookGroupURL", DbType="VarChar(500)")]
+	public string FacebookGroupURL
+	{
+		get
+		{
+			return this._FacebookGroupURL;
+		}
+		set
+		{
+			if ((this._FacebookGroupURL != value))
+			{
+				this.OnFacebookGroupURLChanging(value);
+				this.SendPropertyChanging();
+				this._FacebookGroupURL = value;
+				this.SendPropertyChanged("FacebookGroupURL");
+				this.OnFacebookGroupURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TwitterURL", DbType="VarChar(500)")]
+	public string TwitterURL
+	{
+		get
+		{
+			return this._TwitterURL;
+		}
+		set
+		{
+			if ((this._TwitterURL != value))
+			{
+				this.OnTwitterURLChanging(value);
+				this.SendPropertyChanging();
+				this._TwitterURL = value;
+				this.SendPropertyChanged("TwitterURL");
+				this.OnTwitterURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_InstagramURL", DbType="VarChar(500)")]
+	public string InstagramURL
+	{
+		get
+		{
+			return this._InstagramURL;
+		}
+		set
+		{
+			if ((this._InstagramURL != value))
+			{
+				this.OnInstagramURLChanging(value);
+				this.SendPropertyChanging();
+				this._InstagramURL = value;
+				this.SendPropertyChanged("InstagramURL");
+				this.OnInstagramURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_YouTubeURL", DbType="VarChar(500)")]
+	public string YouTubeURL
+	{
+		get
+		{
+			return this._YouTubeURL;
+		}
+		set
+		{
+			if ((this._YouTubeURL != value))
+			{
+				this.OnYouTubeURLChanging(value);
+				this.SendPropertyChanging();
+				this._YouTubeURL = value;
+				this.SendPropertyChanged("YouTubeURL");
+				this.OnYouTubeURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TikTokURL", DbType="VarChar(500)")]
+	public string TikTokURL
+	{
+		get
+		{
+			return this._TikTokURL;
+		}
+		set
+		{
+			if ((this._TikTokURL != value))
+			{
+				this.OnTikTokURLChanging(value);
+				this.SendPropertyChanging();
+				this._TikTokURL = value;
+				this.SendPropertyChanged("TikTokURL");
+				this.OnTikTokURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[501c3Status]", Storage="__501c3Status", DbType="Bit")]
+	public System.Nullable<bool> _501c3Status
+	{
+		get
+		{
+			return this.@__501c3Status;
+		}
+		set
+		{
+			if ((this.@__501c3Status != value))
+			{
+				this.On_501c3StatusChanging(value);
+				this.SendPropertyChanging();
+				this.@__501c3Status = value;
+				this.SendPropertyChanged("_501c3Status");
+				this.On_501c3StatusChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit")]
+	public System.Nullable<bool> IsActive
+	{
+		get
+		{
+			return this._IsActive;
+		}
+		set
+		{
+			if ((this._IsActive != value))
+			{
+				this.OnIsActiveChanging(value);
+				this.SendPropertyChanging();
+				this._IsActive = value;
+				this.SendPropertyChanged("IsActive");
+				this.OnIsActiveChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsVoadMember", DbType="Bit")]
+	public System.Nullable<bool> IsVoadMember
+	{
+		get
+		{
+			return this._IsVoadMember;
+		}
+		set
+		{
+			if ((this._IsVoadMember != value))
+			{
+				this.OnIsVoadMemberChanging(value);
+				this.SendPropertyChanging();
+				this._IsVoadMember = value;
+				this.SendPropertyChanged("IsVoadMember");
+				this.OnIsVoadMemberChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PointOfContactName", DbType="VarChar(100)")]
+	public string PointOfContactName
+	{
+		get
+		{
+			return this._PointOfContactName;
+		}
+		set
+		{
+			if ((this._PointOfContactName != value))
+			{
+				this.OnPointOfContactNameChanging(value);
+				this.SendPropertyChanging();
+				this._PointOfContactName = value;
+				this.SendPropertyChanged("PointOfContactName");
+				this.OnPointOfContactNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PointOfContactUserId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> PointOfContactUserId
+	{
+		get
+		{
+			return this._PointOfContactUserId;
+		}
+		set
+		{
+			if ((this._PointOfContactUserId != value))
+			{
+				this.OnPointOfContactUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._PointOfContactUserId = value;
+				this.SendPropertyChanged("PointOfContactUserId");
+				this.OnPointOfContactUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PointOfContactEmail", DbType="VarChar(500)")]
+	public string PointOfContactEmail
+	{
+		get
+		{
+			return this._PointOfContactEmail;
+		}
+		set
+		{
+			if ((this._PointOfContactEmail != value))
+			{
+				this.OnPointOfContactEmailChanging(value);
+				this.SendPropertyChanging();
+				this._PointOfContactEmail = value;
+				this.SendPropertyChanged("PointOfContactEmail");
+				this.OnPointOfContactEmailChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PointOfContactPhoneNumber", DbType="VarChar(50)")]
+	public string PointOfContactPhoneNumber
+	{
+		get
+		{
+			return this._PointOfContactPhoneNumber;
+		}
+		set
+		{
+			if ((this._PointOfContactPhoneNumber != value))
+			{
+				this.OnPointOfContactPhoneNumberChanging(value);
+				this.SendPropertyChanging();
+				this._PointOfContactPhoneNumber = value;
+				this.SendPropertyChanged("PointOfContactPhoneNumber");
+				this.OnPointOfContactPhoneNumberChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Website", DbType="VarChar(500)")]
+	public string Website
+	{
+		get
+		{
+			return this._Website;
+		}
+		set
+		{
+			if ((this._Website != value))
+			{
+				this.OnWebsiteChanging(value);
+				this.SendPropertyChanging();
+				this._Website = value;
+				this.SendPropertyChanged("Website");
+				this.OnWebsiteChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PublicPhoneNumber", DbType="VarChar(50)")]
+	public string PublicPhoneNumber
+	{
+		get
+		{
+			return this._PublicPhoneNumber;
+		}
+		set
+		{
+			if ((this._PublicPhoneNumber != value))
+			{
+				this.OnPublicPhoneNumberChanging(value);
+				this.SendPropertyChanging();
+				this._PublicPhoneNumber = value;
+				this.SendPropertyChanged("PublicPhoneNumber");
+				this.OnPublicPhoneNumberChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PublicEmail", DbType="VarChar(500)")]
+	public string PublicEmail
+	{
+		get
+		{
+			return this._PublicEmail;
+		}
+		set
+		{
+			if ((this._PublicEmail != value))
+			{
+				this.OnPublicEmailChanging(value);
+				this.SendPropertyChanging();
+				this._PublicEmail = value;
+				this.SendPropertyChanged("PublicEmail");
+				this.OnPublicEmailChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_YearFounded", DbType="VarChar(4)")]
+	public string YearFounded
+	{
+		get
+		{
+			return this._YearFounded;
+		}
+		set
+		{
+			if ((this._YearFounded != value))
+			{
+				this.OnYearFoundedChanging(value);
+				this.SendPropertyChanging();
+				this._YearFounded = value;
+				this.SendPropertyChanged("YearFounded");
+				this.OnYearFoundedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CoverImage", DbType="VarChar(50)")]
+	public string CoverImage
+	{
+		get
+		{
+			return this._CoverImage;
+		}
+		set
+		{
+			if ((this._CoverImage != value))
+			{
+				this.OnCoverImageChanging(value);
+				this.SendPropertyChanging();
+				this._CoverImage = value;
+				this.SendPropertyChanged("CoverImage");
+				this.OnCoverImageChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EIN", DbType="VarChar(50)")]
+	public string EIN
+	{
+		get
+		{
+			return this._EIN;
+		}
+		set
+		{
+			if ((this._EIN != value))
+			{
+				this.OnEINChanging(value);
+				this.SendPropertyChanging();
+				this._EIN = value;
+				this.SendPropertyChanged("EIN");
+				this.OnEINChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BlogURL", DbType="VarChar(500)")]
+	public string BlogURL
+	{
+		get
+		{
+			return this._BlogURL;
+		}
+		set
+		{
+			if ((this._BlogURL != value))
+			{
+				this.OnBlogURLChanging(value);
+				this.SendPropertyChanging();
+				this._BlogURL = value;
+				this.SendPropertyChanged("BlogURL");
+				this.OnBlogURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DonationURL", DbType="VarChar(500)")]
+	public string DonationURL
+	{
+		get
+		{
+			return this._DonationURL;
+		}
+		set
+		{
+			if ((this._DonationURL != value))
+			{
+				this.OnDonationURLChanging(value);
+				this.SendPropertyChanging();
+				this._DonationURL = value;
+				this.SendPropertyChanged("DonationURL");
+				this.OnDonationURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerURL", DbType="VarChar(500)")]
+	public string VolunteerURL
+	{
+		get
+		{
+			return this._VolunteerURL;
+		}
+		set
+		{
+			if ((this._VolunteerURL != value))
+			{
+				this.OnVolunteerURLChanging(value);
+				this.SendPropertyChanging();
+				this._VolunteerURL = value;
+				this.SendPropertyChanged("VolunteerURL");
+				this.OnVolunteerURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HelpURL", DbType="VarChar(500)")]
+	public string HelpURL
+	{
+		get
+		{
+			return this._HelpURL;
+		}
+		set
+		{
+			if ((this._HelpURL != value))
+			{
+				this.OnHelpURLChanging(value);
+				this.SendPropertyChanging();
+				this._HelpURL = value;
+				this.SendPropertyChanged("HelpURL");
+				this.OnHelpURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsWebsiteActive", DbType="Bit")]
+	public System.Nullable<bool> IsWebsiteActive
+	{
+		get
+		{
+			return this._IsWebsiteActive;
+		}
+		set
+		{
+			if ((this._IsWebsiteActive != value))
+			{
+				this.OnIsWebsiteActiveChanging(value);
+				this.SendPropertyChanging();
+				this._IsWebsiteActive = value;
+				this.SendPropertyChanged("IsWebsiteActive");
+				this.OnIsWebsiteActiveChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RespondToTickets", DbType="Bit")]
+	public System.Nullable<bool> RespondToTickets
+	{
+		get
+		{
+			return this._RespondToTickets;
+		}
+		set
+		{
+			if ((this._RespondToTickets != value))
+			{
+				this.OnRespondToTicketsChanging(value);
+				this.SendPropertyChanging();
+				this._RespondToTickets = value;
+				this.SendPropertyChanged("RespondToTickets");
+				this.OnRespondToTicketsChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HideTeamList", DbType="Bit")]
+	public System.Nullable<bool> HideTeamList
+	{
+		get
+		{
+			return this._HideTeamList;
+		}
+		set
+		{
+			if ((this._HideTeamList != value))
+			{
+				this.OnHideTeamListChanging(value);
+				this.SendPropertyChanging();
+				this._HideTeamList = value;
+				this.SendPropertyChanged("HideTeamList");
+				this.OnHideTeamListChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EnableTeamMemberVerification", DbType="Bit")]
+	public System.Nullable<bool> EnableTeamMemberVerification
+	{
+		get
+		{
+			return this._EnableTeamMemberVerification;
+		}
+		set
+		{
+			if ((this._EnableTeamMemberVerification != value))
+			{
+				this.OnEnableTeamMemberVerificationChanging(value);
+				this.SendPropertyChanging();
+				this._EnableTeamMemberVerification = value;
+				this.SendPropertyChanged("EnableTeamMemberVerification");
+				this.OnEnableTeamMemberVerificationChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationRebuild", Storage="_OrganizationRebuilds", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<OrganizationRebuild> OrganizationRebuilds
+	{
+		get
+		{
+			return this._OrganizationRebuilds;
+		}
+		set
+		{
+			this._OrganizationRebuilds.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationProgram", Storage="_OrganizationPrograms", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<OrganizationProgram> OrganizationPrograms
+	{
+		get
+		{
+			return this._OrganizationPrograms;
+		}
+		set
+		{
+			this._OrganizationPrograms.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganizationInvite", Storage="_UserOrganizationInvites", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<UserOrganizationInvite> UserOrganizationInvites
+	{
+		get
+		{
+			return this._UserOrganizationInvites;
+		}
+		set
+		{
+			this._UserOrganizationInvites.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationEvent", Storage="_OrganizationEvents", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<OrganizationEvent> OrganizationEvents
+	{
+		get
+		{
+			return this._OrganizationEvents;
+		}
+		set
+		{
+			this._OrganizationEvents.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_Position", Storage="_Positions", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<Position> Positions
+	{
+		get
+		{
+			return this._Positions;
+		}
+		set
+		{
+			this._Positions.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_PaymentConfiguration", Storage="_PaymentConfigurations", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<PaymentConfiguration> PaymentConfigurations
+	{
+		get
+		{
+			return this._PaymentConfigurations;
+		}
+		set
+		{
+			this._PaymentConfigurations.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganization", Storage="_UserOrganizations", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<UserOrganization> UserOrganizations
+	{
+		get
+		{
+			return this._UserOrganizations;
+		}
+		set
+		{
+			this._UserOrganizations.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Organization", Storage="_aspnet_User", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.Organizations.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.Organizations.Add(this);
+					this._CreatedBy = value.UserId;
+				}
+				else
+				{
+					this._CreatedBy = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Organization1", Storage="_aspnet_User1", ThisKey="OwnerId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User1
+	{
+		get
+		{
+			return this._aspnet_User1.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User1.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User1.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User1.Entity = null;
+					previousValue.Organizations1.Remove(this);
+				}
+				this._aspnet_User1.Entity = value;
+				if ((value != null))
+				{
+					value.Organizations1.Add(this);
+					this._OwnerId = value.UserId;
+				}
+				else
+				{
+					this._OwnerId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("aspnet_User1");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_OrganizationRebuilds(OrganizationRebuild entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = this;
+	}
+	
+	private void detach_OrganizationRebuilds(OrganizationRebuild entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = null;
+	}
+	
+	private void attach_OrganizationPrograms(OrganizationProgram entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = this;
+	}
+	
+	private void detach_OrganizationPrograms(OrganizationProgram entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = null;
+	}
+	
+	private void attach_UserOrganizationInvites(UserOrganizationInvite entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = this;
+	}
+	
+	private void detach_UserOrganizationInvites(UserOrganizationInvite entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = null;
+	}
+	
+	private void attach_OrganizationEvents(OrganizationEvent entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = this;
+	}
+	
+	private void detach_OrganizationEvents(OrganizationEvent entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = null;
+	}
+	
+	private void attach_Positions(Position entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = this;
+	}
+	
+	private void detach_Positions(Position entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = null;
+	}
+	
+	private void attach_PaymentConfigurations(PaymentConfiguration entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = this;
+	}
+	
+	private void detach_PaymentConfigurations(PaymentConfiguration entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = null;
+	}
+	
+	private void attach_UserOrganizations(UserOrganization entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = this;
+	}
+	
+	private void detach_UserOrganizations(UserOrganization entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = null;
 	}
 }
 

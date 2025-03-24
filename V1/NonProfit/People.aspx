@@ -90,22 +90,18 @@
             btnSend = document.getElementById('btnSend');
             divMessageError = document.getElementById('divMessageError');
             divErrorMessage = document.getElementById('divErrorMessage');
-
             divMessageSuccess = document.getElementById('divMessageSuccess');
             divMessageSuccess.style.visibility = 'visible';
             divMessageSuccess.hidden = true;
             divMessageTextBox.hidden = false;
             btnSend.hidden = false;
-
             divMessageError.style.visibility = 'hidden';
             divErrorMessage.style.visibility = 'hidden';
             divMessageError.hidden = true;
             divErrorMessage.hidden = true;
-
             $("#nonProfit.dropdown-menu li").click(function () {
                 window.location.href = "/V1/NonProfit/Default.aspx?organizationId=" + $(this).attr('id');
             });
-
             $('#StartDate, #EndDate').datepicker({
                 format: 'mm/dd/yyyy',
                 autoclose: true,
@@ -116,7 +112,6 @@
                 icon.toggleClass("fa-chevron-down fa-chevron-up");
                 searchPanel.collapse("toggle");
             });
-
             $('.multiselect').multiselect({
                 includeSelectAllOption: true,
                 enableFiltering: true,
@@ -127,11 +122,8 @@
                 allSelectedText: 'All Selected',
                 numberDisplayed: 2
             });
-
         });
-
         var currentUserId = null;
-
         function setUserId(button) {
             currentUserId = button.getAttribute('data-userid');
             return false;
@@ -172,11 +164,18 @@
             }
             var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
             var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
-            var showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
-
+            var showTeamLogo = false;
+            // Check if the checkbox is visible using the JavaScript style display property
+           <% if (chkManageShowDonateButton.Visible)
+        { %>
+            showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
+              <% }
+        else
+        { %>
+            showTeamLogo = false;
+           <% } %>
             var stabilityVerified = false;
             var makeTeamAdministrator = false;
-
              <% if (User.IsInRole("Administrator"))
         { %>
             stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
@@ -685,13 +684,10 @@
                         <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
                             placeholder="Enter Vetting Notes"></asp:TextBox>
                     </div>
-
-                    <!-- Checkboxes -->
                     <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageShowDonateButton.ClientID %>">
-                            Enable
-                            Team Logo</label>
+                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" Visible="false" />
+                        <asp:Label ID="chkManageShowDonatelabel" runat="server" class="form-check-label"  Visible="false" AssociatedControlID="chkManageShowDonateButton">    Enable Team Logo
+                        </asp:Label>
                     </div>
                     <% if (User.IsInRole("Administrator"))
                         { %>
