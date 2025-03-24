@@ -95,8 +95,6 @@
       <Association Name="aspnet_User_UserEvent" Member="UserEvents" ThisKey="UserId" OtherKey="UserId" Type="UserEvent" />
       <Association Name="aspnet_User_UserResource" Member="UserResources" ThisKey="UserId" OtherKey="UserId" Type="UserResource" />
       <Association Name="aspnet_User_UserAvailableDate" Member="UserAvailableDates" ThisKey="UserId" OtherKey="UserId" Type="UserAvailableDate" />
-      <Association Name="aspnet_User_Organization" Member="Organizations" ThisKey="UserId" OtherKey="CreatedBy" Type="Organization" />
-      <Association Name="aspnet_User_Organization1" Member="Organizations1" ThisKey="UserId" OtherKey="OwnerId" Type="Organization" />
       <Association Name="aspnet_User_PostImage" Member="PostImages" ThisKey="UserId" OtherKey="CreatedBy" Type="PostImage" />
       <Association Name="aspnet_User_UserUser" Member="UserUsers" ThisKey="UserId" OtherKey="AcceptingUserId" Type="UserUser" />
       <Association Name="aspnet_User_UserOrganizationEventPosition" Member="UserOrganizationEventPositions" ThisKey="UserId" OtherKey="UserId" Type="UserOrganizationEventPosition" />
@@ -116,6 +114,8 @@
       <Association Name="aspnet_User_Profile" Member="Profiles" ThisKey="UserId" OtherKey="UserId" Type="Profile" />
       <Association Name="aspnet_User_UserOrganization" Member="UserOrganizations" ThisKey="UserId" OtherKey="UserId" Type="UserOrganization" />
       <Association Name="aspnet_User_Post" Member="Posts" ThisKey="UserId" OtherKey="CreatedBy" Type="Post" />
+      <Association Name="aspnet_User_Organization" Member="Organizations" ThisKey="UserId" OtherKey="CreatedBy" Type="Organization" />
+      <Association Name="aspnet_User_Organization1" Member="Organizations1" ThisKey="UserId" OtherKey="OwnerId" Type="Organization" />
       <Association Name="StreamDonation_aspnet_User" Member="StreamDonation" Storage="_Donation" ThisKey="UserId" OtherKey="UserId" Type="StreamDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User" Member="UserDonation" ThisKey="UserId" OtherKey="DonorId" Type="UserDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User1" Member="UserDonation1" ThisKey="UserId" OtherKey="RecipientId" Type="UserDonation" IsForeignKey="true" />
@@ -1423,69 +1423,6 @@
       <Association Name="aspnet_User_UserAvailableDate" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Organization" Member="Organizations">
-    <Type Name="Organization">
-      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
-      <Column Name="URLFriendlyName" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="PurposeMission" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="History" Type="System.String" DbType="VarChar(350)" CanBeNull="true" />
-      <Column Name="VolunteerInstructions" Type="System.String" DbType="VarChar(350)" CanBeNull="true" />
-      <Column Name="WhoWeHelp" Type="System.String" DbType="VarChar(350)" CanBeNull="true" />
-      <Column Name="ProgramsOverview" Type="System.String" DbType="VarChar(350)" CanBeNull="true" />
-      <Column Name="AFewWordsAboutUs" Type="System.String" DbType="VarChar(350)" CanBeNull="true" />
-      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="OwnerId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Address" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="City" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="State" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Zip" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Country" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="PrimaryPhone" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="SecondaryPhone" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="ParentOrganizationId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="Logo" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="LogoSquare" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="FacebookURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="FacebookGroupURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="TwitterURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="InstagramURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="YouTubeURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="TikTokURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="[501c3Status]" Member="_501c3Status" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="IsVoadMember" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="PointOfContactName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="PointOfContactUserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="PointOfContactEmail" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="PointOfContactPhoneNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Website" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="PublicPhoneNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="PublicEmail" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="YearFounded" Type="System.String" DbType="VarChar(4)" CanBeNull="true" />
-      <Column Name="CoverImage" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="EIN" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="BlogURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="DonationURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="VolunteerURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="HelpURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="IsWebsiteActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="RespondToTickets" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="HideTeamList" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Association Name="Organization_OrganizationRebuild" Member="OrganizationRebuilds" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationRebuild" />
-      <Association Name="Organization_OrganizationProgram" Member="OrganizationPrograms" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationProgram" />
-      <Association Name="Organization_UserOrganizationInvite" Member="UserOrganizationInvites" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganizationInvite" />
-      <Association Name="Organization_OrganizationEvent" Member="OrganizationEvents" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationEvent" />
-      <Association Name="Organization_OrganizationCase" Member="OrganizationCases" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationCase" />
-      <Association Name="Organization_Position" Member="Positions" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Position" />
-      <Association Name="Organization_PaymentConfiguration" Member="PaymentConfigurations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="PaymentConfiguration" />
-      <Association Name="Organization_UserOrganization" Member="UserOrganizations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganization" />
-      <Association Name="aspnet_User_Organization" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
-      <Association Name="aspnet_User_Organization1" Member="aspnet_User1" ThisKey="OwnerId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.AudienceType" Member="AudienceTypes">
     <Type Name="AudienceType">
       <Column Name="AudienceTypeId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -1641,8 +1578,8 @@
       <Association Name="OrganizationEvent_OrganizationEventPositionDate" Member="OrganizationEventPositionDates" ThisKey="OrganizationEventId" OtherKey="OrganizationEventId" Type="OrganizationEventPositionDate" />
       <Association Name="OrganizationEvent_OrganizationEventPosition" Member="OrganizationEventPositions" ThisKey="OrganizationEventId" OtherKey="OrganizationEventId" Type="OrganizationEventPosition" />
       <Association Name="County_OrganizationEvent" Member="County" ThisKey="StagingCountyId" OtherKey="CountyId" Type="County" IsForeignKey="true" />
-      <Association Name="Organization_OrganizationEvent" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
       <Association Name="Event_OrganizationEvent" Member="Event" ThisKey="EventId" OtherKey="EventId" Type="Event" IsForeignKey="true" />
+      <Association Name="Organization_OrganizationEvent" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.LocationProfile" Member="LocationProfiles">
@@ -1808,7 +1745,6 @@
       <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Association Name="aspnet_User_OrganizationCase" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
-      <Association Name="Organization_OrganizationCase" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Position" Member="Positions">
@@ -1835,8 +1771,8 @@
       <Association Name="Position_OrganizationEventPosition" Member="OrganizationEventPositions" ThisKey="PositionId" OtherKey="PositionId" Type="OrganizationEventPosition" />
       <Association Name="Position_Position" Member="Position2" ThisKey="PositionId" OtherKey="PositionId" Type="Position" Cardinality="One" />
       <Association Name="Position_ProgramPosition" Member="ProgramPositions" ThisKey="PositionId" OtherKey="PositionId" Type="ProgramPosition" />
-      <Association Name="Organization_Position" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
       <Association Name="Position_Position" Member="Position1" ThisKey="PositionId" OtherKey="PositionId" Type="Position" IsForeignKey="true" />
+      <Association Name="Organization_Position" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.ProgramPosition" Member="ProgramPositions">
@@ -2110,6 +2046,69 @@
       <Association Name="AudienceType_Post" Member="AudienceType" ThisKey="AudienceTypeId" OtherKey="AudienceTypeId" Type="AudienceType" IsForeignKey="true" />
       <Association Name="Event_Post" Member="Event" ThisKey="EventId" OtherKey="EventId" Type="Event" IsForeignKey="true" />
       <Association Name="PostType_Post" Member="PostType" ThisKey="PostTypeId" OtherKey="PostTypeId" Type="PostType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Organization" Member="Organizations">
+    <Type Name="Organization">
+      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="URLFriendlyName" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="PurposeMission" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="History" Type="System.String" DbType="VarChar(350)" CanBeNull="true" />
+      <Column Name="VolunteerInstructions" Type="System.String" DbType="VarChar(350)" CanBeNull="true" />
+      <Column Name="WhoWeHelp" Type="System.String" DbType="VarChar(350)" CanBeNull="true" />
+      <Column Name="ProgramsOverview" Type="System.String" DbType="VarChar(350)" CanBeNull="true" />
+      <Column Name="AFewWordsAboutUs" Type="System.String" DbType="VarChar(350)" CanBeNull="true" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="OwnerId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="City" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="State" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Zip" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Country" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="PrimaryPhone" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="SecondaryPhone" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="ParentOrganizationId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Logo" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="LogoSquare" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="FacebookURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="FacebookGroupURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="TwitterURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="InstagramURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="YouTubeURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="TikTokURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="[501c3Status]" Member="_501c3Status" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsVoadMember" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="PointOfContactName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="PointOfContactUserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="PointOfContactEmail" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="PointOfContactPhoneNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Website" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="PublicPhoneNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="PublicEmail" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="YearFounded" Type="System.String" DbType="VarChar(4)" CanBeNull="true" />
+      <Column Name="CoverImage" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="EIN" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="BlogURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="DonationURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="VolunteerURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="HelpURL" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="IsWebsiteActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="RespondToTickets" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HideTeamList" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="EnableTeamMemberVerification" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="Organization_OrganizationRebuild" Member="OrganizationRebuilds" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationRebuild" />
+      <Association Name="Organization_OrganizationProgram" Member="OrganizationPrograms" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationProgram" />
+      <Association Name="Organization_UserOrganizationInvite" Member="UserOrganizationInvites" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganizationInvite" />
+      <Association Name="Organization_OrganizationEvent" Member="OrganizationEvents" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationEvent" />
+      <Association Name="Organization_Position" Member="Positions" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Position" />
+      <Association Name="Organization_PaymentConfiguration" Member="PaymentConfigurations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="PaymentConfiguration" />
+      <Association Name="Organization_UserOrganization" Member="UserOrganizations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganization" />
+      <Association Name="aspnet_User_Organization" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+      <Association Name="aspnet_User_Organization1" Member="aspnet_User1" ThisKey="OwnerId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">

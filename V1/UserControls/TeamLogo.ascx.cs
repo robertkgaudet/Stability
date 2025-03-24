@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System;
-using System.Web; 
+using System.Web;
 public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
 {
     public Guid UserId { get; set; }
@@ -26,7 +26,7 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                     var userRoles = from ur in dc.aspnet_UsersInRoles
                                     join r in dc.aspnet_Roles on ur.RoleId equals r.RoleId
                                     where ur.UserId == UserId
-                                    select r.RoleName; 
+                                    select r.RoleName;
                     if (userRoles.Contains("Team Administrator"))
                     {
                         UserName += " (Team Administrator)";
@@ -58,22 +58,26 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                        o.LogoSquare,
                                        o.OrganizationId,
                                        o.Name,
-                                       uo.ShowTeamLogo
+                                       o.EnableTeamMemberVerification,
+                                       uo.ShowTeamLogo,
                                    }).Take(1).SingleOrDefault();
                     if (orgUser != null)
-                    {
-                        if (orgUser.ShowTeamLogo ?? false)
-                        {
-                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare) ?
-                                teamLogo + orgUser.LogoSquare :
-                                "/V1/Images/DefaultLogo.png";
-                            imgTeamLogo.Visible = true;
-                            imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
-                            hypTeamLogo.Visible = true;
-                        }
-                        else
-                        {
-                            hypTeamLogo.Visible = false;
+                    {     
+                        if (orgUser.EnableTeamMemberVerification ?? false)
+                        {                          
+                            if (orgUser.ShowTeamLogo ?? false)
+                            {                             
+                                imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare)
+                                    ? teamLogo + orgUser.LogoSquare 
+                                    : "/V1/Images/DefaultLogo.png"; 
+                                imgTeamLogo.Visible = true;
+                                imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
+                                hypTeamLogo.Visible = true;
+                            }
+                            else
+                            {
+                                hypTeamLogo.Visible = false;
+                            }
                         }
                     }
                     if (profile.IsDisasterReadyCertified)
