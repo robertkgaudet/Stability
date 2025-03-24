@@ -12,6 +12,8 @@
             var isEditComment = false;
             const users = [];
             let cursorPosition = 0;
+            let originalHeight = document.getElementById('commentTextarea').scrollHeight;
+
 
             loadUser();
 
@@ -35,9 +37,9 @@
                         $('#rptPostComments').html('');
                         var html = ""
                         if (response.d) {
-                            if (response.d.length > 0) {
-                                for (let i = 0; i < response.d.length; ++i) {
-                                    let item = response.d[i];
+                            if (response.d.Comments.length > 0) {
+                                for (let i = 0; i < response.d.Comments.length; ++i) {
+                                    let item = response.d.Comments[i];
 
                                     html += "<ul class=\"comments\" data-item-id=\"" + item.CommentId + "\">\n<li>\n<div class=\"userImage\">\n" +
                                         "<a target=\"_blank\" href=\"" + item.ProfileUrl + "\">\n<img class=\"img-rounded\" " +
@@ -46,7 +48,7 @@
 
                                         //"<span id='teamLogo_" + item.UserId + "'></span>" +
                                         "<a target=\"_blank\" href=\"" + item.ProfileUrl + "\" class=\"author-link\">" + item.Author + "</a>\n" +
-                                        
+
                                         "</span>\n<span style=\"float: right; width: 20%;" +
                                         "text-align: right; margin: -20px 0px 0px 0px;\">" + item.TimeAgo + "</span>\n<span style=\"margin-top: 10px\" " +
                                         "data-item-id=\"" + item.CommentId + "-comments\">" + item.Comment1 + "</span>\n\n<div class=\"reaction\">\n" +
@@ -71,20 +73,19 @@
                                         "data-item-id=\"" + item.CommentId + "-postReply\">\n<i class=\"fa fa-reply\"></i>&nbsp;Reply\n</button>\n" +
                                         "<div style='z-index:999' id=\"replySuggestions\" class=\"suggestions replySuggestions\"></div>\n</div>\n\n";
 
-                                     // Fetch the team logo for each comment
-                                     //$.ajax({
-                                     //    url: '/V1/Stream.aspx/RenderTeamLogo',
-                                     //    type: 'POST',
-                                     //    data: JSON.stringify({ userId: item.UserId }),
-                                     //    contentType: 'application/json; charset=utf-8',
-                                     //    success: function (response) {
-                                     //        debugger;
-                                     //        $('#teamLogo_' + item.UserId).html(response);
-                                     //    },
-                                     //    error: function (xhr, status, error) {
-                                     //        $('#teamLogo_' + item.UserId).html('<a target=\"_blank\" href=\"' + item.ProfileUrl + '\" class=\"author-link\">' + item.Author + '</a>\n'); 
-                                     //    }
-                                     //});
+                                    // Fetch the team logo for each comment
+                                    //$.ajax({
+                                    //    url: '/V1/Stream.aspx/RenderTeamLogo',
+                                    //    type: 'POST',
+                                    //    data: JSON.stringify({ userId: item.UserId }),
+                                    //    contentType: 'application/json; charset=utf-8',
+                                    //    success: function (response) {
+                                    //        $('#teamLogo_' + item.UserId).html(response);
+                                    //    },
+                                    //    error: function (xhr, status, error) {
+                                    //        $('#teamLogo_' + item.UserId).html('<a target=\"_blank\" href=\"' + item.ProfileUrl + '\" class=\"author-link\">' + item.Author + '</a>\n'); 
+                                    //    }
+                                    //});
 
 
 
@@ -120,20 +121,19 @@
                                             "<button type=\"button\" class=\"addReplyReply\" data-item-id=\"" + reply.CommentId + "-postReply\">\n" +
                                             "<i class=\"fa fa-reply\"></i>&nbsp;Reply\n</button>\n<div id=\"replySuggestions\" class=\"suggestions replySuggestions\"></div>\n</div>";
 
-                                            // Fetch the team logo for each comment
-                                            //$.ajax({
-                                            //    url: '/V1/Stream.aspx/RenderTeamLogo',
-                                            //    type: 'POST',
-                                            //    data: JSON.stringify({ userId: reply.UserId }),
-                                            //    contentType: 'application/json; charset=utf-8',
-                                            //    success: function (response) {
-                                            //        debugger;
-                                            //        $('#teamLogo_' + reply.UserId).html(response);
-                                            //    },
-                                            //    error: function (xhr, status, error) {
-                                            //        $('#teamLogo_' + reply.UserId).html('<a target=\"_blank\" href=\"' + reply.ProfileUrl + '\" class=\"author-link\">' + reply.Author + '</a>\n'); 
-                                            //    }
-                                            //});
+                                        // Fetch the team logo for each comment
+                                        //$.ajax({
+                                        //    url: '/V1/Stream.aspx/RenderTeamLogo',
+                                        //    type: 'POST',
+                                        //    data: JSON.stringify({ userId: reply.UserId }),
+                                        //    contentType: 'application/json; charset=utf-8',
+                                        //    success: function (response) {
+                                        //        $('#teamLogo_' + reply.UserId).html(response);
+                                        //    },
+                                        //    error: function (xhr, status, error) {
+                                        //        $('#teamLogo_' + reply.UserId).html('<a target=\"_blank\" href=\"' + reply.ProfileUrl + '\" class=\"author-link\">' + reply.Author + '</a>\n'); 
+                                        //    }
+                                        //});
 
                                     }
                                     html += "</ul>";
@@ -144,6 +144,13 @@
                             }
                         }
                         $("#rptPostComments").html(html);
+                        if (!response.d.IsUserSignIn) {
+                            $(".addComment").hide();
+                            $(".ReplyPostComment").hide();
+                            $(".EditPostComment").hide();
+                            $(".DeletePostComment").hide();
+                            $(".commentTextarea").hide();
+                        }
                     },
                     error: function (xhr, status, error) {
                         console.error("Error: " + error);
@@ -423,6 +430,10 @@
                     success: function (response) {
                         gCommentId = "";
                         isEditComment = false;
+
+                        let textarea = document.getElementById('commentTextarea');
+                        textarea.style.height = originalHeight + 'px';
+
                         loadComments($("#postIdForComments").val());
                         loadCommentsUnderPost($("#postIdForComments").val());
                     },
@@ -667,6 +678,10 @@
     </script>
 
     <style>
+        .newComments {
+            padding-right: 0px !important;
+        }
+
         .suggestions {
             border: 1px solid #ccc;
             max-height: 150px;
@@ -824,7 +839,7 @@
 
         .modal-content {
             background-color: #FFF !important;
-            width: 450px !important;
+            width: 385px !important;
         }
 
         .modal-header {
@@ -1022,6 +1037,25 @@
             background-color: #f1f1f1; /* Background color of the scrollbar track */
         }
 
+
+
+        .comment-section-repeater-show::-webkit-scrollbar {
+            width: 8px; /* Adjust the width of the scrollbar */
+        }
+
+        .comment-section-repeater-show::-webkit-scrollbar-thumb {
+            background-color: #888; /* Color of the scrollbar thumb */
+            border-radius: 4px; /* Round the corners of the scrollbar thumb */
+        }
+
+            .comment-section-repeater-show::-webkit-scrollbar-thumb:hover {
+                background-color: #555; /* Darker color when hovering over the scrollbar thumb */
+            }
+
+        .comment-section-repeater-show::-webkit-scrollbar-track {
+            background-color: #f1f1f1; /* Background color of the scrollbar track */
+        }
+
         textarea {
             border: none; /* Remove the border */
             outline: none; /* Remove the outline that might appear on focus */
@@ -1134,10 +1168,10 @@
 
         .comment-section {
             width: 100%;
-            max-width: 600px;
-            max-height: 550px;
-            min-height: 550px;
-            height: 550px;
+            max-width: 525px;
+            max-height: 525px;
+            min-height: 525px;
+            height: 525px;
             /*overflow-y: scroll;*/
             margin: 0px auto;
             background: #fff;
@@ -1150,7 +1184,7 @@
         .comment-section-show {
             width: 100%;
             max-width: 600px;
-            max-height: 110px;
+            max-height: 200px;
             min-height: auto;
             height: auto;
             margin: 0px auto;
@@ -1163,16 +1197,16 @@
 
         .comment-section-repeater {
             width: 103%;
-            max-height: 480px;
-            min-height: 480px;
-            height: 480px;
+            max-height: 450px;
+            min-height: 450px;
+            height: 450px;
             overflow-x: hidden;
             overflow-y: auto;
             padding: 0px;
             position: relative;
             z-index: 0;
             scroll-behavior: smooth;
-            border-top: 1px solid #f0f0f0;
+            /*border-top: 1px solid #f0f0f0;*/
         }
 
         .comment-section-repeater-show {
@@ -1227,22 +1261,29 @@
 
         .comment-input {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 5px;
+            margin-bottom: 0px;
+            border-bottom: 1px solid #f0f0f0;
         }
 
             .comment-input textarea {
                 flex: 1;
                 resize: none;
-                padding: 5px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                font-size: 12px;
-                height: 40px;
                 font-size: 1.4rem;
-                padding: 10px;
-                border-radius: 20px;
-                overflow: hidden;
+                border-radius: 5px;
+                width: 100%;
+                min-height: 50px;
+                max-height: 200px;
+                overflow-y: auto;
+                position: relative;
+                padding: 5px;
+                z-index: 2;
+                background-color: transparent;
+                color: black;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                /*border: 1px solid #ccc;*/
+                outline: none;
             }
 
             .comment-input button {
@@ -1250,10 +1291,11 @@
                 background-color: #1877f2;
                 color: #fff;
                 border: none;
-                border-radius: 15px;
+                border-radius: 10px;
                 cursor: pointer;
                 font-size: 14px;
-                margin: 5px 0px 5px 0px;
+                margin: 18px 0px 18px 0px;
+                height: 35px;
             }
 
                 .comment-input button:hover {
@@ -1411,6 +1453,11 @@
             .reaction .DeletePostReply:hover {
                 color: #dc3545;
             }
+
+
+        .img-rounded {
+            border-radius: 20px;
+        }
     </style>
 
     <script>
@@ -1541,9 +1588,18 @@
                 autoResizeTextarea(this);
             });
 
+            document.getElementById('commentTextarea').addEventListener('input', function () {
+                autoResizeTextarea(this);
+            });
+
             // Initialize the textarea height based on initial content
             document.addEventListener('DOMContentLoaded', function () {
                 var textarea = document.getElementById('postInput');
+                autoResizeTextarea(textarea);
+            });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                var textarea = document.getElementById('commentTextarea');
                 autoResizeTextarea(textarea);
             });
 
@@ -1699,7 +1755,8 @@
 
                                 <div id="commentSectionShow" class="comment-section-show" runat="server">
                                     <div class="comment-section-repeater-show" data-item-id='<%# Eval("postId") %>-showComments'>
-                                        <asp:Repeater ID="rptPostCommentsShow" runat="server" OnItemDataBound="rptPostCommentsShow_ItemDataBound">
+                                        <asp:Repeater ID="rptPostCommentsShow" runat="server">
+                                            <%--OnItemDataBound="rptPostCommentsShow_ItemDataBound"--%>
                                             <ItemTemplate>
                                                 <ul class="comments">
                                                     <li>
@@ -1709,8 +1766,8 @@
                                                         </div>
                                                         <div class="commentReact">
                                                             <span style="font-weight: bold; width: 70%; height: 22px;">
-                                                                <uc1:TeamLogo runat="server" ID="ucTeamLogo" UserId='<%# Eval("UserId") %>' pagename="feed" />
-                                                                <%--<a target="_blank" href="<%# Eval("ProfileUrl") %>" class="author-link"><%# Eval("author") %></a>--%>
+                                                                <%--<uc1:TeamLogo runat="server" ID="ucTeamLogo" UserId='<%# Eval("UserId") %>' pagename="feed" />--%>
+                                                                <a target="_blank" href="<%# Eval("ProfileUrl") %>" class="author-link"><%# Eval("author") %></a>
                                                             </span>
                                                             <span style="float: right; width: 12%; text-align: right; margin: 0px 5px 0px 0px;"><%# Eval("timeAgo") %></span>
                                                             <span><%# Eval("Comment1") %></span>
@@ -1751,7 +1808,7 @@
                         <select id="AudienceType" name="AudienceType" runat="server" clientidmode="static"></select>
                     </div>
                     <div class="col-md-12 m-t-sm">
-                        <select id="PortalTypes" name="PortalTypes" runat="server" clientidmode="static"></select>
+                        <select id="PortalTypes" name="PortalTypes" runat="server" clientidmode="static" style="width:100%"></select>
                     </div>
 
                     <div class="textPost">
@@ -1787,19 +1844,23 @@
         <input type="hidden" clientidmode="Static" id="postTypeId" runat="server" />
     </div>
 
-    <div class="modal fade" id="newComments" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="overflow: hidden">
+    <div class="modal fade" id="newComments" role="dialog" aria-hidden="true" style="overflow: hidden">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header" style="padding: 5px">
+                <div class="modal-header" style="padding: 15px 0 0 0">
                     <center>
                         <h4>Comments</h4>
+                        <button type="button" class="btn btn-danger btn-sm closeComment" aria-label="Close" style="margin: -60px 0px 0px 320px;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </center>
                 </div>
-                <div class="modal-body" id="commentList" style="padding: 10px; height: 570px; max-height: 570px; min-height: 570px;">
+
+                <div class="modal-body" id="commentList" style="padding: 10px; height: 540px; max-height: 540px; min-height: 540px;">
                     <div class="textPost">
                         <div class="comment-section">
                             <div class="comment-input">
-                                <textarea rows="3" class="commentTextarea" placeholder="Write a comment..."></textarea>
+                                <textarea rows="3" id="commentTextarea" class="commentTextarea" placeholder="Write a comment..."></textarea>
                                 <button type="button" class="addComment">Post</button>
                                 <div id="commentSuggestions" class="suggestions commentSuggestions"></div>
                             </div>
@@ -1812,7 +1873,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer" style="padding: 5px;">
+                <div class="modal-footer" style="padding: 5px 10px 5px 0px;">
                     <button type="button" class="btn btn-danger btn-sm closeComment">Close</button>
                 </div>
             </div>

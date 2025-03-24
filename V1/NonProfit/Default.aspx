@@ -3,7 +3,8 @@
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">	<script type="text/javascript">
+<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+	<script type="text/javascript">
 
 		$(document).ready(function () {
 			$('.donateButton').click(function () {

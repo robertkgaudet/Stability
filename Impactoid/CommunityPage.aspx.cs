@@ -89,7 +89,7 @@ public partial class Impactoid_CommunityPage : System.Web.UI.Page
 		rptPrograms.DataSource = programs;
 		rptPrograms.DataBind();
 
-        var causes = from oe in dc.OrganizationEvents
+        var causes = (from oe in dc.OrganizationEvents
                      join ev in dc.Events on oe.EventId equals ev.EventId
                      join dca in dc.DonationCampaigns on oe.OrganizationEventId equals dca.OrganizationEventId into dcaGroup
                      from dca in dcaGroup.DefaultIfEmpty() 
@@ -112,7 +112,7 @@ public partial class Impactoid_CommunityPage : System.Web.UI.Page
                          campaignName = oe.CampaignName,
                          disasterName = ev.Name,
                          DonationCampaignId = dca != null ? dca.DonationCampaignId : (Guid?)null 
-                     };
+                     }).Take(4);
 
 
         if (causes.Count() == 0)

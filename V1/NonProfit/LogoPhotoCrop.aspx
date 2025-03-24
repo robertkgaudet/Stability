@@ -22,10 +22,10 @@
         function CropImage() {
             jQuery(function ($) {
                 $('#<%=imgLogoPhoto.ClientID %>').Jcrop({
-                    boxWidth: 300,
+                    boxWidth: 500,
                     bgColor: 'black',
-                    setSelect: [100, 100, 200, 400],
-                    aspectRatio: 1 / 1,
+					setSelect: [50, 50, 300, 170],
+					aspectRatio: 2.5,
                     bgColor: 'black',
                     bgOpacity: .3,
                     onSelect: storeCoords
@@ -39,7 +39,7 @@
 			jQuery('#<%=W.ClientID%>').val(c.w);
 			jQuery('#<%=H.ClientID%>').val(c.h);
         };
-    </script>
+	</script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">

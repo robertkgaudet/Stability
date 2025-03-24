@@ -51,7 +51,7 @@
 					<div class="form-horizontal">
 						<h1>Upload a Logo</h1>
 						<div class="col-sm-12">
-							<label class="col-md-3">(Logo should be <%=System.Configuration.ConfigurationManager.AppSettings["logoImageHeight"].ToString()%> x <%= System.Configuration.ConfigurationManager.AppSettings["logoImageWidth"].ToString()%>)</label>
+							<label class="col-md-3">(Logo should be 200 x 80)</label>
 							<div class="m-t-lg">
 								<input ID="logoPhotoUpload" type="file" name="logoPhoto" onchange="previewFile()"  runat="server" />
 								<div class="m-t-lg m-b-lg">

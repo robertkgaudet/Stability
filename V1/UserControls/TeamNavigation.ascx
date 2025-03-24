@@ -141,12 +141,6 @@
                 <li <%=_peoplePageActive%>>
                     <asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-vcard"></i> Team Members</asp:HyperLink>
                 </li>
-                <li <%=_teamMember%>>
-				<asp:HyperLink runat="server" ID="hypMail" Visible="true"><i class="fa fa-envelope"></i>Email Team Members </asp:HyperLink>
-				</li>
-				<li <%=_teamMember%>>
-				<asp:HyperLink runat="server" ID="hypSms" Visible="true"><i class="fa fa-file-text text-warning"></i>Text Team Members</asp:HyperLink>
-								</li>
                 <li <%=_teamRolesActive%>>
                     <asp:HyperLink runat="server" ID="hypTeamRoles"><i class="fa fa-vcard"></i> Training</asp:HyperLink>
                 </li>
@@ -171,15 +165,16 @@
                     <asp:HyperLink runat="server" ID="hypDonationDashboard" CssClass="donationDashboard"> <i class="fa fa-tachometer text-primary"></i> Donations Dashboard
                     </asp:HyperLink>
                 </li>
-
+				<hr runat="server" id="hr5"></hr>
+				<li>Image Manager</li>
                 <li>
-                    <asp:HyperLink runat="server" ID="hypLogoUpload" CssClass="logoUploadButton"> <i class="fa fa-upload text-primary"></i> Upload Team Profile Logo
+                    <asp:HyperLink runat="server" ID="hypSquareLogoUpload"  CssClass="squareLogoUploadButton">  <i class="fa fa-upload text-primary"></i>Upload Team Logo
                     </asp:HyperLink>
                 </li>
                 <li>
-                    <asp:HyperLink runat="server" ID="hypSquareLogoUpload"  CssClass="squareLogoUploadButton">  <i class="fa fa-upload text-primary"></i>Upload Website Logo
+                    <asp:HyperLink runat="server" ID="hypLogoUpload" CssClass="logoUploadButton"> <i class="fa fa-upload text-primary"></i> Upload Website Logo
                     </asp:HyperLink>
-                </li>
+                </li>         
                 <li>
                     <asp:HyperLink runat="server" ID="hypCoverImageUpload" CssClass="coverUploadButton">  <i class="fa fa-image text-primary"></i> Upload Cover Image
                     </asp:HyperLink>
@@ -188,6 +183,14 @@
                     <asp:HyperLink runat="server" ID="hypManagePhotos" CssClass="managePhotosButton"> <i class="fa fa-camera text-primary"></i> Manage Photos
                     </asp:HyperLink>
                 </li>
+				 <hr runat="server" id="hr4"></hr>
+				<li>Message All Team Members</li>
+                <li <%=_teamMember%>>
+				<asp:HyperLink runat="server" ID="hypMail" Visible="true"><i class="fa fa-envelope"></i>Email Team Members </asp:HyperLink>
+				</li>
+				<li <%=_teamMember%>>
+				<asp:HyperLink runat="server" ID="hypSms" Visible="true"><i class="fa fa-file-text text-warning"></i>Text Team Members</asp:HyperLink>
+				</li>
                 <hr runat="server" id="hr3"></hr>
 
                 <li <%=_ticketPageActive%>>

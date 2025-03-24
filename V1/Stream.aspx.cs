@@ -271,7 +271,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			if (user != null)
 			{
 				// If user is found, replace with a link to the user's profile
-				return "<a target='_blank' href='/V1/Member/Default.aspx?userid="+ user.UserId +"'>" + user.Firstname + " " + user.Lastname + "</a>";
+				return "<a target='_blank' href='/V1/Member/Default.aspx?userid=" + user.UserId + "'>" + user.Firstname + " " + user.Lastname + "</a>";
 			}
 			// If user not found, keep the mention as is
 			return match.Value;
@@ -313,24 +313,25 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 		var posts = (from p in dc.Posts
-					join pr in dc.Profiles on p.CreatedBy equals pr.UserId
-					where p.IsVisible == true
-					orderby p.CreatedOn descending
-					select new
-					{
-						p.CreatedBy,
-						p.PostId,
-						p.PostTypeId,
-						p.URLImage,
-						p.URLTitle,
-						p.URLDescription,
-						p.SharedURL,
-						p.CreatedOn,
-						p.Message,
-						pr.UserId,
-						EventId = p.EventId ?? new Guid(),
-						fullname = pr.Firstname + " " + pr.Lastname
-					}).Take(10);
+					 join pr in dc.Profiles on p.CreatedBy equals pr.UserId
+					 join us in dc.aspnet_Memberships on p.CreatedBy equals us.UserId
+					 where p.IsVisible == true && us.IsLockedOut == false && us.IsApproved == true
+					 orderby p.CreatedOn descending
+					 select new
+					 {
+						 p.CreatedBy,
+						 p.PostId,
+						 p.PostTypeId,
+						 p.URLImage,
+						 p.URLTitle,
+						 p.URLDescription,
+						 p.SharedURL,
+						 p.CreatedOn,
+						 p.Message,
+						 pr.UserId,
+						 EventId = p.EventId ?? new Guid(),
+						 fullname = pr.Firstname + " " + pr.Lastname
+					 }).Take(10);
 		rptPosts.DataSource = posts;
 		rptPosts.DataBind();
 	}
@@ -413,7 +414,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			{
 				userId = new Guid(user.ProviderUserKey.ToString());
 			}
-            RepeaterItem dataItem = (RepeaterItem)e.Item;
+			RepeaterItem dataItem = (RepeaterItem)e.Item;
 			Guid postId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostId");
 			Guid eventId = (Guid)DataBinder.Eval(dataItem.DataItem, "EventId");
 			Guid postTypeId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostTypeId");
@@ -621,10 +622,14 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			if (profileImage != null)
 			{
 				imgProfile.Src = profilePhotoFolder + profileImage.FilenameCropped;
-				linkProfile.HRef = "/V1/Member/Default.aspx?userid=" + createdBy;
-				linkProfile.Target = "_blank";
-				linkProfile.Style["display"] = "inline";
 			}
+			else
+			{
+				imgProfile.Src = profilePhotoFolder + "profilepicture.png";
+			}
+			linkProfile.HRef = "/V1/Member/Default.aspx?userid=" + createdBy;
+			linkProfile.Target = "_blank";
+			linkProfile.Style["display"] = "inline";
 
 			if (reactionTypeID == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"))
 			{
@@ -678,7 +683,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 												  Comment1 = ReplaceTaggedUsersWithLinks(c.Comment1),
 												  timeAgo = GetTimeAgo(c.CreatedOn),
 												  UserId = c.CreatedBy,
-												  author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname,
+												  author = dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Firstname + " " + dc.Profiles.FirstOrDefault(f => f.UserId == c.CreatedBy).Lastname,
 												  ProfileUrl = "/V1/Member/Default.aspx?userid=" + c.CreatedBy,
 												  ImgProfileUrl = profilePhotoFolder + (
 													 (from rph in dc.ProfilePhotos
@@ -960,6 +965,11 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		string username = HttpContext.Current.User.Identity.Name;
 		MembershipUser user = Membership.GetUser(username);
 
+		if (!String.IsNullOrEmpty(comment))
+		{
+			comment = comment.Replace("\n", "<br/>");
+		}
+
 		if (user != null)
 		{
 			userId = new Guid(user.ProviderUserKey.ToString());
@@ -1082,23 +1092,26 @@ public partial class V1_Stream : BaseOrganizationWebForm
 	}
 
 	[WebMethod]
-	public static List<PostCommentsModel> GetCommentsByPostId(string postId)
+	public static PostCommentsViewModel GetCommentsByPostId(string postId)
 	{
 		StringWriter sw = new StringWriter();
 		HtmlTextWriter writer = new HtmlTextWriter(sw);
+		var viewModel = new PostCommentsViewModel();
 		var comments = new List<PostCommentsModel>();
 		using (var dc = new CrowdReliefDBDataContext())
 		{
 			var userId = new Guid();
+			var role = "";
 			string username = HttpContext.Current.User.Identity.Name;
 			MembershipUser user = Membership.GetUser(username);
+			viewModel.IsUserSignIn = false;
 			if (user != null)
 			{
 				userId = new Guid(user.ProviderUserKey.ToString());
+				var roleId = dc.aspnet_UsersInRoles.FirstOrDefault(f => f.UserId == userId).RoleId;
+				role = dc.aspnet_Roles.FirstOrDefault(f => f.RoleId == roleId).RoleName;
+				viewModel.IsUserSignIn = true;
 			}
-
-			var roleId = dc.aspnet_UsersInRoles.FirstOrDefault(f => f.UserId == userId).RoleId;
-			var role = dc.aspnet_Roles.FirstOrDefault(f => f.RoleId == roleId).RoleName;
 
 			string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
 			comments = (from pc in dc.PostComments
@@ -1165,7 +1178,8 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			//rptPostComments.DataBind();
 			//rptPostComments.RenderControl(writer);
 		}
-		return comments;
+		viewModel.Comments = comments;
+		return viewModel;
 	}
 
 	[WebMethod]
