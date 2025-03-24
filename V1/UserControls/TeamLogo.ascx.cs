@@ -67,22 +67,23 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                    }).Take(1).SingleOrDefault();
 
                     if (orgUser != null)
-                    {     
-                        if (orgUser.EnableTeamMemberVerification ?? false)
-                        {                          
-                            if (orgUser.ShowTeamLogo ?? false)
-                            {                             
-                                imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare)
-                                    ? teamLogo + orgUser.LogoSquare 
-                                    : "/V1/Images/DefaultLogo.png"; 
-                                imgTeamLogo.Visible = true;
-                                imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
-                                hypTeamLogo.Visible = true;
-                            }
-                            else
-                            {
-                                hypTeamLogo.Visible = false;
-                            }
+                    {
+                        if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
+                        {
+                          
+                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare)
+                                ? teamLogo + orgUser.LogoSquare
+                                : "/V1/Images/DefaultLogo.png";
+
+                         
+                            imgTeamLogo.Visible = true;
+                            imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
+                            hypTeamLogo.Visible = true;
+                        }
+                        else
+                        {
+                            // Hide the team logo if conditions are not met
+                            hypTeamLogo.Visible = false;
                         }
                     }
                     if (profile.IsDisasterReadyCertified)

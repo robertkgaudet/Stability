@@ -268,9 +268,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 var organization = (from o in dc.Organizations
                                     where o.OrganizationId == new Guid(organizationId)
                                     select o).SingleOrDefault();
-                if (organization != null && organization.EnableTeamMemberVerification.HasValue)
+                if (organization.EnableTeamMemberVerification==true)
                 {
-                    
                     chkManageShowDonateButton.Visible = true;
                     chkManageShowDonatelabel.Visible = true;
                 }
