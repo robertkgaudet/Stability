@@ -686,7 +686,7 @@
                     </div>
                     <div class="form-group form-check">
                         <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" Visible="false" />
-                        <asp:Label ID="chkManageShowDonatelabel" runat="server" class="form-check-label" AssociatedControlID="chkManageShowDonateButton">    Enable Team Logo
+                        <asp:Label ID="chkManageShowDonatelabel" runat="server" class="form-check-label"  Visible="false" AssociatedControlID="chkManageShowDonateButton">    Enable Team Logo
                         </asp:Label>
                     </div>
                     <% if (User.IsInRole("Administrator"))
