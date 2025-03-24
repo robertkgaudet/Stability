@@ -1,5 +1,5 @@
 -- Inserting Resources into the Resource Table
-INSERT INTO [DB_8013_staging].[dbo].[Resource] (Name, Description, Type)
+INSERT INTO [dbo].[Resource] (Name, Description, Type)
 VALUES
     ('Laptop computer', 'Equipment', 'Equipment'),
     ('Hitch on my car/truck', 'Equipment', 'Equipment'),
@@ -15,12 +15,12 @@ VALUES
     ('Trailer 16+ ft', 'Trailer', 'Trailer');
 
 -- Delete  Skill into the skills  Table
-DELETE FROM [DB_8013_staging].[dbo].[Skill]
+DELETE FROM [dbo].[Skill]
 WHERE [Name] = 'Heavy Lifting';
 
 
 -- Inserting Skills into the Skills Table
-INSERT INTO [DB_8013_staging].[dbo].[Skill] ([Name], [Description])
+INSERT INTO [dbo].[Skill] ([Name], [Description])
 VALUES
     ('No lifting', 'Ability to refrain from lifting'),
     ('Can Lift: 25-50 lbs', 'Ability to lift weights between 25 to 50 lbs'),
