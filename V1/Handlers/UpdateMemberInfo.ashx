@@ -83,6 +83,14 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                     profile.VettingNotes = vettingNotes;
                     profile.IsDisasterReadyCertified = stabilityVerified;
 
+                    if (stabilityVerified == true)
+                    {
+                        profile.StabilityVerifiedDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        profile.StabilityVerifiedDate = null;
+                    }
                     switch (vettingStatus)
                     {
                         case "VettingStarted":
@@ -142,6 +150,14 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                 if (userOrg != null)
                 {
                     userOrg.ShowTeamLogo = showTeamLogo;
+                    if (showTeamLogo == true)
+                    {
+                        userOrg.TeamVerifiedDate = DateTime.Now;
+                    }
+                    else
+                    {
+                         userOrg.TeamVerifiedDate = null;
+                    }
                 }
                 dc.SubmitChanges();
             }

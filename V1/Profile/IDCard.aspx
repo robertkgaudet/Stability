@@ -1,71 +1,190 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="IDCard.aspx.cs" Inherits="V1_Profile_IDCard" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"CodeFile="IDCard.aspx.cs" Inherits="V1_Profile_IDCard" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
+<%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <style>
+        /* ID Card Container */
+        .id-card-container {
+            width: 3.375in; /* Standard CR80 card size */
+            height: 2.125in;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+        }
+        .watermark-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.15;
+            z-index: 1;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+       /* Header Section */
+        .id-card-header {
+            background: #DD1447;
+            color: white;
+            padding: 6px 0;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+        }
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
-	<style>
-		#<%=imgProfile.ClientID%>
-		{
-			max-width:60%;
-		}
+        /* Organization Banner */
+        .id-card-org {
+            background: #C0113A;
+            color: white;
+            padding: 4px 0;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+        }
 
-		.bg-danger
-		{
-			background-color:#DD1447;
-			color:white;
-			margin-top:0px;
-			padding:10px;
-		}
-		.bodyBGColor, .content
-		{
-			background-color:white;
-			color:#333333;
-		}
-		.hpanel
-		{
-			border:solid 1px #CCCCCC;
-		}
-		a
-		{
-			color:#333333;	
-		}
-		.panel-body-bg {
-			background-color:none;
-			background-image: url(/V1/Images/300pxlogo-opacity.png);
-			background-repeat: no-repeat;
-			background-size: cover;
-			background-position: 100px 105px;
-			height:280px;
-			margin:0px;
-		}
-	</style>
+        /* Card Body */
+        .id-card-body {
+            display: flex;
+            padding: 8px;
+            height: calc(100% - 70px);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Photo Section */
+        .id-card-photo {
+            width: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+            .id-card-photo img {
+                width: 100%;
+                max-height: 100%;
+                border: 1px solid #EEE;
+                border-radius: 3px;
+                background-color: white;
+            }
+        /* Info Section */
+        .id-card-info {
+            width: 70%;
+            padding-left: 8px;
+            font-size: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        .id-card-name {
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        .id-card-detail {
+            margin-bottom: 2px;
+        }
+        /* Footer Section */
+        .id-card-footer {
+            background: #DD1447;
+            color: white;
+            padding: 4px 0;
+            text-align: center;
+            font-size: 10px;
+            font-weight: bold;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            z-index: 2;
+        }
+        /* Certification Badge */
+        .certification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #28a745;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 8px;
+            font-weight: bold;
+            z-index: 3;
+        }
+        /* Print-specific styles */
+        @media print {
+            body {
+                background: white !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .id-card-container {
+                box-shadow: none;
+                page-break-after: always;
+            }
+            .watermark-bg {
+                opacity: 0.1; /* More subtle for printing */
+            }
+        }
+    </style>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-		<div class="content animate-panel no-margins" data-child="hpanel" data-effect="fadeInDown" style="width:340px;">
-			<div class="hpanel no-margins">
-				<div class="text-center bg-danger">
-					<br />
-					<h4 class="no-margins font-bold"><i class="fa fa-id-card-o"></i> <asp:Literal id="litTitle" runat="server"></asp:Literal> </h4>
-				</div>
-				<div class="alert alert-danger text-center">
-					<h4 class="font-bold no-margins">GROUND FORCE HUMANITARIAN AID</h4>
-				</div>
-				<div class="panel-body-bg">
-					<div class="m-md">
-						<asp:Image runat="server" class="img-rounded" id="imgProfile"></asp:Image>
-						<p>
-							<dl class="no-margins text-left">
-								<dt><h2 class="no-margins"><a href="/V1/Profile/Profile.aspx" class="font-bold"><asp:Literal id="lblName" runat="server"></asp:Literal></a></h2></dt>
-								<%=locationDD %>
-								<%=zelloDD%>
-								<asp:Literal id="litNumber" runat="server"></asp:Literal>
-								<dd><h5 class="no-margins">Verify: 203-520-4484 </h5></dd>
-							</dl>
-						</p>
-					</div>
-				</div>
-				<div class="bg-danger hred text-center">
-					<h2 class="font-bold"><i class="fa fa-user-circle"></i> VOLUNTEER</h2>
-				</div>
-			</div>
-		</div>
+
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <div class="id-card-container">
+        <div id="watermarkBg" runat="server" class="watermark-bg"></div>
+        <div class="id-card-header">
+            <i class="fa fa-id-card-o"></i>
+            <asp:Literal ID="litTitle" runat="server"></asp:Literal>
+        </div>
+        <div class="id-card-org">
+            GROUND FORCE HUMANITARIAN AID
+        </div>
+        <div class="id-card-body">
+            <div class="id-card-photo">
+                <asp:Image runat="server" ID="imgProfile" AlternateText="Volunteer Photo" />
+            </div>
+            <div class="id-card-info">
+                <div class="id-card-name">
+                    <uc1:TeamLogo ID="ucTeamLogo" runat="server" />
+                </div>
+                <div class="id-card-detail">
+                    <%=locationDD %>
+                </div>
+                <div class="id-card-detail">
+                    <%=zelloDD%>
+                </div>
+                <div class="id-card-detail">
+                    <asp:Literal ID="litNumber" runat="server"></asp:Literal>
+                </div>
+                <div class="id-card-detail">
+                    Verify: 203-520-4484
+                    <br />
+                    Print Date:
+                    <asp:Literal ID="litPrintDate" runat="server"></asp:Literal><br />
+                    <asp:Label ID="lblStabilityVerifiedDate" runat="server" Text="Stability Verified Date:"
+                        Visible="false"></asp:Label>
+                    <asp:Literal ID="litStabilityVerifiedDate" runat="server"></asp:Literal><br />
+
+                    <asp:Label ID="lblTeamVerifiedDate" runat="server" Text="Team Verified Date:" Visible="false"></asp:Label>
+                    <asp:Literal ID="litTeamVerifiedDate" runat="server"></asp:Literal>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="id-card-footer">
+            <i class="fa fa-user-circle"></i>VOLUNTEER
+        </div>
+    </div>
 </asp:Content>

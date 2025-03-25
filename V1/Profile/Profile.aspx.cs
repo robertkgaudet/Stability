@@ -523,25 +523,35 @@ public partial class V1_Profile_Profile : BaseOrganizationWebForm
     {
         if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
-            Guid _profileUserId = new Guid(hidProfileId.Value); // userId of the person on the profile Page
-
+            Guid _profileUserId = new Guid(hidProfileId.Value); 
             using (var context = new CrowdReliefDBDataContext())
-            {
-                // Update UserOrganizations table (Team Logo)
+            {          
                 var userOrg = context.UserOrganizations.FirstOrDefault(uo => uo.UserId == _profileUserId);
                 if (userOrg != null)
                 {
                     userOrg.ShowTeamLogo = chkShowDonateButton.Checked;
+                    if (chkShowDonateButton.Checked)
+                    {
+                        userOrg.TeamVerifiedDate = DateTime.Now;
+                    }
+                    else
+                    {
+                        userOrg.TeamVerifiedDate = null; 
+                    }
                 }
-
-                // Update Profiles table (Stability Verified)
                 var profile = context.Profiles.FirstOrDefault(p => p.UserId == _profileUserId);
                 if (profile != null)
                 {
                     profile.IsDisasterReadyCertified = chkStabilityVerified.Checked;
+                    if (chkStabilityVerified.Checked)
+                    {
+                        profile.StabilityVerifiedDate = DateTime.Now; 
+                    }
+                    else
+                    {
+                        profile.StabilityVerifiedDate = null; 
+                    }
                 }
-
-                // Submit changes to the database
                 context.SubmitChanges();
             }
         }
