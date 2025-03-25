@@ -1021,7 +1021,7 @@
                         <div class="modal-body">
                             <p>
 								<strong>Follow These Steps (Takes About 2 Minutes)</strong>
-								By completing this informtion you're contributing to the overall knowledge of the community in ways that can help everyone collaborate even more effectively.
+								By completing this information you're contributing to the overall knowledge of the community in ways that can help everyone collaborate even more effectively.
 								<ul class="fa-ul" id="userActionList">
 									<li data-url="/V1/Profile/AvailableDates.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=calendarUpdated%>;"></i> <u>Update My Available Deployment Dates</u></li>
 									<li data-url="/V1/Profile/EditNonProfits.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=teamUpdated%>;"></i> <u>Choose or Create Your Team</u></li>
@@ -1030,8 +1030,8 @@
 									<li runat="server" id="liDeployment" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=deploymentUpdated%>;"></i> <u>Find or Create a Deployment</u></li>
 									<li data-url="/V1/Profile/EditDisasters.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=communityUpdated%>;"></i> <u>Choose Your Community Portal</u></li>
 								</ul>
-								Citizens in communities are no longer victims of natrual disasters waiting for help. We are the help because citizens have many of the skills their own community needs
-								to successfully recover from natural disasters.
+								Communities are no longer just waiting for help after natural disasters—we ARE the help. The skills, strength, and stability needed for recovery already exist within our own neighborhoods.
+								By empowering citizens to take action, we turn survivors into responders and rebuild stronger together.
                             </p>
                         </div>
                         <div class="modal-footer">

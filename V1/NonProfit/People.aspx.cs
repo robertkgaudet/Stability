@@ -1,6 +1,9 @@
-﻿using GoogleMapsAPI.Places;
+﻿using CrowdRelief;
+using GoogleMapsAPI.Places;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Configuration;
 using System.Globalization;
 using System.IdentityModel.Metadata;
 using System.Linq;
@@ -11,29 +14,29 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 public partial class V1_NonProfit_People : BaseOrganizationWebForm
 {
-	public string _logo;
-	public string _teamName;
-	public string _teamSquareLogo;
-	public string _teamDescription;
-	public string _pageName;
-	public string _organizationId;
-	public string _nonProfitDropDown;
-	public string _coverImage;
-	public string organizationId = string.Empty;
-	public string signedInUserFullName = string.Empty;
-	public bool isUserOnTeam = false;
-	public Guid organizationOwnerId = Guid.Empty;
-	public string teamName = string.Empty;
-	public string skillId = string.Empty;
-	public string resourceId = string.Empty;
-	public bool userIsOwner = false;
-	public bool hideTeamList = false;
-	protected void Page_Load(object sender, EventArgs e)
-	{
+    public string _logo;
+    public string _teamName;
+    public string _teamSquareLogo;
+    public string _teamDescription;
+    public string _pageName;
+    public string _organizationId;
+    public string _nonProfitDropDown;
+    public string _coverImage;
+    public string organizationId = string.Empty;
+    public string signedInUserFullName = string.Empty;
+    public bool isUserOnTeam = false;
+    public Guid organizationOwnerId = Guid.Empty;
+    public string teamName = string.Empty;
+    public string skillId = string.Empty;
+    public string resourceId = string.Empty;
+    public bool userIsOwner = false;
+    public bool hideTeamList = false;
+    protected void Page_Load(object sender, EventArgs e)
+    {
         organizationId = Request.QueryString["organizationId"];
         skillId = Request.QueryString["skillId"];
         resourceId = Request.QueryString["resourceId"];
-        
+
         ucTeamFooter.PageName = "peoplePage";
         ucTeamHeader.PageName = "Team Members";
         #region HEADER PROPERTIES
@@ -43,7 +46,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
 
         string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
-		_coverImage = causePhotoFolder + "businesscoverimage.png";
+        _coverImage = causePhotoFolder + "businesscoverimage.png";
 
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         var organization = (from o in dc.Organizations
@@ -145,78 +148,168 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             userIsOwner = organization.OwnerId == userId ? true : false;
 
 
-			if (hideTeamList && !HttpContext.Current.User.IsInRole("Administrator") && !userIsOwner)
-			{
-				//HideTeamList is managed by the owner in settings.
-				//Hide team list from nonadmin and nonowner
-				hpanelMembers.Visible = false;
-				divUpdateMessage.Visible = true;
-				divFilterMessage.Visible = false;
-				litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr>Contact team administrator to see the team list.";
-			}
-			else if (isUserOnTeam || User.IsInRole("Administrator") || userIsOwner)
-			{
-				//If user is on team or an admin or the owner they can see this team.
-				hypPrintableTeamList.Visible = true;
-				hypPrintableTeamList.NavigateUrl = "/V1/NonProfitAdministration/PrintableTeamList.aspx?organizationId=" + organizationId + "&skillId=" + skillId + "&resourceId=" + resourceId;
-				
-				//ADMIN SEES ALL USERS
-				
+            if (hideTeamList && !HttpContext.Current.User.IsInRole("Administrator") && !userIsOwner)
+            {
+                //HideTeamList is managed by the owner in settings.
+                //Hide team list from nonadmin and nonowner
+                hpanelMembers.Visible = false;
+                divUpdateMessage.Visible = true;
+                divFilterMessage.Visible = false;
+                litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr>Contact team administrator to see the team list.";
+            }
+            else if (isUserOnTeam || User.IsInRole("Administrator") || userIsOwner)
+            {
+                //If user is on team or an admin or the owner they can see this team.
+                hypPrintableTeamList.Visible = true;
+                hypPrintableTeamList.NavigateUrl = "/V1/NonProfitAdministration/PrintableTeamList.aspx?organizationId=" + organizationId + "&skillId=" + skillId + "&resourceId=" + resourceId;
 
-				
-				if (!String.IsNullOrEmpty(skillId))
-				{
-					var skillName = (from s in dc.Skills
-									 where s.SkillId == new Guid(skillId)
-									 select new { s.Name }).SingleOrDefault();					
+                //ADMIN SEES ALL USERS
 
-					divFilterMessage.Visible = true;
-					litFilterMessage.Text = "<i class=\"fa fa-2x fa-hand-pointer-o\"></i><hr>Showing team members with the '" + skillName.Name + "' skillset.";
-				}
-				if (!String.IsNullOrEmpty(resourceId))
-				{
-					var resouceName = (from r in dc.Resources
-									   where r.ResourceId == new Guid(resourceId)
-									   select new { r.Name }).SingleOrDefault();					
 
-					divFilterMessage.Visible = true;
-					litFilterMessage.Text = "<i class=\"fa fa-2x fa-truck\"></i><hr>Showing team members with a '" + resouceName.Name + "' as an available resource.";
-				}
-				hpanelMembers.Visible = true;
-				rptVolunteers.DataSource = new List<PeopleList>();
-				rptVolunteers.DataBind();
-			}
-			else
-			{
-				//User not on team, not an admin so they cannot see the list.
-				divUpdateMessage.Visible = true;
-				litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr>You must be on this team to see the team members.";
-			}
-		}
-		else
-		{
-			//User must be signed in to see the list.
-			divUpdateMessage.Visible = true;
-			litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr><a href=\"\\signin\">Sign in</a> to see the list of team members.";
-		}
 
+                if (!String.IsNullOrEmpty(skillId))
+                {
+                    var skillName = (from s in dc.Skills
+                                     where s.SkillId == new Guid(skillId)
+                                     select new { s.Name }).SingleOrDefault();
+
+                    divFilterMessage.Visible = true;
+                    litFilterMessage.Text = "<i class=\"fa fa-2x fa-hand-pointer-o\"></i><hr>Showing team members with the '" + skillName.Name + "' skillset.";
+                }
+                if (!String.IsNullOrEmpty(resourceId))
+                {
+                    var resouceName = (from r in dc.Resources
+                                       where r.ResourceId == new Guid(resourceId)
+                                       select new { r.Name }).SingleOrDefault();
+
+                    divFilterMessage.Visible = true;
+                    litFilterMessage.Text = "<i class=\"fa fa-2x fa-truck\"></i><hr>Showing team members with a '" + resouceName.Name + "' as an available resource.";
+                }
+                hpanelMembers.Visible = true;
+                rptVolunteers.DataSource = new List<PeopleList>();
+                rptVolunteers.DataBind();
+            }
+            else
+            {
+                //User not on team, not an admin so they cannot see the list.
+                divUpdateMessage.Visible = true;
+                litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr>You must be on this team to see the team members.";
+            }
+        }
+        else
+        {
+            //User must be signed in to see the list.
+            divUpdateMessage.Visible = true;
+            litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr><a href=\"\\signin\">Sign in</a> to see the list of team members.";
+        }
         if (!IsPostBack)
         {
+            string type = Request.QueryString["type"];
+            bool isVisible = (type == "email" || type == "sms");
+
+            // "Select All" checkbox
+            chkSelectAll.Visible = isVisible;
+            if (type == "email")
+            {
+                divEmail.Visible = true;
+                divSms.Visible = false;
+            }
+            else if (type == "sms")
+            {
+                divEmail.Visible = false;
+                divSms.Visible = true;
+            }
+            else
+            {
+                divEmail.Visible = false;
+                divSms.Visible = false;
+            }
+
+            LoadEvents();
             LoadDropdowns();
             //SearchButton_Click(SearchButton, EventArgs.Empty); // Calls the search function
             ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdatePanelTrigger", "setTimeout(function() { __doPostBack('" + SearchButton.UniqueID + "', ''); }, 100);", true);
 
         }
     }
+    protected void btnSendEmail_click(object sender, EventArgs e)
+    {
+        string selectedUserIds = hdnSelectedUsers.Value;
+        string userMessage = txtEmail.Text;
+        if (!string.IsNullOrEmpty(selectedUserIds))
+        {
+            string[] userIds = selectedUserIds.Split(',');
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                foreach (string userId in userIds)
+                {
+                    Guid userGuid = new Guid(userId);
+                    var userEmail = (from m in dc.aspnet_Memberships
+                                     where m.UserId == userGuid
+                                     select m.Email).FirstOrDefault();
+                    if (!string.IsNullOrEmpty(userEmail))
+                    {
+                        ListDictionary ldEmailBodyReplacements = new ListDictionary();
+                        ldEmailBodyReplacements.Add("<% UserId %>", userId.ToString());
+                        ldEmailBodyReplacements.Add("<% Message %>", userMessage);
+                        string error = string.Empty;
+                        Tools.SendEmail(
+                            userMessage,
+                            "You Have a New Message on Stability",
+                            ldEmailBodyReplacements,
+                            "robertkgaudet@gmail.com",
+                            "Stability User Alert",
+                            string.Empty,
+                            string.Empty,
+                            "~\\EmailTemplates\\TeamMemberMessage.html",
+                            out error
+                        );
+                    }
+                }
+            }
+        }
+        txtEmail.Text = "";
+    }
 
-	protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
-	{
-		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-		{
-			RepeaterItem dataItem = (RepeaterItem)e.Item;
+    protected void btnSendSms_click(object sender, EventArgs e)
+    {
+        string selectedUserIds = hdnSelectedUsers.Value;
+        string smsMessage = txtsms.Value.Trim();
+        if (!string.IsNullOrEmpty(selectedUserIds) && !string.IsNullOrEmpty(smsMessage))
+        {
+            string[] userIds = selectedUserIds.Split(',');
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                foreach (string userId in userIds)
+                {
+                    Guid userGuid = new Guid(userId);
+                    var phoneNumber = (from p in dc.Profiles
+                                       where p.UserId == userGuid
+                                       select p.PhoneNumber).FirstOrDefault();
+                    if (!string.IsNullOrEmpty(phoneNumber))
+                    {
+                        string accountSid = ConfigurationManager.AppSettings["twilioAccountSID"].ToString();
+                        string authToken = ConfigurationManager.AppSettings["twilioAuthToken"].ToString();
+                        string fromNumber = ConfigurationManager.AppSettings["twilioPhoneNumber"].ToString();
+                        var tools = new Tools(accountSid, authToken, fromNumber);
+                        tools.SendSms(smsMessage, new string[] { phoneNumber });
+                    }
+                }
+            }
+        }
+        txtsms.Value = "";
+    }
 
 
-          
+    protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        {
+
+            RepeaterItem dataItem = (RepeaterItem)e.Item;
+
+
+
             Guid userId = Guid.Empty;
             if (DataBinder.Eval(dataItem.DataItem, "UserId") != null)
             {
@@ -236,9 +329,9 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 ucTeamLogo.LoadNameWithBadges();
             }
             MembershipUser profileUser = Membership.GetUser(userId);
-			bool isLockedOut = false;
-			HtmlGenericControl divFooter = (HtmlGenericControl)e.Item.FindControl("divFooter");
-			Button btnContact = (Button)e.Item.FindControl("btnContact");
+            bool isLockedOut = false;
+            HtmlGenericControl divFooter = (HtmlGenericControl)e.Item.FindControl("divFooter");
+            Button btnContact = (Button)e.Item.FindControl("btnContact");
             HtmlGenericControl h5Container = (HtmlGenericControl)e.Item.FindControl("h5Container");
             Button btnManage = (Button)e.Item.FindControl("btnManage");
             Literal litVettingInfo = (Literal)e.Item.FindControl("litVettingInfo");
@@ -257,11 +350,11 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 btnContact.Visible = true;
                 if (btnContact.Visible || btnManage.Visible)
                 {
-                    h5Container.Style["display"] = "flex"; 
+                    h5Container.Style["display"] = "flex";
                 }
                 else
                 {
-                    h5Container.Style.Remove("display"); 
+                    h5Container.Style.Remove("display");
                 }
                 btnManage.Visible = true;
                 isLockedOut = !profileUser.IsApproved;
@@ -292,18 +385,18 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             //zelloName = !String.IsNullOrEmpty(zelloName) ? " Zello: " + zelloName + "</br>" : "";
             description = !String.IsNullOrEmpty(description) ? description + "</br>" : "";
 
-			litMemberInfo.Text = title;
-			string skills = GetSkills(userId);
-			string resources = GetResources(userId);
-			litSkills.Text = !String.IsNullOrEmpty(skills) ? "<h6>Skills:</h6> " + skills + "</br>" : "";
-			litResources.Text = !String.IsNullOrEmpty(resources) ? "<h6>Resources:</h6> " + resources + "</br>" : "";
-			litDescription.Text = description;
+            litMemberInfo.Text = title;
+            string skills = GetSkills(userId);
+            string resources = GetResources(userId);
+            litSkills.Text = !String.IsNullOrEmpty(skills) ? "<h6>Skills:</h6> " + skills + "</br>" : "";
+            litResources.Text = !String.IsNullOrEmpty(resources) ? "<h6>Resources:</h6> " + resources + "</br>" : "";
+            litDescription.Text = description;
 
-		}
-	}
-	protected string GetResources(Guid userId)
-	{
-		string resourceList = string.Empty;
+        }
+    }
+    protected string GetResources(Guid userId)
+    {
+        string resourceList = string.Empty;
 
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
@@ -371,6 +464,23 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             .Select(i => i.Value)
             .ToList();
     }
+    //private void LoadDropdowns()
+    //{
+    //    using (var dc = new CrowdReliefDBDataContext())
+    //    {
+    //        var skills = dc.Skills.Select(s => new { s.SkillId, s.Name }).ToList();
+    //        ddlSkills.DataTextField = "Name";
+    //        ddlSkills.DataValueField = "SkillId";
+    //        ddlSkills.DataSource = skills;
+    //        ddlSkills.DataBind();
+    //        var resources = dc.Resources.Select(r => new { r.ResourceId, r.Name }).ToList();
+    //        ddlResources.DataTextField = "Name";
+    //        ddlResources.DataValueField = "ResourceId";
+    //        ddlResources.DataSource = resources;
+    //        ddlResources.DataBind();
+    //    }
+
+    //}
     private void LoadDropdowns()
     {
         using (var dc = new CrowdReliefDBDataContext())
@@ -385,9 +495,45 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             ddlResources.DataValueField = "ResourceId";
             ddlResources.DataSource = resources;
             ddlResources.DataBind();
+            Guid orgId;
+            if (Guid.TryParse(organizationId, out orgId))
+            {
+                var positions = (from pos in dc.Positions
+                                 where pos.OrganizationId == orgId
+                                 select new
+                                 {
+                                     pos.PositionId,
+                                     pos.Name
+                                 }).ToList();
+                ddlTraining.DataSource = positions;
+                ddlTraining.DataTextField = "Name";
+                ddlTraining.DataValueField = "PositionId";
+                ddlTraining.DataBind();
+            }
+            ddlTraining.Items.Insert(0, new ListItem("Select Training", ""));
+        }
+    }
+    private void LoadEvents()
+    {
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            var events = (from ev in dc.Events
+                          where ev.IsActive == true
+                          select new
+                          {
+                              ev.EventId,
+                              ev.Name
+                          }).ToList();
+            ddlEvent.DataSource = events;
+            ddlEvent.DataTextField = "Name";
+            ddlEvent.DataValueField = "EventId";
+            ddlEvent.DataBind();
+            ddlEvent.Items.Insert(0, new ListItem("  Select Location ", ""));
+
         }
 
     }
+
     private DateTime? ParseDate(string dateText)
     {
         DateTime parsedDate;
@@ -402,11 +548,22 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     }
     protected void SearchButton_Click(object sender, EventArgs e)
     {
-		if (isUserOnTeam || User.IsInRole("Administrator") || userIsOwner)
-		{
+        if (isUserOnTeam || User.IsInRole("Administrator") || userIsOwner)
+        {
+            string selectedTraining = ddlTraining.SelectedValue;
+            int selectedIndex = ddlTraining.SelectedIndex;
+
             //If user is on team or an admin or the owner they can see this team.
             List<string> selectedSkills = GetSelectedValues(ddlSkills);
             List<string> selectedResources = GetSelectedValues(ddlResources);
+            string selectedLocation = Request.Form["selectedEvent"] ?? ddlEvent.SelectedValue;
+            int selectedRadius = 0;
+            int radius;
+            if (int.TryParse(Request.Form["radiusSlider"], out radius))
+
+            {
+                selectedRadius = radius;
+            }
 
             bool emailConnected = txtEmailconnect.Checked;
             bool isVerified = txtIsVerified.Checked;
@@ -423,7 +580,20 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
-                
+                double eventLatitude = 0, eventLongitude = 0;
+                Guid? eventGuid = null;
+                Guid parsedEventGuid;
+                if (!string.IsNullOrEmpty(selectedLocation) && Guid.TryParse(selectedLocation, out parsedEventGuid))
+                {
+                    eventGuid = parsedEventGuid;
+                    var selectedEvent = dc.Events.FirstOrDefault(ea => ea.EventId == eventGuid.Value);
+                    if (selectedEvent != null)
+                    {
+                        double.TryParse(selectedEvent.Latitude, out eventLatitude);
+                        double.TryParse(selectedEvent.Longitude, out eventLongitude);
+                    }
+                }
+
                 var selectedSkillsParam = !selectedSkills.Any() ? skillId == null ? "" : skillId : string.Join(",", selectedSkills);
                 var selectedResourcesParam = !selectedResources.Any() ? resourceId == null ? "" : resourceId : string.Join(",", selectedResources);
                 var nameSearchTermParam = string.IsNullOrEmpty(nameSearchTerm) ? "" : nameSearchTerm;
@@ -431,17 +601,17 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 // Execute stored procedure and return mapped results
                 dc.CommandTimeout = 300;
                 var result = dc.ExecuteQuery<PeopleList>(
-                    "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, emailConnected, isVetted, optedSMS).ToList();				
+                    "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS).ToList();				
 
-				// Show Filter Message if Any Filter Applied
-				divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS;
-				litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
+                // Show Filter Message if Any Filter Applied
+                divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS;
+                litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
 
-				if (isUserOnTeam && !User.IsInRole("Administrator") && !userIsOwner)
+                if (isUserOnTeam && !User.IsInRole("Administrator") && !userIsOwner)
                 {
-					//User is on team but it's not the admin or team owner so limit what they can see.
-					//Hide unapproved users and unvetted users
-					result = result.Where(x => x.IsApproved == true && x.PassedVetting == true).ToList();
+                    //User is on team but it's not the admin or team owner so limit what they can see.
+                    //Hide unapproved users and unvetted users
+                    result = result.Where(x => x.IsApproved == true && x.PassedVetting == true).ToList();
                 }
 
                 // Bind Data.
@@ -451,11 +621,11 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 rptVolunteers.DataSource = result.Skip(20 * (pNumber - 1)).Take(20);
                 rptVolunteers.DataBind();
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "CallMyFunction", "updatePagination();", true);
-            }            
-		}
-        
+            }
+        }
+
     }
-	// sir we don't have to turn on the tracker 
+
 
     protected void ClearButton_Click(object sender, EventArgs e)
     {
@@ -471,6 +641,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         divFilterMessage.Visible = false;
         litFilterMessage.Text = string.Empty;
         filter.Text = string.Empty;
+        ddlTraining.Text = string.Empty;
+        ddlEvent.Text = string.Empty;
     }
 }
 
@@ -519,30 +691,30 @@ internal class PeopleList
 
     public PeopleList()
     {
-			
+
     }
     public override bool Equals(object obj)
-	{
-		PeopleList other = obj as PeopleList;
-		return !ReferenceEquals(other, null) &&
-			   Firstname == other.Firstname &&
-			   CreateDate == other.CreateDate &&
-			   Description == other.Description &&
-			   LoweredEmail == other.LoweredEmail &&
-			   Lastname == other.Lastname &&
-			   UserId.Equals(other.UserId) &&
-			   DateVettingCompleted == other.DateVettingCompleted &&
-			   DateVettingStarted == other.DateVettingStarted &&
-			   VettingNotes == other.VettingNotes &&
-			   VettingActive == other.VettingActive &&
-			   VettingComplete == other.VettingComplete &&
-			   PassedVetting == other.PassedVetting &&
-			   Title == other.Title &&
-			   ZelloName == other.ZelloName &&
-			   LastLoginDate == other.LastLoginDate &&
-			   LastActivityDate == other.LastActivityDate &&
-			   IsApproved == other.IsApproved;
-	}
+    {
+        PeopleList other = obj as PeopleList;
+        return !ReferenceEquals(other, null) &&
+               Firstname == other.Firstname &&
+               CreateDate == other.CreateDate &&
+               Description == other.Description &&
+               LoweredEmail == other.LoweredEmail &&
+               Lastname == other.Lastname &&
+               UserId.Equals(other.UserId) &&
+               DateVettingCompleted == other.DateVettingCompleted &&
+               DateVettingStarted == other.DateVettingStarted &&
+               VettingNotes == other.VettingNotes &&
+               VettingActive == other.VettingActive &&
+               VettingComplete == other.VettingComplete &&
+               PassedVetting == other.PassedVetting &&
+               Title == other.Title &&
+               ZelloName == other.ZelloName &&
+               LastLoginDate == other.LastLoginDate &&
+               LastActivityDate == other.LastActivityDate &&
+               IsApproved == other.IsApproved;
+    }
 
     public override int GetHashCode()
     {
