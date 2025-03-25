@@ -255,7 +255,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                         string authToken = ConfigurationManager.AppSettings["twilioAuthToken"].ToString();
                         string fromNumber = ConfigurationManager.AppSettings["twilioPhoneNumber"].ToString();
                         var tools = new Tools(accountSid, authToken, fromNumber);
-                        //tools.SendSms(smsMessage, new string[] { phoneNumber });
+                        tools.SendSms(smsMessage, new string[] { phoneNumber });
                     }
                 }
             }
@@ -288,17 +288,17 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                             {"<% Email %>",userEmail }
                         };
                         string error = string.Empty;
-                        //Tools.SendEmail(
-                        //    userMessage,                         
-                        //    "You Have a New Message on Stability",
-                        //    ldEmailBodyReplacements,                            
-                        //    "robertkgaudet@gmail.com",
-                        //    "Stability User Alert",
-                        //    string.Empty,
-                        //    string.Empty,
-                        //    "~\\EmailTemplates\\TeamMemberMessage.html",
-                        //    out error
-                        //);
+                        Tools.SendEmail(
+                            userMessage,
+                            "You Have a New Message on Stability",
+                            ldEmailBodyReplacements,
+                            "robertkgaudet@gmail.com",
+                            "Stability User Alert",
+                            string.Empty,
+                            string.Empty,
+                            "~\\EmailTemplates\\TeamMemberMessage.html",
+                            out error
+                        );
                     }
                   
                 }
