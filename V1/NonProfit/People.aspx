@@ -1,5 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"  EnableEventValidation="false" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
@@ -69,6 +68,9 @@
             display: flex !important;
             justify-content: center !important;
         }
+        .donateDiv {
+            display:none;
+        }
     </style>
     <script>
         var recipientsName;
@@ -126,6 +128,11 @@
         var currentUserId = null;
         function setUserId(button) {
             currentUserId = button.getAttribute('data-userid');
+            if (document.getElementById('<%= hiddenManageShowDonateButtonn.ClientID %>').value == "0") {
+                $('.donateDiv').hide();
+            } else {
+                $('.donateDiv').show(); 
+            }
             return false;
         }
         function fetchUserData() {
@@ -656,6 +663,7 @@
             </div>
         </div>
     </div>
+     <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
     <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -689,10 +697,11 @@
                         <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
                             placeholder="Enter Vetting Notes"></asp:TextBox>
                     </div>
-                    <div class="form-group form-check">
+                    <div class="form-group form-check donateDiv">
                         <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input"
-                            Visible="false" />
-                        <label class="form-check-label" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>"  visible="false">
+                             />
+                        <label class="form-check-label"  runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>"
+                            >
                             Enable Team Logo
                         </label>
                     </div>
