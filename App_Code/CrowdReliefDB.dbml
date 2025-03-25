@@ -1197,13 +1197,6 @@
       <Association Name="USState_FEMAAssistanceGrant" Member="FEMAAssistanceGrants" ThisKey="StatesId" OtherKey="StateId" Type="FEMAAssistanceGrant" />
     </Type>
   </Table>
-  <Table Name="dbo.City" Member="Cities">
-    <Type Name="City">
-      <Column Name="CityId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="City" Member="City1" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="Code" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
-    </Type>
-  </Table>
   <Table Name="dbo.OrganizationProgram" Member="OrganizationPrograms">
     <Type Name="OrganizationProgram">
       <Column Name="OrganizationProgramId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -2111,6 +2104,13 @@
       <Column Name="TeamVerifiedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Association Name="aspnet_User_UserOrganization" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="Organization_UserOrganization" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.City" Member="Cities">
+    <Type Name="City">
+      <Column Name="CityId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="City" Member="City1" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Code" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">
