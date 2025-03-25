@@ -20,6 +20,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 
+
 [global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_8013_staging")]
 public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 {
@@ -277,9 +278,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertUSState(USState instance);
   partial void UpdateUSState(USState instance);
   partial void DeleteUSState(USState instance);
-  partial void InsertCity(City instance);
-  partial void UpdateCity(City instance);
-  partial void DeleteCity(City instance);
   partial void InsertOrganizationProgram(OrganizationProgram instance);
   partial void UpdateOrganizationProgram(OrganizationProgram instance);
   partial void DeleteOrganizationProgram(OrganizationProgram instance);
@@ -436,9 +434,12 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertUserOrganization(UserOrganization instance);
   partial void UpdateUserOrganization(UserOrganization instance);
   partial void DeleteUserOrganization(UserOrganization instance);
+  partial void InsertCity(City instance);
+  partial void UpdateCity(City instance);
+  partial void DeleteCity(City instance);
     #endregion
     public CrowdReliefDBDataContext() :
-       base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
+      base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
     {
         OnCreated();
     }
@@ -1130,14 +1131,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		}
 	}
 	
-	public System.Data.Linq.Table<City> Cities
-	{
-		get
-		{
-			return this.GetTable<City>();
-		}
-	}
-	
 	public System.Data.Linq.Table<OrganizationProgram> OrganizationPrograms
 	{
 		get
@@ -1551,6 +1544,14 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<UserOrganization>();
+		}
+	}
+	
+	public System.Data.Linq.Table<City> Cities
+	{
+		get
+		{
+			return this.GetTable<City>();
 		}
 	}
 	
@@ -28452,116 +28453,6 @@ public partial class USState : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.City")]
-public partial class City : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _CityId;
-	
-	private string _City1;
-	
-	private string _Code;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnCityIdChanging(System.Guid value);
-    partial void OnCityIdChanged();
-    partial void OnCity1Changing(string value);
-    partial void OnCity1Changed();
-    partial void OnCodeChanging(string value);
-    partial void OnCodeChanged();
-    #endregion
-	
-	public City()
-	{
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CityId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid CityId
-	{
-		get
-		{
-			return this._CityId;
-		}
-		set
-		{
-			if ((this._CityId != value))
-			{
-				this.OnCityIdChanging(value);
-				this.SendPropertyChanging();
-				this._CityId = value;
-				this.SendPropertyChanged("CityId");
-				this.OnCityIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="City", Storage="_City1", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
-	public string City1
-	{
-		get
-		{
-			return this._City1;
-		}
-		set
-		{
-			if ((this._City1 != value))
-			{
-				this.OnCity1Changing(value);
-				this.SendPropertyChanging();
-				this._City1 = value;
-				this.SendPropertyChanged("City1");
-				this.OnCity1Changed();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Code", DbType="Char(2) NOT NULL", CanBeNull=false)]
-	public string Code
-	{
-		get
-		{
-			return this._Code;
-		}
-		set
-		{
-			if ((this._Code != value))
-			{
-				this.OnCodeChanging(value);
-				this.SendPropertyChanging();
-				this._Code = value;
-				this.SendPropertyChanged("Code");
-				this.OnCodeChanged();
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-}
-
 [global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.OrganizationProgram")]
 public partial class OrganizationProgram : INotifyPropertyChanging, INotifyPropertyChanged
 {
@@ -49153,6 +49044,116 @@ public partial class UserOrganization : INotifyPropertyChanging, INotifyProperty
 					this._OrganizationId = default(System.Guid);
 				}
 				this.SendPropertyChanged("Organization");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.City")]
+public partial class City : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _CityId;
+	
+	private string _City1;
+	
+	private string _Code;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnCityIdChanging(System.Guid value);
+    partial void OnCityIdChanged();
+    partial void OnCity1Changing(string value);
+    partial void OnCity1Changed();
+    partial void OnCodeChanging(string value);
+    partial void OnCodeChanged();
+    #endregion
+	
+	public City()
+	{
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CityId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid CityId
+	{
+		get
+		{
+			return this._CityId;
+		}
+		set
+		{
+			if ((this._CityId != value))
+			{
+				this.OnCityIdChanging(value);
+				this.SendPropertyChanging();
+				this._CityId = value;
+				this.SendPropertyChanged("CityId");
+				this.OnCityIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="City", Storage="_City1", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+	public string City1
+	{
+		get
+		{
+			return this._City1;
+		}
+		set
+		{
+			if ((this._City1 != value))
+			{
+				this.OnCity1Changing(value);
+				this.SendPropertyChanging();
+				this._City1 = value;
+				this.SendPropertyChanged("City1");
+				this.OnCity1Changed();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Code", DbType="Char(2) NOT NULL", CanBeNull=false)]
+	public string Code
+	{
+		get
+		{
+			return this._Code;
+		}
+		set
+		{
+			if ((this._Code != value))
+			{
+				this.OnCodeChanging(value);
+				this.SendPropertyChanging();
+				this._Code = value;
+				this.SendPropertyChanged("Code");
+				this.OnCodeChanged();
 			}
 		}
 	}
