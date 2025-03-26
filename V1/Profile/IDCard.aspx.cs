@@ -52,20 +52,15 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
 				var profile = (from p in dc.Profiles
 							  where p.UserId == userId
 							  select p).SingleOrDefault();
-				litNumber.Text = "<dd><h5 class='no-margins'>Volunteer #" + profile.ProfileNumber +  "</h5></dd>";
-
-				if(!String.IsNullOrEmpty(profile.City))
+                litNumber.Text = "Volunteer #" + profile.ProfileNumber + "";
+                if (!String.IsNullOrEmpty(profile.City))
 				{
-					locationDD = "<dd><h5 class='no-margins'>" + profile.City + ", " + profile.State + "</h5></dd>";
+					locationDD = "" + profile.City + ", " + profile.State + "";
 				}
 				litTitle.Text = "VETTED DISASTER WORKER";
 				if(!String.IsNullOrEmpty(profile.Title))
 				{
 					litTitle.Text = profile.Title.ToUpper();
-				}
-				if(!String.IsNullOrEmpty(profile.ZelloName))
-				{
-					zelloDD = "<dd><h5 class='no-margins'>Zello: " + profile.ZelloName + "</h5></dd>";
 				}
                 if (profile.StabilityVerifiedDate != null)
                 {
