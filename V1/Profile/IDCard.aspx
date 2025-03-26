@@ -1,11 +1,10 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"CodeFile="IDCard.aspx.cs" Inherits="V1_Profile_IDCard" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="IDCard.aspx.cs" Inherits="V1_Profile_IDCard" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <style>
-        /* ID Card Container */
         .id-card-container {
-            width: 3.375in; /* Standard CR80 card size */
+            width: 3.375in;
             height: 2.125in;
             background: white;
             border-radius: 8px;
@@ -82,17 +81,18 @@
         .id-card-info {
             width: 70%;
             padding-left: 8px;
-            font-size: 10px;
+            font-size: 9px; /* Smaller base font size */
             position: relative;
             z-index: 2;
         }
         .id-card-name {
             font-weight: bold;
-            font-size: 12px;
+            font-size: 14px; /* Larger font size for name */
             margin-bottom: 4px;
         }
         .id-card-detail {
             margin-bottom: 2px;
+            font-size: 10px; /* Smaller font size for details */
         }
         /* Footer Section */
         .id-card-footer {
@@ -158,13 +158,10 @@
                     <uc1:TeamLogo ID="ucTeamLogo" runat="server" />
                 </div>
                 <div class="id-card-detail">
-                    <%=locationDD %>
+                     <%=locationDD %>
                 </div>
                 <div class="id-card-detail">
-                    <%=zelloDD%>
-                </div>
-                <div class="id-card-detail">
-                    <asp:Literal ID="litNumber" runat="server"></asp:Literal>
+                      <asp:Literal ID="litNumber" runat="server"></asp:Literal>
                 </div>
                 <div class="id-card-detail">
                     Verify: 203-520-4484
@@ -177,11 +174,9 @@
 
                     <asp:Label ID="lblTeamVerifiedDate" runat="server" Text="Team Verified Date:" Visible="false"></asp:Label>
                     <asp:Literal ID="litTeamVerifiedDate" runat="server"></asp:Literal>
-
                 </div>
             </div>
         </div>
-
         <!-- Footer -->
         <div class="id-card-footer">
             <i class="fa fa-user-circle"></i>VOLUNTEER
