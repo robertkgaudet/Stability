@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IdentityModel.Metadata;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -11,8 +13,7 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
 	public string locationDD = string.Empty;
 	public string cityStateDD = string.Empty;
 
-
-	protected void Page_Load(object sender, EventArgs e)
+    protected void Page_Load(object sender, EventArgs e)
 	{
 		string volunteerStatus = VolunteerStatus.GetVolunteerStatus(userId).Value;
 
@@ -21,13 +22,9 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
 			Response.Write("Unable to print ID Card. Please call the vetting team at 318-572-3161.");
 			Response.End();
 		}
-
-
-
 		this.Master.HideFooter = true;
 		this.Master.HideHeader = true;
 		this.Master.HideMenu = true;
-
 		//this.Master.PageTitle			= "Stability - " +  disaster.Name + " Resources Page";
 		//this.Master.PageDescription		= "Stability - " +  disaster.Name + " " + disaster.Description;
 		//this.Master.FbDescription		= "Stability - " +  disaster.Name + " " + disaster.Description;
@@ -49,32 +46,96 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
 
 			if(profilePhoto != null)
 			{
-				imgProfile.ImageUrl = profilePhotoFolder + profilePhoto.FilenameCropped;
+                litPrintDate.Text = DateTime.Now.ToString("MM/dd/yyyy");
+                imgProfile.ImageUrl = profilePhotoFolder + profilePhoto.FilenameCropped;
 
 				var profile = (from p in dc.Profiles
 							  where p.UserId == userId
 							  select p).SingleOrDefault();
-
-				lblName.Text = profile.Firstname + " " + profile.Lastname;
-				
-				litNumber.Text = "<dd><h5 class='no-margins'>Volunteer #" + profile.ProfileNumber +  "</h5></dd>";
-
-				if(!String.IsNullOrEmpty(profile.City))
+                litNumber.Text = "Volunteer #" + profile.ProfileNumber + "";
+                if (!String.IsNullOrEmpty(profile.City))
 				{
-					locationDD = "<dd><h5 class='no-margins'>" + profile.City + ", " + profile.State + "</h5></dd>";
+					locationDD = "" + profile.City + ", " + profile.State + "";
 				}
 				litTitle.Text = "VETTED DISASTER WORKER";
 				if(!String.IsNullOrEmpty(profile.Title))
 				{
 					litTitle.Text = profile.Title.ToUpper();
 				}
-
-				if(!String.IsNullOrEmpty(profile.ZelloName))
-				{
-					zelloDD = "<dd><h5 class='no-margins'>Zello: " + profile.ZelloName + "</h5></dd>";
-				}
-			}
-		}
-
+                if (profile.StabilityVerifiedDate != null)
+                {
+                    litStabilityVerifiedDate.Text = profile.StabilityVerifiedDate.Value.ToString("MM/dd/yyyy");
+                    lblStabilityVerifiedDate.Visible = true; 
+                    litStabilityVerifiedDate.Visible = true; 
+                }
+                else
+                {
+                    lblStabilityVerifiedDate.Visible = false; 
+                    litStabilityVerifiedDate.Visible = false;
+                }
+            }
+            LoadTeamLogoControl();
+        }
 	}
+    private void LoadTeamLogoControl()
+    {
+        var ucTeamLogo = FindControlRecursive<V1_UserControls_TeamLogo>(this, "ucTeamLogo");
+        if (ucTeamLogo != null)
+        {
+            ucTeamLogo.UserId = userId;
+            ucTeamLogo.LoadNameWithBadges();
+			using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+			{
+                string watermarkImagePath = "/V1/Images/DefaultLogo.png"; 
+                var orgUser = (from o in dc.Organizations
+							   join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+							   where uo.UserId == userId
+                               orderby o.CreatedOn descending
+							   select new
+							   {
+								   o.LogoSquare,
+								   o.OrganizationId,
+								   o.Name,
+								   o.EnableTeamMemberVerification,
+								   uo.ShowTeamLogo,
+								   uo.TeamVerifiedDate
+							   }).Take(1).SingleOrDefault();
+                if (orgUser != null)
+                {
+                    if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
+                    {
+                        if (!string.IsNullOrEmpty(orgUser.LogoSquare))
+                        {
+                            string teamLogo = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
+                            watermarkImagePath = teamLogo + orgUser.LogoSquare;
+                        }
+                    }
+                    if (orgUser.TeamVerifiedDate != null)
+                    {
+                        litTeamVerifiedDate.Text = orgUser.TeamVerifiedDate.Value.ToString("MM/dd/yyyy");
+                        lblTeamVerifiedDate.Visible = true; 
+                        litTeamVerifiedDate.Visible = true; 
+                    }
+                    else
+                    {
+                        lblTeamVerifiedDate.Visible = false; 
+                        litTeamVerifiedDate.Visible = false; 
+                    }
+                    watermarkBg.Style.Add("background-image", "url('" + watermarkImagePath + "')");
+                }
+            }
+        }
+    }
+    public static T FindControlRecursive<T>(Control root, string id) where T : Control
+    {
+        if (root == null) return null;
+        var foundControl = root.FindControl(id) as T;
+        if (foundControl != null) return foundControl;
+        foreach (Control control in root.Controls)
+        {
+            foundControl = FindControlRecursive<T>(control, id);
+            if (foundControl != null) return foundControl;
+        }
+        return null;
+    }
 }

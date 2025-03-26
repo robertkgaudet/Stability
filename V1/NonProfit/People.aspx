@@ -264,6 +264,11 @@ button.btn.btn-primary {
         var currentUserId = null;
         function setUserId(button) {
             currentUserId = button.getAttribute('data-userid');
+            if (document.getElementById('<%= hiddenManageShowDonateButtonn.ClientID %>').value == "0") {
+                $('.donateDiv').hide();
+            } else {
+                $('.donateDiv').show(); 
+            }
             return false;
         }
         function fetchUserData() {
@@ -539,13 +544,13 @@ button.btn.btn-primary {
 
             
             $('#StartDate, #EndDate').val('').datepicker('update');
-           
+
             $('#ContentPlaceHolder1_ddlSkills').multiselect('deselectAll', false);
             $('#ContentPlaceHolder1_ddlSkills').multiselect('refresh');
 
             $('#ContentPlaceHolder1_ddlResources').multiselect('deselectAll', false);
             $('#ContentPlaceHolder1_ddlResources').multiselect('refresh');
-            
+
             // Trigger the search button click event
             __doPostBack('<%= SearchButton.UniqueID %>', '');
         }
@@ -756,10 +761,12 @@ function updateCheckboxSelection() {
                     <h4 style="margin-left: 18px;">Search</h4>
                     <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-                            <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
+                            <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center"
+                                style="margin-bottom: 20px;" visible="false">
                                 <asp:Literal ID="litMessage" runat="server"></asp:Literal>
                             </div>
-                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;" visible="false">
+                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;"
+                                visible="false">
                                 <asp:Literal ID="litFilterMessage" runat="server"></asp:Literal>
                             </div>
                         </ContentTemplate>
@@ -768,7 +775,8 @@ function updateCheckboxSelection() {
                         </Triggers>
                     </asp:UpdatePanel>
 
-                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers" visible="false">
+                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers"
+                        visible="false">
                         <div class="hpanel" runat="server" id="hpanelJoin" visible="true">
                             <a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
                         </div>
@@ -872,8 +880,9 @@ function updateCheckboxSelection() {
 
                                 <div class="row mt-4" style="margin-right: 6px; margin-bottom: 8px;"> 
                                     <div class="col-md-12 text-right ">
-                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="resetSearch()">Clear</button>                                        
+                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2"
+                                            Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="resetSearch()">Clear</button>
                                     </div>
                                 </div>
                             </div>
@@ -909,63 +918,64 @@ function updateCheckboxSelection() {
                                                 <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
 
 
-                                            </h5>
-                                            <p>
-                                                <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
-                                                <asp:Literal ID="litDescription" runat="server"></asp:Literal>
-                                            </p>
-                                            <div class="pull-right">                                                
-                                                <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                                </h5>
+                                                <p>
+                                                    <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
+                                                    <asp:Literal ID="litDescription" runat="server"></asp:Literal>
+                                                </p>
+                                                <div class="pull-right">
+                                                    <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton"
+                                                        data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                                </div>
+                                                <asp:Literal ID="litSkills" runat="server"></asp:Literal>
+                                                <asp:Literal ID="litResources" runat="server"></asp:Literal>
                                             </div>
-                                            <asp:Literal ID="litSkills" runat="server"></asp:Literal>
-                                            <asp:Literal ID="litResources" runat="server"></asp:Literal>
+                                            <div class="panel-footer d-flex justify-content-between align-items-center" id="divFooter"
+                                                runat="server" visible="false">
+                                                <div class="pull-right">
+                                                    <asp:Button ID="btnManage" runat="server" Text="Manage" CssClass="btn btn-primary manageButton float-end"
+                                                        data-toggle="modal" data-target="#manageMemberModal"
+                                                        data-userid='<%# Eval("UserID") %>'
+                                                        OnClientClick="setUserId(this); fetchUserData(); return false;"></asp:Button>
+                                                </div>
+
+                                                <div class="text-muted small" style="width: 100%;">
+                                                    <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
+                                                </div>
+                                            </div>
                                         </div>
-                                         <div class="panel-footer d-flex justify-content-between align-items-center" id="divFooter"
-                                runat="server" visible="false">
-                                <div class="pull-right">
-                                    <asp:Button ID="btnManage" runat="server" Text="Manage" CssClass="btn btn-primary manageButton float-end"
-                                        data-toggle="modal" data-target="#manageMemberModal"
-                                        data-userid='<%# Eval("UserID") %>'
-                                        OnClientClick="setUserId(this); fetchUserData(); return false;"></asp:Button>
-                                </div>
+                                    </td>
+                                </tr>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <br />
+                                <%--<asp:Button ID="TriggerSearchButton" runat="server" Text="Trigger Search" OnClientClick="triggerSearch(1); return false;" />--%>
+                                <nav class="navClass" aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item disabled" id="previousBtn">
+                                            <a class="page-link" href="javascript:void(0)" tabindex="-1">Previous</a>
+                                        </li>
 
-                                <div class="text-muted small" style="width: 100%;">
-                                    <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
-                                </div>
-                            </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ItemTemplate>
-                    </asp:Repeater>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td>
-                            <br />
-                            <%--<asp:Button ID="TriggerSearchButton" runat="server" Text="Trigger Search" OnClientClick="triggerSearch(1); return false;" />--%>
-                            <nav class="navClass" aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item disabled" id="previousBtn">
-                                        <a class="page-link" href="javascript:void(0)" tabindex="-1">Previous</a>
-                                    </li>
+                                        <li class="page-item" id="nextBtn">
+                                            <a class="page-link" href="javascript:void(0)" tabindex="0">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
 
-                                    <li class="page-item" id="nextBtn">
-                                        <a class="page-link" href="javascript:void(0)" tabindex="0">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
-
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
-        </asp:Panel>
-    </ContentTemplate>
-    <Triggers>
-        <asp:AsyncPostBackTrigger ControlID="SearchButton" EventName="Click" />
-    </Triggers>
-</asp:UpdatePanel>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </asp:Panel>
+        </ContentTemplate>
+        <Triggers>
+            <asp:AsyncPostBackTrigger ControlID="SearchButton" EventName="Click" />
+        </Triggers>
+    </asp:UpdatePanel>
 
 
 
@@ -997,6 +1007,7 @@ function updateCheckboxSelection() {
             </div>
         </div>
     </div>
+     <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
     <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1030,10 +1041,13 @@ function updateCheckboxSelection() {
                         <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
                             placeholder="Enter Vetting Notes"></asp:TextBox>
                     </div>
-                    <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" Visible="false" />
-                        <asp:Label ID="chkManageShowDonatelabel" runat="server" class="form-check-label"  Visible="false" AssociatedControlID="chkManageShowDonateButton">    Enable Team Logo
-                        </asp:Label>
+                    <div class="form-group form-check donateDiv">
+                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input"
+                             />
+                        <label class="form-check-label"  runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>"
+                            >
+                            Enable Team Logo
+                        </label>
                     </div>
                     <% if (User.IsInRole("Administrator"))
                         { %>

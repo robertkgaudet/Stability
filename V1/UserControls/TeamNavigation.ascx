@@ -1,5 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="TeamNavigation.ascx.cs"
-    Inherits="V1_UserControls_TeamNavigation" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="TeamNavigation.ascx.cs" Inherits="V1_UserControls_TeamNavigation" %>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -8,8 +7,10 @@
         var caret = panelNav.find('.caret');
         var collapseElement = $('#collapseTeamNavigation');
 
+        // Remove touchstart and touchend handlers to prevent menu from closing while scrolling
         var touchStartY = 0;
         var touchEndY = 0;
+
         panelNav.on('click', function () {
             collapseElement.collapse('toggle');
         });
@@ -33,17 +34,17 @@
         });
         checkWindowSize();  // Initial check on page load
 
-        // Prevent toggling while scrolling
-        panelNav.on('touchstart', function (e) {
-            touchStartY = e.originalEvent.touches[0].clientY;
-        });
+        // Prevent toggling while scrolling – removed touch event logic to avoid interference during scroll
+        // panelNav.on('touchstart', function (e) { 
+        //     touchStartY = e.originalEvent.touches[0].clientY;
+        // });
 
-        panelNav.on('touchend', function (e) {
-            touchEndY = e.originalEvent.changedTouches[0].clientY;
-            if (Math.abs(touchStartY - touchEndY) < 10) { // Adjust the threshold as needed
-                $(this).click();
-            }
-        });
+        // panelNav.on('touchend', function (e) {
+        //     touchEndY = e.originalEvent.changedTouches[0].clientY;
+        //     if (Math.abs(touchStartY - touchEndY) < 10) { // Adjust the threshold as needed
+        //         $(this).click();
+        //     }
+        // });
 
         $('#<%=divWebsite.ClientID%>').click(function () {
             window.location.href = '/Impactoid/CommunityPage.aspx?organizationId=<%=organizationId%>';
@@ -58,8 +59,6 @@
             return false;
         });
     });
-
-
 </script>
 
 <style>
@@ -72,7 +71,6 @@
         background-color: #BCE8F1;
         cursor: pointer;
     }
-
 
     .caret {
         border-top: 4px solid;
@@ -165,8 +163,8 @@
                     <asp:HyperLink runat="server" ID="hypDonationDashboard" CssClass="donationDashboard"> <i class="fa fa-tachometer text-primary"></i> Donations Dashboard
                     </asp:HyperLink>
                 </li>
-				<hr runat="server" id="hr5"></hr>
-				<li>Image Manager</li>
+                <hr runat="server" id="hr5"></hr>
+                <li>Image Manager</li>
                 <li>
                     <asp:HyperLink runat="server" ID="hypSquareLogoUpload"  CssClass="squareLogoUploadButton">  <i class="fa fa-upload text-primary"></i>Upload Team Logo
                     </asp:HyperLink>
@@ -183,14 +181,14 @@
                     <asp:HyperLink runat="server" ID="hypManagePhotos" CssClass="managePhotosButton"> <i class="fa fa-camera text-primary"></i> Manage Photos
                     </asp:HyperLink>
                 </li>
-				 <hr runat="server" id="hr4"></hr>
-				<li>Message All Team Members</li>
+                <hr runat="server" id="hr4"></hr>
+                <li>Message All Team Members</li>
                 <li <%=_teamMember%>>
-				<asp:HyperLink runat="server" ID="hypMail" Visible="true"><i class="fa fa-envelope"></i>Email Team Members </asp:HyperLink>
-				</li>
-				<li <%=_teamMember%>>
-				<asp:HyperLink runat="server" ID="hypSms" Visible="true"><i class="fa fa-file-text text-warning"></i>Text Team Members</asp:HyperLink>
-				</li>
+                <asp:HyperLink runat="server" ID="hypMail" Visible="true"><i class="fa fa-envelope"></i>Email Team Members </asp:HyperLink>
+                </li>
+                <li <%=_teamMember%>>
+                <asp:HyperLink runat="server" ID="hypSms" Visible="true"><i class="fa fa-file-text text-warning"></i>Text Team Members</asp:HyperLink>
+                </li>
                 <hr runat="server" id="hr3"></hr>
 
                 <li <%=_ticketPageActive%>>
