@@ -132,16 +132,16 @@
         }
 
         #txtEmail {
-            margin-right: 0px !important;
-        }
-
-        .input-group-append {
-            margin-left: -1px; /* Removes unwanted space */
-        }
-
-        button.btn.btn-primary {
-            margin-left: 10px;
-        }
+    margin-right: 0px !important;
+}
+.input-group-append {
+    margin-left: -1px; /* Removes unwanted space */
+}
+button.btn.btn-primary {
+    margin-left: 10px;
+           margin-bottom: 90px;
+}
+        
     </style>
     <script>
         var recipientsName;
@@ -743,7 +743,7 @@
     </div>
     <div id="divSms" runat="server" class="input-group">
         <textarea id="txtsms" runat="server" cssclass="form-control" placeholder="Enter SMS Text"
-            rows="2" cols="95"></textarea>
+            rows="6" cols="95"></textarea>
         <div class="input-group-append">
             <button type="button" class="ladda-button ladda-button-demo ladda-button-sms btn btn-primary " data-style="slide-right" onclick="sendSms()">Send SMS</button>
         </div>
