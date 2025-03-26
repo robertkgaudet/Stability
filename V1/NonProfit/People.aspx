@@ -116,6 +116,9 @@
                 margin-left: 110px;
                 width: 123px;
         }
+        button.ladda-button.ladda-button-demo.ladda-button-email.btn.btn-primary.b2 {
+    margin-bottom: 148px;
+}
         .note-editor.note-frame.panel.panel-default {
 
        width: 680px;
