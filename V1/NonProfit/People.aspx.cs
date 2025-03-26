@@ -9,6 +9,7 @@ using System.IdentityModel.Metadata;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
@@ -203,7 +204,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr><a href=\"\\signin\">Sign in</a> to see the list of team members.";
         }
         if (!IsPostBack)
-        {
+        {      
             string type = Request.QueryString["type"];
             bool isVisible = (type == "email" || type == "sms");
 
@@ -232,49 +233,10 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
         }
     }
-    protected void btnSendEmail_click(object sender, EventArgs e)
-    {
-        string selectedUserIds = hdnSelectedUsers.Value;
-        string userMessage = txtEmail.Text;
-        if (!string.IsNullOrEmpty(selectedUserIds))
-        {
-            string[] userIds = selectedUserIds.Split(',');
-            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
-            {
-                foreach (string userId in userIds)
-                {
-                    Guid userGuid = new Guid(userId);
-                    var userEmail = (from m in dc.aspnet_Memberships
-                                     where m.UserId == userGuid
-                                     select m.Email).FirstOrDefault();
-                    if (!string.IsNullOrEmpty(userEmail))
-                    {
-                        ListDictionary ldEmailBodyReplacements = new ListDictionary();
-                        ldEmailBodyReplacements.Add("<% UserId %>", userId.ToString());
-                        ldEmailBodyReplacements.Add("<% Message %>", userMessage);
-                        string error = string.Empty;
-                        Tools.SendEmail(
-                            userMessage,
-                            "You Have a New Message on Stability",
-                            ldEmailBodyReplacements,
-                            "robertkgaudet@gmail.com",
-                            "Stability User Alert",
-                            string.Empty,
-                            string.Empty,
-                            "~\\EmailTemplates\\TeamMemberMessage.html",
-                            out error
-                        );
-                    }
-                }
-            }
-        }
-        txtEmail.Text = "";
-    }
-
-    protected void btnSendSms_click(object sender, EventArgs e)
-    {
-        string selectedUserIds = hdnSelectedUsers.Value;
-        string smsMessage = txtsms.Value.Trim();
+  
+    [WebMethod]
+    public static string sendSms(string selectedUserIds, string smsMessage)
+    {   
         if (!string.IsNullOrEmpty(selectedUserIds) && !string.IsNullOrEmpty(smsMessage))
         {
             string[] userIds = selectedUserIds.Split(',');
@@ -297,9 +259,56 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 }
             }
         }
-        txtsms.Value = "";
+        return "Sms sent successfully!";
     }
 
+
+    [WebMethod]
+    public static string SendEmail(string selectedUserIds, string userMessage)
+    {
+        if (!string.IsNullOrEmpty(selectedUserIds))
+        {
+            string[] userIds = selectedUserIds.Split(',');
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                foreach (string userId in userIds)
+                {
+                    Guid userGuid = new Guid(userId);
+                    var userEmail = (from m in dc.aspnet_Memberships
+                                     where m.UserId == userGuid
+                                     select m.Email).FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(userEmail))
+                    {
+                        ListDictionary ldEmailBodyReplacements = new ListDictionary
+                        {
+                            { "<% UserId %>", userId.ToString() },
+                            { "<% Message %>", userMessage },
+                            {"<% Email %>",userEmail }
+                        };
+                        string error = string.Empty;
+                        Tools.SendEmail(
+                            userMessage,
+                            "You Have a New Message on Stability",
+                            ldEmailBodyReplacements,
+                            "robertkgaudet@gmail.com",
+                            "Stability User Alert",
+                            string.Empty,
+                            string.Empty,
+                            "~\\EmailTemplates\\TeamMemberMessage.html",
+                            out error
+                        );
+                    }
+                  
+                }
+            }
+       
+        }
+
+
+        return "Emails sent successfully!";
+
+    }
 
     protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
     {
