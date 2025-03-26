@@ -11,12 +11,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
     <link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
     <script src="/Homer/vendor/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js"></script>
-     <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote.css" />
+    <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote.css" />
     <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />
     <script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
     <link href="../../Homer/vendor/sweetalert/lib/sweet-alert.css" rel="stylesheet" />
     <script src="../../Homer/vendor/sweetalert/lib/sweet-alert.min.js"></script>
-     <!-- Vendor styles -->
+    <!-- Vendor styles -->
     <link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.css" />
     <link rel="stylesheet" href="vendor/metisMenu/dist/metisMenu.css" />
     <link rel="stylesheet" href="vendor/animate.css/animate.css" />
@@ -57,7 +57,7 @@
         .panel-heading h4 {
             margin-bottom: 0 !important;
             margin-top: -4px;
-        }         
+        }
 
         .container-search {
             margin-top: 5px !important;
@@ -78,19 +78,22 @@
             font-size: 14px;
             border-radius: 5px;
         }
+
         .input-group {
-           display: flex;
+            display: flex;
             align-items: center;
-            margin-right :-40px
-            }
+            margin-right: -40px
+        }
+
         .input-group-append {
             margin-left: 10px;
         }
+
         .chkSelectAll {
             margin-top: 9px;
         }
-       
-         input#ContentPlaceHolder1_chkSelectAll {
+
+        input#ContentPlaceHolder1_chkSelectAll {
             margin-top: 10px;
             margin-right: 10px;
         }
@@ -102,31 +105,32 @@
         .form-check label {
             margin-left: 3px;
         }
-        .margin{
-          margin-left: -6px;
-          margin-right: 6px;
+
+        .margin {
+            margin-left: -6px;
+            margin-right: 6px;
         }
 
         .justify-content-center {
             display: flex !important;
             justify-content: center !important;
         }
+
         .b2 {
             margin-bottom: 160px;
-                margin-left: 110px;
-                width: 123px;
+            margin-left: 110px;
+            width: 123px;
         }
-        button.ladda-button.ladda-button-demo.ladda-button-email.btn.btn-primary.b2 {
-    margin-bottom: 148px;
-}
-        .note-editor.note-frame.panel.panel-default {
 
-       width: 680px;
-}
+        .note-editor.note-frame.panel.panel-default {
+            margin-left: 22px;
+        }
+
         label {
-    margin-top: 11px;
-        margin-left: 7px;
-         }
+            margin: 16px 0px 10px 10px;
+            font-size: 17px;
+        }
+
         #txtEmail {
     margin-right: 0px !important;
 }
@@ -206,23 +210,23 @@ button.btn.btn-primary {
                 };
 
                 $("#<%=ddlEvent.ClientID%>").change(function () {
-          if ($(this).val()) {
-              $("#radiusSection").show();
-              hiddenEvent.value = $(this).val();
-          } else {
-              $("#radiusSection").hide();
-              hiddenEvent.value = "";
-          }
-      });
+                    if ($(this).val()) {
+                        $("#radiusSection").show();
+                        hiddenEvent.value = $(this).val();
+                    } else {
+                        $("#radiusSection").hide();
+                        hiddenEvent.value = "";
+                    }
+                });
 
 
                 $("#<%=SearchButton.ClientID%>").click(function () {
                     hiddenRadius.value = radiusSlider.value;
                     hiddenEvent.value = $("#<%=ddlEvent.ClientID%>").val();
-          console.log("Final Selected Radius: " + hiddenRadius.value + " km");
-          console.log("Final Selected Event: " + hiddenEvent.value);
-      });
-  });
+                    console.log("Final Selected Radius: " + hiddenRadius.value + " km");
+                    console.log("Final Selected Event: " + hiddenEvent.value);
+                });
+            });
 
             $('#tblVolunteers').footable();
             messageModelTitle = document.getElementById('messageModelTitle');
@@ -262,7 +266,7 @@ button.btn.btn-primary {
                 nonSelectedText: 'Select Options',
                 allSelectedText: 'All Selected',
                 numberDisplayed: 2
-            });           
+            });
 
         });
         var currentUserId = null;
@@ -271,7 +275,7 @@ button.btn.btn-primary {
             if (document.getElementById('<%= hiddenManageShowDonateButtonn.ClientID %>').value == "0") {
                 $('.donateDiv').hide();
             } else {
-                $('.donateDiv').show(); 
+                $('.donateDiv').show();
             }
             return false;
         }
@@ -519,7 +523,7 @@ button.btn.btn-primary {
             // Set a value to the hidden field   
             document.getElementById('<%= currentPageValue.ClientID %>').value = 1; // Set custom value here                        
             document.getElementById('<%= filter.ClientID %>').value = ''; // Set custom value here                        
-            
+
             document.getElementById('<%= txtIsVetted.ClientID %>').checked = false;// Set custom value here                        
             document.getElementById('<%= txtOptedSMS.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtEmailconnect.ClientID %>').checked = false; // Set custom value here                        
@@ -527,26 +531,26 @@ button.btn.btn-primary {
             document.getElementById('<%= ddlEvent.ClientID %>').value = ''; // Set custom value here
             $('#hiddenEvent').val('');
             document.getElementById('<%= ddlTraining.ClientID %>').value = ''; // Set custom value here
-            document.getElementById('radiusSection').style.display = 'none'; 
+            document.getElementById('radiusSection').style.display = 'none';
 
             let radiusSlider = document.getElementById('radiusSlider');
             let radiusDisplay = document.getElementById('radiusValue');
             let hiddenRadius = document.getElementById('hiddenRadius');
 
             if (radiusSlider) {
-                radiusSlider.value = 100; 
+                radiusSlider.value = 100;
                 radiusSlider.dispatchEvent(new Event('input'));
 
                 if (radiusDisplay) {
                     radiusDisplay.innerText = '100 km';
                 }
                 if (hiddenRadius) {
-                    hiddenRadius.value = 100; 
+                    hiddenRadius.value = 100;
                 }
             }
-        
 
-            
+
+
             $('#StartDate, #EndDate').val('').datepicker('update');
 
             $('#ContentPlaceHolder1_ddlSkills').multiselect('deselectAll', false);
@@ -582,14 +586,14 @@ button.btn.btn-primary {
             var userCheckboxes = document.querySelectorAll(".select-user");
             var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
 
-    userCheckboxes.forEach(function (checkbox) {
-        if (checkbox.checked) {
-            selectedUserIds.push(checkbox.getAttribute("data-userid"));
-        }
-    });
+            userCheckboxes.forEach(function (checkbox) {
+                if (checkbox.checked) {
+                    selectedUserIds.push(checkbox.getAttribute("data-userid"));
+                }
+            });
 
-    hiddenField.value = selectedUserIds.join(",");
-}
+            hiddenField.value = selectedUserIds.join(",");
+        }
         function sendEmail() {
             var selectedUserIds = document.getElementById('<%= hdnSelectedUsers.ClientID %>').value;
             var userMessage = document.getElementById('<%= txtEmail.ClientID %>').value; // here
@@ -602,7 +606,7 @@ button.btn.btn-primary {
                 });
                 return;
             }
-          
+
             l.ladda('start');
             $.ajax({
                 type: "POST",
@@ -617,7 +621,7 @@ button.btn.btn-primary {
                     document.getElementById('<%= chkSelectAll.ClientID %>').checked = false;
                     // Get all checked checkboxes and uncheck them
                     document.querySelectorAll(".select-user:checked").forEach(cb => cb.checked = false);
-                    
+
                     swal({
                         title: "Send Email",
                         text: response.d,
@@ -625,7 +629,7 @@ button.btn.btn-primary {
                     });
                     //document.getElementById('<%= txtEmail.ClientID %>').value = ""; // Clear text box
                     $("#txtEmail").val("");
-                    $('#<%=txtEmail.ClientID%>').summernote('code', ''); 
+                    $('#<%=txtEmail.ClientID%>').summernote('code', '');
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -639,7 +643,7 @@ button.btn.btn-primary {
             });
             updateCheckboxSelection();
         }
-        
+
         function updateSelectedUsers() {
             var selectedUserIds = [];
             var userCheckboxes = document.querySelectorAll(".select-user");
@@ -656,7 +660,7 @@ button.btn.btn-primary {
 
         function sendSms() {
             var selectedUserIds = document.getElementById('<%= hdnSelectedUsers.ClientID %>').value;
-            var userMessage = document.getElementById('<%= txtsms.ClientID %>').value; 
+            var userMessage = document.getElementById('<%= txtsms.ClientID %>').value;
             var l = $('.ladda-button-sms').ladda();
             if (selectedUserIds.trim() === "" || userMessage.trim() === "") {
                 swal({
@@ -697,51 +701,51 @@ button.btn.btn-primary {
                         type: "warning"
                     });
                 }
+            });
+        }
+
+
+        function updateCheckboxSelection() {
+            var selectAllCheckbox = document.getElementById("chkSelectAll");
+            var userCheckboxes = document.querySelectorAll(".select-user");
+            var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
+
+            selectAllCheckbox.addEventListener("change", function () {
+                var isChecked = this.checked;
+                userCheckboxes.forEach(function (checkbox) {
+                    checkbox.checked = isChecked;
                 });
-            }
-           
-                     
-function updateCheckboxSelection() {
-    var selectAllCheckbox = document.getElementById("chkSelectAll");
-    var userCheckboxes = document.querySelectorAll(".select-user");
-    var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
+                updateSelectedUsers();
+            });
 
-    selectAllCheckbox.addEventListener("change", function () {
-        var isChecked = this.checked;
-        userCheckboxes.forEach(function (checkbox) {
-            checkbox.checked = isChecked;
-        });
-        updateSelectedUsers();
-    });
-
-    userCheckboxes.forEach(function (checkbox) {
-        checkbox.addEventListener("change", function () {
-            var allChecked = Array.from(userCheckboxes).every(cb => cb.checked);
-            selectAllCheckbox.checked = allChecked;
-            updateSelectedUsers();
-        });
-    });
+            userCheckboxes.forEach(function (checkbox) {
+                checkbox.addEventListener("change", function () {
+                    var allChecked = Array.from(userCheckboxes).every(cb => cb.checked);
+                    selectAllCheckbox.checked = allChecked;
+                    updateSelectedUsers();
+                });
+            });
 
         }
     </script>
-  
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
     <asp:HiddenField ID="hdnSelectedUsers" runat="server" />
-   
-<div id="divEmail" runat="server" class="input-group">
-    <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" placeholder="Enter Email Text"
-        ClientIDMode="Static" TextMode="MultiLine" ValidateRequestMode="Disabled" Rows="3"></asp:TextBox>
-    <div class="input-group-append">        
-         <button type="button" class="ladda-button ladda-button-demo ladda-button-email btn btn-primary b2" data-style="slide-right" onclick="sendEmail()">Send Email</button>   
+
+    <div id="divEmail" runat="server" class="input-group">
+        <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" placeholder="Enter Email Text"
+            ClientIDMode="Static" TextMode="MultiLine" ValidateRequestMode="Disabled" Rows="3"></asp:TextBox>
+        <div class="input-group-append">
+            <button type="button" class="ladda-button ladda-button-demo ladda-button-email btn btn-primary b2" data-style="slide-right" onclick="sendEmail()">Send Email</button>
+        </div>
     </div>
-</div>
     <div id="divSms" runat="server" class="input-group">
         <textarea id="txtsms" runat="server" cssclass="form-control" placeholder="Enter SMS Text"
             rows="6" cols="95"></textarea>
         <div class="input-group-append">
-             <button type="button" class="ladda-button ladda-button-demo ladda-button-sms btn btn-primary " data-style="slide-right" onclick="sendSms()">Send SMS</button>   
+            <button type="button" class="ladda-button ladda-button-demo ladda-button-sms btn btn-primary " data-style="slide-right" onclick="sendSms()">Send SMS</button>
         </div>
     </div>
 
@@ -797,8 +801,8 @@ function updateCheckboxSelection() {
 
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
-                                              <b>Training :</b>
-                                            <asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-control"></asp:DropDownList>  
+                                            <b>Training :</b>
+                                            <asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-control"></asp:DropDownList>
                                         </div>
                                     </div>
 
@@ -837,19 +841,19 @@ function updateCheckboxSelection() {
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                        <div class="form-group margin ">
-                                            <b class="text-line">Location :</b>
-                                            <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
-                                        </div>
+                                    <div class="form-group margin ">
+                                        <b class="text-line">Location :</b>
+                                        <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
                                     </div>
-                                    <div class="col-md-6 mb-3" id="radiusSection" style="display: none;">
-                                        <div class="form-group fix">
-                                            <b>Radius (km):</b>
-                                            <input type="range" id="radiusSlider" min="100" max="1000" step="100" value="100" class="form-control">
-                                            <span id="radiusValue">100 km</span>                                   
-                                            <input type="hidden" id="hiddenRadius" name="radiusSlider" value="0" />
-                                            <input type="hidden" id="hiddenEvent" name="selectedEvent" />
-                                        </div>
+                                </div>
+                                <div class="col-md-6 mb-3" id="radiusSection" style="display: none;">
+                                    <div class="form-group fix">
+                                        <b>Radius (km):</b>
+                                        <input type="range" id="radiusSlider" min="100" max="1000" step="100" value="100" class="form-control">
+                                        <span id="radiusValue">100 km</span>
+                                        <input type="hidden" id="hiddenRadius" name="radiusSlider" value="0" />
+                                        <input type="hidden" id="hiddenEvent" name="selectedEvent" />
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -882,7 +886,7 @@ function updateCheckboxSelection() {
                                     </div>
                                 </div>
 
-                                <div class="row mt-4" style="margin-right: 6px; margin-bottom: 8px;"> 
+                                <div class="row mt-4" style="margin-right: 6px; margin-bottom: 8px;">
                                     <div class="col-md-12 text-right ">
                                         <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2"
                                             Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
@@ -896,28 +900,28 @@ function updateCheckboxSelection() {
             </div>
         </div>
     </div>
-  <asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All" ClientIDMode="Static" />
+    <asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All" ClientIDMode="Static" />
     <asp:UpdatePanel runat="server" ID="updatePeopleList" UpdateMode="Conditional">
-    <ContentTemplate>
-        <asp:Panel runat="server" ID="pnlTable">
-            <asp:HiddenField ID="currentPageValue" runat="server" />
-            <asp:HiddenField ID="totalPageValue" runat="server" />
-            <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
-                <tbody>                    
-                    <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
-                        <ItemTemplate>
-                            <tr>
-                                <td style="background-color: white;">
-                                    <div class="hpanel">
-                                        <div class="panel-body">
-                                            
+        <ContentTemplate>
+            <asp:Panel runat="server" ID="pnlTable">
+                <asp:HiddenField ID="currentPageValue" runat="server" />
+                <asp:HiddenField ID="totalPageValue" runat="server" />
+                <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
+                    <tbody>
+                        <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
+                            <ItemTemplate>
+                                <tr>
+                                    <td style="background-color: white;">
+                                        <div class="hpanel">
+                                            <div class="panel-body">
 
-                                            <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: normal;">
 
-                                                <input type="checkbox" runat="server"  class="select-user" 
-                                            data-userid='<%# Eval("UserID") %>' visible='<%# (Request.QueryString["type"] == "email" || Request.QueryString["type"] == "sms") %>' />
+                                                <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: normal;">
 
-                                                                                              
+                                                    <input type="checkbox" runat="server" class="select-user" style="margin-top: -2px;"
+                                                        data-userid='<%# Eval("UserID") %>' visible='<%# (Request.QueryString["type"] == "email" || Request.QueryString["type"] == "sms") %>' />
+
+                                                    &nbsp;&nbsp;                              
 
                                                 <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
 
@@ -1011,7 +1015,7 @@ function updateCheckboxSelection() {
             </div>
         </div>
     </div>
-     <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
+    <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
     <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1046,10 +1050,8 @@ function updateCheckboxSelection() {
                             placeholder="Enter Vetting Notes"></asp:TextBox>
                     </div>
                     <div class="form-group form-check donateDiv">
-                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input"
-                             />
-                        <label class="form-check-label"  runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>"
-                            >
+                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
+                        <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
                             Enable Team Logo
                         </label>
                     </div>

@@ -133,6 +133,9 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
         if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
+            bool hasTeam = false;
+            bool hasDeployment = false;
+            bool hasPortal = false;
             userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
             string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
             divSettings.Visible = true;
@@ -229,6 +232,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             if (orgUser.Count() > 0)
             {
+                hasTeam = true;
                 _organizationId = orgUser.Take(1).SingleOrDefault().OrganizationId.ToString();
                 linkDeployment.HRef = "/V1/NonProfit/Deployments.aspx?organizationId=" + _organizationId;
                 teamUpdated = "yellowgreen";
@@ -258,8 +262,10 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
             }
             else
             {
+                divNoTeamGuidance.Visible = true;
                 hypInviteTeamMembers.Visible = false;
                 hypNonProfit.Visible = false;
+                litNonProfitName.Visible = false;
                 hypNonProfit.Target = "_blank";
             }
 
@@ -332,9 +338,14 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
             {
                 //NO CAUSE
                 _noCause = "true";
+                divNoDeploymentGuidance.Visible = true;
+                litMyCausesslabel.Visible = false;
+
+
             }
             else
             {
+                hasDeployment = true;
                 //TIMESHEET
                 deploymentUpdated = "yellowgreen";
                 lblCause.Text = "<strong>Your Deployment: </strong>" + userOrganizationEvents.Take(1).SingleOrDefault().oe.CampaignName;
@@ -383,6 +394,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             if (disasters.Count() > 0)
             {
+                hasPortal = true;
                 string myDisasterList = string.Empty;
                 foreach (var disaster in disasters.Distinct().OrderByDescending(d => d.BeginDate))
                 {
@@ -399,7 +411,11 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                     litDefaultDisaster.Text = "<li><strong><a href='/Disaster/" + disasters.Take(1).SingleOrDefault().URLFriendlyName + "'>" + disasters.Take(1).SingleOrDefault().Name + "</a> (Default Portal)</strong></li>";
                 }
             }
-
+            else
+            {
+                litDiasterLabel.Visible = false;
+                divNoPortalGuidance.Visible = true;
+            }
             //List nonprofits a user volunteers for.
             var profileImage = (from ph in dc.ProfilePhotos
                                 join p in dc.Photos on ph.PhotoId equals p.PhotoId
