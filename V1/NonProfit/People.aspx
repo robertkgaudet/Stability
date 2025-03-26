@@ -124,6 +124,7 @@
 
     .note-editor.note-frame.panel.panel-default {
         margin-left: 22px;
+        width: 655px;
     }
 
     button.ladda-button.ladda-button-demo.ladda-button-email.btn.btn-primary.b2 {
