@@ -1,19 +1,8 @@
 ﻿<%@ WebHandler Language="C#" Class="GetGeoJsonByDisaster" %>
-
 using System;
 using System.Web;
-using System.Linq;
 using System.Web.Services;
 using System.Web.SessionState;
-using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
-using System.Web.Configuration;
-using Newtonsoft.Json;
-using System.Data;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 [WebService(Namespace = "http://tempuri.org/")]
