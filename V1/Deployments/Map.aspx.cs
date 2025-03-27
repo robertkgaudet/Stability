@@ -15,8 +15,10 @@ public partial class V1_Deployments_Map : BaseWebForm
 	public string mapApiKey = ConfigurationManager.AppSettings["mapApiKey"].ToString();
 	public string _mapGEOJsonPath = String.Empty;
 	public string liCases = string.Empty;
-
-	protected void Page_Load(object sender, EventArgs e)
+    public string locationTypeDropDown = string.Empty;
+    public string locationParentTypeDropDown = string.Empty;
+    public string locationStatusDropDown = string.Empty;
+    protected void Page_Load(object sender, EventArgs e)
 	{
 		if (host == "localhost")
 		{
@@ -133,9 +135,49 @@ public partial class V1_Deployments_Map : BaseWebForm
 		hypCreateDeployment.NavigateUrl = createDeploymentURL;
 		hypCreateDeployment.Text = createDeploymentTEXT;
 
-		LoadDisasters();
-	}
-	public void LoadDisasters()
+        LoadDisasters();
+        LoadLocationTypes();
+        LoadLocationParentTypes();
+        LoadLocationStatuses();
+    }
+    protected void LoadLocationTypes()
+    {
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        var locationTypes = from lt in dc.LocationTypes
+                            orderby lt.Name
+                            select new { lt.Name, lt.LocationTypeId };
+
+        foreach (var type in locationTypes)
+        {
+            locationTypeDropDown += "<li id=\"" + type.LocationTypeId + "\"><a href=\"#\">" + type.Name + "</a></li>" + Environment.NewLine;
+        }
+    }
+    protected void LoadLocationParentTypes()
+    {
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        var parentTypes = from pt in dc.LocationParentTypes
+                          orderby pt.Name
+                          select new { pt.Name, pt.LocationParentTypeId };
+
+        foreach (var type in parentTypes)
+        {
+            locationParentTypeDropDown += "<li id=\"" + type.LocationParentTypeId + "\"><a href=\"#\">" + type.Name + "</a></li>" + Environment.NewLine;
+        }
+    }
+
+    protected void LoadLocationStatuses()
+    {
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        var statuses = from s in dc.LocationStatus
+                       orderby s.Name
+                       select new { s.Name, s.LocationStatusId };
+
+        foreach (var status in statuses)
+        {
+            locationStatusDropDown += "<li id=\"" + status.LocationStatusId + "\"><a href=\"#\">" + status.Name + "</a></li>" + Environment.NewLine;
+        }
+    }
+    public void LoadDisasters()
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 		var disasters = from d in dc.Events
