@@ -2113,12 +2113,6 @@
       <Column Name="Code" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
-  <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">
-    <Parameter Name="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="GetGeoJsonByDisasterResult">
-      <Column Name="" Member="Column1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.GetGeoJsonByDisasterForCleanupMap" Method="GetGeoJsonByDisasterForCleanupMap">
     <Parameter Name="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="GetGeoJsonByDisasterForCleanupMapResult">
@@ -2147,6 +2141,47 @@
     <Parameter Name="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="MapStabilityLocationsResult">
       <Column Name="" Member="Column1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">
+    <Parameter Name="EventId" Parameter="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="LocationType" Parameter="locationType" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="ParentType" Parameter="parentType" Type="System.String" DbType="NVarChar(255)" />
+    <Parameter Name="Status" Parameter="status" Type="System.String" DbType="NVarChar(255)" />
+    <ElementType Name="GetGeoJsonByDisasterResult">
+      <Column Name="type" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Column Name="[geometry.type]" Member="geometry_type" Type="System.String" DbType="VarChar(5) NOT NULL" CanBeNull="false" />
+      <Column Name="[geometry.coordinates]" Member="geometry_coordinates" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="[properties.EventName]" Member="properties_EventName" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="[properties.LocationName]" Member="properties_LocationName" Type="System.String" DbType="VarChar(250) NOT NULL" CanBeNull="false" />
+      <Column Name="[properties.LocationType]" Member="properties_LocationType" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="[properties.Description]" Member="properties_Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="[properties.Address]" Member="properties_Address" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
+      <Column Name="[properties.IsActive]" Member="properties_IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="[properties.AllowsPets]" Member="properties_AllowsPets" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="[properties.Capacity]" Member="properties_Capacity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="[properties.ProvidesMedicalHelp]" Member="properties_ProvidesMedicalHelp" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="[properties.icon]" Member="properties_icon" Type="System.String" DbType="VarChar(550)" CanBeNull="true" />
+      <Column Name="[properties.locationProfileId]" Member="properties_locationProfileId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="[properties.donationURL]" Member="properties_donationURL" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
+      <Column Name="[properties.SeekingVolunteers]" Member="properties_SeekingVolunteers" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="[properties.Status]" Member="properties_Status" Type="System.String" DbType="VarChar(250) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetDisasterLocationsByCountys" Method="GetDisasterLocationsByCountys">
+    <Parameter Name="CountyId" Parameter="countyId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="PageNumber" Parameter="pageNumber" Type="System.Int32" DbType="Int" />
+    <Parameter Name="PageSize" Parameter="pageSize" Type="System.Int32" DbType="Int" />
+    <ElementType Name="GetDisasterLocationsByCountysResult">
+      <Column Name="LocationName" Type="System.String" DbType="VarChar(250) NOT NULL" CanBeNull="false" />
+      <Column Name="FullAddress" Type="System.String" DbType="VarChar(2576)" CanBeNull="true" />
+      <Column Name="GooglePlacesID" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Coordinates" Type="System.String" DbType="NVarChar(62)" CanBeNull="true" />
+      <Column Name="PointOfContact" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="TotalCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
