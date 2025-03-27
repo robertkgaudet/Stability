@@ -21,7 +21,7 @@ using System.Reflection;
 
 
 
-[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_8013_staging")]
+[global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "DB_8013_staging")]
 public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 {
 	
@@ -439,7 +439,7 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void DeleteCity(City instance);
     #endregion
     public CrowdReliefDBDataContext() :
-      base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
+    base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
     {
         OnCreated();
     }
@@ -1555,13 +1555,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetGeoJsonByDisaster")]
-	public ISingleResult<GetGeoJsonByDisasterResult> GetGeoJsonByDisaster([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId)
-	{
-		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId);
-		return ((ISingleResult<GetGeoJsonByDisasterResult>)(result.ReturnValue));
-	}
-	
 	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetGeoJsonByDisasterForCleanupMap")]
 	public ISingleResult<GetGeoJsonByDisasterForCleanupMapResult> GetGeoJsonByDisasterForCleanupMap([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId)
 	{
@@ -1595,6 +1588,20 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 	{
 		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId);
 		return ((ISingleResult<MapStabilityLocationsResult>)(result.ReturnValue));
+	}
+	
+	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetGeoJsonByDisaster")]
+	public ISingleResult<GetGeoJsonByDisasterResult> GetGeoJsonByDisaster([global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LocationType", DbType="NVarChar(255)")] string locationType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ParentType", DbType="NVarChar(255)")] string parentType, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Status", DbType="NVarChar(255)")] string status)
+	{
+		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId, locationType, parentType, status);
+		return ((ISingleResult<GetGeoJsonByDisasterResult>)(result.ReturnValue));
+	}
+	
+	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetDisasterLocationsByCountys")]
+	public ISingleResult<GetDisasterLocationsByCountysResult> GetDisasterLocationsByCountys([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CountyId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> countyId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PageNumber", DbType="Int")] System.Nullable<int> pageNumber, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PageSize", DbType="Int")] System.Nullable<int> pageSize)
+	{
+		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), countyId, pageNumber, pageSize);
+		return ((ISingleResult<GetDisasterLocationsByCountysResult>)(result.ReturnValue));
 	}
 }
 
@@ -49179,32 +49186,6 @@ public partial class City : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 }
 
-public partial class GetGeoJsonByDisasterResult
-{
-	
-	private string _Column1;
-	
-	public GetGeoJsonByDisasterResult()
-	{
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="", Storage="_Column1", DbType="NVarChar(MAX)")]
-	public string Column1
-	{
-		get
-		{
-			return this._Column1;
-		}
-		set
-		{
-			if ((this._Column1 != value))
-			{
-				this._Column1 = value;
-			}
-		}
-	}
-}
-
 public partial class GetGeoJsonByDisasterForCleanupMapResult
 {
 	
@@ -49330,6 +49311,490 @@ public partial class MapStabilityLocationsResult
 			if ((this._Column1 != value))
 			{
 				this._Column1 = value;
+			}
+		}
+	}
+}
+
+public partial class GetGeoJsonByDisasterResult
+{
+	
+	private string _type;
+	
+	private string _geometry_type;
+	
+	private string _geometry_coordinates;
+	
+	private string _properties_EventName;
+	
+	private string _properties_LocationName;
+	
+	private string _properties_LocationType;
+	
+	private string _properties_Description;
+	
+	private string _properties_Address;
+	
+	private System.Nullable<bool> _properties_IsActive;
+	
+	private bool _properties_AllowsPets;
+	
+	private int _properties_Capacity;
+	
+	private bool _properties_ProvidesMedicalHelp;
+	
+	private string _properties_icon;
+	
+	private System.Guid _properties_locationProfileId;
+	
+	private string _properties_donationURL;
+	
+	private System.Nullable<bool> _properties_SeekingVolunteers;
+	
+	private string _properties_Status;
+	
+	public GetGeoJsonByDisasterResult()
+	{
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type", DbType="VarChar(7) NOT NULL", CanBeNull=false)]
+	public string type
+	{
+		get
+		{
+			return this._type;
+		}
+		set
+		{
+			if ((this._type != value))
+			{
+				this._type = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[geometry.type]", Storage="_geometry_type", DbType="VarChar(5) NOT NULL", CanBeNull=false)]
+	public string geometry_type
+	{
+		get
+		{
+			return this._geometry_type;
+		}
+		set
+		{
+			if ((this._geometry_type != value))
+			{
+				this._geometry_type = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[geometry.coordinates]", Storage="_geometry_coordinates", DbType="NVarChar(4000)")]
+	public string geometry_coordinates
+	{
+		get
+		{
+			return this._geometry_coordinates;
+		}
+		set
+		{
+			if ((this._geometry_coordinates != value))
+			{
+				this._geometry_coordinates = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.EventName]", Storage="_properties_EventName", DbType="VarChar(500) NOT NULL", CanBeNull=false)]
+	public string properties_EventName
+	{
+		get
+		{
+			return this._properties_EventName;
+		}
+		set
+		{
+			if ((this._properties_EventName != value))
+			{
+				this._properties_EventName = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.LocationName]", Storage="_properties_LocationName", DbType="VarChar(250) NOT NULL", CanBeNull=false)]
+	public string properties_LocationName
+	{
+		get
+		{
+			return this._properties_LocationName;
+		}
+		set
+		{
+			if ((this._properties_LocationName != value))
+			{
+				this._properties_LocationName = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.LocationType]", Storage="_properties_LocationType", DbType="VarChar(500) NOT NULL", CanBeNull=false)]
+	public string properties_LocationType
+	{
+		get
+		{
+			return this._properties_LocationType;
+		}
+		set
+		{
+			if ((this._properties_LocationType != value))
+			{
+				this._properties_LocationType = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.Description]", Storage="_properties_Description", DbType="VarChar(MAX)")]
+	public string properties_Description
+	{
+		get
+		{
+			return this._properties_Description;
+		}
+		set
+		{
+			if ((this._properties_Description != value))
+			{
+				this._properties_Description = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.Address]", Storage="_properties_Address", DbType="VarChar(2000)")]
+	public string properties_Address
+	{
+		get
+		{
+			return this._properties_Address;
+		}
+		set
+		{
+			if ((this._properties_Address != value))
+			{
+				this._properties_Address = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.IsActive]", Storage="_properties_IsActive", DbType="Bit")]
+	public System.Nullable<bool> properties_IsActive
+	{
+		get
+		{
+			return this._properties_IsActive;
+		}
+		set
+		{
+			if ((this._properties_IsActive != value))
+			{
+				this._properties_IsActive = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.AllowsPets]", Storage="_properties_AllowsPets", DbType="Bit NOT NULL")]
+	public bool properties_AllowsPets
+	{
+		get
+		{
+			return this._properties_AllowsPets;
+		}
+		set
+		{
+			if ((this._properties_AllowsPets != value))
+			{
+				this._properties_AllowsPets = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.Capacity]", Storage="_properties_Capacity", DbType="Int NOT NULL")]
+	public int properties_Capacity
+	{
+		get
+		{
+			return this._properties_Capacity;
+		}
+		set
+		{
+			if ((this._properties_Capacity != value))
+			{
+				this._properties_Capacity = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.ProvidesMedicalHelp]", Storage="_properties_ProvidesMedicalHelp", DbType="Bit NOT NULL")]
+	public bool properties_ProvidesMedicalHelp
+	{
+		get
+		{
+			return this._properties_ProvidesMedicalHelp;
+		}
+		set
+		{
+			if ((this._properties_ProvidesMedicalHelp != value))
+			{
+				this._properties_ProvidesMedicalHelp = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.icon]", Storage="_properties_icon", DbType="VarChar(550)")]
+	public string properties_icon
+	{
+		get
+		{
+			return this._properties_icon;
+		}
+		set
+		{
+			if ((this._properties_icon != value))
+			{
+				this._properties_icon = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.locationProfileId]", Storage="_properties_locationProfileId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid properties_locationProfileId
+	{
+		get
+		{
+			return this._properties_locationProfileId;
+		}
+		set
+		{
+			if ((this._properties_locationProfileId != value))
+			{
+				this._properties_locationProfileId = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.donationURL]", Storage="_properties_donationURL", DbType="VarChar(2000)")]
+	public string properties_donationURL
+	{
+		get
+		{
+			return this._properties_donationURL;
+		}
+		set
+		{
+			if ((this._properties_donationURL != value))
+			{
+				this._properties_donationURL = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.SeekingVolunteers]", Storage="_properties_SeekingVolunteers", DbType="Bit")]
+	public System.Nullable<bool> properties_SeekingVolunteers
+	{
+		get
+		{
+			return this._properties_SeekingVolunteers;
+		}
+		set
+		{
+			if ((this._properties_SeekingVolunteers != value))
+			{
+				this._properties_SeekingVolunteers = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.Status]", Storage="_properties_Status", DbType="VarChar(250) NOT NULL", CanBeNull=false)]
+	public string properties_Status
+	{
+		get
+		{
+			return this._properties_Status;
+		}
+		set
+		{
+			if ((this._properties_Status != value))
+			{
+				this._properties_Status = value;
+			}
+		}
+	}
+}
+
+public partial class GetDisasterLocationsByCountysResult
+{
+	
+	private string _LocationName;
+	
+	private string _FullAddress;
+	
+	private string _GooglePlacesID;
+	
+	private string _Description;
+	
+	private string _Coordinates;
+	
+	private string _PointOfContact;
+	
+	private string _PhoneNumber;
+	
+	private string _Email;
+	
+	private System.Nullable<int> _TotalCount;
+	
+	public GetDisasterLocationsByCountysResult()
+	{
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LocationName", DbType="VarChar(250) NOT NULL", CanBeNull=false)]
+	public string LocationName
+	{
+		get
+		{
+			return this._LocationName;
+		}
+		set
+		{
+			if ((this._LocationName != value))
+			{
+				this._LocationName = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FullAddress", DbType="VarChar(2576)")]
+	public string FullAddress
+	{
+		get
+		{
+			return this._FullAddress;
+		}
+		set
+		{
+			if ((this._FullAddress != value))
+			{
+				this._FullAddress = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GooglePlacesID", DbType="VarChar(2000)")]
+	public string GooglePlacesID
+	{
+		get
+		{
+			return this._GooglePlacesID;
+		}
+		set
+		{
+			if ((this._GooglePlacesID != value))
+			{
+				this._GooglePlacesID = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(MAX)")]
+	public string Description
+	{
+		get
+		{
+			return this._Description;
+		}
+		set
+		{
+			if ((this._Description != value))
+			{
+				this._Description = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Coordinates", DbType="NVarChar(62)")]
+	public string Coordinates
+	{
+		get
+		{
+			return this._Coordinates;
+		}
+		set
+		{
+			if ((this._Coordinates != value))
+			{
+				this._Coordinates = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PointOfContact", DbType="VarChar(250)")]
+	public string PointOfContact
+	{
+		get
+		{
+			return this._PointOfContact;
+		}
+		set
+		{
+			if ((this._PointOfContact != value))
+			{
+				this._PointOfContact = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="VarChar(10)")]
+	public string PhoneNumber
+	{
+		get
+		{
+			return this._PhoneNumber;
+		}
+		set
+		{
+			if ((this._PhoneNumber != value))
+			{
+				this._PhoneNumber = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="VarChar(250)")]
+	public string Email
+	{
+		get
+		{
+			return this._Email;
+		}
+		set
+		{
+			if ((this._Email != value))
+			{
+				this._Email = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TotalCount", DbType="Int")]
+	public System.Nullable<int> TotalCount
+	{
+		get
+		{
+			return this._TotalCount;
+		}
+		set
+		{
+			if ((this._TotalCount != value))
+			{
+				this._TotalCount = value;
 			}
 		}
 	}
