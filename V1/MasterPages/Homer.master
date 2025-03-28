@@ -387,6 +387,9 @@
 			{
 				display: inline-block;
 			}
+			.link-margin{
+				margin-top:10px;
+			}
 		</style>
         <style>
 			.skin-option {
@@ -982,7 +985,7 @@
                 <div id="divNoTeamGuidance" visible="false" runat="server" class="alert alert-warning m-b-md">
                     <h5><i class="fa fa-users"></i> Join a Team</h5>
                     <p>Connect with others to make a bigger impact:</p>
-                    <div class="text-center">
+                    <div class="text-center link-margin">
                         <asp:LinkButton ID="btnJoinTeam" 
                             PostBackUrl="/V1/Profile/EditNonProfits.aspx?userActionModal=false" 
                             runat="server" 
@@ -995,7 +998,7 @@
                 <div id="divNoDeploymentGuidance" visible="false"   runat="server" class="alert alert-info m-b-md">
                     <h5><i class="fa fa-globe"></i> Join a Deployment</h5>
                     <p>Participate in active disaster response efforts:</p>
-                    <div class="text-center">
+                    <div class="text-center link-margin">
                         <asp:LinkButton ID="btnJoinDeployment" 
                             PostBackUrl="/V1/Deployments.aspx" 
                             runat="server" 
@@ -1008,7 +1011,7 @@
                 <div id="divNoPortalGuidance" visible="false" runat="server" class="alert alert-warning m-b-md">
                     <h5><i class="fa fa-map-marker"></i> Connect to a Portal</h5>
                     <p>Track local recovery efforts in your community:</p>
-                    <div class="text-center">
+                    <div class="text-center link-margin">
                         <asp:LinkButton ID="btnBrowsePortals" 
                             PostBackUrl="/V1/ChooseEvent.aspx" 
                             runat="server" 
