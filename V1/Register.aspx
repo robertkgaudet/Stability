@@ -10,8 +10,17 @@
     <script src="/Homer/vendor/select2-3.5.2/select2.min.js"></script>
 
     <script>
+        var address;
+        var city;
+        var state;
+        var zip;
+        var lookupComplete = false;
 
         $(document).ready(function () {
+
+            $('#divAddressMessage').hide();
+            $('#divMessage').hide();
+            $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
 <%--		<%=preselectedDisasterJQuery%>
 
 			$("#disasterEvent.dropdown-menu li").click(function ()
@@ -31,6 +40,112 @@
                 document.location.href = "/default.aspx";
             });
         });
+
+        function CheckAddressValues(controlName, sender) {
+            debugger;
+            switch (controlName) {
+                case "address":
+                    if (sender.value) {
+                        address = sender.value;
+                    }
+                    break;
+                case "city":
+                    if (sender.value) {
+                        city = sender.value;
+                    }
+                    break;
+                case "state":
+                    if (sender.value) {
+                        state = sender.value;
+                    }
+                    break;
+                case "zip":
+                    if (sender.value) {
+                        zip = sender.value;
+                    }
+                    break;
+                default:
+                // code block
+            }
+
+            if ((address) && (city) && (state) && (zip) && (lookupComplete == false)) {
+                $('#divAddressMessage').show();
+                SetLatitudeLongitude(address + " " + city + ", " + state + " " + zip);
+            }
+        }
+
+        function SetLatitudeLongitude(address) {
+            $.ajax(
+                {
+                    type: "GET",
+                    url: "/V1/Handlers/GetGoogleAddressInfo.ashx?address=" + address,
+                    contentType: "text/plain; charset=utf-8",
+                    dataType: "html",
+                    success: function (data) {
+                        if (data != "") {
+                            var results = data.split("|");
+                            var isPartialMatch = results[0];
+                            var duplicate = results[12];
+                            if ((isPartialMatch == 'False' || isPartialMatch == 'false') && (duplicate == 'False' || duplicate == 'false')) {
+                                var latitude = results[1];
+                                var longitude = results[2];
+                                var street_number = results[3];
+                                var street = results[4];
+                                var city = results[5];
+                                var state = results[6];
+                                var country = results[7];
+                                var postal_code = results[8];
+                                var county = results[9];
+                                var googlePlaceId = results[10];
+                                var formattedAddress = results[11];
+                                var addressId = results[13];
+
+                                $("#divMapMessage").addClass("alert-success");
+                                $("#divMapMessage").removeClass("alert-danger");
+                                $("#iFontAwesome").removeClass("fa-warning");
+                                $("#iFontAwesome").addClass("fa-map-marker");
+                                var successMessage = " Google successfully matched your address and returned the following information. (" + data + ")";
+                                $("#<%=hidAddressData.ClientID%>").val(data);
+                                $('#<%=lblAddressMessage.ClientID%>').text(successMessage);
+                                lookupComplete = true;
+                                $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                            }
+                            else if (duplicate == 'True' || duplicate == 'true') {
+                                //Address already exists.
+                                $("#divMapMessage").removeClass("alert-success");
+                                $("#divMapMessage").addClass("alert-danger");
+                                $("#iFontAwesome").addClass("fa-warning");
+                                $("#iFontAwesome").removeClass("fa-map-marker");
+                                $("#<%=hidAddressData.ClientID%>").val(data);
+                                lookupComplete = false;
+                                var errorMessage = " This address already exists (" + address + "). Press 'Next' to edit in the Stability Location Manager. Web Service Message: " + data;
+                                $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
+                                $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                            }
+                            else {
+                                //Error getting the information
+                                $("#divMapMessage").removeClass("alert-success");
+                                $("#divMapMessage").addClass("alert-danger");
+                                $("#iFontAwesome").addClass("fa-warning");
+                                $("#iFontAwesome").removeClass("fa-map-marker");
+                                lookupComplete = false;
+                                var errorMessage = " Please check your address. Google returned an error matching the address you provided. (" + address + ") Web Service Message: " + data;
+                                $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
+                                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                            }
+                        }
+                    },
+                    error: function (request, status, error) {
+                        $("#divMapMessage").removeClass("alert-success");
+                        $("#divMapMessage").addClass("alert-danger");
+                        $("#iFontAwesome").addClass("fa-warning");
+                        $("#iFontAwesome").removeClass("fa-map-marker");
+                        lookupComplete = false;
+                        $('#<%=lblAddressMessage.ClientID%>').text(" Error retrieving address information from Google. " + request.statusText + ' - ' + error + ' - ' + status);
+                        $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                    }
+                });
+        }
 
     </script>
     <style>
@@ -130,16 +245,16 @@
                             </div>
                             <div class="form-group col-lg-12">
                                 <label>Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtAddress" runat="server" CssClass="form-control" required="" placeholder="Address"></asp:TextBox>
+                                <asp:TextBox ID="txtAddress" runat="server" onblur="CheckAddressValues('address', this)" CssClass="form-control" required="" placeholder="Address"></asp:TextBox>
                             </div>
                             <div class="form-group col-lg-12">
                                 <label>City  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtCity" runat="server" CssClass="form-control" required="" placeholder="City"></asp:TextBox>
+                                <asp:TextBox ID="txtCity" runat="server" onblur="CheckAddressValues('city', this)" CssClass="form-control" required="" placeholder="City"></asp:TextBox>
                             </div>
                             <div class="form-group col-lg-12">
                                 <label for="ddlState">State <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                                 <div class="dropdown-wrapper">
-                                    <select id="ddlState" runat="server" class="custom-dropdown">
+                                    <select id="ddlState" runat="server" class="custom-dropdown" onblur="CheckAddressValues('state', this)">
                                         <option value="">Select a state</option>
                                         <option value="AL">Alabama</option>
                                         <option value="AK">Alaska</option>
@@ -198,7 +313,7 @@
 
                             <div class="form-group col-lg-12">
                                 <label>Zip Code  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtZipCode" runat="server" CssClass="form-control" required="" placeholder="Zip Code"></asp:TextBox>
+                                <asp:TextBox ID="txtZipCode" runat="server" CssClass="form-control" onblur="CheckAddressValues('zip', this)" required="" placeholder="Zip Code"></asp:TextBox>
                             </div>
                             <div class="form-group col-lg-12">
                                 <label>Email Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
@@ -237,6 +352,19 @@
             </div>
         </div>
         <div class="col-xs-1 col-sm-2 col-md-3 col-lg-3"></div>
+
+        <div id="divMessage" class="alert alert-success m-b-lg">
+            <i class="fa fa-bolt"></i>
+            <asp:Label runat="server" ID="lblMessage"></asp:Label>
+        </div>
+        <div id="divAddressMessage" class="form-group">
+            <label class="col-sm-2 control-label">Google Address Details</label>
+            <div id="divMapMessage" class="alert m-b-lg p-sm col-sm-5" style="margin-left:300px">
+                <i id="iFontAwesome" class="fa"></i>
+                <asp:Label runat="server" ID="lblAddressMessage"></asp:Label>
+                <asp:HiddenField ID="hidAddressData" runat="server"></asp:HiddenField>
+            </div>
+        </div>
     </div>
     <!-- Meta Pixel Code -->
     <script>
