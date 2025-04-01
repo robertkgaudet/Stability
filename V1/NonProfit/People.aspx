@@ -1,4 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"
+    EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs"
+    Inherits="V1_NonProfit_People" %>
 
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
@@ -34,121 +36,120 @@
     <script src="../../Homer/vendor/ladda/dist/ladda.jquery.min.js"></script>
 
     <style>
-    .website {
-        background-color: #5E2E91;
-        padding: 17px;
-        color: white;
-    }
-
-        .website:hover {
-            background-color: #902F91;
+        .website {
+            background-color: #5E2E91;
+            padding: 17px;
             color: white;
-            cursor: pointer;
         }
 
-    .modal-dialog {
-        margin-top: 100px;
-    }
+            .website:hover {
+                background-color: #902F91;
+                color: white;
+                cursor: pointer;
+            }
 
-    .container-search {
-        margin-bottom: 10px;
-    }
+        .modal-dialog {
+            margin-top: 100px;
+        }
 
-    .panel-heading h4 {
-        margin-bottom: 0 !important;
-        margin-top: -4px;
-    }
+        .container-search {
+            margin-bottom: 10px;
+        }
 
-    .container-search {
-        margin-top: 5px !important;
-    }
+        .panel-heading h4 {
+            margin-bottom: 0 !important;
+            margin-top: -4px;
+        }
 
-    .fix {
-        margin-right: 8px;
-        margin-left: 8px;
-    }
+        .container-search {
+            margin-top: 5px !important;
+        }
 
-    .m-b-xs {
-        margin-bottom: 0;
-    }
+        .fix {
+            margin-right: 8px;
+            margin-left: 8px;
+        }
 
-    .messageButton {
-        margin-left: auto;
-        padding: 5px 15px;
-        font-size: 14px;
-        border-radius: 5px;
-    }
+        .m-b-xs {
+            margin-bottom: 0;
+        }
 
-    .input-group {
-        display: flex;
-        align-items: center;
-        margin-right: -40px
-    }
+        .messageButton {
+            margin-left: auto;
+            padding: 5px 15px;
+            font-size: 14px;
+            border-radius: 5px;
+        }
 
-    .input-group-append {
-        margin-left: 10px;
-    }
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-right: -40px
+        }
 
-    .chkSelectAll {
-        margin-top: 9px;
-    }
+        .input-group-append {
+            margin-left: 10px;
+        }
 
-    input#ContentPlaceHolder1_chkSelectAll {
-        margin-top: 10px;
-        margin-right: 10px;
-    }
+        .chkSelectAll {
+            margin-top: 9px;
+        }
 
-    .stability-badge {
-        margin-right: 4px !important;
-    }
+        input#ContentPlaceHolder1_chkSelectAll {
+            margin-top: 10px;
+            margin-right: 10px;
+        }
 
-    .form-check label {
-        margin-left: 3px;
-    }
+        .stability-badge {
+            margin-right: 4px !important;
+        }
 
-    .margin {
-        margin-left: -6px;
-        margin-right: 6px;
-    }
+        .form-check label {
+            margin-left: 3px;
+        }
 
-    .justify-content-center {
-        display: flex !important;
-        justify-content: center !important;
-    }
+        .margin {
+            margin-left: -6px;
+            margin-right: 6px;
+        }
 
-    .b2 {
-        margin-bottom: 160px;
-        margin-left: 110px;
-        width: 123px;
-    }
+        .justify-content-center {
+            display: flex !important;
+            justify-content: center !important;
+        }
 
-    .note-editor.note-frame.panel.panel-default {
-        margin-left: 22px;
-        width: 655px;
-    }
+        .b2 {
+            margin-bottom: 160px;
+            margin-left: 110px;
+            width: 123px;
+        }
 
-    button.ladda-button.ladda-button-demo.ladda-button-email.btn.btn-primary.b2 {
-        margin-bottom: 155px;
-    }
+        .note-editor.note-frame.panel.panel-default {
+            margin-left: 22px;
+            width: 655px;
+        }
 
-    label {
-        margin: 16px 0px 10px 10px;
-        font-size: 17px;
-    }
+        button.ladda-button.ladda-button-demo.ladda-button-email.btn.btn-primary.b2 {
+            margin-bottom: 155px;
+        }
 
-    #txtEmail {
-        margin-right: 0px !important;
-    }
+        label {
+            margin: 16px 0px 10px 10px;
+            font-size: 17px;
+        }
 
-    .input-group-append {
-        margin-left: -1px; /* Removes unwanted space */
-    }
+        #txtEmail {
+            margin-right: 0px !important;
+        }
 
-    button.btn.btn-primary {
-        margin-left: 10px;
-        margin-bottom: 90px;
-    }
+        .input-group-append {
+            margin-left: -1px; /* Removes unwanted space */
+        }
 
+        button.btn.btn-primary {
+            margin-left: 10px;
+            margin-bottom: 90px;
+        }
     </style>
     <script>
         var recipientsName;
@@ -298,7 +299,7 @@
                 dataType: "json",
                 success: function (response) {
                     if (response.success) {
-                        // Populate modal fields with fetched data
+
                         $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
                         $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
                         $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
@@ -360,7 +361,7 @@
                 success: function (response) {
                     if (response.Success) {
                         $('#manageMemberModal').modal('hide');
-                        location.reload();
+                        resetSearch();
                     } else {
                         alert("Error: " + response.Message);
                     }
@@ -745,14 +746,16 @@
         <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" placeholder="Enter Email Text"
             ClientIDMode="Static" TextMode="MultiLine" ValidateRequestMode="Disabled" Rows="3"></asp:TextBox>
         <div class="input-group-append">
-            <button type="button" class="ladda-button ladda-button-demo ladda-button-email btn btn-primary b2" data-style="slide-right" onclick="sendEmail()">Send Email</button>
+            <button type="button" class="ladda-button ladda-button-demo ladda-button-email btn btn-primary b2"
+                data-style="slide-right" onclick="sendEmail()">Send Email</button>
         </div>
     </div>
     <div id="divSms" runat="server" class="input-group">
         <textarea id="txtsms" runat="server" cssclass="form-control" placeholder="Enter SMS Text"
             rows="6" cols="95"></textarea>
         <div class="input-group-append">
-            <button type="button" class="ladda-button ladda-button-demo ladda-button-sms btn btn-primary " data-style="slide-right" onclick="sendSms()">Send SMS</button>
+            <button type="button" class="ladda-button ladda-button-demo ladda-button-sms btn btn-primary "
+                data-style="slide-right" onclick="sendSms()">Send SMS</button>
         </div>
     </div>
 
@@ -763,8 +766,7 @@
             Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
     </div>
     <asp:ScriptManager runat="server" ID="ScriptManager1" />
-    <div class="panel-body" style="margin-bottom: -27px;
-        padding: 0px;">
+    <div class="panel-body" style="margin-bottom: -27px; padding: 0px;">
         <div class="col-lg-12">
             <div class="row">
                 <div class="hpanel hblue">
@@ -857,7 +859,8 @@
                                 <div class="col-md-6 mb-3" id="radiusSection" style="display: none;">
                                     <div class="form-group fix">
                                         <b>Radius (km):</b>
-                                        <input type="range" id="radiusSlider" min="100" max="1000" step="100" value="100" class="form-control">
+                                        <input type="range" id="radiusSlider" min="100" max="1000" step="100" value="100"
+                                            class="form-control">
                                         <span id="radiusValue">100 km</span>
                                         <input type="hidden" id="hiddenRadius" name="radiusSlider" value="0" />
                                         <input type="hidden" id="hiddenEvent" name="selectedEvent" />
@@ -894,8 +897,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row mt-4" style="        margin-right: 6px;
-        margin-bottom: 8px;">
+                                <div class="row mt-4" style="margin-right: 6px; margin-bottom: 8px;">
                                     <div class="col-md-12 text-right ">
                                         <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2"
                                             Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
@@ -909,7 +911,8 @@
             </div>
         </div>
     </div>
-    <asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All" ClientIDMode="Static" />
+    <asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All"
+        ClientIDMode="Static" />
     <asp:UpdatePanel runat="server" ID="updatePeopleList" UpdateMode="Conditional">
         <ContentTemplate>
             <asp:Panel runat="server" ID="pnlTable">
@@ -920,13 +923,12 @@
                         <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
                             <ItemTemplate>
                                 <tr>
-                                    <td style="        background-color: white;">
+                                    <td style="background-color: white;">
                                         <div class="hpanel">
                                             <div class="panel-body">
 
 
-                                                <h5 class="m-b-xs" id="h5Container" runat="server" style="        align-items: center;
-        justify-content: normal;">
+                                                <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: normal;">
 
                                                     <input type="checkbox" runat="server" class="select-user" style="margin-top: -2px;"
                                                         data-userid='<%# Eval("UserID") %>' visible='<%# (Request.QueryString["type"] == "email" || Request.QueryString["type"] == "sms") %>' />
@@ -957,7 +959,7 @@
                                                         OnClientClick="setUserId(this); fetchUserData(); return false;"></asp:Button>
                                                 </div>
 
-                                                <div class="text-muted small" style="        width: 100%;">
+                                                <div class="text-muted small" style="width: 100%;">
                                                     <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
                                                 </div>
                                             </div>
@@ -1035,10 +1037,10 @@
 
                 </div>
                 <!-- Success and Error Messages -->
-                <div id="divManageSuccess" class="alert alert-success text-uppercase" style="        display: none;">
+                <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
                     <i class="fa fa-check-circle"></i>Changes saved successfully.
                 </div>
-                <div id="divManageError" class="alert alert-warning text-uppercase" style="        display: none;">
+                <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
                     <i class="fa fa-exclamation-triangle"></i>
                     <div id="divManageErrorMessage"></div>
                 </div>
@@ -1047,9 +1049,9 @@
                     <div class="form-group">
                         <label for="rblManageUserStatus">Update Member Vetting Status:</label>
                         <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
-                            <asp:ListItem Text="Active" Value="Active" CssClass="form-check-input"></asp:ListItem>
-                            <asp:ListItem Text="Inactive" Value="Inactive" CssClass="form-check-input"></asp:ListItem>
-                            <asp:ListItem Text="Pending" Value="Pending" CssClass="form-check-input"></asp:ListItem>
+                            <asp:ListItem Text="Start Vetting" Value="1" CssClass="form-check-input"></asp:ListItem>
+                            <asp:ListItem Text="Passed Vetting" Value="2" CssClass="form-check-input"></asp:ListItem>
+                            <asp:ListItem Text="Failed Vetting" Value="3" CssClass="form-check-input"></asp:ListItem>
                         </asp:RadioButtonList>
                     </div>
 
