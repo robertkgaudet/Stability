@@ -314,10 +314,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     {
         if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
         {
-
             RepeaterItem dataItem = (RepeaterItem)e.Item;
-
-
 
             Guid userId = Guid.Empty;
             if (DataBinder.Eval(dataItem.DataItem, "UserId") != null)
@@ -345,12 +342,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             Button btnManage = (Button)e.Item.FindControl("btnManage");
             Literal litVettingInfo = (Literal)e.Item.FindControl("litVettingInfo");
             Literal litActiveDate = (Literal)e.Item.FindControl("litActiveDate");
+            RadioButtonList rblManageUserStatus = (RadioButtonList)e.Item.FindControl("rblManageUserStatus");
             if (User.IsInRole("Administrator") || userIsOwner || User.IsInRole("Team Administrator"))
             {
                 bool? vettingComplete = (bool?)DataBinder.Eval(dataItem.DataItem, "VettingComplete");
                 bool? passedVetting = (bool?)DataBinder.Eval(dataItem.DataItem, "PassedVetting");
                 bool? vettingActive = (bool?)DataBinder.Eval(dataItem.DataItem, "VettingActive");
-                //bool? isLockedOut = (bool?)DataBinder.Eval(dataItem.DataItem, "IsLockedOut");
                 String vettingNotes = (String)DataBinder.Eval(dataItem.DataItem, "VettingNotes");
                 DateTime? dateVettingCompleted = (DateTime?)DataBinder.Eval(dataItem.DataItem, "DateVettingCompleted");
                 DateTime? dateVettingStarted = (DateTime?)DataBinder.Eval(dataItem.DataItem, "DateVettingStarted");
@@ -378,8 +375,27 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 String lastActivitysDate = lastActivityDateString == DateTime.MinValue ? "Not Started" : lastActivityDateString.ToShortDateString() + " " + lastActivityDateString.ToLongDateString() + " at " + lastActivityDateString.ToLongTimeString();
                 string vettingCompleted = (bool)vettingComplete ? "VETTING COMPLETE: " + ((bool)passedVetting ? "<span style='color:yellowgreen'>PASSED</span>" : "<span style='color:orange'>FAILED</span>") : (bool)vettingActive ? "VETTING: PENDING" : "VETTING: NO ACTION TAKEN";
                 vettingCompleted += ((bool)isLockedOut ? "<br><span style='color:orange'>LOCKED OUT</span>" : "<br><span style='color:yellowgreen'>HAS ACCESS</span>") + ("<br>Notes:" + vettingNotes + "<br>Date Started: " + dateVettingStarts + "<br>Date Completed: " + dateVettingComplete + "<br>Last Activity Date: " + lastActivitysDate + "<br>Phone Number: " + phoneNUmber + "<br>Email: " + loweredEmail);
-
                 litVettingInfo.Text = vettingCompleted;
+                // Set up the radio button list for vetting status
+                if (rblManageUserStatus != null)
+                {
+                    rblManageUserStatus.Items.Clear();
+                    rblManageUserStatus.Items.Add(new ListItem("Start Vetting", VolunteerStatus.VettingStarted.Value));
+                    rblManageUserStatus.Items.Add(new ListItem("Passed Vetting", VolunteerStatus.VettingComplete_Passed.Value));
+                    rblManageUserStatus.Items.Add(new ListItem("Failed Vetting", VolunteerStatus.VettingComplete_Failed.Value));
+
+                    // Set the selected value based on current status
+                    if (vettingComplete == true)
+                    {
+                        rblManageUserStatus.SelectedValue = passedVetting == true ?
+                            VolunteerStatus.VettingComplete_Passed.Value :
+                            VolunteerStatus.VettingComplete_Failed.Value;
+                    }
+                    else if (vettingActive == true)
+                    {
+                        rblManageUserStatus.SelectedValue = VolunteerStatus.VettingStarted.Value;
+                    }
+                }
             }
             HyperLink hypName = (HyperLink)e.Item.FindControl("hypName");
             Literal litMemberInfo = (Literal)e.Item.FindControl("litMemberInfo");
@@ -391,7 +407,6 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             btnContact.Attributes.Add("onclick", "return btnClick(this);");
 
             title = !String.IsNullOrEmpty(title) ? title + "</br>" : "";
-            //zelloName = !String.IsNullOrEmpty(zelloName) ? " Zello: " + zelloName + "</br>" : "";
             description = !String.IsNullOrEmpty(description) ? description + "</br>" : "";
 
             litMemberInfo.Text = title;
@@ -400,7 +415,6 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             litSkills.Text = !String.IsNullOrEmpty(skills) ? "<h6>Skills:</h6> " + skills + "</br>" : "";
             litResources.Text = !String.IsNullOrEmpty(resources) ? "<h6>Resources:</h6> " + resources + "</br>" : "";
             litDescription.Text = description;
-
         }
     }
     protected string GetResources(Guid userId)
@@ -541,6 +555,16 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
         }
 
+    }
+    public void CreateManageUserStatusRadioButtons()
+    {
+        ListItem activeLI = new ListItem("Active", "Active");
+        ListItem inactiveLI = new ListItem("Inactive", "Inactive");
+        ListItem pendingLI = new ListItem("Pending", "Pending");
+
+        rblManageUserStatus.Items.Add(activeLI);
+        rblManageUserStatus.Items.Add(inactiveLI);
+        rblManageUserStatus.Items.Add(pendingLI);
     }
 
     private DateTime? ParseDate(string dateText)
