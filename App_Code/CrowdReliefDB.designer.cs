@@ -21,7 +21,7 @@ using System.Reflection;
 
 
 
-[global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "DB_8013_staging")]
+[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_8013_stabilityNew")]
 public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 {
 	
@@ -439,7 +439,7 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void DeleteCity(City instance);
     #endregion
     public CrowdReliefDBDataContext() :
-   base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
+  base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
     {
         OnCreated();
     }
@@ -1583,13 +1583,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		return ((ISingleResult<GetTotalHoursByCauseByDayResult>)(result.ReturnValue));
 	}
 	
-	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.MapStabilityLocations")]
-	public ISingleResult<MapStabilityLocationsResult> MapStabilityLocations([global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Status", DbType="UniqueIdentifier")] System.Nullable<System.Guid> status, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LocationTypeId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationTypeId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LocationParentTypeId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationParentTypeId)
-	{
-		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId, status, locationTypeId, locationParentTypeId);
-		return ((ISingleResult<MapStabilityLocationsResult>)(result.ReturnValue));
-	}
-	
 	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetDisasterLocationsByCountys")]
 	public ISingleResult<GetDisasterLocationsByCountysResult> GetDisasterLocationsByCountys([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CountyId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> countyId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PageNumber", DbType="Int")] System.Nullable<int> pageNumber, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PageSize", DbType="Int")] System.Nullable<int> pageSize)
 	{
@@ -1602,6 +1595,13 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 	{
 		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId, locationTypeId, parentTypeId, statusId);
 		return ((ISingleResult<GetGeoJsonByDisasterResult>)(result.ReturnValue));
+	}
+	
+	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.MapStabilityLocations")]
+	public ISingleResult<MapStabilityLocationsResult> MapStabilityLocations([global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Status", DbType="UniqueIdentifier")] System.Nullable<System.Guid> status, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LocationTypeId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationTypeId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LocationParentTypeId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationParentTypeId)
+	{
+		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId, status, locationTypeId, locationParentTypeId);
+		return ((ISingleResult<MapStabilityLocationsResult>)(result.ReturnValue));
 	}
 }
 
@@ -49290,32 +49290,6 @@ public partial class GetTotalHoursByCauseByDayResult
 	}
 }
 
-public partial class MapStabilityLocationsResult
-{
-	
-	private string _Column1;
-	
-	public MapStabilityLocationsResult()
-	{
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="", Storage="_Column1", DbType="NVarChar(MAX)")]
-	public string Column1
-	{
-		get
-		{
-			return this._Column1;
-		}
-		set
-		{
-			if ((this._Column1 != value))
-			{
-				this._Column1 = value;
-			}
-		}
-	}
-}
-
 public partial class GetDisasterLocationsByCountysResult
 {
 	
@@ -49489,312 +49463,50 @@ public partial class GetDisasterLocationsByCountysResult
 public partial class GetGeoJsonByDisasterResult
 {
 	
-	private string _type;
-	
-	private string _geometry_type;
-	
-	private string _geometry_coordinates;
-	
-	private string _properties_EventName;
-	
-	private string _properties_LocationName;
-	
-	private string _properties_LocationType;
-	
-	private string _properties_Description;
-	
-	private string _properties_Address;
-	
-	private System.Nullable<bool> _properties_IsActive;
-	
-	private bool _properties_AllowsPets;
-	
-	private int _properties_Capacity;
-	
-	private bool _properties_ProvidesMedicalHelp;
-	
-	private string _properties_icon;
-	
-	private System.Guid _properties_locationProfileId;
-	
-	private string _properties_donationURL;
-	
-	private System.Nullable<bool> _properties_SeekingVolunteers;
-	
-	private string _properties_Status;
+	private string _Column1;
 	
 	public GetGeoJsonByDisasterResult()
 	{
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_type", DbType="VarChar(7) NOT NULL", CanBeNull=false)]
-	public string type
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="", Storage="_Column1", DbType="NVarChar(MAX)")]
+	public string Column1
 	{
 		get
 		{
-			return this._type;
+			return this._Column1;
 		}
 		set
 		{
-			if ((this._type != value))
+			if ((this._Column1 != value))
 			{
-				this._type = value;
+				this._Column1 = value;
 			}
 		}
 	}
+}
+
+public partial class MapStabilityLocationsResult
+{
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[geometry.type]", Storage="_geometry_type", DbType="VarChar(5) NOT NULL", CanBeNull=false)]
-	public string geometry_type
+	private string _Column1;
+	
+	public MapStabilityLocationsResult()
 	{
-		get
-		{
-			return this._geometry_type;
-		}
-		set
-		{
-			if ((this._geometry_type != value))
-			{
-				this._geometry_type = value;
-			}
-		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[geometry.coordinates]", Storage="_geometry_coordinates", DbType="NVarChar(4000)")]
-	public string geometry_coordinates
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="", Storage="_Column1", DbType="NVarChar(MAX)")]
+	public string Column1
 	{
 		get
 		{
-			return this._geometry_coordinates;
+			return this._Column1;
 		}
 		set
 		{
-			if ((this._geometry_coordinates != value))
+			if ((this._Column1 != value))
 			{
-				this._geometry_coordinates = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.EventName]", Storage="_properties_EventName", DbType="VarChar(500) NOT NULL", CanBeNull=false)]
-	public string properties_EventName
-	{
-		get
-		{
-			return this._properties_EventName;
-		}
-		set
-		{
-			if ((this._properties_EventName != value))
-			{
-				this._properties_EventName = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.LocationName]", Storage="_properties_LocationName", DbType="VarChar(250) NOT NULL", CanBeNull=false)]
-	public string properties_LocationName
-	{
-		get
-		{
-			return this._properties_LocationName;
-		}
-		set
-		{
-			if ((this._properties_LocationName != value))
-			{
-				this._properties_LocationName = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.LocationType]", Storage="_properties_LocationType", DbType="VarChar(500) NOT NULL", CanBeNull=false)]
-	public string properties_LocationType
-	{
-		get
-		{
-			return this._properties_LocationType;
-		}
-		set
-		{
-			if ((this._properties_LocationType != value))
-			{
-				this._properties_LocationType = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.Description]", Storage="_properties_Description", DbType="VarChar(MAX)")]
-	public string properties_Description
-	{
-		get
-		{
-			return this._properties_Description;
-		}
-		set
-		{
-			if ((this._properties_Description != value))
-			{
-				this._properties_Description = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.Address]", Storage="_properties_Address", DbType="VarChar(2000)")]
-	public string properties_Address
-	{
-		get
-		{
-			return this._properties_Address;
-		}
-		set
-		{
-			if ((this._properties_Address != value))
-			{
-				this._properties_Address = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.IsActive]", Storage="_properties_IsActive", DbType="Bit")]
-	public System.Nullable<bool> properties_IsActive
-	{
-		get
-		{
-			return this._properties_IsActive;
-		}
-		set
-		{
-			if ((this._properties_IsActive != value))
-			{
-				this._properties_IsActive = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.AllowsPets]", Storage="_properties_AllowsPets", DbType="Bit NOT NULL")]
-	public bool properties_AllowsPets
-	{
-		get
-		{
-			return this._properties_AllowsPets;
-		}
-		set
-		{
-			if ((this._properties_AllowsPets != value))
-			{
-				this._properties_AllowsPets = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.Capacity]", Storage="_properties_Capacity", DbType="Int NOT NULL")]
-	public int properties_Capacity
-	{
-		get
-		{
-			return this._properties_Capacity;
-		}
-		set
-		{
-			if ((this._properties_Capacity != value))
-			{
-				this._properties_Capacity = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.ProvidesMedicalHelp]", Storage="_properties_ProvidesMedicalHelp", DbType="Bit NOT NULL")]
-	public bool properties_ProvidesMedicalHelp
-	{
-		get
-		{
-			return this._properties_ProvidesMedicalHelp;
-		}
-		set
-		{
-			if ((this._properties_ProvidesMedicalHelp != value))
-			{
-				this._properties_ProvidesMedicalHelp = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.icon]", Storage="_properties_icon", DbType="VarChar(550)")]
-	public string properties_icon
-	{
-		get
-		{
-			return this._properties_icon;
-		}
-		set
-		{
-			if ((this._properties_icon != value))
-			{
-				this._properties_icon = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.locationProfileId]", Storage="_properties_locationProfileId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid properties_locationProfileId
-	{
-		get
-		{
-			return this._properties_locationProfileId;
-		}
-		set
-		{
-			if ((this._properties_locationProfileId != value))
-			{
-				this._properties_locationProfileId = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.donationURL]", Storage="_properties_donationURL", DbType="VarChar(2000)")]
-	public string properties_donationURL
-	{
-		get
-		{
-			return this._properties_donationURL;
-		}
-		set
-		{
-			if ((this._properties_donationURL != value))
-			{
-				this._properties_donationURL = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.SeekingVolunteers]", Storage="_properties_SeekingVolunteers", DbType="Bit")]
-	public System.Nullable<bool> properties_SeekingVolunteers
-	{
-		get
-		{
-			return this._properties_SeekingVolunteers;
-		}
-		set
-		{
-			if ((this._properties_SeekingVolunteers != value))
-			{
-				this._properties_SeekingVolunteers = value;
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="[properties.Status]", Storage="_properties_Status", DbType="VarChar(250) NOT NULL", CanBeNull=false)]
-	public string properties_Status
-	{
-		get
-		{
-			return this._properties_Status;
-		}
-		set
-		{
-			if ((this._properties_Status != value))
-			{
-				this._properties_Status = value;
+				this._Column1 = value;
 			}
 		}
 	}

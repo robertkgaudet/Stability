@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="india" Class="CrowdReliefDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_8013_stabilityNew" Class="CrowdReliefDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.aspnet_Membership" Member="aspnet_Memberships">
     <Type Name="aspnet_Membership">
       <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
@@ -2137,15 +2137,6 @@
       <Column Name="" Member="Column1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.MapStabilityLocations" Method="MapStabilityLocations">
-    <Parameter Name="EventId" Parameter="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <Parameter Name="Status" Parameter="status" Type="System.Guid" DbType="UniqueIdentifier" />
-    <Parameter Name="LocationTypeId" Parameter="locationTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <Parameter Name="LocationParentTypeId" Parameter="locationParentTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="MapStabilityLocationsResult">
-      <Column Name="" Member="Column1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.GetDisasterLocationsByCountys" Method="GetDisasterLocationsByCountys">
     <Parameter Name="CountyId" Parameter="countyId" Type="System.Guid" DbType="UniqueIdentifier" />
     <Parameter Name="PageNumber" Parameter="pageNumber" Type="System.Int32" DbType="Int" />
@@ -2168,23 +2159,16 @@
     <Parameter Name="ParentTypeId" Parameter="parentTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
     <Parameter Name="StatusId" Parameter="statusId" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="GetGeoJsonByDisasterResult">
-      <Column Name="type" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
-      <Column Name="[geometry.type]" Member="geometry_type" Type="System.String" DbType="VarChar(5) NOT NULL" CanBeNull="false" />
-      <Column Name="[geometry.coordinates]" Member="geometry_coordinates" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
-      <Column Name="[properties.EventName]" Member="properties_EventName" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
-      <Column Name="[properties.LocationName]" Member="properties_LocationName" Type="System.String" DbType="VarChar(250) NOT NULL" CanBeNull="false" />
-      <Column Name="[properties.LocationType]" Member="properties_LocationType" Type="System.String" DbType="VarChar(500) NOT NULL" CanBeNull="false" />
-      <Column Name="[properties.Description]" Member="properties_Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="[properties.Address]" Member="properties_Address" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
-      <Column Name="[properties.IsActive]" Member="properties_IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="[properties.AllowsPets]" Member="properties_AllowsPets" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="[properties.Capacity]" Member="properties_Capacity" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="[properties.ProvidesMedicalHelp]" Member="properties_ProvidesMedicalHelp" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="[properties.icon]" Member="properties_icon" Type="System.String" DbType="VarChar(550)" CanBeNull="true" />
-      <Column Name="[properties.locationProfileId]" Member="properties_locationProfileId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="[properties.donationURL]" Member="properties_donationURL" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
-      <Column Name="[properties.SeekingVolunteers]" Member="properties_SeekingVolunteers" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="[properties.Status]" Member="properties_Status" Type="System.String" DbType="VarChar(250) NOT NULL" CanBeNull="false" />
+      <Column Name="" Member="Column1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.MapStabilityLocations" Method="MapStabilityLocations">
+    <Parameter Name="EventId" Parameter="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="Status" Parameter="status" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="LocationTypeId" Parameter="locationTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="LocationParentTypeId" Parameter="locationParentTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="MapStabilityLocationsResult">
+      <Column Name="" Member="Column1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>
