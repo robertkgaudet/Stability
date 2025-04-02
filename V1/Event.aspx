@@ -322,13 +322,21 @@
 		{width:250px;
 		 text-align:left;
 		}
+		.tab-pane
+		{
+			padding:5px;
+		}
+		.gpt-pane
+		{
+			background-color:#F1F3F6;
+		}
 	</style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 	<div class="normalheader animate-panel" data-child="hpanel" data-effect="fadeInDown">
 		<asp:HiddenField runat="server" id="hidEventId"></asp:HiddenField>
 		<asp:HiddenField runat="server" id="hidEventName"></asp:HiddenField>
-			<div class="hpanel collapsed">
+			<div class="hpanel">
 				<div class="panel-heading hbuilt member-panel-body">
 					<div class="panel-tools"><a class="showhide"><i class="fa fa-chevron-up"></i></a></div>
 					<h4><%=eventName%></h4>
@@ -338,13 +346,19 @@
 				</div>
 			</div>
 
-
 			<div class="row m-t-lg" style="margin-bottom:200px;">
 				<div class="col-sm-12">
 					<div class="hpanel">
 						<div class="hpanel">
+							<div class="form-group">
+								<button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i> </button>
+								<ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
+									<%=disasterDropDown%>
+								</ul>
+							</div>
 							<ul class="nav nav-tabs">
-								<li class="tab-background active"><a data-toggle="tab" href="#tab1">Map</a></li>
+								<li class="tab-background active"><a data-toggle="tab" href="#tab12">Ask Stability</a></li>
+								<li class="tab-background"><a data-toggle="tab" href="#tab1">Map</a></li>
 								<li class="tab-background"><a data-toggle="tab" href="#tab9" class="font-bold">Deployments</a></li>
 								<li class="tab-background"><a data-toggle="tab" href="#tab11" class="font-bold">Relief Teams</a></li>
 								<li class="tab-background"><a data-toggle="tab" href="#tab10" class="font-bold">States and Counties</a></li>
@@ -355,16 +369,221 @@
 								<li class="tab-background"><a data-toggle="tab" href="#tab4" visible="false" runat="server" class="font-bold">Statistics</a></li>
 								<li class="tab-background"><a data-toggle="tab" href="#tab5" visible="false" runat="server" class="font-bold">Relief Finder</a></li>
 								<li class="pull-right">
-									<div class="form-group">
-										<button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i> </button>
-										<ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
-											<%=disasterDropDown%>
-										</ul>
-									</div>
 								</li>
 							</ul>
 							<div class="tab-content map-tab">
-								<div id="tab1" class="tab-pane active">
+								<div id="tab12" class="tab-pane active gpt-pane">
+									<div class="row">
+										<div class="col-md-3">
+											<div class="hpanel panel-group">
+
+												<div id="notes" class="collapse">
+
+													<div class="panel-body note-link">
+														<a href="#note1" data-toggle="tab">
+														<small class="pull-right text-muted">26.10.2016</small>
+															<h5>Publishing packages</h5>
+														<div class="small">
+															Many desktop publishing packages and web page editors now use Lorem
+														</div>
+														</a>
+													</div>
+
+													<div class="panel-body note-link">
+														<a href="#note2" data-toggle="tab">
+														<small class="pull-right text-muted">22.01.2016</small>
+														<h5>
+															Latin literature from
+														</h5>
+														<div class="small">
+															Lorem Ipsum, you need to be sure there
+														</div>
+															</a>
+													</div>
+
+													<div class="panel-body note-link">
+														<a href="#note3" data-toggle="tab">
+														<small class="pull-right text-muted">14.03.2016</small>
+														<h5>
+															The generated Lorem Ipsum
+														</h5>
+														<div class="small">
+															It has survived not only five centuries
+														</div>
+															</a>
+													</div>
+
+													<div class="panel-body note-link">
+														<a href="#note4" data-toggle="tab">
+														<small class="pull-right text-muted">07.10.2015</small>
+														<h5>
+															Neque porro quisquam
+														</h5>
+														<div class="small">
+															Finibus Bonorum et Malorum
+														</div>
+															</a>
+													</div>
+
+													<div class="panel-body note-link">
+														<a href="#note5" data-toggle="tab">
+														<small class="pull-right text-muted">12.04.2015</small>
+														<h5>
+															The first line of Lorem Ipsum
+														</h5>
+														<div class="small">
+															Lorem Ipsum which looks reasonable
+														</div>
+															</a>
+													</div>
+
+												</div>
+
+
+
+											</div>
+										</div>
+										<div class="col-md-9">
+											<div class="row">
+												<div class="col-lg-12">
+													<div class="hpanel">
+														<div class="panel-body">
+															<div class="input-group">
+																<input class="form-control" type="text" placeholder="Search projects..">
+																<div class="input-group-btn">
+																	<button class="btn btn-default"><i class="fa fa-search"></i></button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="hpanel">
+
+												<div class="panel-body">
+
+													<div class="text-center hidden">
+														We couldn't find any notes for you.
+													</div>
+
+													<div class="tab-content">
+														<div id="note1" class="tab-pane active">
+															<div class="pull-right text-muted m-l-lg">
+																26.10.2016
+															</div>
+															<h3>Publishing packages</h3>
+															<hr/>
+															<div class="note-content">
+																<textarea class="form-control">
+								It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+
+								Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
+								Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
+																</textarea>
+															</div>
+															<div class="btn-group">
+																<button class="btn btn-sm btn-default"><i class="fa fa-thumbs-o-up"></i> Save</button>
+																<button class="btn btn-sm btn-default"><i class="fa fa-trash"></i> Remove</button>
+															</div>
+														</div>
+
+														<div id="note2" class="tab-pane">
+															<div class="pull-right text-muted m-l-lg">
+																22.01.2016
+															</div>
+															<h3>Latin literature from </h3>
+															<hr/>
+															<div class="note-content">
+																<textarea class="form-control">
+								Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
+
+								It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+
+								Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
+																</textarea>
+															</div>
+															<div class="btn-group">
+																<button class="btn btn-sm btn-default"><i class="fa fa-thumbs-o-up"></i> Save</button>
+																<button class="btn btn-sm btn-default"><i class="fa fa-trash"></i> Remove</button>
+															</div>
+														</div>
+
+														<div id="note3" class="tab-pane">
+															<div class="pull-right text-muted m-l-lg">
+																14.03.2016
+															</div>
+															<h3>The generated Lorem Ipsum </h3>
+															<hr/>
+															<div class="note-content">
+																<textarea class="form-control">
+								It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+
+								Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
+								Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
+
+								Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
+																</textarea>
+															</div>
+															<div class="btn-group">
+																<button class="btn btn-sm btn-default"><i class="fa fa-thumbs-o-up"></i> Save</button>
+																<button class="btn btn-sm btn-default"><i class="fa fa-trash"></i> Remove</button>
+															</div>
+														</div>
+
+														<div id="note4" class="tab-pane">
+															<div class="pull-right text-muted m-l-lg">
+																07.10.2015
+															</div>
+															<h3>Neque porro quisquam</h3>
+															<hr/>
+															<div class="note-content">
+																<textarea class="form-control">
+								It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.
+
+								Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
+																</textarea>
+															</div>
+															<div class="btn-group">
+																<button class="btn btn-sm btn-default"><i class="fa fa-thumbs-o-up"></i> Save</button>
+																<button class="btn btn-sm btn-default"><i class="fa fa-trash"></i> Remove</button>
+															</div>
+														</div>
+
+														<div id="note5" class="tab-pane">
+															<div class="pull-right text-muted m-l-lg">
+																12.04.2015
+															</div>
+															<h3>The first line of Lorem Ipsum </h3>
+															<hr/>
+															<div class="note-content">
+																<textarea class="form-control">
+
+								Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
+
+								Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+
+																</textarea>
+															</div>
+															<div class="btn-group">
+																<button class="btn btn-sm btn-default"><i class="fa fa-thumbs-o-up"></i> Save</button>
+																<button class="btn btn-sm btn-default"><i class="fa fa-trash"></i> Remove</button>
+															</div>
+														</div>
+
+
+													</div>
+
+												</div>
+
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="tab1" class="tab-pane">
 									<div class="form-group" id="divMapFilter">
 										<div id="divChangeMapFilter" class="dropdown m-b-md mapFilter" runat="server">
 											<button id="btn-mapDropDown" class="btn btn-outline btn-default ddlMapFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Modify Map Filter <i class="fa fa-sort-down"></i></button>
