@@ -194,9 +194,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertProfileNote(ProfileNote instance);
   partial void UpdateProfileNote(ProfileNote instance);
   partial void DeleteProfileNote(ProfileNote instance);
-  partial void InsertAddress(Address instance);
-  partial void UpdateAddress(Address instance);
-  partial void DeleteAddress(Address instance);
   partial void InsertLocationLocationStatus(LocationLocationStatus instance);
   partial void UpdateLocationLocationStatus(LocationLocationStatus instance);
   partial void DeleteLocationLocationStatus(LocationLocationStatus instance);
@@ -437,9 +434,12 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertCity(City instance);
   partial void UpdateCity(City instance);
   partial void DeleteCity(City instance);
+  partial void InsertAddress(Address instance);
+  partial void UpdateAddress(Address instance);
+  partial void DeleteAddress(Address instance);
     #endregion
     public CrowdReliefDBDataContext() :
-    base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
+base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
     {
         OnCreated();
     }
@@ -904,14 +904,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<ProfileNote>();
-		}
-	}
-	
-	public System.Data.Linq.Table<Address> Addresses
-	{
-		get
-		{
-			return this.GetTable<Address>();
 		}
 	}
 	
@@ -1552,6 +1544,14 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<City>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Address> Addresses
+	{
+		get
+		{
+			return this.GetTable<Address>();
 		}
 	}
 	
@@ -16864,9 +16864,9 @@ public partial class LocationLocationType : INotifyPropertyChanging, INotifyProp
 	
 	private System.Guid _LocationTypeId;
 	
-	private EntityRef<Address> _Address;
-	
 	private EntityRef<LocationType> _LocationType;
+	
+	private EntityRef<Address> _Address;
 	
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -16882,8 +16882,8 @@ public partial class LocationLocationType : INotifyPropertyChanging, INotifyProp
 	
 	public LocationLocationType()
 	{
-		this._Address = default(EntityRef<Address>);
 		this._LocationType = default(EntityRef<LocationType>);
+		this._Address = default(EntityRef<Address>);
 		OnCreated();
 	}
 	
@@ -16955,40 +16955,6 @@ public partial class LocationLocationType : INotifyPropertyChanging, INotifyProp
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationLocationType", Storage="_Address", ThisKey="AddressId", OtherKey="AddressId", IsForeignKey=true)]
-	public Address Address
-	{
-		get
-		{
-			return this._Address.Entity;
-		}
-		set
-		{
-			Address previousValue = this._Address.Entity;
-			if (((previousValue != value) 
-						|| (this._Address.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Address.Entity = null;
-					previousValue.LocationLocationTypes.Remove(this);
-				}
-				this._Address.Entity = value;
-				if ((value != null))
-				{
-					value.LocationLocationTypes.Add(this);
-					this._AddressId = value.AddressId;
-				}
-				else
-				{
-					this._AddressId = default(System.Guid);
-				}
-				this.SendPropertyChanged("Address");
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="LocationType_LocationLocationType", Storage="_LocationType", ThisKey="LocationTypeId", OtherKey="LocationTypeId", IsForeignKey=true)]
 	public LocationType LocationType
 	{
@@ -17019,6 +16985,40 @@ public partial class LocationLocationType : INotifyPropertyChanging, INotifyProp
 					this._LocationTypeId = default(System.Guid);
 				}
 				this.SendPropertyChanged("LocationType");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationLocationType", Storage="_Address", ThisKey="AddressId", OtherKey="AddressId", IsForeignKey=true)]
+	public Address Address
+	{
+		get
+		{
+			return this._Address.Entity;
+		}
+		set
+		{
+			Address previousValue = this._Address.Entity;
+			if (((previousValue != value) 
+						|| (this._Address.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Address.Entity = null;
+					previousValue.LocationLocationTypes.Remove(this);
+				}
+				this._Address.Entity = value;
+				if ((value != null))
+				{
+					value.LocationLocationTypes.Add(this);
+					this._AddressId = value.AddressId;
+				}
+				else
+				{
+					this._AddressId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Address");
 			}
 		}
 	}
@@ -17258,9 +17258,9 @@ public partial class LocationPhoto : INotifyPropertyChanging, INotifyPropertyCha
 	
 	private bool _IsDeleted;
 	
-	private EntityRef<Address> _Address;
-	
 	private EntityRef<Photo> _Photo;
+	
+	private EntityRef<Address> _Address;
 	
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -17286,8 +17286,8 @@ public partial class LocationPhoto : INotifyPropertyChanging, INotifyPropertyCha
 	
 	public LocationPhoto()
 	{
-		this._Address = default(EntityRef<Address>);
 		this._Photo = default(EntityRef<Photo>);
+		this._Address = default(EntityRef<Address>);
 		OnCreated();
 	}
 	
@@ -17459,40 +17459,6 @@ public partial class LocationPhoto : INotifyPropertyChanging, INotifyPropertyCha
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationPhoto", Storage="_Address", ThisKey="AddressId", OtherKey="AddressId", IsForeignKey=true)]
-	public Address Address
-	{
-		get
-		{
-			return this._Address.Entity;
-		}
-		set
-		{
-			Address previousValue = this._Address.Entity;
-			if (((previousValue != value) 
-						|| (this._Address.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Address.Entity = null;
-					previousValue.LocationPhotos.Remove(this);
-				}
-				this._Address.Entity = value;
-				if ((value != null))
-				{
-					value.LocationPhotos.Add(this);
-					this._AddressId = value.AddressId;
-				}
-				else
-				{
-					this._AddressId = default(System.Guid);
-				}
-				this.SendPropertyChanged("Address");
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Photo_LocationPhoto", Storage="_Photo", ThisKey="PhotoId", OtherKey="PhotoId", IsForeignKey=true)]
 	public Photo Photo
 	{
@@ -17523,6 +17489,40 @@ public partial class LocationPhoto : INotifyPropertyChanging, INotifyPropertyCha
 					this._PhotoId = default(System.Guid);
 				}
 				this.SendPropertyChanged("Photo");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationPhoto", Storage="_Address", ThisKey="AddressId", OtherKey="AddressId", IsForeignKey=true)]
+	public Address Address
+	{
+		get
+		{
+			return this._Address.Entity;
+		}
+		set
+		{
+			Address previousValue = this._Address.Entity;
+			if (((previousValue != value) 
+						|| (this._Address.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Address.Entity = null;
+					previousValue.LocationPhotos.Remove(this);
+				}
+				this._Address.Entity = value;
+				if ((value != null))
+				{
+					value.LocationPhotos.Add(this);
+					this._AddressId = value.AddressId;
+				}
+				else
+				{
+					this._AddressId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Address");
 			}
 		}
 	}
@@ -17562,11 +17562,11 @@ public partial class LocationProfileEvent : INotifyPropertyChanging, INotifyProp
 	
 	private System.Guid _EventId;
 	
-	private EntityRef<Address> _Address;
-	
 	private EntityRef<LocationProfile> _LocationProfile;
 	
 	private EntityRef<Event> _Event;
+	
+	private EntityRef<Address> _Address;
 	
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -17584,9 +17584,9 @@ public partial class LocationProfileEvent : INotifyPropertyChanging, INotifyProp
 	
 	public LocationProfileEvent()
 	{
-		this._Address = default(EntityRef<Address>);
 		this._LocationProfile = default(EntityRef<LocationProfile>);
 		this._Event = default(EntityRef<Event>);
+		this._Address = default(EntityRef<Address>);
 		OnCreated();
 	}
 	
@@ -17682,40 +17682,6 @@ public partial class LocationProfileEvent : INotifyPropertyChanging, INotifyProp
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationProfileEvent", Storage="_Address", ThisKey="AddressId", OtherKey="AddressId", IsForeignKey=true)]
-	public Address Address
-	{
-		get
-		{
-			return this._Address.Entity;
-		}
-		set
-		{
-			Address previousValue = this._Address.Entity;
-			if (((previousValue != value) 
-						|| (this._Address.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Address.Entity = null;
-					previousValue.LocationProfileEvents.Remove(this);
-				}
-				this._Address.Entity = value;
-				if ((value != null))
-				{
-					value.LocationProfileEvents.Add(this);
-					this._AddressId = value.AddressId;
-				}
-				else
-				{
-					this._AddressId = default(System.Guid);
-				}
-				this.SendPropertyChanged("Address");
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="LocationProfile_LocationProfileEvent", Storage="_LocationProfile", ThisKey="LocationProfileId", OtherKey="LocationProfileId", IsForeignKey=true)]
 	public LocationProfile LocationProfile
 	{
@@ -17780,6 +17746,40 @@ public partial class LocationProfileEvent : INotifyPropertyChanging, INotifyProp
 					this._EventId = default(System.Guid);
 				}
 				this.SendPropertyChanged("Event");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationProfileEvent", Storage="_Address", ThisKey="AddressId", OtherKey="AddressId", IsForeignKey=true)]
+	public Address Address
+	{
+		get
+		{
+			return this._Address.Entity;
+		}
+		set
+		{
+			Address previousValue = this._Address.Entity;
+			if (((previousValue != value) 
+						|| (this._Address.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Address.Entity = null;
+					previousValue.LocationProfileEvents.Remove(this);
+				}
+				this._Address.Entity = value;
+				if ((value != null))
+				{
+					value.LocationProfileEvents.Add(this);
+					this._AddressId = value.AddressId;
+				}
+				else
+				{
+					this._AddressId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Address");
 			}
 		}
 	}
@@ -19634,696 +19634,6 @@ public partial class ProfileNote : INotifyPropertyChanging, INotifyPropertyChang
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Address")]
-public partial class Address : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _AddressId;
-	
-	private string _GooglePlaceId;
-	
-	private string _FormattedAddress;
-	
-	private string _StreetNumber;
-	
-	private string _StreetName;
-	
-	private string _Address1;
-	
-	private string _Address2;
-	
-	private string _City;
-	
-	private string _State;
-	
-	private string _Zip;
-	
-	private string _Country;
-	
-	private string _County;
-	
-	private string _Latitude;
-	
-	private string _Longitude;
-	
-	private System.Nullable<bool> _IsActive;
-	
-	private System.DateTime _CreatedOn;
-	
-	private System.Guid _CreatedBy;
-	
-	private System.Nullable<System.DateTime> _UpdatedOn;
-	
-	private System.Nullable<System.Guid> _UpdatedBy;
-	
-	private EntitySet<RebuildSurvey> _RebuildSurveys;
-	
-	private EntitySet<LocationLocationType> _LocationLocationTypes;
-	
-	private EntitySet<LocationNote> _LocationNotes;
-	
-	private EntitySet<LocationPhoto> _LocationPhotos;
-	
-	private EntitySet<LocationProfileEvent> _LocationProfileEvents;
-	
-	private EntitySet<LocationLocationStatus> _LocationLocationStatus;
-	
-	private EntitySet<LocationProfile> _LocationProfiles;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnAddressIdChanging(System.Guid value);
-    partial void OnAddressIdChanged();
-    partial void OnGooglePlaceIdChanging(string value);
-    partial void OnGooglePlaceIdChanged();
-    partial void OnFormattedAddressChanging(string value);
-    partial void OnFormattedAddressChanged();
-    partial void OnStreetNumberChanging(string value);
-    partial void OnStreetNumberChanged();
-    partial void OnStreetNameChanging(string value);
-    partial void OnStreetNameChanged();
-    partial void OnAddress1Changing(string value);
-    partial void OnAddress1Changed();
-    partial void OnAddress2Changing(string value);
-    partial void OnAddress2Changed();
-    partial void OnCityChanging(string value);
-    partial void OnCityChanged();
-    partial void OnStateChanging(string value);
-    partial void OnStateChanged();
-    partial void OnZipChanging(string value);
-    partial void OnZipChanged();
-    partial void OnCountryChanging(string value);
-    partial void OnCountryChanged();
-    partial void OnCountyChanging(string value);
-    partial void OnCountyChanged();
-    partial void OnLatitudeChanging(string value);
-    partial void OnLatitudeChanged();
-    partial void OnLongitudeChanging(string value);
-    partial void OnLongitudeChanged();
-    partial void OnIsActiveChanging(System.Nullable<bool> value);
-    partial void OnIsActiveChanged();
-    partial void OnCreatedOnChanging(System.DateTime value);
-    partial void OnCreatedOnChanged();
-    partial void OnCreatedByChanging(System.Guid value);
-    partial void OnCreatedByChanged();
-    partial void OnUpdatedOnChanging(System.Nullable<System.DateTime> value);
-    partial void OnUpdatedOnChanged();
-    partial void OnUpdatedByChanging(System.Nullable<System.Guid> value);
-    partial void OnUpdatedByChanged();
-    #endregion
-	
-	public Address()
-	{
-		this._RebuildSurveys = new EntitySet<RebuildSurvey>(new Action<RebuildSurvey>(this.attach_RebuildSurveys), new Action<RebuildSurvey>(this.detach_RebuildSurveys));
-		this._LocationLocationTypes = new EntitySet<LocationLocationType>(new Action<LocationLocationType>(this.attach_LocationLocationTypes), new Action<LocationLocationType>(this.detach_LocationLocationTypes));
-		this._LocationNotes = new EntitySet<LocationNote>(new Action<LocationNote>(this.attach_LocationNotes), new Action<LocationNote>(this.detach_LocationNotes));
-		this._LocationPhotos = new EntitySet<LocationPhoto>(new Action<LocationPhoto>(this.attach_LocationPhotos), new Action<LocationPhoto>(this.detach_LocationPhotos));
-		this._LocationProfileEvents = new EntitySet<LocationProfileEvent>(new Action<LocationProfileEvent>(this.attach_LocationProfileEvents), new Action<LocationProfileEvent>(this.detach_LocationProfileEvents));
-		this._LocationLocationStatus = new EntitySet<LocationLocationStatus>(new Action<LocationLocationStatus>(this.attach_LocationLocationStatus), new Action<LocationLocationStatus>(this.detach_LocationLocationStatus));
-		this._LocationProfiles = new EntitySet<LocationProfile>(new Action<LocationProfile>(this.attach_LocationProfiles), new Action<LocationProfile>(this.detach_LocationProfiles));
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddressId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid AddressId
-	{
-		get
-		{
-			return this._AddressId;
-		}
-		set
-		{
-			if ((this._AddressId != value))
-			{
-				this.OnAddressIdChanging(value);
-				this.SendPropertyChanging();
-				this._AddressId = value;
-				this.SendPropertyChanged("AddressId");
-				this.OnAddressIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GooglePlaceId", DbType="VarChar(100)")]
-	public string GooglePlaceId
-	{
-		get
-		{
-			return this._GooglePlaceId;
-		}
-		set
-		{
-			if ((this._GooglePlaceId != value))
-			{
-				this.OnGooglePlaceIdChanging(value);
-				this.SendPropertyChanging();
-				this._GooglePlaceId = value;
-				this.SendPropertyChanged("GooglePlaceId");
-				this.OnGooglePlaceIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FormattedAddress", DbType="VarChar(2000)")]
-	public string FormattedAddress
-	{
-		get
-		{
-			return this._FormattedAddress;
-		}
-		set
-		{
-			if ((this._FormattedAddress != value))
-			{
-				this.OnFormattedAddressChanging(value);
-				this.SendPropertyChanging();
-				this._FormattedAddress = value;
-				this.SendPropertyChanged("FormattedAddress");
-				this.OnFormattedAddressChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StreetNumber", DbType="VarChar(50)")]
-	public string StreetNumber
-	{
-		get
-		{
-			return this._StreetNumber;
-		}
-		set
-		{
-			if ((this._StreetNumber != value))
-			{
-				this.OnStreetNumberChanging(value);
-				this.SendPropertyChanging();
-				this._StreetNumber = value;
-				this.SendPropertyChanged("StreetNumber");
-				this.OnStreetNumberChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StreetName", DbType="VarChar(250)")]
-	public string StreetName
-	{
-		get
-		{
-			return this._StreetName;
-		}
-		set
-		{
-			if ((this._StreetName != value))
-			{
-				this.OnStreetNameChanging(value);
-				this.SendPropertyChanging();
-				this._StreetName = value;
-				this.SendPropertyChanged("StreetName");
-				this.OnStreetNameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="Address", Storage="_Address1", DbType="VarChar(1000)")]
-	public string Address1
-	{
-		get
-		{
-			return this._Address1;
-		}
-		set
-		{
-			if ((this._Address1 != value))
-			{
-				this.OnAddress1Changing(value);
-				this.SendPropertyChanging();
-				this._Address1 = value;
-				this.SendPropertyChanged("Address1");
-				this.OnAddress1Changed();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address2", DbType="VarChar(1000)")]
-	public string Address2
-	{
-		get
-		{
-			return this._Address2;
-		}
-		set
-		{
-			if ((this._Address2 != value))
-			{
-				this.OnAddress2Changing(value);
-				this.SendPropertyChanging();
-				this._Address2 = value;
-				this.SendPropertyChanged("Address2");
-				this.OnAddress2Changed();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_City", DbType="VarChar(500)")]
-	public string City
-	{
-		get
-		{
-			return this._City;
-		}
-		set
-		{
-			if ((this._City != value))
-			{
-				this.OnCityChanging(value);
-				this.SendPropertyChanging();
-				this._City = value;
-				this.SendPropertyChanged("City");
-				this.OnCityChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="VarChar(50)")]
-	public string State
-	{
-		get
-		{
-			return this._State;
-		}
-		set
-		{
-			if ((this._State != value))
-			{
-				this.OnStateChanging(value);
-				this.SendPropertyChanging();
-				this._State = value;
-				this.SendPropertyChanged("State");
-				this.OnStateChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Zip", DbType="VarChar(20)")]
-	public string Zip
-	{
-		get
-		{
-			return this._Zip;
-		}
-		set
-		{
-			if ((this._Zip != value))
-			{
-				this.OnZipChanging(value);
-				this.SendPropertyChanging();
-				this._Zip = value;
-				this.SendPropertyChanged("Zip");
-				this.OnZipChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Country", DbType="VarChar(50)")]
-	public string Country
-	{
-		get
-		{
-			return this._Country;
-		}
-		set
-		{
-			if ((this._Country != value))
-			{
-				this.OnCountryChanging(value);
-				this.SendPropertyChanging();
-				this._Country = value;
-				this.SendPropertyChanged("Country");
-				this.OnCountryChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_County", DbType="VarChar(500)")]
-	public string County
-	{
-		get
-		{
-			return this._County;
-		}
-		set
-		{
-			if ((this._County != value))
-			{
-				this.OnCountyChanging(value);
-				this.SendPropertyChanging();
-				this._County = value;
-				this.SendPropertyChanged("County");
-				this.OnCountyChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Latitude", DbType="VarChar(50)")]
-	public string Latitude
-	{
-		get
-		{
-			return this._Latitude;
-		}
-		set
-		{
-			if ((this._Latitude != value))
-			{
-				this.OnLatitudeChanging(value);
-				this.SendPropertyChanging();
-				this._Latitude = value;
-				this.SendPropertyChanged("Latitude");
-				this.OnLatitudeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Longitude", DbType="VarChar(50)")]
-	public string Longitude
-	{
-		get
-		{
-			return this._Longitude;
-		}
-		set
-		{
-			if ((this._Longitude != value))
-			{
-				this.OnLongitudeChanging(value);
-				this.SendPropertyChanging();
-				this._Longitude = value;
-				this.SendPropertyChanged("Longitude");
-				this.OnLongitudeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit")]
-	public System.Nullable<bool> IsActive
-	{
-		get
-		{
-			return this._IsActive;
-		}
-		set
-		{
-			if ((this._IsActive != value))
-			{
-				this.OnIsActiveChanging(value);
-				this.SendPropertyChanging();
-				this._IsActive = value;
-				this.SendPropertyChanged("IsActive");
-				this.OnIsActiveChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
-	public System.DateTime CreatedOn
-	{
-		get
-		{
-			return this._CreatedOn;
-		}
-		set
-		{
-			if ((this._CreatedOn != value))
-			{
-				this.OnCreatedOnChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedOn = value;
-				this.SendPropertyChanged("CreatedOn");
-				this.OnCreatedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid CreatedBy
-	{
-		get
-		{
-			return this._CreatedBy;
-		}
-		set
-		{
-			if ((this._CreatedBy != value))
-			{
-				this.OnCreatedByChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedBy = value;
-				this.SendPropertyChanged("CreatedBy");
-				this.OnCreatedByChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedOn", DbType="DateTime")]
-	public System.Nullable<System.DateTime> UpdatedOn
-	{
-		get
-		{
-			return this._UpdatedOn;
-		}
-		set
-		{
-			if ((this._UpdatedOn != value))
-			{
-				this.OnUpdatedOnChanging(value);
-				this.SendPropertyChanging();
-				this._UpdatedOn = value;
-				this.SendPropertyChanged("UpdatedOn");
-				this.OnUpdatedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedBy", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> UpdatedBy
-	{
-		get
-		{
-			return this._UpdatedBy;
-		}
-		set
-		{
-			if ((this._UpdatedBy != value))
-			{
-				this.OnUpdatedByChanging(value);
-				this.SendPropertyChanging();
-				this._UpdatedBy = value;
-				this.SendPropertyChanged("UpdatedBy");
-				this.OnUpdatedByChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_RebuildSurvey", Storage="_RebuildSurveys", ThisKey="AddressId", OtherKey="AddressId")]
-	public EntitySet<RebuildSurvey> RebuildSurveys
-	{
-		get
-		{
-			return this._RebuildSurveys;
-		}
-		set
-		{
-			this._RebuildSurveys.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationLocationType", Storage="_LocationLocationTypes", ThisKey="AddressId", OtherKey="AddressId")]
-	public EntitySet<LocationLocationType> LocationLocationTypes
-	{
-		get
-		{
-			return this._LocationLocationTypes;
-		}
-		set
-		{
-			this._LocationLocationTypes.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationNote", Storage="_LocationNotes", ThisKey="AddressId", OtherKey="AddressId")]
-	public EntitySet<LocationNote> LocationNotes
-	{
-		get
-		{
-			return this._LocationNotes;
-		}
-		set
-		{
-			this._LocationNotes.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationPhoto", Storage="_LocationPhotos", ThisKey="AddressId", OtherKey="AddressId")]
-	public EntitySet<LocationPhoto> LocationPhotos
-	{
-		get
-		{
-			return this._LocationPhotos;
-		}
-		set
-		{
-			this._LocationPhotos.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationProfileEvent", Storage="_LocationProfileEvents", ThisKey="AddressId", OtherKey="AddressId")]
-	public EntitySet<LocationProfileEvent> LocationProfileEvents
-	{
-		get
-		{
-			return this._LocationProfileEvents;
-		}
-		set
-		{
-			this._LocationProfileEvents.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationLocationStatus", Storage="_LocationLocationStatus", ThisKey="AddressId", OtherKey="AddressId")]
-	public EntitySet<LocationLocationStatus> LocationLocationStatus
-	{
-		get
-		{
-			return this._LocationLocationStatus;
-		}
-		set
-		{
-			this._LocationLocationStatus.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationProfile", Storage="_LocationProfiles", ThisKey="AddressId", OtherKey="AddressId")]
-	public EntitySet<LocationProfile> LocationProfiles
-	{
-		get
-		{
-			return this._LocationProfiles;
-		}
-		set
-		{
-			this._LocationProfiles.Assign(value);
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-	
-	private void attach_RebuildSurveys(RebuildSurvey entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = this;
-	}
-	
-	private void detach_RebuildSurveys(RebuildSurvey entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = null;
-	}
-	
-	private void attach_LocationLocationTypes(LocationLocationType entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = this;
-	}
-	
-	private void detach_LocationLocationTypes(LocationLocationType entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = null;
-	}
-	
-	private void attach_LocationNotes(LocationNote entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = this;
-	}
-	
-	private void detach_LocationNotes(LocationNote entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = null;
-	}
-	
-	private void attach_LocationPhotos(LocationPhoto entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = this;
-	}
-	
-	private void detach_LocationPhotos(LocationPhoto entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = null;
-	}
-	
-	private void attach_LocationProfileEvents(LocationProfileEvent entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = this;
-	}
-	
-	private void detach_LocationProfileEvents(LocationProfileEvent entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = null;
-	}
-	
-	private void attach_LocationLocationStatus(LocationLocationStatus entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = this;
-	}
-	
-	private void detach_LocationLocationStatus(LocationLocationStatus entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = null;
-	}
-	
-	private void attach_LocationProfiles(LocationProfile entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = this;
-	}
-	
-	private void detach_LocationProfiles(LocationProfile entity)
-	{
-		this.SendPropertyChanging();
-		entity.Address = null;
-	}
-}
-
 [global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.LocationLocationStatus")]
 public partial class LocationLocationStatus : INotifyPropertyChanging, INotifyPropertyChanged
 {
@@ -20344,9 +19654,9 @@ public partial class LocationLocationStatus : INotifyPropertyChanging, INotifyPr
 	
 	private System.Nullable<System.Guid> _UpdatedBy;
 	
-	private EntityRef<Address> _Address;
-	
 	private EntityRef<LocationStatus> _LocationStatus;
+	
+	private EntityRef<Address> _Address;
 	
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -20370,8 +19680,8 @@ public partial class LocationLocationStatus : INotifyPropertyChanging, INotifyPr
 	
 	public LocationLocationStatus()
 	{
-		this._Address = default(EntityRef<Address>);
 		this._LocationStatus = default(EntityRef<LocationStatus>);
+		this._Address = default(EntityRef<Address>);
 		OnCreated();
 	}
 	
@@ -20523,40 +19833,6 @@ public partial class LocationLocationStatus : INotifyPropertyChanging, INotifyPr
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationLocationStatus", Storage="_Address", ThisKey="AddressId", OtherKey="AddressId", IsForeignKey=true)]
-	public Address Address
-	{
-		get
-		{
-			return this._Address.Entity;
-		}
-		set
-		{
-			Address previousValue = this._Address.Entity;
-			if (((previousValue != value) 
-						|| (this._Address.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Address.Entity = null;
-					previousValue.LocationLocationStatus.Remove(this);
-				}
-				this._Address.Entity = value;
-				if ((value != null))
-				{
-					value.LocationLocationStatus.Add(this);
-					this._AddressId = value.AddressId;
-				}
-				else
-				{
-					this._AddressId = default(System.Guid);
-				}
-				this.SendPropertyChanged("Address");
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="LocationStatus_LocationLocationStatus", Storage="_LocationStatus", ThisKey="LocationStatusId", OtherKey="LocationStatusId", IsForeignKey=true)]
 	public LocationStatus LocationStatus
 	{
@@ -20587,6 +19863,40 @@ public partial class LocationLocationStatus : INotifyPropertyChanging, INotifyPr
 					this._LocationStatusId = default(System.Guid);
 				}
 				this.SendPropertyChanged("LocationStatus");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationLocationStatus", Storage="_Address", ThisKey="AddressId", OtherKey="AddressId", IsForeignKey=true)]
+	public Address Address
+	{
+		get
+		{
+			return this._Address.Entity;
+		}
+		set
+		{
+			Address previousValue = this._Address.Entity;
+			if (((previousValue != value) 
+						|| (this._Address.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Address.Entity = null;
+					previousValue.LocationLocationStatus.Remove(this);
+				}
+				this._Address.Entity = value;
+				if ((value != null))
+				{
+					value.LocationLocationStatus.Add(this);
+					this._AddressId = value.AddressId;
+				}
+				else
+				{
+					this._AddressId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Address");
 			}
 		}
 	}
@@ -28896,6 +28206,8 @@ public partial class County : INotifyPropertyChanging, INotifyPropertyChanged
 	
 	private EntitySet<OrganizationEvent> _OrganizationEvents;
 	
+	private EntitySet<Address> _Addresses;
+	
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -28918,6 +28230,7 @@ public partial class County : INotifyPropertyChanging, INotifyPropertyChanged
 		this._EventCounties = new EntitySet<EventCounty>(new Action<EventCounty>(this.attach_EventCounties), new Action<EventCounty>(this.detach_EventCounties));
 		this._FEMAAssistanceGrants = new EntitySet<FEMAAssistanceGrant>(new Action<FEMAAssistanceGrant>(this.attach_FEMAAssistanceGrants), new Action<FEMAAssistanceGrant>(this.detach_FEMAAssistanceGrants));
 		this._OrganizationEvents = new EntitySet<OrganizationEvent>(new Action<OrganizationEvent>(this.attach_OrganizationEvents), new Action<OrganizationEvent>(this.detach_OrganizationEvents));
+		this._Addresses = new EntitySet<Address>(new Action<Address>(this.attach_Addresses), new Action<Address>(this.detach_Addresses));
 		OnCreated();
 	}
 	
@@ -29073,6 +28386,19 @@ public partial class County : INotifyPropertyChanging, INotifyPropertyChanged
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="County_Address", Storage="_Addresses", ThisKey="CountyId", OtherKey="CountyId")]
+	public EntitySet<Address> Addresses
+	{
+		get
+		{
+			return this._Addresses;
+		}
+		set
+		{
+			this._Addresses.Assign(value);
+		}
+	}
+	
 	public event PropertyChangingEventHandler PropertyChanging;
 	
 	public event PropertyChangedEventHandler PropertyChanged;
@@ -29139,6 +28465,18 @@ public partial class County : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this.SendPropertyChanging();
 		entity.County = null;
+	}
+	
+	private void attach_Addresses(Address entity)
+	{
+		this.SendPropertyChanging();
+		entity.County1 = this;
+	}
+	
+	private void detach_Addresses(Address entity)
+	{
+		this.SendPropertyChanging();
+		entity.County1 = null;
 	}
 }
 
@@ -36928,9 +36266,9 @@ public partial class LocationProfile : INotifyPropertyChanging, INotifyPropertyC
 	
 	private EntitySet<LocationProfilePetType> _LocationProfilePetTypes;
 	
-	private EntityRef<Address> _Address;
-	
 	private EntityRef<LocationParentType> _LocationParentType;
+	
+	private EntityRef<Address> _Address;
 	
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -37002,8 +36340,8 @@ public partial class LocationProfile : INotifyPropertyChanging, INotifyPropertyC
 	{
 		this._LocationProfileEvents = new EntitySet<LocationProfileEvent>(new Action<LocationProfileEvent>(this.attach_LocationProfileEvents), new Action<LocationProfileEvent>(this.detach_LocationProfileEvents));
 		this._LocationProfilePetTypes = new EntitySet<LocationProfilePetType>(new Action<LocationProfilePetType>(this.attach_LocationProfilePetTypes), new Action<LocationProfilePetType>(this.detach_LocationProfilePetTypes));
-		this._Address = default(EntityRef<Address>);
 		this._LocationParentType = default(EntityRef<LocationParentType>);
+		this._Address = default(EntityRef<Address>);
 		OnCreated();
 	}
 	
@@ -37641,40 +36979,6 @@ public partial class LocationProfile : INotifyPropertyChanging, INotifyPropertyC
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationProfile", Storage="_Address", ThisKey="AddressId", OtherKey="AddressId", IsForeignKey=true)]
-	public Address Address
-	{
-		get
-		{
-			return this._Address.Entity;
-		}
-		set
-		{
-			Address previousValue = this._Address.Entity;
-			if (((previousValue != value) 
-						|| (this._Address.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Address.Entity = null;
-					previousValue.LocationProfiles.Remove(this);
-				}
-				this._Address.Entity = value;
-				if ((value != null))
-				{
-					value.LocationProfiles.Add(this);
-					this._AddressId = value.AddressId;
-				}
-				else
-				{
-					this._AddressId = default(System.Guid);
-				}
-				this.SendPropertyChanged("Address");
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="LocationParentType_LocationProfile", Storage="_LocationParentType", ThisKey="LocationParentTypeId", OtherKey="LocationParentTypeId", IsForeignKey=true)]
 	public LocationParentType LocationParentType
 	{
@@ -37705,6 +37009,40 @@ public partial class LocationProfile : INotifyPropertyChanging, INotifyPropertyC
 					this._LocationParentTypeId = default(Nullable<System.Guid>);
 				}
 				this.SendPropertyChanged("LocationParentType");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationProfile", Storage="_Address", ThisKey="AddressId", OtherKey="AddressId", IsForeignKey=true)]
+	public Address Address
+	{
+		get
+		{
+			return this._Address.Entity;
+		}
+		set
+		{
+			Address previousValue = this._Address.Entity;
+			if (((previousValue != value) 
+						|| (this._Address.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Address.Entity = null;
+					previousValue.LocationProfiles.Remove(this);
+				}
+				this._Address.Entity = value;
+				if ((value != null))
+				{
+					value.LocationProfiles.Add(this);
+					this._AddressId = value.AddressId;
+				}
+				else
+				{
+					this._AddressId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Address");
 			}
 		}
 	}
@@ -49186,6 +48524,785 @@ public partial class City : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 }
 
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Address")]
+public partial class Address : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _AddressId;
+	
+	private string _GooglePlaceId;
+	
+	private string _FormattedAddress;
+	
+	private string _StreetNumber;
+	
+	private string _StreetName;
+	
+	private string _Address1;
+	
+	private string _Address2;
+	
+	private string _City;
+	
+	private string _State;
+	
+	private string _Zip;
+	
+	private string _Country;
+	
+	private string _County;
+	
+	private string _Latitude;
+	
+	private string _Longitude;
+	
+	private System.Nullable<bool> _IsActive;
+	
+	private System.DateTime _CreatedOn;
+	
+	private System.Guid _CreatedBy;
+	
+	private System.Nullable<System.DateTime> _UpdatedOn;
+	
+	private System.Nullable<System.Guid> _UpdatedBy;
+	
+	private System.Nullable<System.Guid> _CountyId;
+	
+	private System.Nullable<System.Guid> _CountyIds;
+	
+	private EntitySet<RebuildSurvey> _RebuildSurveys;
+	
+	private EntitySet<LocationLocationType> _LocationLocationTypes;
+	
+	private EntitySet<LocationNote> _LocationNotes;
+	
+	private EntitySet<LocationPhoto> _LocationPhotos;
+	
+	private EntitySet<LocationProfileEvent> _LocationProfileEvents;
+	
+	private EntitySet<LocationLocationStatus> _LocationLocationStatus;
+	
+	private EntitySet<LocationProfile> _LocationProfiles;
+	
+	private EntityRef<County> _County1;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnAddressIdChanging(System.Guid value);
+    partial void OnAddressIdChanged();
+    partial void OnGooglePlaceIdChanging(string value);
+    partial void OnGooglePlaceIdChanged();
+    partial void OnFormattedAddressChanging(string value);
+    partial void OnFormattedAddressChanged();
+    partial void OnStreetNumberChanging(string value);
+    partial void OnStreetNumberChanged();
+    partial void OnStreetNameChanging(string value);
+    partial void OnStreetNameChanged();
+    partial void OnAddress1Changing(string value);
+    partial void OnAddress1Changed();
+    partial void OnAddress2Changing(string value);
+    partial void OnAddress2Changed();
+    partial void OnCityChanging(string value);
+    partial void OnCityChanged();
+    partial void OnStateChanging(string value);
+    partial void OnStateChanged();
+    partial void OnZipChanging(string value);
+    partial void OnZipChanged();
+    partial void OnCountryChanging(string value);
+    partial void OnCountryChanged();
+    partial void OnCountyChanging(string value);
+    partial void OnCountyChanged();
+    partial void OnLatitudeChanging(string value);
+    partial void OnLatitudeChanged();
+    partial void OnLongitudeChanging(string value);
+    partial void OnLongitudeChanged();
+    partial void OnIsActiveChanging(System.Nullable<bool> value);
+    partial void OnIsActiveChanged();
+    partial void OnCreatedOnChanging(System.DateTime value);
+    partial void OnCreatedOnChanged();
+    partial void OnCreatedByChanging(System.Guid value);
+    partial void OnCreatedByChanged();
+    partial void OnUpdatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnUpdatedOnChanged();
+    partial void OnUpdatedByChanging(System.Nullable<System.Guid> value);
+    partial void OnUpdatedByChanged();
+    partial void OnCountyIdChanging(System.Nullable<System.Guid> value);
+    partial void OnCountyIdChanged();
+    partial void OnCountyIdsChanging(System.Nullable<System.Guid> value);
+    partial void OnCountyIdsChanged();
+    #endregion
+	
+	public Address()
+	{
+		this._RebuildSurveys = new EntitySet<RebuildSurvey>(new Action<RebuildSurvey>(this.attach_RebuildSurveys), new Action<RebuildSurvey>(this.detach_RebuildSurveys));
+		this._LocationLocationTypes = new EntitySet<LocationLocationType>(new Action<LocationLocationType>(this.attach_LocationLocationTypes), new Action<LocationLocationType>(this.detach_LocationLocationTypes));
+		this._LocationNotes = new EntitySet<LocationNote>(new Action<LocationNote>(this.attach_LocationNotes), new Action<LocationNote>(this.detach_LocationNotes));
+		this._LocationPhotos = new EntitySet<LocationPhoto>(new Action<LocationPhoto>(this.attach_LocationPhotos), new Action<LocationPhoto>(this.detach_LocationPhotos));
+		this._LocationProfileEvents = new EntitySet<LocationProfileEvent>(new Action<LocationProfileEvent>(this.attach_LocationProfileEvents), new Action<LocationProfileEvent>(this.detach_LocationProfileEvents));
+		this._LocationLocationStatus = new EntitySet<LocationLocationStatus>(new Action<LocationLocationStatus>(this.attach_LocationLocationStatus), new Action<LocationLocationStatus>(this.detach_LocationLocationStatus));
+		this._LocationProfiles = new EntitySet<LocationProfile>(new Action<LocationProfile>(this.attach_LocationProfiles), new Action<LocationProfile>(this.detach_LocationProfiles));
+		this._County1 = default(EntityRef<County>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddressId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid AddressId
+	{
+		get
+		{
+			return this._AddressId;
+		}
+		set
+		{
+			if ((this._AddressId != value))
+			{
+				this.OnAddressIdChanging(value);
+				this.SendPropertyChanging();
+				this._AddressId = value;
+				this.SendPropertyChanged("AddressId");
+				this.OnAddressIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GooglePlaceId", DbType="VarChar(2000)")]
+	public string GooglePlaceId
+	{
+		get
+		{
+			return this._GooglePlaceId;
+		}
+		set
+		{
+			if ((this._GooglePlaceId != value))
+			{
+				this.OnGooglePlaceIdChanging(value);
+				this.SendPropertyChanging();
+				this._GooglePlaceId = value;
+				this.SendPropertyChanged("GooglePlaceId");
+				this.OnGooglePlaceIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FormattedAddress", DbType="VarChar(2000)")]
+	public string FormattedAddress
+	{
+		get
+		{
+			return this._FormattedAddress;
+		}
+		set
+		{
+			if ((this._FormattedAddress != value))
+			{
+				this.OnFormattedAddressChanging(value);
+				this.SendPropertyChanging();
+				this._FormattedAddress = value;
+				this.SendPropertyChanged("FormattedAddress");
+				this.OnFormattedAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StreetNumber", DbType="VarChar(50)")]
+	public string StreetNumber
+	{
+		get
+		{
+			return this._StreetNumber;
+		}
+		set
+		{
+			if ((this._StreetNumber != value))
+			{
+				this.OnStreetNumberChanging(value);
+				this.SendPropertyChanging();
+				this._StreetNumber = value;
+				this.SendPropertyChanged("StreetNumber");
+				this.OnStreetNumberChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StreetName", DbType="VarChar(250)")]
+	public string StreetName
+	{
+		get
+		{
+			return this._StreetName;
+		}
+		set
+		{
+			if ((this._StreetName != value))
+			{
+				this.OnStreetNameChanging(value);
+				this.SendPropertyChanging();
+				this._StreetName = value;
+				this.SendPropertyChanged("StreetName");
+				this.OnStreetNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="Address", Storage="_Address1", DbType="VarChar(1000)")]
+	public string Address1
+	{
+		get
+		{
+			return this._Address1;
+		}
+		set
+		{
+			if ((this._Address1 != value))
+			{
+				this.OnAddress1Changing(value);
+				this.SendPropertyChanging();
+				this._Address1 = value;
+				this.SendPropertyChanged("Address1");
+				this.OnAddress1Changed();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address2", DbType="VarChar(1000)")]
+	public string Address2
+	{
+		get
+		{
+			return this._Address2;
+		}
+		set
+		{
+			if ((this._Address2 != value))
+			{
+				this.OnAddress2Changing(value);
+				this.SendPropertyChanging();
+				this._Address2 = value;
+				this.SendPropertyChanged("Address2");
+				this.OnAddress2Changed();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_City", DbType="VarChar(500)")]
+	public string City
+	{
+		get
+		{
+			return this._City;
+		}
+		set
+		{
+			if ((this._City != value))
+			{
+				this.OnCityChanging(value);
+				this.SendPropertyChanging();
+				this._City = value;
+				this.SendPropertyChanged("City");
+				this.OnCityChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="VarChar(50)")]
+	public string State
+	{
+		get
+		{
+			return this._State;
+		}
+		set
+		{
+			if ((this._State != value))
+			{
+				this.OnStateChanging(value);
+				this.SendPropertyChanging();
+				this._State = value;
+				this.SendPropertyChanged("State");
+				this.OnStateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Zip", DbType="VarChar(20)")]
+	public string Zip
+	{
+		get
+		{
+			return this._Zip;
+		}
+		set
+		{
+			if ((this._Zip != value))
+			{
+				this.OnZipChanging(value);
+				this.SendPropertyChanging();
+				this._Zip = value;
+				this.SendPropertyChanged("Zip");
+				this.OnZipChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Country", DbType="VarChar(50)")]
+	public string Country
+	{
+		get
+		{
+			return this._Country;
+		}
+		set
+		{
+			if ((this._Country != value))
+			{
+				this.OnCountryChanging(value);
+				this.SendPropertyChanging();
+				this._Country = value;
+				this.SendPropertyChanged("Country");
+				this.OnCountryChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_County", DbType="VarChar(500)")]
+	public string County
+	{
+		get
+		{
+			return this._County;
+		}
+		set
+		{
+			if ((this._County != value))
+			{
+				this.OnCountyChanging(value);
+				this.SendPropertyChanging();
+				this._County = value;
+				this.SendPropertyChanged("County");
+				this.OnCountyChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Latitude", DbType="VarChar(50)")]
+	public string Latitude
+	{
+		get
+		{
+			return this._Latitude;
+		}
+		set
+		{
+			if ((this._Latitude != value))
+			{
+				this.OnLatitudeChanging(value);
+				this.SendPropertyChanging();
+				this._Latitude = value;
+				this.SendPropertyChanged("Latitude");
+				this.OnLatitudeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Longitude", DbType="VarChar(50)")]
+	public string Longitude
+	{
+		get
+		{
+			return this._Longitude;
+		}
+		set
+		{
+			if ((this._Longitude != value))
+			{
+				this.OnLongitudeChanging(value);
+				this.SendPropertyChanging();
+				this._Longitude = value;
+				this.SendPropertyChanged("Longitude");
+				this.OnLongitudeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit")]
+	public System.Nullable<bool> IsActive
+	{
+		get
+		{
+			return this._IsActive;
+		}
+		set
+		{
+			if ((this._IsActive != value))
+			{
+				this.OnIsActiveChanging(value);
+				this.SendPropertyChanging();
+				this._IsActive = value;
+				this.SendPropertyChanged("IsActive");
+				this.OnIsActiveChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> UpdatedOn
+	{
+		get
+		{
+			return this._UpdatedOn;
+		}
+		set
+		{
+			if ((this._UpdatedOn != value))
+			{
+				this.OnUpdatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedOn = value;
+				this.SendPropertyChanged("UpdatedOn");
+				this.OnUpdatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedBy", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> UpdatedBy
+	{
+		get
+		{
+			return this._UpdatedBy;
+		}
+		set
+		{
+			if ((this._UpdatedBy != value))
+			{
+				this.OnUpdatedByChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedBy = value;
+				this.SendPropertyChanged("UpdatedBy");
+				this.OnUpdatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CountyId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> CountyId
+	{
+		get
+		{
+			return this._CountyId;
+		}
+		set
+		{
+			if ((this._CountyId != value))
+			{
+				if (this._County1.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCountyIdChanging(value);
+				this.SendPropertyChanging();
+				this._CountyId = value;
+				this.SendPropertyChanged("CountyId");
+				this.OnCountyIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CountyIds", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> CountyIds
+	{
+		get
+		{
+			return this._CountyIds;
+		}
+		set
+		{
+			if ((this._CountyIds != value))
+			{
+				this.OnCountyIdsChanging(value);
+				this.SendPropertyChanging();
+				this._CountyIds = value;
+				this.SendPropertyChanged("CountyIds");
+				this.OnCountyIdsChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_RebuildSurvey", Storage="_RebuildSurveys", ThisKey="AddressId", OtherKey="AddressId")]
+	public EntitySet<RebuildSurvey> RebuildSurveys
+	{
+		get
+		{
+			return this._RebuildSurveys;
+		}
+		set
+		{
+			this._RebuildSurveys.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationLocationType", Storage="_LocationLocationTypes", ThisKey="AddressId", OtherKey="AddressId")]
+	public EntitySet<LocationLocationType> LocationLocationTypes
+	{
+		get
+		{
+			return this._LocationLocationTypes;
+		}
+		set
+		{
+			this._LocationLocationTypes.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationNote", Storage="_LocationNotes", ThisKey="AddressId", OtherKey="AddressId")]
+	public EntitySet<LocationNote> LocationNotes
+	{
+		get
+		{
+			return this._LocationNotes;
+		}
+		set
+		{
+			this._LocationNotes.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationPhoto", Storage="_LocationPhotos", ThisKey="AddressId", OtherKey="AddressId")]
+	public EntitySet<LocationPhoto> LocationPhotos
+	{
+		get
+		{
+			return this._LocationPhotos;
+		}
+		set
+		{
+			this._LocationPhotos.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationProfileEvent", Storage="_LocationProfileEvents", ThisKey="AddressId", OtherKey="AddressId")]
+	public EntitySet<LocationProfileEvent> LocationProfileEvents
+	{
+		get
+		{
+			return this._LocationProfileEvents;
+		}
+		set
+		{
+			this._LocationProfileEvents.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationLocationStatus", Storage="_LocationLocationStatus", ThisKey="AddressId", OtherKey="AddressId")]
+	public EntitySet<LocationLocationStatus> LocationLocationStatus
+	{
+		get
+		{
+			return this._LocationLocationStatus;
+		}
+		set
+		{
+			this._LocationLocationStatus.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Address_LocationProfile", Storage="_LocationProfiles", ThisKey="AddressId", OtherKey="AddressId")]
+	public EntitySet<LocationProfile> LocationProfiles
+	{
+		get
+		{
+			return this._LocationProfiles;
+		}
+		set
+		{
+			this._LocationProfiles.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="County_Address", Storage="_County1", ThisKey="CountyId", OtherKey="CountyId", IsForeignKey=true)]
+	public County County1
+	{
+		get
+		{
+			return this._County1.Entity;
+		}
+		set
+		{
+			County previousValue = this._County1.Entity;
+			if (((previousValue != value) 
+						|| (this._County1.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._County1.Entity = null;
+					previousValue.Addresses.Remove(this);
+				}
+				this._County1.Entity = value;
+				if ((value != null))
+				{
+					value.Addresses.Add(this);
+					this._CountyId = value.CountyId;
+				}
+				else
+				{
+					this._CountyId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("County1");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_RebuildSurveys(RebuildSurvey entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = this;
+	}
+	
+	private void detach_RebuildSurveys(RebuildSurvey entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = null;
+	}
+	
+	private void attach_LocationLocationTypes(LocationLocationType entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = this;
+	}
+	
+	private void detach_LocationLocationTypes(LocationLocationType entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = null;
+	}
+	
+	private void attach_LocationNotes(LocationNote entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = this;
+	}
+	
+	private void detach_LocationNotes(LocationNote entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = null;
+	}
+	
+	private void attach_LocationPhotos(LocationPhoto entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = this;
+	}
+	
+	private void detach_LocationPhotos(LocationPhoto entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = null;
+	}
+	
+	private void attach_LocationProfileEvents(LocationProfileEvent entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = this;
+	}
+	
+	private void detach_LocationProfileEvents(LocationProfileEvent entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = null;
+	}
+	
+	private void attach_LocationLocationStatus(LocationLocationStatus entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = this;
+	}
+	
+	private void detach_LocationLocationStatus(LocationLocationStatus entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = null;
+	}
+	
+	private void attach_LocationProfiles(LocationProfile entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = this;
+	}
+	
+	private void detach_LocationProfiles(LocationProfile entity)
+	{
+		this.SendPropertyChanging();
+		entity.Address = null;
+	}
+}
+
 public partial class GetGeoJsonByDisasterForCleanupMapResult
 {
 	
@@ -49671,7 +49788,7 @@ public partial class GetDisasterLocationsByCountysResult
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FullAddress", DbType="VarChar(2576)")]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FullAddress", DbType="VarChar(3078)")]
 	public string FullAddress
 	{
 		get
@@ -49719,7 +49836,7 @@ public partial class GetDisasterLocationsByCountysResult
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Coordinates", DbType="NVarChar(62)")]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Coordinates", DbType="NVarChar(42)")]
 	public string Coordinates
 	{
 		get
