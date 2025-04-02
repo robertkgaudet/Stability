@@ -136,6 +136,9 @@
                 opacity: 0.1; /* More subtle for printing */
             }
         }
+        .icon{
+            margin-right:2px;
+        }
     </style>
 </asp:Content>
 
@@ -164,8 +167,6 @@
                       <asp:Literal ID="litNumber" runat="server"></asp:Literal>
                 </div>
                 <div class="id-card-detail">
-                    Verify: 203-520-4484
-                    <br />
                     Print Date:
                     <asp:Literal ID="litPrintDate" runat="server"></asp:Literal><br />
                     <asp:Label ID="lblStabilityVerifiedDate" runat="server" Text="Stability Verified Date:"
@@ -179,7 +180,7 @@
         </div>
         <!-- Footer -->
         <div class="id-card-footer">
-            <i class="fa fa-user-circle"></i>VOLUNTEER
+            <i class="fa fa-user-circle icon" ></i>VOLUNTEER
         </div>
     </div>
 </asp:Content>
