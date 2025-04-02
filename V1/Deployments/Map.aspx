@@ -5,35 +5,38 @@
 	
 <script type="text/javascript">
     $(document).ready(function () {
-
-
-         // Initialize with stored filter or default to Critical
-    const storedFilter = sessionStorage.getItem('mapFilterType') || "Critical";
-    updateFilterStates(storedFilter);
-    
-    // Handle map filter changes
-    $("#ddlMapFilter.dropdown-menu li").click(function() {
-        const mapFilterType = $(this).attr('id');
-        sessionStorage.setItem('mapFilterType', mapFilterType);
-        updateFilterStates(mapFilterType);
-    });
-    
-    // Function to enable/disable filters based on selected map filter
-    function updateFilterStates(mapFilterType) {
-        const isCritical = mapFilterType === "Critical";
         
-        // Toggle disabled state for additional filters
-        $(".additional-filter")
-            .toggleClass("disabled", !isCritical)
-            .find("button")
-            .prop("disabled", !isCritical);
-        
-        // Update button text for main filter
-        const $selectedItem = $(`#ddlMapFilter.dropdown-menu li[id="${mapFilterType}"]`);
-        if ($selectedItem.length) {
-            $("#btn-mapDropDown").html($selectedItem.text() + ' <i class="fa fa-sort-down"></i>');
-        }
+      // Initialize with stored filter or default to Critical
+const storedFilter = sessionStorage.getItem('mapFilterType') || "Critical";
+updateFilterStates(storedFilter);
+
+// Handle map filter changes
+$("#ddlMapFilter.dropdown-menu li").click(function() {
+    const mapFilterType = $(this).attr('id');
+    sessionStorage.setItem('mapFilterType', mapFilterType);
+    updateFilterStates(mapFilterType);
+});
+
+// Function to enable/disable filters based on selected map filter
+function updateFilterStates(mapFilterType) {
+    const isCritical = mapFilterType === "Critical";
+
+    // Ensure the dropdown is never disabled by default
+    $("#btn-mapDropDown").removeClass("disabled").prop("disabled", false);
+    
+    // Toggle disabled state for additional filters, but ensure dropdown remains active
+    $(".additional-filter")
+        .toggleClass("disabled", !isCritical)
+        .find("button")
+        .prop("disabled", !isCritical);
+    
+    // Update button text for main filter
+    const $selectedItem = $(`#ddlMapFilter.dropdown-menu li[id="${mapFilterType}"]`);
+    if ($selectedItem.length) {
+        $("#btn-mapDropDown").html($selectedItem.text() + ' <i class="fa fa-sort-down"></i>');
     }
+}
+
         // V4: State management constants
         const STORAGE_KEYS = {
             MAP_FILTER: 'mapFilterType',
@@ -51,8 +54,6 @@
             window.location.href = "/Maps/" + $(this).attr('name');
             event.preventDefault();
         });
-
-
 
         // Initialize with stored state or defaults
         initMap(getStoredFilter(STORAGE_KEYS.MAP_FILTER) || DEFAULT_FILTER);
@@ -145,6 +146,8 @@
                 mapFilterType === "Critical" ? getStoredFilter(STORAGE_KEYS.STATUS) : null
             );
         }
+
+
         function initMapWithFilters(mapFilterType, locationTypeId, parentTypeId, statusId) {
             // Only pass additional filters if in Critical mode
             if (mapFilterType !== "Critical") {
@@ -431,7 +434,6 @@
             padding: 10px 0;
         }
 
-
        .filter-dropdown {
     position: relative;
     display: inline-block;
@@ -492,12 +494,13 @@
                 min-width: 100%;
             }
         }
-     .deployment-section {
-            margin-left: 0;
-            width: 100%;
-            justify-content: flex-start;
-            margin-top: 8px;
-        }
+        .deployment-section {
+    display: flex;
+    align-items: center; /* Vertically center-aligns the items */
+    justify-content: flex-start; /* Aligns items to the left */
+    gap: 10px; /* Optional: Adds space between elements */
+}
+
 .deployment-text {
     margin-right: 20px; /* Adjust space between the text and the buttons */
 }
@@ -509,8 +512,8 @@
 .disasterEvent-dropdown {
     position: relative;
     display: inline-block;
-}
-  .additional-filter.disabled {
+}  
+      .additional-filter.disabled {
         opacity: 0.6;
         pointer-events: none;
     }
@@ -531,47 +534,40 @@
 	<div class="row form-group no-gutter">
 		<div class="col-xs-12" >
               <div class="filter-container">
-                <!-- Main Map Filter Dropdown -->
-    <div class="filter-dropdown map-filter-dropdown">
-        <button id="btn-mapDropDown" class="btn btn-outline btn-default ddlMapFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">
-            Modify Map Filter <i class="fa fa-sort-down"></i>
-        </button>
-        <ul id="ddlMapFilter" class="dropdown-menu text-center dropdown-map-filter">
-            <li id="All" Selected="True"><a href="#">All Locations</a></li>
-            <li id="Community"><a href="#">Stability.org Deployments</a></li>
-            <li id="Critical"><a href="#">Critical Facilities</a></li>
-            <%=liCases%>
-        </ul>
-    </div>
-    
-    <!-- Additional Filters (initially disabled) -->
-    <div class="filter-dropdown additional-filter" id="locationTypeFilter">
-        <button id="btn-locationType" class="btn btn-outline btn-default locationTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown" disabled>
-            Location Types <i class="fa fa-sort-down"></i>
-        </button>
-        <ul id="ddlLocationType" class="dropdown-menu text-center dropdown-map-filter">
-            <%=locationTypeDropDown%>
-        </ul>
-    </div>
-    
-    <div class="filter-dropdown additional-filter" id="parentTypeFilter">
-        <button id="btn-parentType" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown" disabled>
-            Parent Types <i class="fa fa-sort-down"></i>
-        </button>
-        <ul id="ddlParentType" class="dropdown-menu text-center dropdown-map-filter">
-            <%=locationParentTypeDropDown%>
-        </ul>
-    </div>
-    
-    <div class="filter-dropdown additional-filter" id="statusFilter">
-        <button id="btn-status" class="btn btn-outline btn-default statusFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown" disabled>
-            Status <i class="fa fa-sort-down"></i>
-        </button>
-        <ul id="ddlStatus" class="dropdown-menu text-center dropdown-map-filter">
-            <%=locationStatusDropDown%>
-        </ul>
-    </div>
-</div>
+                    <div class="filter-dropdown map-filter-dropdown">
+			<button id="btn-mapDropDown" class="btn btn-outline btn-default ddlMapFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Modify Map Filter <i class="fa fa-sort-down"></i></button>
+			<ul id="ddlMapFilter" class="dropdown-menu text-center dropdown-map-filter">
+				<li id="All" Selected="True"><a href="#">All Locations</a></li>
+				<li id="Community"><a href="#">Stability.org Deployments</a></li>
+				<li id="Critical"><a href="#">Critical Facilities</a></li>
+				<%=liCases%>
+			</ul>
+		</div>
+        
+        <!-- New Location Type Filter -->
+         <div class="filter-dropdown additional-filter">
+             <button id="btn-locationType" class="btn btn-outline btn-default locationTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Location Types <i class="fa fa-sort-down"></i></button>
+            <ul id="ddlLocationType" class="dropdown-menu text-center dropdown-map-filter">
+                <%=locationTypeDropDown%>
+            </ul>
+        </div>
+        
+        <!-- New Parent Type Filter -->
+       <div class="filter-dropdown additional-filter">
+           <button id="btn-parentType" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Parent Types <i class="fa fa-sort-down"></i></button>
+            <ul id="ddlParentType" class="dropdown-menu text-center dropdown-map-filter">
+                <%=locationParentTypeDropDown%>
+            </ul>
+        </div>
+        
+        <!-- New Status Filter -->
+        <div class="filter-dropdown additional-filter">
+         <button id="btn-status" class="btn btn-outline btn-default statusFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Status <i class="fa fa-sort-down"></i></button>
+            <ul id="ddlStatus" class="dropdown-menu text-center dropdown-map-filter">
+                <%=locationStatusDropDown%>
+            </ul>
+        </div>
+        
 	  <div class="filter-dropdown">
   		<button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i> </button>
 			<ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
@@ -587,7 +583,7 @@
 		</div>
 	</div>
                 </div>
-
+</div>
 	<div class="row no-gutter">
 		<div class="col-xs-12 col-sm-9">
 			<div id="map"></div>
