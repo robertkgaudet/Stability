@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[GetDisasterLocationsByCountys]
+ALTER PROCEDURE [dbo].[GetDisasterLocationsByCountys]
     @CountyId UNIQUEIDENTIFIER,
     @PageNumber INT = 1,
     @PageSize INT = 10
@@ -14,12 +14,13 @@ BEGIN
         SELECT 
             lp.Name AS LocationName,
             COALESCE(a.Address, '') + ' ' + COALESCE(a.Address2, '') + ', ' + 
-            COALESCE(a.City, '') + ', ' + COALESCE(a.State, '') + ' ' + COALESCE(a.Zip, '') AS FullAddress,
+            COALESCE(a.City, '') + ', ' + COALESCE(a.State, '') + ' ' + COALESCE(a.Zip, '') + ', ' +
+            c.Name AS FullAddress,  -- Added county name to the address
             a.GooglePlaceId AS GooglePlacesID,
             COALESCE(lp.Description, 'No Description') AS Description,
             CASE 
                 WHEN lp.IsOnMap = 1 AND a.Latitude IS NOT NULL AND a.Longitude IS NOT NULL 
-                THEN CAST(a.Latitude AS NVARCHAR) + ', ' + CAST(a.Longitude AS NVARCHAR)
+                THEN CAST(a.Latitude AS NVARCHAR(20)) + ', ' + CAST(a.Longitude AS NVARCHAR(20))
                 ELSE 'Not on Map'
             END AS Coordinates,
             COALESCE(lp.PointOfContactName, 'Not Provided') AS PointOfContact,
@@ -29,11 +30,9 @@ BEGIN
             COUNT(*) OVER () AS TotalCount
         FROM LocationProfile lp
         LEFT JOIN Address a ON lp.AddressId = a.AddressId
-        INNER JOIN LocationProfileEvent lpe ON lp.LocationProfileId = lpe.LocationProfileId
-        INNER JOIN Event e ON lpe.EventId = e.EventId
-        INNER JOIN EventCounty ec ON e.EventId = ec.EventId
+        LEFT JOIN County c ON a.CountyId = c.CountyId  -- Join to get county name
         WHERE lp.IsActive = 1
-        AND ec.CountyId = @CountyId
+        AND a.CountyId = @CountyId  -- Filter by CountyId from Address table
         AND a.GooglePlaceId IS NOT NULL
     )
     SELECT 
