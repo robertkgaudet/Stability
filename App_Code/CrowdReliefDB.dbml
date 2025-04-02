@@ -671,8 +671,8 @@
       <Column Name="LocationLocationTypeId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="AddressId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="LocationTypeId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Association Name="Address_LocationLocationType" Member="Address" ThisKey="AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
       <Association Name="LocationType_LocationLocationType" Member="LocationType" ThisKey="LocationTypeId" OtherKey="LocationTypeId" Type="LocationType" IsForeignKey="true" />
+      <Association Name="Address_LocationLocationType" Member="Address" ThisKey="AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.LocationNote" Member="LocationNotes">
@@ -694,8 +694,8 @@
       <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="Address_LocationPhoto" Member="Address" ThisKey="AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
       <Association Name="Photo_LocationPhoto" Member="Photo" ThisKey="PhotoId" OtherKey="PhotoId" Type="Photo" IsForeignKey="true" />
+      <Association Name="Address_LocationPhoto" Member="Address" ThisKey="AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.LocationProfileEvent" Member="LocationProfileEvents">
@@ -704,9 +704,9 @@
       <Column Name="LocationProfileId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="AddressId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="EventId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Association Name="Address_LocationProfileEvent" Member="Address" ThisKey="AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
       <Association Name="LocationProfile_LocationProfileEvent" Member="LocationProfile" ThisKey="LocationProfileId" OtherKey="LocationProfileId" Type="LocationProfile" IsForeignKey="true" />
       <Association Name="Event_LocationProfileEvent" Member="Event" ThisKey="EventId" OtherKey="EventId" Type="Event" IsForeignKey="true" />
+      <Association Name="Address_LocationProfileEvent" Member="Address" ThisKey="AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.LocationStatus" Member="LocationStatus">
@@ -797,36 +797,6 @@
       <Association Name="Note_ProfileNote" Member="Note" ThisKey="NoteId" OtherKey="NoteId" Type="Note" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.Address" Member="Addresses">
-    <Type Name="Address">
-      <Column Name="AddressId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="GooglePlaceId" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="FormattedAddress" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
-      <Column Name="StreetNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="StreetName" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
-      <Column Name="Address" Member="Address1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-      <Column Name="Address2" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-      <Column Name="City" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="State" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Zip" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Country" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="County" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Latitude" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Longitude" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Association Name="Address_RebuildSurvey" Member="RebuildSurveys" ThisKey="AddressId" OtherKey="AddressId" Type="RebuildSurvey" />
-      <Association Name="Address_LocationLocationType" Member="LocationLocationTypes" ThisKey="AddressId" OtherKey="AddressId" Type="LocationLocationType" />
-      <Association Name="Address_LocationNote" Member="LocationNotes" ThisKey="AddressId" OtherKey="AddressId" Type="LocationNote" />
-      <Association Name="Address_LocationPhoto" Member="LocationPhotos" ThisKey="AddressId" OtherKey="AddressId" Type="LocationPhoto" />
-      <Association Name="Address_LocationProfileEvent" Member="LocationProfileEvents" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfileEvent" />
-      <Association Name="Address_LocationLocationStatus" Member="LocationLocationStatus" ThisKey="AddressId" OtherKey="AddressId" Type="LocationLocationStatus" />
-      <Association Name="Address_LocationProfile" Member="LocationProfiles" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfile" />
-    </Type>
-  </Table>
   <Table Name="dbo.LocationLocationStatus" Member="LocationLocationStatus">
     <Type Name="LocationLocationStatus">
       <Column Name="LocationLocationStatusId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -836,8 +806,8 @@
       <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Association Name="Address_LocationLocationStatus" Member="Address" ThisKey="AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
       <Association Name="LocationStatus_LocationLocationStatus" Member="LocationStatus" ThisKey="LocationStatusId" OtherKey="LocationStatusId" Type="LocationStatus" IsForeignKey="true" />
+      <Association Name="Address_LocationLocationStatus" Member="Address" ThisKey="AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.LocationType" Member="LocationTypes">
@@ -1227,6 +1197,7 @@
       <Association Name="County_EventCounty" Member="EventCounties" ThisKey="CountyId" OtherKey="CountyId" Type="EventCounty" />
       <Association Name="County_FEMAAssistanceGrant" Member="FEMAAssistanceGrants" ThisKey="CountyId" OtherKey="CountyId" Type="FEMAAssistanceGrant" />
       <Association Name="County_OrganizationEvent" Member="OrganizationEvents" ThisKey="CountyId" OtherKey="StagingCountyId" Type="OrganizationEvent" />
+      <Association Name="County_Address" Member="Addresses" ThisKey="CountyId" OtherKey="CountyId" Type="Address" />
     </Type>
   </Table>
   <Table Name="dbo.EmergencyManagment" Member="EmergencyManagments">
@@ -1609,8 +1580,8 @@
       <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Association Name="LocationProfile_LocationProfileEvent" Member="LocationProfileEvents" ThisKey="LocationProfileId" OtherKey="LocationProfileId" Type="LocationProfileEvent" />
       <Association Name="LocationProfile_LocationProfilePetType" Member="LocationProfilePetTypes" ThisKey="LocationProfileId" OtherKey="LocationProfileId" Type="LocationProfilePetType" />
-      <Association Name="Address_LocationProfile" Member="Address" ThisKey="AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
       <Association Name="LocationParentType_LocationProfile" Member="LocationParentType" ThisKey="LocationParentTypeId" OtherKey="LocationParentTypeId" Type="LocationParentType" IsForeignKey="true" />
+      <Association Name="Address_LocationProfile" Member="Address" ThisKey="AddressId" OtherKey="AddressId" Type="Address" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Event" Member="Events">
@@ -2111,6 +2082,39 @@
       <Column Name="CityId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="City" Member="City1" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="Code" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Address" Member="Addresses">
+    <Type Name="Address">
+      <Column Name="AddressId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="GooglePlaceId" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
+      <Column Name="FormattedAddress" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
+      <Column Name="StreetNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="StreetName" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="Address" Member="Address1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="Address2" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="City" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="State" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Zip" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Country" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="County" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Latitude" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Longitude" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="CountyId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="CountyIds" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Association Name="Address_RebuildSurvey" Member="RebuildSurveys" ThisKey="AddressId" OtherKey="AddressId" Type="RebuildSurvey" />
+      <Association Name="Address_LocationLocationType" Member="LocationLocationTypes" ThisKey="AddressId" OtherKey="AddressId" Type="LocationLocationType" />
+      <Association Name="Address_LocationNote" Member="LocationNotes" ThisKey="AddressId" OtherKey="AddressId" Type="LocationNote" />
+      <Association Name="Address_LocationPhoto" Member="LocationPhotos" ThisKey="AddressId" OtherKey="AddressId" Type="LocationPhoto" />
+      <Association Name="Address_LocationProfileEvent" Member="LocationProfileEvents" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfileEvent" />
+      <Association Name="Address_LocationLocationStatus" Member="LocationLocationStatus" ThisKey="AddressId" OtherKey="AddressId" Type="LocationLocationStatus" />
+      <Association Name="Address_LocationProfile" Member="LocationProfiles" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfile" />
+      <Association Name="County_Address" Member="County1" ThisKey="CountyId" OtherKey="CountyId" Type="County" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisasterForCleanupMap" Method="GetGeoJsonByDisasterForCleanupMap">
