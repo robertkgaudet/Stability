@@ -14,21 +14,25 @@
             margin: 0 auto;
             font-family: Arial, sans-serif;
         }
-        .watermark-bg {
+          .watermark-bg {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 150px;
-            height: 150px;
+            width: 110px;
+            height: 110px;
             background-repeat: no-repeat;
-            background-size: contain;
+            background-size: 70% 70%;
+            background-position: center;
             opacity: 0.15;
             z-index: 1;
             border-radius: 50%;
-            overflow: hidden;
+            pointer-events: none;
+            background-clip: content-box;
+            padding: 15px;
+            box-sizing: border-box;
+            overflow: visible;
         }
-       /* Header Section */
         .id-card-header {
             background: #DD1447;
             color: white;
@@ -150,7 +154,7 @@
             <asp:Literal ID="litTitle" runat="server"></asp:Literal>
         </div>
         <div class="id-card-org">
-            GROUND FORCE HUMANITARIAN AID
+           <asp:Literal ID="TeamName" runat="server"></asp:Literal>
         </div>
         <div class="id-card-body">
             <div class="id-card-photo">
@@ -180,7 +184,7 @@
         </div>
         <!-- Footer -->
         <div class="id-card-footer">
-            <i class="fa fa-user-circle icon" ></i>VOLUNTEER
+           <asp:Literal ID="TeamRole" runat="server"></asp:Literal>
         </div>
     </div>
 </asp:Content>
