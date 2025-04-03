@@ -20,7 +20,6 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 
-
 [global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_8013_staging")]
 public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 {
