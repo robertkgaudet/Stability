@@ -46,8 +46,8 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		litDeploymentCount.Text			= _deploymentCount;
 		hypConnections.Text				= _connectionCount + " Connections";
 		hypConnections.NavigateUrl		= "/V1/Member/Connections.aspx?userId=" + UserId;
-
-		if(_badgeVettingStatus == "fa-approved-color")
+        linkCamera.NavigateUrl= "/V1/Profile/ProfilePhotoUpload.aspx?userId=" + UserId;
+        if (_badgeVettingStatus == "fa-approved-color")
 		{
 			faIdBadgeClick = "faIdBadgeClick";
 		}
