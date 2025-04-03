@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.IdentityModel.Metadata;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
 public partial class V1_Profile_IDCard : BaseOrganizationWebForm
 {
 	public string zelloDD = string.Empty;
@@ -84,42 +80,51 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
         {
             ucTeamLogo.UserId = userId;
             ucTeamLogo.LoadNameWithBadges();
-			using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
-			{
-                string watermarkImagePath = "/V1/Images/DefaultLogo.png"; 
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                var userRoles = (from ur in dc.aspnet_UsersInRoles
+                                 join r in dc.aspnet_Roles on ur.RoleId equals r.RoleId
+                                 where ur.UserId == userId
+                                 select r.RoleName).ToList();
+                TeamRole.Text = userRoles.FirstOrDefault() ?? "No roles assigned";
+
+                string watermarkImagePath = "/V1/Images/DefaultLogo.png";
                 var orgUser = (from o in dc.Organizations
-							   join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-							   where uo.UserId == userId
+                               join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+                               where uo.UserId == userId
                                orderby o.CreatedOn descending
-							   select new
-							   {
-								   o.LogoSquare,
-								   o.OrganizationId,
-								   o.Name,
-								   o.EnableTeamMemberVerification,
-								   uo.ShowTeamLogo,
-								   uo.TeamVerifiedDate
-							   }).Take(1).SingleOrDefault();
+                               select new
+                               {
+                                   o.LogoSquare,
+                                   o.OrganizationId,
+                                   o.Name,
+                                   o.EnableTeamMemberVerification,
+                                   uo.ShowTeamLogo,
+                                   uo.TeamVerifiedDate
+                               }).Take(1).SingleOrDefault();
                 if (orgUser != null)
                 {
+                    TeamName.Text = orgUser.Name.ToUpper();
                     if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
                     {
                         if (!string.IsNullOrEmpty(orgUser.LogoSquare))
                         {
-                            string teamLogo = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
-                            watermarkImagePath = teamLogo + orgUser.LogoSquare;
+                            string teamLogo = ConfigurationManager.AppSettings["logoFolder"].ToString();
+                            watermarkImagePath = !string.IsNullOrEmpty(orgUser.LogoSquare)
+                                ? teamLogo + orgUser.LogoSquare
+                                : "/V1/Images/DefaultLogo.png";
                         }
                     }
                     if (orgUser.TeamVerifiedDate != null)
                     {
                         litTeamVerifiedDate.Text = orgUser.TeamVerifiedDate.Value.ToString("MM/dd/yyyy");
-                        lblTeamVerifiedDate.Visible = true; 
-                        litTeamVerifiedDate.Visible = true; 
+                        lblTeamVerifiedDate.Visible = true;
+                        litTeamVerifiedDate.Visible = true;
                     }
                     else
                     {
-                        lblTeamVerifiedDate.Visible = false; 
-                        litTeamVerifiedDate.Visible = false; 
+                        lblTeamVerifiedDate.Visible = false;
+                        litTeamVerifiedDate.Visible = false;
                     }
                     watermarkBg.Style.Add("background-image", "url('" + watermarkImagePath + "')");
                 }

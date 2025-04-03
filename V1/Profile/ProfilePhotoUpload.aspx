@@ -51,7 +51,7 @@
 					<div class="form-horizontal">
 						<h1>Create a Profile Photo</h1>
 						<div class="col-sm-12">
-							<label class="col-md-3 control-label pull-left">Upload Your Profile Photo*</label>
+							<label class="col-md-3">Upload Your Profile Photo*</label>		
 							<div class="m-t-lg">
 								<input ID="profilePhotoUpload" type="file" name="profilePhoto" onchange="previewFile()"  runat="server" />
 								<div class="m-t-lg m-b-lg">
