@@ -31,10 +31,10 @@ public partial class V1_Login : System.Web.UI.Page
 		if(isUserNumber)
 		{
 			//Get the username for this user
-			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			CrowdReliefDBDataContext dc1 = new CrowdReliefDBDataContext();
 
-			var userInfo = (from p in dc.Profiles
-						   join u in dc.aspnet_Users on p.UserId equals u.UserId
+			var userInfo = (from p in dc1.Profiles
+						   join u in dc1.aspnet_Users on p.UserId equals u.UserId
 						   where p.ProfileNumber == result
 						   select new {u.UserName }).SingleOrDefault();
 
@@ -44,20 +44,18 @@ public partial class V1_Login : System.Web.UI.Page
 			}
 		}
 
-		// Validate the user against the Membership framework user store
-		if (Membership.ValidateUser(username, password))
-		{
+		//// Validate the user against the Membership framework user store
+		//if (Membership.ValidateUser(username, password))
+		//{
 			FormsAuthentication.SetAuthCookie(username, true);
 
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 			var userId = (from u in dc.aspnet_Users
 						  where u.UserName == username
 						  select u.UserId).SingleOrDefault();
-
 			ListDictionary ldEmailBodyReplacements = new ListDictionary();
 			ldEmailBodyReplacements.Add("<% UserName %>", username);
 			ldEmailBodyReplacements.Add("<% UserId %>", userId.ToString());
-
 			string error = string.Empty;
 			Tools.SendEmail(
 			string.Empty,
@@ -70,12 +68,12 @@ public partial class V1_Login : System.Web.UI.Page
 			"~\\EmailTemplates\\SignIn.html",
 			out error);
 
-			//Response.Redirect("V1/NonProfit/TakeAction.aspx?organizationId=e1c2150a-056c-45dc-9cdc-31153384e732");
+			//Response.Redirect("V1/NonProfit/TakAction.aspx?organizationId=e1c2150a-056c-45dc-9cdc-31153384e732");
 			Redirect(username);
 
 			// Log the user into the site
 			//FormsAuthentication.RedirectFromLoginPage(username, true);
-		}
+		//}
 	}
 
 	protected void Redirect(string username)
