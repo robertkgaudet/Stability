@@ -1,7 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"
-    EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs"
-    Inherits="V1_NonProfit_People" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs"Inherits="V1_NonProfit_People" %>
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
@@ -114,7 +111,7 @@
         }
 
         .justify-content-center {
-            display: flex !important;
+          /*  display: flex !important;*/
             justify-content: center !important;
         }
 
@@ -133,11 +130,11 @@
             margin-bottom: 155px;
         }
 
-        label {
+      /*  label {
             margin: 16px 0px 10px 10px;
             font-size: 17px;
         }
-
+*/
         #txtEmail {
             margin-right: 0px !important;
         }
