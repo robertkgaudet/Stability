@@ -15,7 +15,7 @@ public partial class V1_Login : System.Web.UI.Page
     {
         if (User.Identity.IsAuthenticated)
         {
-            //Redirect(User.Identity.Name);
+            Response.Redirect("~/feed", false);
         }
     }
 
