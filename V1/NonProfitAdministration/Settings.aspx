@@ -37,8 +37,7 @@
                         Allow the public to request help.</label>
                 </div>
             </div>
-                    <% if (User.IsInRole("Administrator"))
-                        { %>
+                 <% if (User.IsInRole("Administrator") || isOwner) { %>
             <div class="col-sm-12 m-t-md">
                 <div>
                     <label>
