@@ -44,9 +44,11 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
 			txtZello.Value = profile.ZelloName;
 			txtZipCode.Value = profile.Zip;
 			txtTitle.Value = profile.Title;
+			receiveSMS.Checked = profile.ReceiveSMSNotifications;
+			receiveEmail.Checked = profile.ReceiveEmailNotifications;
 
 
-			ListItemCollection statesList = new ListItemCollection();
+            ListItemCollection statesList = new ListItemCollection();
 			foreach (string state in States.Names())
 			{
 				ListItem li = new ListItem(state, state);
@@ -79,6 +81,8 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
 		profile.ZelloName = txtZello.Value;
 		profile.Zip = txtZipCode.Value;
 		profile.Title = txtTitle.Value;
+		profile.ReceiveSMSNotifications = receiveSMS.Checked;
+		profile.ReceiveEmailNotifications = receiveEmail.Checked;
 		dc.SubmitChanges();
 		divMessage.Visible = true;
 		Response.Redirect("/V1/Member/Default.aspx");
