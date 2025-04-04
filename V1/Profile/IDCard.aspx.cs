@@ -20,15 +20,7 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
 		}
 		this.Master.HideFooter = true;
 		this.Master.HideHeader = true;
-		this.Master.HideMenu = true;
-		//this.Master.PageTitle			= "Stability - " +  disaster.Name + " Resources Page";
-		//this.Master.PageDescription		= "Stability - " +  disaster.Name + " " + disaster.Description;
-		//this.Master.FbDescription		= "Stability - " +  disaster.Name + " " + disaster.Description;
-		//this.Master.FbImage				= "/V1/Images/Hurricane-Michael-damage.jpg";
-		//this.Master.FbImageType			= "image/jpg";
-		//this.Master.FbSite_name			= "Stability - " +  disaster.Name + " Resouces Page";
-		//this.Master.FbURL				= Request.Url.AbsoluteUri;
-		
+		this.Master.HideMenu = true;	
 		if(User.Identity.IsAuthenticated)
 		{
 			string profilePhotoFolder	= System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
@@ -38,38 +30,41 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
 						   join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
 						   where ph.UserId == userId
 						   orderby p.CreatedOn descending
-							select p).Take(1).SingleOrDefault();
-
-			if(profilePhoto != null)
-			{
-                litPrintDate.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                imgProfile.ImageUrl = profilePhotoFolder + profilePhoto.FilenameCropped;
-
-				var profile = (from p in dc.Profiles
-							  where p.UserId == userId
-							  select p).SingleOrDefault();
-                litNumber.Text = "Volunteer #" + profile.ProfileNumber + "";
-                if (!String.IsNullOrEmpty(profile.City))
-				{
-					locationDD = "" + profile.City + ", " + profile.State + "";
-				}
-				litTitle.Text = "VETTED DISASTER WORKER";
-				if(!String.IsNullOrEmpty(profile.Title))
-				{
-					litTitle.Text = profile.Title.ToUpper();
-				}
-                if (profile.StabilityVerifiedDate != null)
-                {
-                    litStabilityVerifiedDate.Text = profile.StabilityVerifiedDate.Value.ToString("MM/dd/yyyy");
-                    lblStabilityVerifiedDate.Visible = true; 
-                    litStabilityVerifiedDate.Visible = true; 
-                }
-                else
-                {
-                    lblStabilityVerifiedDate.Visible = false; 
-                    litStabilityVerifiedDate.Visible = false;
-                }
+							select p).Take(1).SingleOrDefault();    
+            if (profilePhoto != null)
+			{   
+                imgProfile.ImageUrl = profilePhotoFolder + profilePhoto.FilenameCropped;	
             }
+            else
+            {
+                imgProfile.ImageUrl = profilePhotoFolder + "profilepicture.png";
+
+            }
+            var profile = (from p in dc.Profiles
+                           where p.UserId == userId
+                           select p).SingleOrDefault();
+            litNumber.Text = "Volunteer #" + profile.ProfileNumber + "";
+            if (!String.IsNullOrEmpty(profile.City))
+            {
+                locationDD = "" + profile.City + ", " + profile.State + "";
+            }
+            litTitle.Text = "VETTED DISASTER WORKER";
+            if (!String.IsNullOrEmpty(profile.Title))
+            {
+                litTitle.Text = profile.Title.ToUpper();
+            }
+            if (profile.StabilityVerifiedDate != null)
+            {
+                litStabilityVerifiedDate.Text = profile.StabilityVerifiedDate.Value.ToString("MM/dd/yyyy");
+                lblStabilityVerifiedDate.Visible = true;
+                litStabilityVerifiedDate.Visible = true;
+            }
+            else
+            {
+                lblStabilityVerifiedDate.Visible = false;
+                litStabilityVerifiedDate.Visible = false;
+            }
+            litPrintDate.Text = DateTime.Now.ToString("MM/dd/yyyy");
             LoadTeamLogoControl();
         }
 	}
@@ -82,12 +77,6 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
             ucTeamLogo.LoadNameWithBadges();
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
-                var userRoles = (from ur in dc.aspnet_UsersInRoles
-                                 join r in dc.aspnet_Roles on ur.RoleId equals r.RoleId
-                                 where ur.UserId == userId
-                                 select r.RoleName).ToList();
-                TeamRole.Text = userRoles.FirstOrDefault() ?? "No roles assigned";
-
                 string watermarkImagePath = "/V1/Images/DefaultLogo.png";
                 var orgUser = (from o in dc.Organizations
                                join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
@@ -105,16 +94,13 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
                 if (orgUser != null)
                 {
                     TeamName.Text = orgUser.Name.ToUpper();
-                    if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
-                    {
                         if (!string.IsNullOrEmpty(orgUser.LogoSquare))
                         {
                             string teamLogo = ConfigurationManager.AppSettings["logoFolder"].ToString();
                             watermarkImagePath = !string.IsNullOrEmpty(orgUser.LogoSquare)
                                 ? teamLogo + orgUser.LogoSquare
                                 : "/V1/Images/DefaultLogo.png";
-                        }
-                    }
+                        }                 
                     if (orgUser.TeamVerifiedDate != null)
                     {
                         litTeamVerifiedDate.Text = orgUser.TeamVerifiedDate.Value.ToString("MM/dd/yyyy");

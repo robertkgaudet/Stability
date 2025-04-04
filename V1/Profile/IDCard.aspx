@@ -184,7 +184,7 @@
         </div>
         <!-- Footer -->
         <div class="id-card-footer">
-           <asp:Literal ID="TeamRole" runat="server"></asp:Literal>
-        </div>
+        <i class="fa fa-user-circle icon" ></i>VOLUNTEER
+       </div>
     </div>
 </asp:Content>
