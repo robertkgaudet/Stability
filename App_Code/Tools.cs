@@ -97,7 +97,24 @@ namespace CrowdRelief
 			TwilioClient.Init(_accountSid, _authToken);
 		}
 
-		public enum FriendStatus
+        public enum TransactionStatus
+        {
+            Started,
+            Pending,
+            Succeeded,
+            Failed,
+            Returned
+        }
+
+        public enum TransactionType
+        {
+            CreditCard = 1,
+            Paypal,
+            Venmo,
+            CashApp
+        }
+
+        public enum FriendStatus
 		{
 			AddConnection,
 			Blocked,

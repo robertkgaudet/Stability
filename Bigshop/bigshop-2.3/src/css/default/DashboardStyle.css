@@ -1,0 +1,227 @@
+﻿#header {
+    margin-top: 0px !important;
+}
+
+.save-btn {
+    background-color: #5e2e91 !important; /* Button Background Color */
+    color: white !important; /* Text Color */
+    border: none; /* Remove Border */
+    padding: 10px 20px; /* Padding for better look */
+    font-size: 16px; /* Text Size */
+    border-radius: 5px; /* Rounded Corners */
+    cursor: pointer; /* Pointer Cursor */
+    float: right; /* Move Button to Right */
+    transition: 0.3s ease-in-out; /* Smooth Transition */
+}
+
+    /* Hover Effect */
+    .save-btn:hover {
+        background-color: #4b2173 !important; /* Darker Shade on Hover */
+    }
+  
+/* General Dashboard Layout */
+.dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+/* HEADER */
+.headers {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #5e2e91;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+    .headers h1 {
+        font-size: 3rem;
+        margin: 0;
+    }
+
+/* TOTAL DONATED BOX */
+.total-donated {
+    background: linear-gradient(135deg, #460572, #60288b);
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.4rem;
+    box-shadow: 0px 4px 15px rgba(106, 5, 114, 0.4);
+    transition: transform 0.3s;
+}
+
+    .total-donated:hover {
+        transform: scale(1.05);
+    }
+
+/* DONATION DETAILS CARDS */
+.donation-details {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.card {
+    background: linear-gradient(135deg, #5e2e91, #5e2e91);
+    color: white;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card h2 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        font-size: 1.2rem;
+    }
+
+/* RECENT DONORS TABLE */
+.recent-donors {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+    .recent-donors h2 {
+        color: #1e3c72;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        padding: 20px 10px;
+    }
+
+    /* Table Styling */
+    .recent-donors table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    /* Header Styling */
+    .recent-donors th {
+        background: linear-gradient(135deg, #5e2e91, #5e2e91);
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-size: 1.1rem;
+    }
+
+    /* Table Row Styling */
+    .recent-donors td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        font-size: 1rem;
+        color: #333;
+    }
+
+    /* Zebra Striped Rows */
+    .recent-donors tr:nth-child(even) {
+        background-color: #f0f8ff; /* Light Blue */
+    }
+
+    .recent-donors tr:nth-child(odd) {
+        background-color: #ffffff;
+    }
+
+    /* Hover Effect */
+    .recent-donors tr:hover {
+        background-color: #d4e3fc !important;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+.recent-donors-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.recent-donors {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    flex: 1; /* Ensures equal width */
+    overflow: hidden;
+}
+
+    .recent-donors h2 {
+        color: #1e3c72;
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .recent-donors table {
+        width: 100%;
+        border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .recent-donors th {
+        background: linear-gradient(135deg, #5e2e91, #5e2e91);
+        color: white;
+        padding: 20px;
+        text-align: left;
+        font-size: 1.2rem;
+       
+    }
+
+    .recent-donors td {
+        padding: 20px;
+        border-bottom: 2px solid #ddd;
+        font-size: 13px;
+        color: #333;
+        padding-right: 10px;
+        text-align: center;
+        height: 40px;
+        width: 40px;
+    }   
+    
+    .recent-donors tr:nth-child(even) {
+        background-color: #f0f8ff;
+    }
+    
+    .recent-donors tr:nth-child(odd) {
+        background-color: #ffffff;
+    } 
+   
+    .recent-donors tr:hover {
+        background-color: #d4e3fc !important;
+        transition: background-color 0.3s ease-in-out;
+    }
+     
+   
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .donation-details {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .headers {
+        flex-direction: column;
+        text-align: center;
+    }
+
+        .headers h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+}

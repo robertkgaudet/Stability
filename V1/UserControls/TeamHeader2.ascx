@@ -37,8 +37,9 @@
 		height: 150px;
 		border-radius: 50%;
 		object-fit: cover; /* Ensures the image covers the entire area */
-		border: 5px solid white; /* Adds the white border */
-		position: relative
+		border: 2px solid white; /* Adds the white border */
+		position: relative;
+		background-color:white;
     }
 	.memberDetail
 	{

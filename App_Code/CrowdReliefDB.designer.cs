@@ -21,7 +21,7 @@ using System.Reflection;
 
 
 
-[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_8013_stability")]
+[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_8013_staging")]
 public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 {
 	
@@ -59,9 +59,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertRebuildPost(RebuildPost instance);
   partial void UpdateRebuildPost(RebuildPost instance);
   partial void DeleteRebuildPost(RebuildPost instance);
-  partial void InsertUserOrganization(UserOrganization instance);
-  partial void UpdateUserOrganization(UserOrganization instance);
-  partial void DeleteUserOrganization(UserOrganization instance);
   partial void InsertSlider(Slider instance);
   partial void UpdateSlider(Slider instance);
   partial void DeleteSlider(Slider instance);
@@ -101,18 +98,12 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertTaskType(TaskType instance);
   partial void UpdateTaskType(TaskType instance);
   partial void DeleteTaskType(TaskType instance);
-  partial void InsertProfilePhoto(ProfilePhoto instance);
-  partial void UpdateProfilePhoto(ProfilePhoto instance);
-  partial void DeleteProfilePhoto(ProfilePhoto instance);
   partial void InsertEventPost(EventPost instance);
   partial void UpdateEventPost(EventPost instance);
   partial void DeleteEventPost(EventPost instance);
   partial void InsertArticleComment(ArticleComment instance);
   partial void UpdateArticleComment(ArticleComment instance);
   partial void DeleteArticleComment(ArticleComment instance);
-  partial void InsertComment(Comment instance);
-  partial void UpdateComment(Comment instance);
-  partial void DeleteComment(Comment instance);
   partial void InsertArticleCategory(ArticleCategory instance);
   partial void UpdateArticleCategory(ArticleCategory instance);
   partial void DeleteArticleCategory(ArticleCategory instance);
@@ -353,9 +344,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertPostType(PostType instance);
   partial void UpdatePostType(PostType instance);
   partial void DeletePostType(PostType instance);
-  partial void InsertPost(Post instance);
-  partial void UpdatePost(Post instance);
-  partial void DeletePost(Post instance);
   partial void InsertPostImage(PostImage instance);
   partial void UpdatePostImage(PostImage instance);
   partial void DeletePostImage(PostImage instance);
@@ -383,9 +371,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertLocationProfile(LocationProfile instance);
   partial void UpdateLocationProfile(LocationProfile instance);
   partial void DeleteLocationProfile(LocationProfile instance);
-  partial void InsertProfile(Profile instance);
-  partial void UpdateProfile(Profile instance);
-  partial void DeleteProfile(Profile instance);
   partial void InsertEvent(Event instance);
   partial void UpdateEvent(Event instance);
   partial void DeleteEvent(Event instance);
@@ -410,9 +395,52 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertVideoLink(VideoLink instance);
   partial void UpdateVideoLink(VideoLink instance);
   partial void DeleteVideoLink(VideoLink instance);
+  partial void InsertPaymentConfiguration(PaymentConfiguration instance);
+  partial void UpdatePaymentConfiguration(PaymentConfiguration instance);
+  partial void DeletePaymentConfiguration(PaymentConfiguration instance);
+  partial void InsertPostReactionType(PostReactionType instance);
+  partial void UpdatePostReactionType(PostReactionType instance);
+  partial void DeletePostReactionType(PostReactionType instance);
+  partial void InsertPostReaction(PostReaction instance);
+  partial void UpdatePostReaction(PostReaction instance);
+  partial void DeletePostReaction(PostReaction instance);
+  partial void InsertPostComment(PostComment instance);
+  partial void UpdatePostComment(PostComment instance);
+  partial void DeletePostComment(PostComment instance);
+  partial void InsertComment(Comment instance);
+  partial void UpdateComment(Comment instance);
+  partial void DeleteComment(Comment instance);
+  partial void InsertPostTaggedUser(PostTaggedUser instance);
+  partial void UpdatePostTaggedUser(PostTaggedUser instance);
+  partial void DeletePostTaggedUser(PostTaggedUser instance);
+  partial void InsertFeatureType(FeatureType instance);
+  partial void UpdateFeatureType(FeatureType instance);
+  partial void DeleteFeatureType(FeatureType instance);
+  partial void InsertNotification(Notification instance);
+  partial void UpdateNotification(Notification instance);
+  partial void DeleteNotification(Notification instance);
+  partial void InsertProfilePhoto(ProfilePhoto instance);
+  partial void UpdateProfilePhoto(ProfilePhoto instance);
+  partial void DeleteProfilePhoto(ProfilePhoto instance);
+  partial void InsertProfile(Profile instance);
+  partial void UpdateProfile(Profile instance);
+  partial void DeleteProfile(Profile instance);
+  partial void InsertUserOrganization(UserOrganization instance);
+  partial void UpdateUserOrganization(UserOrganization instance);
+  partial void DeleteUserOrganization(UserOrganization instance);
+  partial void InsertDonationCampaign(DonationCampaign instance);
+  partial void UpdateDonationCampaign(DonationCampaign instance);
+  partial void DeleteDonationCampaign(DonationCampaign instance);
+  partial void InsertDonation(Donation instance);
+  partial void UpdateDonation(Donation instance);
+  partial void DeleteDonation(Donation instance);
+  partial void InsertPost(Post instance);
+  partial void UpdatePost(Post instance);
+  partial void DeletePost(Post instance);
 	#endregion
+
 	public CrowdReliefDBDataContext() :
-			base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
+		base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
 	{
 		OnCreated();
 	}
@@ -521,14 +549,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		}
 	}
 	
-	public System.Data.Linq.Table<UserOrganization> UserOrganizations
-	{
-		get
-		{
-			return this.GetTable<UserOrganization>();
-		}
-	}
-	
 	public System.Data.Linq.Table<Slider> Sliders
 	{
 		get
@@ -633,14 +653,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		}
 	}
 	
-	public System.Data.Linq.Table<ProfilePhoto> ProfilePhotos
-	{
-		get
-		{
-			return this.GetTable<ProfilePhoto>();
-		}
-	}
-	
 	public System.Data.Linq.Table<EventPost> EventPosts
 	{
 		get
@@ -654,14 +666,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<ArticleComment>();
-		}
-	}
-	
-	public System.Data.Linq.Table<Comment> Comments
-	{
-		get
-		{
-			return this.GetTable<Comment>();
 		}
 	}
 	
@@ -1305,14 +1309,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		}
 	}
 	
-	public System.Data.Linq.Table<Post> Posts
-	{
-		get
-		{
-			return this.GetTable<Post>();
-		}
-	}
-	
 	public System.Data.Linq.Table<PostImage> PostImages
 	{
 		get
@@ -1385,14 +1381,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		}
 	}
 	
-	public System.Data.Linq.Table<Profile> Profiles
-	{
-		get
-		{
-			return this.GetTable<Profile>();
-		}
-	}
-	
 	public System.Data.Linq.Table<Event> Events
 	{
 		get
@@ -1454,6 +1442,118 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<VideoLink>();
+		}
+	}
+	
+	public System.Data.Linq.Table<PaymentConfiguration> PaymentConfigurations
+	{
+		get
+		{
+			return this.GetTable<PaymentConfiguration>();
+		}
+	}
+	
+	public System.Data.Linq.Table<PostReactionType> PostReactionTypes
+	{
+		get
+		{
+			return this.GetTable<PostReactionType>();
+		}
+	}
+	
+	public System.Data.Linq.Table<PostReaction> PostReactions
+	{
+		get
+		{
+			return this.GetTable<PostReaction>();
+		}
+	}
+	
+	public System.Data.Linq.Table<PostComment> PostComments
+	{
+		get
+		{
+			return this.GetTable<PostComment>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Comment> Comments
+	{
+		get
+		{
+			return this.GetTable<Comment>();
+		}
+	}
+	
+	public System.Data.Linq.Table<PostTaggedUser> PostTaggedUsers
+	{
+		get
+		{
+			return this.GetTable<PostTaggedUser>();
+		}
+	}
+	
+	public System.Data.Linq.Table<FeatureType> FeatureTypes
+	{
+		get
+		{
+			return this.GetTable<FeatureType>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Notification> Notifications
+	{
+		get
+		{
+			return this.GetTable<Notification>();
+		}
+	}
+	
+	public System.Data.Linq.Table<ProfilePhoto> ProfilePhotos
+	{
+		get
+		{
+			return this.GetTable<ProfilePhoto>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Profile> Profiles
+	{
+		get
+		{
+			return this.GetTable<Profile>();
+		}
+	}
+	
+	public System.Data.Linq.Table<UserOrganization> UserOrganizations
+	{
+		get
+		{
+			return this.GetTable<UserOrganization>();
+		}
+	}
+	
+	public System.Data.Linq.Table<DonationCampaign> DonationCampaigns
+	{
+		get
+		{
+			return this.GetTable<DonationCampaign>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Donation> Donations
+	{
+		get
+		{
+			return this.GetTable<Donation>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Post> Posts
+	{
+		get
+		{
+			return this.GetTable<Post>();
 		}
 	}
 	
@@ -2547,8 +2647,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private EntitySet<RebuildPost> _RebuildPosts;
 	
-	private EntitySet<UserOrganization> _UserOrganizations;
-	
 	private EntitySet<Rebuild> _Rebuilds;
 	
 	private EntitySet<Rebuild> _Rebuilds1;
@@ -2558,8 +2656,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	private EntitySet<UserInteractionType> _UserInteractionTypes;
 	
 	private EntitySet<UserSkill> _UserSkills;
-	
-	private EntitySet<ProfilePhoto> _ProfilePhotos;
 	
 	private EntitySet<EventPost> _EventPosts;
 	
@@ -2629,8 +2725,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private EntitySet<Organization> _Organizations1;
 	
-	private EntitySet<Post> _Posts;
-	
 	private EntitySet<PostImage> _PostImages;
 	
 	private EntitySet<UserUser> _UserUsers;
@@ -2643,8 +2737,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private EntitySet<OrganizationEventPosition> _OrganizationEventPositions1;
 	
-	private EntitySet<Profile> _Profiles;
-	
 	private EntitySet<Event> _Events;
 	
 	private EntitySet<TicketProperty> _TicketProperties;
@@ -2654,6 +2746,22 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	private EntitySet<TicketProperty> _TicketProperties2;
 	
 	private EntitySet<OrganizationCase> _OrganizationCases;
+	
+	private EntitySet<PostReaction> _PostReactions;
+	
+	private EntitySet<PostComment> _PostComments;
+	
+	private EntitySet<PostTaggedUser> _PostTaggedUsers;
+	
+	private EntitySet<PostTaggedUser> _PostTaggedUsers1;
+	
+	private EntitySet<ProfilePhoto> _ProfilePhotos;
+	
+	private EntitySet<Profile> _Profiles;
+	
+	private EntitySet<UserOrganization> _UserOrganizations;
+	
+	private EntitySet<Post> _Posts;
 	
 	private EntityRef<StreamDonation> _Donation;
 	
@@ -2686,13 +2794,11 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		this._aspnet_Membership = default(EntityRef<aspnet_Membership>);
 		this._aspnet_UsersInRoles = new EntitySet<aspnet_UsersInRole>(new Action<aspnet_UsersInRole>(this.attach_aspnet_UsersInRoles), new Action<aspnet_UsersInRole>(this.detach_aspnet_UsersInRoles));
 		this._RebuildPosts = new EntitySet<RebuildPost>(new Action<RebuildPost>(this.attach_RebuildPosts), new Action<RebuildPost>(this.detach_RebuildPosts));
-		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
 		this._Rebuilds = new EntitySet<Rebuild>(new Action<Rebuild>(this.attach_Rebuilds), new Action<Rebuild>(this.detach_Rebuilds));
 		this._Rebuilds1 = new EntitySet<Rebuild>(new Action<Rebuild>(this.attach_Rebuilds1), new Action<Rebuild>(this.detach_Rebuilds1));
 		this._Rebuilds2 = new EntitySet<Rebuild>(new Action<Rebuild>(this.attach_Rebuilds2), new Action<Rebuild>(this.detach_Rebuilds2));
 		this._UserInteractionTypes = new EntitySet<UserInteractionType>(new Action<UserInteractionType>(this.attach_UserInteractionTypes), new Action<UserInteractionType>(this.detach_UserInteractionTypes));
 		this._UserSkills = new EntitySet<UserSkill>(new Action<UserSkill>(this.attach_UserSkills), new Action<UserSkill>(this.detach_UserSkills));
-		this._ProfilePhotos = new EntitySet<ProfilePhoto>(new Action<ProfilePhoto>(this.attach_ProfilePhotos), new Action<ProfilePhoto>(this.detach_ProfilePhotos));
 		this._EventPosts = new EntitySet<EventPost>(new Action<EventPost>(this.attach_EventPosts), new Action<EventPost>(this.detach_EventPosts));
 		this._ArticleComments = new EntitySet<ArticleComment>(new Action<ArticleComment>(this.attach_ArticleComments), new Action<ArticleComment>(this.detach_ArticleComments));
 		this._ArticlePhotos = new EntitySet<ArticlePhoto>(new Action<ArticlePhoto>(this.attach_ArticlePhotos), new Action<ArticlePhoto>(this.detach_ArticlePhotos));
@@ -2727,19 +2833,25 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		this._UserAvailableDates = new EntitySet<UserAvailableDate>(new Action<UserAvailableDate>(this.attach_UserAvailableDates), new Action<UserAvailableDate>(this.detach_UserAvailableDates));
 		this._Organizations = new EntitySet<Organization>(new Action<Organization>(this.attach_Organizations), new Action<Organization>(this.detach_Organizations));
 		this._Organizations1 = new EntitySet<Organization>(new Action<Organization>(this.attach_Organizations1), new Action<Organization>(this.detach_Organizations1));
-		this._Posts = new EntitySet<Post>(new Action<Post>(this.attach_Posts), new Action<Post>(this.detach_Posts));
 		this._PostImages = new EntitySet<PostImage>(new Action<PostImage>(this.attach_PostImages), new Action<PostImage>(this.detach_PostImages));
 		this._UserUsers = new EntitySet<UserUser>(new Action<UserUser>(this.attach_UserUsers), new Action<UserUser>(this.detach_UserUsers));
 		this._UserOrganizationEventPositions = new EntitySet<UserOrganizationEventPosition>(new Action<UserOrganizationEventPosition>(this.attach_UserOrganizationEventPositions), new Action<UserOrganizationEventPosition>(this.detach_UserOrganizationEventPositions));
 		this._OrganizationEventPositionDates = new EntitySet<OrganizationEventPositionDate>(new Action<OrganizationEventPositionDate>(this.attach_OrganizationEventPositionDates), new Action<OrganizationEventPositionDate>(this.detach_OrganizationEventPositionDates));
 		this._OrganizationEventPositions = new EntitySet<OrganizationEventPosition>(new Action<OrganizationEventPosition>(this.attach_OrganizationEventPositions), new Action<OrganizationEventPosition>(this.detach_OrganizationEventPositions));
 		this._OrganizationEventPositions1 = new EntitySet<OrganizationEventPosition>(new Action<OrganizationEventPosition>(this.attach_OrganizationEventPositions1), new Action<OrganizationEventPosition>(this.detach_OrganizationEventPositions1));
-		this._Profiles = new EntitySet<Profile>(new Action<Profile>(this.attach_Profiles), new Action<Profile>(this.detach_Profiles));
 		this._Events = new EntitySet<Event>(new Action<Event>(this.attach_Events), new Action<Event>(this.detach_Events));
 		this._TicketProperties = new EntitySet<TicketProperty>(new Action<TicketProperty>(this.attach_TicketProperties), new Action<TicketProperty>(this.detach_TicketProperties));
 		this._TicketProperties1 = new EntitySet<TicketProperty>(new Action<TicketProperty>(this.attach_TicketProperties1), new Action<TicketProperty>(this.detach_TicketProperties1));
 		this._TicketProperties2 = new EntitySet<TicketProperty>(new Action<TicketProperty>(this.attach_TicketProperties2), new Action<TicketProperty>(this.detach_TicketProperties2));
 		this._OrganizationCases = new EntitySet<OrganizationCase>(new Action<OrganizationCase>(this.attach_OrganizationCases), new Action<OrganizationCase>(this.detach_OrganizationCases));
+		this._PostReactions = new EntitySet<PostReaction>(new Action<PostReaction>(this.attach_PostReactions), new Action<PostReaction>(this.detach_PostReactions));
+		this._PostComments = new EntitySet<PostComment>(new Action<PostComment>(this.attach_PostComments), new Action<PostComment>(this.detach_PostComments));
+		this._PostTaggedUsers = new EntitySet<PostTaggedUser>(new Action<PostTaggedUser>(this.attach_PostTaggedUsers), new Action<PostTaggedUser>(this.detach_PostTaggedUsers));
+		this._PostTaggedUsers1 = new EntitySet<PostTaggedUser>(new Action<PostTaggedUser>(this.attach_PostTaggedUsers1), new Action<PostTaggedUser>(this.detach_PostTaggedUsers1));
+		this._ProfilePhotos = new EntitySet<ProfilePhoto>(new Action<ProfilePhoto>(this.attach_ProfilePhotos), new Action<ProfilePhoto>(this.detach_ProfilePhotos));
+		this._Profiles = new EntitySet<Profile>(new Action<Profile>(this.attach_Profiles), new Action<Profile>(this.detach_Profiles));
+		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
+		this._Posts = new EntitySet<Post>(new Action<Post>(this.attach_Posts), new Action<Post>(this.detach_Posts));
 		this._Donation = default(EntityRef<StreamDonation>);
 		this._UserDonation = default(EntityRef<UserDonation>);
 		this._UserDonation1 = default(EntityRef<UserDonation>);
@@ -2946,19 +3058,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserOrganization", Storage="_UserOrganizations", ThisKey="UserId", OtherKey="UserId")]
-	public EntitySet<UserOrganization> UserOrganizations
-	{
-		get
-		{
-			return this._UserOrganizations;
-		}
-		set
-		{
-			this._UserOrganizations.Assign(value);
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Rebuild", Storage="_Rebuilds", ThisKey="UserId", OtherKey="CreatedBy")]
 	public EntitySet<Rebuild> Rebuilds
 	{
@@ -3021,19 +3120,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		set
 		{
 			this._UserSkills.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_ProfilePhoto", Storage="_ProfilePhotos", ThisKey="UserId", OtherKey="UserId")]
-	public EntitySet<ProfilePhoto> ProfilePhotos
-	{
-		get
-		{
-			return this._ProfilePhotos;
-		}
-		set
-		{
-			this._ProfilePhotos.Assign(value);
 		}
 	}
 	
@@ -3479,19 +3565,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Post", Storage="_Posts", ThisKey="UserId", OtherKey="CreatedBy")]
-	public EntitySet<Post> Posts
-	{
-		get
-		{
-			return this._Posts;
-		}
-		set
-		{
-			this._Posts.Assign(value);
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostImage", Storage="_PostImages", ThisKey="UserId", OtherKey="CreatedBy")]
 	public EntitySet<PostImage> PostImages
 	{
@@ -3570,19 +3643,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Profile", Storage="_Profiles", ThisKey="UserId", OtherKey="UserId")]
-	public EntitySet<Profile> Profiles
-	{
-		get
-		{
-			return this._Profiles;
-		}
-		set
-		{
-			this._Profiles.Assign(value);
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Event", Storage="_Events", ThisKey="UserId", OtherKey="CreatedBy")]
 	public EntitySet<Event> Events
 	{
@@ -3645,6 +3705,110 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		set
 		{
 			this._OrganizationCases.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostReaction", Storage="_PostReactions", ThisKey="UserId", OtherKey="CreatedBy")]
+	public EntitySet<PostReaction> PostReactions
+	{
+		get
+		{
+			return this._PostReactions;
+		}
+		set
+		{
+			this._PostReactions.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostComment", Storage="_PostComments", ThisKey="UserId", OtherKey="UserId")]
+	public EntitySet<PostComment> PostComments
+	{
+		get
+		{
+			return this._PostComments;
+		}
+		set
+		{
+			this._PostComments.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostTaggedUser", Storage="_PostTaggedUsers", ThisKey="UserId", OtherKey="TaggedUser")]
+	public EntitySet<PostTaggedUser> PostTaggedUsers
+	{
+		get
+		{
+			return this._PostTaggedUsers;
+		}
+		set
+		{
+			this._PostTaggedUsers.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostTaggedUser1", Storage="_PostTaggedUsers1", ThisKey="UserId", OtherKey="CreatedBy")]
+	public EntitySet<PostTaggedUser> PostTaggedUsers1
+	{
+		get
+		{
+			return this._PostTaggedUsers1;
+		}
+		set
+		{
+			this._PostTaggedUsers1.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_ProfilePhoto", Storage="_ProfilePhotos", ThisKey="UserId", OtherKey="UserId")]
+	public EntitySet<ProfilePhoto> ProfilePhotos
+	{
+		get
+		{
+			return this._ProfilePhotos;
+		}
+		set
+		{
+			this._ProfilePhotos.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Profile", Storage="_Profiles", ThisKey="UserId", OtherKey="UserId")]
+	public EntitySet<Profile> Profiles
+	{
+		get
+		{
+			return this._Profiles;
+		}
+		set
+		{
+			this._Profiles.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserOrganization", Storage="_UserOrganizations", ThisKey="UserId", OtherKey="UserId")]
+	public EntitySet<UserOrganization> UserOrganizations
+	{
+		get
+		{
+			return this._UserOrganizations;
+		}
+		set
+		{
+			this._UserOrganizations.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Post", Storage="_Posts", ThisKey="UserId", OtherKey="CreatedBy")]
+	public EntitySet<Post> Posts
+	{
+		get
+		{
+			return this._Posts;
+		}
+		set
+		{
+			this._Posts.Assign(value);
 		}
 	}
 	
@@ -3794,18 +3958,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		entity.aspnet_User = null;
 	}
 	
-	private void attach_UserOrganizations(UserOrganization entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = this;
-	}
-	
-	private void detach_UserOrganizations(UserOrganization entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = null;
-	}
-	
 	private void attach_Rebuilds(Rebuild entity)
 	{
 		this.SendPropertyChanging();
@@ -3861,18 +4013,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	}
 	
 	private void detach_UserSkills(UserSkill entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = null;
-	}
-	
-	private void attach_ProfilePhotos(ProfilePhoto entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = this;
-	}
-	
-	private void detach_ProfilePhotos(ProfilePhoto entity)
 	{
 		this.SendPropertyChanging();
 		entity.aspnet_User = null;
@@ -4286,18 +4426,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		entity.aspnet_User1 = null;
 	}
 	
-	private void attach_Posts(Post entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = this;
-	}
-	
-	private void detach_Posts(Post entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = null;
-	}
-	
 	private void attach_PostImages(PostImage entity)
 	{
 		this.SendPropertyChanging();
@@ -4370,18 +4498,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		entity.aspnet_User1 = null;
 	}
 	
-	private void attach_Profiles(Profile entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = this;
-	}
-	
-	private void detach_Profiles(Profile entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = null;
-	}
-	
 	private void attach_Events(Event entity)
 	{
 		this.SendPropertyChanging();
@@ -4437,6 +4553,102 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	}
 	
 	private void detach_OrganizationCases(OrganizationCase entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_PostReactions(PostReaction entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_PostReactions(PostReaction entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_PostComments(PostComment entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_PostComments(PostComment entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_PostTaggedUsers(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_PostTaggedUsers(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_PostTaggedUsers1(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User1 = this;
+	}
+	
+	private void detach_PostTaggedUsers1(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User1 = null;
+	}
+	
+	private void attach_ProfilePhotos(ProfilePhoto entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_ProfilePhotos(ProfilePhoto entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_Profiles(Profile entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_Profiles(Profile entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_UserOrganizations(UserOrganization entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_UserOrganizations(UserOrganization entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_Posts(Post entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_Posts(Post entity)
 	{
 		this.SendPropertyChanging();
 		entity.aspnet_User = null;
@@ -6080,222 +6292,6 @@ public partial class RebuildPost : INotifyPropertyChanging, INotifyPropertyChang
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.UserOrganization")]
-public partial class UserOrganization : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _UserOrganizationId;
-	
-	private System.Guid _UserId;
-	
-	private System.Guid _OrganizationId;
-	
-	private System.Nullable<bool> _IsPrimary;
-	
-	private EntityRef<aspnet_User> _aspnet_User;
-	
-	private EntityRef<Organization> _Organization;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnUserOrganizationIdChanging(System.Guid value);
-    partial void OnUserOrganizationIdChanged();
-    partial void OnUserIdChanging(System.Guid value);
-    partial void OnUserIdChanged();
-    partial void OnOrganizationIdChanging(System.Guid value);
-    partial void OnOrganizationIdChanged();
-    partial void OnIsPrimaryChanging(System.Nullable<bool> value);
-    partial void OnIsPrimaryChanged();
-    #endregion
-	
-	public UserOrganization()
-	{
-		this._aspnet_User = default(EntityRef<aspnet_User>);
-		this._Organization = default(EntityRef<Organization>);
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserOrganizationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid UserOrganizationId
-	{
-		get
-		{
-			return this._UserOrganizationId;
-		}
-		set
-		{
-			if ((this._UserOrganizationId != value))
-			{
-				this.OnUserOrganizationIdChanging(value);
-				this.SendPropertyChanging();
-				this._UserOrganizationId = value;
-				this.SendPropertyChanged("UserOrganizationId");
-				this.OnUserOrganizationIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid UserId
-	{
-		get
-		{
-			return this._UserId;
-		}
-		set
-		{
-			if ((this._UserId != value))
-			{
-				if (this._aspnet_User.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnUserIdChanging(value);
-				this.SendPropertyChanging();
-				this._UserId = value;
-				this.SendPropertyChanged("UserId");
-				this.OnUserIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid OrganizationId
-	{
-		get
-		{
-			return this._OrganizationId;
-		}
-		set
-		{
-			if ((this._OrganizationId != value))
-			{
-				if (this._Organization.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnOrganizationIdChanging(value);
-				this.SendPropertyChanging();
-				this._OrganizationId = value;
-				this.SendPropertyChanged("OrganizationId");
-				this.OnOrganizationIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsPrimary", DbType="Bit")]
-	public System.Nullable<bool> IsPrimary
-	{
-		get
-		{
-			return this._IsPrimary;
-		}
-		set
-		{
-			if ((this._IsPrimary != value))
-			{
-				this.OnIsPrimaryChanging(value);
-				this.SendPropertyChanging();
-				this._IsPrimary = value;
-				this.SendPropertyChanged("IsPrimary");
-				this.OnIsPrimaryChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserOrganization", Storage="_aspnet_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
-	public aspnet_User aspnet_User
-	{
-		get
-		{
-			return this._aspnet_User.Entity;
-		}
-		set
-		{
-			aspnet_User previousValue = this._aspnet_User.Entity;
-			if (((previousValue != value) 
-						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._aspnet_User.Entity = null;
-					previousValue.UserOrganizations.Remove(this);
-				}
-				this._aspnet_User.Entity = value;
-				if ((value != null))
-				{
-					value.UserOrganizations.Add(this);
-					this._UserId = value.UserId;
-				}
-				else
-				{
-					this._UserId = default(System.Guid);
-				}
-				this.SendPropertyChanged("aspnet_User");
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganization", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
-	public Organization Organization
-	{
-		get
-		{
-			return this._Organization.Entity;
-		}
-		set
-		{
-			Organization previousValue = this._Organization.Entity;
-			if (((previousValue != value) 
-						|| (this._Organization.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Organization.Entity = null;
-					previousValue.UserOrganizations.Remove(this);
-				}
-				this._Organization.Entity = value;
-				if ((value != null))
-				{
-					value.UserOrganizations.Add(this);
-					this._OrganizationId = value.OrganizationId;
-				}
-				else
-				{
-					this._OrganizationId = default(System.Guid);
-				}
-				this.SendPropertyChanged("Organization");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-}
-
 [global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Slider")]
 public partial class Slider : INotifyPropertyChanging, INotifyPropertyChanged
 {
@@ -7582,6 +7578,8 @@ public partial class BasicNeedsCampaign : INotifyPropertyChanging, INotifyProper
 	
 	private System.Nullable<bool> _Hidden;
 	
+	private EntitySet<Donation> _Donations;
+	
 	private EntityRef<BasicNeedsSurvey> _BasicNeedsSurvey;
 	
     #region Extensibility Method Definitions
@@ -7614,6 +7612,7 @@ public partial class BasicNeedsCampaign : INotifyPropertyChanging, INotifyProper
 	
 	public BasicNeedsCampaign()
 	{
+		this._Donations = new EntitySet<Donation>(new Action<Donation>(this.attach_Donations), new Action<Donation>(this.detach_Donations));
 		this._BasicNeedsSurvey = default(EntityRef<BasicNeedsSurvey>);
 		OnCreated();
 	}
@@ -7842,6 +7841,19 @@ public partial class BasicNeedsCampaign : INotifyPropertyChanging, INotifyProper
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BasicNeedsCampaign_Donation", Storage="_Donations", ThisKey="BasicNeedsCampaignId", OtherKey="CampaignId")]
+	public EntitySet<Donation> Donations
+	{
+		get
+		{
+			return this._Donations;
+		}
+		set
+		{
+			this._Donations.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BasicNeedsSurvey_BasicNeedsCampaign", Storage="_BasicNeedsSurvey", ThisKey="BasicNeedsSurveyId", OtherKey="SurveyId", IsForeignKey=true)]
 	public BasicNeedsSurvey BasicNeedsSurvey
 	{
@@ -7894,6 +7906,18 @@ public partial class BasicNeedsCampaign : INotifyPropertyChanging, INotifyProper
 		{
 			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
+	}
+	
+	private void attach_Donations(Donation entity)
+	{
+		this.SendPropertyChanging();
+		entity.BasicNeedsCampaign = this;
+	}
+	
+	private void detach_Donations(Donation entity)
+	{
+		this.SendPropertyChanging();
+		entity.BasicNeedsCampaign = null;
 	}
 }
 
@@ -9829,181 +9853,6 @@ public partial class TaskType : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ProfilePhoto")]
-public partial class ProfilePhoto : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _ProfilePhotoId;
-	
-	private System.Guid _UserId;
-	
-	private System.Guid _PhotoId;
-	
-	private bool _IsCurrrent;
-	
-	private EntityRef<aspnet_User> _aspnet_User;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnProfilePhotoIdChanging(System.Guid value);
-    partial void OnProfilePhotoIdChanged();
-    partial void OnUserIdChanging(System.Guid value);
-    partial void OnUserIdChanged();
-    partial void OnPhotoIdChanging(System.Guid value);
-    partial void OnPhotoIdChanged();
-    partial void OnIsCurrrentChanging(bool value);
-    partial void OnIsCurrrentChanged();
-    #endregion
-	
-	public ProfilePhoto()
-	{
-		this._aspnet_User = default(EntityRef<aspnet_User>);
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProfilePhotoId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid ProfilePhotoId
-	{
-		get
-		{
-			return this._ProfilePhotoId;
-		}
-		set
-		{
-			if ((this._ProfilePhotoId != value))
-			{
-				this.OnProfilePhotoIdChanging(value);
-				this.SendPropertyChanging();
-				this._ProfilePhotoId = value;
-				this.SendPropertyChanged("ProfilePhotoId");
-				this.OnProfilePhotoIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid UserId
-	{
-		get
-		{
-			return this._UserId;
-		}
-		set
-		{
-			if ((this._UserId != value))
-			{
-				if (this._aspnet_User.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnUserIdChanging(value);
-				this.SendPropertyChanging();
-				this._UserId = value;
-				this.SendPropertyChanged("UserId");
-				this.OnUserIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhotoId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid PhotoId
-	{
-		get
-		{
-			return this._PhotoId;
-		}
-		set
-		{
-			if ((this._PhotoId != value))
-			{
-				this.OnPhotoIdChanging(value);
-				this.SendPropertyChanging();
-				this._PhotoId = value;
-				this.SendPropertyChanged("PhotoId");
-				this.OnPhotoIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsCurrrent", DbType="Bit NOT NULL")]
-	public bool IsCurrrent
-	{
-		get
-		{
-			return this._IsCurrrent;
-		}
-		set
-		{
-			if ((this._IsCurrrent != value))
-			{
-				this.OnIsCurrrentChanging(value);
-				this.SendPropertyChanging();
-				this._IsCurrrent = value;
-				this.SendPropertyChanged("IsCurrrent");
-				this.OnIsCurrrentChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_ProfilePhoto", Storage="_aspnet_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
-	public aspnet_User aspnet_User
-	{
-		get
-		{
-			return this._aspnet_User.Entity;
-		}
-		set
-		{
-			aspnet_User previousValue = this._aspnet_User.Entity;
-			if (((previousValue != value) 
-						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._aspnet_User.Entity = null;
-					previousValue.ProfilePhotos.Remove(this);
-				}
-				this._aspnet_User.Entity = value;
-				if ((value != null))
-				{
-					value.ProfilePhotos.Add(this);
-					this._UserId = value.UserId;
-				}
-				else
-				{
-					this._UserId = default(System.Guid);
-				}
-				this.SendPropertyChanged("aspnet_User");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-}
-
 [global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.EventPost")]
 public partial class EventPost : INotifyPropertyChanging, INotifyPropertyChanged
 {
@@ -10288,9 +10137,9 @@ public partial class ArticleComment : INotifyPropertyChanging, INotifyPropertyCh
 	
 	private EntityRef<aspnet_User> _aspnet_User;
 	
-	private EntityRef<Comment> _Comment;
-	
 	private EntityRef<Article> _Article;
+	
+	private EntityRef<Comment> _Comment;
 	
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -10313,8 +10162,8 @@ public partial class ArticleComment : INotifyPropertyChanging, INotifyPropertyCh
 	public ArticleComment()
 	{
 		this._aspnet_User = default(EntityRef<aspnet_User>);
-		this._Comment = default(EntityRef<Comment>);
 		this._Article = default(EntityRef<Article>);
+		this._Comment = default(EntityRef<Comment>);
 		OnCreated();
 	}
 	
@@ -10484,40 +10333,6 @@ public partial class ArticleComment : INotifyPropertyChanging, INotifyPropertyCh
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Comment_ArticleComment", Storage="_Comment", ThisKey="CommentId", OtherKey="CommentId", IsForeignKey=true)]
-	public Comment Comment
-	{
-		get
-		{
-			return this._Comment.Entity;
-		}
-		set
-		{
-			Comment previousValue = this._Comment.Entity;
-			if (((previousValue != value) 
-						|| (this._Comment.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Comment.Entity = null;
-					previousValue.ArticleComments.Remove(this);
-				}
-				this._Comment.Entity = value;
-				if ((value != null))
-				{
-					value.ArticleComments.Add(this);
-					this._CommentId = value.CommentId;
-				}
-				else
-				{
-					this._CommentId = default(System.Guid);
-				}
-				this.SendPropertyChanged("Comment");
-			}
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Article_ArticleComment", Storage="_Article", ThisKey="ArticleId", OtherKey="ArticleId", IsForeignKey=true)]
 	public Article Article
 	{
@@ -10552,177 +10367,37 @@ public partial class ArticleComment : INotifyPropertyChanging, INotifyPropertyCh
 		}
 	}
 	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-}
-
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Comment")]
-public partial class Comment : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _CommentId;
-	
-	private string _Comment1;
-	
-	private System.DateTime _CreatedOn;
-	
-	private System.Guid _CreatedBy;
-	
-	private bool _IsDeleted;
-	
-	private EntitySet<ArticleComment> _ArticleComments;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnCommentIdChanging(System.Guid value);
-    partial void OnCommentIdChanged();
-    partial void OnComment1Changing(string value);
-    partial void OnComment1Changed();
-    partial void OnCreatedOnChanging(System.DateTime value);
-    partial void OnCreatedOnChanged();
-    partial void OnCreatedByChanging(System.Guid value);
-    partial void OnCreatedByChanged();
-    partial void OnIsDeletedChanging(bool value);
-    partial void OnIsDeletedChanged();
-    #endregion
-	
-	public Comment()
-	{
-		this._ArticleComments = new EntitySet<ArticleComment>(new Action<ArticleComment>(this.attach_ArticleComments), new Action<ArticleComment>(this.detach_ArticleComments));
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CommentId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid CommentId
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Comment_ArticleComment", Storage="_Comment", ThisKey="CommentId", OtherKey="CommentId", IsForeignKey=true)]
+	public Comment Comment
 	{
 		get
 		{
-			return this._CommentId;
+			return this._Comment.Entity;
 		}
 		set
 		{
-			if ((this._CommentId != value))
+			Comment previousValue = this._Comment.Entity;
+			if (((previousValue != value) 
+						|| (this._Comment.HasLoadedOrAssignedValue == false)))
 			{
-				this.OnCommentIdChanging(value);
 				this.SendPropertyChanging();
-				this._CommentId = value;
-				this.SendPropertyChanged("CommentId");
-				this.OnCommentIdChanged();
+				if ((previousValue != null))
+				{
+					this._Comment.Entity = null;
+					previousValue.ArticleComments.Remove(this);
+				}
+				this._Comment.Entity = value;
+				if ((value != null))
+				{
+					value.ArticleComments.Add(this);
+					this._CommentId = value.CommentId;
+				}
+				else
+				{
+					this._CommentId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Comment");
 			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="Comment", Storage="_Comment1", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
-	public string Comment1
-	{
-		get
-		{
-			return this._Comment1;
-		}
-		set
-		{
-			if ((this._Comment1 != value))
-			{
-				this.OnComment1Changing(value);
-				this.SendPropertyChanging();
-				this._Comment1 = value;
-				this.SendPropertyChanged("Comment1");
-				this.OnComment1Changed();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
-	public System.DateTime CreatedOn
-	{
-		get
-		{
-			return this._CreatedOn;
-		}
-		set
-		{
-			if ((this._CreatedOn != value))
-			{
-				this.OnCreatedOnChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedOn = value;
-				this.SendPropertyChanged("CreatedOn");
-				this.OnCreatedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid CreatedBy
-	{
-		get
-		{
-			return this._CreatedBy;
-		}
-		set
-		{
-			if ((this._CreatedBy != value))
-			{
-				this.OnCreatedByChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedBy = value;
-				this.SendPropertyChanged("CreatedBy");
-				this.OnCreatedByChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDeleted", DbType="Bit NOT NULL")]
-	public bool IsDeleted
-	{
-		get
-		{
-			return this._IsDeleted;
-		}
-		set
-		{
-			if ((this._IsDeleted != value))
-			{
-				this.OnIsDeletedChanging(value);
-				this.SendPropertyChanging();
-				this._IsDeleted = value;
-				this.SendPropertyChanged("IsDeleted");
-				this.OnIsDeletedChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Comment_ArticleComment", Storage="_ArticleComments", ThisKey="CommentId", OtherKey="CommentId")]
-	public EntitySet<ArticleComment> ArticleComments
-	{
-		get
-		{
-			return this._ArticleComments;
-		}
-		set
-		{
-			this._ArticleComments.Assign(value);
 		}
 	}
 	
@@ -10744,18 +10419,6 @@ public partial class Comment : INotifyPropertyChanging, INotifyPropertyChanged
 		{
 			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
-	}
-	
-	private void attach_ArticleComments(ArticleComment entity)
-	{
-		this.SendPropertyChanging();
-		entity.Comment = this;
-	}
-	
-	private void detach_ArticleComments(ArticleComment entity)
-	{
-		this.SendPropertyChanging();
-		entity.Comment = null;
 	}
 }
 
@@ -12710,6 +12373,8 @@ public partial class BasicNeedsSurveyItem : INotifyPropertyChanging, INotifyProp
 	
 	private int _Count;
 	
+	private EntitySet<Donation> _Donations;
+	
 	private EntityRef<Item> _Item;
 	
 	private EntityRef<BasicNeedsSurvey> _BasicNeedsSurvey;
@@ -12730,6 +12395,7 @@ public partial class BasicNeedsSurveyItem : INotifyPropertyChanging, INotifyProp
 	
 	public BasicNeedsSurveyItem()
 	{
+		this._Donations = new EntitySet<Donation>(new Action<Donation>(this.attach_Donations), new Action<Donation>(this.detach_Donations));
 		this._Item = default(EntityRef<Item>);
 		this._BasicNeedsSurvey = default(EntityRef<BasicNeedsSurvey>);
 		OnCreated();
@@ -12823,6 +12489,19 @@ public partial class BasicNeedsSurveyItem : INotifyPropertyChanging, INotifyProp
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BasicNeedsSurveyItem_Donation", Storage="_Donations", ThisKey="BasicSurveyItemId", OtherKey="BasicNeedsSurveyItemId")]
+	public EntitySet<Donation> Donations
+	{
+		get
+		{
+			return this._Donations;
+		}
+		set
+		{
+			this._Donations.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Item_BasicNeedsSurveyItem", Storage="_Item", ThisKey="ItemId", OtherKey="ItemId", IsForeignKey=true)]
 	public Item Item
 	{
@@ -12909,6 +12588,18 @@ public partial class BasicNeedsSurveyItem : INotifyPropertyChanging, INotifyProp
 		{
 			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
+	}
+	
+	private void attach_Donations(Donation entity)
+	{
+		this.SendPropertyChanging();
+		entity.BasicNeedsSurveyItem = this;
+	}
+	
+	private void detach_Donations(Donation entity)
+	{
+		this.SendPropertyChanging();
+		entity.BasicNeedsSurveyItem = null;
 	}
 }
 
@@ -33779,8 +33470,6 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 	
 	private EntitySet<OrganizationRebuild> _OrganizationRebuilds;
 	
-	private EntitySet<UserOrganization> _UserOrganizations;
-	
 	private EntitySet<OrganizationProgram> _OrganizationPrograms;
 	
 	private EntitySet<UserOrganizationInvite> _UserOrganizationInvites;
@@ -33790,6 +33479,10 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 	private EntitySet<OrganizationCase> _OrganizationCases;
 	
 	private EntitySet<Position> _Positions;
+	
+	private EntitySet<PaymentConfiguration> _PaymentConfigurations;
+	
+	private EntitySet<UserOrganization> _UserOrganizations;
 	
 	private EntityRef<aspnet_User> _aspnet_User;
 	
@@ -33902,12 +33595,13 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 	public Organization()
 	{
 		this._OrganizationRebuilds = new EntitySet<OrganizationRebuild>(new Action<OrganizationRebuild>(this.attach_OrganizationRebuilds), new Action<OrganizationRebuild>(this.detach_OrganizationRebuilds));
-		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
 		this._OrganizationPrograms = new EntitySet<OrganizationProgram>(new Action<OrganizationProgram>(this.attach_OrganizationPrograms), new Action<OrganizationProgram>(this.detach_OrganizationPrograms));
 		this._UserOrganizationInvites = new EntitySet<UserOrganizationInvite>(new Action<UserOrganizationInvite>(this.attach_UserOrganizationInvites), new Action<UserOrganizationInvite>(this.detach_UserOrganizationInvites));
 		this._OrganizationEvents = new EntitySet<OrganizationEvent>(new Action<OrganizationEvent>(this.attach_OrganizationEvents), new Action<OrganizationEvent>(this.detach_OrganizationEvents));
 		this._OrganizationCases = new EntitySet<OrganizationCase>(new Action<OrganizationCase>(this.attach_OrganizationCases), new Action<OrganizationCase>(this.detach_OrganizationCases));
 		this._Positions = new EntitySet<Position>(new Action<Position>(this.attach_Positions), new Action<Position>(this.detach_Positions));
+		this._PaymentConfigurations = new EntitySet<PaymentConfiguration>(new Action<PaymentConfiguration>(this.attach_PaymentConfigurations), new Action<PaymentConfiguration>(this.detach_PaymentConfigurations));
+		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
 		this._aspnet_User = default(EntityRef<aspnet_User>);
 		this._aspnet_User1 = default(EntityRef<aspnet_User>);
 		OnCreated();
@@ -34914,19 +34608,6 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganization", Storage="_UserOrganizations", ThisKey="OrganizationId", OtherKey="OrganizationId")]
-	public EntitySet<UserOrganization> UserOrganizations
-	{
-		get
-		{
-			return this._UserOrganizations;
-		}
-		set
-		{
-			this._UserOrganizations.Assign(value);
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationProgram", Storage="_OrganizationPrograms", ThisKey="OrganizationId", OtherKey="OrganizationId")]
 	public EntitySet<OrganizationProgram> OrganizationPrograms
 	{
@@ -34989,6 +34670,32 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		set
 		{
 			this._Positions.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_PaymentConfiguration", Storage="_PaymentConfigurations", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<PaymentConfiguration> PaymentConfigurations
+	{
+		get
+		{
+			return this._PaymentConfigurations;
+		}
+		set
+		{
+			this._PaymentConfigurations.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganization", Storage="_UserOrganizations", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<UserOrganization> UserOrganizations
+	{
+		get
+		{
+			return this._UserOrganizations;
+		}
+		set
+		{
+			this._UserOrganizations.Assign(value);
 		}
 	}
 	
@@ -35092,18 +34799,6 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		entity.Organization = null;
 	}
 	
-	private void attach_UserOrganizations(UserOrganization entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = this;
-	}
-	
-	private void detach_UserOrganizations(UserOrganization entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = null;
-	}
-	
 	private void attach_OrganizationPrograms(OrganizationProgram entity)
 	{
 		this.SendPropertyChanging();
@@ -35159,6 +34854,30 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 	}
 	
 	private void detach_Positions(Position entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = null;
+	}
+	
+	private void attach_PaymentConfigurations(PaymentConfiguration entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = this;
+	}
+	
+	private void detach_PaymentConfigurations(PaymentConfiguration entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = null;
+	}
+	
+	private void attach_UserOrganizations(UserOrganization entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = this;
+	}
+	
+	private void detach_UserOrganizations(UserOrganization entity)
 	{
 		this.SendPropertyChanging();
 		entity.Organization = null;
@@ -35390,483 +35109,6 @@ public partial class PostType : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this.SendPropertyChanging();
 		entity.PostType = null;
-	}
-}
-
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Post")]
-public partial class Post : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _PostId;
-	
-	private System.Guid _PostTypeId;
-	
-	private System.Guid _AudienceTypeId;
-	
-	private string _URLDescription;
-	
-	private string _URLTitle;
-	
-	private string _URLImage;
-	
-	private string _SharedURL;
-	
-	private string _Message;
-	
-	private bool _IsVisible;
-	
-	private int _ViewCount;
-	
-	private System.Nullable<System.DateTime> _CreatedOn;
-	
-	private System.Nullable<System.Guid> _CreatedBy;
-	
-	private EntitySet<PostImage> _PostImages;
-	
-	private EntityRef<aspnet_User> _aspnet_User;
-	
-	private EntityRef<AudienceType> _AudienceType;
-	
-	private EntityRef<PostType> _PostType;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnPostIdChanging(System.Guid value);
-    partial void OnPostIdChanged();
-    partial void OnPostTypeIdChanging(System.Guid value);
-    partial void OnPostTypeIdChanged();
-    partial void OnAudienceTypeIdChanging(System.Guid value);
-    partial void OnAudienceTypeIdChanged();
-    partial void OnURLDescriptionChanging(string value);
-    partial void OnURLDescriptionChanged();
-    partial void OnURLTitleChanging(string value);
-    partial void OnURLTitleChanged();
-    partial void OnURLImageChanging(string value);
-    partial void OnURLImageChanged();
-    partial void OnSharedURLChanging(string value);
-    partial void OnSharedURLChanged();
-    partial void OnMessageChanging(string value);
-    partial void OnMessageChanged();
-    partial void OnIsVisibleChanging(bool value);
-    partial void OnIsVisibleChanged();
-    partial void OnViewCountChanging(int value);
-    partial void OnViewCountChanged();
-    partial void OnCreatedOnChanging(System.Nullable<System.DateTime> value);
-    partial void OnCreatedOnChanged();
-    partial void OnCreatedByChanging(System.Nullable<System.Guid> value);
-    partial void OnCreatedByChanged();
-    #endregion
-	
-	public Post()
-	{
-		this._PostImages = new EntitySet<PostImage>(new Action<PostImage>(this.attach_PostImages), new Action<PostImage>(this.detach_PostImages));
-		this._aspnet_User = default(EntityRef<aspnet_User>);
-		this._AudienceType = default(EntityRef<AudienceType>);
-		this._PostType = default(EntityRef<PostType>);
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid PostId
-	{
-		get
-		{
-			return this._PostId;
-		}
-		set
-		{
-			if ((this._PostId != value))
-			{
-				this.OnPostIdChanging(value);
-				this.SendPropertyChanging();
-				this._PostId = value;
-				this.SendPropertyChanged("PostId");
-				this.OnPostIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostTypeId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid PostTypeId
-	{
-		get
-		{
-			return this._PostTypeId;
-		}
-		set
-		{
-			if ((this._PostTypeId != value))
-			{
-				if (this._PostType.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnPostTypeIdChanging(value);
-				this.SendPropertyChanging();
-				this._PostTypeId = value;
-				this.SendPropertyChanged("PostTypeId");
-				this.OnPostTypeIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AudienceTypeId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid AudienceTypeId
-	{
-		get
-		{
-			return this._AudienceTypeId;
-		}
-		set
-		{
-			if ((this._AudienceTypeId != value))
-			{
-				if (this._AudienceType.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnAudienceTypeIdChanging(value);
-				this.SendPropertyChanging();
-				this._AudienceTypeId = value;
-				this.SendPropertyChanged("AudienceTypeId");
-				this.OnAudienceTypeIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_URLDescription", DbType="VarChar(4000)")]
-	public string URLDescription
-	{
-		get
-		{
-			return this._URLDescription;
-		}
-		set
-		{
-			if ((this._URLDescription != value))
-			{
-				this.OnURLDescriptionChanging(value);
-				this.SendPropertyChanging();
-				this._URLDescription = value;
-				this.SendPropertyChanged("URLDescription");
-				this.OnURLDescriptionChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_URLTitle", DbType="VarChar(1000)")]
-	public string URLTitle
-	{
-		get
-		{
-			return this._URLTitle;
-		}
-		set
-		{
-			if ((this._URLTitle != value))
-			{
-				this.OnURLTitleChanging(value);
-				this.SendPropertyChanging();
-				this._URLTitle = value;
-				this.SendPropertyChanged("URLTitle");
-				this.OnURLTitleChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_URLImage", DbType="VarChar(4000)")]
-	public string URLImage
-	{
-		get
-		{
-			return this._URLImage;
-		}
-		set
-		{
-			if ((this._URLImage != value))
-			{
-				this.OnURLImageChanging(value);
-				this.SendPropertyChanging();
-				this._URLImage = value;
-				this.SendPropertyChanged("URLImage");
-				this.OnURLImageChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SharedURL", DbType="VarChar(MAX)")]
-	public string SharedURL
-	{
-		get
-		{
-			return this._SharedURL;
-		}
-		set
-		{
-			if ((this._SharedURL != value))
-			{
-				this.OnSharedURLChanging(value);
-				this.SendPropertyChanging();
-				this._SharedURL = value;
-				this.SendPropertyChanged("SharedURL");
-				this.OnSharedURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Message", DbType="VarChar(MAX)")]
-	public string Message
-	{
-		get
-		{
-			return this._Message;
-		}
-		set
-		{
-			if ((this._Message != value))
-			{
-				this.OnMessageChanging(value);
-				this.SendPropertyChanging();
-				this._Message = value;
-				this.SendPropertyChanged("Message");
-				this.OnMessageChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsVisible", DbType="Bit NOT NULL")]
-	public bool IsVisible
-	{
-		get
-		{
-			return this._IsVisible;
-		}
-		set
-		{
-			if ((this._IsVisible != value))
-			{
-				this.OnIsVisibleChanging(value);
-				this.SendPropertyChanging();
-				this._IsVisible = value;
-				this.SendPropertyChanged("IsVisible");
-				this.OnIsVisibleChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ViewCount", DbType="Int NOT NULL")]
-	public int ViewCount
-	{
-		get
-		{
-			return this._ViewCount;
-		}
-		set
-		{
-			if ((this._ViewCount != value))
-			{
-				this.OnViewCountChanging(value);
-				this.SendPropertyChanging();
-				this._ViewCount = value;
-				this.SendPropertyChanged("ViewCount");
-				this.OnViewCountChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime")]
-	public System.Nullable<System.DateTime> CreatedOn
-	{
-		get
-		{
-			return this._CreatedOn;
-		}
-		set
-		{
-			if ((this._CreatedOn != value))
-			{
-				this.OnCreatedOnChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedOn = value;
-				this.SendPropertyChanged("CreatedOn");
-				this.OnCreatedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> CreatedBy
-	{
-		get
-		{
-			return this._CreatedBy;
-		}
-		set
-		{
-			if ((this._CreatedBy != value))
-			{
-				if (this._aspnet_User.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnCreatedByChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedBy = value;
-				this.SendPropertyChanged("CreatedBy");
-				this.OnCreatedByChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Post_PostImage", Storage="_PostImages", ThisKey="PostId", OtherKey="PostId")]
-	public EntitySet<PostImage> PostImages
-	{
-		get
-		{
-			return this._PostImages;
-		}
-		set
-		{
-			this._PostImages.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Post", Storage="_aspnet_User", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
-	public aspnet_User aspnet_User
-	{
-		get
-		{
-			return this._aspnet_User.Entity;
-		}
-		set
-		{
-			aspnet_User previousValue = this._aspnet_User.Entity;
-			if (((previousValue != value) 
-						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._aspnet_User.Entity = null;
-					previousValue.Posts.Remove(this);
-				}
-				this._aspnet_User.Entity = value;
-				if ((value != null))
-				{
-					value.Posts.Add(this);
-					this._CreatedBy = value.UserId;
-				}
-				else
-				{
-					this._CreatedBy = default(Nullable<System.Guid>);
-				}
-				this.SendPropertyChanged("aspnet_User");
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AudienceType_Post", Storage="_AudienceType", ThisKey="AudienceTypeId", OtherKey="AudienceTypeId", IsForeignKey=true)]
-	public AudienceType AudienceType
-	{
-		get
-		{
-			return this._AudienceType.Entity;
-		}
-		set
-		{
-			AudienceType previousValue = this._AudienceType.Entity;
-			if (((previousValue != value) 
-						|| (this._AudienceType.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._AudienceType.Entity = null;
-					previousValue.Posts.Remove(this);
-				}
-				this._AudienceType.Entity = value;
-				if ((value != null))
-				{
-					value.Posts.Add(this);
-					this._AudienceTypeId = value.AudienceTypeId;
-				}
-				else
-				{
-					this._AudienceTypeId = default(System.Guid);
-				}
-				this.SendPropertyChanged("AudienceType");
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PostType_Post", Storage="_PostType", ThisKey="PostTypeId", OtherKey="PostTypeId", IsForeignKey=true)]
-	public PostType PostType
-	{
-		get
-		{
-			return this._PostType.Entity;
-		}
-		set
-		{
-			PostType previousValue = this._PostType.Entity;
-			if (((previousValue != value) 
-						|| (this._PostType.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._PostType.Entity = null;
-					previousValue.Posts.Remove(this);
-				}
-				this._PostType.Entity = value;
-				if ((value != null))
-				{
-					value.Posts.Add(this);
-					this._PostTypeId = value.PostTypeId;
-				}
-				else
-				{
-					this._PostTypeId = default(System.Guid);
-				}
-				this.SendPropertyChanged("PostType");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-	
-	private void attach_PostImages(PostImage entity)
-	{
-		this.SendPropertyChanging();
-		entity.Post = this;
-	}
-	
-	private void detach_PostImages(PostImage entity)
-	{
-		this.SendPropertyChanging();
-		entity.Post = null;
 	}
 }
 
@@ -40137,953 +39379,6 @@ public partial class LocationProfile : INotifyPropertyChanging, INotifyPropertyC
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Profile")]
-public partial class Profile : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _ProfileId;
-	
-	private int _ProfileNumber;
-	
-	private string _Firstname;
-	
-	private string _Lastname;
-	
-	private string _PhoneNumber;
-	
-	private string _Address;
-	
-	private string _City;
-	
-	private string _State;
-	
-	private string _Zip;
-	
-	private System.Nullable<bool> _ReceiveDeploymentSMS;
-	
-	private string _ContactMethod;
-	
-	private System.Guid _UserId;
-	
-	private System.Nullable<System.Guid> _DefaultEventId;
-	
-	private string _VolunteerReliefMoniker;
-	
-	private string _Description;
-	
-	private string _DatesAvailable;
-	
-	private string _NumberOfDaysAvailable;
-	
-	private string _PreviousVolunteerExperience;
-	
-	private System.Nullable<int> _Age;
-	
-	private string _ZelloName;
-	
-	private string _Title;
-	
-	private string _Photo;
-	
-	private System.Nullable<bool> _VettingActive;
-	
-	private System.Nullable<bool> _VettingComplete;
-	
-	private System.Nullable<bool> _PassedVetting;
-	
-	private System.Nullable<System.Guid> _VettedBy;
-	
-	private string _VettingNotes;
-	
-	private System.Nullable<System.DateTime> _DateVettingStarted;
-	
-	private System.Nullable<System.DateTime> _DateVettingCompleted;
-	
-	private System.Nullable<bool> _VolunteerApplicationIsComplete;
-	
-	private System.Nullable<System.DateTime> _VolunteerApplicationDate;
-	
-	private System.Nullable<System.Guid> _PhotoId;
-	
-	private string _AmazonWishListURL;
-	
-	private System.Nullable<bool> _ShowOnWebsite;
-	
-	private System.Nullable<System.DateTime> _HideUserActionModal;
-	
-	private EntitySet<ProfileAddress> _ProfileAddresses;
-	
-	private EntityRef<aspnet_User> _aspnet_User;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnProfileIdChanging(System.Guid value);
-    partial void OnProfileIdChanged();
-    partial void OnProfileNumberChanging(int value);
-    partial void OnProfileNumberChanged();
-    partial void OnFirstnameChanging(string value);
-    partial void OnFirstnameChanged();
-    partial void OnLastnameChanging(string value);
-    partial void OnLastnameChanged();
-    partial void OnPhoneNumberChanging(string value);
-    partial void OnPhoneNumberChanged();
-    partial void OnAddressChanging(string value);
-    partial void OnAddressChanged();
-    partial void OnCityChanging(string value);
-    partial void OnCityChanged();
-    partial void OnStateChanging(string value);
-    partial void OnStateChanged();
-    partial void OnZipChanging(string value);
-    partial void OnZipChanged();
-    partial void OnReceiveDeploymentSMSChanging(System.Nullable<bool> value);
-    partial void OnReceiveDeploymentSMSChanged();
-    partial void OnContactMethodChanging(string value);
-    partial void OnContactMethodChanged();
-    partial void OnUserIdChanging(System.Guid value);
-    partial void OnUserIdChanged();
-    partial void OnDefaultEventIdChanging(System.Nullable<System.Guid> value);
-    partial void OnDefaultEventIdChanged();
-    partial void OnVolunteerReliefMonikerChanging(string value);
-    partial void OnVolunteerReliefMonikerChanged();
-    partial void OnDescriptionChanging(string value);
-    partial void OnDescriptionChanged();
-    partial void OnDatesAvailableChanging(string value);
-    partial void OnDatesAvailableChanged();
-    partial void OnNumberOfDaysAvailableChanging(string value);
-    partial void OnNumberOfDaysAvailableChanged();
-    partial void OnPreviousVolunteerExperienceChanging(string value);
-    partial void OnPreviousVolunteerExperienceChanged();
-    partial void OnAgeChanging(System.Nullable<int> value);
-    partial void OnAgeChanged();
-    partial void OnZelloNameChanging(string value);
-    partial void OnZelloNameChanged();
-    partial void OnTitleChanging(string value);
-    partial void OnTitleChanged();
-    partial void OnPhotoChanging(string value);
-    partial void OnPhotoChanged();
-    partial void OnVettingActiveChanging(System.Nullable<bool> value);
-    partial void OnVettingActiveChanged();
-    partial void OnVettingCompleteChanging(System.Nullable<bool> value);
-    partial void OnVettingCompleteChanged();
-    partial void OnPassedVettingChanging(System.Nullable<bool> value);
-    partial void OnPassedVettingChanged();
-    partial void OnVettedByChanging(System.Nullable<System.Guid> value);
-    partial void OnVettedByChanged();
-    partial void OnVettingNotesChanging(string value);
-    partial void OnVettingNotesChanged();
-    partial void OnDateVettingStartedChanging(System.Nullable<System.DateTime> value);
-    partial void OnDateVettingStartedChanged();
-    partial void OnDateVettingCompletedChanging(System.Nullable<System.DateTime> value);
-    partial void OnDateVettingCompletedChanged();
-    partial void OnVolunteerApplicationIsCompleteChanging(System.Nullable<bool> value);
-    partial void OnVolunteerApplicationIsCompleteChanged();
-    partial void OnVolunteerApplicationDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnVolunteerApplicationDateChanged();
-    partial void OnPhotoIdChanging(System.Nullable<System.Guid> value);
-    partial void OnPhotoIdChanged();
-    partial void OnAmazonWishListURLChanging(string value);
-    partial void OnAmazonWishListURLChanged();
-    partial void OnShowOnWebsiteChanging(System.Nullable<bool> value);
-    partial void OnShowOnWebsiteChanged();
-    partial void OnHideUserActionModalChanging(System.Nullable<System.DateTime> value);
-    partial void OnHideUserActionModalChanged();
-    #endregion
-	
-	public Profile()
-	{
-		this._ProfileAddresses = new EntitySet<ProfileAddress>(new Action<ProfileAddress>(this.attach_ProfileAddresses), new Action<ProfileAddress>(this.detach_ProfileAddresses));
-		this._aspnet_User = default(EntityRef<aspnet_User>);
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProfileId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid ProfileId
-	{
-		get
-		{
-			return this._ProfileId;
-		}
-		set
-		{
-			if ((this._ProfileId != value))
-			{
-				this.OnProfileIdChanging(value);
-				this.SendPropertyChanging();
-				this._ProfileId = value;
-				this.SendPropertyChanged("ProfileId");
-				this.OnProfileIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProfileNumber", AutoSync=AutoSync.Always, DbType="Int NOT NULL IDENTITY", IsDbGenerated=true)]
-	public int ProfileNumber
-	{
-		get
-		{
-			return this._ProfileNumber;
-		}
-		set
-		{
-			if ((this._ProfileNumber != value))
-			{
-				this.OnProfileNumberChanging(value);
-				this.SendPropertyChanging();
-				this._ProfileNumber = value;
-				this.SendPropertyChanged("ProfileNumber");
-				this.OnProfileNumberChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Firstname", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
-	public string Firstname
-	{
-		get
-		{
-			return this._Firstname;
-		}
-		set
-		{
-			if ((this._Firstname != value))
-			{
-				this.OnFirstnameChanging(value);
-				this.SendPropertyChanging();
-				this._Firstname = value;
-				this.SendPropertyChanged("Firstname");
-				this.OnFirstnameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Lastname", DbType="VarChar(50)")]
-	public string Lastname
-	{
-		get
-		{
-			return this._Lastname;
-		}
-		set
-		{
-			if ((this._Lastname != value))
-			{
-				this.OnLastnameChanging(value);
-				this.SendPropertyChanging();
-				this._Lastname = value;
-				this.SendPropertyChanged("Lastname");
-				this.OnLastnameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="VarChar(20)")]
-	public string PhoneNumber
-	{
-		get
-		{
-			return this._PhoneNumber;
-		}
-		set
-		{
-			if ((this._PhoneNumber != value))
-			{
-				this.OnPhoneNumberChanging(value);
-				this.SendPropertyChanging();
-				this._PhoneNumber = value;
-				this.SendPropertyChanged("PhoneNumber");
-				this.OnPhoneNumberChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="VarChar(500)")]
-	public string Address
-	{
-		get
-		{
-			return this._Address;
-		}
-		set
-		{
-			if ((this._Address != value))
-			{
-				this.OnAddressChanging(value);
-				this.SendPropertyChanging();
-				this._Address = value;
-				this.SendPropertyChanged("Address");
-				this.OnAddressChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_City", DbType="VarChar(50)")]
-	public string City
-	{
-		get
-		{
-			return this._City;
-		}
-		set
-		{
-			if ((this._City != value))
-			{
-				this.OnCityChanging(value);
-				this.SendPropertyChanging();
-				this._City = value;
-				this.SendPropertyChanged("City");
-				this.OnCityChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="VarChar(50)")]
-	public string State
-	{
-		get
-		{
-			return this._State;
-		}
-		set
-		{
-			if ((this._State != value))
-			{
-				this.OnStateChanging(value);
-				this.SendPropertyChanging();
-				this._State = value;
-				this.SendPropertyChanged("State");
-				this.OnStateChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Zip", DbType="VarChar(10)")]
-	public string Zip
-	{
-		get
-		{
-			return this._Zip;
-		}
-		set
-		{
-			if ((this._Zip != value))
-			{
-				this.OnZipChanging(value);
-				this.SendPropertyChanging();
-				this._Zip = value;
-				this.SendPropertyChanged("Zip");
-				this.OnZipChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceiveDeploymentSMS", DbType="Bit")]
-	public System.Nullable<bool> ReceiveDeploymentSMS
-	{
-		get
-		{
-			return this._ReceiveDeploymentSMS;
-		}
-		set
-		{
-			if ((this._ReceiveDeploymentSMS != value))
-			{
-				this.OnReceiveDeploymentSMSChanging(value);
-				this.SendPropertyChanging();
-				this._ReceiveDeploymentSMS = value;
-				this.SendPropertyChanged("ReceiveDeploymentSMS");
-				this.OnReceiveDeploymentSMSChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ContactMethod", DbType="VarChar(50)")]
-	public string ContactMethod
-	{
-		get
-		{
-			return this._ContactMethod;
-		}
-		set
-		{
-			if ((this._ContactMethod != value))
-			{
-				this.OnContactMethodChanging(value);
-				this.SendPropertyChanging();
-				this._ContactMethod = value;
-				this.SendPropertyChanged("ContactMethod");
-				this.OnContactMethodChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid UserId
-	{
-		get
-		{
-			return this._UserId;
-		}
-		set
-		{
-			if ((this._UserId != value))
-			{
-				if (this._aspnet_User.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnUserIdChanging(value);
-				this.SendPropertyChanging();
-				this._UserId = value;
-				this.SendPropertyChanged("UserId");
-				this.OnUserIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultEventId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> DefaultEventId
-	{
-		get
-		{
-			return this._DefaultEventId;
-		}
-		set
-		{
-			if ((this._DefaultEventId != value))
-			{
-				this.OnDefaultEventIdChanging(value);
-				this.SendPropertyChanging();
-				this._DefaultEventId = value;
-				this.SendPropertyChanged("DefaultEventId");
-				this.OnDefaultEventIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerReliefMoniker", DbType="VarChar(15)")]
-	public string VolunteerReliefMoniker
-	{
-		get
-		{
-			return this._VolunteerReliefMoniker;
-		}
-		set
-		{
-			if ((this._VolunteerReliefMoniker != value))
-			{
-				this.OnVolunteerReliefMonikerChanging(value);
-				this.SendPropertyChanging();
-				this._VolunteerReliefMoniker = value;
-				this.SendPropertyChanged("VolunteerReliefMoniker");
-				this.OnVolunteerReliefMonikerChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(MAX)")]
-	public string Description
-	{
-		get
-		{
-			return this._Description;
-		}
-		set
-		{
-			if ((this._Description != value))
-			{
-				this.OnDescriptionChanging(value);
-				this.SendPropertyChanging();
-				this._Description = value;
-				this.SendPropertyChanged("Description");
-				this.OnDescriptionChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DatesAvailable", DbType="VarChar(200)")]
-	public string DatesAvailable
-	{
-		get
-		{
-			return this._DatesAvailable;
-		}
-		set
-		{
-			if ((this._DatesAvailable != value))
-			{
-				this.OnDatesAvailableChanging(value);
-				this.SendPropertyChanging();
-				this._DatesAvailable = value;
-				this.SendPropertyChanged("DatesAvailable");
-				this.OnDatesAvailableChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberOfDaysAvailable", DbType="VarChar(5)")]
-	public string NumberOfDaysAvailable
-	{
-		get
-		{
-			return this._NumberOfDaysAvailable;
-		}
-		set
-		{
-			if ((this._NumberOfDaysAvailable != value))
-			{
-				this.OnNumberOfDaysAvailableChanging(value);
-				this.SendPropertyChanging();
-				this._NumberOfDaysAvailable = value;
-				this.SendPropertyChanged("NumberOfDaysAvailable");
-				this.OnNumberOfDaysAvailableChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PreviousVolunteerExperience", DbType="VarChar(MAX)")]
-	public string PreviousVolunteerExperience
-	{
-		get
-		{
-			return this._PreviousVolunteerExperience;
-		}
-		set
-		{
-			if ((this._PreviousVolunteerExperience != value))
-			{
-				this.OnPreviousVolunteerExperienceChanging(value);
-				this.SendPropertyChanging();
-				this._PreviousVolunteerExperience = value;
-				this.SendPropertyChanged("PreviousVolunteerExperience");
-				this.OnPreviousVolunteerExperienceChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Age", DbType="Int")]
-	public System.Nullable<int> Age
-	{
-		get
-		{
-			return this._Age;
-		}
-		set
-		{
-			if ((this._Age != value))
-			{
-				this.OnAgeChanging(value);
-				this.SendPropertyChanging();
-				this._Age = value;
-				this.SendPropertyChanged("Age");
-				this.OnAgeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ZelloName", DbType="VarChar(50)")]
-	public string ZelloName
-	{
-		get
-		{
-			return this._ZelloName;
-		}
-		set
-		{
-			if ((this._ZelloName != value))
-			{
-				this.OnZelloNameChanging(value);
-				this.SendPropertyChanging();
-				this._ZelloName = value;
-				this.SendPropertyChanged("ZelloName");
-				this.OnZelloNameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Title", DbType="VarChar(500)")]
-	public string Title
-	{
-		get
-		{
-			return this._Title;
-		}
-		set
-		{
-			if ((this._Title != value))
-			{
-				this.OnTitleChanging(value);
-				this.SendPropertyChanging();
-				this._Title = value;
-				this.SendPropertyChanged("Title");
-				this.OnTitleChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Photo", DbType="VarChar(500)")]
-	public string Photo
-	{
-		get
-		{
-			return this._Photo;
-		}
-		set
-		{
-			if ((this._Photo != value))
-			{
-				this.OnPhotoChanging(value);
-				this.SendPropertyChanging();
-				this._Photo = value;
-				this.SendPropertyChanged("Photo");
-				this.OnPhotoChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingActive", DbType="Bit")]
-	public System.Nullable<bool> VettingActive
-	{
-		get
-		{
-			return this._VettingActive;
-		}
-		set
-		{
-			if ((this._VettingActive != value))
-			{
-				this.OnVettingActiveChanging(value);
-				this.SendPropertyChanging();
-				this._VettingActive = value;
-				this.SendPropertyChanged("VettingActive");
-				this.OnVettingActiveChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingComplete", DbType="Bit")]
-	public System.Nullable<bool> VettingComplete
-	{
-		get
-		{
-			return this._VettingComplete;
-		}
-		set
-		{
-			if ((this._VettingComplete != value))
-			{
-				this.OnVettingCompleteChanging(value);
-				this.SendPropertyChanging();
-				this._VettingComplete = value;
-				this.SendPropertyChanged("VettingComplete");
-				this.OnVettingCompleteChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PassedVetting", DbType="Bit")]
-	public System.Nullable<bool> PassedVetting
-	{
-		get
-		{
-			return this._PassedVetting;
-		}
-		set
-		{
-			if ((this._PassedVetting != value))
-			{
-				this.OnPassedVettingChanging(value);
-				this.SendPropertyChanging();
-				this._PassedVetting = value;
-				this.SendPropertyChanged("PassedVetting");
-				this.OnPassedVettingChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettedBy", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> VettedBy
-	{
-		get
-		{
-			return this._VettedBy;
-		}
-		set
-		{
-			if ((this._VettedBy != value))
-			{
-				this.OnVettedByChanging(value);
-				this.SendPropertyChanging();
-				this._VettedBy = value;
-				this.SendPropertyChanged("VettedBy");
-				this.OnVettedByChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingNotes", DbType="VarChar(1000)")]
-	public string VettingNotes
-	{
-		get
-		{
-			return this._VettingNotes;
-		}
-		set
-		{
-			if ((this._VettingNotes != value))
-			{
-				this.OnVettingNotesChanging(value);
-				this.SendPropertyChanging();
-				this._VettingNotes = value;
-				this.SendPropertyChanged("VettingNotes");
-				this.OnVettingNotesChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateVettingStarted", DbType="DateTime")]
-	public System.Nullable<System.DateTime> DateVettingStarted
-	{
-		get
-		{
-			return this._DateVettingStarted;
-		}
-		set
-		{
-			if ((this._DateVettingStarted != value))
-			{
-				this.OnDateVettingStartedChanging(value);
-				this.SendPropertyChanging();
-				this._DateVettingStarted = value;
-				this.SendPropertyChanged("DateVettingStarted");
-				this.OnDateVettingStartedChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateVettingCompleted", DbType="DateTime")]
-	public System.Nullable<System.DateTime> DateVettingCompleted
-	{
-		get
-		{
-			return this._DateVettingCompleted;
-		}
-		set
-		{
-			if ((this._DateVettingCompleted != value))
-			{
-				this.OnDateVettingCompletedChanging(value);
-				this.SendPropertyChanging();
-				this._DateVettingCompleted = value;
-				this.SendPropertyChanged("DateVettingCompleted");
-				this.OnDateVettingCompletedChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerApplicationIsComplete", DbType="Bit")]
-	public System.Nullable<bool> VolunteerApplicationIsComplete
-	{
-		get
-		{
-			return this._VolunteerApplicationIsComplete;
-		}
-		set
-		{
-			if ((this._VolunteerApplicationIsComplete != value))
-			{
-				this.OnVolunteerApplicationIsCompleteChanging(value);
-				this.SendPropertyChanging();
-				this._VolunteerApplicationIsComplete = value;
-				this.SendPropertyChanged("VolunteerApplicationIsComplete");
-				this.OnVolunteerApplicationIsCompleteChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerApplicationDate", DbType="DateTime")]
-	public System.Nullable<System.DateTime> VolunteerApplicationDate
-	{
-		get
-		{
-			return this._VolunteerApplicationDate;
-		}
-		set
-		{
-			if ((this._VolunteerApplicationDate != value))
-			{
-				this.OnVolunteerApplicationDateChanging(value);
-				this.SendPropertyChanging();
-				this._VolunteerApplicationDate = value;
-				this.SendPropertyChanged("VolunteerApplicationDate");
-				this.OnVolunteerApplicationDateChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhotoId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> PhotoId
-	{
-		get
-		{
-			return this._PhotoId;
-		}
-		set
-		{
-			if ((this._PhotoId != value))
-			{
-				this.OnPhotoIdChanging(value);
-				this.SendPropertyChanging();
-				this._PhotoId = value;
-				this.SendPropertyChanged("PhotoId");
-				this.OnPhotoIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AmazonWishListURL", DbType="VarChar(1000)")]
-	public string AmazonWishListURL
-	{
-		get
-		{
-			return this._AmazonWishListURL;
-		}
-		set
-		{
-			if ((this._AmazonWishListURL != value))
-			{
-				this.OnAmazonWishListURLChanging(value);
-				this.SendPropertyChanging();
-				this._AmazonWishListURL = value;
-				this.SendPropertyChanged("AmazonWishListURL");
-				this.OnAmazonWishListURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowOnWebsite", DbType="Bit")]
-	public System.Nullable<bool> ShowOnWebsite
-	{
-		get
-		{
-			return this._ShowOnWebsite;
-		}
-		set
-		{
-			if ((this._ShowOnWebsite != value))
-			{
-				this.OnShowOnWebsiteChanging(value);
-				this.SendPropertyChanging();
-				this._ShowOnWebsite = value;
-				this.SendPropertyChanged("ShowOnWebsite");
-				this.OnShowOnWebsiteChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HideUserActionModal", DbType="DateTime")]
-	public System.Nullable<System.DateTime> HideUserActionModal
-	{
-		get
-		{
-			return this._HideUserActionModal;
-		}
-		set
-		{
-			if ((this._HideUserActionModal != value))
-			{
-				this.OnHideUserActionModalChanging(value);
-				this.SendPropertyChanging();
-				this._HideUserActionModal = value;
-				this.SendPropertyChanged("HideUserActionModal");
-				this.OnHideUserActionModalChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Profile_ProfileAddress", Storage="_ProfileAddresses", ThisKey="ProfileId", OtherKey="ProfileId")]
-	public EntitySet<ProfileAddress> ProfileAddresses
-	{
-		get
-		{
-			return this._ProfileAddresses;
-		}
-		set
-		{
-			this._ProfileAddresses.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Profile", Storage="_aspnet_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
-	public aspnet_User aspnet_User
-	{
-		get
-		{
-			return this._aspnet_User.Entity;
-		}
-		set
-		{
-			aspnet_User previousValue = this._aspnet_User.Entity;
-			if (((previousValue != value) 
-						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._aspnet_User.Entity = null;
-					previousValue.Profiles.Remove(this);
-				}
-				this._aspnet_User.Entity = value;
-				if ((value != null))
-				{
-					value.Profiles.Add(this);
-					this._UserId = value.UserId;
-				}
-				else
-				{
-					this._UserId = default(System.Guid);
-				}
-				this.SendPropertyChanged("aspnet_User");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-	
-	private void attach_ProfileAddresses(ProfileAddress entity)
-	{
-		this.SendPropertyChanging();
-		entity.Profile = this;
-	}
-	
-	private void detach_ProfileAddresses(ProfileAddress entity)
-	{
-		this.SendPropertyChanging();
-		entity.Profile = null;
-	}
-}
-
 [global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Event")]
 public partial class Event : INotifyPropertyChanging, INotifyPropertyChanged
 {
@@ -41214,6 +39509,8 @@ public partial class Event : INotifyPropertyChanging, INotifyPropertyChanged
 	
 	private EntitySet<TicketProperty> _TicketProperties;
 	
+	private EntitySet<Post> _Posts;
+	
 	private EntityRef<aspnet_User> _aspnet_User;
 	
     #region Extensibility Method Definitions
@@ -41336,6 +39633,7 @@ public partial class Event : INotifyPropertyChanging, INotifyPropertyChanged
 		this._UserEvents = new EntitySet<UserEvent>(new Action<UserEvent>(this.attach_UserEvents), new Action<UserEvent>(this.detach_UserEvents));
 		this._OrganizationEvents = new EntitySet<OrganizationEvent>(new Action<OrganizationEvent>(this.attach_OrganizationEvents), new Action<OrganizationEvent>(this.detach_OrganizationEvents));
 		this._TicketProperties = new EntitySet<TicketProperty>(new Action<TicketProperty>(this.attach_TicketProperties), new Action<TicketProperty>(this.detach_TicketProperties));
+		this._Posts = new EntitySet<Post>(new Action<Post>(this.attach_Posts), new Action<Post>(this.detach_Posts));
 		this._aspnet_User = default(EntityRef<aspnet_User>);
 		OnCreated();
 	}
@@ -42500,6 +40798,19 @@ public partial class Event : INotifyPropertyChanging, INotifyPropertyChanged
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Event_Post", Storage="_Posts", ThisKey="EventId", OtherKey="EventId")]
+	public EntitySet<Post> Posts
+	{
+		get
+		{
+			return this._Posts;
+		}
+		set
+		{
+			this._Posts.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Event", Storage="_aspnet_User", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
 	public aspnet_User aspnet_User
 	{
@@ -42693,6 +41004,18 @@ public partial class Event : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 	
 	private void detach_TicketProperties(TicketProperty entity)
+	{
+		this.SendPropertyChanging();
+		entity.Event = null;
+	}
+	
+	private void attach_Posts(Post entity)
+	{
+		this.SendPropertyChanging();
+		entity.Event = this;
+	}
+	
+	private void detach_Posts(Post entity)
 	{
 		this.SendPropertyChanging();
 		entity.Event = null;
@@ -45538,6 +43861,5320 @@ public partial class VideoLink : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this.SendPropertyChanging();
 		entity.VideoLink = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PaymentConfiguration")]
+public partial class PaymentConfiguration : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _PaymentConfigurationId;
+	
+	private string _PayPal;
+	
+	private string _Venmo;
+	
+	private string _CashApp;
+	
+	private string _Summary;
+	
+	private string _Address;
+	
+	private System.Nullable<System.DateTime> _CreatedOn;
+	
+	private System.Nullable<System.DateTime> _UpdatedOn;
+	
+	private string _CreatedBy;
+	
+	private string _UpdatedBy;
+	
+	private System.Nullable<System.Guid> _OrganizationId;
+	
+	private System.Nullable<bool> _ShowDonationButton;
+	
+	private EntityRef<Organization> _Organization;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPaymentConfigurationIdChanging(System.Guid value);
+    partial void OnPaymentConfigurationIdChanged();
+    partial void OnPayPalChanging(string value);
+    partial void OnPayPalChanged();
+    partial void OnVenmoChanging(string value);
+    partial void OnVenmoChanged();
+    partial void OnCashAppChanging(string value);
+    partial void OnCashAppChanged();
+    partial void OnSummaryChanging(string value);
+    partial void OnSummaryChanged();
+    partial void OnAddressChanging(string value);
+    partial void OnAddressChanged();
+    partial void OnCreatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnCreatedOnChanged();
+    partial void OnUpdatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnUpdatedOnChanged();
+    partial void OnCreatedByChanging(string value);
+    partial void OnCreatedByChanged();
+    partial void OnUpdatedByChanging(string value);
+    partial void OnUpdatedByChanged();
+    partial void OnOrganizationIdChanging(System.Nullable<System.Guid> value);
+    partial void OnOrganizationIdChanged();
+    partial void OnShowDonationButtonChanging(System.Nullable<bool> value);
+    partial void OnShowDonationButtonChanged();
+    #endregion
+	
+	public PaymentConfiguration()
+	{
+		this._Organization = default(EntityRef<Organization>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PaymentConfigurationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid PaymentConfigurationId
+	{
+		get
+		{
+			return this._PaymentConfigurationId;
+		}
+		set
+		{
+			if ((this._PaymentConfigurationId != value))
+			{
+				this.OnPaymentConfigurationIdChanging(value);
+				this.SendPropertyChanging();
+				this._PaymentConfigurationId = value;
+				this.SendPropertyChanged("PaymentConfigurationId");
+				this.OnPaymentConfigurationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PayPal", DbType="VarChar(255)")]
+	public string PayPal
+	{
+		get
+		{
+			return this._PayPal;
+		}
+		set
+		{
+			if ((this._PayPal != value))
+			{
+				this.OnPayPalChanging(value);
+				this.SendPropertyChanging();
+				this._PayPal = value;
+				this.SendPropertyChanged("PayPal");
+				this.OnPayPalChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Venmo", DbType="VarChar(255)")]
+	public string Venmo
+	{
+		get
+		{
+			return this._Venmo;
+		}
+		set
+		{
+			if ((this._Venmo != value))
+			{
+				this.OnVenmoChanging(value);
+				this.SendPropertyChanging();
+				this._Venmo = value;
+				this.SendPropertyChanged("Venmo");
+				this.OnVenmoChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CashApp", DbType="VarChar(255)")]
+	public string CashApp
+	{
+		get
+		{
+			return this._CashApp;
+		}
+		set
+		{
+			if ((this._CashApp != value))
+			{
+				this.OnCashAppChanging(value);
+				this.SendPropertyChanging();
+				this._CashApp = value;
+				this.SendPropertyChanged("CashApp");
+				this.OnCashAppChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Summary", DbType="NVarChar(MAX)")]
+	public string Summary
+	{
+		get
+		{
+			return this._Summary;
+		}
+		set
+		{
+			if ((this._Summary != value))
+			{
+				this.OnSummaryChanging(value);
+				this.SendPropertyChanging();
+				this._Summary = value;
+				this.SendPropertyChanged("Summary");
+				this.OnSummaryChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="NVarChar(MAX)")]
+	public string Address
+	{
+		get
+		{
+			return this._Address;
+		}
+		set
+		{
+			if ((this._Address != value))
+			{
+				this.OnAddressChanging(value);
+				this.SendPropertyChanging();
+				this._Address = value;
+				this.SendPropertyChanged("Address");
+				this.OnAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> UpdatedOn
+	{
+		get
+		{
+			return this._UpdatedOn;
+		}
+		set
+		{
+			if ((this._UpdatedOn != value))
+			{
+				this.OnUpdatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedOn = value;
+				this.SendPropertyChanged("UpdatedOn");
+				this.OnUpdatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="VarChar(255)")]
+	public string CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedBy", DbType="VarChar(255)")]
+	public string UpdatedBy
+	{
+		get
+		{
+			return this._UpdatedBy;
+		}
+		set
+		{
+			if ((this._UpdatedBy != value))
+			{
+				this.OnUpdatedByChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedBy = value;
+				this.SendPropertyChanged("UpdatedBy");
+				this.OnUpdatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				if (this._Organization.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowDonationButton", DbType="Bit")]
+	public System.Nullable<bool> ShowDonationButton
+	{
+		get
+		{
+			return this._ShowDonationButton;
+		}
+		set
+		{
+			if ((this._ShowDonationButton != value))
+			{
+				this.OnShowDonationButtonChanging(value);
+				this.SendPropertyChanging();
+				this._ShowDonationButton = value;
+				this.SendPropertyChanged("ShowDonationButton");
+				this.OnShowDonationButtonChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_PaymentConfiguration", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
+	public Organization Organization
+	{
+		get
+		{
+			return this._Organization.Entity;
+		}
+		set
+		{
+			Organization previousValue = this._Organization.Entity;
+			if (((previousValue != value) 
+						|| (this._Organization.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Organization.Entity = null;
+					previousValue.PaymentConfigurations.Remove(this);
+				}
+				this._Organization.Entity = value;
+				if ((value != null))
+				{
+					value.PaymentConfigurations.Add(this);
+					this._OrganizationId = value.OrganizationId;
+				}
+				else
+				{
+					this._OrganizationId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("Organization");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PostReactionType")]
+public partial class PostReactionType : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _PostReactionTypeId;
+	
+	private string _PostReactionType1;
+	
+	private string _PostReactionSymbol;
+	
+	private int _OrderId;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPostReactionTypeIdChanging(System.Guid value);
+    partial void OnPostReactionTypeIdChanged();
+    partial void OnPostReactionType1Changing(string value);
+    partial void OnPostReactionType1Changed();
+    partial void OnPostReactionSymbolChanging(string value);
+    partial void OnPostReactionSymbolChanged();
+    partial void OnOrderIdChanging(int value);
+    partial void OnOrderIdChanged();
+    #endregion
+	
+	public PostReactionType()
+	{
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostReactionTypeId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid PostReactionTypeId
+	{
+		get
+		{
+			return this._PostReactionTypeId;
+		}
+		set
+		{
+			if ((this._PostReactionTypeId != value))
+			{
+				this.OnPostReactionTypeIdChanging(value);
+				this.SendPropertyChanging();
+				this._PostReactionTypeId = value;
+				this.SendPropertyChanged("PostReactionTypeId");
+				this.OnPostReactionTypeIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="PostReactionType", Storage="_PostReactionType1", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+	public string PostReactionType1
+	{
+		get
+		{
+			return this._PostReactionType1;
+		}
+		set
+		{
+			if ((this._PostReactionType1 != value))
+			{
+				this.OnPostReactionType1Changing(value);
+				this.SendPropertyChanging();
+				this._PostReactionType1 = value;
+				this.SendPropertyChanged("PostReactionType1");
+				this.OnPostReactionType1Changed();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostReactionSymbol", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+	public string PostReactionSymbol
+	{
+		get
+		{
+			return this._PostReactionSymbol;
+		}
+		set
+		{
+			if ((this._PostReactionSymbol != value))
+			{
+				this.OnPostReactionSymbolChanging(value);
+				this.SendPropertyChanging();
+				this._PostReactionSymbol = value;
+				this.SendPropertyChanged("PostReactionSymbol");
+				this.OnPostReactionSymbolChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrderId", DbType="Int NOT NULL")]
+	public int OrderId
+	{
+		get
+		{
+			return this._OrderId;
+		}
+		set
+		{
+			if ((this._OrderId != value))
+			{
+				this.OnOrderIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrderId = value;
+				this.SendPropertyChanged("OrderId");
+				this.OnOrderIdChanged();
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PostReaction")]
+public partial class PostReaction : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _PostReactionId;
+	
+	private System.Guid _PostId;
+	
+	private System.Guid _ReactionTypeId;
+	
+	private bool _IsDeleted;
+	
+	private System.DateTime _CreatedOn;
+	
+	private System.Guid _CreatedBy;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+	private EntityRef<Post> _Post;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPostReactionIdChanging(System.Guid value);
+    partial void OnPostReactionIdChanged();
+    partial void OnPostIdChanging(System.Guid value);
+    partial void OnPostIdChanged();
+    partial void OnReactionTypeIdChanging(System.Guid value);
+    partial void OnReactionTypeIdChanged();
+    partial void OnIsDeletedChanging(bool value);
+    partial void OnIsDeletedChanged();
+    partial void OnCreatedOnChanging(System.DateTime value);
+    partial void OnCreatedOnChanged();
+    partial void OnCreatedByChanging(System.Guid value);
+    partial void OnCreatedByChanged();
+    #endregion
+	
+	public PostReaction()
+	{
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		this._Post = default(EntityRef<Post>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostReactionId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid PostReactionId
+	{
+		get
+		{
+			return this._PostReactionId;
+		}
+		set
+		{
+			if ((this._PostReactionId != value))
+			{
+				this.OnPostReactionIdChanging(value);
+				this.SendPropertyChanging();
+				this._PostReactionId = value;
+				this.SendPropertyChanged("PostReactionId");
+				this.OnPostReactionIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid PostId
+	{
+		get
+		{
+			return this._PostId;
+		}
+		set
+		{
+			if ((this._PostId != value))
+			{
+				if (this._Post.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnPostIdChanging(value);
+				this.SendPropertyChanging();
+				this._PostId = value;
+				this.SendPropertyChanged("PostId");
+				this.OnPostIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReactionTypeId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid ReactionTypeId
+	{
+		get
+		{
+			return this._ReactionTypeId;
+		}
+		set
+		{
+			if ((this._ReactionTypeId != value))
+			{
+				this.OnReactionTypeIdChanging(value);
+				this.SendPropertyChanging();
+				this._ReactionTypeId = value;
+				this.SendPropertyChanged("ReactionTypeId");
+				this.OnReactionTypeIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDeleted", DbType="Bit NOT NULL")]
+	public bool IsDeleted
+	{
+		get
+		{
+			return this._IsDeleted;
+		}
+		set
+		{
+			if ((this._IsDeleted != value))
+			{
+				this.OnIsDeletedChanging(value);
+				this.SendPropertyChanging();
+				this._IsDeleted = value;
+				this.SendPropertyChanged("IsDeleted");
+				this.OnIsDeletedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostReaction", Storage="_aspnet_User", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.PostReactions.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.PostReactions.Add(this);
+					this._CreatedBy = value.UserId;
+				}
+				else
+				{
+					this._CreatedBy = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Post_PostReaction", Storage="_Post", ThisKey="PostId", OtherKey="PostId", IsForeignKey=true)]
+	public Post Post
+	{
+		get
+		{
+			return this._Post.Entity;
+		}
+		set
+		{
+			Post previousValue = this._Post.Entity;
+			if (((previousValue != value) 
+						|| (this._Post.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Post.Entity = null;
+					previousValue.PostReactions.Remove(this);
+				}
+				this._Post.Entity = value;
+				if ((value != null))
+				{
+					value.PostReactions.Add(this);
+					this._PostId = value.PostId;
+				}
+				else
+				{
+					this._PostId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Post");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PostComment")]
+public partial class PostComment : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _PostCommentId;
+	
+	private System.Guid _PostId;
+	
+	private System.Guid _CommentId;
+	
+	private System.Guid _UserId;
+	
+	private System.DateTime _CreatedOn;
+	
+	private bool _IsDeleted;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+	private EntityRef<Comment> _Comment;
+	
+	private EntityRef<Post> _Post;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPostCommentIdChanging(System.Guid value);
+    partial void OnPostCommentIdChanged();
+    partial void OnPostIdChanging(System.Guid value);
+    partial void OnPostIdChanged();
+    partial void OnCommentIdChanging(System.Guid value);
+    partial void OnCommentIdChanged();
+    partial void OnUserIdChanging(System.Guid value);
+    partial void OnUserIdChanged();
+    partial void OnCreatedOnChanging(System.DateTime value);
+    partial void OnCreatedOnChanged();
+    partial void OnIsDeletedChanging(bool value);
+    partial void OnIsDeletedChanged();
+    #endregion
+	
+	public PostComment()
+	{
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		this._Comment = default(EntityRef<Comment>);
+		this._Post = default(EntityRef<Post>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostCommentId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid PostCommentId
+	{
+		get
+		{
+			return this._PostCommentId;
+		}
+		set
+		{
+			if ((this._PostCommentId != value))
+			{
+				this.OnPostCommentIdChanging(value);
+				this.SendPropertyChanging();
+				this._PostCommentId = value;
+				this.SendPropertyChanged("PostCommentId");
+				this.OnPostCommentIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid PostId
+	{
+		get
+		{
+			return this._PostId;
+		}
+		set
+		{
+			if ((this._PostId != value))
+			{
+				if (this._Post.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnPostIdChanging(value);
+				this.SendPropertyChanging();
+				this._PostId = value;
+				this.SendPropertyChanged("PostId");
+				this.OnPostIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CommentId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid CommentId
+	{
+		get
+		{
+			return this._CommentId;
+		}
+		set
+		{
+			if ((this._CommentId != value))
+			{
+				if (this._Comment.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCommentIdChanging(value);
+				this.SendPropertyChanging();
+				this._CommentId = value;
+				this.SendPropertyChanged("CommentId");
+				this.OnCommentIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDeleted", DbType="Bit NOT NULL")]
+	public bool IsDeleted
+	{
+		get
+		{
+			return this._IsDeleted;
+		}
+		set
+		{
+			if ((this._IsDeleted != value))
+			{
+				this.OnIsDeletedChanging(value);
+				this.SendPropertyChanging();
+				this._IsDeleted = value;
+				this.SendPropertyChanged("IsDeleted");
+				this.OnIsDeletedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostComment", Storage="_aspnet_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.PostComments.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.PostComments.Add(this);
+					this._UserId = value.UserId;
+				}
+				else
+				{
+					this._UserId = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Comment_PostComment", Storage="_Comment", ThisKey="CommentId", OtherKey="CommentId", IsForeignKey=true)]
+	public Comment Comment
+	{
+		get
+		{
+			return this._Comment.Entity;
+		}
+		set
+		{
+			Comment previousValue = this._Comment.Entity;
+			if (((previousValue != value) 
+						|| (this._Comment.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Comment.Entity = null;
+					previousValue.PostComments.Remove(this);
+				}
+				this._Comment.Entity = value;
+				if ((value != null))
+				{
+					value.PostComments.Add(this);
+					this._CommentId = value.CommentId;
+				}
+				else
+				{
+					this._CommentId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Comment");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Post_PostComment", Storage="_Post", ThisKey="PostId", OtherKey="PostId", IsForeignKey=true)]
+	public Post Post
+	{
+		get
+		{
+			return this._Post.Entity;
+		}
+		set
+		{
+			Post previousValue = this._Post.Entity;
+			if (((previousValue != value) 
+						|| (this._Post.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Post.Entity = null;
+					previousValue.PostComments.Remove(this);
+				}
+				this._Post.Entity = value;
+				if ((value != null))
+				{
+					value.PostComments.Add(this);
+					this._PostId = value.PostId;
+				}
+				else
+				{
+					this._PostId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Post");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Comment")]
+public partial class Comment : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _CommentId;
+	
+	private string _Comment1;
+	
+	private System.DateTime _CreatedOn;
+	
+	private System.Guid _CreatedBy;
+	
+	private bool _IsDeleted;
+	
+	private System.Nullable<System.Guid> _ParentId;
+	
+	private EntitySet<ArticleComment> _ArticleComments;
+	
+	private EntitySet<PostComment> _PostComments;
+	
+	private EntitySet<PostTaggedUser> _PostTaggedUsers;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnCommentIdChanging(System.Guid value);
+    partial void OnCommentIdChanged();
+    partial void OnComment1Changing(string value);
+    partial void OnComment1Changed();
+    partial void OnCreatedOnChanging(System.DateTime value);
+    partial void OnCreatedOnChanged();
+    partial void OnCreatedByChanging(System.Guid value);
+    partial void OnCreatedByChanged();
+    partial void OnIsDeletedChanging(bool value);
+    partial void OnIsDeletedChanged();
+    partial void OnParentIdChanging(System.Nullable<System.Guid> value);
+    partial void OnParentIdChanged();
+    #endregion
+	
+	public Comment()
+	{
+		this._ArticleComments = new EntitySet<ArticleComment>(new Action<ArticleComment>(this.attach_ArticleComments), new Action<ArticleComment>(this.detach_ArticleComments));
+		this._PostComments = new EntitySet<PostComment>(new Action<PostComment>(this.attach_PostComments), new Action<PostComment>(this.detach_PostComments));
+		this._PostTaggedUsers = new EntitySet<PostTaggedUser>(new Action<PostTaggedUser>(this.attach_PostTaggedUsers), new Action<PostTaggedUser>(this.detach_PostTaggedUsers));
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CommentId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid CommentId
+	{
+		get
+		{
+			return this._CommentId;
+		}
+		set
+		{
+			if ((this._CommentId != value))
+			{
+				this.OnCommentIdChanging(value);
+				this.SendPropertyChanging();
+				this._CommentId = value;
+				this.SendPropertyChanged("CommentId");
+				this.OnCommentIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="Comment", Storage="_Comment1", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
+	public string Comment1
+	{
+		get
+		{
+			return this._Comment1;
+		}
+		set
+		{
+			if ((this._Comment1 != value))
+			{
+				this.OnComment1Changing(value);
+				this.SendPropertyChanging();
+				this._Comment1 = value;
+				this.SendPropertyChanged("Comment1");
+				this.OnComment1Changed();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDeleted", DbType="Bit NOT NULL")]
+	public bool IsDeleted
+	{
+		get
+		{
+			return this._IsDeleted;
+		}
+		set
+		{
+			if ((this._IsDeleted != value))
+			{
+				this.OnIsDeletedChanging(value);
+				this.SendPropertyChanging();
+				this._IsDeleted = value;
+				this.SendPropertyChanged("IsDeleted");
+				this.OnIsDeletedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ParentId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> ParentId
+	{
+		get
+		{
+			return this._ParentId;
+		}
+		set
+		{
+			if ((this._ParentId != value))
+			{
+				this.OnParentIdChanging(value);
+				this.SendPropertyChanging();
+				this._ParentId = value;
+				this.SendPropertyChanged("ParentId");
+				this.OnParentIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Comment_ArticleComment", Storage="_ArticleComments", ThisKey="CommentId", OtherKey="CommentId")]
+	public EntitySet<ArticleComment> ArticleComments
+	{
+		get
+		{
+			return this._ArticleComments;
+		}
+		set
+		{
+			this._ArticleComments.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Comment_PostComment", Storage="_PostComments", ThisKey="CommentId", OtherKey="CommentId")]
+	public EntitySet<PostComment> PostComments
+	{
+		get
+		{
+			return this._PostComments;
+		}
+		set
+		{
+			this._PostComments.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Comment_PostTaggedUser", Storage="_PostTaggedUsers", ThisKey="CommentId", OtherKey="CommentId")]
+	public EntitySet<PostTaggedUser> PostTaggedUsers
+	{
+		get
+		{
+			return this._PostTaggedUsers;
+		}
+		set
+		{
+			this._PostTaggedUsers.Assign(value);
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_ArticleComments(ArticleComment entity)
+	{
+		this.SendPropertyChanging();
+		entity.Comment = this;
+	}
+	
+	private void detach_ArticleComments(ArticleComment entity)
+	{
+		this.SendPropertyChanging();
+		entity.Comment = null;
+	}
+	
+	private void attach_PostComments(PostComment entity)
+	{
+		this.SendPropertyChanging();
+		entity.Comment = this;
+	}
+	
+	private void detach_PostComments(PostComment entity)
+	{
+		this.SendPropertyChanging();
+		entity.Comment = null;
+	}
+	
+	private void attach_PostTaggedUsers(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.Comment = this;
+	}
+	
+	private void detach_PostTaggedUsers(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.Comment = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.PostTaggedUser")]
+public partial class PostTaggedUser : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _PostTaggedUserId;
+	
+	private System.Guid _CommentId;
+	
+	private System.Guid _TaggedUser;
+	
+	private System.DateTime _CreatedOn;
+	
+	private System.Guid _CreatedBy;
+	
+	private System.Nullable<bool> _IsEmailNotification;
+	
+	private System.Nullable<bool> _IsSMSNotification;
+	
+	private System.Guid _PostId;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+	private EntityRef<aspnet_User> _aspnet_User1;
+	
+	private EntityRef<Comment> _Comment;
+	
+	private EntityRef<Post> _Post;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPostTaggedUserIdChanging(System.Guid value);
+    partial void OnPostTaggedUserIdChanged();
+    partial void OnCommentIdChanging(System.Guid value);
+    partial void OnCommentIdChanged();
+    partial void OnTaggedUserChanging(System.Guid value);
+    partial void OnTaggedUserChanged();
+    partial void OnCreatedOnChanging(System.DateTime value);
+    partial void OnCreatedOnChanged();
+    partial void OnCreatedByChanging(System.Guid value);
+    partial void OnCreatedByChanged();
+    partial void OnIsEmailNotificationChanging(System.Nullable<bool> value);
+    partial void OnIsEmailNotificationChanged();
+    partial void OnIsSMSNotificationChanging(System.Nullable<bool> value);
+    partial void OnIsSMSNotificationChanged();
+    partial void OnPostIdChanging(System.Guid value);
+    partial void OnPostIdChanged();
+    #endregion
+	
+	public PostTaggedUser()
+	{
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		this._aspnet_User1 = default(EntityRef<aspnet_User>);
+		this._Comment = default(EntityRef<Comment>);
+		this._Post = default(EntityRef<Post>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostTaggedUserId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid PostTaggedUserId
+	{
+		get
+		{
+			return this._PostTaggedUserId;
+		}
+		set
+		{
+			if ((this._PostTaggedUserId != value))
+			{
+				this.OnPostTaggedUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._PostTaggedUserId = value;
+				this.SendPropertyChanged("PostTaggedUserId");
+				this.OnPostTaggedUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CommentId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid CommentId
+	{
+		get
+		{
+			return this._CommentId;
+		}
+		set
+		{
+			if ((this._CommentId != value))
+			{
+				if (this._Comment.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCommentIdChanging(value);
+				this.SendPropertyChanging();
+				this._CommentId = value;
+				this.SendPropertyChanged("CommentId");
+				this.OnCommentIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TaggedUser", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid TaggedUser
+	{
+		get
+		{
+			return this._TaggedUser;
+		}
+		set
+		{
+			if ((this._TaggedUser != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnTaggedUserChanging(value);
+				this.SendPropertyChanging();
+				this._TaggedUser = value;
+				this.SendPropertyChanged("TaggedUser");
+				this.OnTaggedUserChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				if (this._aspnet_User1.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsEmailNotification", DbType="Bit")]
+	public System.Nullable<bool> IsEmailNotification
+	{
+		get
+		{
+			return this._IsEmailNotification;
+		}
+		set
+		{
+			if ((this._IsEmailNotification != value))
+			{
+				this.OnIsEmailNotificationChanging(value);
+				this.SendPropertyChanging();
+				this._IsEmailNotification = value;
+				this.SendPropertyChanged("IsEmailNotification");
+				this.OnIsEmailNotificationChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsSMSNotification", DbType="Bit")]
+	public System.Nullable<bool> IsSMSNotification
+	{
+		get
+		{
+			return this._IsSMSNotification;
+		}
+		set
+		{
+			if ((this._IsSMSNotification != value))
+			{
+				this.OnIsSMSNotificationChanging(value);
+				this.SendPropertyChanging();
+				this._IsSMSNotification = value;
+				this.SendPropertyChanged("IsSMSNotification");
+				this.OnIsSMSNotificationChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid PostId
+	{
+		get
+		{
+			return this._PostId;
+		}
+		set
+		{
+			if ((this._PostId != value))
+			{
+				if (this._Post.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnPostIdChanging(value);
+				this.SendPropertyChanging();
+				this._PostId = value;
+				this.SendPropertyChanged("PostId");
+				this.OnPostIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostTaggedUser", Storage="_aspnet_User", ThisKey="TaggedUser", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.PostTaggedUsers.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.PostTaggedUsers.Add(this);
+					this._TaggedUser = value.UserId;
+				}
+				else
+				{
+					this._TaggedUser = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_PostTaggedUser1", Storage="_aspnet_User1", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User1
+	{
+		get
+		{
+			return this._aspnet_User1.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User1.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User1.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User1.Entity = null;
+					previousValue.PostTaggedUsers1.Remove(this);
+				}
+				this._aspnet_User1.Entity = value;
+				if ((value != null))
+				{
+					value.PostTaggedUsers1.Add(this);
+					this._CreatedBy = value.UserId;
+				}
+				else
+				{
+					this._CreatedBy = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User1");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Comment_PostTaggedUser", Storage="_Comment", ThisKey="CommentId", OtherKey="CommentId", IsForeignKey=true)]
+	public Comment Comment
+	{
+		get
+		{
+			return this._Comment.Entity;
+		}
+		set
+		{
+			Comment previousValue = this._Comment.Entity;
+			if (((previousValue != value) 
+						|| (this._Comment.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Comment.Entity = null;
+					previousValue.PostTaggedUsers.Remove(this);
+				}
+				this._Comment.Entity = value;
+				if ((value != null))
+				{
+					value.PostTaggedUsers.Add(this);
+					this._CommentId = value.CommentId;
+				}
+				else
+				{
+					this._CommentId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Comment");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Post_PostTaggedUser", Storage="_Post", ThisKey="PostId", OtherKey="PostId", IsForeignKey=true)]
+	public Post Post
+	{
+		get
+		{
+			return this._Post.Entity;
+		}
+		set
+		{
+			Post previousValue = this._Post.Entity;
+			if (((previousValue != value) 
+						|| (this._Post.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Post.Entity = null;
+					previousValue.PostTaggedUsers.Remove(this);
+				}
+				this._Post.Entity = value;
+				if ((value != null))
+				{
+					value.PostTaggedUsers.Add(this);
+					this._PostId = value.PostId;
+				}
+				else
+				{
+					this._PostId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Post");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.FeatureType")]
+public partial class FeatureType : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _FeatureTypeId;
+	
+	private string _FeatureName;
+	
+	private string _RedirectURL;
+	
+	private bool _IncludeInStream;
+	
+	private System.Nullable<int> _Counter;
+	
+	private string _DisplayText;
+	
+	private EntitySet<Notification> _Notifications;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnFeatureTypeIdChanging(System.Guid value);
+    partial void OnFeatureTypeIdChanged();
+    partial void OnFeatureNameChanging(string value);
+    partial void OnFeatureNameChanged();
+    partial void OnRedirectURLChanging(string value);
+    partial void OnRedirectURLChanged();
+    partial void OnIncludeInStreamChanging(bool value);
+    partial void OnIncludeInStreamChanged();
+    partial void OnCounterChanging(System.Nullable<int> value);
+    partial void OnCounterChanged();
+    partial void OnDisplayTextChanging(string value);
+    partial void OnDisplayTextChanged();
+    #endregion
+	
+	public FeatureType()
+	{
+		this._Notifications = new EntitySet<Notification>(new Action<Notification>(this.attach_Notifications), new Action<Notification>(this.detach_Notifications));
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FeatureTypeId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid FeatureTypeId
+	{
+		get
+		{
+			return this._FeatureTypeId;
+		}
+		set
+		{
+			if ((this._FeatureTypeId != value))
+			{
+				this.OnFeatureTypeIdChanging(value);
+				this.SendPropertyChanging();
+				this._FeatureTypeId = value;
+				this.SendPropertyChanged("FeatureTypeId");
+				this.OnFeatureTypeIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FeatureName", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+	public string FeatureName
+	{
+		get
+		{
+			return this._FeatureName;
+		}
+		set
+		{
+			if ((this._FeatureName != value))
+			{
+				this.OnFeatureNameChanging(value);
+				this.SendPropertyChanging();
+				this._FeatureName = value;
+				this.SendPropertyChanged("FeatureName");
+				this.OnFeatureNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RedirectURL", DbType="NVarChar(500) NOT NULL", CanBeNull=false)]
+	public string RedirectURL
+	{
+		get
+		{
+			return this._RedirectURL;
+		}
+		set
+		{
+			if ((this._RedirectURL != value))
+			{
+				this.OnRedirectURLChanging(value);
+				this.SendPropertyChanging();
+				this._RedirectURL = value;
+				this.SendPropertyChanged("RedirectURL");
+				this.OnRedirectURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IncludeInStream", DbType="Bit NOT NULL")]
+	public bool IncludeInStream
+	{
+		get
+		{
+			return this._IncludeInStream;
+		}
+		set
+		{
+			if ((this._IncludeInStream != value))
+			{
+				this.OnIncludeInStreamChanging(value);
+				this.SendPropertyChanging();
+				this._IncludeInStream = value;
+				this.SendPropertyChanged("IncludeInStream");
+				this.OnIncludeInStreamChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Counter", DbType="Int")]
+	public System.Nullable<int> Counter
+	{
+		get
+		{
+			return this._Counter;
+		}
+		set
+		{
+			if ((this._Counter != value))
+			{
+				this.OnCounterChanging(value);
+				this.SendPropertyChanging();
+				this._Counter = value;
+				this.SendPropertyChanged("Counter");
+				this.OnCounterChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayText", DbType="NVarChar(50)")]
+	public string DisplayText
+	{
+		get
+		{
+			return this._DisplayText;
+		}
+		set
+		{
+			if ((this._DisplayText != value))
+			{
+				this.OnDisplayTextChanging(value);
+				this.SendPropertyChanging();
+				this._DisplayText = value;
+				this.SendPropertyChanged("DisplayText");
+				this.OnDisplayTextChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FeatureType_Notification", Storage="_Notifications", ThisKey="FeatureTypeId", OtherKey="FeatureTypeId")]
+	public EntitySet<Notification> Notifications
+	{
+		get
+		{
+			return this._Notifications;
+		}
+		set
+		{
+			this._Notifications.Assign(value);
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_Notifications(Notification entity)
+	{
+		this.SendPropertyChanging();
+		entity.FeatureType = this;
+	}
+	
+	private void detach_Notifications(Notification entity)
+	{
+		this.SendPropertyChanging();
+		entity.FeatureType = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Notification")]
+public partial class Notification : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _NotificationId;
+	
+	private string _Title;
+	
+	private string _Description;
+	
+	private string _RedirectURLParameters;
+	
+	private int _NotificationType;
+	
+	private System.DateTime _CreatedOn;
+	
+	private int _CreatedBy;
+	
+	private bool _IsRead;
+	
+	private System.Nullable<System.Guid> _SenderUserId;
+	
+	private System.Nullable<System.Guid> _RecipientUserId;
+	
+	private System.Nullable<System.Guid> _FeatureTypeId;
+	
+	private System.Nullable<bool> _PostToStream;
+	
+	private EntityRef<FeatureType> _FeatureType;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnNotificationIdChanging(System.Guid value);
+    partial void OnNotificationIdChanged();
+    partial void OnTitleChanging(string value);
+    partial void OnTitleChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnRedirectURLParametersChanging(string value);
+    partial void OnRedirectURLParametersChanged();
+    partial void OnNotificationTypeChanging(int value);
+    partial void OnNotificationTypeChanged();
+    partial void OnCreatedOnChanging(System.DateTime value);
+    partial void OnCreatedOnChanged();
+    partial void OnCreatedByChanging(int value);
+    partial void OnCreatedByChanged();
+    partial void OnIsReadChanging(bool value);
+    partial void OnIsReadChanged();
+    partial void OnSenderUserIdChanging(System.Nullable<System.Guid> value);
+    partial void OnSenderUserIdChanged();
+    partial void OnRecipientUserIdChanging(System.Nullable<System.Guid> value);
+    partial void OnRecipientUserIdChanged();
+    partial void OnFeatureTypeIdChanging(System.Nullable<System.Guid> value);
+    partial void OnFeatureTypeIdChanged();
+    partial void OnPostToStreamChanging(System.Nullable<bool> value);
+    partial void OnPostToStreamChanged();
+    #endregion
+	
+	public Notification()
+	{
+		this._FeatureType = default(EntityRef<FeatureType>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NotificationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid NotificationId
+	{
+		get
+		{
+			return this._NotificationId;
+		}
+		set
+		{
+			if ((this._NotificationId != value))
+			{
+				this.OnNotificationIdChanging(value);
+				this.SendPropertyChanging();
+				this._NotificationId = value;
+				this.SendPropertyChanged("NotificationId");
+				this.OnNotificationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Title", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+	public string Title
+	{
+		get
+		{
+			return this._Title;
+		}
+		set
+		{
+			if ((this._Title != value))
+			{
+				this.OnTitleChanging(value);
+				this.SendPropertyChanging();
+				this._Title = value;
+				this.SendPropertyChanged("Title");
+				this.OnTitleChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="NVarChar(1000) NOT NULL", CanBeNull=false)]
+	public string Description
+	{
+		get
+		{
+			return this._Description;
+		}
+		set
+		{
+			if ((this._Description != value))
+			{
+				this.OnDescriptionChanging(value);
+				this.SendPropertyChanging();
+				this._Description = value;
+				this.SendPropertyChanged("Description");
+				this.OnDescriptionChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RedirectURLParameters", DbType="NVarChar(500)")]
+	public string RedirectURLParameters
+	{
+		get
+		{
+			return this._RedirectURLParameters;
+		}
+		set
+		{
+			if ((this._RedirectURLParameters != value))
+			{
+				this.OnRedirectURLParametersChanging(value);
+				this.SendPropertyChanging();
+				this._RedirectURLParameters = value;
+				this.SendPropertyChanged("RedirectURLParameters");
+				this.OnRedirectURLParametersChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NotificationType", DbType="Int NOT NULL")]
+	public int NotificationType
+	{
+		get
+		{
+			return this._NotificationType;
+		}
+		set
+		{
+			if ((this._NotificationType != value))
+			{
+				this.OnNotificationTypeChanging(value);
+				this.SendPropertyChanging();
+				this._NotificationType = value;
+				this.SendPropertyChanged("NotificationType");
+				this.OnNotificationTypeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="Int NOT NULL")]
+	public int CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsRead", DbType="Bit NOT NULL")]
+	public bool IsRead
+	{
+		get
+		{
+			return this._IsRead;
+		}
+		set
+		{
+			if ((this._IsRead != value))
+			{
+				this.OnIsReadChanging(value);
+				this.SendPropertyChanging();
+				this._IsRead = value;
+				this.SendPropertyChanged("IsRead");
+				this.OnIsReadChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SenderUserId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> SenderUserId
+	{
+		get
+		{
+			return this._SenderUserId;
+		}
+		set
+		{
+			if ((this._SenderUserId != value))
+			{
+				this.OnSenderUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._SenderUserId = value;
+				this.SendPropertyChanged("SenderUserId");
+				this.OnSenderUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RecipientUserId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> RecipientUserId
+	{
+		get
+		{
+			return this._RecipientUserId;
+		}
+		set
+		{
+			if ((this._RecipientUserId != value))
+			{
+				this.OnRecipientUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._RecipientUserId = value;
+				this.SendPropertyChanged("RecipientUserId");
+				this.OnRecipientUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FeatureTypeId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> FeatureTypeId
+	{
+		get
+		{
+			return this._FeatureTypeId;
+		}
+		set
+		{
+			if ((this._FeatureTypeId != value))
+			{
+				if (this._FeatureType.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnFeatureTypeIdChanging(value);
+				this.SendPropertyChanging();
+				this._FeatureTypeId = value;
+				this.SendPropertyChanged("FeatureTypeId");
+				this.OnFeatureTypeIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostToStream", DbType="Bit")]
+	public System.Nullable<bool> PostToStream
+	{
+		get
+		{
+			return this._PostToStream;
+		}
+		set
+		{
+			if ((this._PostToStream != value))
+			{
+				this.OnPostToStreamChanging(value);
+				this.SendPropertyChanging();
+				this._PostToStream = value;
+				this.SendPropertyChanged("PostToStream");
+				this.OnPostToStreamChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FeatureType_Notification", Storage="_FeatureType", ThisKey="FeatureTypeId", OtherKey="FeatureTypeId", IsForeignKey=true)]
+	public FeatureType FeatureType
+	{
+		get
+		{
+			return this._FeatureType.Entity;
+		}
+		set
+		{
+			FeatureType previousValue = this._FeatureType.Entity;
+			if (((previousValue != value) 
+						|| (this._FeatureType.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._FeatureType.Entity = null;
+					previousValue.Notifications.Remove(this);
+				}
+				this._FeatureType.Entity = value;
+				if ((value != null))
+				{
+					value.Notifications.Add(this);
+					this._FeatureTypeId = value.FeatureTypeId;
+				}
+				else
+				{
+					this._FeatureTypeId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("FeatureType");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ProfilePhoto")]
+public partial class ProfilePhoto : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _ProfilePhotoId;
+	
+	private System.Guid _UserId;
+	
+	private System.Guid _PhotoId;
+	
+	private bool _IsCurrrent;
+	
+	private System.Nullable<System.DateTime> _CreatedOn;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnProfilePhotoIdChanging(System.Guid value);
+    partial void OnProfilePhotoIdChanged();
+    partial void OnUserIdChanging(System.Guid value);
+    partial void OnUserIdChanged();
+    partial void OnPhotoIdChanging(System.Guid value);
+    partial void OnPhotoIdChanged();
+    partial void OnIsCurrrentChanging(bool value);
+    partial void OnIsCurrrentChanged();
+    partial void OnCreatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnCreatedOnChanged();
+    #endregion
+	
+	public ProfilePhoto()
+	{
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProfilePhotoId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid ProfilePhotoId
+	{
+		get
+		{
+			return this._ProfilePhotoId;
+		}
+		set
+		{
+			if ((this._ProfilePhotoId != value))
+			{
+				this.OnProfilePhotoIdChanging(value);
+				this.SendPropertyChanging();
+				this._ProfilePhotoId = value;
+				this.SendPropertyChanged("ProfilePhotoId");
+				this.OnProfilePhotoIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhotoId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid PhotoId
+	{
+		get
+		{
+			return this._PhotoId;
+		}
+		set
+		{
+			if ((this._PhotoId != value))
+			{
+				this.OnPhotoIdChanging(value);
+				this.SendPropertyChanging();
+				this._PhotoId = value;
+				this.SendPropertyChanged("PhotoId");
+				this.OnPhotoIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsCurrrent", DbType="Bit NOT NULL")]
+	public bool IsCurrrent
+	{
+		get
+		{
+			return this._IsCurrrent;
+		}
+		set
+		{
+			if ((this._IsCurrrent != value))
+			{
+				this.OnIsCurrrentChanging(value);
+				this.SendPropertyChanging();
+				this._IsCurrrent = value;
+				this.SendPropertyChanged("IsCurrrent");
+				this.OnIsCurrrentChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_ProfilePhoto", Storage="_aspnet_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.ProfilePhotos.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.ProfilePhotos.Add(this);
+					this._UserId = value.UserId;
+				}
+				else
+				{
+					this._UserId = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Profile")]
+public partial class Profile : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _ProfileId;
+	
+	private int _ProfileNumber;
+	
+	private string _Firstname;
+	
+	private string _Lastname;
+	
+	private string _PhoneNumber;
+	
+	private string _Address;
+	
+	private string _City;
+	
+	private string _State;
+	
+	private string _Zip;
+	
+	private System.Nullable<bool> _ReceiveDeploymentSMS;
+	
+	private string _ContactMethod;
+	
+	private System.Guid _UserId;
+	
+	private System.Nullable<System.Guid> _DefaultEventId;
+	
+	private string _VolunteerReliefMoniker;
+	
+	private string _Description;
+	
+	private string _DatesAvailable;
+	
+	private string _NumberOfDaysAvailable;
+	
+	private string _PreviousVolunteerExperience;
+	
+	private System.Nullable<int> _Age;
+	
+	private string _ZelloName;
+	
+	private string _Title;
+	
+	private string _Photo;
+	
+	private System.Nullable<bool> _VettingActive;
+	
+	private System.Nullable<bool> _VettingComplete;
+	
+	private System.Nullable<bool> _PassedVetting;
+	
+	private System.Nullable<System.Guid> _VettedBy;
+	
+	private string _VettingNotes;
+	
+	private System.Nullable<System.DateTime> _DateVettingStarted;
+	
+	private System.Nullable<System.DateTime> _DateVettingCompleted;
+	
+	private System.Nullable<bool> _VolunteerApplicationIsComplete;
+	
+	private System.Nullable<System.DateTime> _VolunteerApplicationDate;
+	
+	private System.Nullable<System.Guid> _PhotoId;
+	
+	private string _AmazonWishListURL;
+	
+	private System.Nullable<bool> _ShowOnWebsite;
+	
+	private System.Nullable<System.DateTime> _HideUserActionModal;
+	
+	private bool _IsDisasterReadyCertified;
+	
+	private EntitySet<ProfileAddress> _ProfileAddresses;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnProfileIdChanging(System.Guid value);
+    partial void OnProfileIdChanged();
+    partial void OnProfileNumberChanging(int value);
+    partial void OnProfileNumberChanged();
+    partial void OnFirstnameChanging(string value);
+    partial void OnFirstnameChanged();
+    partial void OnLastnameChanging(string value);
+    partial void OnLastnameChanged();
+    partial void OnPhoneNumberChanging(string value);
+    partial void OnPhoneNumberChanged();
+    partial void OnAddressChanging(string value);
+    partial void OnAddressChanged();
+    partial void OnCityChanging(string value);
+    partial void OnCityChanged();
+    partial void OnStateChanging(string value);
+    partial void OnStateChanged();
+    partial void OnZipChanging(string value);
+    partial void OnZipChanged();
+    partial void OnReceiveDeploymentSMSChanging(System.Nullable<bool> value);
+    partial void OnReceiveDeploymentSMSChanged();
+    partial void OnContactMethodChanging(string value);
+    partial void OnContactMethodChanged();
+    partial void OnUserIdChanging(System.Guid value);
+    partial void OnUserIdChanged();
+    partial void OnDefaultEventIdChanging(System.Nullable<System.Guid> value);
+    partial void OnDefaultEventIdChanged();
+    partial void OnVolunteerReliefMonikerChanging(string value);
+    partial void OnVolunteerReliefMonikerChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnDatesAvailableChanging(string value);
+    partial void OnDatesAvailableChanged();
+    partial void OnNumberOfDaysAvailableChanging(string value);
+    partial void OnNumberOfDaysAvailableChanged();
+    partial void OnPreviousVolunteerExperienceChanging(string value);
+    partial void OnPreviousVolunteerExperienceChanged();
+    partial void OnAgeChanging(System.Nullable<int> value);
+    partial void OnAgeChanged();
+    partial void OnZelloNameChanging(string value);
+    partial void OnZelloNameChanged();
+    partial void OnTitleChanging(string value);
+    partial void OnTitleChanged();
+    partial void OnPhotoChanging(string value);
+    partial void OnPhotoChanged();
+    partial void OnVettingActiveChanging(System.Nullable<bool> value);
+    partial void OnVettingActiveChanged();
+    partial void OnVettingCompleteChanging(System.Nullable<bool> value);
+    partial void OnVettingCompleteChanged();
+    partial void OnPassedVettingChanging(System.Nullable<bool> value);
+    partial void OnPassedVettingChanged();
+    partial void OnVettedByChanging(System.Nullable<System.Guid> value);
+    partial void OnVettedByChanged();
+    partial void OnVettingNotesChanging(string value);
+    partial void OnVettingNotesChanged();
+    partial void OnDateVettingStartedChanging(System.Nullable<System.DateTime> value);
+    partial void OnDateVettingStartedChanged();
+    partial void OnDateVettingCompletedChanging(System.Nullable<System.DateTime> value);
+    partial void OnDateVettingCompletedChanged();
+    partial void OnVolunteerApplicationIsCompleteChanging(System.Nullable<bool> value);
+    partial void OnVolunteerApplicationIsCompleteChanged();
+    partial void OnVolunteerApplicationDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnVolunteerApplicationDateChanged();
+    partial void OnPhotoIdChanging(System.Nullable<System.Guid> value);
+    partial void OnPhotoIdChanged();
+    partial void OnAmazonWishListURLChanging(string value);
+    partial void OnAmazonWishListURLChanged();
+    partial void OnShowOnWebsiteChanging(System.Nullable<bool> value);
+    partial void OnShowOnWebsiteChanged();
+    partial void OnHideUserActionModalChanging(System.Nullable<System.DateTime> value);
+    partial void OnHideUserActionModalChanged();
+    partial void OnIsDisasterReadyCertifiedChanging(bool value);
+    partial void OnIsDisasterReadyCertifiedChanged();
+    #endregion
+	
+	public Profile()
+	{
+		this._ProfileAddresses = new EntitySet<ProfileAddress>(new Action<ProfileAddress>(this.attach_ProfileAddresses), new Action<ProfileAddress>(this.detach_ProfileAddresses));
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProfileId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid ProfileId
+	{
+		get
+		{
+			return this._ProfileId;
+		}
+		set
+		{
+			if ((this._ProfileId != value))
+			{
+				this.OnProfileIdChanging(value);
+				this.SendPropertyChanging();
+				this._ProfileId = value;
+				this.SendPropertyChanged("ProfileId");
+				this.OnProfileIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProfileNumber", AutoSync=AutoSync.Always, DbType="Int NOT NULL IDENTITY", IsDbGenerated=true)]
+	public int ProfileNumber
+	{
+		get
+		{
+			return this._ProfileNumber;
+		}
+		set
+		{
+			if ((this._ProfileNumber != value))
+			{
+				this.OnProfileNumberChanging(value);
+				this.SendPropertyChanging();
+				this._ProfileNumber = value;
+				this.SendPropertyChanged("ProfileNumber");
+				this.OnProfileNumberChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Firstname", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+	public string Firstname
+	{
+		get
+		{
+			return this._Firstname;
+		}
+		set
+		{
+			if ((this._Firstname != value))
+			{
+				this.OnFirstnameChanging(value);
+				this.SendPropertyChanging();
+				this._Firstname = value;
+				this.SendPropertyChanged("Firstname");
+				this.OnFirstnameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Lastname", DbType="VarChar(50)")]
+	public string Lastname
+	{
+		get
+		{
+			return this._Lastname;
+		}
+		set
+		{
+			if ((this._Lastname != value))
+			{
+				this.OnLastnameChanging(value);
+				this.SendPropertyChanging();
+				this._Lastname = value;
+				this.SendPropertyChanged("Lastname");
+				this.OnLastnameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="VarChar(20)")]
+	public string PhoneNumber
+	{
+		get
+		{
+			return this._PhoneNumber;
+		}
+		set
+		{
+			if ((this._PhoneNumber != value))
+			{
+				this.OnPhoneNumberChanging(value);
+				this.SendPropertyChanging();
+				this._PhoneNumber = value;
+				this.SendPropertyChanged("PhoneNumber");
+				this.OnPhoneNumberChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="VarChar(500)")]
+	public string Address
+	{
+		get
+		{
+			return this._Address;
+		}
+		set
+		{
+			if ((this._Address != value))
+			{
+				this.OnAddressChanging(value);
+				this.SendPropertyChanging();
+				this._Address = value;
+				this.SendPropertyChanged("Address");
+				this.OnAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_City", DbType="VarChar(50)")]
+	public string City
+	{
+		get
+		{
+			return this._City;
+		}
+		set
+		{
+			if ((this._City != value))
+			{
+				this.OnCityChanging(value);
+				this.SendPropertyChanging();
+				this._City = value;
+				this.SendPropertyChanged("City");
+				this.OnCityChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="VarChar(50)")]
+	public string State
+	{
+		get
+		{
+			return this._State;
+		}
+		set
+		{
+			if ((this._State != value))
+			{
+				this.OnStateChanging(value);
+				this.SendPropertyChanging();
+				this._State = value;
+				this.SendPropertyChanged("State");
+				this.OnStateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Zip", DbType="VarChar(10)")]
+	public string Zip
+	{
+		get
+		{
+			return this._Zip;
+		}
+		set
+		{
+			if ((this._Zip != value))
+			{
+				this.OnZipChanging(value);
+				this.SendPropertyChanging();
+				this._Zip = value;
+				this.SendPropertyChanged("Zip");
+				this.OnZipChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceiveDeploymentSMS", DbType="Bit")]
+	public System.Nullable<bool> ReceiveDeploymentSMS
+	{
+		get
+		{
+			return this._ReceiveDeploymentSMS;
+		}
+		set
+		{
+			if ((this._ReceiveDeploymentSMS != value))
+			{
+				this.OnReceiveDeploymentSMSChanging(value);
+				this.SendPropertyChanging();
+				this._ReceiveDeploymentSMS = value;
+				this.SendPropertyChanged("ReceiveDeploymentSMS");
+				this.OnReceiveDeploymentSMSChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ContactMethod", DbType="VarChar(50)")]
+	public string ContactMethod
+	{
+		get
+		{
+			return this._ContactMethod;
+		}
+		set
+		{
+			if ((this._ContactMethod != value))
+			{
+				this.OnContactMethodChanging(value);
+				this.SendPropertyChanging();
+				this._ContactMethod = value;
+				this.SendPropertyChanged("ContactMethod");
+				this.OnContactMethodChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultEventId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> DefaultEventId
+	{
+		get
+		{
+			return this._DefaultEventId;
+		}
+		set
+		{
+			if ((this._DefaultEventId != value))
+			{
+				this.OnDefaultEventIdChanging(value);
+				this.SendPropertyChanging();
+				this._DefaultEventId = value;
+				this.SendPropertyChanged("DefaultEventId");
+				this.OnDefaultEventIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerReliefMoniker", DbType="VarChar(15)")]
+	public string VolunteerReliefMoniker
+	{
+		get
+		{
+			return this._VolunteerReliefMoniker;
+		}
+		set
+		{
+			if ((this._VolunteerReliefMoniker != value))
+			{
+				this.OnVolunteerReliefMonikerChanging(value);
+				this.SendPropertyChanging();
+				this._VolunteerReliefMoniker = value;
+				this.SendPropertyChanged("VolunteerReliefMoniker");
+				this.OnVolunteerReliefMonikerChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(MAX)")]
+	public string Description
+	{
+		get
+		{
+			return this._Description;
+		}
+		set
+		{
+			if ((this._Description != value))
+			{
+				this.OnDescriptionChanging(value);
+				this.SendPropertyChanging();
+				this._Description = value;
+				this.SendPropertyChanged("Description");
+				this.OnDescriptionChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DatesAvailable", DbType="VarChar(200)")]
+	public string DatesAvailable
+	{
+		get
+		{
+			return this._DatesAvailable;
+		}
+		set
+		{
+			if ((this._DatesAvailable != value))
+			{
+				this.OnDatesAvailableChanging(value);
+				this.SendPropertyChanging();
+				this._DatesAvailable = value;
+				this.SendPropertyChanged("DatesAvailable");
+				this.OnDatesAvailableChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberOfDaysAvailable", DbType="VarChar(5)")]
+	public string NumberOfDaysAvailable
+	{
+		get
+		{
+			return this._NumberOfDaysAvailable;
+		}
+		set
+		{
+			if ((this._NumberOfDaysAvailable != value))
+			{
+				this.OnNumberOfDaysAvailableChanging(value);
+				this.SendPropertyChanging();
+				this._NumberOfDaysAvailable = value;
+				this.SendPropertyChanged("NumberOfDaysAvailable");
+				this.OnNumberOfDaysAvailableChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PreviousVolunteerExperience", DbType="VarChar(MAX)")]
+	public string PreviousVolunteerExperience
+	{
+		get
+		{
+			return this._PreviousVolunteerExperience;
+		}
+		set
+		{
+			if ((this._PreviousVolunteerExperience != value))
+			{
+				this.OnPreviousVolunteerExperienceChanging(value);
+				this.SendPropertyChanging();
+				this._PreviousVolunteerExperience = value;
+				this.SendPropertyChanged("PreviousVolunteerExperience");
+				this.OnPreviousVolunteerExperienceChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Age", DbType="Int")]
+	public System.Nullable<int> Age
+	{
+		get
+		{
+			return this._Age;
+		}
+		set
+		{
+			if ((this._Age != value))
+			{
+				this.OnAgeChanging(value);
+				this.SendPropertyChanging();
+				this._Age = value;
+				this.SendPropertyChanged("Age");
+				this.OnAgeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ZelloName", DbType="VarChar(50)")]
+	public string ZelloName
+	{
+		get
+		{
+			return this._ZelloName;
+		}
+		set
+		{
+			if ((this._ZelloName != value))
+			{
+				this.OnZelloNameChanging(value);
+				this.SendPropertyChanging();
+				this._ZelloName = value;
+				this.SendPropertyChanged("ZelloName");
+				this.OnZelloNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Title", DbType="VarChar(500)")]
+	public string Title
+	{
+		get
+		{
+			return this._Title;
+		}
+		set
+		{
+			if ((this._Title != value))
+			{
+				this.OnTitleChanging(value);
+				this.SendPropertyChanging();
+				this._Title = value;
+				this.SendPropertyChanged("Title");
+				this.OnTitleChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Photo", DbType="VarChar(500)")]
+	public string Photo
+	{
+		get
+		{
+			return this._Photo;
+		}
+		set
+		{
+			if ((this._Photo != value))
+			{
+				this.OnPhotoChanging(value);
+				this.SendPropertyChanging();
+				this._Photo = value;
+				this.SendPropertyChanged("Photo");
+				this.OnPhotoChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingActive", DbType="Bit")]
+	public System.Nullable<bool> VettingActive
+	{
+		get
+		{
+			return this._VettingActive;
+		}
+		set
+		{
+			if ((this._VettingActive != value))
+			{
+				this.OnVettingActiveChanging(value);
+				this.SendPropertyChanging();
+				this._VettingActive = value;
+				this.SendPropertyChanged("VettingActive");
+				this.OnVettingActiveChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingComplete", DbType="Bit")]
+	public System.Nullable<bool> VettingComplete
+	{
+		get
+		{
+			return this._VettingComplete;
+		}
+		set
+		{
+			if ((this._VettingComplete != value))
+			{
+				this.OnVettingCompleteChanging(value);
+				this.SendPropertyChanging();
+				this._VettingComplete = value;
+				this.SendPropertyChanged("VettingComplete");
+				this.OnVettingCompleteChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PassedVetting", DbType="Bit")]
+	public System.Nullable<bool> PassedVetting
+	{
+		get
+		{
+			return this._PassedVetting;
+		}
+		set
+		{
+			if ((this._PassedVetting != value))
+			{
+				this.OnPassedVettingChanging(value);
+				this.SendPropertyChanging();
+				this._PassedVetting = value;
+				this.SendPropertyChanged("PassedVetting");
+				this.OnPassedVettingChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettedBy", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> VettedBy
+	{
+		get
+		{
+			return this._VettedBy;
+		}
+		set
+		{
+			if ((this._VettedBy != value))
+			{
+				this.OnVettedByChanging(value);
+				this.SendPropertyChanging();
+				this._VettedBy = value;
+				this.SendPropertyChanged("VettedBy");
+				this.OnVettedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingNotes", DbType="VarChar(1000)")]
+	public string VettingNotes
+	{
+		get
+		{
+			return this._VettingNotes;
+		}
+		set
+		{
+			if ((this._VettingNotes != value))
+			{
+				this.OnVettingNotesChanging(value);
+				this.SendPropertyChanging();
+				this._VettingNotes = value;
+				this.SendPropertyChanged("VettingNotes");
+				this.OnVettingNotesChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateVettingStarted", DbType="DateTime")]
+	public System.Nullable<System.DateTime> DateVettingStarted
+	{
+		get
+		{
+			return this._DateVettingStarted;
+		}
+		set
+		{
+			if ((this._DateVettingStarted != value))
+			{
+				this.OnDateVettingStartedChanging(value);
+				this.SendPropertyChanging();
+				this._DateVettingStarted = value;
+				this.SendPropertyChanged("DateVettingStarted");
+				this.OnDateVettingStartedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateVettingCompleted", DbType="DateTime")]
+	public System.Nullable<System.DateTime> DateVettingCompleted
+	{
+		get
+		{
+			return this._DateVettingCompleted;
+		}
+		set
+		{
+			if ((this._DateVettingCompleted != value))
+			{
+				this.OnDateVettingCompletedChanging(value);
+				this.SendPropertyChanging();
+				this._DateVettingCompleted = value;
+				this.SendPropertyChanged("DateVettingCompleted");
+				this.OnDateVettingCompletedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerApplicationIsComplete", DbType="Bit")]
+	public System.Nullable<bool> VolunteerApplicationIsComplete
+	{
+		get
+		{
+			return this._VolunteerApplicationIsComplete;
+		}
+		set
+		{
+			if ((this._VolunteerApplicationIsComplete != value))
+			{
+				this.OnVolunteerApplicationIsCompleteChanging(value);
+				this.SendPropertyChanging();
+				this._VolunteerApplicationIsComplete = value;
+				this.SendPropertyChanged("VolunteerApplicationIsComplete");
+				this.OnVolunteerApplicationIsCompleteChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerApplicationDate", DbType="DateTime")]
+	public System.Nullable<System.DateTime> VolunteerApplicationDate
+	{
+		get
+		{
+			return this._VolunteerApplicationDate;
+		}
+		set
+		{
+			if ((this._VolunteerApplicationDate != value))
+			{
+				this.OnVolunteerApplicationDateChanging(value);
+				this.SendPropertyChanging();
+				this._VolunteerApplicationDate = value;
+				this.SendPropertyChanged("VolunteerApplicationDate");
+				this.OnVolunteerApplicationDateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhotoId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> PhotoId
+	{
+		get
+		{
+			return this._PhotoId;
+		}
+		set
+		{
+			if ((this._PhotoId != value))
+			{
+				this.OnPhotoIdChanging(value);
+				this.SendPropertyChanging();
+				this._PhotoId = value;
+				this.SendPropertyChanged("PhotoId");
+				this.OnPhotoIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AmazonWishListURL", DbType="VarChar(1000)")]
+	public string AmazonWishListURL
+	{
+		get
+		{
+			return this._AmazonWishListURL;
+		}
+		set
+		{
+			if ((this._AmazonWishListURL != value))
+			{
+				this.OnAmazonWishListURLChanging(value);
+				this.SendPropertyChanging();
+				this._AmazonWishListURL = value;
+				this.SendPropertyChanged("AmazonWishListURL");
+				this.OnAmazonWishListURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowOnWebsite", DbType="Bit")]
+	public System.Nullable<bool> ShowOnWebsite
+	{
+		get
+		{
+			return this._ShowOnWebsite;
+		}
+		set
+		{
+			if ((this._ShowOnWebsite != value))
+			{
+				this.OnShowOnWebsiteChanging(value);
+				this.SendPropertyChanging();
+				this._ShowOnWebsite = value;
+				this.SendPropertyChanged("ShowOnWebsite");
+				this.OnShowOnWebsiteChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HideUserActionModal", DbType="DateTime")]
+	public System.Nullable<System.DateTime> HideUserActionModal
+	{
+		get
+		{
+			return this._HideUserActionModal;
+		}
+		set
+		{
+			if ((this._HideUserActionModal != value))
+			{
+				this.OnHideUserActionModalChanging(value);
+				this.SendPropertyChanging();
+				this._HideUserActionModal = value;
+				this.SendPropertyChanged("HideUserActionModal");
+				this.OnHideUserActionModalChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDisasterReadyCertified", DbType="Bit NOT NULL")]
+	public bool IsDisasterReadyCertified
+	{
+		get
+		{
+			return this._IsDisasterReadyCertified;
+		}
+		set
+		{
+			if ((this._IsDisasterReadyCertified != value))
+			{
+				this.OnIsDisasterReadyCertifiedChanging(value);
+				this.SendPropertyChanging();
+				this._IsDisasterReadyCertified = value;
+				this.SendPropertyChanged("IsDisasterReadyCertified");
+				this.OnIsDisasterReadyCertifiedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Profile_ProfileAddress", Storage="_ProfileAddresses", ThisKey="ProfileId", OtherKey="ProfileId")]
+	public EntitySet<ProfileAddress> ProfileAddresses
+	{
+		get
+		{
+			return this._ProfileAddresses;
+		}
+		set
+		{
+			this._ProfileAddresses.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Profile", Storage="_aspnet_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.Profiles.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.Profiles.Add(this);
+					this._UserId = value.UserId;
+				}
+				else
+				{
+					this._UserId = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_ProfileAddresses(ProfileAddress entity)
+	{
+		this.SendPropertyChanging();
+		entity.Profile = this;
+	}
+	
+	private void detach_ProfileAddresses(ProfileAddress entity)
+	{
+		this.SendPropertyChanging();
+		entity.Profile = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.UserOrganization")]
+public partial class UserOrganization : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _UserOrganizationId;
+	
+	private System.Guid _UserId;
+	
+	private System.Guid _OrganizationId;
+	
+	private System.Nullable<bool> _IsPrimary;
+	
+	private System.Nullable<bool> _ShowTeamLogo;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+	private EntityRef<Organization> _Organization;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnUserOrganizationIdChanging(System.Guid value);
+    partial void OnUserOrganizationIdChanged();
+    partial void OnUserIdChanging(System.Guid value);
+    partial void OnUserIdChanged();
+    partial void OnOrganizationIdChanging(System.Guid value);
+    partial void OnOrganizationIdChanged();
+    partial void OnIsPrimaryChanging(System.Nullable<bool> value);
+    partial void OnIsPrimaryChanged();
+    partial void OnShowTeamLogoChanging(System.Nullable<bool> value);
+    partial void OnShowTeamLogoChanged();
+    #endregion
+	
+	public UserOrganization()
+	{
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		this._Organization = default(EntityRef<Organization>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserOrganizationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid UserOrganizationId
+	{
+		get
+		{
+			return this._UserOrganizationId;
+		}
+		set
+		{
+			if ((this._UserOrganizationId != value))
+			{
+				this.OnUserOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserOrganizationId = value;
+				this.SendPropertyChanged("UserOrganizationId");
+				this.OnUserOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				if (this._Organization.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsPrimary", DbType="Bit")]
+	public System.Nullable<bool> IsPrimary
+	{
+		get
+		{
+			return this._IsPrimary;
+		}
+		set
+		{
+			if ((this._IsPrimary != value))
+			{
+				this.OnIsPrimaryChanging(value);
+				this.SendPropertyChanging();
+				this._IsPrimary = value;
+				this.SendPropertyChanged("IsPrimary");
+				this.OnIsPrimaryChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowTeamLogo", DbType="Bit")]
+	public System.Nullable<bool> ShowTeamLogo
+	{
+		get
+		{
+			return this._ShowTeamLogo;
+		}
+		set
+		{
+			if ((this._ShowTeamLogo != value))
+			{
+				this.OnShowTeamLogoChanging(value);
+				this.SendPropertyChanging();
+				this._ShowTeamLogo = value;
+				this.SendPropertyChanged("ShowTeamLogo");
+				this.OnShowTeamLogoChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserOrganization", Storage="_aspnet_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.UserOrganizations.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.UserOrganizations.Add(this);
+					this._UserId = value.UserId;
+				}
+				else
+				{
+					this._UserId = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganization", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
+	public Organization Organization
+	{
+		get
+		{
+			return this._Organization.Entity;
+		}
+		set
+		{
+			Organization previousValue = this._Organization.Entity;
+			if (((previousValue != value) 
+						|| (this._Organization.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Organization.Entity = null;
+					previousValue.UserOrganizations.Remove(this);
+				}
+				this._Organization.Entity = value;
+				if ((value != null))
+				{
+					value.UserOrganizations.Add(this);
+					this._OrganizationId = value.OrganizationId;
+				}
+				else
+				{
+					this._OrganizationId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Organization");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.DonationCampaign")]
+public partial class DonationCampaign : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _DonationCampaignId;
+	
+	private System.Nullable<System.Guid> _OrganizationEventId;
+	
+	private string _Summary;
+	
+	private string _Address;
+	
+	private string _Amount;
+	
+	private string _Description;
+	
+	private bool _IsDefault;
+	
+	private System.Nullable<System.Guid> _OrganizationId;
+	
+	private EntitySet<Donation> _Donations;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnDonationCampaignIdChanging(System.Guid value);
+    partial void OnDonationCampaignIdChanged();
+    partial void OnOrganizationEventIdChanging(System.Nullable<System.Guid> value);
+    partial void OnOrganizationEventIdChanged();
+    partial void OnSummaryChanging(string value);
+    partial void OnSummaryChanged();
+    partial void OnAddressChanging(string value);
+    partial void OnAddressChanged();
+    partial void OnAmountChanging(string value);
+    partial void OnAmountChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnIsDefaultChanging(bool value);
+    partial void OnIsDefaultChanged();
+    partial void OnOrganizationIdChanging(System.Nullable<System.Guid> value);
+    partial void OnOrganizationIdChanged();
+    #endregion
+	
+	public DonationCampaign()
+	{
+		this._Donations = new EntitySet<Donation>(new Action<Donation>(this.attach_Donations), new Action<Donation>(this.detach_Donations));
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DonationCampaignId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid DonationCampaignId
+	{
+		get
+		{
+			return this._DonationCampaignId;
+		}
+		set
+		{
+			if ((this._DonationCampaignId != value))
+			{
+				this.OnDonationCampaignIdChanging(value);
+				this.SendPropertyChanging();
+				this._DonationCampaignId = value;
+				this.SendPropertyChanged("DonationCampaignId");
+				this.OnDonationCampaignIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationEventId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> OrganizationEventId
+	{
+		get
+		{
+			return this._OrganizationEventId;
+		}
+		set
+		{
+			if ((this._OrganizationEventId != value))
+			{
+				this.OnOrganizationEventIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationEventId = value;
+				this.SendPropertyChanged("OrganizationEventId");
+				this.OnOrganizationEventIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Summary", DbType="NVarChar(MAX)")]
+	public string Summary
+	{
+		get
+		{
+			return this._Summary;
+		}
+		set
+		{
+			if ((this._Summary != value))
+			{
+				this.OnSummaryChanging(value);
+				this.SendPropertyChanging();
+				this._Summary = value;
+				this.SendPropertyChanged("Summary");
+				this.OnSummaryChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="NVarChar(MAX)")]
+	public string Address
+	{
+		get
+		{
+			return this._Address;
+		}
+		set
+		{
+			if ((this._Address != value))
+			{
+				this.OnAddressChanging(value);
+				this.SendPropertyChanging();
+				this._Address = value;
+				this.SendPropertyChanged("Address");
+				this.OnAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Amount", DbType="VarChar(255)")]
+	public string Amount
+	{
+		get
+		{
+			return this._Amount;
+		}
+		set
+		{
+			if ((this._Amount != value))
+			{
+				this.OnAmountChanging(value);
+				this.SendPropertyChanging();
+				this._Amount = value;
+				this.SendPropertyChanged("Amount");
+				this.OnAmountChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="NVarChar(MAX)")]
+	public string Description
+	{
+		get
+		{
+			return this._Description;
+		}
+		set
+		{
+			if ((this._Description != value))
+			{
+				this.OnDescriptionChanging(value);
+				this.SendPropertyChanging();
+				this._Description = value;
+				this.SendPropertyChanged("Description");
+				this.OnDescriptionChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDefault", DbType="Bit NOT NULL")]
+	public bool IsDefault
+	{
+		get
+		{
+			return this._IsDefault;
+		}
+		set
+		{
+			if ((this._IsDefault != value))
+			{
+				this.OnIsDefaultChanging(value);
+				this.SendPropertyChanging();
+				this._IsDefault = value;
+				this.SendPropertyChanged("IsDefault");
+				this.OnIsDefaultChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DonationCampaign_Donation", Storage="_Donations", ThisKey="DonationCampaignId", OtherKey="DonationCampaignId")]
+	public EntitySet<Donation> Donations
+	{
+		get
+		{
+			return this._Donations;
+		}
+		set
+		{
+			this._Donations.Assign(value);
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_Donations(Donation entity)
+	{
+		this.SendPropertyChanging();
+		entity.DonationCampaign = this;
+	}
+	
+	private void detach_Donations(Donation entity)
+	{
+		this.SendPropertyChanging();
+		entity.DonationCampaign = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Donation")]
+public partial class Donation : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _DonationId;
+	
+	private decimal _Amount;
+	
+	private string _FirstName;
+	
+	private string _LastName;
+	
+	private string _EmailAddress;
+	
+	private string _PhoneNumber;
+	
+	private System.Guid _UserId;
+	
+	private System.Nullable<System.Guid> _CampaignId;
+	
+	private System.Nullable<System.Guid> _BasicNeedsSurveyItemId;
+	
+	private string _TransactionId;
+	
+	private string _OrderId;
+	
+	private string _AuthorizedTransactionId;
+	
+	private string _SettlementBatchId;
+	
+	private bool _IsTest;
+	
+	private System.DateTime _CreatedAt;
+	
+	private System.Nullable<decimal> _ItemCostEach;
+	
+	private System.Nullable<int> _ItemCount;
+	
+	private System.Nullable<System.Guid> _DonationCampaignId;
+	
+	private System.Nullable<int> _PaymentProvider;
+	
+	private System.Nullable<int> _DonationStatus;
+	
+	private string _ErrorDetails;
+	
+	private System.Nullable<decimal> _TransactionFee;
+	
+	private System.Nullable<decimal> _TotalAmount;
+	
+	private EntityRef<BasicNeedsCampaign> _BasicNeedsCampaign;
+	
+	private EntityRef<BasicNeedsSurveyItem> _BasicNeedsSurveyItem;
+	
+	private EntityRef<DonationCampaign> _DonationCampaign;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnDonationIdChanging(System.Guid value);
+    partial void OnDonationIdChanged();
+    partial void OnAmountChanging(decimal value);
+    partial void OnAmountChanged();
+    partial void OnFirstNameChanging(string value);
+    partial void OnFirstNameChanged();
+    partial void OnLastNameChanging(string value);
+    partial void OnLastNameChanged();
+    partial void OnEmailAddressChanging(string value);
+    partial void OnEmailAddressChanged();
+    partial void OnPhoneNumberChanging(string value);
+    partial void OnPhoneNumberChanged();
+    partial void OnUserIdChanging(System.Guid value);
+    partial void OnUserIdChanged();
+    partial void OnCampaignIdChanging(System.Nullable<System.Guid> value);
+    partial void OnCampaignIdChanged();
+    partial void OnBasicNeedsSurveyItemIdChanging(System.Nullable<System.Guid> value);
+    partial void OnBasicNeedsSurveyItemIdChanged();
+    partial void OnTransactionIdChanging(string value);
+    partial void OnTransactionIdChanged();
+    partial void OnOrderIdChanging(string value);
+    partial void OnOrderIdChanged();
+    partial void OnAuthorizedTransactionIdChanging(string value);
+    partial void OnAuthorizedTransactionIdChanged();
+    partial void OnSettlementBatchIdChanging(string value);
+    partial void OnSettlementBatchIdChanged();
+    partial void OnIsTestChanging(bool value);
+    partial void OnIsTestChanged();
+    partial void OnCreatedAtChanging(System.DateTime value);
+    partial void OnCreatedAtChanged();
+    partial void OnItemCostEachChanging(System.Nullable<decimal> value);
+    partial void OnItemCostEachChanged();
+    partial void OnItemCountChanging(System.Nullable<int> value);
+    partial void OnItemCountChanged();
+    partial void OnDonationCampaignIdChanging(System.Nullable<System.Guid> value);
+    partial void OnDonationCampaignIdChanged();
+    partial void OnPaymentProviderChanging(System.Nullable<int> value);
+    partial void OnPaymentProviderChanged();
+    partial void OnDonationStatusChanging(System.Nullable<int> value);
+    partial void OnDonationStatusChanged();
+    partial void OnErrorDetailsChanging(string value);
+    partial void OnErrorDetailsChanged();
+    partial void OnTransactionFeeChanging(System.Nullable<decimal> value);
+    partial void OnTransactionFeeChanged();
+    partial void OnTotalAmountChanging(System.Nullable<decimal> value);
+    partial void OnTotalAmountChanged();
+    #endregion
+	
+	public Donation()
+	{
+		this._BasicNeedsCampaign = default(EntityRef<BasicNeedsCampaign>);
+		this._BasicNeedsSurveyItem = default(EntityRef<BasicNeedsSurveyItem>);
+		this._DonationCampaign = default(EntityRef<DonationCampaign>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DonationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid DonationId
+	{
+		get
+		{
+			return this._DonationId;
+		}
+		set
+		{
+			if ((this._DonationId != value))
+			{
+				this.OnDonationIdChanging(value);
+				this.SendPropertyChanging();
+				this._DonationId = value;
+				this.SendPropertyChanged("DonationId");
+				this.OnDonationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Amount", DbType="Decimal(18,2) NOT NULL")]
+	public decimal Amount
+	{
+		get
+		{
+			return this._Amount;
+		}
+		set
+		{
+			if ((this._Amount != value))
+			{
+				this.OnAmountChanging(value);
+				this.SendPropertyChanging();
+				this._Amount = value;
+				this.SendPropertyChanged("Amount");
+				this.OnAmountChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FirstName", DbType="VarChar(50)")]
+	public string FirstName
+	{
+		get
+		{
+			return this._FirstName;
+		}
+		set
+		{
+			if ((this._FirstName != value))
+			{
+				this.OnFirstNameChanging(value);
+				this.SendPropertyChanging();
+				this._FirstName = value;
+				this.SendPropertyChanged("FirstName");
+				this.OnFirstNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastName", DbType="VarChar(50)")]
+	public string LastName
+	{
+		get
+		{
+			return this._LastName;
+		}
+		set
+		{
+			if ((this._LastName != value))
+			{
+				this.OnLastNameChanging(value);
+				this.SendPropertyChanging();
+				this._LastName = value;
+				this.SendPropertyChanged("LastName");
+				this.OnLastNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmailAddress", DbType="VarChar(50)")]
+	public string EmailAddress
+	{
+		get
+		{
+			return this._EmailAddress;
+		}
+		set
+		{
+			if ((this._EmailAddress != value))
+			{
+				this.OnEmailAddressChanging(value);
+				this.SendPropertyChanging();
+				this._EmailAddress = value;
+				this.SendPropertyChanged("EmailAddress");
+				this.OnEmailAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="VarChar(50)")]
+	public string PhoneNumber
+	{
+		get
+		{
+			return this._PhoneNumber;
+		}
+		set
+		{
+			if ((this._PhoneNumber != value))
+			{
+				this.OnPhoneNumberChanging(value);
+				this.SendPropertyChanging();
+				this._PhoneNumber = value;
+				this.SendPropertyChanged("PhoneNumber");
+				this.OnPhoneNumberChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CampaignId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> CampaignId
+	{
+		get
+		{
+			return this._CampaignId;
+		}
+		set
+		{
+			if ((this._CampaignId != value))
+			{
+				if (this._BasicNeedsCampaign.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCampaignIdChanging(value);
+				this.SendPropertyChanging();
+				this._CampaignId = value;
+				this.SendPropertyChanged("CampaignId");
+				this.OnCampaignIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BasicNeedsSurveyItemId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> BasicNeedsSurveyItemId
+	{
+		get
+		{
+			return this._BasicNeedsSurveyItemId;
+		}
+		set
+		{
+			if ((this._BasicNeedsSurveyItemId != value))
+			{
+				if (this._BasicNeedsSurveyItem.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnBasicNeedsSurveyItemIdChanging(value);
+				this.SendPropertyChanging();
+				this._BasicNeedsSurveyItemId = value;
+				this.SendPropertyChanged("BasicNeedsSurveyItemId");
+				this.OnBasicNeedsSurveyItemIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TransactionId", DbType="VarChar(50)")]
+	public string TransactionId
+	{
+		get
+		{
+			return this._TransactionId;
+		}
+		set
+		{
+			if ((this._TransactionId != value))
+			{
+				this.OnTransactionIdChanging(value);
+				this.SendPropertyChanging();
+				this._TransactionId = value;
+				this.SendPropertyChanged("TransactionId");
+				this.OnTransactionIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrderId", DbType="VarChar(50)")]
+	public string OrderId
+	{
+		get
+		{
+			return this._OrderId;
+		}
+		set
+		{
+			if ((this._OrderId != value))
+			{
+				this.OnOrderIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrderId = value;
+				this.SendPropertyChanged("OrderId");
+				this.OnOrderIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AuthorizedTransactionId", DbType="VarChar(50)")]
+	public string AuthorizedTransactionId
+	{
+		get
+		{
+			return this._AuthorizedTransactionId;
+		}
+		set
+		{
+			if ((this._AuthorizedTransactionId != value))
+			{
+				this.OnAuthorizedTransactionIdChanging(value);
+				this.SendPropertyChanging();
+				this._AuthorizedTransactionId = value;
+				this.SendPropertyChanged("AuthorizedTransactionId");
+				this.OnAuthorizedTransactionIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SettlementBatchId", DbType="NChar(10)")]
+	public string SettlementBatchId
+	{
+		get
+		{
+			return this._SettlementBatchId;
+		}
+		set
+		{
+			if ((this._SettlementBatchId != value))
+			{
+				this.OnSettlementBatchIdChanging(value);
+				this.SendPropertyChanging();
+				this._SettlementBatchId = value;
+				this.SendPropertyChanged("SettlementBatchId");
+				this.OnSettlementBatchIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsTest", DbType="Bit NOT NULL")]
+	public bool IsTest
+	{
+		get
+		{
+			return this._IsTest;
+		}
+		set
+		{
+			if ((this._IsTest != value))
+			{
+				this.OnIsTestChanging(value);
+				this.SendPropertyChanging();
+				this._IsTest = value;
+				this.SendPropertyChanged("IsTest");
+				this.OnIsTestChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedAt", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedAt
+	{
+		get
+		{
+			return this._CreatedAt;
+		}
+		set
+		{
+			if ((this._CreatedAt != value))
+			{
+				this.OnCreatedAtChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedAt = value;
+				this.SendPropertyChanged("CreatedAt");
+				this.OnCreatedAtChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ItemCostEach", DbType="Decimal(18,2)")]
+	public System.Nullable<decimal> ItemCostEach
+	{
+		get
+		{
+			return this._ItemCostEach;
+		}
+		set
+		{
+			if ((this._ItemCostEach != value))
+			{
+				this.OnItemCostEachChanging(value);
+				this.SendPropertyChanging();
+				this._ItemCostEach = value;
+				this.SendPropertyChanged("ItemCostEach");
+				this.OnItemCostEachChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ItemCount", DbType="Int")]
+	public System.Nullable<int> ItemCount
+	{
+		get
+		{
+			return this._ItemCount;
+		}
+		set
+		{
+			if ((this._ItemCount != value))
+			{
+				this.OnItemCountChanging(value);
+				this.SendPropertyChanging();
+				this._ItemCount = value;
+				this.SendPropertyChanged("ItemCount");
+				this.OnItemCountChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DonationCampaignId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> DonationCampaignId
+	{
+		get
+		{
+			return this._DonationCampaignId;
+		}
+		set
+		{
+			if ((this._DonationCampaignId != value))
+			{
+				if (this._DonationCampaign.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnDonationCampaignIdChanging(value);
+				this.SendPropertyChanging();
+				this._DonationCampaignId = value;
+				this.SendPropertyChanged("DonationCampaignId");
+				this.OnDonationCampaignIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PaymentProvider", DbType="Int")]
+	public System.Nullable<int> PaymentProvider
+	{
+		get
+		{
+			return this._PaymentProvider;
+		}
+		set
+		{
+			if ((this._PaymentProvider != value))
+			{
+				this.OnPaymentProviderChanging(value);
+				this.SendPropertyChanging();
+				this._PaymentProvider = value;
+				this.SendPropertyChanged("PaymentProvider");
+				this.OnPaymentProviderChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DonationStatus", DbType="Int")]
+	public System.Nullable<int> DonationStatus
+	{
+		get
+		{
+			return this._DonationStatus;
+		}
+		set
+		{
+			if ((this._DonationStatus != value))
+			{
+				this.OnDonationStatusChanging(value);
+				this.SendPropertyChanging();
+				this._DonationStatus = value;
+				this.SendPropertyChanged("DonationStatus");
+				this.OnDonationStatusChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ErrorDetails", DbType="NVarChar(MAX)")]
+	public string ErrorDetails
+	{
+		get
+		{
+			return this._ErrorDetails;
+		}
+		set
+		{
+			if ((this._ErrorDetails != value))
+			{
+				this.OnErrorDetailsChanging(value);
+				this.SendPropertyChanging();
+				this._ErrorDetails = value;
+				this.SendPropertyChanged("ErrorDetails");
+				this.OnErrorDetailsChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TransactionFee", DbType="Decimal(10,2)")]
+	public System.Nullable<decimal> TransactionFee
+	{
+		get
+		{
+			return this._TransactionFee;
+		}
+		set
+		{
+			if ((this._TransactionFee != value))
+			{
+				this.OnTransactionFeeChanging(value);
+				this.SendPropertyChanging();
+				this._TransactionFee = value;
+				this.SendPropertyChanged("TransactionFee");
+				this.OnTransactionFeeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TotalAmount", DbType="Decimal(10,2)")]
+	public System.Nullable<decimal> TotalAmount
+	{
+		get
+		{
+			return this._TotalAmount;
+		}
+		set
+		{
+			if ((this._TotalAmount != value))
+			{
+				this.OnTotalAmountChanging(value);
+				this.SendPropertyChanging();
+				this._TotalAmount = value;
+				this.SendPropertyChanged("TotalAmount");
+				this.OnTotalAmountChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BasicNeedsCampaign_Donation", Storage="_BasicNeedsCampaign", ThisKey="CampaignId", OtherKey="BasicNeedsCampaignId", IsForeignKey=true)]
+	public BasicNeedsCampaign BasicNeedsCampaign
+	{
+		get
+		{
+			return this._BasicNeedsCampaign.Entity;
+		}
+		set
+		{
+			BasicNeedsCampaign previousValue = this._BasicNeedsCampaign.Entity;
+			if (((previousValue != value) 
+						|| (this._BasicNeedsCampaign.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._BasicNeedsCampaign.Entity = null;
+					previousValue.Donations.Remove(this);
+				}
+				this._BasicNeedsCampaign.Entity = value;
+				if ((value != null))
+				{
+					value.Donations.Add(this);
+					this._CampaignId = value.BasicNeedsCampaignId;
+				}
+				else
+				{
+					this._CampaignId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("BasicNeedsCampaign");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BasicNeedsSurveyItem_Donation", Storage="_BasicNeedsSurveyItem", ThisKey="BasicNeedsSurveyItemId", OtherKey="BasicSurveyItemId", IsForeignKey=true)]
+	public BasicNeedsSurveyItem BasicNeedsSurveyItem
+	{
+		get
+		{
+			return this._BasicNeedsSurveyItem.Entity;
+		}
+		set
+		{
+			BasicNeedsSurveyItem previousValue = this._BasicNeedsSurveyItem.Entity;
+			if (((previousValue != value) 
+						|| (this._BasicNeedsSurveyItem.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._BasicNeedsSurveyItem.Entity = null;
+					previousValue.Donations.Remove(this);
+				}
+				this._BasicNeedsSurveyItem.Entity = value;
+				if ((value != null))
+				{
+					value.Donations.Add(this);
+					this._BasicNeedsSurveyItemId = value.BasicSurveyItemId;
+				}
+				else
+				{
+					this._BasicNeedsSurveyItemId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("BasicNeedsSurveyItem");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DonationCampaign_Donation", Storage="_DonationCampaign", ThisKey="DonationCampaignId", OtherKey="DonationCampaignId", IsForeignKey=true)]
+	public DonationCampaign DonationCampaign
+	{
+		get
+		{
+			return this._DonationCampaign.Entity;
+		}
+		set
+		{
+			DonationCampaign previousValue = this._DonationCampaign.Entity;
+			if (((previousValue != value) 
+						|| (this._DonationCampaign.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._DonationCampaign.Entity = null;
+					previousValue.Donations.Remove(this);
+				}
+				this._DonationCampaign.Entity = value;
+				if ((value != null))
+				{
+					value.Donations.Add(this);
+					this._DonationCampaignId = value.DonationCampaignId;
+				}
+				else
+				{
+					this._DonationCampaignId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("DonationCampaign");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Post")]
+public partial class Post : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _PostId;
+	
+	private System.Guid _PostTypeId;
+	
+	private System.Guid _AudienceTypeId;
+	
+	private string _URLDescription;
+	
+	private string _URLTitle;
+	
+	private string _URLImage;
+	
+	private string _SharedURL;
+	
+	private string _Message;
+	
+	private bool _IsVisible;
+	
+	private int _ViewCount;
+	
+	private System.Nullable<System.DateTime> _CreatedOn;
+	
+	private System.Nullable<System.Guid> _CreatedBy;
+	
+	private System.Nullable<System.Guid> _EventId;
+	
+	private EntitySet<PostImage> _PostImages;
+	
+	private EntitySet<PostReaction> _PostReactions;
+	
+	private EntitySet<PostComment> _PostComments;
+	
+	private EntitySet<PostTaggedUser> _PostTaggedUsers;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+	private EntityRef<AudienceType> _AudienceType;
+	
+	private EntityRef<Event> _Event;
+	
+	private EntityRef<PostType> _PostType;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnPostIdChanging(System.Guid value);
+    partial void OnPostIdChanged();
+    partial void OnPostTypeIdChanging(System.Guid value);
+    partial void OnPostTypeIdChanged();
+    partial void OnAudienceTypeIdChanging(System.Guid value);
+    partial void OnAudienceTypeIdChanged();
+    partial void OnURLDescriptionChanging(string value);
+    partial void OnURLDescriptionChanged();
+    partial void OnURLTitleChanging(string value);
+    partial void OnURLTitleChanged();
+    partial void OnURLImageChanging(string value);
+    partial void OnURLImageChanged();
+    partial void OnSharedURLChanging(string value);
+    partial void OnSharedURLChanged();
+    partial void OnMessageChanging(string value);
+    partial void OnMessageChanged();
+    partial void OnIsVisibleChanging(bool value);
+    partial void OnIsVisibleChanged();
+    partial void OnViewCountChanging(int value);
+    partial void OnViewCountChanged();
+    partial void OnCreatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnCreatedOnChanged();
+    partial void OnCreatedByChanging(System.Nullable<System.Guid> value);
+    partial void OnCreatedByChanged();
+    partial void OnEventIdChanging(System.Nullable<System.Guid> value);
+    partial void OnEventIdChanged();
+    #endregion
+	
+	public Post()
+	{
+		this._PostImages = new EntitySet<PostImage>(new Action<PostImage>(this.attach_PostImages), new Action<PostImage>(this.detach_PostImages));
+		this._PostReactions = new EntitySet<PostReaction>(new Action<PostReaction>(this.attach_PostReactions), new Action<PostReaction>(this.detach_PostReactions));
+		this._PostComments = new EntitySet<PostComment>(new Action<PostComment>(this.attach_PostComments), new Action<PostComment>(this.detach_PostComments));
+		this._PostTaggedUsers = new EntitySet<PostTaggedUser>(new Action<PostTaggedUser>(this.attach_PostTaggedUsers), new Action<PostTaggedUser>(this.detach_PostTaggedUsers));
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		this._AudienceType = default(EntityRef<AudienceType>);
+		this._Event = default(EntityRef<Event>);
+		this._PostType = default(EntityRef<PostType>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid PostId
+	{
+		get
+		{
+			return this._PostId;
+		}
+		set
+		{
+			if ((this._PostId != value))
+			{
+				this.OnPostIdChanging(value);
+				this.SendPropertyChanging();
+				this._PostId = value;
+				this.SendPropertyChanged("PostId");
+				this.OnPostIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostTypeId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid PostTypeId
+	{
+		get
+		{
+			return this._PostTypeId;
+		}
+		set
+		{
+			if ((this._PostTypeId != value))
+			{
+				if (this._PostType.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnPostTypeIdChanging(value);
+				this.SendPropertyChanging();
+				this._PostTypeId = value;
+				this.SendPropertyChanged("PostTypeId");
+				this.OnPostTypeIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AudienceTypeId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid AudienceTypeId
+	{
+		get
+		{
+			return this._AudienceTypeId;
+		}
+		set
+		{
+			if ((this._AudienceTypeId != value))
+			{
+				if (this._AudienceType.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnAudienceTypeIdChanging(value);
+				this.SendPropertyChanging();
+				this._AudienceTypeId = value;
+				this.SendPropertyChanged("AudienceTypeId");
+				this.OnAudienceTypeIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_URLDescription", DbType="VarChar(4000)")]
+	public string URLDescription
+	{
+		get
+		{
+			return this._URLDescription;
+		}
+		set
+		{
+			if ((this._URLDescription != value))
+			{
+				this.OnURLDescriptionChanging(value);
+				this.SendPropertyChanging();
+				this._URLDescription = value;
+				this.SendPropertyChanged("URLDescription");
+				this.OnURLDescriptionChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_URLTitle", DbType="VarChar(1000)")]
+	public string URLTitle
+	{
+		get
+		{
+			return this._URLTitle;
+		}
+		set
+		{
+			if ((this._URLTitle != value))
+			{
+				this.OnURLTitleChanging(value);
+				this.SendPropertyChanging();
+				this._URLTitle = value;
+				this.SendPropertyChanged("URLTitle");
+				this.OnURLTitleChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_URLImage", DbType="VarChar(4000)")]
+	public string URLImage
+	{
+		get
+		{
+			return this._URLImage;
+		}
+		set
+		{
+			if ((this._URLImage != value))
+			{
+				this.OnURLImageChanging(value);
+				this.SendPropertyChanging();
+				this._URLImage = value;
+				this.SendPropertyChanged("URLImage");
+				this.OnURLImageChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SharedURL", DbType="VarChar(MAX)")]
+	public string SharedURL
+	{
+		get
+		{
+			return this._SharedURL;
+		}
+		set
+		{
+			if ((this._SharedURL != value))
+			{
+				this.OnSharedURLChanging(value);
+				this.SendPropertyChanging();
+				this._SharedURL = value;
+				this.SendPropertyChanged("SharedURL");
+				this.OnSharedURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Message", DbType="VarChar(MAX)")]
+	public string Message
+	{
+		get
+		{
+			return this._Message;
+		}
+		set
+		{
+			if ((this._Message != value))
+			{
+				this.OnMessageChanging(value);
+				this.SendPropertyChanging();
+				this._Message = value;
+				this.SendPropertyChanged("Message");
+				this.OnMessageChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsVisible", DbType="Bit NOT NULL")]
+	public bool IsVisible
+	{
+		get
+		{
+			return this._IsVisible;
+		}
+		set
+		{
+			if ((this._IsVisible != value))
+			{
+				this.OnIsVisibleChanging(value);
+				this.SendPropertyChanging();
+				this._IsVisible = value;
+				this.SendPropertyChanged("IsVisible");
+				this.OnIsVisibleChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ViewCount", DbType="Int NOT NULL")]
+	public int ViewCount
+	{
+		get
+		{
+			return this._ViewCount;
+		}
+		set
+		{
+			if ((this._ViewCount != value))
+			{
+				this.OnViewCountChanging(value);
+				this.SendPropertyChanging();
+				this._ViewCount = value;
+				this.SendPropertyChanged("ViewCount");
+				this.OnViewCountChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EventId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> EventId
+	{
+		get
+		{
+			return this._EventId;
+		}
+		set
+		{
+			if ((this._EventId != value))
+			{
+				if (this._Event.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnEventIdChanging(value);
+				this.SendPropertyChanging();
+				this._EventId = value;
+				this.SendPropertyChanged("EventId");
+				this.OnEventIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Post_PostImage", Storage="_PostImages", ThisKey="PostId", OtherKey="PostId")]
+	public EntitySet<PostImage> PostImages
+	{
+		get
+		{
+			return this._PostImages;
+		}
+		set
+		{
+			this._PostImages.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Post_PostReaction", Storage="_PostReactions", ThisKey="PostId", OtherKey="PostId")]
+	public EntitySet<PostReaction> PostReactions
+	{
+		get
+		{
+			return this._PostReactions;
+		}
+		set
+		{
+			this._PostReactions.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Post_PostComment", Storage="_PostComments", ThisKey="PostId", OtherKey="PostId")]
+	public EntitySet<PostComment> PostComments
+	{
+		get
+		{
+			return this._PostComments;
+		}
+		set
+		{
+			this._PostComments.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Post_PostTaggedUser", Storage="_PostTaggedUsers", ThisKey="PostId", OtherKey="PostId")]
+	public EntitySet<PostTaggedUser> PostTaggedUsers
+	{
+		get
+		{
+			return this._PostTaggedUsers;
+		}
+		set
+		{
+			this._PostTaggedUsers.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Post", Storage="_aspnet_User", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.Posts.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.Posts.Add(this);
+					this._CreatedBy = value.UserId;
+				}
+				else
+				{
+					this._CreatedBy = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AudienceType_Post", Storage="_AudienceType", ThisKey="AudienceTypeId", OtherKey="AudienceTypeId", IsForeignKey=true)]
+	public AudienceType AudienceType
+	{
+		get
+		{
+			return this._AudienceType.Entity;
+		}
+		set
+		{
+			AudienceType previousValue = this._AudienceType.Entity;
+			if (((previousValue != value) 
+						|| (this._AudienceType.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._AudienceType.Entity = null;
+					previousValue.Posts.Remove(this);
+				}
+				this._AudienceType.Entity = value;
+				if ((value != null))
+				{
+					value.Posts.Add(this);
+					this._AudienceTypeId = value.AudienceTypeId;
+				}
+				else
+				{
+					this._AudienceTypeId = default(System.Guid);
+				}
+				this.SendPropertyChanged("AudienceType");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Event_Post", Storage="_Event", ThisKey="EventId", OtherKey="EventId", IsForeignKey=true)]
+	public Event Event
+	{
+		get
+		{
+			return this._Event.Entity;
+		}
+		set
+		{
+			Event previousValue = this._Event.Entity;
+			if (((previousValue != value) 
+						|| (this._Event.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Event.Entity = null;
+					previousValue.Posts.Remove(this);
+				}
+				this._Event.Entity = value;
+				if ((value != null))
+				{
+					value.Posts.Add(this);
+					this._EventId = value.EventId;
+				}
+				else
+				{
+					this._EventId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("Event");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="PostType_Post", Storage="_PostType", ThisKey="PostTypeId", OtherKey="PostTypeId", IsForeignKey=true)]
+	public PostType PostType
+	{
+		get
+		{
+			return this._PostType.Entity;
+		}
+		set
+		{
+			PostType previousValue = this._PostType.Entity;
+			if (((previousValue != value) 
+						|| (this._PostType.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._PostType.Entity = null;
+					previousValue.Posts.Remove(this);
+				}
+				this._PostType.Entity = value;
+				if ((value != null))
+				{
+					value.Posts.Add(this);
+					this._PostTypeId = value.PostTypeId;
+				}
+				else
+				{
+					this._PostTypeId = default(System.Guid);
+				}
+				this.SendPropertyChanged("PostType");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_PostImages(PostImage entity)
+	{
+		this.SendPropertyChanging();
+		entity.Post = this;
+	}
+	
+	private void detach_PostImages(PostImage entity)
+	{
+		this.SendPropertyChanging();
+		entity.Post = null;
+	}
+	
+	private void attach_PostReactions(PostReaction entity)
+	{
+		this.SendPropertyChanging();
+		entity.Post = this;
+	}
+	
+	private void detach_PostReactions(PostReaction entity)
+	{
+		this.SendPropertyChanging();
+		entity.Post = null;
+	}
+	
+	private void attach_PostComments(PostComment entity)
+	{
+		this.SendPropertyChanging();
+		entity.Post = this;
+	}
+	
+	private void detach_PostComments(PostComment entity)
+	{
+		this.SendPropertyChanging();
+		entity.Post = null;
+	}
+	
+	private void attach_PostTaggedUsers(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.Post = this;
+	}
+	
+	private void detach_PostTaggedUsers(PostTaggedUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.Post = null;
 	}
 }
 

@@ -11,6 +11,10 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Net.PeerToPeer;
 using System.Web.Security;
+using System.Text;
+using System.Web.Services;
+using Twilio.Base;
+//using Braintree;
 
 public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 {
@@ -24,7 +28,7 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		LoadPosts();
-
+		BindDropdown();
 		postField.Visible = false;
 		lblPostMessage.Text = "Sign in to post";
 		if (HttpContext.Current.User.Identity.IsAuthenticated)
@@ -53,6 +57,7 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 			{
 				litFullName.Text = profile.Firstname + " " + profile.Lastname;
 			}
+
 		}
 
 		bool testMode = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["brainTreeTestMode"].ToString());
@@ -67,16 +72,74 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 		}
 	}
 
+
+	public void BindDropdown()
+	{
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		var AudianceType = dc.AudienceTypes.ToList();
+		foreach (var option in AudianceType)
+		{
+			ListItem item = new ListItem(option.Type.ToString(), option.AudienceTypeId.ToString());
+			AudienceType.Items.Add(item);
+		}
+		var PostReactionTypes = dc.PostReactionTypes.OrderBy(f => f.OrderId).ToList();
+		var div = new HtmlGenericControl("div");
+
+		foreach (var item in PostReactionTypes)
+		{
+			HtmlGenericControl newDiv = new HtmlGenericControl("span");
+			newDiv.InnerHtml = item.PostReactionSymbol;
+			newDiv.Attributes["id"] = item.PostReactionTypeId.ToString();
+			if (item.OrderId == 2)
+			{
+				newDiv.Attributes["class"] = "large-icon text-danger thanksReaction";
+			}
+			else if (item.OrderId == 3)
+			{
+				newDiv.Attributes["class"] = "large-icon bold-purple-star thanksReaction";
+			}
+			else
+			{
+				newDiv.Attributes["class"] = "large-icon thanksReaction";
+			}
+			newDiv.Attributes["data-toggle"] = "tooltip";
+			newDiv.Attributes["data-placement"] = "top";
+			newDiv.Attributes["title"] = item.PostReactionType1.ToString();
+			div.Controls.Add(newDiv);
+		}
+		PostReactionTypesId.Controls.Add(div);
+
+		//foreach (var option in PostReactionTypes)
+		//{
+		//	sbHtml.Append("<span id=" + option.PostReactionTypeId + " class= 'large-icon thanksReaction' data-toggle='tooltip' data-placement='top' title=" + option.PostReactionType1 + ">" + option.PostReactionSymbol + "</span>");
+
+
+		//		sbHtml.Append("<span onclick='triggerPostReaction(option.PostReactionTypeId)' id=" + option.PostReactionTypeId + " class='large-icon' data-toggle='tooltip' data-placement='top' title= " + option.PostReactionType1 + ">" + option.PostReactionSymbol + "</span>");
+		//}
+		//sbHtml.Append("</div>");
+		//postReactionType.InnerHtml = sbHtml.ToString();
+	}
+
 	public void LoadPosts()
 	{
+		var userId = new Guid();
+		string username = HttpContext.Current.User.Identity.Name;
+		MembershipUser user = Membership.GetUser(username);
+		if (user != null)
+		{
+			userId = new Guid(user.ProviderUserKey.ToString());
+		}
+
 		int streamPostPageSize = int.Parse(ConfigurationManager.AppSettings["streamPostPageSize"].ToString()) + 10;
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 		var posts = from p in dc.Posts
 					join pr in dc.Profiles on p.CreatedBy equals pr.UserId
-					where p.IsVisible == true
+					join prec in dc.PostReactions on p.PostId equals prec.PostId into reactions
+					from prec in reactions.DefaultIfEmpty()
+					where p.IsVisible == true && (prec == null || prec.CreatedBy == userId)
 					orderby p.CreatedOn descending
-					select new { p.CreatedBy, p.PostId, p.PostTypeId, p.URLImage, p.URLTitle, p.URLDescription, p.SharedURL, p.CreatedOn, p.Message, pr.UserId, fullname = pr.Firstname + " " + pr.Lastname };
+					select new { p.CreatedBy, p.PostId, p.PostTypeId, p.URLImage, p.URLTitle, p.URLDescription, p.SharedURL, p.CreatedOn, p.Message, pr.UserId, fullname = pr.Firstname + " " + pr.Lastname, ReactionTypeId = prec != null ? prec.ReactionTypeId : new Guid() };
 
 		rptPosts.DataSource = posts;
 		rptPosts.DataBind();
@@ -157,6 +220,7 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 		{
 			RepeaterItem dataItem = (RepeaterItem)e.Item;
 			Guid postId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostId");
+			Guid reactionTypeID = (Guid)DataBinder.Eval(dataItem.DataItem, "ReactionTypeId");
 			Guid postTypeId = (Guid)DataBinder.Eval(dataItem.DataItem, "PostTypeId");
 			DateTime createdOn = (DateTime)DataBinder.Eval(dataItem.DataItem, "CreatedOn");
 			String fullname = (String)DataBinder.Eval(dataItem.DataItem, "Fullname");
@@ -166,21 +230,22 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 			String URLDescription = (String)DataBinder.Eval(dataItem.DataItem, "URLDescription");
 			String URLTitle = (String)DataBinder.Eval(dataItem.DataItem, "URLTitle");
 			String SharedURL = (String)DataBinder.Eval(dataItem.DataItem, "SharedURL");
-
 			HyperLink hypCreatedBy = (HyperLink)e.Item.FindControl("hypCreatedBy");
 			Label lblMessageDate = (Label)e.Item.FindControl("lblMessageDate");
 			Literal litMessage = (Literal)e.Item.FindControl("litMessage");
+			Literal litReactionTitle = (Literal)e.Item.FindControl("litReactionTitle");
 			HtmlImage imgProfile = (HtmlImage)e.Item.FindControl("imgProfile");
-
 			lblMessageDate.Text = CrowdRelief.Tools.GetElapsedTime(createdOn);
-			hypCreatedBy.Text = fullname;
-			hypCreatedBy.NavigateUrl = "/V1/Member/Default.aspx?userId=" + createdBy;
-
 			string postHtml = string.Empty;
 			bool URLShared = false;
 			string URLLink = SharedURL;
-
-			if (!String.IsNullOrEmpty(SharedURL))
+            V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
+            if (ucTeamLogo != null)
+            {     
+                ucTeamLogo.UserId = createdBy;
+                ucTeamLogo.LoadNameWithBadges();
+            }
+            if (!String.IsNullOrEmpty(SharedURL))
 			{
 				//A url was used.
 				//Make sure the URL is used to open the link.
@@ -253,6 +318,33 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 			{
 				//Get the users profile image
 				imgProfile.Src = profilePhotoFolder + profileImage.FilenameCropped;
+			}
+
+
+			string reactionHtml = string.Empty;
+			if (reactionTypeID == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"))
+			{
+				litReactionTitle.Text = "<span style='color: #286090'> &#128591; Thank </span>";
+			}
+			else if (reactionTypeID == new Guid("b247efe7-3da7-44fa-9452-a331f71d337f"))
+			{
+				litReactionTitle.Text = "<span style='color: #FF0000'> &#10084; Love </span>";
+			}
+			else if (reactionTypeID == new Guid("8fe324d4-3694-4b7d-b710-df277c74b1c4"))
+			{
+				litReactionTitle.Text = "<span style='color: #f0ad4e'> &#128171; Bump </span>";
+			}
+			else if (reactionTypeID == new Guid("6528bbd7-501b-475b-a15f-520bb0a3ffbf"))
+			{
+				litReactionTitle.Text = "<span style='color: #f0ad4e'> &#128074; Be Strong </span>";
+			}
+			else if (reactionTypeID == new Guid("43142e57-f55b-4c8d-b024-84e0e5c664e9"))
+			{
+				litReactionTitle.Text = "<span style='color: #eea236'> &#128558; Wow </span>";
+			}
+			else
+			{
+				litReactionTitle.Text = "<span style='color: #777'> &#128077; Thank </span>";
 			}
 		}
 	}

@@ -10,96 +10,102 @@ using System.Drawing.Drawing2D;
 
 public partial class V1_NonProfit_LogoUpload : BaseOrganizationWebForm
 {
-	protected void Page_Load(object sender, EventArgs e)
-	{
-	}
-	
-	protected void btnUpdate_Click(object sender, EventArgs e)
-	{
-		string logoFolder		= System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
-		int logoImageWidth		= Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["logoImageWidth"].ToString());
-		int logoImageHeight		= Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["logoImageHeight"].ToString());
-		string organizationId	= Request.QueryString["organizationId"];
+    protected void Page_Load(object sender, EventArgs e)
+    {
+    }
 
-		try
-		{
-			if (profilePhotoUpload.PostedFile.ContentLength > 0)
-			{
-				try
-				{
-					if (profilePhotoUpload.PostedFile.ContentType == "image/jpeg" || profilePhotoUpload.PostedFile.ContentType == "image/png")
-					{
-						if (profilePhotoUpload.PostedFile.ContentLength < 5242880)
-						{
-							string imageGuid				= Guid.NewGuid().ToString();
-							string imageFileFolder			= Server.MapPath(logoFolder);
-							string imageExtension			= Path.GetExtension(profilePhotoUpload.PostedFile.FileName);;
+    protected void btnUpdate_Click(object sender, EventArgs e)
+    {
+        string logoFolder = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
+		int logoImageWidth = 400; // Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["logoImageWidth"].ToString());
+		int logoImageHeight = 160; // Int32.Parse(System.Configuration.ConfigurationManager.AppSettings["logoImageHeight"].ToString());
+        string organizationId = Request.QueryString["organizationId"];
 
-							string imageNameOriginal		= imageGuid + imageExtension;
+        try
+        {
+            if (logoPhotoUpload.PostedFile.ContentLength > 0)
+            {
+                try
+                {
+                    if (logoPhotoUpload.PostedFile.ContentType == "image/jpeg" || logoPhotoUpload.PostedFile.ContentType == "image/png")
+                    {
+                        if (logoPhotoUpload.PostedFile.ContentLength < 5242880)
+                        {
+                            string imageGuid = Guid.NewGuid().ToString();
+                            string imageFileFolder = Server.MapPath(logoFolder);
+                            string imageExtension = Path.GetExtension(logoPhotoUpload.PostedFile.FileName); ;
 
-							string filePathnameOriginal		= Path.Combine(imageFileFolder, imageNameOriginal);
-							
-							profilePhotoUpload.PostedFile.SaveAs(filePathnameOriginal);
+                            string imageNameOriginal = imageGuid + imageExtension;
+                            string imageNameCropped = imageGuid + "_crop" + imageExtension;
+                            string imageNameResized = imageGuid + "_resized" + imageExtension;
 
-							CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+                            string filePathnameOriginal = Path.Combine(imageFileFolder, imageNameOriginal);
+                            string filePathNameCropped = Path.Combine(imageFileFolder, imageNameCropped);
+                            string filePathNameResized = Path.Combine(imageFileFolder, imageNameResized);
 
-							var organization = (from o in dc.Organizations
-												where o.OrganizationId == new Guid(organizationId)
-												select o).SingleOrDefault();
+                            logoPhotoUpload.PostedFile.SaveAs(filePathnameOriginal);
 
-							//Insert the image.
-							organization.Logo = imageNameOriginal;
-							dc.SubmitChanges();
+                            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-							//ResizeAndSaveImage(filePathnameOriginal, filePathNameResized, logoImageWidth, logoImageHeight);
+                            var organization = (from o in dc.Organizations
+                                                where o.OrganizationId == new Guid(organizationId)
+                                                select o).SingleOrDefault();
 
-							Response.Redirect("~/V1/NonProfit/Default.aspx?organizationId=" + organizationId);
-						}
-					}
-				}
-				catch (Exception ex)
-				{
-					Response.Write(ex.Message);
-					Response.End();
-				}
-			}
-			
-		}
-		catch (Exception ex)
-		{
-			Response.Write(ex.Message);
-			Response.End();
-		}
-	}
-	
-	//protected void ResizeAndSaveImage(string imageFilenamePathOriginal, string imageFilenamePathFinal, int maxWidth, int maxHeight)
-	//{
-	//	//Get an image object of the newly uploaded file.
-	//	System.Drawing.Image image = System.Drawing.Image.FromFile(imageFilenamePathOriginal);
+                            //Insert the image.
+                            organization.Logo = imageNameOriginal;
+                            dc.SubmitChanges();
 
-	//	if(image.Width < maxWidth && image.Height < maxHeight)
-	//	{
-	//		maxWidth = image.Width;
-	//		maxHeight = image.Height;
-	//	}
-		
-	//	var ratioX = (double)maxWidth / image.Width;
-	//	var ratioY = (double)maxHeight / image.Height;
-	//	var ratio = Math.Min(ratioX, ratioY);
-	//	var newWidth = (int)(image.Width * ratio);
-	//	var newHeight = (int)(image.Height * ratio);
+                            ResizeAndSaveImage(filePathnameOriginal, filePathNameResized, logoImageWidth, logoImageHeight);
 
-		
-	//	//Create a copy of the image with 
-	//	var newImage = new Bitmap(newWidth, newHeight);
+                            //Response.Redirect("~/V1/NonProfit/Default.aspx?organizationId=" + organizationId);
+                            Response.Redirect("~/V1/NonProfit/LogoPhotoCrop.aspx?imageNameResized=" + imageNameResized + "&imageType=logo");
 
-	//	//Size the image down, create a new resized image.
-	//	Graphics.FromImage(newImage).DrawImage(image, 0, 0, newWidth, newHeight);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Response.Write(ex.Message);
+                    Response.End();
+                }
+            }
 
-	//	//Convert to a bitmap
-	//	Bitmap bitmapImage = new Bitmap(newImage);
+        }
+        catch (Exception ex)
+        {
+            Response.Write(ex.Message);
+            Response.End();
+        }
+    }
 
-	//	//Save the new image
-	//	bitmapImage.Save(imageFilenamePathFinal);
-	//}
+    protected void ResizeAndSaveImage(string imageFilenamePathOriginal, string imageFilenamePathFinal, int maxWidth, int maxHeight)
+    {
+        //Get an image object of the newly uploaded file.
+        System.Drawing.Image image = System.Drawing.Image.FromFile(imageFilenamePathOriginal);
+
+        if (image.Width < maxWidth && image.Height < maxHeight)
+        {
+            maxWidth = image.Width;
+            maxHeight = image.Height;
+        }
+
+        var ratioX = (double)maxWidth / image.Width;
+        var ratioY = (double)maxHeight / image.Height;
+        var ratio = Math.Min(ratioX, ratioY);
+        var newWidth = (int)(image.Width * ratio);
+        var newHeight = (int)(image.Height * ratio);
+
+
+        //Create a copy of the image with 
+        var newImage = new Bitmap(newWidth, newHeight);
+
+        //Size the image down, create a new resized image.
+        Graphics.FromImage(newImage).DrawImage(image, 0, 0, newWidth, newHeight);
+
+        //Convert to a bitmap
+        Bitmap bitmapImage = new Bitmap(newImage);
+
+        //Save the new image
+        bitmapImage.Save(imageFilenamePathFinal);
+    }
 }

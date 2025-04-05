@@ -30,14 +30,15 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 	public string _badgeHoursRecordedStatus = "fa-pending-color";
 	public string _badgeTOPStatus = "fa-pending-color";
 	public string faIdBadgeClick = string.Empty;
-
-	protected void Page_Load(object sender, EventArgs e)
+    public string _teamLogo = string.Empty;
+    protected void Page_Load(object sender, EventArgs e)
 	{
 		//string causePhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		string profilePhotoFolder		= System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
 		string coverPhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
-		_coverImage						= coverPhotoFolder + "Stability_Cover_V3.jpg";
-		litMemberName.Text				= _memberFullname;
+        string teamLogo = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
+        _coverImage = coverPhotoFolder + "Stability_Cover_V3.jpg";
+		//litMemberName.Text = _memberFullname;
 		imgMemberProfilePhoto.ImageUrl	= profilePhotoFolder + _memberProfileImageFilename;
 		litMemberDescription.Text		= _memberDescription;
 		litTitle.Text					= !String.IsNullOrEmpty(_memberTitle) ? _memberTitle + "<br />" : string.Empty;
@@ -50,8 +51,15 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		{
 			faIdBadgeClick = "faIdBadgeClick";
 		}
-
-		if (!String.IsNullOrEmpty(_teamId))
+        if (!IsPostBack)
+        {
+			if(!String.IsNullOrEmpty(_userId))
+			{ 
+				ucTeamLogo.UserId = new Guid(_userId);
+				ucTeamLogo.LoadNameWithBadges();
+			}
+		}
+        if (!String.IsNullOrEmpty(_teamId))
 		{
 			litTeamBreak.Text =         "<br />";
 			hypTeam.Visible				= true;
@@ -143,8 +151,12 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		}
 	}
 
-
-	public string BadgeVettingStatus
+    public string TeamLogo
+    {
+        get { return _teamLogo; }
+        set { _teamLogo = value; }
+    }
+    public string BadgeVettingStatus
 	{
 		get { return _badgeVettingStatus; }
 		set { _badgeVettingStatus = value; }
@@ -165,7 +177,7 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		set { _badgeHoursRecordedStatus = value; }
 	}
 
-	public string BadgeTOPStatus
+    public string BadgeTOPStatus
 	{
 		get { return _badgeTOPStatus; }
 		set { _badgeTOPStatus = value; }

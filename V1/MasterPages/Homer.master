@@ -1,18 +1,17 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Homer.master.cs" Inherits="MasterPages_Homer" %>
 
-
 <!DOCTYPE html>
 <html>
 	<head runat="server">
 		<!-- Global site tag (gtag.js) - Google Analytics -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-96039646-1"></script>
 		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag() { dataLayer.push(arguments); }
-			gtag('js', new Date());
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
 
-			gtag('config', 'UA-96039646-1');
-		</script>
+            gtag('config', 'UA-96039646-1');
+        </script>
 		<link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
 		<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -58,23 +57,24 @@
             var checkTaskType = "true";
             var causeName = "";
 
-			document.addEventListener("DOMContentLoaded", function () {
-				const listItems = document.querySelectorAll("#userActionList li");
+            document.addEventListener("DOMContentLoaded", function () {
+                const listItems = document.querySelectorAll("#userActionList li");
 
-				listItems.forEach(item => {
-					item.addEventListener("click", function () {
-						const url = this.getAttribute("data-url");
-						if (url) {
-							window.location.href = url;
-						}
-					});
-				});
-			});
+                listItems.forEach(item => {
+                    item.addEventListener("click", function () {
+                        const url = this.getAttribute("data-url");
+                        if (url) {
+                            window.location.href = url;
+                        }
+                    });
+                });
+            });
 
 			$(document).ready(function () {
+                $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 
 				<%=_showUserActionModal%>
-				
+
                 $("#causeTypeList.dropdown-menu li").click(function () {
                     causeName = $(this).text();
                     $("#btn-causeDropdown.dropdown-chooseCause").html("<i class='fa fa-globe'></i> " + causeName);
@@ -133,7 +133,7 @@
                 }
 
 				$('#<%=imgLogo.ClientID%>').click(function () {
-					window.location.href = '/Default.aspx';
+                  window.location.href = '/V1/NonProfit/Default.aspx';
 					return false;
 				});
 
@@ -161,10 +161,38 @@
                 //Remove the cause Divs
                 divChooseCause.hidden = true;
                 $("#btn-causeDropdownB.dropdown-chooseCauseB").html("<i class='fa fa-globe'></i> " + causeName);
+			}
+
+
+            function checkSignOutStatus() {
+                $.ajax({
+                    type: "GET",
+                    url: "/V1/Handlers/CheckSignOutStatus.ashx",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response && response.shouldSignOut) {
+                         
+                            document.getElementById('<%= btnSignOut.ClientID %>').click();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error checking sign-out status: " + error);
+            }
+        });
             }
 
+           
+            setInterval(checkSignOutStatus, 30000);
+
+          
+            $(document).ready(function () {
+                checkSignOutStatus();
+            });
+
             function updateTime(isUserActive)
-            {
+			{
+				
                 workDescription = document.getElementById('<%=txtWorkDescription.ClientID%>').value;
                 workCompleteDescription = document.getElementById('<%=txtWorkCompleteDescription.ClientID%>').value;
                 taskTypeId = document.getElementById('<%=hidTaskTypeId.ClientID%>').value;
@@ -179,7 +207,8 @@
                     workDescription = workCompleteDescription;
                 }
 
-                if (taskTypeId == "" && checkTaskType) {
+               
+                if (isUserActive && taskTypeId == "" && checkTaskType) {
                     toastr.error('Error - Please choose a Volunteer Role.');
                     return;
                 }
@@ -224,9 +253,69 @@
 				    });
                  }
              }
+        </script>
+		<script type="text/javascript">
+            var baseUrl = '<%= ResolveUrl("~/") %>';
+            console.log("Base URL:", baseUrl);
 		</script>
+		
+
+		<script>
+            $(document).ready(function () {
+                var notificationCount = '<%= notificationCounting %>';
+
+                console.log("Notification Count:", notificationCount);
+
+                if (notificationCount === "" || notificationCount === "0") {
+                    $('.badge.badge-danger').hide();
+                } else {
+                    $('.badge.badge-danger').show();
+                }
+            });
+            $('#notificationContainer').on('click', '.notification-item', function () {
+                var notificationId = $(this).find('.notificationClick').data('notification-id');
+                var self = $(this);
+                $.ajax({
+                    url: "/MasterPages/Homer.master/GetCount",
+                    type: "POST",
+                    data: JSON.stringify({ notificationId: notificationId }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (res) {
+                        console.log(res);
+
+                    },
+                    error: function () {
+                        console.error('Failed to mark notification as read.');
+                    }
+                });
+            });
+        </script>
 
 		<style>
+			#featureTypeCounter{
+				    margin-right: 17px;
+					margin-top: 20px;
+					color: white;
+			}
+			#featureCounter{
+				top:0;
+				bottom:0;
+				right:0;
+				left:0;
+				margin-top:0;
+				margin-bottom:0;
+				margin-right:0;
+				margin-left:0;
+			}
+			    #notificationDropdown a:hover {
+					background: none;
+				}
+				#notificationDropdown a {
+					background: none;
+					border-bottom:none;
+				}
+
             .btn-purple
             {
                 background-color:#5E2E91;
@@ -274,7 +363,7 @@
 			}
 			.fa-bars:hover
 			{
-				color:white;
+				color:none;
 			}
 			#<%=imgProfile.ClientID%> {width:60%;}
 
@@ -291,7 +380,7 @@
 			.liUserAction:hover
 			{
 				cursor:pointer;
-				background-color:lightgray;
+				background-color:none;
 				color:white;
 			}
 			.ul_legend li
@@ -386,19 +475,54 @@
 				padding:9px 0px !important;
 				margin:8px 8px 8px 0px !important;
 			}
-			
+           .desktop-logo {
+                display: inline-block;
+            }
+           .mobile-logo {
+                display: none;
+            }
+           @media (max-width: 767px) {
+                  .desktop-logo {
+                 display: none;
+              }
+	    	.mobile-logo {
+            display: inline-block;
+            }
+           }
 		</style>
-		<asp:ContentPlaceHolder id="head" runat="server">
+
+	<asp:ContentPlaceHolder id="head" runat="server">
 		</asp:ContentPlaceHolder>
 	</head>
 	<%=bodyTag%>
-    <body class="sidebar-scroll hide-sidebar fixed-navbar <%=fixedFooter%> <%=fixedHeader%> bodyBGColor">
+    <body class="sidebar-scroll hide-sidebar fixed-navbar <%=fixedFooter%> <%=fixedHeader%> bodyBGColor">		
+		<asp:Panel ID="adminFeatureSection" runat="server" Visible="false">   
+    <div style="background-color: #6e2e91; padding: 15px; text-align: right; color: white;
+                position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
+        <div class="navbar-right"></div>
+        <%=FeatureTypeCounterTitle %>  
+        <asp:Label ID="FeatureTypeCounterNumber" runat="server"></asp:Label>
+    </div>
+</asp:Panel>
+ <!-- Add a Literal control to dynamically include the style block -->
+    <asp:Literal ID="bodyStyle" runat="server" Visible="false">
+        <style>
+            body {
+                padding-top: 30px; 
+            }
+        </style>
+    </asp:Literal>
 		<form id="form1" runat="server" role="form">
+										
 			<div style="margin-bottom:500px;">
 				<div id="header" runat="server">
 					<nav role="navigation">
-						<asp:Image ID="imgLogo" CssClass="pull-left" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png" />
-						<div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs"></i></div>
+						<asp:Image ID="imgLogo" CssClass="pull-left desktop-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png" />
+                        <asp:Image ID="imgresponsive" CssClass="pull-left mobile-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/mobile-logo.png" />
+	                    <div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs"></i></div>					
+                        <div class="header-link text-white" onclick="window.location.href='/feed';">
+                        <i class="fa fa-home fa-2x m-t-xs"></i>
+                  </div>
 						<div class="header-link load-map text-white" onclick="window.location.href='/V1/Member/Default.aspx';"><i class="fa fa-user fa-2x m-t-xs"></i></div>
 						<div class="header-link load-map text-white" onclick="window.location.href='/V1/NonProfit/Default.aspx';"><i class="fa fa-users fa-2x m-t-xs"></i></div>
 						<div class="header-link load-map text-white" onclick="window.location.href='/MapZone';"><i class="fa fa-map fa-2x m-t-xs"></i></div>
@@ -438,6 +562,30 @@
 						</div>
 
 						<div class="navbar-right">
+							<%--<ul class="nav navbar-nav no-borders removeStyle">
+								<li id="featureTypeCounter">
+								<%=FeatureTypeCounterTitle %> <asp:label ID="FeatureTypeCounterNumber" runat="server" ></asp:label>
+
+								</li>
+								
+							</ul>--%>
+							<ul class="nav navbar-nav no-borders removeStyle">
+								
+
+								<li class="dropdown" id="notificationDropdown">
+									<a class="dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
+										<i class="fa fa-bell"></i>
+										<span class="badge badge-danger">
+											<asp:Label  ID="notificationCounts" runat="server" ></asp:Label>
+										</span>
+									</a>
+									<asp:PlaceHolder ID="PlaceHolderContent" runat="server"></asp:PlaceHolder>
+								</li>
+							</ul>
+
+
+							
+							
 							<ul class="nav navbar-nav no-borders">
 								<li class="dropdown" style="visibility:hidden;">
 									<a class="dropdown-toggle label-menu-corner" href="#" data-toggle="dropdown">
@@ -773,6 +921,7 @@
                                     </p>
                                     <asp:TextBox TextMode="MultiLine" Rows="4" Columns="40" ID="txtWorkCompleteDescription" runat="server"></asp:TextBox>
                                     <br />
+									<asp:HiddenField ID="litTimeIn" Value="" runat="server" />
                                     <button type="button" class="btn btn-warning" runat="server" id="btnSignOut" onclick="updateTime(false);">Sign Out</button>
                                 </div>
                                 <div class="row" id="timeEntry">
@@ -917,5 +1066,6 @@
 		<br />
 		<br />
 		<br />
+
 	</body>
 </html>
