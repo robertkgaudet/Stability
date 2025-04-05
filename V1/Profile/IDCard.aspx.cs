@@ -100,16 +100,13 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
 								   uo.ShowTeamLogo,
 								   uo.TeamVerifiedDate
 							   }).Take(1).SingleOrDefault();
+
                 if (orgUser != null)
                 {
-                    if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
+                    if (!string.IsNullOrEmpty(orgUser.LogoSquare))
                     {
-                        if (!string.IsNullOrEmpty(orgUser.LogoSquare))
-                        {
-                            string teamLogo = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
-                            watermarkImagePath = teamLogo + orgUser.LogoSquare;
-                        }
-                    }
+						watermarkImagePath = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString() + orgUser.LogoSquare;
+						}
                     if (orgUser.TeamVerifiedDate != null)
                     {
                         litTeamVerifiedDate.Text = orgUser.TeamVerifiedDate.Value.ToString("MM/dd/yyyy");

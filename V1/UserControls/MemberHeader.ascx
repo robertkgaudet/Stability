@@ -106,8 +106,7 @@
 		<div class="panel-body member-panel-body">
 			<div class="memberImageContainer col-xs-3 col-md-4">
 				<asp:Image runat="server" id="imgMemberProfilePhoto" class="memberPhoto" />
-				<a href="/V1/Profile/ProfilePhotoUpload.aspx?userId=<%=_userId%>"
-					class="camera-icon" title="Edit" runat="server" id="linkCamera" visible="false">
+				<a class="camera-icon" title="Edit" runat="server" id="linkCamera" visible="false">
 					<i class="fa fa-camera"></i></a>
 			</div>	
             <div class="pull-right" id="divMemberEditControl" runat="server">

@@ -11,31 +11,42 @@
         var touchStartY = 0;
         var touchEndY = 0;
 
-        panelNav.on('click', function () {
-            collapseElement.collapse('toggle');
-        });
+        //panelNav.on('click', function () {
+        //    collapseElement.collapse('toggle');
+        //});
 
         // Function to automatically collapse the div on small screens
-        function checkWindowSize() {
-            if ($(window).width() < 768) {
-                collapseElement.collapse({ 'toggle': true }).collapse('hide');
-            }
-        }
+   //     function checkWindowSize() {
+			//if ($(window).width() < 768) {
+			//	collapseElement.removeClass('in'); // Hide collapse manually
+			//	//collapseElement.collapse({ 'toggle': true }).collapse('hide');
+   //         }
+   //     }
+
+		function checkWindowSize() {
+			if ($(window).width() < 768) {
+				collapseElement.removeClass('in'); // Hide it on small screens
+			} else {
+				collapseElement.addClass('in'); // Show it on larger screens
+			}
+		}
 
         // Check window size on page load and window resize
-        $(window).on('resize', checkWindowSize);
+		$(window).on('resize', checkWindowSize);
+		checkWindowSize();  // Initial check on page load
 
         // Adjust caret direction based on collapse state
         collapseElement.on('hidden.bs.collapse', function () {
             caret.removeClass('caret-up');
-        });
+		});
+
         collapseElement.on('shown.bs.collapse', function () {
             caret.addClass('caret-up');
-        });
-        checkWindowSize();  // Initial check on page load
+		});
+
 
         // Prevent toggling while scrolling – removed touch event logic to avoid interference during scroll
-        // panelNav.on('touchstart', function (e) { 
+        // panelNav.on('touchstart', function (e) {
         //     touchStartY = e.originalEvent.touches[0].clientY;
         // });
 
@@ -45,6 +56,11 @@
         //         $(this).click();
         //     }
         // });
+		
+		$('#<%=divTeamConfiguration.ClientID%>').click(function () {
+			window.location.href = '/V1/DeploymentDirectorSplash.html';
+			return false;
+		});
 
         $('#<%=divWebsite.ClientID%>').click(function () {
             window.location.href = '/Impactoid/CommunityPage.aspx?organizationId=<%=organizationId%>';
@@ -63,7 +79,7 @@
 
 <style>
     .deployment:hover {
-        background-color: #D6F0CC;
+        background-color: darkseagreen;
         cursor: pointer;
     }
 
@@ -85,6 +101,7 @@
 
     .caret-up {
         transform: rotate(180deg);
+		 display: inline-block;
     }
 
     .panelNav:hover {
@@ -104,15 +121,43 @@
 </style>
 <div class="hpanel">
     <div class="panel-body">
-        <asp:HyperLink ID="hypMyProfile" runat="server" NavigateUrl="/V1/Member/Default.aspx"><i class="fa fa-id-badge"></i> My Profile</asp:HyperLink><br />
+		<div id="desktopNavigation" class="m-b-lg">
+			<div id="divTeamConfiguration" runat="server" class="alert alert-info text-center deployment">
+				<h5 class="v1"><i class="fa fa-user pe-2x"></i><b>Launch Deployment Director Training</b></h5>
+				Team, Website, and Deployment Management
+			</div>
+		</div>
         <asp:HyperLink runat="server" ID="hypGetHelp" CssClass="btn btn-danger btn-block"><i class='fa fa-check'></i> Get Help From This Team</asp:HyperLink>
-        <button class="btn panelNav btn-block" type="button" data-bs-toggle="collapseTeam"
-            data-bs-target="#collapseTeamNavigation" aria-expanded="false" aria-controls="collapseTeamNavigation">
-            <span class="caret"></span>Team Navigation 
-        </button>
-        <div class="collapseTeam mt-2" id="collapseTeamNavigation">
+		<button class="btn panelNav btn-block" 
+				type="button" 
+				data-toggle="collapse" 
+				data-target="#collapseTeamNavigation" 
+				aria-expanded="false" 
+				aria-controls="collapseTeamNavigation">
+			<span class="caret"></span> Team Navigation 
+		</button>
+        <div class="collapse in mt-2" id="collapseTeamNavigation">
             <ul class="mailbox-list">
                 <hr runat="server" id="hr2"></hr>
+            <ul class="mailbox-list" runat="server" id="ul1">
+                <li><b>Team Resources</b></li>
+                <li <%=_peoplePageActive%>>
+                    <asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-vcard"></i> Team Members</asp:HyperLink>
+                </li>
+                <li <%=_teamRolesActive%>>
+                    <asp:HyperLink runat="server" ID="hypTeamRoles"><i class="fa fa-vcard"></i> Training</asp:HyperLink>
+                </li>
+                <li <%=_deploymentTeamActive%>>
+                    <asp:HyperLink runat="server" ID="hypDeploymentTeam"><i class="fa fa-users"></i> Find Open Positions</asp:HyperLink>
+                </li>
+                <li <%=_skillsPageActive%>>
+                    <asp:HyperLink runat="server" ID="hypSkillsets"><i class="fa fa-hand-pointer-o"></i> Skillsets</asp:HyperLink>
+                </li>
+                <li <%=_resourcesPageActive%>>
+                    <asp:HyperLink runat="server" ID="hypResources"><i class="fa fa-truck"></i> Resources</asp:HyperLink>
+                </li>
+            </ul>
+            <hr runat="server" id="hrAdmin" visible="false"></hr>
                 <li><b>Response Tools</b></li>
                 <li <%=_streamActive%>>
                     <asp:HyperLink runat="server" ID="hypStream"><i class="fa fa-home"></i> Posts</asp:HyperLink>
@@ -134,25 +179,6 @@
                 </li>
             </ul>
             <hr runat="server" id="hr1"></hr>
-            <ul class="mailbox-list" runat="server" id="ul1">
-                <li><b>Team Resources</b></li>
-                <li <%=_peoplePageActive%>>
-                    <asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-vcard"></i> Team Members</asp:HyperLink>
-                </li>
-                <li <%=_teamRolesActive%>>
-                    <asp:HyperLink runat="server" ID="hypTeamRoles"><i class="fa fa-vcard"></i> Training</asp:HyperLink>
-                </li>
-                <li <%=_deploymentTeamActive%>>
-                    <asp:HyperLink runat="server" ID="hypDeploymentTeam"><i class="fa fa-users"></i> Find Open Positions</asp:HyperLink>
-                </li>
-                <li <%=_skillsPageActive%>>
-                    <asp:HyperLink runat="server" ID="hypSkillsets"><i class="fa fa-hand-pointer-o"></i> Skillsets</asp:HyperLink>
-                </li>
-                <li <%=_resourcesPageActive%>>
-                    <asp:HyperLink runat="server" ID="hypResources"><i class="fa fa-truck"></i> Resources</asp:HyperLink>
-                </li>
-            </ul>
-            <hr runat="server" id="hrAdmin" visible="false"></hr>
             <ul class="mailbox-list" runat="server" id="ulAdmin" visible="false">
                 <li><b>Administrative Tools</b></li>
                 <li>
@@ -224,13 +250,13 @@
     <div id="divWebsite" runat="server" class="alert alert-info text-center website m-b-xs">
         <h5 class="v1"><i class="fa fa-globe pe-2x"></i><b>Team Member Website</b></h5>
     </div>
+    <div id="donatenow" runat="server" class="alert alert-success text-center deployment m-b-xs"
+        visible="true">
+        <h5 class="v1"><i class="fa fa-globe pe-2x"></i><b>Donate Now</b></h5>
+    </div>
     <div id="divDeployment" runat="server" class="alert alert-success text-center deployment m-b-xs"
         visible="false">
         <h5 class="v1"><i class="fa fa-street-view pe-2x"></i><b>Create A New Deployment</b>
         </h5>
-    </div>
-    <div id="donatenow" runat="server" class="alert alert-success text-center deployment m-b-xs"
-        visible="true">
-        <h5 class="v1"><i class="fa fa-globe pe-2x"></i><b>Donate Now</b></h5>
     </div>
 </div>

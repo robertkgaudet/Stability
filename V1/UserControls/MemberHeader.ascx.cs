@@ -54,7 +54,8 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
         if (!IsPostBack)
         {
 			if(!String.IsNullOrEmpty(_userId))
-			{ 
+			{
+				linkCamera.HRef = "/V1/Profile/ProfilePhotoUpload.aspx?userId=" + _userId;
 				ucTeamLogo.UserId = new Guid(_userId);
 				ucTeamLogo.LoadNameWithBadges();
 			}
