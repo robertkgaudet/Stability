@@ -106,8 +106,9 @@
 		<div class="panel-body member-panel-body">
 			<div class="memberImageContainer col-xs-3 col-md-4">
 				<asp:Image runat="server" id="imgMemberProfilePhoto" class="memberPhoto" />
-				<a class="camera-icon" title="Edit" runat="server" id="linkCamera" visible="false">
-					<i class="fa fa-camera"></i></a>
+                <asp:HyperLink runat="server" ID="linkCamera"   CssClass="camera-icon"  ToolTip="Edit"   Visible="false">
+                <i class="fa fa-camera"></i>
+                </asp:HyperLink>
 			</div>	
             <div class="pull-right" id="divMemberEditControl" runat="server">
                 <div class="btn-group">

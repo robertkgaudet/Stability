@@ -54,6 +54,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             var events = (from orgEvent in dc.OrganizationEvents
                           where orgEvent.IsActive == true && orgEvent.OrganizationId == new Guid(organizationId)
                           && !eventOrgIds.Contains(orgEvent.OrganizationEventId)
+                          orderby orgEvent.CampaignName // Added ordering here
                           select new
                           {
                               orgEvent.OrganizationEventId,
