@@ -1,0 +1,632 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Deployment Director Guide | Stability.org</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f8f9fa;
+			line-height: 1.6;
+			color: #333;
+		}
+
+		#header {
+			background-color: #5a2ca0;
+			padding: 10px 20px;
+			display: flex;
+			align-items: center;
+			flex-wrap: wrap;
+			justify-content: space-between;
+		}
+
+			#header img {
+				height: 50px;
+				margin-right: 10px;
+			}
+
+		.header-link {
+			color: white;
+			cursor: pointer;
+			margin: 0 10px;
+		}
+
+			.header-link i {
+				vertical-align: middle;
+			}
+
+		.navbar-form-custom {
+			display: flex;
+			margin-left: auto;
+		}
+
+		.input-group {
+			display: flex;
+			align-items: center;
+		}
+
+		.search-input {
+			padding: 6px;
+			border: none;
+			border-radius: 4px 0 0 4px;
+			outline: none;
+		}
+
+		.btn.btn-primary2 {
+			background-color: #fff;
+			color: #5a2ca0;
+			padding: 6px 12px;
+			border: none;
+			border-radius: 0 4px 4px 0;
+			cursor: pointer;
+			font-weight: bold;
+		}
+
+		.hero {
+			position: relative;
+			width: 100%;
+			height: 70vh; /* Fill 90% of screen height */
+			background-image: url('/V1/Images/trainingb2g.png');
+			background-position: left center; /* Stick to the left */
+			background-size: cover;
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+			padding-left: 5vw;
+		}
+
+		.hero-text {
+			color: white;
+			width: 60vw; /* fixed to 50% of viewport width */
+			max-width: 600px;
+			min-width: 200px;
+		}
+
+		.hero h1 {
+			font-size: 3.5rem;
+			font-weight: bold;
+			/*text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);*/
+			margin-bottom: 10px;
+		}
+
+		.subtext {
+			font-size: 1.4rem;
+			font-weight: 400;
+			/*text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);*/
+		}
+
+		.container {
+			width: 100%;
+			padding: 30px 5vw;
+			background: white;
+		}
+
+		.container {
+			padding-top: 20px; /* gives breathing room in case feature cards push down */
+			padding-bottom: 80px; /* gives breathing room in case feature cards push down */
+		}
+
+		.page-description {
+			max-width: 800px;
+			margin: 20px auto 40px;
+			font-size: 1.1rem;
+			color: #444;
+		}
+
+		h2 {
+			color: #333;
+			border-bottom: 2px solid #eee;
+			padding-bottom: 5px;
+			margin-top: 30px;
+			font-size: 1.25rem;
+		}
+
+		ul {
+			padding-left: 20px;
+			margin-top: 10px;
+		}
+
+		li {
+			margin-bottom: 8px;
+			font-size: 1rem;
+		}
+
+		.section-number {
+			font-weight: bold;
+			color: #5a2ca0;
+		}
+
+		.feature-cards {
+			display: flex;
+			justify-content: space-between;
+			gap: 20px;
+			width: 90%;
+			max-width: 1200px;
+			margin: -30px auto 60px; /* overlaps hero downward */
+			z-index: 2;
+			position: relative;
+		}
+
+		.feature-card {
+			background: white;
+			flex: 1;
+			border-radius: 12px;
+			padding: 20px;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			font-size: 1rem;
+			color: #4a4a4a;
+		}
+
+			.feature-card p {
+				margin: 0;
+			}
+
+		.video-wrapper {
+			position: relative;
+			width: 100%;
+			max-width: 800px;
+			aspect-ratio: 16 / 9;
+			margin: 40px auto;
+			overflow: hidden;
+			border-radius: 12px;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		}
+
+			.video-wrapper iframe {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				border: none;
+			}
+
+		.training-syllabus {
+			max-width: 800px;
+			margin: 60px auto;
+			padding: 20px;
+		}
+
+			.training-syllabus h2 {
+				font-size: 2rem;
+				color: #5a2ca0;
+				text-align: center;
+				margin-bottom: 30px;
+			}
+
+		.syllabus-section {
+			margin-bottom: 20px;
+			border-bottom: 1px solid #eee;
+			padding-bottom: 15px;
+		}
+
+		.syllabus-header {
+			display: flex;
+			align-items: center;
+			gap: 10px; /* space between checkbox, number, title, toggle */
+			cursor: pointer;
+			font-size: 1.25rem;
+			color: #333;
+		}
+
+		.syllabus-link {
+			color: #333;
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.checkbox-icon {
+			color: green;
+			font-size: 1.2rem;
+		}
+
+		.toggle-icon {
+			font-size: 1.2rem;
+			color: #5a2ca0;
+			margin-left: auto; /* pushes toggle icon to far right *if needed* */
+		}
+
+		.syllabus-content {
+			display: none; /* start collapsed */
+			padding-left: 24px;
+			margin-top: 10px;
+		}
+
+			.syllabus-content li {
+				margin-bottom: 8px;
+			}
+
+			.syllabus-content a {
+				color: #444;
+				text-decoration: none;
+				transition: color 0.2s ease;
+			}
+
+				.syllabus-content a:hover {
+					color: #5a2ca0;
+					text-decoration: underline;
+				}
+
+
+		@media (max-width: 768px) {
+			.feature-cards {
+				flex-direction: column;
+				margin: 30px auto; /* remove overlap on mobile */
+			}
+
+			.feature-card {
+				margin-bottom: 16px;
+			}
+
+			.toggle-icon {
+				display: inline;
+			}
+
+			.syllabus-content {
+				display: none;
+			}
+
+			.hero-text {
+				width: 100%;
+			}
+
+			.hero h1 {
+				font-size: 3rem;
+			}
+
+			.subtext {
+				font-size: 1.6rem;
+			}
+		}
+
+
+		/* Base logo container */
+		.rotating-logo {
+			justify-content: center;
+			align-items: center;
+			margin: 10px auto;
+			width: 100px;
+			height: 100px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+		}
+
+
+		/* Already defined keyframes */
+		@keyframes spin {
+			from {
+				transform: rotate(0deg);
+			}
+
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		@keyframes spin-reverse {
+			from {
+				transform: rotate(0deg);
+			}
+
+			to {
+				transform: rotate(-360deg);
+			}
+		}
+
+		/* Base logo */
+		.rotating-logo img {
+			width: 100px;
+			height: auto;
+			animation: spin 5s linear infinite;
+			transition: all 0.3s ease-in-out;
+		}
+
+		/* Behaviors */
+		.rotating-logo.fast img {
+			animation-duration: 0.8s;
+		}
+
+		.rotating-logo.slow img {
+			animation-duration: 12s;
+		}
+
+		.rotating-logo.reverse img {
+			animation-name: spin-reverse;
+		}
+
+		.rotating-logo.paused img {
+			animation-play-state: paused;
+		}
+
+		.rotating-logo.burst img {
+			animation-duration: 0.4s;
+		}
+
+
+
+
+		.toggle-icon {
+			width: 24px;
+			height: 24px;
+			display: inline-block;
+			transition: transform 0.3s ease;
+			margin-left: 8px;
+		}
+
+		.toggle-icon-img {
+			width: 100%;
+			height: auto;
+			transition: transform 0.4s ease;
+		}
+
+		.syllabus-header.open .toggle-icon-img {
+			transform: rotate(180deg); /* or 360deg for a full spin */
+		}
+
+		.syllabus-note {
+			font-size: 0.95rem;
+			color: #777;
+			text-align: center;
+			margin-top: -10px;
+			margin-bottom: 30px;
+		}
+		/* Spin on hover of header */
+		.syllabus-header:hover .toggle-icon-img {
+			transform: rotate(360deg);
+		}
+
+		.callout {
+			background-color: #f3f4f6;
+			color: #1f2937;
+			text-align: left;
+			padding: 40px 30px;
+			border: 1px solid #e5e7eb;
+			border-radius: 12px;
+			margin: 80px auto 40px;
+			max-width: 800px;
+		}
+
+		.callout-content h2 {
+			font-size: 1.8rem;
+			font-weight: 600;
+			margin-bottom: 12px;
+			color: #111827;
+		}
+
+		.callout-content p {
+			font-size: 1.1rem;
+			color: #374151;
+			line-height: 1.6;
+			margin-bottom: 20px;
+		}
+
+		.callout-button {
+			display: inline-block;
+			background-color: #5a2ca0;
+			color: white;
+			padding: 10px 20px;
+			font-size: 1rem;
+			border-radius: 6px;
+			text-decoration: none;
+			transition: background-color 0.3s ease;
+		}
+
+			.callout-button:hover {
+				background-color: #47218c;
+			}
+
+		@media (max-width: 600px) {
+			.callout {
+				padding: 30px 20px;
+			}
+
+			.callout-content h2 {
+				font-size: 1.5rem;
+			}
+
+			.callout-content p {
+				font-size: 1rem;
+			}
+		}
+		.rotating-logo:hover .spin-label {
+			color: #5a2ca0;
+		}
+		.spin-label {
+			margin-top: 8px;
+			font-size: 0.95rem;
+			color: #555;
+			user-select: none;
+		}
+	</style>
+	<script>
+		function toggleSyllabus(header) {
+			const content = header.nextElementSibling;
+			const isOpen = content.style.display === 'block';
+
+			content.style.display = isOpen ? 'none' : 'block';
+			header.classList.toggle('open', !isOpen);
+		}
+	</script>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const logo = document.getElementById('rotatingLogo');
+			const behaviors = ['fast', 'slow', 'paused', 'burst', '']; // random fun
+			let isReverse = false; // toggle tracker
+
+			logo.addEventListener('click', () => {
+				// Remove previous classes
+				logo.classList.remove('fast', 'slow', 'paused', 'burst', 'reverse');
+
+				// Toggle direction
+				isReverse = !isReverse;
+				if (isReverse) {
+					logo.classList.add('reverse');
+				}
+
+				// Apply one random spin behavior
+				const behavior = behaviors[Math.floor(Math.random() * behaviors.length)];
+				if (behavior) {
+					logo.classList.add(behavior);
+				}
+			});
+		});
+	</script>
+
+</head>
+<body>
+
+	<!-- Header Bar -->
+	<div id="header">
+		<img id="imgLogo" class="desktop-logo" src="../V1/Images/logo-cs.png" alt="Desktop Logo" />
+
+		<div class="header-link" onclick="window.location.href='/feed';"><i class="fa fa-home fa-2x"></i></div>
+		<div class="header-link" onclick="window.location.href='/V1/Member/Default.aspx';"><i class="fa fa-user fa-2x"></i></div>
+		<div class="header-link" onclick="window.location.href='/V1/NonProfit/Default.aspx';"><i class="fa fa-users fa-2x"></i></div>
+		<div class="header-link" onclick="window.location.href='/MapZone';"><i class="fa fa-map fa-2x"></i></div>
+
+		<div role="search" class="navbar-form-custom">
+		</div>
+	</div>
+
+	<!-- Hero Section -->
+	<div class="hero">
+		<div class="hero-text">
+			<h1>Disaster Deployment for Everyone</h1>
+			<p class="subtext">Learn how your organization can become instantly disaster-ready by becoming a Stability Certified Deployment Director</p>
+		</div>
+	</div>
+
+	<!-- Feature Cards Overlapping Hero -->
+	<div class="feature-cards">
+		<div class="feature-card">
+			<p>
+				<h3>✅ Create A Website</h3>
+				Link a custom disaster website from your organization's home page to find new volunteers, raise money and share your impact.
+			</p>
+		</div>
+		<div class="feature-card">
+			<p>
+				<h3>✅ Mobilize Trusted Volunteers </h3>
+
+				Invite, train, message, and organize volunteers effectively.
+			</p>
+		</div>
+		<div class="feature-card">
+			<p>
+				<h3>✅ Take Action</h3>
+				Empower your community spirit—join real-world deployments, help where needed.
+			</p>
+		</div>
+	</div>
+
+	<!-- Main Content -->
+	<div class="container">
+		<div class="video-wrapper">
+			<iframe src="https://www.youtube.com/embed/rR9lOtZ6lQQ?si=W17s2ub6-0DIUyMw"
+					title="Deployment Director Overview"
+					frameborder="0"
+					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+					allowfullscreen>
+			</iframe>
+		</div>
+		<center>
+			<i>Don’t wait for the help that’s never coming. Be the help your neighbors are praying for.</i>
+		</center>
+		<p class="page-description">
+			<br />
+			Welcome to the Stability.org Deployment Director Guide. This resource walks you through setting up your team, managing volunteers, and activating deployments for real-world impact. Whether you’re preparing for emergencies or supporting daily civic trust-building, this guide ensures you're ready.
+		</p>
+
+		<div class="rotating-logo" id="rotatingLogo">
+			<img src="/V1/Images/pinwheel.png" alt="Stability Logo" />
+			<p class="spin-label">(Spin Me)</p>
+		</div>
+		<section class="training-syllabus">
+			<h2>Training Syllabus</h2>
+			<p class="syllabus-note">(Click to open)</p>
+			<div class="syllabus-section">
+				<h3 class="syllabus-header" onclick="toggleSyllabus(this)">
+					<span class="toggle-icon">
+						<img src="/V1/Images/pinwheel.png" alt="Toggle Icon" class="toggle-icon-img" />
+					</span>
+					<span class="section-number">1.</span> Create Your Profile
+				</h3>
+				<ul class="syllabus-content">
+					<li><a href="/register" target="_blank">Create an account</a></li>
+					<li><a href="/V1/Profile/ProfileEdit.aspx" target="_blank">Update your profile</a></li>
+					<li><a href="/V1/Member/Default.aspx" target="_blank">Upload your photo (Select Camera Icon)</a></li>
+					<li><a href="/V1/Profile/EditSkills.aspx" target="_blank">Select your skills</a></li>
+					<li><a href="/V1/Profile/EditResources.aspx" target="_blank">Select your resources</a></li>
+				</ul>
+			</div>
+
+			<div class="syllabus-section">
+				<h3 class="syllabus-header" onclick="toggleSyllabus(this)">
+					<span class="toggle-icon">
+						<img src="/V1/Images/pinwheel.png" alt="Toggle Icon" class="toggle-icon-img" />
+					</span>
+					<span class="section-number">2.</span> Create A Website
+				</h3>
+				<ul class="syllabus-content">
+					<li><a href="/V1/NonProfit/NonProfitNew.aspx" target="_blank">Create your team page</a></li>
+					<li><a href="/V1/NonProfit/Default.aspx" target="_blank">Upload team logo (Select Upload Team Logo)(Square 1:1)</a></li>
+					<li><a href="/V1/NonProfit/Default.aspx" target="_blank">Upload website logo (Select Upload Website Logo)(Rectangle 16:9)</a></li>
+					<li><a href="/V1/NonProfit/Default.aspx" target="_blank">Set up fundraising page (Select Settings > Edit Donation Settings)</a></li>
+				</ul>
+			</div>
+
+			<div class="syllabus-section">
+				<h3 class="syllabus-header" onclick="toggleSyllabus(this)">
+					<span class="toggle-icon">
+						<img src="/V1/Images/pinwheel.png" alt="Toggle Icon" class="toggle-icon-img" />
+					</span>
+					<span class="section-number">3.</span> Build Your Team
+				</h3>
+				<ul class="syllabus-content">
+					<li><a href="/V1/NonProfit/Default.aspx" target="_blank">Invite team members</a></li>
+					<li><a href="/V1/NonProfit/Default.aspx" target="_blank">Configure team administrators (Select Team Member List)</a></li>
+					<li><a href="/V1/NonProfit/Default.aspx" target="_blank">Activate team verified status (Select Team Member List)</a></li>
+					<li><a href="/V1/NonProfit/Default.aspx" target="_blank">Send updates and messages to your team (Select Team Member List)</a></li>
+					<li><a href="/V1/NonProfit/Default.aspx" target="_blank">Provide training (Select Training)</a></li>
+				</ul>
+			</div>
+
+			<div class="syllabus-section">
+				<h3 class="syllabus-header" onclick="toggleSyllabus(this)">
+					<span class="toggle-icon">
+						<img src="/V1/Images/pinwheel.png" alt="Toggle Icon" class="toggle-icon-img" />
+					</span>
+					<span class="section-number">4.</span> Take Action
+				</h3>
+				<ul class="syllabus-content">
+					<li><a href="/V1/Member/Default.aspx" target="_blank">Choose a deployment (Select Deployments)</a></li>
+					<li><a href="/V1/NonProfit/Default.aspx" target="_blank">Share deployment openings link (Select Find Open Positions)</a></li>
+					<li><a href="/V1/Member/Positions.aspx" target="_blank">Check my deployment schedule and readiness</a></li>
+					<li><a href="/V1/NonProfitAdministration/Participants.aspx?organizationEventId=b028fa23-e659-4f25-971c-a8085aa41e92" target="_blank">View team participants</a></li>
+					<li><a href="/V1/Member/Positions.aspx" target="_blank">Track teams time</a></li>
+				</ul>
+			</div>
+		</section>
+		<section class="callout">
+			<div class="callout-content">
+				<h2>We’ve waited long enough.</h2>
+				<p>With <strong>Stability</strong>, communities help themselves — and each other.</p>
+				<a href="/register" class="callout-button" target="_blank">Register Now</a>
+			</div>
+		</section>
+	</div>
+</body>
+</html>
