@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System;
-using System.Web; 
+using System.Web;
 public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
 {
     public Guid UserId { get; set; }
@@ -62,22 +62,27 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                        o.LogoSquare,
                                        o.OrganizationId,
                                        o.Name,
-                                       uo.ShowTeamLogo
+                                       o.EnableTeamMemberVerification,
+                                       uo.ShowTeamLogo,
                                    }).Take(1).SingleOrDefault();
 
                     if (orgUser != null)
                     {
-                        if (orgUser.ShowTeamLogo ?? false)
+                        if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
                         {
-                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare) ?
-                                teamLogo + orgUser.LogoSquare :
-                                "/V1/Images/DefaultLogo.png";
+                          
+                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare)
+                                ? teamLogo + orgUser.LogoSquare
+                                : "/V1/Images/DefaultLogo.png";
+
+                         
                             imgTeamLogo.Visible = true;
                             imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
                             hypTeamLogo.Visible = true;
                         }
                         else
                         {
+                            // Hide the team logo if conditions are not met
                             hypTeamLogo.Visible = false;
                         }
                     }

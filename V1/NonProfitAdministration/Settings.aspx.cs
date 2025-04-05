@@ -18,7 +18,8 @@ public partial class V1_NonProfit_Settings : BaseWebForm
 	public string _nonProfitDropDown;
 	public string _coverImage;
 	public string organizationId = string.Empty;
-	protected void Page_Load(object sender, EventArgs e)
+    public bool isOwner = false;
+    protected void Page_Load(object sender, EventArgs e)
 	{
 		ucTeamFooter.PageName = "settingsPage";
 		ucTeamHeader.PageName = "Settings";
@@ -35,7 +36,7 @@ public partial class V1_NonProfit_Settings : BaseWebForm
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 		var organization = (from o in dc.Organizations
 							where o.OrganizationId == new Guid(organizationId)
-							select new { o.Name, o.LogoSquare, o.RespondToTickets, o.HideTeamList, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
+							select new { o.Name, o.LogoSquare, o.RespondToTickets, o.HideTeamList, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName,o.EnableTeamMemberVerification }).SingleOrDefault();
 
 		string squareLogo = string.Empty;
 		if (organization != null)
@@ -79,8 +80,6 @@ public partial class V1_NonProfit_Settings : BaseWebForm
 		//ucTeamHeader.TeamDescription = organization.Description;
 		//ucTeamHeader.TeamName = organization.Name;
 		//ucTeamHeader.TeamSquareLogo = squareLogo;
-
-		bool isOwner = false;
 		if (User.Identity.IsAuthenticated == true)
 		{
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
@@ -107,29 +106,28 @@ public partial class V1_NonProfit_Settings : BaseWebForm
 		{
 			bool respondToTickets = organization.RespondToTickets != null ? (bool)organization.RespondToTickets : false;
 			bool hideTeamList = organization.HideTeamList != null ? (bool)organization.HideTeamList : false;
+			bool teamMemberVerification = organization.EnableTeamMemberVerification != null ? (bool)organization.EnableTeamMemberVerification : false;
 			chkEnableTicketing.Checked = respondToTickets;
 			chkHideTeamList.Checked = hideTeamList;
+			chkEnableTeamVerification.Checked = teamMemberVerification;
 		}
 		else
-		{ divUpdateMessage.Visible = true; }
-
+		{
+			divUpdateMessage.Visible = true;
+		}
 	}
-
 	protected void btnSubmit_Click(object sender, EventArgs e)
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-
 		var organization = (from o in dc.Organizations
 							where o.OrganizationId == new Guid(organizationId)
 							select o).SingleOrDefault();
-
 		organization.RespondToTickets = chkEnableTicketing.Checked;
 		organization.HideTeamList = chkHideTeamList.Checked;
-
-		dc.SubmitChanges();
+		organization.EnableTeamMemberVerification = chkEnableTeamVerification.Checked;
+        dc.SubmitChanges();
 		divUpdateMessage.Visible = true;
 	}
-
     protected void btnPaymentConfig_Click(object sender, EventArgs e)
     {
         string organizationId = Request.QueryString["organizationId"];

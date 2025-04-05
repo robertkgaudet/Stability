@@ -387,6 +387,9 @@
 			{
 				display: inline-block;
 			}
+			.link-margin{
+				margin-top:10px;
+			}
 		</style>
         <style>
 			.skin-option {
@@ -635,11 +638,11 @@
 								</div>
 							</div>
 							<div class="stats-label text-color text-center m-b-md">
-							    <div class="text-center m-b-sm" runat="server" id="myDisastersButton">
-                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModalActiveDisasters">
-                                        My Assistant
-                                    </button>
-							    </div>
+							   <div class="text-center m-b-sm" id="myDisastersButton" runat="server">
+                              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModalActiveDisasters">
+                                My Assistant
+                           </button>
+                         </div>
 								<div class="m-b-md" style="position:relative;" runat="server" id="timeButtons">
 									<button type="button" style="position:absolute;" class="btn btn-warning btn-xl" id="activeStatusButton" runat="server" data-toggle="modal" data-target="#activeStatusModal"><i class='fa fa-clock-o fa-2x'></i><br />Track Time</button>
                                     <button type="button" class="btn btn-success btn-xl " id="activeTrackingButton" runat="server" data-toggle="modal" data-target="#activeStatusModal"><i class='fa fa-clock-o fa-2x'></i><br />Stop Time</button>
@@ -969,47 +972,83 @@
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="myModalActiveDisasters" tabindex="-1" role="dialog"  aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="color-line"></div>
-                        <div class="modal-header text-center">
-                            <h4 class="modal-title">My Assistant</h4>
-                            <small class="font-bold">Select a Community Portal from your <a href="/V1/Profile/EditDisasters.aspx">profile settings</a>.</small>
-                        </div>
-                        <div class="modal-body">
-                            <p>
-                                <asp:HyperLink id="hypActionPage" runat="server" CssClass="btn btn-ls btn-success" Text="Team Activity Page"></asp:HyperLink>
-								<hr />
-                                <strong><asp:Literal ID="litNonProfitName" runat="server" Visible="false" Text="My Team:"></asp:Literal></strong>
-                                <asp:HyperLink id="hypNonProfit" runat="server"></asp:HyperLink>
-                                 <br />
-                                <asp:HyperLink id="hypInviteTeamMembers" runat="server" CssClass="btn btn-xs btn-success" Text="Invite New Members"></asp:HyperLink>
-                                <div class="m-t-md">
-                                    <strong>
-                                        <span class="nav-label">My Deployments:</span>
-                                    </strong>
-                                    <ul>
-                                        <asp:Literal id="litMyCauses" runat="server"></asp:Literal>
-                                    </ul>
-                                </div>
-                                <div class="m-t-md">
-                                    <strong>
-                                        <span class="nav-label">My Community Portals:</span>
-                                    </strong>
-                                    <ul>
-                                        <asp:Literal id="litDefaultDisaster" runat="server"></asp:Literal>
-                                        <asp:Literal id="litMyDisasters" runat="server"></asp:Literal>
-                                    </ul>
-                                </div>
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
+      <div class="modal fade" id="myModalActiveDisasters" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="color-line"></div>
+            <div class="modal-header text-center">
+                <h4 class="modal-title">My Assistant</h4>
+                <small class="font-bold">Select a Community Portal from your <a href="/V1/Profile/EditDisasters.aspx">profile settings</a>.</small>
+            </div>
+            <div class="modal-body">
+                <!-- Team Guidance -->
+                <div id="divNoTeamGuidance" visible="false" runat="server" class="alert alert-warning m-b-md">
+                    <h5><i class="fa fa-users"></i> Join a Team</h5>
+                    <p>Connect with others to make a bigger impact:</p>
+                    <div class="text-center link-margin">
+                        <asp:LinkButton ID="btnJoinTeam" 
+                            PostBackUrl="/V1/Profile/EditNonProfits.aspx?userActionModal=false" 
+                            runat="server" 
+                            CssClass="btn btn-primary" 
+                            Text="<i class='fa fa-sign-in'></i> Join Team" />
                     </div>
                 </div>
+                
+                <!-- Deployment Guidance -->
+                <div id="divNoDeploymentGuidance" visible="false"   runat="server" class="alert alert-info m-b-md">
+                    <h5><i class="fa fa-globe"></i> Join a Deployment</h5>
+                    <p>Participate in active disaster response efforts:</p>
+                    <div class="text-center link-margin">
+                        <asp:LinkButton ID="btnJoinDeployment" 
+                            PostBackUrl="/V1/Deployments.aspx" 
+                            runat="server" 
+                            CssClass="btn btn-primary" 
+                            Text="<i class='fa fa-sign-in'></i> Join Deployment" />
+                    </div>
+                </div>
+
+                <!-- Portal Guidance -->
+                <div id="divNoPortalGuidance" visible="false" runat="server" class="alert alert-warning m-b-md">
+                    <h5><i class="fa fa-map-marker"></i> Connect to a Portal</h5>
+                    <p>Track local recovery efforts in your community:</p>
+                    <div class="text-center link-margin">
+                        <asp:LinkButton ID="btnBrowsePortals" 
+                            PostBackUrl="/V1/ChooseEvent.aspx" 
+                            runat="server" 
+                            CssClass="btn btn-primary" 
+                            Text="<i class='fa fa-search'></i> Browse Portals" />
+                    </div>
+                </div>
+
+                <!-- Existing Connections -->
+                <div id="divTeamInfo" visible="false">
+                    <asp:HyperLink ID="hypActionPage" runat="server" CssClass="btn btn-ls btn-success" Text="Team Activity Page"></asp:HyperLink>
+                    <hr />
+                    <strong><asp:Literal ID="litNonProfitName" runat="server" Text="My Team:"></asp:Literal></strong>
+                    <asp:HyperLink ID="hypNonProfit" runat="server"></asp:HyperLink>
+                    <br />
+                    <asp:HyperLink ID="hypInviteTeamMembers" runat="server" CssClass="btn btn-xs btn-success" Text="Invite New Members"></asp:HyperLink>
+                </div>
+
+                <div class="m-t-md" id="divDeploymentInfo" visible="false">
+                    <strong><span class="nav-label"  id="litMyCausesslabel" runat="server">My Deployments:</span></strong>
+                    <ul><asp:Literal ID="litMyCauses" runat="server"></asp:Literal></ul>
+                </div>
+
+                <div class="m-t-md" id="divPortalInfo" visible="false">
+                    <strong><span class="nav-label" id="litDiasterLabel" runat="server">My Community Portals:</span></strong>
+                    <ul>
+                        <asp:Literal ID="litDefaultDisaster"  runat="server"></asp:Literal>
+                        <asp:Literal ID="litMyDisasters" runat="server"></asp:Literal>
+                    </ul>
+                </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 			<div class="modal fade hmodal-success" id="divUserActionModal" tabindex="-1" role="dialog"  aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -1021,7 +1060,7 @@
                         <div class="modal-body">
                             <p>
 								<strong>Follow These Steps (Takes About 2 Minutes)</strong>
-								By completing this informtion you're contributing to the overall knowledge of the community in ways that can help everyone collaborate even more effectively.
+								By completing this information you're contributing to the overall knowledge of the community in ways that can help everyone collaborate even more effectively.
 								<ul class="fa-ul" id="userActionList">
 									<li data-url="/V1/Profile/AvailableDates.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=calendarUpdated%>;"></i> <u>Update My Available Deployment Dates</u></li>
 									<li data-url="/V1/Profile/EditNonProfits.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=teamUpdated%>;"></i> <u>Choose or Create Your Team</u></li>
@@ -1030,15 +1069,15 @@
 									<li runat="server" id="liDeployment" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=deploymentUpdated%>;"></i> <u>Find or Create a Deployment</u></li>
 									<li data-url="/V1/Profile/EditDisasters.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=communityUpdated%>;"></i> <u>Choose Your Community Portal</u></li>
 								</ul>
-								Citizens in communities are no longer victims of natrual disasters waiting for help. We are the help because citizens have many of the skills their own community needs
-								to successfully recover from natural disasters.
+								Communities are no longer just waiting for help after natural disasters—we ARE the help. The skills, strength, and stability needed for recovery already exist within our own neighborhoods.
+								By empowering citizens to take action, we turn survivors into responders and rebuild stronger together.
                             </p>
                         </div>
                         <div class="modal-footer">
 							<div class="pull-left">
 								<ul class="ul_legend text-muted small">
 									<li><i class="fa fa-check-square" style="color:yellowgreen;"></i> COMPLETE</li>
-									<li><i class="fa fa-check-square" style="color:grey;"></i> UNCOMPLETE</li>
+									<li><i class="fa fa-check-square" style="color:grey;"></i> INCOMPLETE</li>
 								</ul>
 							</div>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

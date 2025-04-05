@@ -50,7 +50,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 		<asp:HiddenField runat="server" id="hidEventId"></asp:HiddenField>
 		<asp:HiddenField runat="server" id="hidEventName"></asp:HiddenField>
-			<div class="hpanel collapsed">
+			<div class="hpanel">
 				<div class="panel-heading hbuilt member-panel-body">
 					<div class="panel-tools"><a class="showhide"><i class="fa fa-chevron-up"></i></a></div>
 					<h4><%=_eventName%></h4>

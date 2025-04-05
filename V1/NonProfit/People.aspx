@@ -1,5 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
-
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs"Inherits="V1_NonProfit_People" %>
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
@@ -11,6 +10,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.min.js"></script>
     <link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
     <script src="/Homer/vendor/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote.css" />
+    <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />
+    <script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
+    <link href="../../Homer/vendor/sweetalert/lib/sweet-alert.css" rel="stylesheet" />
+    <script src="../../Homer/vendor/sweetalert/lib/sweet-alert.min.js"></script>
+    <!-- Vendor styles -->
+    <link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="vendor/metisMenu/dist/metisMenu.css" />
+    <link rel="stylesheet" href="vendor/animate.css/animate.css" />
+    <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="vendor/ladda/dist/ladda-themeless.min.css" />
+
+    <!-- App styles -->
+    <link rel="stylesheet" href="fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css" />
+    <link rel="stylesheet" href="fonts/pe-icon-7-stroke/css/helper.css" />
+    <link rel="stylesheet" href="styles/style.css">
+
+    <link rel="stylesheet" href="../../Homer/vendor/ladda/dist/ladda-themeless.min.css" />
+    <script src="../../Homer/vendor/ladda/dist/spin.min.js"></script>
+    <script src="../../Homer/vendor/ladda/dist/ladda.min.js"></script>
+    <script src="../../Homer/vendor/ladda/dist/ladda.jquery.min.js"></script>
+
     <style>
         .website {
             background-color: #5E2E91;
@@ -57,6 +78,25 @@
             border-radius: 5px;
         }
 
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-right: -40px
+        }
+
+        .input-group-append {
+            margin-left: 10px;
+        }
+
+        .chkSelectAll {
+            margin-top: 9px;
+        }
+
+        input#ContentPlaceHolder1_chkSelectAll {
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
         .stability-badge {
             margin-right: 4px !important;
         }
@@ -65,9 +105,51 @@
             margin-left: 3px;
         }
 
+        .margin {
+            margin-left: -6px;
+            margin-right: 6px;
+        }
+
         .justify-content-center {
-            display: flex !important;
+          /*  display: flex !important;*/
             justify-content: center !important;
+        }
+
+        .b2 {
+            margin-bottom: 160px;
+            margin-left: 110px;
+            width: 123px;
+        }
+
+        .note-editor.note-frame.panel.panel-default {
+            margin-left: 22px;
+            width: 655px;
+        }
+
+        button.ladda-button.ladda-button-demo.ladda-button-email.btn.btn-primary.b2 {
+            margin-bottom: 155px;
+        }
+
+      /*  label {
+            margin: 16px 0px 10px 10px;
+            font-size: 17px;
+        }
+*/
+          #manageMemberModal .modal-body label,
+          #manageMemberModal .form-check-label {
+       font-weight: normal !important;
+       }
+        #txtEmail {
+            margin-right: 0px !important;
+        }
+
+        .input-group-append {
+            margin-left: -1px; /* Removes unwanted space */
+        }
+
+        button.btn.btn-primary {
+            margin-left: 10px;
+            margin-bottom: 90px;
         }
     </style>
     <script>
@@ -83,6 +165,78 @@
         var messageModelTitle;
         var txtMessage;
         $(document).ready(function () {
+            var radiusSlider = document.getElementById("radiusSlider");
+            var radiusValue = document.getElementById("radiusValue");
+            var hiddenRadius = document.getElementById("hiddenRadius");
+
+            radiusSlider.oninput = function () {
+                radiusValue.innerHTML = this.value + " km";
+                hiddenRadius.value = this.value;
+            }
+            ///script for training search
+            document.addEventListener("DOMContentLoaded", function () {
+                var dropdown = document.getElementById("iygg");
+                var hiddenField = document.getElementById("gfgj");
+
+                if (dropdown && hiddenField) {
+                    dropdown.addEventListener("change", function () {
+                        hiddenField.value = dropdown.value;
+                        console.log("Hidden Field Updated:", hiddenField.value);
+                    });
+                }
+
+                var form = document.querySelector("form");
+                if (form) {
+                    form.addEventListener("submit", function () {
+                        hiddenField.value = dropdown.value;
+                    });
+                }
+            });
+            $('#<%=txtEmail.ClientID%>').summernote({
+                toolbar: [
+                    ['style', ['bold', 'italic']],
+                    ['alignment', ['ul', 'ol', 'paragraph']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link', 'table']],
+
+                ],
+                height: 100
+            });
+
+            $(document).ready(function () {
+                var radiusSlider = document.getElementById("radiusSlider");
+                var radiusValue = document.getElementById("radiusValue");
+                var hiddenRadius = document.getElementById("hiddenRadius");
+                var hiddenEvent = document.getElementById("hiddenEvent");
+
+                // Update hidden radius value when slider changes
+                radiusSlider.oninput = function () {
+                    radiusValue.innerHTML = this.value + " km";
+                    hiddenRadius.value = this.value; // Ensure hidden field updates
+                };
+
+                $("#<%=ddlEvent.ClientID%>").change(function () {
+                    if ($(this).val()) {
+                        $("#radiusSection").show();
+                        hiddenEvent.value = $(this).val();
+                    } else {
+                        $("#radiusSection").hide();
+                        hiddenEvent.value = "";
+                    }
+                });
+
+
+                $("#<%=SearchButton.ClientID%>").click(function () {
+                    hiddenRadius.value = radiusSlider.value;
+                    hiddenEvent.value = $("#<%=ddlEvent.ClientID%>").val();
+                    console.log("Final Selected Radius: " + hiddenRadius.value + " km");
+                    console.log("Final Selected Event: " + hiddenEvent.value);
+                });
+            });
+
             $('#tblVolunteers').footable();
             messageModelTitle = document.getElementById('messageModelTitle');
             txtMessage = document.getElementById('<%=txtMessage.ClientID%>');
@@ -90,22 +244,18 @@
             btnSend = document.getElementById('btnSend');
             divMessageError = document.getElementById('divMessageError');
             divErrorMessage = document.getElementById('divErrorMessage');
-
             divMessageSuccess = document.getElementById('divMessageSuccess');
             divMessageSuccess.style.visibility = 'visible';
             divMessageSuccess.hidden = true;
             divMessageTextBox.hidden = false;
             btnSend.hidden = false;
-
             divMessageError.style.visibility = 'hidden';
             divErrorMessage.style.visibility = 'hidden';
             divMessageError.hidden = true;
             divErrorMessage.hidden = true;
-
             $("#nonProfit.dropdown-menu li").click(function () {
                 window.location.href = "/V1/NonProfit/Default.aspx?organizationId=" + $(this).attr('id');
             });
-
             $('#StartDate, #EndDate').datepicker({
                 format: 'mm/dd/yyyy',
                 autoclose: true,
@@ -116,7 +266,6 @@
                 icon.toggleClass("fa-chevron-down fa-chevron-up");
                 searchPanel.collapse("toggle");
             });
-
             $('.multiselect').multiselect({
                 includeSelectAllOption: true,
                 enableFiltering: true,
@@ -129,11 +278,14 @@
             });
 
         });
-
         var currentUserId = null;
-
         function setUserId(button) {
             currentUserId = button.getAttribute('data-userid');
+            if (document.getElementById('<%= hiddenManageShowDonateButtonn.ClientID %>').value == "0") {
+                $('.donateDiv').hide();
+            } else {
+                $('.donateDiv').show();
+            }
             return false;
         }
         function fetchUserData() {
@@ -148,7 +300,7 @@
                 dataType: "json",
                 success: function (response) {
                     if (response.success) {
-                        // Populate modal fields with fetched data
+
                         $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
                         $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
                         $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
@@ -172,11 +324,18 @@
             }
             var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
             var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
-            var showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
-
+            var showTeamLogo = false;
+            // Check if the checkbox is visible using the JavaScript style display property
+           <% if (chkManageShowDonateButton.Visible)
+        { %>
+            showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
+              <% }
+        else
+        { %>
+            showTeamLogo = false;
+           <% } %>
             var stabilityVerified = false;
             var makeTeamAdministrator = false;
-
              <% if (User.IsInRole("Administrator"))
         { %>
             stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
@@ -203,7 +362,7 @@
                 success: function (response) {
                     if (response.Success) {
                         $('#manageMemberModal').modal('hide');
-                        location.reload();
+                        resetSearch();
                     } else {
                         alert("Error: " + response.Message);
                     }
@@ -370,24 +529,45 @@
             document.getElementById('<%= currentPageValue.ClientID %>').value = 1; // Set custom value here    
         }
         function resetSearch() {
-            // Set a value to the hidden field            
+            // Set a value to the hidden field   
             document.getElementById('<%= currentPageValue.ClientID %>').value = 1; // Set custom value here                        
             document.getElementById('<%= filter.ClientID %>').value = ''; // Set custom value here                        
-            document.getElementById('txtlocation').value = ''; // Set custom value here                        
+
             document.getElementById('<%= txtIsVetted.ClientID %>').checked = false;// Set custom value here                        
             document.getElementById('<%= txtOptedSMS.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtEmailconnect.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtIsVerified.ClientID %>').checked = false; // Set custom value here
+            document.getElementById('<%= ddlEvent.ClientID %>').value = ''; // Set custom value here
+            $('#hiddenEvent').val('');
+            document.getElementById('<%= ddlTraining.ClientID %>').value = ''; // Set custom value here
+            document.getElementById('radiusSection').style.display = 'none';
 
-          
+            let radiusSlider = document.getElementById('radiusSlider');
+            let radiusDisplay = document.getElementById('radiusValue');
+            let hiddenRadius = document.getElementById('hiddenRadius');
+
+            if (radiusSlider) {
+                radiusSlider.value = 100;
+                radiusSlider.dispatchEvent(new Event('input'));
+
+                if (radiusDisplay) {
+                    radiusDisplay.innerText = '100 km';
+                }
+                if (hiddenRadius) {
+                    hiddenRadius.value = 100;
+                }
+            }
+
+
+
             $('#StartDate, #EndDate').val('').datepicker('update');
-           
+
             $('#ContentPlaceHolder1_ddlSkills').multiselect('deselectAll', false);
             $('#ContentPlaceHolder1_ddlSkills').multiselect('refresh');
 
             $('#ContentPlaceHolder1_ddlResources').multiselect('deselectAll', false);
             $('#ContentPlaceHolder1_ddlResources').multiselect('refresh');
-            
+
             // Trigger the search button click event
             __doPostBack('<%= SearchButton.UniqueID %>', '');
         }
@@ -408,11 +588,178 @@
             else {
                 $('.navClass').html(currentPagination);
             }
+            updateCheckboxSelection();
+        }
+        function updateSelectedUsers() {
+            var selectedUserIds = [];
+            var userCheckboxes = document.querySelectorAll(".select-user");
+            var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
+
+            userCheckboxes.forEach(function (checkbox) {
+                if (checkbox.checked) {
+                    selectedUserIds.push(checkbox.getAttribute("data-userid"));
+                }
+            });
+
+            hiddenField.value = selectedUserIds.join(",");
+        }
+        function sendEmail() {
+            var selectedUserIds = document.getElementById('<%= hdnSelectedUsers.ClientID %>').value;
+            var userMessage = document.getElementById('<%= txtEmail.ClientID %>').value; // here
+            var l = $('.ladda-button-email').ladda();
+            if (selectedUserIds.trim() === "" || userMessage.trim() === "") {
+                swal({
+                    title: "Send Email",
+                    text: "Please enter a message and select users.",
+                    type: "warning"
+                });
+                return;
+            }
+
+            l.ladda('start');
+            $.ajax({
+                type: "POST",
+                url: "People.aspx/SendEmail",
+                data: JSON.stringify({ selectedUserIds: selectedUserIds, userMessage: userMessage }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // Clear the textbox
+                    l.ladda('stop');
+                    document.getElementById('<%= txtEmail.ClientID %>').value = "";
+                    document.getElementById('<%= chkSelectAll.ClientID %>').checked = false;
+                    // Get all checked checkboxes and uncheck them
+                    document.querySelectorAll(".select-user:checked").forEach(cb => cb.checked = false);
+
+                    swal({
+                        title: "Send Email",
+                        text: response.d,
+                        type: "success"
+                    });
+                    //document.getElementById('<%= txtEmail.ClientID %>').value = ""; // Clear text box
+                    $("#txtEmail").val("");
+                    $('#<%=txtEmail.ClientID%>').summernote('code', '');
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    l.ladda('stop');
+                    swal({
+                        title: "Send Email",
+                        text: "An error occurred while sending the email. " + xhr.responseText,
+                        type: "warning"
+                    });
+                }
+            });
+            updateCheckboxSelection();
+        }
+
+        function updateSelectedUsers() {
+            var selectedUserIds = [];
+            var userCheckboxes = document.querySelectorAll(".select-user");
+            var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
+
+            userCheckboxes.forEach(function (checkbox) {
+                if (checkbox.checked) {
+                    selectedUserIds.push(checkbox.getAttribute("data-userid"));
+                }
+            });
+
+            hiddenField.value = selectedUserIds.join(",");
+        }
+
+        function sendSms() {
+            var selectedUserIds = document.getElementById('<%= hdnSelectedUsers.ClientID %>').value;
+            var userMessage = document.getElementById('<%= txtsms.ClientID %>').value;
+            var l = $('.ladda-button-sms').ladda();
+            if (selectedUserIds.trim() === "" || userMessage.trim() === "") {
+                swal({
+                    title: "Send SMS",
+                    text: "Please enter a message and select users.",
+                    type: "warning"
+                });
+                return;
+            }
+            // Start loading
+            l.ladda('start');
+            $.ajax({
+                type: "POST",
+                url: "People.aspx/SendSms",
+                data: JSON.stringify({ selectedUserIds: selectedUserIds, smsMessage: userMessage }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    // Clear the textbox
+                    l.ladda('stop');
+                    document.getElementById('<%= txtsms.ClientID %>').value = "";
+                    document.getElementById('<%= chkSelectAll.ClientID %>').checked = false;
+                    // Get all checked checkboxes and uncheck them
+                    document.querySelectorAll(".select-user:checked").forEach(cb => cb.checked = false);
+                    swal({
+                        title: "Send SMS",
+                        text: response.d,
+                        type: "success"
+                    });
+                    document.getElementById('<%= txtsms.ClientID %>').value = ""; // Clear text box
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    l.ladda('stop');
+                    swal({
+                        title: "Send SMS",
+                        text: "An error occurred while sending sms. " + xhr.responseText,
+                        type: "warning"
+                    });
+                }
+            });
+        }
+
+
+        function updateCheckboxSelection() {
+            var selectAllCheckbox = document.getElementById("chkSelectAll");
+            var userCheckboxes = document.querySelectorAll(".select-user");
+            var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
+
+            selectAllCheckbox.addEventListener("change", function () {
+                var isChecked = this.checked;
+                userCheckboxes.forEach(function (checkbox) {
+                    checkbox.checked = isChecked;
+                });
+                updateSelectedUsers();
+            });
+
+            userCheckboxes.forEach(function (checkbox) {
+                checkbox.addEventListener("change", function () {
+                    var allChecked = Array.from(userCheckboxes).every(cb => cb.checked);
+                    selectAllCheckbox.checked = allChecked;
+                    updateSelectedUsers();
+                });
+            });
+
         }
     </script>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
+    <asp:HiddenField ID="hdnSelectedUsers" runat="server" />
+
+    <div id="divEmail" runat="server" class="input-group">
+        <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" placeholder="Enter Email Text"
+            ClientIDMode="Static" TextMode="MultiLine" ValidateRequestMode="Disabled" Rows="3"></asp:TextBox>
+        <div class="input-group-append">
+            <button type="button" class="ladda-button ladda-button-demo ladda-button-email btn btn-primary b2"
+                data-style="slide-right" onclick="sendEmail()">Send Email</button>
+        </div>
+    </div>
+    <div id="divSms" runat="server" class="input-group">
+        <textarea id="txtsms" runat="server" cssclass="form-control" placeholder="Enter SMS Text"
+            rows="6" cols="95"></textarea>
+        <div class="input-group-append">
+            <button type="button" class="ladda-button ladda-button-demo ladda-button-sms btn btn-primary "
+                data-style="slide-right" onclick="sendSms()">Send SMS</button>
+        </div>
+    </div>
+
     <div class="panel-heading">
         <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members"
             CssClass="btn btn-sm btn-info"></asp:HyperLink>
@@ -433,10 +780,12 @@
                     <h4 style="margin-left: 18px;">Search</h4>
                     <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-                            <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
+                            <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center"
+                                style="margin-bottom: 20px;" visible="false">
                                 <asp:Literal ID="litMessage" runat="server"></asp:Literal>
                             </div>
-                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;" visible="false">
+                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;"
+                                visible="false">
                                 <asp:Literal ID="litFilterMessage" runat="server"></asp:Literal>
                             </div>
                         </ContentTemplate>
@@ -445,7 +794,8 @@
                         </Triggers>
                     </asp:UpdatePanel>
 
-                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers" visible="false">
+                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers"
+                        visible="false">
                         <div class="hpanel" runat="server" id="hpanelJoin" visible="true">
                             <a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
                         </div>
@@ -462,10 +812,11 @@
 
                                     <div class="col-md-6 mb-3">
                                         <div class="form-group fix">
-                                            <b>Location :</b>
-                                            <input type="text" class="form-control" id="txtlocation" placeholder="Enter Location">
+                                            <b>Training :</b>
+                                            <asp:DropDownList ID="ddlTraining" runat="server" CssClass="form-control"></asp:DropDownList>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
@@ -500,7 +851,22 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-group margin ">
+                                        <b class="text-line">Location :</b>
+                                        <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3" id="radiusSection" style="display: none;">
+                                    <div class="form-group fix">
+                                        <b>Radius (km):</b>
+                                        <input type="range" id="radiusSlider" min="100" max="1000" step="100" value="100"
+                                            class="form-control">
+                                        <span id="radiusValue">100 km</span>
+                                        <input type="hidden" id="hiddenRadius" name="radiusSlider" value="0" />
+                                        <input type="hidden" id="hiddenEvent" name="selectedEvent" />
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="row">
@@ -532,10 +898,11 @@
                                     </div>
                                 </div>
 
-                                <div class="row mt-4" style="margin-right: 6px;">
+                                <div class="row mt-4" style="margin-right: 6px; margin-bottom: 8px;">
                                     <div class="col-md-12 text-right ">
-                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="resetSearch()">Clear</button>                                        
+                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2"
+                                            Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="resetSearch()">Clear</button>
                                     </div>
                                 </div>
                             </div>
@@ -545,82 +912,91 @@
             </div>
         </div>
     </div>
+    <asp:CheckBox ID="chkSelectAll" runat="server" CssClass="select-all" Text="Select All"
+        ClientIDMode="Static" />
     <asp:UpdatePanel runat="server" ID="updatePeopleList" UpdateMode="Conditional">
-    <ContentTemplate>
-        <asp:Panel runat="server" ID="pnlTable">
-            <asp:HiddenField ID="currentPageValue" runat="server" />
-            <asp:HiddenField ID="totalPageValue" runat="server" />
-            <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
-                <tbody>
-                    <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
-                        <ItemTemplate>
-                            <tr>
-                                <td style="background-color: white;">
-                                    <div class="hpanel">
-                                        <div class="panel-body">
-                                            <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: normal;">
-                                                
+        <ContentTemplate>
+            <asp:Panel runat="server" ID="pnlTable">
+                <asp:HiddenField ID="currentPageValue" runat="server" />
+                <asp:HiddenField ID="totalPageValue" runat="server" />
+                <table id="tblVolunteers" class="footable" data-page-size="20" data-filter="#filter">
+                    <tbody>
+                        <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
+                            <ItemTemplate>
+                                <tr>
+                                    <td style="background-color: white;">
+                                        <div class="hpanel">
+                                            <div class="panel-body">
+
+
+                                                <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: normal;">
+
+                                                    <input type="checkbox" runat="server" class="select-user" style="margin-top: -2px;"
+                                                        data-userid='<%# Eval("UserID") %>' visible='<%# (Request.QueryString["type"] == "email" || Request.QueryString["type"] == "sms") %>' />
+
+                                                    &nbsp;&nbsp;                              
 
                                                 <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
 
 
-                                            </h5>
-                                            <p>
-                                                <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
-                                                <asp:Literal ID="litDescription" runat="server"></asp:Literal>
-                                            </p>
-                                            <div class="pull-right">                                                
-                                                <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton" data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                                </h5>
+                                                <p>
+                                                    <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
+                                                    <asp:Literal ID="litDescription" runat="server"></asp:Literal>
+                                                </p>
+                                                <div class="pull-right">
+                                                    <asp:Button ID="btnContact" runat="server" Text="Message" Visible="false" CssClass="btn btn-success messageButton"
+                                                        data-toggle="modal" data-target="#messageMemberModal"></asp:Button>
+                                                </div>
+                                                <asp:Literal ID="litSkills" runat="server"></asp:Literal>
+                                                <asp:Literal ID="litResources" runat="server"></asp:Literal>
                                             </div>
-                                            <asp:Literal ID="litSkills" runat="server"></asp:Literal>
-                                            <asp:Literal ID="litResources" runat="server"></asp:Literal>
+                                            <div class="panel-footer d-flex justify-content-between align-items-center" id="divFooter"
+                                                runat="server" visible="false">
+                                                <div class="pull-right">
+                                                    <asp:Button ID="btnManage" runat="server" Text="Manage" CssClass="btn btn-primary manageButton float-end"
+                                                        data-toggle="modal" data-target="#manageMemberModal"
+                                                        data-userid='<%# Eval("UserID") %>'
+                                                        OnClientClick="setUserId(this); fetchUserData(); return false;"></asp:Button>
+                                                </div>
+
+                                                <div class="text-muted small" style="width: 100%;">
+                                                    <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
+                                                </div>
+                                            </div>
                                         </div>
-                                         <div class="panel-footer d-flex justify-content-between align-items-center" id="divFooter"
-                                runat="server" visible="false">
-                                <div class="pull-right">
-                                    <asp:Button ID="btnManage" runat="server" Text="Manage" CssClass="btn btn-primary manageButton float-end"
-                                        data-toggle="modal" data-target="#manageMemberModal"
-                                        data-userid='<%# Eval("UserID") %>'
-                                        OnClientClick="setUserId(this); fetchUserData(); return false;"></asp:Button>
-                                </div>
+                                    </td>
+                                </tr>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <br />
+                                <%--<asp:Button ID="TriggerSearchButton" runat="server" Text="Trigger Search" OnClientClick="triggerSearch(1); return false;" />--%>
+                                <nav class="navClass" aria-label="Page navigation example">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item disabled" id="previousBtn">
+                                            <a class="page-link" href="javascript:void(0)" tabindex="-1">Previous</a>
+                                        </li>
 
-                                <div class="text-muted small" style="width: 100%;">
-                                    <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
-                                </div>
-                            </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ItemTemplate>
-                    </asp:Repeater>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td>
-                            <br />
-                            <%--<asp:Button ID="TriggerSearchButton" runat="server" Text="Trigger Search" OnClientClick="triggerSearch(1); return false;" />--%>
-                            <nav class="navClass" aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item disabled" id="previousBtn">
-                                        <a class="page-link" href="javascript:void(0)" tabindex="-1">Previous</a>
-                                    </li>
+                                        <li class="page-item" id="nextBtn">
+                                            <a class="page-link" href="javascript:void(0)" tabindex="0">Next</a>
+                                        </li>
+                                    </ul>
+                                </nav>
 
-                                    <li class="page-item" id="nextBtn">
-                                        <a class="page-link" href="javascript:void(0)" tabindex="0">Next</a>
-                                    </li>
-                                </ul>
-                            </nav>
-
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
-        </asp:Panel>
-    </ContentTemplate>
-    <Triggers>
-        <asp:AsyncPostBackTrigger ControlID="SearchButton" EventName="Click" />
-    </Triggers>
-</asp:UpdatePanel>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </asp:Panel>
+        </ContentTemplate>
+        <Triggers>
+            <asp:AsyncPostBackTrigger ControlID="SearchButton" EventName="Click" />
+        </Triggers>
+    </asp:UpdatePanel>
 
 
 
@@ -652,70 +1028,67 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="color-line"></div>
-                <div class="modal-header text-center">
-                    <h5 class="modal-title">Update Member Status</h5>
+    <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
+   <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="color-line"></div>
+            <div class="modal-header text-center">
+                <h5 class="modal-title">Update Member Status</h5>
+            </div>
+            <!-- Success and Error Messages -->
+            <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
+                <i class="fa fa-check-circle"></i>Changes saved successfully.
+            </div>
+            <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
+                <i class="fa fa-exclamation-triangle"></i>
+                <div id="divManageErrorMessage"></div>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="rblManageUserStatus">Update Member Vetting Status:</label>
+                    <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
+                        <asp:ListItem Text="Start Vetting" Value="1" CssClass="form-check-input"></asp:ListItem>
+                        <asp:ListItem Text="Passed Vetting" Value="2" CssClass="form-check-input"></asp:ListItem>
+                        <asp:ListItem Text="Failed Vetting" Value="3" CssClass="form-check-input"></asp:ListItem>
+                    </asp:RadioButtonList>
+                </div>
 
+                <!-- Vetting Notes Textarea -->
+                <div class="form-group">
+                    <label for="txtManageVettingNotes">Vetting Notes:</label>
+                    <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
+                        placeholder="Enter Vetting Notes"></asp:TextBox>
                 </div>
-                <!-- Success and Error Messages -->
-                <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
-                    <i class="fa fa-check-circle"></i>Changes saved successfully.
+                <div class="form-group form-check donateDiv">
+                    <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
+                    <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
+                        Enable Team Logo
+                    </label>
                 </div>
-                <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
-                    <i class="fa fa-exclamation-triangle"></i>
-                    <div id="divManageErrorMessage"></div>
+                <% if (User.IsInRole("Administrator") || isOwner) { %>
+                <div class="form-group form-check">
+                    <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
+                    <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
+                        Stability Verified
+                    </label>
                 </div>
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="rblManageUserStatus">Update Member Vetting Status:</label>
-                        <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
-                            <asp:ListItem Text="Active" Value="Active" CssClass="form-check-input"></asp:ListItem>
-                            <asp:ListItem Text="Inactive" Value="Inactive" CssClass="form-check-input"></asp:ListItem>
-                            <asp:ListItem Text="Pending" Value="Pending" CssClass="form-check-input"></asp:ListItem>
-                        </asp:RadioButtonList>
-                    </div>
-
-                    <!-- Vetting Notes Textarea -->
-                    <div class="form-group">
-                        <label for="txtManageVettingNotes">Vetting Notes:</label>
-                        <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
-                            placeholder="Enter Vetting Notes"></asp:TextBox>
-                    </div>
-
-                    <!-- Checkboxes -->
-                    <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageShowDonateButton.ClientID %>">
-                            Enable
-                            Team Logo</label>
-                    </div>
-                    <% if (User.IsInRole("Administrator"))
-                        { %>
-                    <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
-                            Stability
-                            Verified</label>
-                    </div>
-                    <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
-                            Make
-                            Team Administrator</label>
-                    </div>
-                    <% } %>
+                <div class="form-group form-check">
+                    <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
+                    <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
+                        Make Team Administrator
+                    </label>
                 </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
-                        Save Changes</button>
-                </div>
+                <% } %>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
+                    Save Changes</button>
             </div>
         </div>
     </div>
+</div>
     <uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>

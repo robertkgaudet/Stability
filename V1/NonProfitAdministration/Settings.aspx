@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Settings.aspx.cs" Inherits="V1_NonProfit_Settings" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"  CodeFile="Settings.aspx.cs" Inherits="V1_NonProfit_Settings" %>
 
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
@@ -34,17 +34,30 @@
                 <div>
                     <label>
                         <input runat="server" type="checkbox" id="chkEnableTicketing" class="i-checks">
-                        Allow the public to request help.</label></div>
+                        Allow the public to request help.</label>
+                </div>
             </div>
+                 <% if (User.IsInRole("Administrator") || isOwner) { %>
+            <div class="col-sm-12 m-t-md">
+                <div>
+                    <label>
+                        <input runat="server" type="checkbox" id="chkEnableTeamVerification" class="i-checks">
+                        Enable Team Member Verification</label>
+                </div>
+            </div>
+               <% } %>
             <div class="col-sm-12 m-t-md">
                 <div>
                     <label>
                         <input runat="server" type="checkbox" id="chkHideTeamList" class="i-checks">
-                        Hide my team list from my team members.</label></div>
+                        Hide my team list from my team members.</label>
+                </div>
             </div>
             <div class="col-sm-12 m-t-lg">
-                <asp:Button ID="btnSubmit" runat="server" Text="Update Settings" OnClick="btnSubmit_Click" CssClass="btn btn-primary" />
-                <asp:Button ID="btnPaymentConfig" runat="server" Text="Edit Donation Settings" OnClick="btnPaymentConfig_Click" CssClass="btn btn-primary"/>
+                <asp:Button ID="btnSubmit" runat="server" Text="Update Settings" OnClick="btnSubmit_Click"
+                    CssClass="btn btn-primary" />
+                <asp:Button ID="btnPaymentConfig" runat="server" Text="Edit Donation Settings" OnClick="btnPaymentConfig_Click"
+                    CssClass="btn btn-primary" />
             </div>
 
         </div>
