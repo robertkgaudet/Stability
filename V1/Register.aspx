@@ -19,7 +19,6 @@
         $(document).ready(function () {
 
             $('#divAddressMessage').hide();
-            $('#divMessage').hide();
             $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
 <%--		<%=preselectedDisasterJQuery%>
 
@@ -42,7 +41,6 @@
         });
 
         function CheckAddressValues(controlName, sender) {
-            debugger;
             switch (controlName) {
                 case "address":
                     if (sender.value) {
@@ -98,13 +96,15 @@
                                 var county = results[9];
                                 var googlePlaceId = results[10];
                                 var formattedAddress = results[11];
-                                var addressId = results[13];
+                                var locationType = results[13];
+                                var cityCode = results[14];
+                                var addressId = results[15];
 
                                 $("#divMapMessage").addClass("alert-success");
                                 $("#divMapMessage").removeClass("alert-danger");
                                 $("#iFontAwesome").removeClass("fa-warning");
                                 $("#iFontAwesome").addClass("fa-map-marker");
-                                var successMessage = " Google successfully matched your address and returned the following information. (" + data + ")";
+                                var successMessage = "Address Lookup Successful!";
                                 $("#<%=hidAddressData.ClientID%>").val(data);
                                 $('#<%=lblAddressMessage.ClientID%>').text(successMessage);
                                 lookupComplete = true;
@@ -309,12 +309,19 @@
                                     </select>
                                 </div>
                             </div>
-
-
                             <div class="form-group col-lg-12">
                                 <label>Zip Code  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                                 <asp:TextBox ID="txtZipCode" runat="server" CssClass="form-control" onblur="CheckAddressValues('zip', this)" required="" placeholder="Zip Code"></asp:TextBox>
                             </div>
+
+                            <div id="divAddressMessage" class="form-group col-lg-12">
+                                <div id="divMapMessage" class="alert m-b-lg p-sm">
+                                    <i id="iFontAwesome" class="fa"></i>
+                                    <asp:Label runat="server" ID="lblAddressMessage"></asp:Label>
+                                    <asp:HiddenField ID="hidAddressData" runat="server"></asp:HiddenField>
+                                </div>
+                            </div>
+
                             <div class="form-group col-lg-12">
                                 <label>Email Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                                 <asp:TextBox type="email" ID="txtEmail" runat="server" CssClass="form-control" required="" placeholder="Email"></asp:TextBox>
@@ -352,19 +359,6 @@
             </div>
         </div>
         <div class="col-xs-1 col-sm-2 col-md-3 col-lg-3"></div>
-
-        <div id="divMessage" class="alert alert-success m-b-lg">
-            <i class="fa fa-bolt"></i>
-            <asp:Label runat="server" ID="lblMessage"></asp:Label>
-        </div>
-        <div id="divAddressMessage" class="form-group">
-            <label class="col-sm-2 control-label">Google Address Details</label>
-            <div id="divMapMessage" class="alert m-b-lg p-sm col-sm-5" style="margin-left:300px">
-                <i id="iFontAwesome" class="fa"></i>
-                <asp:Label runat="server" ID="lblAddressMessage"></asp:Label>
-                <asp:HiddenField ID="hidAddressData" runat="server"></asp:HiddenField>
-            </div>
-        </div>
     </div>
     <!-- Meta Pixel Code -->
     <script>
