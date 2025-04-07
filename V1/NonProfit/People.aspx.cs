@@ -62,11 +62,14 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                     isOwner = true;
                 }
             }
-        }
+                                                                                                                                                                                                                                                                                                                                             }
         var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId)
                             select new { o.Name, o.LogoSquare, o.HideTeamList, o.OwnerId, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName, o.EnableTeamMemberVerification }).SingleOrDefault();
-        hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true|| isOwner ? "1" : "0";
+    
+        hiddenManageShowDonateButtonn.Value = (isOwner || (organization != null && organization.EnableTeamMemberVerification == true)) ? "1" : "0";
+
+
         string squareLogo = string.Empty;
         if (organization != null)
         {

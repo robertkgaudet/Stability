@@ -20,8 +20,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 
-
-[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_8013_staging")]
+[global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "DB_8013_staging")]
 public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 {
 	
@@ -1583,13 +1582,6 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 		return ((ISingleResult<GetTotalHoursByCauseByDayResult>)(result.ReturnValue));
 	}
 	
-	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetDisasterLocationsByCountys")]
-	public ISingleResult<GetDisasterLocationsByCountysResult> GetDisasterLocationsByCountys([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CountyId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> countyId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PageNumber", DbType="Int")] System.Nullable<int> pageNumber, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PageSize", DbType="Int")] System.Nullable<int> pageSize)
-	{
-		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), countyId, pageNumber, pageSize);
-		return ((ISingleResult<GetDisasterLocationsByCountysResult>)(result.ReturnValue));
-	}
-	
 	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetGeoJsonByDisaster")]
 	public ISingleResult<GetGeoJsonByDisasterResult> GetGeoJsonByDisaster([global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LocationTypeId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationTypeId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ParentTypeId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> parentTypeId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="StatusId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> statusId)
 	{
@@ -1602,6 +1594,13 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 	{
 		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId, status, locationTypeId, locationParentTypeId);
 		return ((ISingleResult<MapStabilityLocationsResult>)(result.ReturnValue));
+	}
+	
+	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetDisasterLocationsByCountys")]
+	public ISingleResult<GetDisasterLocationsByCountysResult> GetDisasterLocationsByCountys([global::System.Data.Linq.Mapping.ParameterAttribute(Name="CountyId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> countyId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PageNumber", DbType="Int")] System.Nullable<int> pageNumber, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="PageSize", DbType="Int")] System.Nullable<int> pageSize)
+	{
+		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), countyId, pageNumber, pageSize);
+		return ((ISingleResult<GetDisasterLocationsByCountysResult>)(result.ReturnValue));
 	}
 }
 
@@ -49455,8 +49454,62 @@ public partial class GetTotalHoursByCauseByDayResult
 	}
 }
 
+public partial class GetGeoJsonByDisasterResult
+{
+	
+	private string _Column1;
+	
+	public GetGeoJsonByDisasterResult()
+	{
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="", Storage="_Column1", DbType="NVarChar(MAX)")]
+	public string Column1
+	{
+		get
+		{
+			return this._Column1;
+		}
+		set
+		{
+			if ((this._Column1 != value))
+			{
+				this._Column1 = value;
+			}
+		}
+	}
+}
+
+public partial class MapStabilityLocationsResult
+{
+	
+	private string _Column1;
+	
+	public MapStabilityLocationsResult()
+	{
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="", Storage="_Column1", DbType="NVarChar(MAX)")]
+	public string Column1
+	{
+		get
+		{
+			return this._Column1;
+		}
+		set
+		{
+			if ((this._Column1 != value))
+			{
+				this._Column1 = value;
+			}
+		}
+	}
+}
+
 public partial class GetDisasterLocationsByCountysResult
 {
+	
+	private System.Guid _LocationProfileId;
 	
 	private string _LocationName;
 	
@@ -49480,6 +49533,22 @@ public partial class GetDisasterLocationsByCountysResult
 	{
 	}
 	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LocationProfileId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid LocationProfileId
+	{
+		get
+		{
+			return this._LocationProfileId;
+		}
+		set
+		{
+			if ((this._LocationProfileId != value))
+			{
+				this._LocationProfileId = value;
+			}
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LocationName", DbType="VarChar(250) NOT NULL", CanBeNull=false)]
 	public string LocationName
 	{
@@ -49496,7 +49565,7 @@ public partial class GetDisasterLocationsByCountysResult
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FullAddress", DbType="VarChar(2576)")]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FullAddress", DbType="VarChar(3078)")]
 	public string FullAddress
 	{
 		get
@@ -49544,7 +49613,7 @@ public partial class GetDisasterLocationsByCountysResult
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Coordinates", DbType="NVarChar(62)")]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Coordinates", DbType="NVarChar(42)")]
 	public string Coordinates
 	{
 		get
@@ -49620,58 +49689,6 @@ public partial class GetDisasterLocationsByCountysResult
 			if ((this._TotalCount != value))
 			{
 				this._TotalCount = value;
-			}
-		}
-	}
-}
-
-public partial class GetGeoJsonByDisasterResult
-{
-	
-	private string _Column1;
-	
-	public GetGeoJsonByDisasterResult()
-	{
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="", Storage="_Column1", DbType="NVarChar(MAX)")]
-	public string Column1
-	{
-		get
-		{
-			return this._Column1;
-		}
-		set
-		{
-			if ((this._Column1 != value))
-			{
-				this._Column1 = value;
-			}
-		}
-	}
-}
-
-public partial class MapStabilityLocationsResult
-{
-	
-	private string _Column1;
-	
-	public MapStabilityLocationsResult()
-	{
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Name="", Storage="_Column1", DbType="NVarChar(MAX)")]
-	public string Column1
-	{
-		get
-		{
-			return this._Column1;
-		}
-		set
-		{
-			if ((this._Column1 != value))
-			{
-				this._Column1 = value;
 			}
 		}
 	}

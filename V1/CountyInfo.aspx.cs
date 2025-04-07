@@ -1,103 +1,84 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class V1_CountyInfo : BaseOrganizationWebForm
 {
-    private const int PageSize = 10;
-
     protected void Page_Load(object sender, EventArgs e)
     {
+        string stateCode = Request.QueryString["stateCode"];
+        string countyId = Request.QueryString["countyId"];
+        string eventId = Request.QueryString["eventId"];
         if (!IsPostBack)
         {
-            string stateCode = Request.QueryString["stateCode"];
-            string countyId = Request.QueryString["countyId"];
-            string eventId = Request.QueryString["eventId"];
-
-            InitializeEmergencyManagementInfo(stateCode, countyId);
-            LoadDisasterLocations(countyId, CurrentPage, PageSize, null, null);
-        }
-    }
-
-    private void InitializeEmergencyManagementInfo(string stateCode, string countyId)
-    {
-        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
-        {
-            var emergencyInfoQuery = (from em in dc.EmergencyManagments
-                                      join s in dc.USStates on em.StatesId equals s.StatesId
-                                      where s.Code == stateCode && em.CountyId == new Guid(countyId)
-                                      select em).FirstOrDefault();
-
-            if (emergencyInfoQuery != null)
+            if (User.IsInRole("Administrator"))
             {
-                litWebsite.Text = emergencyInfoQuery.Website;
-                litEOCName.Text = emergencyInfoQuery.EOCName;
-                litEMName.Text = emergencyInfoQuery.EmergencyManagerName;
-                litPhoneNumber.Text = emergencyInfoQuery.PhoneNumber;
+                hypEditCounty.NavigateUrl = "/V1/Administration/EmergencyManagement.aspx?eventId=" + eventId + "&countyId=" + countyId + "&stateCode=" + stateCode;
+                hypEditCounty.Visible = true;
+            }
+
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            var countyEmergencyManagementInformation = (from em in dc.EmergencyManagments
+                                                        join s in dc.USStates on em.StatesId equals s.StatesId
+                                                        where s.Code == stateCode
+                                                        && em.CountyId == new Guid(countyId)
+                                                        select em).SingleOrDefault();
+
+            if (countyEmergencyManagementInformation != null)
+            {
+                litWebsite.Text = countyEmergencyManagementInformation.Website;
+                litEOCName.Text = countyEmergencyManagementInformation.EOCName;
+                litEMName.Text = countyEmergencyManagementInformation.EmergencyManagerName;
+                litPhoneNumber.Text = countyEmergencyManagementInformation.PhoneNumber;
+
                 divInfo.Visible = true;
                 divInfoMessage.Visible = false;
             }
             else
             {
+                //Redirect to the add screen.
+                //
                 divInfo.Visible = false;
                 divInfoMessage.Visible = true;
+                //Response.Redirect("/V1/Administration/EmergencyManagement.aspx?eventId=" + eventId + "&countyId= " + countyId + "&stateCode=" +  stateCode);
             }
+            var county = (from c in dc.Counties
+                          where c.CountyId == new Guid(countyId)
+                          select c).SingleOrDefault();
+            string countyOrParish = " County";
+            if (stateCode.ToUpper() == "LA")
+            {
+                countyOrParish = " Parish";
+            }
+            var state = (from s in dc.USStates
+                         where s.Code == stateCode
+                         select s).SingleOrDefault();
+
+            string countyName = county.Name + countyOrParish;
+            lblStateInformation.Text = state.Name + ", " + countyName + ": Emergency Management Information for " + countyName + ".";
+            LoadDisasterLocations(countyId);
         }
     }
-    private void LoadDisasterLocations(string countyId, int pageNumber, int pageSize, string sortColumn, string sortDirection)
+    private void LoadDisasterLocations(string countyId)
     {
         Guid countyGuid = new Guid(countyId);
 
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
-            var query = dc.GetDisasterLocationsByCountys(countyGuid, pageNumber, pageSize).AsQueryable();
-            if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortDirection))
-            {
-                query = sortDirection == "ASC" ? query.OrderBy(x => x.GetType().GetProperty(sortColumn).GetValue(x, null))
-                                                : query.OrderByDescending(x => x.GetType().GetProperty(sortColumn).GetValue(x, null));
-            }
-            var locations = query.ToList();
+            var locations = dc.GetDisasterLocationsByCountys(countyGuid, 1, int.MaxValue).ToList();
 
-            gvLocations.DataSource = locations;
-            gvLocations.DataBind();
-            gvLocations.Visible = locations.Any();
-            pnlNoLocations.Visible = !locations.Any();
-
-            lblCurrentPage.InnerText = "Page " + pageNumber;
-            btnPrevious.Enabled = pageNumber > 1;
-            btnNext.Enabled = locations.Count == pageSize;
+            rptLocations.DataSource = locations;
+            rptLocations.DataBind();
+            rptLocations.Visible = locations.Any();
         }
     }
-
     private int CurrentPage
     {
-        get
-        {
-            return ViewState["CurrentPage"] != null ? (int)ViewState["CurrentPage"] : 1;
-        }
-        set
-        {
-            ViewState["CurrentPage"] = value;
-        }
+        get { return ViewState["CurrentPage"] != null ? (int)ViewState["CurrentPage"] : 1; }
+        set { ViewState["CurrentPage"] = value; }
     }
-
-
-    protected void btnPrevious_Click(object sender, EventArgs e)
-    {
-        if (CurrentPage > 1)
-        {
-            CurrentPage--;
-            LoadDisasterLocations(Request.QueryString["countyId"], CurrentPage, PageSize, ViewState["SortColumn"] as string, ViewState["SortDirection"] as string);
-        }
-    }
-
-    protected void btnNext_Click(object sender, EventArgs e)
-    {
-        CurrentPage++;
-        LoadDisasterLocations(Request.QueryString["countyId"], CurrentPage, PageSize, ViewState["SortColumn"] as string, ViewState["SortDirection"] as string);
-    }
-
     protected void gvLocations_Sorting(object sender, GridViewSortEventArgs e)
     {
         string sortColumn = e.SortExpression;
@@ -106,6 +87,6 @@ public partial class V1_CountyInfo : BaseOrganizationWebForm
         ViewState["SortColumn"] = sortColumn;
         ViewState["SortDirection"] = sortDirection;
 
-        LoadDisasterLocations(Request.QueryString["countyId"], CurrentPage, PageSize, sortColumn, sortDirection);
+        LoadDisasterLocations(Request.QueryString["countyId"]);
     }
 }
