@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.IdentityModel.Metadata;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
 public partial class V1_Profile_IDCard : BaseOrganizationWebForm
 {
 	public string zelloDD = string.Empty;
@@ -24,15 +20,7 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
 		}
 		this.Master.HideFooter = true;
 		this.Master.HideHeader = true;
-		this.Master.HideMenu = true;
-		//this.Master.PageTitle			= "Stability - " +  disaster.Name + " Resources Page";
-		//this.Master.PageDescription		= "Stability - " +  disaster.Name + " " + disaster.Description;
-		//this.Master.FbDescription		= "Stability - " +  disaster.Name + " " + disaster.Description;
-		//this.Master.FbImage				= "/V1/Images/Hurricane-Michael-damage.jpg";
-		//this.Master.FbImageType			= "image/jpg";
-		//this.Master.FbSite_name			= "Stability - " +  disaster.Name + " Resouces Page";
-		//this.Master.FbURL				= Request.Url.AbsoluteUri;
-		
+		this.Master.HideMenu = true;	
 		if(User.Identity.IsAuthenticated)
 		{
 			string profilePhotoFolder	= System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
@@ -42,38 +30,41 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
 						   join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
 						   where ph.UserId == userId
 						   orderby p.CreatedOn descending
-							select p).Take(1).SingleOrDefault();
-
-			if(profilePhoto != null)
-			{
-                litPrintDate.Text = DateTime.Now.ToString("MM/dd/yyyy");
-                imgProfile.ImageUrl = profilePhotoFolder + profilePhoto.FilenameCropped;
-
-				var profile = (from p in dc.Profiles
-							  where p.UserId == userId
-							  select p).SingleOrDefault();
-                litNumber.Text = "Volunteer #" + profile.ProfileNumber + "";
-                if (!String.IsNullOrEmpty(profile.City))
-				{
-					locationDD = "" + profile.City + ", " + profile.State + "";
-				}
-				litTitle.Text = "VETTED DISASTER WORKER";
-				if(!String.IsNullOrEmpty(profile.Title))
-				{
-					litTitle.Text = profile.Title.ToUpper();
-				}
-                if (profile.StabilityVerifiedDate != null)
-                {
-                    litStabilityVerifiedDate.Text = profile.StabilityVerifiedDate.Value.ToString("MM/dd/yyyy");
-                    lblStabilityVerifiedDate.Visible = true; 
-                    litStabilityVerifiedDate.Visible = true; 
-                }
-                else
-                {
-                    lblStabilityVerifiedDate.Visible = false; 
-                    litStabilityVerifiedDate.Visible = false;
-                }
+							select p).Take(1).SingleOrDefault();    
+            if (profilePhoto != null)
+			{   
+                imgProfile.ImageUrl = profilePhotoFolder + profilePhoto.FilenameCropped;	
             }
+            else
+            {
+                imgProfile.ImageUrl = profilePhotoFolder + "profilepicture.png";
+
+            }
+            var profile = (from p in dc.Profiles
+                           where p.UserId == userId
+                           select p).SingleOrDefault();
+            litNumber.Text = "Volunteer #" + profile.ProfileNumber + "";
+            if (!String.IsNullOrEmpty(profile.City))
+            {
+                locationDD = "" + profile.City + ", " + profile.State + "";
+            }
+            litTitle.Text = "VETTED DISASTER WORKER";
+            if (!String.IsNullOrEmpty(profile.Title))
+            {
+                litTitle.Text = profile.Title.ToUpper();
+            }
+            if (profile.StabilityVerifiedDate != null)
+            {
+                litStabilityVerifiedDate.Text = profile.StabilityVerifiedDate.Value.ToString("MM/dd/yyyy");
+                lblStabilityVerifiedDate.Visible = true;
+                litStabilityVerifiedDate.Visible = true;
+            }
+            else
+            {
+                lblStabilityVerifiedDate.Visible = false;
+                litStabilityVerifiedDate.Visible = false;
+            }
+            litPrintDate.Text = DateTime.Now.ToString("MM/dd/yyyy");
             LoadTeamLogoControl();
         }
 	}
@@ -84,42 +75,42 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
         {
             ucTeamLogo.UserId = userId;
             ucTeamLogo.LoadNameWithBadges();
-			using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
-			{
-                string watermarkImagePath = "/V1/Images/DefaultLogo.png"; 
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                string watermarkImagePath = "/V1/Images/DefaultLogo.png";
                 var orgUser = (from o in dc.Organizations
-							   join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-							   where uo.UserId == userId
+                               join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+                               where uo.UserId == userId
                                orderby o.CreatedOn descending
-							   select new
-							   {
-								   o.LogoSquare,
-								   o.OrganizationId,
-								   o.Name,
-								   o.EnableTeamMemberVerification,
-								   uo.ShowTeamLogo,
-								   uo.TeamVerifiedDate
-							   }).Take(1).SingleOrDefault();
+                               select new
+                               {
+                                   o.LogoSquare,
+                                   o.OrganizationId,
+                                   o.Name,
+                                   o.EnableTeamMemberVerification,
+                                   uo.ShowTeamLogo,
+                                   uo.TeamVerifiedDate
+                               }).Take(1).SingleOrDefault();
                 if (orgUser != null)
                 {
-                    if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
-                    {
+                    TeamName.Text = orgUser.Name.ToUpper();
                         if (!string.IsNullOrEmpty(orgUser.LogoSquare))
                         {
-                            string teamLogo = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
-                            watermarkImagePath = teamLogo + orgUser.LogoSquare;
-                        }
-                    }
+                            string teamLogo = ConfigurationManager.AppSettings["logoFolder"].ToString();
+                            watermarkImagePath = !string.IsNullOrEmpty(orgUser.LogoSquare)
+                                ? teamLogo + orgUser.LogoSquare
+                                : "/V1/Images/DefaultLogo.png";
+                        }                 
                     if (orgUser.TeamVerifiedDate != null)
                     {
                         litTeamVerifiedDate.Text = orgUser.TeamVerifiedDate.Value.ToString("MM/dd/yyyy");
-                        lblTeamVerifiedDate.Visible = true; 
-                        litTeamVerifiedDate.Visible = true; 
+                        lblTeamVerifiedDate.Visible = true;
+                        litTeamVerifiedDate.Visible = true;
                     }
                     else
                     {
-                        lblTeamVerifiedDate.Visible = false; 
-                        litTeamVerifiedDate.Visible = false; 
+                        lblTeamVerifiedDate.Visible = false;
+                        litTeamVerifiedDate.Visible = false;
                     }
                     watermarkBg.Style.Add("background-image", "url('" + watermarkImagePath + "')");
                 }
