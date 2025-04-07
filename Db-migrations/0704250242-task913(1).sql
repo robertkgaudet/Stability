@@ -36,6 +36,7 @@ BEGIN
         AND a.GooglePlaceId IS NOT NULL
     )
     SELECT 
+        LocationProfileId,  
         LocationName,
         FullAddress,
         GooglePlacesID,
