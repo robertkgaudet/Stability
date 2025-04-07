@@ -499,14 +499,24 @@
 	</head>
 	<%=bodyTag%>
     <body class="sidebar-scroll hide-sidebar fixed-navbar <%=fixedFooter%> <%=fixedHeader%> bodyBGColor">		
-		<asp:Panel ID="adminFeatureSection" runat="server" Visible="false">   
-    <div style="background-color: #6e2e91; padding: 15px; text-align: right; color: white;
-                position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
-        <div class="navbar-right"></div>
-        <%=FeatureTypeCounterTitle %>  
-        <asp:Label ID="FeatureTypeCounterNumber" runat="server"></asp:Label>
-    </div>
-</asp:Panel>
+		<asp:Panel ID="adminFeatureSection" runat="server" Visible="false">
+			<div style="background-color: lightgray;
+						height:65px;
+						padding:4px 10px 0px 0px;
+						text-align: right;
+						color: dimgray;
+						position: relative;
+						top: 0;
+						left: 0;
+						width: 100%;
+						z-index: 1000;">
+				
+				<h5>Site Admin Panel</h5>
+				<%=FeatureTypeCounterTitle %>  
+				<asp:Label ID="FeatureTypeCounterNumber" runat="server"></asp:Label>
+			</div>
+		</asp:Panel>
+				<div class="navbar-right"></div>
  <!-- Add a Literal control to dynamically include the style block -->
     <asp:Literal ID="bodyStyle" runat="server" Visible="false">
         <style>
@@ -516,7 +526,6 @@
         </style>
     </asp:Literal>
 		<form id="form1" runat="server" role="form">
-										
 			<div style="margin-bottom:500px;">
 				<div id="header" runat="server">
 					<nav role="navigation">
@@ -585,10 +594,6 @@
 									<asp:PlaceHolder ID="PlaceHolderContent" runat="server"></asp:PlaceHolder>
 								</li>
 							</ul>
-
-
-							
-							
 							<ul class="nav navbar-nav no-borders">
 								<li class="dropdown" style="visibility:hidden;">
 									<a class="dropdown-toggle label-menu-corner" href="#" data-toggle="dropdown">
@@ -627,8 +632,8 @@
 						</div>
 					</nav>
 				</div>
-				<!-- Navigation -->
-				<aside id="menu" runat="server">
+				<!-- Navigation 1-->
+				<aside id="menu" runat="server" style="z-index:1001;">
 					<div id="navigation">
 						<ul class="nav m-b" id="side-menu">
 							<div class="profile-picture m-b-xs">
