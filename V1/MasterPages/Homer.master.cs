@@ -162,12 +162,12 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
                     if (FeatreTypeCounters != null)
                     {
-                        FeatureTypeCounterTitle = FeatreTypeCounters.FeatureKey;
+                        FeatureTypeCounterTitle = FeatreTypeCounters.FeatureKey + " Page Load Count = ";
                         FeatureTypeCounterNumber.Text = " : " + FeatreTypeCounters.Counter.ToString();
                     }
                     else
                     {
-                        FeatureTypeCounterTitle = "";
+                        FeatureTypeCounterTitle = "Page Not in Database";
                         FeatureTypeCounterNumber.Text = "";
                     }
                 }

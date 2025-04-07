@@ -21,7 +21,7 @@ using System.Reflection;
 
 
 
-[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_8013_stabilityNew")]
+[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_8013_staging")]
 public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 {
 	
@@ -425,9 +425,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertOrganization(Organization instance);
   partial void UpdateOrganization(Organization instance);
   partial void DeleteOrganization(Organization instance);
-  partial void InsertProfile(Profile instance);
-  partial void UpdateProfile(Profile instance);
-  partial void DeleteProfile(Profile instance);
   partial void InsertUserOrganization(UserOrganization instance);
   partial void UpdateUserOrganization(UserOrganization instance);
   partial void DeleteUserOrganization(UserOrganization instance);
@@ -437,9 +434,12 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertAddress(Address instance);
   partial void UpdateAddress(Address instance);
   partial void DeleteAddress(Address instance);
+  partial void InsertProfile(Profile instance);
+  partial void UpdateProfile(Profile instance);
+  partial void DeleteProfile(Profile instance);
     #endregion
     public CrowdReliefDBDataContext() :
-  base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
+base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
     {
         OnCreated();
     }
@@ -1523,14 +1523,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		}
 	}
 	
-	public System.Data.Linq.Table<Profile> Profiles
-	{
-		get
-		{
-			return this.GetTable<Profile>();
-		}
-	}
-	
 	public System.Data.Linq.Table<UserOrganization> UserOrganizations
 	{
 		get
@@ -1552,6 +1544,14 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<Address>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Profile> Profiles
+	{
+		get
+		{
+			return this.GetTable<Profile>();
 		}
 	}
 	
@@ -2764,9 +2764,9 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private EntitySet<Organization> _Organizations1;
 	
-	private EntitySet<Profile> _Profiles;
-	
 	private EntitySet<UserOrganization> _UserOrganizations;
+	
+	private EntitySet<Profile> _Profiles;
 	
 	private EntityRef<StreamDonation> _Donation;
 	
@@ -2855,8 +2855,8 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		this._Posts = new EntitySet<Post>(new Action<Post>(this.attach_Posts), new Action<Post>(this.detach_Posts));
 		this._Organizations = new EntitySet<Organization>(new Action<Organization>(this.attach_Organizations), new Action<Organization>(this.detach_Organizations));
 		this._Organizations1 = new EntitySet<Organization>(new Action<Organization>(this.attach_Organizations1), new Action<Organization>(this.detach_Organizations1));
-		this._Profiles = new EntitySet<Profile>(new Action<Profile>(this.attach_Profiles), new Action<Profile>(this.detach_Profiles));
 		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
+		this._Profiles = new EntitySet<Profile>(new Action<Profile>(this.attach_Profiles), new Action<Profile>(this.detach_Profiles));
 		this._Donation = default(EntityRef<StreamDonation>);
 		this._UserDonation = default(EntityRef<UserDonation>);
 		this._UserDonation1 = default(EntityRef<UserDonation>);
@@ -3791,19 +3791,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Profile", Storage="_Profiles", ThisKey="UserId", OtherKey="UserId")]
-	public EntitySet<Profile> Profiles
-	{
-		get
-		{
-			return this._Profiles;
-		}
-		set
-		{
-			this._Profiles.Assign(value);
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserOrganization", Storage="_UserOrganizations", ThisKey="UserId", OtherKey="UserId")]
 	public EntitySet<UserOrganization> UserOrganizations
 	{
@@ -3814,6 +3801,19 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		set
 		{
 			this._UserOrganizations.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Profile", Storage="_Profiles", ThisKey="UserId", OtherKey="UserId")]
+	public EntitySet<Profile> Profiles
+	{
+		get
+		{
+			return this._Profiles;
+		}
+		set
+		{
+			this._Profiles.Assign(value);
 		}
 	}
 	
@@ -4635,18 +4635,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		entity.aspnet_User1 = null;
 	}
 	
-	private void attach_Profiles(Profile entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = this;
-	}
-	
-	private void detach_Profiles(Profile entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = null;
-	}
-	
 	private void attach_UserOrganizations(UserOrganization entity)
 	{
 		this.SendPropertyChanging();
@@ -4654,6 +4642,18 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	}
 	
 	private void detach_UserOrganizations(UserOrganization entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_Profiles(Profile entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_Profiles(Profile entity)
 	{
 		this.SendPropertyChanging();
 		entity.aspnet_User = null;
@@ -47155,1001 +47155,6 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Profile")]
-public partial class Profile : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _ProfileId;
-	
-	private int _ProfileNumber;
-	
-	private string _Firstname;
-	
-	private string _Lastname;
-	
-	private string _PhoneNumber;
-	
-	private string _Address;
-	
-	private string _City;
-	
-	private string _State;
-	
-	private string _Zip;
-	
-	private System.Nullable<bool> _ReceiveDeploymentSMS;
-	
-	private string _ContactMethod;
-	
-	private System.Guid _UserId;
-	
-	private System.Nullable<System.Guid> _DefaultEventId;
-	
-	private string _VolunteerReliefMoniker;
-	
-	private string _Description;
-	
-	private string _DatesAvailable;
-	
-	private string _NumberOfDaysAvailable;
-	
-	private string _PreviousVolunteerExperience;
-	
-	private System.Nullable<int> _Age;
-	
-	private string _ZelloName;
-	
-	private string _Title;
-	
-	private string _Photo;
-	
-	private System.Nullable<bool> _VettingActive;
-	
-	private System.Nullable<bool> _VettingComplete;
-	
-	private System.Nullable<bool> _PassedVetting;
-	
-	private System.Nullable<System.Guid> _VettedBy;
-	
-	private string _VettingNotes;
-	
-	private System.Nullable<System.DateTime> _DateVettingStarted;
-	
-	private System.Nullable<System.DateTime> _DateVettingCompleted;
-	
-	private System.Nullable<bool> _VolunteerApplicationIsComplete;
-	
-	private System.Nullable<System.DateTime> _VolunteerApplicationDate;
-	
-	private System.Nullable<System.Guid> _PhotoId;
-	
-	private string _AmazonWishListURL;
-	
-	private System.Nullable<bool> _ShowOnWebsite;
-	
-	private System.Nullable<System.DateTime> _HideUserActionModal;
-	
-	private bool _IsDisasterReadyCertified;
-	
-	private System.Nullable<System.DateTime> _StabilityVerifiedDate;
-	
-	private EntitySet<ProfileAddress> _ProfileAddresses;
-	
-	private EntityRef<aspnet_User> _aspnet_User;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnProfileIdChanging(System.Guid value);
-    partial void OnProfileIdChanged();
-    partial void OnProfileNumberChanging(int value);
-    partial void OnProfileNumberChanged();
-    partial void OnFirstnameChanging(string value);
-    partial void OnFirstnameChanged();
-    partial void OnLastnameChanging(string value);
-    partial void OnLastnameChanged();
-    partial void OnPhoneNumberChanging(string value);
-    partial void OnPhoneNumberChanged();
-    partial void OnAddressChanging(string value);
-    partial void OnAddressChanged();
-    partial void OnCityChanging(string value);
-    partial void OnCityChanged();
-    partial void OnStateChanging(string value);
-    partial void OnStateChanged();
-    partial void OnZipChanging(string value);
-    partial void OnZipChanged();
-    partial void OnReceiveDeploymentSMSChanging(System.Nullable<bool> value);
-    partial void OnReceiveDeploymentSMSChanged();
-    partial void OnContactMethodChanging(string value);
-    partial void OnContactMethodChanged();
-    partial void OnUserIdChanging(System.Guid value);
-    partial void OnUserIdChanged();
-    partial void OnDefaultEventIdChanging(System.Nullable<System.Guid> value);
-    partial void OnDefaultEventIdChanged();
-    partial void OnVolunteerReliefMonikerChanging(string value);
-    partial void OnVolunteerReliefMonikerChanged();
-    partial void OnDescriptionChanging(string value);
-    partial void OnDescriptionChanged();
-    partial void OnDatesAvailableChanging(string value);
-    partial void OnDatesAvailableChanged();
-    partial void OnNumberOfDaysAvailableChanging(string value);
-    partial void OnNumberOfDaysAvailableChanged();
-    partial void OnPreviousVolunteerExperienceChanging(string value);
-    partial void OnPreviousVolunteerExperienceChanged();
-    partial void OnAgeChanging(System.Nullable<int> value);
-    partial void OnAgeChanged();
-    partial void OnZelloNameChanging(string value);
-    partial void OnZelloNameChanged();
-    partial void OnTitleChanging(string value);
-    partial void OnTitleChanged();
-    partial void OnPhotoChanging(string value);
-    partial void OnPhotoChanged();
-    partial void OnVettingActiveChanging(System.Nullable<bool> value);
-    partial void OnVettingActiveChanged();
-    partial void OnVettingCompleteChanging(System.Nullable<bool> value);
-    partial void OnVettingCompleteChanged();
-    partial void OnPassedVettingChanging(System.Nullable<bool> value);
-    partial void OnPassedVettingChanged();
-    partial void OnVettedByChanging(System.Nullable<System.Guid> value);
-    partial void OnVettedByChanged();
-    partial void OnVettingNotesChanging(string value);
-    partial void OnVettingNotesChanged();
-    partial void OnDateVettingStartedChanging(System.Nullable<System.DateTime> value);
-    partial void OnDateVettingStartedChanged();
-    partial void OnDateVettingCompletedChanging(System.Nullable<System.DateTime> value);
-    partial void OnDateVettingCompletedChanged();
-    partial void OnVolunteerApplicationIsCompleteChanging(System.Nullable<bool> value);
-    partial void OnVolunteerApplicationIsCompleteChanged();
-    partial void OnVolunteerApplicationDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnVolunteerApplicationDateChanged();
-    partial void OnPhotoIdChanging(System.Nullable<System.Guid> value);
-    partial void OnPhotoIdChanged();
-    partial void OnAmazonWishListURLChanging(string value);
-    partial void OnAmazonWishListURLChanged();
-    partial void OnShowOnWebsiteChanging(System.Nullable<bool> value);
-    partial void OnShowOnWebsiteChanged();
-    partial void OnHideUserActionModalChanging(System.Nullable<System.DateTime> value);
-    partial void OnHideUserActionModalChanged();
-    partial void OnIsDisasterReadyCertifiedChanging(bool value);
-    partial void OnIsDisasterReadyCertifiedChanged();
-    partial void OnStabilityVerifiedDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnStabilityVerifiedDateChanged();
-    #endregion
-	
-	public Profile()
-	{
-		this._ProfileAddresses = new EntitySet<ProfileAddress>(new Action<ProfileAddress>(this.attach_ProfileAddresses), new Action<ProfileAddress>(this.detach_ProfileAddresses));
-		this._aspnet_User = default(EntityRef<aspnet_User>);
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProfileId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid ProfileId
-	{
-		get
-		{
-			return this._ProfileId;
-		}
-		set
-		{
-			if ((this._ProfileId != value))
-			{
-				this.OnProfileIdChanging(value);
-				this.SendPropertyChanging();
-				this._ProfileId = value;
-				this.SendPropertyChanged("ProfileId");
-				this.OnProfileIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProfileNumber", AutoSync=AutoSync.Always, DbType="Int NOT NULL IDENTITY", IsDbGenerated=true)]
-	public int ProfileNumber
-	{
-		get
-		{
-			return this._ProfileNumber;
-		}
-		set
-		{
-			if ((this._ProfileNumber != value))
-			{
-				this.OnProfileNumberChanging(value);
-				this.SendPropertyChanging();
-				this._ProfileNumber = value;
-				this.SendPropertyChanged("ProfileNumber");
-				this.OnProfileNumberChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Firstname", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
-	public string Firstname
-	{
-		get
-		{
-			return this._Firstname;
-		}
-		set
-		{
-			if ((this._Firstname != value))
-			{
-				this.OnFirstnameChanging(value);
-				this.SendPropertyChanging();
-				this._Firstname = value;
-				this.SendPropertyChanged("Firstname");
-				this.OnFirstnameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Lastname", DbType="VarChar(50)")]
-	public string Lastname
-	{
-		get
-		{
-			return this._Lastname;
-		}
-		set
-		{
-			if ((this._Lastname != value))
-			{
-				this.OnLastnameChanging(value);
-				this.SendPropertyChanging();
-				this._Lastname = value;
-				this.SendPropertyChanged("Lastname");
-				this.OnLastnameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="VarChar(20)")]
-	public string PhoneNumber
-	{
-		get
-		{
-			return this._PhoneNumber;
-		}
-		set
-		{
-			if ((this._PhoneNumber != value))
-			{
-				this.OnPhoneNumberChanging(value);
-				this.SendPropertyChanging();
-				this._PhoneNumber = value;
-				this.SendPropertyChanged("PhoneNumber");
-				this.OnPhoneNumberChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="VarChar(500)")]
-	public string Address
-	{
-		get
-		{
-			return this._Address;
-		}
-		set
-		{
-			if ((this._Address != value))
-			{
-				this.OnAddressChanging(value);
-				this.SendPropertyChanging();
-				this._Address = value;
-				this.SendPropertyChanged("Address");
-				this.OnAddressChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_City", DbType="VarChar(50)")]
-	public string City
-	{
-		get
-		{
-			return this._City;
-		}
-		set
-		{
-			if ((this._City != value))
-			{
-				this.OnCityChanging(value);
-				this.SendPropertyChanging();
-				this._City = value;
-				this.SendPropertyChanged("City");
-				this.OnCityChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="VarChar(50)")]
-	public string State
-	{
-		get
-		{
-			return this._State;
-		}
-		set
-		{
-			if ((this._State != value))
-			{
-				this.OnStateChanging(value);
-				this.SendPropertyChanging();
-				this._State = value;
-				this.SendPropertyChanged("State");
-				this.OnStateChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Zip", DbType="VarChar(10)")]
-	public string Zip
-	{
-		get
-		{
-			return this._Zip;
-		}
-		set
-		{
-			if ((this._Zip != value))
-			{
-				this.OnZipChanging(value);
-				this.SendPropertyChanging();
-				this._Zip = value;
-				this.SendPropertyChanged("Zip");
-				this.OnZipChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceiveDeploymentSMS", DbType="Bit")]
-	public System.Nullable<bool> ReceiveDeploymentSMS
-	{
-		get
-		{
-			return this._ReceiveDeploymentSMS;
-		}
-		set
-		{
-			if ((this._ReceiveDeploymentSMS != value))
-			{
-				this.OnReceiveDeploymentSMSChanging(value);
-				this.SendPropertyChanging();
-				this._ReceiveDeploymentSMS = value;
-				this.SendPropertyChanged("ReceiveDeploymentSMS");
-				this.OnReceiveDeploymentSMSChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ContactMethod", DbType="VarChar(50)")]
-	public string ContactMethod
-	{
-		get
-		{
-			return this._ContactMethod;
-		}
-		set
-		{
-			if ((this._ContactMethod != value))
-			{
-				this.OnContactMethodChanging(value);
-				this.SendPropertyChanging();
-				this._ContactMethod = value;
-				this.SendPropertyChanged("ContactMethod");
-				this.OnContactMethodChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid UserId
-	{
-		get
-		{
-			return this._UserId;
-		}
-		set
-		{
-			if ((this._UserId != value))
-			{
-				if (this._aspnet_User.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnUserIdChanging(value);
-				this.SendPropertyChanging();
-				this._UserId = value;
-				this.SendPropertyChanged("UserId");
-				this.OnUserIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultEventId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> DefaultEventId
-	{
-		get
-		{
-			return this._DefaultEventId;
-		}
-		set
-		{
-			if ((this._DefaultEventId != value))
-			{
-				this.OnDefaultEventIdChanging(value);
-				this.SendPropertyChanging();
-				this._DefaultEventId = value;
-				this.SendPropertyChanged("DefaultEventId");
-				this.OnDefaultEventIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerReliefMoniker", DbType="VarChar(15)")]
-	public string VolunteerReliefMoniker
-	{
-		get
-		{
-			return this._VolunteerReliefMoniker;
-		}
-		set
-		{
-			if ((this._VolunteerReliefMoniker != value))
-			{
-				this.OnVolunteerReliefMonikerChanging(value);
-				this.SendPropertyChanging();
-				this._VolunteerReliefMoniker = value;
-				this.SendPropertyChanged("VolunteerReliefMoniker");
-				this.OnVolunteerReliefMonikerChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(MAX)")]
-	public string Description
-	{
-		get
-		{
-			return this._Description;
-		}
-		set
-		{
-			if ((this._Description != value))
-			{
-				this.OnDescriptionChanging(value);
-				this.SendPropertyChanging();
-				this._Description = value;
-				this.SendPropertyChanged("Description");
-				this.OnDescriptionChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DatesAvailable", DbType="VarChar(200)")]
-	public string DatesAvailable
-	{
-		get
-		{
-			return this._DatesAvailable;
-		}
-		set
-		{
-			if ((this._DatesAvailable != value))
-			{
-				this.OnDatesAvailableChanging(value);
-				this.SendPropertyChanging();
-				this._DatesAvailable = value;
-				this.SendPropertyChanged("DatesAvailable");
-				this.OnDatesAvailableChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberOfDaysAvailable", DbType="VarChar(5)")]
-	public string NumberOfDaysAvailable
-	{
-		get
-		{
-			return this._NumberOfDaysAvailable;
-		}
-		set
-		{
-			if ((this._NumberOfDaysAvailable != value))
-			{
-				this.OnNumberOfDaysAvailableChanging(value);
-				this.SendPropertyChanging();
-				this._NumberOfDaysAvailable = value;
-				this.SendPropertyChanged("NumberOfDaysAvailable");
-				this.OnNumberOfDaysAvailableChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PreviousVolunteerExperience", DbType="VarChar(MAX)")]
-	public string PreviousVolunteerExperience
-	{
-		get
-		{
-			return this._PreviousVolunteerExperience;
-		}
-		set
-		{
-			if ((this._PreviousVolunteerExperience != value))
-			{
-				this.OnPreviousVolunteerExperienceChanging(value);
-				this.SendPropertyChanging();
-				this._PreviousVolunteerExperience = value;
-				this.SendPropertyChanged("PreviousVolunteerExperience");
-				this.OnPreviousVolunteerExperienceChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Age", DbType="Int")]
-	public System.Nullable<int> Age
-	{
-		get
-		{
-			return this._Age;
-		}
-		set
-		{
-			if ((this._Age != value))
-			{
-				this.OnAgeChanging(value);
-				this.SendPropertyChanging();
-				this._Age = value;
-				this.SendPropertyChanged("Age");
-				this.OnAgeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ZelloName", DbType="VarChar(50)")]
-	public string ZelloName
-	{
-		get
-		{
-			return this._ZelloName;
-		}
-		set
-		{
-			if ((this._ZelloName != value))
-			{
-				this.OnZelloNameChanging(value);
-				this.SendPropertyChanging();
-				this._ZelloName = value;
-				this.SendPropertyChanged("ZelloName");
-				this.OnZelloNameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Title", DbType="VarChar(500)")]
-	public string Title
-	{
-		get
-		{
-			return this._Title;
-		}
-		set
-		{
-			if ((this._Title != value))
-			{
-				this.OnTitleChanging(value);
-				this.SendPropertyChanging();
-				this._Title = value;
-				this.SendPropertyChanged("Title");
-				this.OnTitleChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Photo", DbType="VarChar(500)")]
-	public string Photo
-	{
-		get
-		{
-			return this._Photo;
-		}
-		set
-		{
-			if ((this._Photo != value))
-			{
-				this.OnPhotoChanging(value);
-				this.SendPropertyChanging();
-				this._Photo = value;
-				this.SendPropertyChanged("Photo");
-				this.OnPhotoChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingActive", DbType="Bit")]
-	public System.Nullable<bool> VettingActive
-	{
-		get
-		{
-			return this._VettingActive;
-		}
-		set
-		{
-			if ((this._VettingActive != value))
-			{
-				this.OnVettingActiveChanging(value);
-				this.SendPropertyChanging();
-				this._VettingActive = value;
-				this.SendPropertyChanged("VettingActive");
-				this.OnVettingActiveChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingComplete", DbType="Bit")]
-	public System.Nullable<bool> VettingComplete
-	{
-		get
-		{
-			return this._VettingComplete;
-		}
-		set
-		{
-			if ((this._VettingComplete != value))
-			{
-				this.OnVettingCompleteChanging(value);
-				this.SendPropertyChanging();
-				this._VettingComplete = value;
-				this.SendPropertyChanged("VettingComplete");
-				this.OnVettingCompleteChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PassedVetting", DbType="Bit")]
-	public System.Nullable<bool> PassedVetting
-	{
-		get
-		{
-			return this._PassedVetting;
-		}
-		set
-		{
-			if ((this._PassedVetting != value))
-			{
-				this.OnPassedVettingChanging(value);
-				this.SendPropertyChanging();
-				this._PassedVetting = value;
-				this.SendPropertyChanged("PassedVetting");
-				this.OnPassedVettingChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettedBy", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> VettedBy
-	{
-		get
-		{
-			return this._VettedBy;
-		}
-		set
-		{
-			if ((this._VettedBy != value))
-			{
-				this.OnVettedByChanging(value);
-				this.SendPropertyChanging();
-				this._VettedBy = value;
-				this.SendPropertyChanged("VettedBy");
-				this.OnVettedByChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingNotes", DbType="VarChar(1000)")]
-	public string VettingNotes
-	{
-		get
-		{
-			return this._VettingNotes;
-		}
-		set
-		{
-			if ((this._VettingNotes != value))
-			{
-				this.OnVettingNotesChanging(value);
-				this.SendPropertyChanging();
-				this._VettingNotes = value;
-				this.SendPropertyChanged("VettingNotes");
-				this.OnVettingNotesChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateVettingStarted", DbType="DateTime")]
-	public System.Nullable<System.DateTime> DateVettingStarted
-	{
-		get
-		{
-			return this._DateVettingStarted;
-		}
-		set
-		{
-			if ((this._DateVettingStarted != value))
-			{
-				this.OnDateVettingStartedChanging(value);
-				this.SendPropertyChanging();
-				this._DateVettingStarted = value;
-				this.SendPropertyChanged("DateVettingStarted");
-				this.OnDateVettingStartedChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateVettingCompleted", DbType="DateTime")]
-	public System.Nullable<System.DateTime> DateVettingCompleted
-	{
-		get
-		{
-			return this._DateVettingCompleted;
-		}
-		set
-		{
-			if ((this._DateVettingCompleted != value))
-			{
-				this.OnDateVettingCompletedChanging(value);
-				this.SendPropertyChanging();
-				this._DateVettingCompleted = value;
-				this.SendPropertyChanged("DateVettingCompleted");
-				this.OnDateVettingCompletedChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerApplicationIsComplete", DbType="Bit")]
-	public System.Nullable<bool> VolunteerApplicationIsComplete
-	{
-		get
-		{
-			return this._VolunteerApplicationIsComplete;
-		}
-		set
-		{
-			if ((this._VolunteerApplicationIsComplete != value))
-			{
-				this.OnVolunteerApplicationIsCompleteChanging(value);
-				this.SendPropertyChanging();
-				this._VolunteerApplicationIsComplete = value;
-				this.SendPropertyChanged("VolunteerApplicationIsComplete");
-				this.OnVolunteerApplicationIsCompleteChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerApplicationDate", DbType="DateTime")]
-	public System.Nullable<System.DateTime> VolunteerApplicationDate
-	{
-		get
-		{
-			return this._VolunteerApplicationDate;
-		}
-		set
-		{
-			if ((this._VolunteerApplicationDate != value))
-			{
-				this.OnVolunteerApplicationDateChanging(value);
-				this.SendPropertyChanging();
-				this._VolunteerApplicationDate = value;
-				this.SendPropertyChanged("VolunteerApplicationDate");
-				this.OnVolunteerApplicationDateChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhotoId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> PhotoId
-	{
-		get
-		{
-			return this._PhotoId;
-		}
-		set
-		{
-			if ((this._PhotoId != value))
-			{
-				this.OnPhotoIdChanging(value);
-				this.SendPropertyChanging();
-				this._PhotoId = value;
-				this.SendPropertyChanged("PhotoId");
-				this.OnPhotoIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AmazonWishListURL", DbType="VarChar(1000)")]
-	public string AmazonWishListURL
-	{
-		get
-		{
-			return this._AmazonWishListURL;
-		}
-		set
-		{
-			if ((this._AmazonWishListURL != value))
-			{
-				this.OnAmazonWishListURLChanging(value);
-				this.SendPropertyChanging();
-				this._AmazonWishListURL = value;
-				this.SendPropertyChanged("AmazonWishListURL");
-				this.OnAmazonWishListURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowOnWebsite", DbType="Bit")]
-	public System.Nullable<bool> ShowOnWebsite
-	{
-		get
-		{
-			return this._ShowOnWebsite;
-		}
-		set
-		{
-			if ((this._ShowOnWebsite != value))
-			{
-				this.OnShowOnWebsiteChanging(value);
-				this.SendPropertyChanging();
-				this._ShowOnWebsite = value;
-				this.SendPropertyChanged("ShowOnWebsite");
-				this.OnShowOnWebsiteChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HideUserActionModal", DbType="DateTime")]
-	public System.Nullable<System.DateTime> HideUserActionModal
-	{
-		get
-		{
-			return this._HideUserActionModal;
-		}
-		set
-		{
-			if ((this._HideUserActionModal != value))
-			{
-				this.OnHideUserActionModalChanging(value);
-				this.SendPropertyChanging();
-				this._HideUserActionModal = value;
-				this.SendPropertyChanged("HideUserActionModal");
-				this.OnHideUserActionModalChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDisasterReadyCertified", DbType="Bit NOT NULL")]
-	public bool IsDisasterReadyCertified
-	{
-		get
-		{
-			return this._IsDisasterReadyCertified;
-		}
-		set
-		{
-			if ((this._IsDisasterReadyCertified != value))
-			{
-				this.OnIsDisasterReadyCertifiedChanging(value);
-				this.SendPropertyChanging();
-				this._IsDisasterReadyCertified = value;
-				this.SendPropertyChanged("IsDisasterReadyCertified");
-				this.OnIsDisasterReadyCertifiedChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StabilityVerifiedDate", DbType="DateTime")]
-	public System.Nullable<System.DateTime> StabilityVerifiedDate
-	{
-		get
-		{
-			return this._StabilityVerifiedDate;
-		}
-		set
-		{
-			if ((this._StabilityVerifiedDate != value))
-			{
-				this.OnStabilityVerifiedDateChanging(value);
-				this.SendPropertyChanging();
-				this._StabilityVerifiedDate = value;
-				this.SendPropertyChanged("StabilityVerifiedDate");
-				this.OnStabilityVerifiedDateChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Profile_ProfileAddress", Storage="_ProfileAddresses", ThisKey="ProfileId", OtherKey="ProfileId")]
-	public EntitySet<ProfileAddress> ProfileAddresses
-	{
-		get
-		{
-			return this._ProfileAddresses;
-		}
-		set
-		{
-			this._ProfileAddresses.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Profile", Storage="_aspnet_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
-	public aspnet_User aspnet_User
-	{
-		get
-		{
-			return this._aspnet_User.Entity;
-		}
-		set
-		{
-			aspnet_User previousValue = this._aspnet_User.Entity;
-			if (((previousValue != value) 
-						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._aspnet_User.Entity = null;
-					previousValue.Profiles.Remove(this);
-				}
-				this._aspnet_User.Entity = value;
-				if ((value != null))
-				{
-					value.Profiles.Add(this);
-					this._UserId = value.UserId;
-				}
-				else
-				{
-					this._UserId = default(System.Guid);
-				}
-				this.SendPropertyChanged("aspnet_User");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-	
-	private void attach_ProfileAddresses(ProfileAddress entity)
-	{
-		this.SendPropertyChanging();
-		entity.Profile = this;
-	}
-	
-	private void detach_ProfileAddresses(ProfileAddress entity)
-	{
-		this.SendPropertyChanging();
-		entity.Profile = null;
-	}
-}
-
 [global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.UserOrganization")]
 public partial class UserOrganization : INotifyPropertyChanging, INotifyPropertyChanged
 {
@@ -49300,6 +48305,1049 @@ public partial class Address : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this.SendPropertyChanging();
 		entity.Address = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Profile")]
+public partial class Profile : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _ProfileId;
+	
+	private int _ProfileNumber;
+	
+	private string _Firstname;
+	
+	private string _Lastname;
+	
+	private string _PhoneNumber;
+	
+	private string _Address;
+	
+	private string _City;
+	
+	private string _State;
+	
+	private string _Zip;
+	
+	private System.Nullable<bool> _ReceiveDeploymentSMS;
+	
+	private string _ContactMethod;
+	
+	private System.Guid _UserId;
+	
+	private System.Nullable<System.Guid> _DefaultEventId;
+	
+	private string _VolunteerReliefMoniker;
+	
+	private string _Description;
+	
+	private string _DatesAvailable;
+	
+	private string _NumberOfDaysAvailable;
+	
+	private string _PreviousVolunteerExperience;
+	
+	private System.Nullable<int> _Age;
+	
+	private string _ZelloName;
+	
+	private string _Title;
+	
+	private string _Photo;
+	
+	private System.Nullable<bool> _VettingActive;
+	
+	private System.Nullable<bool> _VettingComplete;
+	
+	private System.Nullable<bool> _PassedVetting;
+	
+	private System.Nullable<System.Guid> _VettedBy;
+	
+	private string _VettingNotes;
+	
+	private System.Nullable<System.DateTime> _DateVettingStarted;
+	
+	private System.Nullable<System.DateTime> _DateVettingCompleted;
+	
+	private System.Nullable<bool> _VolunteerApplicationIsComplete;
+	
+	private System.Nullable<System.DateTime> _VolunteerApplicationDate;
+	
+	private System.Nullable<System.Guid> _PhotoId;
+	
+	private string _AmazonWishListURL;
+	
+	private System.Nullable<bool> _ShowOnWebsite;
+	
+	private System.Nullable<System.DateTime> _HideUserActionModal;
+	
+	private bool _IsDisasterReadyCertified;
+	
+	private System.Nullable<System.DateTime> _StabilityVerifiedDate;
+	
+	private bool _ReceiveSMSNotifications;
+	
+	private bool _ReceiveEmailNotifications;
+	
+	private EntitySet<ProfileAddress> _ProfileAddresses;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnProfileIdChanging(System.Guid value);
+    partial void OnProfileIdChanged();
+    partial void OnProfileNumberChanging(int value);
+    partial void OnProfileNumberChanged();
+    partial void OnFirstnameChanging(string value);
+    partial void OnFirstnameChanged();
+    partial void OnLastnameChanging(string value);
+    partial void OnLastnameChanged();
+    partial void OnPhoneNumberChanging(string value);
+    partial void OnPhoneNumberChanged();
+    partial void OnAddressChanging(string value);
+    partial void OnAddressChanged();
+    partial void OnCityChanging(string value);
+    partial void OnCityChanged();
+    partial void OnStateChanging(string value);
+    partial void OnStateChanged();
+    partial void OnZipChanging(string value);
+    partial void OnZipChanged();
+    partial void OnReceiveDeploymentSMSChanging(System.Nullable<bool> value);
+    partial void OnReceiveDeploymentSMSChanged();
+    partial void OnContactMethodChanging(string value);
+    partial void OnContactMethodChanged();
+    partial void OnUserIdChanging(System.Guid value);
+    partial void OnUserIdChanged();
+    partial void OnDefaultEventIdChanging(System.Nullable<System.Guid> value);
+    partial void OnDefaultEventIdChanged();
+    partial void OnVolunteerReliefMonikerChanging(string value);
+    partial void OnVolunteerReliefMonikerChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnDatesAvailableChanging(string value);
+    partial void OnDatesAvailableChanged();
+    partial void OnNumberOfDaysAvailableChanging(string value);
+    partial void OnNumberOfDaysAvailableChanged();
+    partial void OnPreviousVolunteerExperienceChanging(string value);
+    partial void OnPreviousVolunteerExperienceChanged();
+    partial void OnAgeChanging(System.Nullable<int> value);
+    partial void OnAgeChanged();
+    partial void OnZelloNameChanging(string value);
+    partial void OnZelloNameChanged();
+    partial void OnTitleChanging(string value);
+    partial void OnTitleChanged();
+    partial void OnPhotoChanging(string value);
+    partial void OnPhotoChanged();
+    partial void OnVettingActiveChanging(System.Nullable<bool> value);
+    partial void OnVettingActiveChanged();
+    partial void OnVettingCompleteChanging(System.Nullable<bool> value);
+    partial void OnVettingCompleteChanged();
+    partial void OnPassedVettingChanging(System.Nullable<bool> value);
+    partial void OnPassedVettingChanged();
+    partial void OnVettedByChanging(System.Nullable<System.Guid> value);
+    partial void OnVettedByChanged();
+    partial void OnVettingNotesChanging(string value);
+    partial void OnVettingNotesChanged();
+    partial void OnDateVettingStartedChanging(System.Nullable<System.DateTime> value);
+    partial void OnDateVettingStartedChanged();
+    partial void OnDateVettingCompletedChanging(System.Nullable<System.DateTime> value);
+    partial void OnDateVettingCompletedChanged();
+    partial void OnVolunteerApplicationIsCompleteChanging(System.Nullable<bool> value);
+    partial void OnVolunteerApplicationIsCompleteChanged();
+    partial void OnVolunteerApplicationDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnVolunteerApplicationDateChanged();
+    partial void OnPhotoIdChanging(System.Nullable<System.Guid> value);
+    partial void OnPhotoIdChanged();
+    partial void OnAmazonWishListURLChanging(string value);
+    partial void OnAmazonWishListURLChanged();
+    partial void OnShowOnWebsiteChanging(System.Nullable<bool> value);
+    partial void OnShowOnWebsiteChanged();
+    partial void OnHideUserActionModalChanging(System.Nullable<System.DateTime> value);
+    partial void OnHideUserActionModalChanged();
+    partial void OnIsDisasterReadyCertifiedChanging(bool value);
+    partial void OnIsDisasterReadyCertifiedChanged();
+    partial void OnStabilityVerifiedDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnStabilityVerifiedDateChanged();
+    partial void OnReceiveSMSNotificationsChanging(bool value);
+    partial void OnReceiveSMSNotificationsChanged();
+    partial void OnReceiveEmailNotificationsChanging(bool value);
+    partial void OnReceiveEmailNotificationsChanged();
+    #endregion
+	
+	public Profile()
+	{
+		this._ProfileAddresses = new EntitySet<ProfileAddress>(new Action<ProfileAddress>(this.attach_ProfileAddresses), new Action<ProfileAddress>(this.detach_ProfileAddresses));
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProfileId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid ProfileId
+	{
+		get
+		{
+			return this._ProfileId;
+		}
+		set
+		{
+			if ((this._ProfileId != value))
+			{
+				this.OnProfileIdChanging(value);
+				this.SendPropertyChanging();
+				this._ProfileId = value;
+				this.SendPropertyChanged("ProfileId");
+				this.OnProfileIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProfileNumber", AutoSync=AutoSync.Always, DbType="Int NOT NULL IDENTITY", IsDbGenerated=true)]
+	public int ProfileNumber
+	{
+		get
+		{
+			return this._ProfileNumber;
+		}
+		set
+		{
+			if ((this._ProfileNumber != value))
+			{
+				this.OnProfileNumberChanging(value);
+				this.SendPropertyChanging();
+				this._ProfileNumber = value;
+				this.SendPropertyChanged("ProfileNumber");
+				this.OnProfileNumberChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Firstname", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+	public string Firstname
+	{
+		get
+		{
+			return this._Firstname;
+		}
+		set
+		{
+			if ((this._Firstname != value))
+			{
+				this.OnFirstnameChanging(value);
+				this.SendPropertyChanging();
+				this._Firstname = value;
+				this.SendPropertyChanged("Firstname");
+				this.OnFirstnameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Lastname", DbType="VarChar(50)")]
+	public string Lastname
+	{
+		get
+		{
+			return this._Lastname;
+		}
+		set
+		{
+			if ((this._Lastname != value))
+			{
+				this.OnLastnameChanging(value);
+				this.SendPropertyChanging();
+				this._Lastname = value;
+				this.SendPropertyChanged("Lastname");
+				this.OnLastnameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="VarChar(20)")]
+	public string PhoneNumber
+	{
+		get
+		{
+			return this._PhoneNumber;
+		}
+		set
+		{
+			if ((this._PhoneNumber != value))
+			{
+				this.OnPhoneNumberChanging(value);
+				this.SendPropertyChanging();
+				this._PhoneNumber = value;
+				this.SendPropertyChanged("PhoneNumber");
+				this.OnPhoneNumberChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="VarChar(500)")]
+	public string Address
+	{
+		get
+		{
+			return this._Address;
+		}
+		set
+		{
+			if ((this._Address != value))
+			{
+				this.OnAddressChanging(value);
+				this.SendPropertyChanging();
+				this._Address = value;
+				this.SendPropertyChanged("Address");
+				this.OnAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_City", DbType="VarChar(50)")]
+	public string City
+	{
+		get
+		{
+			return this._City;
+		}
+		set
+		{
+			if ((this._City != value))
+			{
+				this.OnCityChanging(value);
+				this.SendPropertyChanging();
+				this._City = value;
+				this.SendPropertyChanged("City");
+				this.OnCityChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="VarChar(50)")]
+	public string State
+	{
+		get
+		{
+			return this._State;
+		}
+		set
+		{
+			if ((this._State != value))
+			{
+				this.OnStateChanging(value);
+				this.SendPropertyChanging();
+				this._State = value;
+				this.SendPropertyChanged("State");
+				this.OnStateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Zip", DbType="VarChar(10)")]
+	public string Zip
+	{
+		get
+		{
+			return this._Zip;
+		}
+		set
+		{
+			if ((this._Zip != value))
+			{
+				this.OnZipChanging(value);
+				this.SendPropertyChanging();
+				this._Zip = value;
+				this.SendPropertyChanged("Zip");
+				this.OnZipChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceiveDeploymentSMS", DbType="Bit")]
+	public System.Nullable<bool> ReceiveDeploymentSMS
+	{
+		get
+		{
+			return this._ReceiveDeploymentSMS;
+		}
+		set
+		{
+			if ((this._ReceiveDeploymentSMS != value))
+			{
+				this.OnReceiveDeploymentSMSChanging(value);
+				this.SendPropertyChanging();
+				this._ReceiveDeploymentSMS = value;
+				this.SendPropertyChanged("ReceiveDeploymentSMS");
+				this.OnReceiveDeploymentSMSChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ContactMethod", DbType="VarChar(50)")]
+	public string ContactMethod
+	{
+		get
+		{
+			return this._ContactMethod;
+		}
+		set
+		{
+			if ((this._ContactMethod != value))
+			{
+				this.OnContactMethodChanging(value);
+				this.SendPropertyChanging();
+				this._ContactMethod = value;
+				this.SendPropertyChanged("ContactMethod");
+				this.OnContactMethodChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultEventId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> DefaultEventId
+	{
+		get
+		{
+			return this._DefaultEventId;
+		}
+		set
+		{
+			if ((this._DefaultEventId != value))
+			{
+				this.OnDefaultEventIdChanging(value);
+				this.SendPropertyChanging();
+				this._DefaultEventId = value;
+				this.SendPropertyChanged("DefaultEventId");
+				this.OnDefaultEventIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerReliefMoniker", DbType="VarChar(15)")]
+	public string VolunteerReliefMoniker
+	{
+		get
+		{
+			return this._VolunteerReliefMoniker;
+		}
+		set
+		{
+			if ((this._VolunteerReliefMoniker != value))
+			{
+				this.OnVolunteerReliefMonikerChanging(value);
+				this.SendPropertyChanging();
+				this._VolunteerReliefMoniker = value;
+				this.SendPropertyChanged("VolunteerReliefMoniker");
+				this.OnVolunteerReliefMonikerChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(MAX)")]
+	public string Description
+	{
+		get
+		{
+			return this._Description;
+		}
+		set
+		{
+			if ((this._Description != value))
+			{
+				this.OnDescriptionChanging(value);
+				this.SendPropertyChanging();
+				this._Description = value;
+				this.SendPropertyChanged("Description");
+				this.OnDescriptionChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DatesAvailable", DbType="VarChar(200)")]
+	public string DatesAvailable
+	{
+		get
+		{
+			return this._DatesAvailable;
+		}
+		set
+		{
+			if ((this._DatesAvailable != value))
+			{
+				this.OnDatesAvailableChanging(value);
+				this.SendPropertyChanging();
+				this._DatesAvailable = value;
+				this.SendPropertyChanged("DatesAvailable");
+				this.OnDatesAvailableChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberOfDaysAvailable", DbType="VarChar(5)")]
+	public string NumberOfDaysAvailable
+	{
+		get
+		{
+			return this._NumberOfDaysAvailable;
+		}
+		set
+		{
+			if ((this._NumberOfDaysAvailable != value))
+			{
+				this.OnNumberOfDaysAvailableChanging(value);
+				this.SendPropertyChanging();
+				this._NumberOfDaysAvailable = value;
+				this.SendPropertyChanged("NumberOfDaysAvailable");
+				this.OnNumberOfDaysAvailableChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PreviousVolunteerExperience", DbType="VarChar(MAX)")]
+	public string PreviousVolunteerExperience
+	{
+		get
+		{
+			return this._PreviousVolunteerExperience;
+		}
+		set
+		{
+			if ((this._PreviousVolunteerExperience != value))
+			{
+				this.OnPreviousVolunteerExperienceChanging(value);
+				this.SendPropertyChanging();
+				this._PreviousVolunteerExperience = value;
+				this.SendPropertyChanged("PreviousVolunteerExperience");
+				this.OnPreviousVolunteerExperienceChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Age", DbType="Int")]
+	public System.Nullable<int> Age
+	{
+		get
+		{
+			return this._Age;
+		}
+		set
+		{
+			if ((this._Age != value))
+			{
+				this.OnAgeChanging(value);
+				this.SendPropertyChanging();
+				this._Age = value;
+				this.SendPropertyChanged("Age");
+				this.OnAgeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ZelloName", DbType="VarChar(50)")]
+	public string ZelloName
+	{
+		get
+		{
+			return this._ZelloName;
+		}
+		set
+		{
+			if ((this._ZelloName != value))
+			{
+				this.OnZelloNameChanging(value);
+				this.SendPropertyChanging();
+				this._ZelloName = value;
+				this.SendPropertyChanged("ZelloName");
+				this.OnZelloNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Title", DbType="VarChar(500)")]
+	public string Title
+	{
+		get
+		{
+			return this._Title;
+		}
+		set
+		{
+			if ((this._Title != value))
+			{
+				this.OnTitleChanging(value);
+				this.SendPropertyChanging();
+				this._Title = value;
+				this.SendPropertyChanged("Title");
+				this.OnTitleChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Photo", DbType="VarChar(500)")]
+	public string Photo
+	{
+		get
+		{
+			return this._Photo;
+		}
+		set
+		{
+			if ((this._Photo != value))
+			{
+				this.OnPhotoChanging(value);
+				this.SendPropertyChanging();
+				this._Photo = value;
+				this.SendPropertyChanged("Photo");
+				this.OnPhotoChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingActive", DbType="Bit")]
+	public System.Nullable<bool> VettingActive
+	{
+		get
+		{
+			return this._VettingActive;
+		}
+		set
+		{
+			if ((this._VettingActive != value))
+			{
+				this.OnVettingActiveChanging(value);
+				this.SendPropertyChanging();
+				this._VettingActive = value;
+				this.SendPropertyChanged("VettingActive");
+				this.OnVettingActiveChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingComplete", DbType="Bit")]
+	public System.Nullable<bool> VettingComplete
+	{
+		get
+		{
+			return this._VettingComplete;
+		}
+		set
+		{
+			if ((this._VettingComplete != value))
+			{
+				this.OnVettingCompleteChanging(value);
+				this.SendPropertyChanging();
+				this._VettingComplete = value;
+				this.SendPropertyChanged("VettingComplete");
+				this.OnVettingCompleteChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PassedVetting", DbType="Bit")]
+	public System.Nullable<bool> PassedVetting
+	{
+		get
+		{
+			return this._PassedVetting;
+		}
+		set
+		{
+			if ((this._PassedVetting != value))
+			{
+				this.OnPassedVettingChanging(value);
+				this.SendPropertyChanging();
+				this._PassedVetting = value;
+				this.SendPropertyChanged("PassedVetting");
+				this.OnPassedVettingChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettedBy", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> VettedBy
+	{
+		get
+		{
+			return this._VettedBy;
+		}
+		set
+		{
+			if ((this._VettedBy != value))
+			{
+				this.OnVettedByChanging(value);
+				this.SendPropertyChanging();
+				this._VettedBy = value;
+				this.SendPropertyChanged("VettedBy");
+				this.OnVettedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingNotes", DbType="VarChar(1000)")]
+	public string VettingNotes
+	{
+		get
+		{
+			return this._VettingNotes;
+		}
+		set
+		{
+			if ((this._VettingNotes != value))
+			{
+				this.OnVettingNotesChanging(value);
+				this.SendPropertyChanging();
+				this._VettingNotes = value;
+				this.SendPropertyChanged("VettingNotes");
+				this.OnVettingNotesChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateVettingStarted", DbType="DateTime")]
+	public System.Nullable<System.DateTime> DateVettingStarted
+	{
+		get
+		{
+			return this._DateVettingStarted;
+		}
+		set
+		{
+			if ((this._DateVettingStarted != value))
+			{
+				this.OnDateVettingStartedChanging(value);
+				this.SendPropertyChanging();
+				this._DateVettingStarted = value;
+				this.SendPropertyChanged("DateVettingStarted");
+				this.OnDateVettingStartedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateVettingCompleted", DbType="DateTime")]
+	public System.Nullable<System.DateTime> DateVettingCompleted
+	{
+		get
+		{
+			return this._DateVettingCompleted;
+		}
+		set
+		{
+			if ((this._DateVettingCompleted != value))
+			{
+				this.OnDateVettingCompletedChanging(value);
+				this.SendPropertyChanging();
+				this._DateVettingCompleted = value;
+				this.SendPropertyChanged("DateVettingCompleted");
+				this.OnDateVettingCompletedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerApplicationIsComplete", DbType="Bit")]
+	public System.Nullable<bool> VolunteerApplicationIsComplete
+	{
+		get
+		{
+			return this._VolunteerApplicationIsComplete;
+		}
+		set
+		{
+			if ((this._VolunteerApplicationIsComplete != value))
+			{
+				this.OnVolunteerApplicationIsCompleteChanging(value);
+				this.SendPropertyChanging();
+				this._VolunteerApplicationIsComplete = value;
+				this.SendPropertyChanged("VolunteerApplicationIsComplete");
+				this.OnVolunteerApplicationIsCompleteChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VolunteerApplicationDate", DbType="DateTime")]
+	public System.Nullable<System.DateTime> VolunteerApplicationDate
+	{
+		get
+		{
+			return this._VolunteerApplicationDate;
+		}
+		set
+		{
+			if ((this._VolunteerApplicationDate != value))
+			{
+				this.OnVolunteerApplicationDateChanging(value);
+				this.SendPropertyChanging();
+				this._VolunteerApplicationDate = value;
+				this.SendPropertyChanged("VolunteerApplicationDate");
+				this.OnVolunteerApplicationDateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhotoId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> PhotoId
+	{
+		get
+		{
+			return this._PhotoId;
+		}
+		set
+		{
+			if ((this._PhotoId != value))
+			{
+				this.OnPhotoIdChanging(value);
+				this.SendPropertyChanging();
+				this._PhotoId = value;
+				this.SendPropertyChanged("PhotoId");
+				this.OnPhotoIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AmazonWishListURL", DbType="VarChar(1000)")]
+	public string AmazonWishListURL
+	{
+		get
+		{
+			return this._AmazonWishListURL;
+		}
+		set
+		{
+			if ((this._AmazonWishListURL != value))
+			{
+				this.OnAmazonWishListURLChanging(value);
+				this.SendPropertyChanging();
+				this._AmazonWishListURL = value;
+				this.SendPropertyChanged("AmazonWishListURL");
+				this.OnAmazonWishListURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowOnWebsite", DbType="Bit")]
+	public System.Nullable<bool> ShowOnWebsite
+	{
+		get
+		{
+			return this._ShowOnWebsite;
+		}
+		set
+		{
+			if ((this._ShowOnWebsite != value))
+			{
+				this.OnShowOnWebsiteChanging(value);
+				this.SendPropertyChanging();
+				this._ShowOnWebsite = value;
+				this.SendPropertyChanged("ShowOnWebsite");
+				this.OnShowOnWebsiteChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HideUserActionModal", DbType="DateTime")]
+	public System.Nullable<System.DateTime> HideUserActionModal
+	{
+		get
+		{
+			return this._HideUserActionModal;
+		}
+		set
+		{
+			if ((this._HideUserActionModal != value))
+			{
+				this.OnHideUserActionModalChanging(value);
+				this.SendPropertyChanging();
+				this._HideUserActionModal = value;
+				this.SendPropertyChanged("HideUserActionModal");
+				this.OnHideUserActionModalChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDisasterReadyCertified", DbType="Bit NOT NULL")]
+	public bool IsDisasterReadyCertified
+	{
+		get
+		{
+			return this._IsDisasterReadyCertified;
+		}
+		set
+		{
+			if ((this._IsDisasterReadyCertified != value))
+			{
+				this.OnIsDisasterReadyCertifiedChanging(value);
+				this.SendPropertyChanging();
+				this._IsDisasterReadyCertified = value;
+				this.SendPropertyChanged("IsDisasterReadyCertified");
+				this.OnIsDisasterReadyCertifiedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_StabilityVerifiedDate", DbType="DateTime")]
+	public System.Nullable<System.DateTime> StabilityVerifiedDate
+	{
+		get
+		{
+			return this._StabilityVerifiedDate;
+		}
+		set
+		{
+			if ((this._StabilityVerifiedDate != value))
+			{
+				this.OnStabilityVerifiedDateChanging(value);
+				this.SendPropertyChanging();
+				this._StabilityVerifiedDate = value;
+				this.SendPropertyChanged("StabilityVerifiedDate");
+				this.OnStabilityVerifiedDateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceiveSMSNotifications", DbType="Bit NOT NULL")]
+	public bool ReceiveSMSNotifications
+	{
+		get
+		{
+			return this._ReceiveSMSNotifications;
+		}
+		set
+		{
+			if ((this._ReceiveSMSNotifications != value))
+			{
+				this.OnReceiveSMSNotificationsChanging(value);
+				this.SendPropertyChanging();
+				this._ReceiveSMSNotifications = value;
+				this.SendPropertyChanged("ReceiveSMSNotifications");
+				this.OnReceiveSMSNotificationsChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceiveEmailNotifications", DbType="Bit NOT NULL")]
+	public bool ReceiveEmailNotifications
+	{
+		get
+		{
+			return this._ReceiveEmailNotifications;
+		}
+		set
+		{
+			if ((this._ReceiveEmailNotifications != value))
+			{
+				this.OnReceiveEmailNotificationsChanging(value);
+				this.SendPropertyChanging();
+				this._ReceiveEmailNotifications = value;
+				this.SendPropertyChanged("ReceiveEmailNotifications");
+				this.OnReceiveEmailNotificationsChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Profile_ProfileAddress", Storage="_ProfileAddresses", ThisKey="ProfileId", OtherKey="ProfileId")]
+	public EntitySet<ProfileAddress> ProfileAddresses
+	{
+		get
+		{
+			return this._ProfileAddresses;
+		}
+		set
+		{
+			this._ProfileAddresses.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Profile", Storage="_aspnet_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.Profiles.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.Profiles.Add(this);
+					this._UserId = value.UserId;
+				}
+				else
+				{
+					this._UserId = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_ProfileAddresses(ProfileAddress entity)
+	{
+		this.SendPropertyChanging();
+		entity.Profile = this;
+	}
+	
+	private void detach_ProfileAddresses(ProfileAddress entity)
+	{
+		this.SendPropertyChanging();
+		entity.Profile = null;
 	}
 }
 
