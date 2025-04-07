@@ -3,7 +3,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <link rel="stylesheet" href="/Homer/vendor/sweetalert/lib/sweet-alert.css" />
-	<script src="/Homer/vendor/iCheck/icheck.min.js"></script>	<script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
+	<script src="/Homer/vendor/iCheck/icheck.min.js"></script>
+	<script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
 	<script>
 		var address;
 		var city;
