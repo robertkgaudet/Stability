@@ -1,4 +1,5 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="CountyInfo.aspx.cs" Inherits="V1_CountyInfo" %>
+
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <script src="/Homer/vendor/fooTable/dist/footable.all.min.js"></script>
@@ -38,8 +39,10 @@
                                 runat="server" Text="Edit"></asp:HyperLink>
                         </div>
                         <asp:Label ID="lblStateInformation" runat="server"></asp:Label>
-                        <div id="divInfoMessage" runat="server" visible="true">Detailed county information has
-                            not yet been entered.</div>
+                        <div id="divInfoMessage" runat="server" visible="true">
+                            Detailed county information has
+                            not yet been entered.
+                        </div>
                     </div>
                     <div class="panel-body" id="divInfo" runat="server" visible="false">
                         <div class="form-group">
@@ -92,8 +95,11 @@
                                 </HeaderTemplate>
                                 <ItemTemplate>
                                     <tr>
-
-                                        <td><%# Eval("LocationName") %></td>
+                                        <td>
+                                            <a href='/V1/Location.aspx?locationProfileId=<%# Eval("LocationProfileId") %>' class="EventLink">
+                                                <%# Eval("LocationName") %>
+                                            </a>
+                                        </td>
                                         <td><%# Eval("FullAddress") %></td>
                                         <td><%# Eval("Description") %></td>
                                         <td><%# Eval("PointOfContact") ?? "Not Provided" %></td>
@@ -101,7 +107,6 @@
                                         <td><%# Eval("Email") ?? "N/A" %></td>
                                     </tr>
                                 </ItemTemplate>
-
                                 <FooterTemplate>
                                     </tbody>
                                         <tfoot>
