@@ -1603,6 +1603,13 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId, status, locationTypeId, locationParentTypeId);
 		return ((ISingleResult<MapStabilityLocationsResult>)(result.ReturnValue));
 	}
+	
+	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetPeopleList")]
+	public ISingleResult<GetPeopleListResult> GetPeopleList([global::System.Data.Linq.Mapping.ParameterAttribute(Name="OrganizationId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> organizationId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="StartDate", DbType="Date")] System.Nullable<System.DateTime> startDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="EndDate", DbType="Date")] System.Nullable<System.DateTime> endDate, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SelectedSkills", DbType="VarChar(MAX)")] string selectedSkills, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="SelectedResources", DbType="VarChar(MAX)")] string selectedResources, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="NameSearchTerm", DbType="VarChar(255)")] string nameSearchTerm, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="VarChar(100)")] string position, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Float")] System.Nullable<double> lat, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Float")] System.Nullable<double> lng, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="Float")] System.Nullable<double> radius, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="EmailConnected", DbType="Bit")] System.Nullable<bool> emailConnected, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="IsVetted", DbType="Bit")] System.Nullable<bool> isVetted, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="OptedSMS", DbType="Bit")] System.Nullable<bool> optedSMS)
+	{
+		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), organizationId, startDate, endDate, selectedSkills, selectedResources, nameSearchTerm, position, lat, lng, radius, emailConnected, isVetted, optedSMS);
+		return ((ISingleResult<GetPeopleListResult>)(result.ReturnValue));
+	}
 }
 
 [global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.aspnet_Membership")]
@@ -49672,6 +49679,356 @@ public partial class MapStabilityLocationsResult
 			if ((this._Column1 != value))
 			{
 				this._Column1 = value;
+			}
+		}
+	}
+}
+
+public partial class GetPeopleListResult
+{
+	
+	private string _Firstname;
+	
+	private string _Lastname;
+	
+	private System.DateTime _CreateDate;
+	
+	private string _Description;
+	
+	private string _LoweredEmail;
+	
+	private string _PhoneNumber;
+	
+	private System.Guid _UserId;
+	
+	private System.Nullable<System.DateTime> _DateVettingCompleted;
+	
+	private System.Nullable<System.DateTime> _DateVettingStarted;
+	
+	private string _VettingNotes;
+	
+	private System.Nullable<bool> _VettingActive;
+	
+	private System.Nullable<bool> _VettingComplete;
+	
+	private System.Nullable<bool> _PassedVetting;
+	
+	private string _Title;
+	
+	private string _ZelloName;
+	
+	private System.DateTime _LastActivityDate;
+	
+	private System.DateTime _LastLoginDate;
+	
+	private bool _IsApproved;
+	
+	private bool _ReceiveSMSNotifications;
+	
+	public GetPeopleListResult()
+	{
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Firstname", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+	public string Firstname
+	{
+		get
+		{
+			return this._Firstname;
+		}
+		set
+		{
+			if ((this._Firstname != value))
+			{
+				this._Firstname = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Lastname", DbType="VarChar(50)")]
+	public string Lastname
+	{
+		get
+		{
+			return this._Lastname;
+		}
+		set
+		{
+			if ((this._Lastname != value))
+			{
+				this._Lastname = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreateDate", DbType="DateTime NOT NULL")]
+	public System.DateTime CreateDate
+	{
+		get
+		{
+			return this._CreateDate;
+		}
+		set
+		{
+			if ((this._CreateDate != value))
+			{
+				this._CreateDate = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="VarChar(MAX)")]
+	public string Description
+	{
+		get
+		{
+			return this._Description;
+		}
+		set
+		{
+			if ((this._Description != value))
+			{
+				this._Description = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LoweredEmail", DbType="NVarChar(256)")]
+	public string LoweredEmail
+	{
+		get
+		{
+			return this._LoweredEmail;
+		}
+		set
+		{
+			if ((this._LoweredEmail != value))
+			{
+				this._LoweredEmail = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PhoneNumber", DbType="VarChar(20)")]
+	public string PhoneNumber
+	{
+		get
+		{
+			return this._PhoneNumber;
+		}
+		set
+		{
+			if ((this._PhoneNumber != value))
+			{
+				this._PhoneNumber = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				this._UserId = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateVettingCompleted", DbType="DateTime")]
+	public System.Nullable<System.DateTime> DateVettingCompleted
+	{
+		get
+		{
+			return this._DateVettingCompleted;
+		}
+		set
+		{
+			if ((this._DateVettingCompleted != value))
+			{
+				this._DateVettingCompleted = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateVettingStarted", DbType="DateTime")]
+	public System.Nullable<System.DateTime> DateVettingStarted
+	{
+		get
+		{
+			return this._DateVettingStarted;
+		}
+		set
+		{
+			if ((this._DateVettingStarted != value))
+			{
+				this._DateVettingStarted = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingNotes", DbType="VarChar(1000)")]
+	public string VettingNotes
+	{
+		get
+		{
+			return this._VettingNotes;
+		}
+		set
+		{
+			if ((this._VettingNotes != value))
+			{
+				this._VettingNotes = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingActive", DbType="Bit")]
+	public System.Nullable<bool> VettingActive
+	{
+		get
+		{
+			return this._VettingActive;
+		}
+		set
+		{
+			if ((this._VettingActive != value))
+			{
+				this._VettingActive = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VettingComplete", DbType="Bit")]
+	public System.Nullable<bool> VettingComplete
+	{
+		get
+		{
+			return this._VettingComplete;
+		}
+		set
+		{
+			if ((this._VettingComplete != value))
+			{
+				this._VettingComplete = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PassedVetting", DbType="Bit")]
+	public System.Nullable<bool> PassedVetting
+	{
+		get
+		{
+			return this._PassedVetting;
+		}
+		set
+		{
+			if ((this._PassedVetting != value))
+			{
+				this._PassedVetting = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Title", DbType="VarChar(500)")]
+	public string Title
+	{
+		get
+		{
+			return this._Title;
+		}
+		set
+		{
+			if ((this._Title != value))
+			{
+				this._Title = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ZelloName", DbType="VarChar(50)")]
+	public string ZelloName
+	{
+		get
+		{
+			return this._ZelloName;
+		}
+		set
+		{
+			if ((this._ZelloName != value))
+			{
+				this._ZelloName = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastActivityDate", DbType="DateTime NOT NULL")]
+	public System.DateTime LastActivityDate
+	{
+		get
+		{
+			return this._LastActivityDate;
+		}
+		set
+		{
+			if ((this._LastActivityDate != value))
+			{
+				this._LastActivityDate = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastLoginDate", DbType="DateTime NOT NULL")]
+	public System.DateTime LastLoginDate
+	{
+		get
+		{
+			return this._LastLoginDate;
+		}
+		set
+		{
+			if ((this._LastLoginDate != value))
+			{
+				this._LastLoginDate = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsApproved", DbType="Bit NOT NULL")]
+	public bool IsApproved
+	{
+		get
+		{
+			return this._IsApproved;
+		}
+		set
+		{
+			if ((this._IsApproved != value))
+			{
+				this._IsApproved = value;
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceiveSMSNotifications", DbType="Bit NOT NULL")]
+	public bool ReceiveSMSNotifications
+	{
+		get
+		{
+			return this._ReceiveSMSNotifications;
+		}
+		set
+		{
+			if ((this._ReceiveSMSNotifications != value))
+			{
+				this._ReceiveSMSNotifications = value;
 			}
 		}
 	}

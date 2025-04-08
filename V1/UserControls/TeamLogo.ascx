@@ -11,7 +11,7 @@
         margin-right: 2px;
     }
     .user-name {
-        margin-right: 0px;
+          margin-left: -8px;
         color: #050505;
         font-weight: bold;
         vertical-align: middle;

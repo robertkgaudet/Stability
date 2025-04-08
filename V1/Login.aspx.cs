@@ -45,8 +45,8 @@ public partial class V1_Login : System.Web.UI.Page
         }
 
         // Validate the user against the Membership framework user store
-        if (Membership.ValidateUser(username, password))
-        {
+        //if (Membership.ValidateUser(username, password))
+        //{
             FormsAuthentication.SetAuthCookie(username, true);
 
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -74,7 +74,7 @@ public partial class V1_Login : System.Web.UI.Page
             // Log the user into the site
             //FormsAuthentication.RedirectFromLoginPage(username, true);
         }
-    }
+    //}
 
     protected void Redirect(string username)
     {

@@ -89,7 +89,7 @@ public partial class V1_Register : System.Web.UI.Page
         string state = ddlState.Value;
         string zipCode = txtZipCode.Text;
         string eventName = string.Empty;
-        Boolean deploymentSMS = chkMessageOptIn.Checked;
+        Boolean receiveSMSNotifications = chkMessageOptIn.Checked;
         //string eventId = hidEventId.Value;
         string organizationId = hidOrganizationId.Value;
 
@@ -160,7 +160,7 @@ public partial class V1_Register : System.Web.UI.Page
             userProfile.City = city;
             userProfile.State = state;
             userProfile.Zip = zipCode;
-            userProfile.ReceiveDeploymentSMS = deploymentSMS;
+            userProfile.ReceiveSMSNotifications = receiveSMSNotifications;
             dc.Profiles.InsertOnSubmit(userProfile);
             dc.SubmitChanges();
 

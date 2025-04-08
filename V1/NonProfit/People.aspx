@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs"Inherits="V1_NonProfit_People" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
+
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
@@ -111,7 +112,7 @@
         }
 
         .justify-content-center {
-          /*  display: flex !important;*/
+            /*  display: flex !important;*/
             justify-content: center !important;
         }
 
@@ -130,15 +131,11 @@
             margin-bottom: 155px;
         }
 
-      /*  label {
+        /*  label {
             margin: 16px 0px 10px 10px;
             font-size: 17px;
         }
 */
-          #manageMemberModal .modal-body label,
-          #manageMemberModal .form-check-label {
-       font-weight: normal !important;
-       }
         #txtEmail {
             margin-right: 0px !important;
         }
@@ -151,6 +148,17 @@
             margin-left: 10px;
             margin-bottom: 90px;
         }
+      /*  <----- -------------/>*/
+      .custom-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #ccc;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+    margin-top:30px;
+  }
     </style>
     <script>
         var recipientsName;
@@ -276,7 +284,20 @@
                 allSelectedText: 'All Selected',
                 numberDisplayed: 2
             });
+            // PageRequestManager reference
+            var prm = Sys.WebForms.PageRequestManager.getInstance();
 
+            // Before async postback starts
+            prm.add_beginRequest(function () {
+                document.getElementById("loader").style.display = "block";
+                document.getElementById("tblVolunteers").style.display = "none";
+            });
+
+            // After async postback completes (this includes when Repeater's data is bound)
+            prm.add_endRequest(function () {
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("tblVolunteers").style.display = "table"; // or "block" based on your styling
+            });
         });
         var currentUserId = null;
         function setUserId(button) {
@@ -289,10 +310,12 @@
             return false;
         }
         function fetchUserData() {
+            debugger;
             if (!currentUserId) {
                 alert("User ID not set.");
                 return;
             }
+            $('#loader').show();
             $.ajax({
                 type: "GET",
                 url: "/V1/Handlers/UpdateMemberInfo.ashx",
@@ -300,7 +323,7 @@
                 dataType: "json",
                 success: function (response) {
                     if (response.success) {
-
+                        $('#loader').hide();
                         $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
                         $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
                         $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
@@ -308,6 +331,7 @@
                         $('#<%= chkManageTeamAdministrator.ClientID %>').prop('checked', response.makeTeamAdministrator);
                         console.log("User data fetched successfully:", response);
                     } else {
+                        $('#loader').hide();
                         alert("Failed to fetch user data.");
                     }
                 },
@@ -440,21 +464,25 @@
         $(document).ready(function () {
             // Function to handle the "Next" button click
             $(document).on("click", "#nextBtn", function () {
-                if (!$('#nextBtn').hasClass('disabled')) {
-                    var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
-                    var currentPage = Math.max(...$(".pagination .page-link").map(function () {
-                        return parseInt($(this).attr("tabindex")) || 0;
-                    }).get());
 
+                if (!$('#nextBtn').hasClass('disabled')) {
+                    debugger;
+                    var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
+                    // var currentPage = Math.max(...$(".pagination .page-link").map(function () {
+                    //   return parseInt($(this).attr("tabindex")) || 0;
+                    //}).get());
+                    var currentPage = parseInt($(".firstpn").eq(0).text()) || 0;
                     // Increment the current page number
-                    if (currentPage <= totalPages) {
+                    if (currentPage < totalPages - 3) {
 
                         // Update tabindex for each page link
+                        var updateIndex = 0;
                         $('.page-item a').each(function (index) {
-                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
+                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0" && updateIndex < 3) {
                                 $(this).attr('tabindex', index + currentPage - 2);
                                 $(this).text(index + currentPage - 2);
                                 $(this).attr("onclick", `triggerSearch(${(index + currentPage - 2)}); return false;`);
+                                updateIndex++;
                             }
                         });
 
@@ -465,32 +493,38 @@
                     }
 
                     // Disable Next button if on the last page
-                    if (currentPage == totalPages) {
+                    if (currentPage == totalPages - 4) {
                         $('#nextBtn').addClass('disabled');
+                        $(".dotpage").hide();
                     } else {
                         $('#nextBtn').removeClass('disabled');
+                        $(".dotpage").show();
                     }
                 }
             });
 
             // Function to handle the "Previous" button click
             $(document).on("click", "#previousBtn", function () {
+                debugger;
                 if (!$('#previousBtn').hasClass('disabled')) {
                     var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
-                    var currentPage = Math.max(...$(".pagination .page-link").map(function () {
-                        return parseInt($(this).attr("tabindex")) || 0;
-                    }).get());
+                    //var currentPage = Math.max(...$(".pagination .page-link").map(function () {
+                    //    return parseInt($(this).attr("tabindex")) || 0;
+                    //}).get());
+                    var currentPage = parseInt($(".firstpn").eq(0).text()) || 0;
                     // Decrease the current page number
                     var firstPage = 1 + currentPage - 4;
                     if (firstPage >= 1) {
 
 
                         // Update tabindex for each page link
+                        var updateIndex = 0;
                         $('.page-item a').each(function (index) {
-                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
+                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0" && updateIndex < 3) {
                                 $(this).attr('tabindex', index + currentPage - 4);
                                 $(this).text(index + currentPage - 4);
                                 $(this).attr("onclick", `triggerSearch(${(index + currentPage - 4)}); return false;`);
+                                updateIndex++;
                             }
                         });
 
@@ -503,8 +537,10 @@
                     }
                     if (firstPage == 1) {
                         $('#previousBtn').addClass('disabled');
+                        $(".dotpage").hide();
                     } else {
                         $('#previousBtn').removeClass('disabled');
+                        $(".dotpage").show();
                     }
                 }
 
@@ -513,8 +549,10 @@
 
 
         function triggerSearch(pn) {
+            debugger;
             // Set a value to the hidden field            
             document.getElementById('<%= currentPageValue.ClientID %>').value = pn; // Set custom value here
+            document.getElementById('firstpn').value = pn;
             // Remove "active" class from all <li> elements
             $(".pagination .page-item").removeClass("active");
 
@@ -578,11 +616,20 @@
                 $(".page-item").not("#previousBtn, #nextBtn").remove();
                 var newPageItem = ''
                 for (var i = 0; i < parseFloat(totalPage); i++) {
-                    if (i == 3) break;
-                    newPageItem += '<li class="page-item' + (i == 0 ? " active" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                    if (i < 3) {
+                        newPageItem += '<li class="page-item' + (i == 0 ? " active" : "") + (i == 2 ? " firstpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                    }
+                    else if (i > 3 && i <= 4) {
+                        newPageItem += '<li class="page-item disabled dotpage"><a class="page-link">...</a></li>';
+                    }
+
+                }
+                for (var i = Math.max(parseFloat(totalPage) - 3, 3), j = 0; i < parseFloat(totalPage); i++, j++) {
+
+                    newPageItem += '<li class="page-item' + (j == 0 ? " lastpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
                 }
                 if (newPageItem != '') $('#previousBtn').after(newPageItem);
-                if (totalPage <= 3) $('#nextBtn').addClass('disabled');
+                if (totalPage <= currentPage) $('#nextBtn').addClass('disabled');
                 else $('#nextBtn').removeClass('disabled');
             }
             else {
@@ -748,7 +795,8 @@
             ClientIDMode="Static" TextMode="MultiLine" ValidateRequestMode="Disabled" Rows="3"></asp:TextBox>
         <div class="input-group-append">
             <button type="button" class="ladda-button ladda-button-demo ladda-button-email btn btn-primary b2"
-                data-style="slide-right" onclick="sendEmail()">Send Email</button>
+                data-style="slide-right" onclick="sendEmail()">
+                Send Email</button>
         </div>
     </div>
     <div id="divSms" runat="server" class="input-group">
@@ -756,7 +804,8 @@
             rows="6" cols="95"></textarea>
         <div class="input-group-append">
             <button type="button" class="ladda-button ladda-button-demo ladda-button-sms btn btn-primary "
-                data-style="slide-right" onclick="sendSms()">Send SMS</button>
+                data-style="slide-right" onclick="sendSms()">
+                Send SMS</button>
         </div>
     </div>
 
@@ -884,7 +933,7 @@
                                             </div>
                                             <div class="col-sm-3 mb-2">
                                                 <div class="form-check">
-                                                    <asp:CheckBox ID="txtEmailconnect" runat="server" CssClass="form-check-input" />
+                                                    <asp:CheckBox ID="txtEmailconnect" runat="server"  CssClass="form-check-input" visible="false"/>
                                                     <label class="form-check-label" for="<%=txtEmailconnect.ClientID%>">Email Connected</label>
                                                 </div>
                                             </div>
@@ -916,6 +965,13 @@
         ClientIDMode="Static" />
     <asp:UpdatePanel runat="server" ID="updatePeopleList" UpdateMode="Conditional">
         <ContentTemplate>
+             <%--   <div id="loader" style="text-align: center; padding: 20px;">
+        <img src="/path-to-your-loader.gif" alt="Loading..." />
+    </div>--%>
+          <%--  <div  id="loader"  class="spinner-border" role="status">
+  <span class="sr-only">Loading...</span>
+</div>--%>
+            <div id="loader" class="custom-spinner"></div>
             <asp:Panel runat="server" ID="pnlTable">
                 <asp:HiddenField ID="currentPageValue" runat="server" />
                 <asp:HiddenField ID="totalPageValue" runat="server" />
@@ -1029,66 +1085,68 @@
         </div>
     </div>
     <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
-   <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="color-line"></div>
-            <div class="modal-header text-center">
-                <h5 class="modal-title">Update Member Status</h5>
-            </div>
-            <!-- Success and Error Messages -->
-            <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
-                <i class="fa fa-check-circle"></i>Changes saved successfully.
-            </div>
-            <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
-                <i class="fa fa-exclamation-triangle"></i>
-                <div id="divManageErrorMessage"></div>
-            </div>
-            <!-- Modal body -->
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="rblManageUserStatus">Update Member Vetting Status:</label>
-                    <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
-                        <asp:ListItem Text="Start Vetting" Value="1" CssClass="form-check-input"></asp:ListItem>
-                        <asp:ListItem Text="Passed Vetting" Value="2" CssClass="form-check-input"></asp:ListItem>
-                        <asp:ListItem Text="Failed Vetting" Value="3" CssClass="form-check-input"></asp:ListItem>
-                    </asp:RadioButtonList>
-                </div>
+    <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="color-line"></div>
+                <div class="modal-header text-center">
+                    <h5 class="modal-title">Update Member Status</h5>
 
-                <!-- Vetting Notes Textarea -->
-                <div class="form-group">
-                    <label for="txtManageVettingNotes">Vetting Notes:</label>
-                    <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
-                        placeholder="Enter Vetting Notes"></asp:TextBox>
                 </div>
-                <div class="form-group form-check donateDiv">
-                    <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
-                    <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
-                        Enable Team Logo
-                    </label>
+                <!-- Success and Error Messages -->
+                <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
+                    <i class="fa fa-check-circle"></i>Changes saved successfully.
                 </div>
-                <% if (User.IsInRole("Administrator") || isOwner) { %>
-                <div class="form-group form-check">
-                    <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
-                    <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
-                        Stability Verified
-                    </label>
+                <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <div id="divManageErrorMessage"></div>
                 </div>
-                <div class="form-group form-check">
-                    <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
-                    <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
-                        Make Team Administrator
-                    </label>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="rblManageUserStatus">Update Member Vetting Status:</label>
+                        <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
+                            <asp:ListItem Text="Start Vetting" Value="1" CssClass="form-check-input"></asp:ListItem>
+                            <asp:ListItem Text="Passed Vetting" Value="2" CssClass="form-check-input"></asp:ListItem>
+                            <asp:ListItem Text="Failed Vetting" Value="3" CssClass="form-check-input"></asp:ListItem>
+                        </asp:RadioButtonList>
+                    </div>
+
+                    <!-- Vetting Notes Textarea -->
+                    <div class="form-group">
+                        <label for="txtManageVettingNotes">Vetting Notes:</label>
+                        <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
+                            placeholder="Enter Vetting Notes"></asp:TextBox>
+                    </div>
+                    <div class="form-group form-check donateDiv">
+                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
+                        <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
+                            Enable Team Logo
+                        </label>
+                    </div>
+                    <% if (User.IsInRole("Administrator"))
+                        { %>
+                    <div class="form-group form-check">
+                        <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
+                        <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
+                            Stability
+                            Verified</label>
+                    </div>
+                    <div class="form-group form-check">
+                        <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
+                        <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
+                            Make
+                            Team Administrator</label>
+                    </div>
+                    <% } %>
                 </div>
-                <% } %>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
-                    Save Changes</button>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
+                        Save Changes</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
     <uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>
