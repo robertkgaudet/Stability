@@ -5,113 +5,113 @@ using System.Web.UI.WebControls;
 
 public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizationWebForm
 {
-	public string disasterDropDown = string.Empty;
-	public string preselectedDisasterJQuery = string.Empty;
-	public string eventId = string.Empty;
-	public string organizationId = string.Empty;
+    public string disasterDropDown = string.Empty;
+    public string preselectedDisasterJQuery = string.Empty;
+    public string eventId = string.Empty;
+    public string organizationId = string.Empty;
 
-	protected void Page_Load(object sender, EventArgs e)
-	{
-		eventId = Request.QueryString["eventId"];
-		organizationId = Request.QueryString["organizationId"];
-		//If org and eventid already exist, then don't allow them here.
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-		if (!IsPostBack)
-		{
-			//Load the address lookup state list.
-			ListItemCollection statesList = new ListItemCollection();
-			foreach (string state in States.Names())
-			{
-				ListItem li = new ListItem(state, state);
-				statesList.Add(li);
-			}
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        eventId = Request.QueryString["eventId"];
+        organizationId = Request.QueryString["organizationId"];
+        //If org and eventid already exist, then don't allow them here.
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        if (!IsPostBack)
+        {
+            //Load the address lookup state list.
+            ListItemCollection statesList = new ListItemCollection();
+            foreach (string state in States.Names())
+            {
+                ListItem li = new ListItem(state, state);
+                statesList.Add(li);
+            }
 
-			ddlState1.DataSource = statesList;
-			ddlState1.DataBind();
-			
-			if (String.IsNullOrEmpty(eventId))
-			{
-				//No event id was sent.
-				divCreateCause.Visible = false;
-				divSelectEvent.Visible = true;
-				LoadDisasters();
-			}
-			else
-			{
-				Guid guidEventId = new Guid(eventId);
-				divCreateCause.Visible = true;
-				divSelectEvent.Visible = false;
-				//var states = from s in dc.USStates
-				//			 //join es in dc.EventStates on s.StatesId equals es.StatesId
-				//		//	 where es.EventId == guidEventId
-				//			orderby s.Name
-				//			 select new { s.StatesId, s.Name };
+            ddlState1.DataSource = statesList;
+            ddlState1.DataBind();
 
-				//ddlState.DataSource = states.ToList();
-				//ddlState.DataBind();
-				//ddlState.Items.Insert(0, new ListItem("Choose a State", ""));
+            if (String.IsNullOrEmpty(eventId))
+            {
+                //No event id was sent.
+                divCreateCause.Visible = false;
+                divSelectEvent.Visible = true;
+                LoadDisasters();
+            }
+            else
+            {
+                Guid guidEventId = new Guid(eventId);
+                divCreateCause.Visible = true;
+                divSelectEvent.Visible = false;
+                //var states = from s in dc.USStates
+                //			 //join es in dc.EventStates on s.StatesId equals es.StatesId
+                //		//	 where es.EventId == guidEventId
+                //			orderby s.Name
+                //			 select new { s.StatesId, s.Name };
 
-				var disaster = (from ev in dc.Events
-								where ev.EventId == guidEventId
-								select new { ev.Name }).SingleOrDefault();
+                //ddlState.DataSource = states.ToList();
+                //ddlState.DataBind();
+                //ddlState.Items.Insert(0, new ListItem("Choose a State", ""));
 
-				litEventName.Text = disaster.Name;
+                var disaster = (from ev in dc.Events
+                                where ev.EventId == guidEventId
+                                select new { ev.Name }).SingleOrDefault();
 
-				//LoadDisasters();
-			}
+                litEventName.Text = disaster.Name;
 
-			var profile = (from p in dc.Profiles
-						   join u in dc.aspnet_Memberships on p.UserId equals u.UserId
-						  where p.UserId == userId
-						  select new { fullName = p.Firstname + " " + p.Lastname, u.Email, p.PhoneNumber }).SingleOrDefault();
+                //LoadDisasters();
+            }
 
-			if(profile != null)
-			{ 
-				txtEmailAddress.Value = profile.Email;
-				txtPOCFullname.Value = profile.fullName;
-				txtPhonenumber.Value = profile.PhoneNumber;
-			}
-		}
-	}
+            var profile = (from p in dc.Profiles
+                           join u in dc.aspnet_Memberships on p.UserId equals u.UserId
+                           where p.UserId == userId
+                           select new { fullName = p.Firstname + " " + p.Lastname, u.Email, p.PhoneNumber }).SingleOrDefault();
 
-	[WebMethod]
-	public static bool IsURLFriendlyNameUnique(string urlFriendlyName)
-	{
-		using (var dc = new CrowdReliefDBDataContext()) // Replace with your actual DataContext
-		{
-			// Check if the URLFriendlyCampaignName already exists
-			return !dc.OrganizationEvents.Any(o => o.URLFriendlyCampaignName == urlFriendlyName);
-		}
-	}
-	public void LoadDisasters()
-	{
-		eventId = Request.QueryString["eventId"];
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-		var disasters = from d in dc.Events
-						orderby d.BeginDate descending
-						where d.IsActive == true
-						select new { d };
+            if (profile != null)
+            {
+                txtEmailAddress.Value = profile.Email;
+                txtPOCFullname.Value = profile.fullName;
+                txtPhonenumber.Value = profile.PhoneNumber;
+            }
+        }
+    }
 
-		int idNumber = 0;
-		foreach (var disaster in disasters)
-		{
-			string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
-			disasterDropDown = disasterDropDown + "<li id=\"" + disaster.d.EventId + "\"><a href=\"#\">" + disasterDate + " - " + disaster.d.Name + "</a></li>" + Environment.NewLine;
-			idNumber = idNumber + 1;
-		}
-		if (!String.IsNullOrEmpty(eventId))
-		{
-			//Hide the Dropdown and show the selected disaster
-			var disaster = (from d in dc.Events
-							where d.EventId == new Guid(eventId)
-							orderby d.BeginDate descending
-							select new { d }).SingleOrDefault();
+    [WebMethod]
+    public static bool IsURLFriendlyNameUnique(string urlFriendlyName)
+    {
+        using (var dc = new CrowdReliefDBDataContext()) // Replace with your actual DataContext
+        {
+            // Check if the URLFriendlyCampaignName already exists
+            return !dc.OrganizationEvents.Any(o => o.URLFriendlyCampaignName == urlFriendlyName);
+        }
+    }
+    public void LoadDisasters()
+    {
+        eventId = Request.QueryString["eventId"];
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        var disasters = from d in dc.Events
+                        orderby d.BeginDate descending
+                        where d.IsActive == true
+                        select new { d };
 
-			string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
-			preselectedDisasterJQuery = "$(\"#btn-dropdown.disasterEvent\").html('" + disaster.d.Name + " - " + disasterDate + "');";
-			hidEventId.Value = eventId;
-		}
-	}
+        int idNumber = 0;
+        foreach (var disaster in disasters)
+        {
+            string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
+            disasterDropDown = disasterDropDown + "<li id=\"" + disaster.d.EventId + "\"><a href=\"#\">" + disasterDate + " - " + disaster.d.Name + "</a></li>" + Environment.NewLine;
+            idNumber = idNumber + 1;
+        }
+        if (!String.IsNullOrEmpty(eventId))
+        {
+            //Hide the Dropdown and show the selected disaster
+            var disaster = (from d in dc.Events
+                            where d.EventId == new Guid(eventId)
+                            orderby d.BeginDate descending
+                            select new { d }).SingleOrDefault();
+
+            string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
+            preselectedDisasterJQuery = "$(\"#btn-dropdown.disasterEvent\").html('" + disaster.d.Name + " - " + disasterDate + "');";
+            hidEventId.Value = eventId;
+        }
+    }
 
     protected void btnSubmit_Click(object sender, EventArgs e)
     {
@@ -137,16 +137,16 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
 
             string countyName = addressArray[9].Replace("County", "").Trim();
             countyName = countyName.Replace("Parish", "").Trim();
-             countyId = (from s in dc.Counties
-                            where s.Name == countyName && s.StateId == stateId
-                            select s.CountyId).SingleOrDefault();
+            countyId = (from s in dc.Counties
+                        where s.Name == countyName && s.StateId == stateId
+                        select s.CountyId).SingleOrDefault();
             var addressesToUpdate = from a in dc.Addresses
                                     where a.County == countyName
                                     select a;
 
             foreach (var addressUpdate in addressesToUpdate)
             {
-                addressUpdate.CountyId = countyId;  
+                addressUpdate.CountyId = countyId;
             }
 
             dc.SubmitChanges();
@@ -207,7 +207,7 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
         Response.Redirect("/V1/NonProfitAdministration/PositionsNeeded.aspx?organizationEventId=" + organizationEventId);
     }
     protected void btnSubmit_Cancel(object sender, EventArgs e)
-	{
-		Response.Redirect("/V1/NonProfit/Deployments.aspx?organizationId=" + organizationId);
-	}
+    {
+        Response.Redirect("/V1/NonProfit/Deployments.aspx?organizationId=" + organizationId);
+    }
 }
