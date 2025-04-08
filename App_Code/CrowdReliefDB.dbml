@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_8013_staging" Class="CrowdReliefDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="india" Class="CrowdReliefDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.aspnet_Membership" Member="aspnet_Memberships">
     <Type Name="aspnet_Membership">
       <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
@@ -1197,7 +1197,6 @@
       <Association Name="County_EventCounty" Member="EventCounties" ThisKey="CountyId" OtherKey="CountyId" Type="EventCounty" />
       <Association Name="County_FEMAAssistanceGrant" Member="FEMAAssistanceGrants" ThisKey="CountyId" OtherKey="CountyId" Type="FEMAAssistanceGrant" />
       <Association Name="County_OrganizationEvent" Member="OrganizationEvents" ThisKey="CountyId" OtherKey="StagingCountyId" Type="OrganizationEvent" />
-      <Association Name="County_Address" Member="Addresses" ThisKey="CountyId" OtherKey="CountyId" Type="Address" />
     </Type>
   </Table>
   <Table Name="dbo.EmergencyManagment" Member="EmergencyManagments">
@@ -2041,39 +2040,6 @@
       <Column Name="Code" Type="System.String" DbType="Char(2) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
-  <Table Name="dbo.Address" Member="Addresses">
-    <Type Name="Address">
-      <Column Name="AddressId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="GooglePlaceId" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
-      <Column Name="FormattedAddress" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
-      <Column Name="StreetNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="StreetName" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
-      <Column Name="Address" Member="Address1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-      <Column Name="Address2" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
-      <Column Name="City" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="State" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Zip" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
-      <Column Name="Country" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="County" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
-      <Column Name="Latitude" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="Longitude" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="CountyId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="CountyIds" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Association Name="Address_RebuildSurvey" Member="RebuildSurveys" ThisKey="AddressId" OtherKey="AddressId" Type="RebuildSurvey" />
-      <Association Name="Address_LocationLocationType" Member="LocationLocationTypes" ThisKey="AddressId" OtherKey="AddressId" Type="LocationLocationType" />
-      <Association Name="Address_LocationNote" Member="LocationNotes" ThisKey="AddressId" OtherKey="AddressId" Type="LocationNote" />
-      <Association Name="Address_LocationPhoto" Member="LocationPhotos" ThisKey="AddressId" OtherKey="AddressId" Type="LocationPhoto" />
-      <Association Name="Address_LocationProfileEvent" Member="LocationProfileEvents" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfileEvent" />
-      <Association Name="Address_LocationLocationStatus" Member="LocationLocationStatus" ThisKey="AddressId" OtherKey="AddressId" Type="LocationLocationStatus" />
-      <Association Name="Address_LocationProfile" Member="LocationProfiles" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfile" />
-      <Association Name="County_Address" Member="County1" ThisKey="CountyId" OtherKey="CountyId" Type="County" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Profile" Member="Profiles">
     <Type Name="Profile">
       <Column Name="ProfileId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -2119,6 +2085,39 @@
       <Association Name="aspnet_User_Profile" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
   </Table>
+  <Table Name="dbo.Address" Member="Addresses">
+    <Type Name="Address">
+      <Column Name="AddressId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="GooglePlaceId" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
+      <Column Name="FormattedAddress" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
+      <Column Name="StreetNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="StreetName" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="Address" Member="Address1" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="Address2" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="City" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="State" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Zip" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Country" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="County" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="Latitude" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Longitude" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="CountyId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="CityId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="LocationType" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Association Name="Address_RebuildSurvey" Member="RebuildSurveys" ThisKey="AddressId" OtherKey="AddressId" Type="RebuildSurvey" />
+      <Association Name="Address_LocationLocationType" Member="LocationLocationTypes" ThisKey="AddressId" OtherKey="AddressId" Type="LocationLocationType" />
+      <Association Name="Address_LocationNote" Member="LocationNotes" ThisKey="AddressId" OtherKey="AddressId" Type="LocationNote" />
+      <Association Name="Address_LocationPhoto" Member="LocationPhotos" ThisKey="AddressId" OtherKey="AddressId" Type="LocationPhoto" />
+      <Association Name="Address_LocationProfileEvent" Member="LocationProfileEvents" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfileEvent" />
+      <Association Name="Address_LocationLocationStatus" Member="LocationLocationStatus" ThisKey="AddressId" OtherKey="AddressId" Type="LocationLocationStatus" />
+      <Association Name="Address_LocationProfile" Member="LocationProfiles" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfile" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetGeoJsonByDisasterForCleanupMap" Method="GetGeoJsonByDisasterForCleanupMap">
     <Parameter Name="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="GetGeoJsonByDisasterForCleanupMapResult">
@@ -2143,22 +2142,6 @@
       <Column Name="" Member="Column1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.GetDisasterLocationsByCountys" Method="GetDisasterLocationsByCountys">
-    <Parameter Name="CountyId" Parameter="countyId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <Parameter Name="PageNumber" Parameter="pageNumber" Type="System.Int32" DbType="Int" />
-    <Parameter Name="PageSize" Parameter="pageSize" Type="System.Int32" DbType="Int" />
-    <ElementType Name="GetDisasterLocationsByCountysResult">
-      <Column Name="LocationName" Type="System.String" DbType="VarChar(250) NOT NULL" CanBeNull="false" />
-      <Column Name="FullAddress" Type="System.String" DbType="VarChar(2576)" CanBeNull="true" />
-      <Column Name="GooglePlacesID" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
-      <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Coordinates" Type="System.String" DbType="NVarChar(62)" CanBeNull="true" />
-      <Column Name="PointOfContact" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
-      <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
-      <Column Name="Email" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
-      <Column Name="TotalCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
-    </ElementType>
-  </Function>
   <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">
     <Parameter Name="EventId" Parameter="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
     <Parameter Name="LocationTypeId" Parameter="locationTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
@@ -2175,6 +2158,23 @@
     <Parameter Name="LocationParentTypeId" Parameter="locationParentTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="MapStabilityLocationsResult">
       <Column Name="" Member="Column1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.GetDisasterLocationsByCountys" Method="GetDisasterLocationsByCountys">
+    <Parameter Name="CountyId" Parameter="countyId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="PageNumber" Parameter="pageNumber" Type="System.Int32" DbType="Int" />
+    <Parameter Name="PageSize" Parameter="pageSize" Type="System.Int32" DbType="Int" />
+    <ElementType Name="GetDisasterLocationsByCountysResult">
+      <Column Name="LocationProfileId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="LocationName" Type="System.String" DbType="VarChar(250) NOT NULL" CanBeNull="false" />
+      <Column Name="FullAddress" Type="System.String" DbType="VarChar(3078)" CanBeNull="true" />
+      <Column Name="GooglePlacesID" Type="System.String" DbType="VarChar(2000)" CanBeNull="true" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Coordinates" Type="System.String" DbType="NVarChar(42)" CanBeNull="true" />
+      <Column Name="PointOfContact" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="TotalCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
 </Database>

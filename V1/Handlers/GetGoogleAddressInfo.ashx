@@ -25,19 +25,21 @@ public class GetGoogleAddressInfo : IHttpHandler, IReadOnlySessionState
         string street_number = string.Empty;
         string street = string.Empty;
         string city = string.Empty;
+        string cityCode = string.Empty;
         string state = string.Empty;
         string country = string.Empty;
         string postal_code = string.Empty;
         string county = string.Empty;
         string googlePlaceId = string.Empty;
         string formattedAddress = string.Empty;
+        string locationType = string.Empty;
         bool? isPartialMatch = false;
         bool? duplicate = false;
         string addressId = string.Empty;
 
-        if (GetLatitudeLongitudeFromGoogle(address, out latitude, out longitude, out message, out isPartialMatch, out street_number, out street, out city, out state, out country, out postal_code, out county, out googlePlaceId, out formattedAddress))
+        if (GetLatitudeLongitudeFromGoogle(address, out latitude, out longitude, out message, out isPartialMatch, out street_number, out street, out city, out cityCode, out state, out country, out postal_code, out county, out googlePlaceId, out formattedAddress, out locationType))
         {
-            results = isPartialMatch + "|" + latitude + "|" + longitude + "|" + street_number + "|" + street + "|" + city + "|" + state + "|" + country + "|" + postal_code + "|" + county + "|" + googlePlaceId + "|" + formattedAddress + "|" + duplicate + "|" + addressId;
+            results = isPartialMatch + "|" + latitude + "|" + longitude + "|" + street_number + "|" + street + "|" + city + "|" + state + "|" + country + "|" + postal_code + "|" + county + "|" + googlePlaceId + "|" + formattedAddress + "|" + duplicate + "|" + locationType + "|" + cityCode + "|" + addressId;
         }
         else
         {
@@ -47,7 +49,7 @@ public class GetGoogleAddressInfo : IHttpHandler, IReadOnlySessionState
         context.Response.Write(results);
     }
 
-    protected bool GetLatitudeLongitudeFromGoogle(string address, out double latitude, out double longitude, out string message, out bool? isPartialMatch, out string street_number, out string street, out string city, out string state, out string country, out string postal_code, out string county, out string googlePlaceId, out string formattedAddress)
+    protected bool GetLatitudeLongitudeFromGoogle(string address, out double latitude, out double longitude, out string message, out bool? isPartialMatch, out string street_number, out string street, out string city, out string cityCode, out string state, out string country, out string postal_code, out string county, out string googlePlaceId, out string formattedAddress, out string locationType)
     {
         message = string.Empty;
         latitude = 0.0;
@@ -56,10 +58,12 @@ public class GetGoogleAddressInfo : IHttpHandler, IReadOnlySessionState
         isPartialMatch = false;
         googlePlaceId = string.Empty;
         formattedAddress = string.Empty;
+        locationType = string.Empty;
         county = string.Empty;
         street_number = string.Empty;
         street = string.Empty;
         city = string.Empty;
+        cityCode = string.Empty;
         state = string.Empty;
         country = string.Empty;
         postal_code = string.Empty;
@@ -103,6 +107,11 @@ public class GetGoogleAddressInfo : IHttpHandler, IReadOnlySessionState
                                 .FirstOrDefault(o => o.types.Contains(address_type))
                                 .long_name;
 
+            cityCode = locationInfo.results[0]
+                    .address_components
+                    .FirstOrDefault(o => o.types.Contains(address_type))
+                    .short_name;
+
             address_type = "administrative_area_level_1";
             state = locationInfo.results[0]
                                 .address_components
@@ -127,6 +136,7 @@ public class GetGoogleAddressInfo : IHttpHandler, IReadOnlySessionState
                 latitude = location.geometry.location.lat;
                 longitude = location.geometry.location.lng;
                 googlePlaceId = location.place_id;
+                locationType = location.geometry.location_type;
                 formattedAddress = location.formatted_address;
             }
         }

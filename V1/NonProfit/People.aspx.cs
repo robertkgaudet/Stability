@@ -39,41 +39,41 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 		skillId = Request.QueryString["skillId"];
 		resourceId = Request.QueryString["resourceId"];
 
-		ucTeamFooter.PageName = "peoplePage";
-		ucTeamHeader.PageName = "Team Members";
-		#region HEADER PROPERTIES
-		////////////////////////
-		//BEGIN HEADER PROPERTIES
-		////////////////////////
-		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
-		_coverImage = causePhotoFolder + "businesscoverimage.png";
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-		if (User.Identity.IsAuthenticated == true)
-		{
-			var userOrganizationOwner = (from uo in dc.UserOrganizations
-										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-										 && uo.OrganizationId == new Guid(organizationId)
-										 select o).Take(1).SingleOrDefault();
-			if (userOrganizationOwner != null)
-			{
-				if ((userOrganizationOwner.OwnerId != userId))
-				{
-					isOwner = true;
-				}
-			}
-		}
-		var organization = (from o in dc.Organizations
-							where o.OrganizationId == new Guid(organizationId)
-							select new { o.Name, o.LogoSquare, o.HideTeamList, o.OwnerId, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName, o.EnableTeamMemberVerification }).SingleOrDefault();
-		hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true || isOwner ? "1" : "0";
-		string squareLogo = string.Empty;
-		if (organization != null)
-		{
-			if (organization.CoverImage != null)
-			{
-				//	_coverImage = causePhotoFolder + organization.CoverImage;
-			}
+        ucTeamFooter.PageName = "peoplePage";
+        ucTeamHeader.PageName = "Team Members";
+        #region HEADER PROPERTIES
+        ////////////////////////
+        //BEGIN HEADER PROPERTIES
+        ////////////////////////
+        string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
+        _coverImage = causePhotoFolder + "businesscoverimage.png";
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        if (User.Identity.IsAuthenticated == true)
+        {
+            var userOrganizationOwner = (from uo in dc.UserOrganizations
+                                         join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
+                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+                                         && uo.OrganizationId == new Guid(organizationId)
+                                         select o).Take(1).SingleOrDefault();
+            if (userOrganizationOwner != null)
+            {
+                if ((userOrganizationOwner.OwnerId != userId))
+                {
+                    isOwner = true;
+                }
+            }
+        }
+        var organization = (from o in dc.Organizations
+                            where o.OrganizationId == new Guid(organizationId)
+                            select new { o.Name, o.LogoSquare, o.HideTeamList, o.OwnerId, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName, o.EnableTeamMemberVerification }).SingleOrDefault();
+        hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true|| isOwner ? "1" : "0";
+        string squareLogo = string.Empty;
+        if (organization != null)
+        {
+            if (organization.CoverImage != null)
+            {
+                //	_coverImage = causePhotoFolder + organization.CoverImage;
+            }
 
 			ucTeamHeader.CoverImage = _coverImage;
 			ucTeamHeader.TeamDescription = organization.Description;

@@ -1,0 +1,5 @@
+ALTER TABLE [dbo].[Address]
+ADD [CityId] UNIQUEIDENTIFIER NULL;
+
+ALTER TABLE [dbo].[Address]
+ADD [LocationType] VARCHAR(100) NULL;
