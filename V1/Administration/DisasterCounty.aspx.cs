@@ -1,15 +1,10 @@
-﻿using Braintree;
-using System;
-using System.Activities.Expressions;
-using System.Collections.Generic;
-using System.Data.Linq.SqlClient;
+﻿using System;
+using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
+using System.Net;
 using System.Web;
 using System.Web.Security;
-using System.Web.UI;
 using System.Web.UI.WebControls;
-
 public partial class V1_Administration_DisasterCounty : BaseOrganizationWebForm
 {
 	public string disasterName = string.Empty;
@@ -23,34 +18,20 @@ public partial class V1_Administration_DisasterCounty : BaseOrganizationWebForm
 		this.Master.FbDescription = "";
 		this.Master.FbSite_name = "Stability - Select Impacted Counties";
 		this.Master.FbURL = Request.Url.AbsoluteUri;
-
 		eventId = new Guid(Request.QueryString["eventId"]);
-
 		var eventName = (from c in dc.Events
 						where c.EventId == eventId
 						select new { c.Name, c.URLFriendlyName }).SingleOrDefault();
-
 		disasterName = eventName.Name;
 		disasterURLFriendlyName = eventName.URLFriendlyName;
-
 		if (!IsPostBack)
 		{
 			LoadCounties(eventId);
 		}
-	}
-
+	}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 	protected void LoadCounties(Guid eventId)
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-
-		//Get a list of states for this disaster and use it to load counties
-		//State id, code and name for this event.
-		//var stateEvent = from es in dc.EventStates
-		//				 join s in dc.USStates on es.StatesId equals s.StatesId
-		//				  where es.EventId == eventId
-		//				  orderby s.Name
-		//				  select new { es.StatesId, s.Code, s.Name };
-
 		var states =	from st in dc.USStates
 						join es in dc.EventStates on st.StatesId equals es.StatesId
 						join co in dc.Counties on st.StatesId equals co.StateId
@@ -62,7 +43,6 @@ public partial class V1_Administration_DisasterCounty : BaseOrganizationWebForm
 							displayName = "  " + grp.Key.stateName + " - " + grp.Key.county,
 							grp.Key.CountyId
 						};
-
 		states = states.OrderBy(x => x.displayName).GroupBy(x => x.displayName).Select(x => x.FirstOrDefault());
 
 		cblCounties.DataSource = states;
@@ -90,57 +70,86 @@ public partial class V1_Administration_DisasterCounty : BaseOrganizationWebForm
 		}
 	}
 
-	protected void btnSubmit_Click(object sender, EventArgs e)
-	{
-		Guid eventId = new Guid(Request.QueryString["eventId"]);
+    protected void btnSubmit_Click(object sender, EventArgs e)
+    {
+        Guid eventId = new Guid(Request.QueryString["eventId"]);
+        Guid userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+        divMessage.Visible = true;
 
-		divMessage.Visible = true;
-		lblMessage.Text = "County information has been updated.";
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            foreach (ListItem item in cblCounties.Items)
+            {
+                var countyEvents = from ce in dc.EventCounties
+                                   where ce.EventId == eventId && ce.CountyId == new Guid(item.Value)
+                                   select ce;
 
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+                if (item.Selected)
+                {
+                    if (countyEvents.Count() == 0)
+                    {
+                        var county = dc.Counties.FirstOrDefault(c => c.CountyId == new Guid(item.Value));
 
-		//UPDATE LOCATION TYPES------------------------------------------
-		foreach (ListItem item in cblCounties.Items)
-		{
-			//Are county event already connected?
-			var countyEvents = from ce in dc.EventCounties
-								where ce.EventId == eventId
-								&& ce.CountyId == new Guid(item.Value)
-								select ce;
+                        EventCounty eventCounty = new EventCounty();
+                        eventCounty.EventId = eventId;
+                        eventCounty.EventCountyId = Guid.NewGuid();
+                        eventCounty.CountyId = county.CountyId;
+                        eventCounty.CreatedBy = userId;
+                        eventCounty.CreatedOn = DateTime.Now;
+                        eventCounty.IsActive = true;
+                        dc.EventCounties.InsertOnSubmit(eventCounty);
+                    }
+                }
+                else
+                {
+                    foreach (var countyEvent in countyEvents)
+                    {
+                        dc.EventCounties.DeleteOnSubmit(countyEvent);
+                    }
+                }
+            }
+            dc.SubmitChanges();
+            foreach (ListItem item in cblCounties.Items)
+            {
+                if (item.Selected)
+                {
+                    var county = dc.Counties.FirstOrDefault(c => c.CountyId == new Guid(item.Value));
+                    if (county != null)
+                    {
+                        string address = string.Format("{0}, {1}", county.Name, county.State);
+                        CallGetLatLngHandler(userId.ToString(), address);
+                    }
+                }
+            }
+        }
+        lblMessage.Text = "County information has been updated with Google Places data.";
+        Response.Redirect("/Disaster/" + disasterURLFriendlyName);
+    }
+    private void CallGetLatLngHandler(string userId, string address)
+    {
+        try
+        {
+            string baseUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
+            string handlerUrl = baseUrl + "/V1/Handlers/GetLatitudeLongitude.ashx?userId=" +
+                                HttpUtility.UrlEncode(userId) +
+                                "&address=" + HttpUtility.UrlEncode(address);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(handlerUrl);
+            request.Method = "GET";
+            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+            {
+                string result = reader.ReadToEnd();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error calling GetLatitudeLongitude.ashx: " + ex.Message);
+        }
+    }
 
 
-			if (item.Selected)
-			{
 
-				if (countyEvents.Count() == 0)
-				{
-					//Does not exist, add it
-					EventCounty eventCounty = new EventCounty();
-					eventCounty.EventId = eventId;
-					eventCounty.EventCountyId = Guid.NewGuid();
-					eventCounty.CountyId = new Guid(item.Value);
-					eventCounty.CreatedBy = new Guid(Membership.GetUser().ProviderUserKey.ToString());
-					eventCounty.CreatedOn = DateTime.Now;
-					eventCounty.IsActive = true;
-					dc.EventCounties.InsertOnSubmit(eventCounty);
-					dc.SubmitChanges();
-				}
-			}
-			else
-			{
-				//Delete any checked records
-				if (countyEvents.Count() > 0)
-				{
-					//Item is selected.
-					foreach (var countyEvent in countyEvents)
-					{
-						dc.EventCounties.DeleteOnSubmit(countyEvent);
-						dc.SubmitChanges();
-					}
-				}
-			}
-		}
-		//LoadCounties();
-		Response.Redirect("/Disaster/" + disasterURLFriendlyName);
-	}
+
+
+
 }
