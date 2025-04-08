@@ -130,7 +130,7 @@
 					<div class="hpanel form-horizontal">
 
 						<div class="panel-heading hbuilt">
-							Team Information
+							<h4><asp:Literal ID="litParentOrganization" runat="server"></asp:Literal></h4>
 						</div>
 						<div class="panel-body">
 							
@@ -186,21 +186,21 @@
 								<div class="col-sm-5"><input type="text" runat="server" id="txtEIN" class="form-control" placeholder="IRS EIN"></div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">Address</label>
+								<label class="col-sm-2 control-label">Address *</label>
 								<div class="col-sm-5"><input type="text" required runat="server" id="txtAddress" class="form-control i-check" placeholder="Address"></div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">City</label>
+								<label class="col-sm-2 control-label">City *</label>
 								<div class="col-sm-5"><input type="text" required runat="server" id="txtCity" class="form-control" placeholder="City"></div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">State</label>
+								<label class="col-sm-2 control-label">State *</label>
 								<div class="col-sm-5">
 									<asp:DropDownList ID="ddlState" runat="server" DataTextField="Text" DataValueField="Value" CssClass="form-control" required=""></asp:DropDownList>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">Zip</label>
+								<label class="col-sm-2 control-label">Zip *</label>
 								<div class="col-sm-5"><input type="text" required runat="server" id="txtZipCode" class="form-control" placeholder="Zip Code"></div>
 							</div>
 									

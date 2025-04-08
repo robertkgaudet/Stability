@@ -33,164 +33,169 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     public bool userIsOwner = false;
     public bool hideTeamList = false;
     public bool isOwner = false;
-    protected void Page_Load(object sender, EventArgs e)
-    {
-        organizationId = Request.QueryString["organizationId"];
-        skillId = Request.QueryString["skillId"];
-        resourceId = Request.QueryString["resourceId"];
+	protected void Page_Load(object sender, EventArgs e)
+	{
+		organizationId = Request.QueryString["organizationId"];
+		skillId = Request.QueryString["skillId"];
+		resourceId = Request.QueryString["resourceId"];
 
-        ucTeamFooter.PageName = "peoplePage";
-        ucTeamHeader.PageName = "Team Members";
-        #region HEADER PROPERTIES
-        ////////////////////////
-        //BEGIN HEADER PROPERTIES
-        ////////////////////////
-        string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
-        _coverImage = causePhotoFolder + "businesscoverimage.png";
-        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-        if (User.Identity.IsAuthenticated == true)
-        {
-            var userOrganizationOwner = (from uo in dc.UserOrganizations
-                                         join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-                                         && uo.OrganizationId == new Guid(organizationId)
-                                         select o).Take(1).SingleOrDefault();
-            if (userOrganizationOwner != null)
-            {
-                if ((userOrganizationOwner.OwnerId != userId))
-                {
-                    isOwner = true;
-                }
-            }
-        }
-        var organization = (from o in dc.Organizations
-                            where o.OrganizationId == new Guid(organizationId)
-                            select new { o.Name, o.LogoSquare, o.HideTeamList, o.OwnerId, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName, o.EnableTeamMemberVerification }).SingleOrDefault();
-        hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true|| isOwner ? "1" : "0";
-        string squareLogo = string.Empty;
-        if (organization != null)
-        {
-            if (organization.CoverImage != null)
-            {
-                //	_coverImage = causePhotoFolder + organization.CoverImage;
-            }
+		ucTeamFooter.PageName = "peoplePage";
+		ucTeamHeader.PageName = "Team Members";
+		#region HEADER PROPERTIES
+		////////////////////////
+		//BEGIN HEADER PROPERTIES
+		////////////////////////
+		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
+		_coverImage = causePhotoFolder + "businesscoverimage.png";
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		if (User.Identity.IsAuthenticated == true)
+		{
+			var userOrganizationOwner = (from uo in dc.UserOrganizations
+										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
+										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+										 && uo.OrganizationId == new Guid(organizationId)
+										 select o).Take(1).SingleOrDefault();
+			if (userOrganizationOwner != null)
+			{
+				if ((userOrganizationOwner.OwnerId != userId))
+				{
+					isOwner = true;
+				}
+			}
+		}
+		var organization = (from o in dc.Organizations
+							where o.OrganizationId == new Guid(organizationId)
+							select new { o.Name, o.LogoSquare, o.HideTeamList, o.OwnerId, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName, o.EnableTeamMemberVerification }).SingleOrDefault();
+		hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true || isOwner ? "1" : "0";
+		string squareLogo = string.Empty;
+		if (organization != null)
+		{
+			if (organization.CoverImage != null)
+			{
+				//	_coverImage = causePhotoFolder + organization.CoverImage;
+			}
 
-            ucTeamHeader.CoverImage = _coverImage;
-            ucTeamHeader.TeamDescription = organization.Description;
-            ucTeamHeader._teamTitle = organization.Name;
+			ucTeamHeader.CoverImage = _coverImage;
+			ucTeamHeader.TeamDescription = organization.Description;
+			ucTeamHeader._teamTitle = organization.Name;
 
-            if (!String.IsNullOrEmpty(organization.LogoSquare))
-            {
-                squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-            }
-            else
-            {
-                squareLogo = "/V1/Images/Logo-Placeholder.png";
-            }
+			if (!String.IsNullOrEmpty(organization.LogoSquare))
+			{
+				squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+			}
+			else
+			{
+				squareLogo = "/V1/Images/Logo-Placeholder.png";
+			}
 
-            Master.PageTitle = organization.Name + " Programs on Stability";
-            Master.PageDescription = organization.Description;
-            Master.FbDescription = organization.Description;
-            Master.FbImage = _coverImage;
-            Master.FbSite_name = organization.Name + " Programs on Stability";
-            ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
-        }
+			Master.PageTitle = organization.Name + " Programs on Stability";
+			Master.PageDescription = organization.Description;
+			Master.FbDescription = organization.Description;
+			Master.FbImage = _coverImage;
+			Master.FbSite_name = organization.Name + " Programs on Stability";
+			ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
+		}
 
-        ucTeamFooter.TeamName = organization.Name;
-        ucTeamFooter.OrganizationId = organizationId;
-        ucTeamHeader.OrganizationId = organizationId;
-        ucTeamHeader.TeamLogo = squareLogo;
-        Master.FbImageType = "image/jpg";
-        Master.FbURL = Request.Url.AbsoluteUri;
-        //ucTeamHeader.Logo = logo;
-        //ucTeamHeader.OrganizationId = organizationId;
-        //ucTeamHeader.PageName = "Programs";
-        //ucTeamHeader.TeamDescription = organization.Description;
-        //ucTeamHeader.TeamName = organization.Name;
-        //ucTeamHeader.TeamSquareLogo = squareLogo;  
-      
-
-        ////////////////////////
-        //END HEADER PROPERTIES
-        ////////////////////////
-        #endregion
-
-        hideTeamList = organization.HideTeamList != null ? (bool)organization.HideTeamList : false;
-
-        if (User.Identity.IsAuthenticated)
-        {
-            //Is logged in user on this team?
-
-            var userCheck = (from uo in dc.UserOrganizations
-                             where uo.UserId == userId
-                             && uo.OrganizationId == new Guid(organizationId)
-                             select uo).Take(1).SingleOrDefault();
-
-            Profile profile = GetUserProfileByUserId(userId);
-            signedInUserFullName = profile.Firstname + " " + profile.Lastname;
-
-            if (userCheck != null)
-            {
-                //User is on this team.
-                isUserOnTeam = true;
-                hpanelJoin.Visible = false;
-                hpanelMembers.Visible = true;
-                hypInviteTeamMembers.Visible = true;
-                hypInviteTeamMembers.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + organizationId;
-            }
-
-            teamName = organization.Name;
-            organizationOwnerId = organization.OwnerId != null ? (Guid)organization.OwnerId : Guid.Empty;
-            userIsOwner = organization.OwnerId == userId ? true : false;
+		ucTeamFooter.TeamName = organization.Name;
+		ucTeamFooter.OrganizationId = organizationId;
+		ucTeamHeader.OrganizationId = organizationId;
+		ucTeamHeader.TeamLogo = squareLogo;
+		Master.FbImageType = "image/jpg";
+		Master.FbURL = Request.Url.AbsoluteUri;
+		//ucTeamHeader.Logo = logo;
+		//ucTeamHeader.OrganizationId = organizationId;
+		//ucTeamHeader.PageName = "Programs";
+		//ucTeamHeader.TeamDescription = organization.Description;
+		//ucTeamHeader.TeamName = organization.Name;
+		//ucTeamHeader.TeamSquareLogo = squareLogo;  
 
 
-            if (hideTeamList && !HttpContext.Current.User.IsInRole("Administrator") && !userIsOwner)
-            {
-                //HideTeamList is managed by the owner in settings.
-                //Hide team list from nonadmin and nonowner
-                hpanelMembers.Visible = false;
-                divUpdateMessage.Visible = true;
-                divFilterMessage.Visible = false;
-                litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr>Contact team administrator to see the team list.";
-            }
-            else if (isUserOnTeam || User.IsInRole("Administrator") || userIsOwner)
-            {
-                //If user is on team or an admin or the owner they can see this team.
-                hypPrintableTeamList.Visible = true;
-                hypPrintableTeamList.NavigateUrl = "/V1/NonProfitAdministration/PrintableTeamList.aspx?organizationId=" + organizationId + "&skillId=" + skillId + "&resourceId=" + resourceId;
+		////////////////////////
+		//END HEADER PROPERTIES
+		////////////////////////
+		#endregion
 
-                //ADMIN SEES ALL USERS
+		hideTeamList = organization.HideTeamList != null ? (bool)organization.HideTeamList : false;
+
+		if (User.Identity.IsAuthenticated)
+		{
+			//Is logged in user on this team?
+
+			var userCheck = (from uo in dc.UserOrganizations
+							 where uo.UserId == userId
+							 && uo.OrganizationId == new Guid(organizationId)
+							 select uo).Take(1).SingleOrDefault();
+
+			Profile profile = GetUserProfileByUserId(userId);
+			signedInUserFullName = profile.Firstname + " " + profile.Lastname;
+
+			if (userCheck != null)
+			{
+				//User is on this team.
+				isUserOnTeam = true;
+				hpanelJoin.Visible = false;
+				hpanelMembers.Visible = true;
+				hypInviteTeamMembers.Visible = true;
+				hypInviteTeamMembers.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + organizationId;
+			}
+
+			teamName = organization.Name;
+			organizationOwnerId = organization.OwnerId != null ? (Guid)organization.OwnerId : Guid.Empty;
+			userIsOwner = organization.OwnerId == userId ? true : false;
+
+
+			if (hideTeamList && !HttpContext.Current.User.IsInRole("Administrator") && !userIsOwner)
+			{
+				//HideTeamList is managed by the owner in settings.
+				//Hide team list from nonadmin and nonowner
+				hpanelMembers.Visible = false;
+				divUpdateMessage.Visible = true;
+				divFilterMessage.Visible = false;
+				litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr>Contact team administrator to see the team list.";
+			}
+			else if (isUserOnTeam || User.IsInRole("Administrator") || userIsOwner)
+			{
+				//If user is on team or an admin or the owner they can see this team.
+				hypPrintableTeamList.Visible = true;
+				hypPrintableTeamList.NavigateUrl = "/V1/NonProfitAdministration/PrintableTeamList.aspx?organizationId=" + organizationId + "&skillId=" + skillId + "&resourceId=" + resourceId;
+
+				//ADMIN SEES ALL USERS
 
 
 
-                if (!String.IsNullOrEmpty(skillId))
-                {
-                    var skillName = (from s in dc.Skills
-                                     where s.SkillId == new Guid(skillId)
-                                     select new { s.Name }).SingleOrDefault();
+				if (!String.IsNullOrEmpty(skillId))
+				{
+					var skillName = (from s in dc.Skills
+									 where s.SkillId == new Guid(skillId)
+									 select new { s.Name }).SingleOrDefault();
 
-                    divFilterMessage.Visible = true;
-                    litFilterMessage.Text = "<i class=\"fa fa-2x fa-hand-pointer-o\"></i><hr>Showing team members with the '" + skillName.Name + "' skillset.";
-                }
-                if (!String.IsNullOrEmpty(resourceId))
-                {
-                    var resouceName = (from r in dc.Resources
-                                       where r.ResourceId == new Guid(resourceId)
-                                       select new { r.Name }).SingleOrDefault();
+					divFilterMessage.Visible = true;
+					litFilterMessage.Text = "<i class=\"fa fa-2x fa-hand-pointer-o\"></i><hr>Showing team members with the '" + skillName.Name + "' skillset.";
+				}
+				if (!String.IsNullOrEmpty(resourceId))
+				{
+					var resouceName = (from r in dc.Resources
+									   where r.ResourceId == new Guid(resourceId)
+									   select new { r.Name }).SingleOrDefault();
 
-                    divFilterMessage.Visible = true;
-                    litFilterMessage.Text = "<i class=\"fa fa-2x fa-truck\"></i><hr>Showing team members with a '" + resouceName.Name + "' as an available resource.";
-                }
-                hpanelMembers.Visible = true;
-                rptVolunteers.DataSource = new List<PeopleList>();
-                rptVolunteers.DataBind();
-            }
-            else
-            {
-                //User not on team, not an admin so they cannot see the list.
-                divUpdateMessage.Visible = true;
-                litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr>You must be on this team to see the team members.";
-            }
+					divFilterMessage.Visible = true;
+					litFilterMessage.Text = "<i class=\"fa fa-2x fa-truck\"></i><hr>Showing team members with a '" + resouceName.Name + "' as an available resource.";
+				}
+				hpanelMembers.Visible = true;
+				rptVolunteers.DataSource = new List<PeopleList>();
+				rptVolunteers.DataBind();
+			}
+			else
+			{
+				//User not on team, not an admin so they cannot see the list.
+				divUpdateMessage.Visible = true;
+				litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr>You must be on this team to see the team members.";
+			}
+
+			if (isOwner || User.IsInRole("Administrator") || (isUserOnTeam && User.IsInRole("Team Administrator")))
+			{
+				divShowTeamVerifiedFeatures.Visible = true;
+			}
         }
         else
         {

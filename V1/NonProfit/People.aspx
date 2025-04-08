@@ -317,7 +317,8 @@
                 }
             });
         }
-        function saveChanges() {
+		function btnManageSaveChanges() {
+			debugger;
             if (!currentUserId) {
                 alert("No user selected.");
                 return;
@@ -339,7 +340,8 @@
              <% if (User.IsInRole("Administrator"))
         { %>
             stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
-            makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
+			makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
+			
     <% } %>
             updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
         }
@@ -434,7 +436,7 @@
                     }
                 );
         }
-    </script>
+	</script>
     <script type="text/javascript">
         var currentPagination = '';
         $(document).ready(function () {
@@ -1067,24 +1069,24 @@
                         Enable Team Logo
                     </label>
                 </div>
-                <% if (User.IsInRole("Administrator") || isOwner) { %>
-                <div class="form-group form-check">
-                    <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
-                    <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
-                        Stability Verified
-                    </label>
-                </div>
-                <div class="form-group form-check">
-                    <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
-                    <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
-                        Make Team Administrator
-                    </label>
-                </div>
-                <% } %>
+				<div id="divShowTeamVerifiedFeatures" runat="server" visible="false">
+	  				<div class="form-group form-check">
+						<asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
+						<label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
+							Stability Verified
+						</label>
+					</div>
+				  <div class="form-group form-check">
+						<asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
+						<label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
+							Make Team Administrator
+						</label>
+					</div>
+				</div>
             </div>
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
+                <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
                     Save Changes</button>
             </div>
         </div>

@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Security;
+using Microsoft.SqlServer.Server;
 
 public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 {
@@ -22,12 +23,29 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 
 			ddlState.DataSource = statesList;
 			ddlState.DataBind();
+
+			string parentOrganizationId = Request.QueryString["parentOrganizationId"];
+
+			litParentOrganization.Text = "Enter Your Team Information";
+
+			if (!String.IsNullOrEmpty(parentOrganizationId))
+			{ 	
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+			var parentOrganization = (from o in dc.Organizations
+									 where o.OrganizationId == new Guid(parentOrganizationId)
+									 select new { o.Name }).SingleOrDefault();
+
+				litParentOrganization.Text = " Create Chapter for " + parentOrganization.Name;
+			}
+
 		}
 	}
 
 	protected void btnSubmit_Click(object sender, EventArgs e)
 	{
 		string organizationName = txtParentOrganization.Value;
+		string parentOrganziationId = Request.QueryString["parentOrganizationId"];
 		string description		= txtDescription.Value;
 		string address			= txtAddress.Value;
 		string city				= txtCity.Value;
@@ -58,6 +76,10 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 		
 		Organization organization = new Organization();
 
+		if (!String.IsNullOrEmpty(parentOrganziationId))
+		{
+			organization.ParentOrganizationId = new Guid(parentOrganziationId);
+		}
 		organization.Address = address;
 		organization.City = city;
 		organization.CreatedBy = userId;
@@ -99,11 +121,21 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 		userOrganization.UserOrganizationId = Guid.NewGuid();
 		userOrganization.OrganizationId = organizationId;
 		userOrganization.UserId = userId;
-		userOrganization.IsPrimary = true;
+		if (!String.IsNullOrEmpty(parentOrganziationId))
+		{
+			userOrganization.IsPrimary = true;
+		}
+		else
+		{ 
+			userOrganization.IsPrimary = false;
+		}
 		dc.UserOrganizations.InsertOnSubmit(userOrganization);
 		dc.SubmitChanges();
 
-		Roles.AddUserToRole(User.Identity.Name, "NonProfitAdministrator");
+		if(!User.IsInRole("NonProfitAdministrator"))
+		{ 
+			Roles.AddUserToRole(User.Identity.Name, "NonProfitAdministrator");
+		}
 
 		Response.Redirect("/V1/NonProfitAdministration/InviteTeam.aspx?userActionModal=false&organizationId=" + organizationId);
 
