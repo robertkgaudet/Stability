@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using System.IdentityModel.Metadata;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Configuration;
+using CrowdRelief;
+using System.Collections.Specialized;
+using System.Web.Services;
 
 public partial class V1_NonProfit_Support : BaseWebForm
 {
@@ -42,7 +48,7 @@ public partial class V1_NonProfit_Support : BaseWebForm
 		{
 			if (organization.CoverImage != null)
 			{
-			//	_coverImage = causePhotoFolder + organization.CoverImage;
+				//	_coverImage = causePhotoFolder + organization.CoverImage;
 			}
 
 			ucTeamHeader.CoverImage = _coverImage;
@@ -103,5 +109,47 @@ public partial class V1_NonProfit_Support : BaseWebForm
 		////////////////////////
 		#endregion
 
+		//if (IsPostBack)
+		//{
+		//	string name = Request.Form["name"];
+		//	string email = Request.Form["email"];
+		//	string subject = Request.Form["subject"];
+		//	string message = Request.Form["message"];
+
+		//	// Send the email using the provided details
+		//	SendEmail(name, email, subject, message);
+		//}
+	}
+
+	[WebMethod]
+	public static string SendEmail(string name, string email, string subject, string message)
+	{
+		try
+		{
+			string error = string.Empty;
+			
+			ListDictionary ldEmailBodyReplacements = new ListDictionary();
+			ldEmailBodyReplacements.Add("<% Message %>", message);
+			ldEmailBodyReplacements.Add("<% SenderName %>", name);
+			ldEmailBodyReplacements.Add("<% SenderEmail %>", email);
+
+			Tools.SendEmail(
+				string.Empty,
+				subject,
+				ldEmailBodyReplacements,
+				"help@stability.org",
+				"Stability Support",
+				name,
+				email,
+				"~\\EmailTemplates\\Support.html",
+				out error
+			);
+
+			return "success";
+		}
+		catch (Exception ex)
+		{
+			return ex.Message.ToString();
+		}
 	}
 }
