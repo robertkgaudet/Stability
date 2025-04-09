@@ -17,25 +17,24 @@ $("#ddlMapFilter.dropdown-menu li").click(function() {
     updateFilterStates(mapFilterType);
 });
 
-// Function to enable/disable filters based on selected map filter
 function updateFilterStates(mapFilterType) {
-    const isCritical = mapFilterType === "Critical";
-
-    // Ensure the dropdown is never disabled by default
+    // Always keep dropdown enabled
     $("#btn-mapDropDown").removeClass("disabled").prop("disabled", false);
-    
-    // Toggle disabled state for additional filters, but ensure dropdown remains active
-    $(".additional-filter")
-        .toggleClass("disabled", !isCritical)
-        .find("button")
-        .prop("disabled", !isCritical);
-    
-    // Update button text for main filter
+
+    // No longer disable additional filters based on selection
+    // So we remove this block entirely:
+    // $(".additional-filter")
+    //     .toggleClass("disabled", !isCritical)
+    //     .find("button")
+    //     .prop("disabled", !isCritical);
+
+    // Just update the button text
     const $selectedItem = $(`#ddlMapFilter.dropdown-menu li[id="${mapFilterType}"]`);
     if ($selectedItem.length) {
         $("#btn-mapDropDown").html($selectedItem.text() + ' <i class="fa fa-sort-down"></i>');
     }
 }
+
 
         // V4: State management constants
         const STORAGE_KEYS = {
@@ -149,7 +148,6 @@ function updateFilterStates(mapFilterType) {
 
 
         function initMapWithFilters(mapFilterType, locationTypeId, parentTypeId, statusId) {
-            // Only pass additional filters if in Critical mode
             if (mapFilterType !== "Critical") {
                 locationTypeId = null;
                 parentTypeId = null;
@@ -239,7 +237,7 @@ function updateFilterStates(mapFilterType) {
                     `;
                     listContainer.appendChild(listItem);
 
-                    // Click event on list item to zoom the map to the corresponding point
+                 
                     listItem.addEventListener('click', () => {
                         map.setCenter(coordinates);
                         map.setZoom(15);
@@ -309,9 +307,9 @@ function updateFilterStates(mapFilterType) {
                     map.data.addListener('click', function (event) {
                         var feat = event.feature;
                         var html = "<div class='col-sm-12'> <b><a style='text-decoration:underline;' target='_blank' href='/V1/Location.aspx?locationProfileId=" + feat.getProperty('locationProfileId') + "'>"
-                            + feat.getProperty('Location Name') + "</a></b></br>"
+                            + feat.getProperty('LocationName') + "</a></b></br>"
                             + feat.getProperty('Address') + "</br></br>"
-                            + "<b>" + feat.getProperty('Location Type') + "</b></br>"
+                            + "<b>" + feat.getProperty('LocationType') + "</b></br>"
                             + feat.getProperty('Description') + "</b></br></br>"
                             + "Seeking Volunteers: " + feat.getProperty('SeekingVolunteers') + "</br>"
                             + "Allows Pets: " + feat.getProperty('AllowsPets') + "</br>"
@@ -330,9 +328,9 @@ function updateFilterStates(mapFilterType) {
                     map.data.addListener('click', function (event) {
                         var feat = event.feature;
                         var html = "<div class='col-sm-12'> <b><a style='text-decoration:underline;' target='_blank' href='/V1/Location.aspx?locationProfileId=" + feat.getProperty('locationProfileId') + "'>"
-                            + feat.getProperty('Location Name') + "</a></b></br>"
+                            + feat.getProperty('LocationName') + "</a></b></br>"
                             + feat.getProperty('Address') + "</br></br>"
-                            + "<b>" + feat.getProperty('Location Type') + "</b></br>"
+                            + "<b>" + feat.getProperty('LocationType') + "</b></br>"
                             + feat.getProperty('Description') + "</b></br></br>"
                             + "Seeking Volunteers: " + feat.getProperty('SeekingVolunteers') + "</br>"
                             + "Allows Pets: " + feat.getProperty('AllowsPets') + "</br>"
@@ -513,15 +511,7 @@ function updateFilterStates(mapFilterType) {
     position: relative;
     display: inline-block;
 }  
-      .additional-filter.disabled {
-        opacity: 0.6;
-        pointer-events: none;
-    }
-    .additional-filter.disabled button {
-        background-color: #f8f9fa;
-        color: #6c757d;
-        cursor: not-allowed;
-    }
+    
     /* Smooth transitions */
     .filter-dropdown {
         transition: all 0.3s ease;
