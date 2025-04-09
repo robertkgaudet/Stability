@@ -103,8 +103,7 @@
         }
 
         .form-check label {
-            margin-left: 8px;
-            font-weight:normal!important;
+            margin-left: 3px;
         }
 
         .margin {
@@ -123,12 +122,6 @@
             width: 123px;
         }
 
-        .form-group {
-            margin-bottom: 15px !important;
-            margin-left: 28px !important;
-                margin: -6px;
-        }
-
         .note-editor.note-frame.panel.panel-default {
             margin-left: 22px;
             width: 655px;
@@ -143,13 +136,11 @@
             font-size: 17px;
         }
 */
-        
-        .modal-body {
-    position: relative;
-    padding: 15px;
-    margin-left: -14px;
-    margin-bottom:-13px;
-}
+        #manageMemberModal .modal-body label,
+        #manageMemberModal .form-check-label {
+            font-weight: normal !important;
+        }
+
         #txtEmail {
             margin-right: 0px !important;
         }
@@ -162,7 +153,7 @@
             margin-left: 10px;
             margin-bottom: 90px;
         }
-        /*  <----- -------------/>*/
+
         .custom-spinner {
             width: 40px;
             height: 40px;
@@ -172,9 +163,6 @@
             animation: spin 1s linear infinite;
             margin: 20px auto;
             margin-top: 106px;
-        }
-        #ContentPlaceHolder1_txtManageVettingNotes{
-            margin-left:-9px;
         }
     </style>
     <script>
@@ -301,20 +289,20 @@
                 allSelectedText: 'All Selected',
                 numberDisplayed: 2
             });
-            // PageRequestManager reference
             var prm = Sys.WebForms.PageRequestManager.getInstance();
 
-            // Before async postback starts
             prm.add_beginRequest(function () {
                 document.getElementById("loader").style.display = "block";
                 document.getElementById("tblVolunteers").style.display = "none";
             });
 
-            // After async postback completes (this includes when Repeater's data is bound)
             prm.add_endRequest(function () {
                 document.getElementById("loader").style.display = "none";
-                document.getElementById("tblVolunteers").style.display = "table"; // or "block" based on your styling
+                document.getElementById("tblVolunteers").style.display = "table";
+
+                $('html, body').animate({ scrollTop: 0 }, 'slow');
             });
+
         });
         var currentUserId = null;
         function setUserId(button) {
@@ -327,20 +315,19 @@
             return false;
         }
         function fetchUserData() {
-            debugger;
             if (!currentUserId) {
                 alert("User ID not set.");
                 return;
             }
-            $('#loader').show();
             $.ajax({
                 type: "GET",
                 url: "/V1/Handlers/UpdateMemberInfo.ashx",
                 data: { action: "fetch", userId: currentUserId },
                 dataType: "json",
                 success: function (response) {
+
                     if (response.success) {
-                        $('#loader').hide();
+                      
                         $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
                         $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
                         $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
@@ -348,8 +335,8 @@
                         $('#<%= chkManageTeamAdministrator.ClientID %>').prop('checked', response.makeTeamAdministrator);
                         console.log("User data fetched successfully:", response);
                     } else {
-                        $('#loader').hide();
                         alert("Failed to fetch user data.");
+
                     }
                 },
                 error: function (xhr, status, error) {
@@ -358,7 +345,8 @@
                 }
             });
         }
-        function saveChanges() {
+        function btnManageSaveChanges() {
+            debugger;
             if (!currentUserId) {
                 alert("No user selected.");
                 return;
@@ -381,6 +369,7 @@
         { %>
             stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
             makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
+
     <% } %>
             updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
         }
@@ -481,25 +470,21 @@
         $(document).ready(function () {
             // Function to handle the "Next" button click
             $(document).on("click", "#nextBtn", function () {
-
                 if (!$('#nextBtn').hasClass('disabled')) {
-                    debugger;
                     var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
-                    // var currentPage = Math.max(...$(".pagination .page-link").map(function () {
-                    //   return parseInt($(this).attr("tabindex")) || 0;
-                    //}).get());
-                    var currentPage = parseInt($(".firstpn").eq(0).text()) || 0;
+                    var currentPage = Math.max(...$(".pagination .page-link").map(function () {
+                        return parseInt($(this).attr("tabindex")) || 0;
+                    }).get());
+
                     // Increment the current page number
-                    if (currentPage < totalPages - 3) {
+                    if (currentPage <= totalPages) {
 
                         // Update tabindex for each page link
-                        var updateIndex = 0;
                         $('.page-item a').each(function (index) {
-                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0" && updateIndex < 3) {
+                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
                                 $(this).attr('tabindex', index + currentPage - 2);
                                 $(this).text(index + currentPage - 2);
                                 $(this).attr("onclick", `triggerSearch(${(index + currentPage - 2)}); return false;`);
-                                updateIndex++;
                             }
                         });
 
@@ -510,38 +495,32 @@
                     }
 
                     // Disable Next button if on the last page
-                    if (currentPage == totalPages - 4) {
+                    if (currentPage == totalPages) {
                         $('#nextBtn').addClass('disabled');
-                        $(".dotpage").hide();
                     } else {
                         $('#nextBtn').removeClass('disabled');
-                        $(".dotpage").show();
                     }
                 }
             });
 
             // Function to handle the "Previous" button click
             $(document).on("click", "#previousBtn", function () {
-                debugger;
                 if (!$('#previousBtn').hasClass('disabled')) {
                     var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
-                    //var currentPage = Math.max(...$(".pagination .page-link").map(function () {
-                    //    return parseInt($(this).attr("tabindex")) || 0;
-                    //}).get());
-                    var currentPage = parseInt($(".firstpn").eq(0).text()) || 0;
+                    var currentPage = Math.max(...$(".pagination .page-link").map(function () {
+                        return parseInt($(this).attr("tabindex")) || 0;
+                    }).get());
                     // Decrease the current page number
                     var firstPage = 1 + currentPage - 4;
                     if (firstPage >= 1) {
 
 
                         // Update tabindex for each page link
-                        var updateIndex = 0;
                         $('.page-item a').each(function (index) {
-                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0" && updateIndex < 3) {
+                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
                                 $(this).attr('tabindex', index + currentPage - 4);
                                 $(this).text(index + currentPage - 4);
                                 $(this).attr("onclick", `triggerSearch(${(index + currentPage - 4)}); return false;`);
-                                updateIndex++;
                             }
                         });
 
@@ -554,10 +533,8 @@
                     }
                     if (firstPage == 1) {
                         $('#previousBtn').addClass('disabled');
-                        $(".dotpage").hide();
                     } else {
                         $('#previousBtn').removeClass('disabled');
-                        $(".dotpage").show();
                     }
                 }
 
@@ -566,10 +543,8 @@
 
 
         function triggerSearch(pn) {
-            debugger;
             // Set a value to the hidden field            
             document.getElementById('<%= currentPageValue.ClientID %>').value = pn; // Set custom value here
-            document.getElementById('firstpn').value = pn;
             // Remove "active" class from all <li> elements
             $(".pagination .page-item").removeClass("active");
 
@@ -633,20 +608,11 @@
                 $(".page-item").not("#previousBtn, #nextBtn").remove();
                 var newPageItem = ''
                 for (var i = 0; i < parseFloat(totalPage); i++) {
-                    if (i < 3) {
-                        newPageItem += '<li class="page-item' + (i == 0 ? " active" : "") + (i == 2 ? " firstpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
-                    }
-                    else if (i > 3 && i <= 4) {
-                        newPageItem += '<li class="page-item disabled dotpage"><a class="page-link">...</a></li>';
-                    }
-
-                }
-                for (var i = Math.max(parseFloat(totalPage) - 3, 3), j = 0; i < parseFloat(totalPage); i++, j++) {
-
-                    newPageItem += '<li class="page-item' + (j == 0 ? " lastpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                    if (i == 3) break;
+                    newPageItem += '<li class="page-item' + (i == 0 ? " active" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
                 }
                 if (newPageItem != '') $('#previousBtn').after(newPageItem);
-                if (totalPage <= currentPage) $('#nextBtn').addClass('disabled');
+                if (totalPage <= 3) $('#nextBtn').addClass('disabled');
                 else $('#nextBtn').removeClass('disabled');
             }
             else {
@@ -851,6 +817,7 @@
                     <h4 style="margin-left: 18px;">Search</h4>
                     <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
+                            
                             <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center"
                                 style="margin-bottom: 20px;" visible="false">
                                 <asp:Literal ID="litMessage" runat="server"></asp:Literal>
@@ -987,13 +954,7 @@
         ClientIDMode="Static" />
     <asp:UpdatePanel runat="server" ID="updatePeopleList" UpdateMode="Conditional">
         <ContentTemplate>
-            <%--   <div id="loader" style="text-align: center; padding: 20px;">
-        <img src="/path-to-your-loader.gif" alt="Loading..." />
-    </div>--%>
-            <%--  <div  id="loader"  class="spinner-border" role="status">
-  <span class="sr-only">Loading...</span>
-</div>--%>
-            <div id="loader" class="custom-spinner"></div>
+             <div id="loader" class="custom-spinner"></div>
             <asp:Panel runat="server" ID="pnlTable">
                 <asp:HiddenField ID="currentPageValue" runat="server" />
                 <asp:HiddenField ID="totalPageValue" runat="server" />
@@ -1113,7 +1074,6 @@
                 <div class="color-line"></div>
                 <div class="modal-header text-center">
                     <h5 class="modal-title">Update Member Status</h5>
-
                 </div>
                 <!-- Success and Error Messages -->
                 <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
@@ -1131,41 +1091,40 @@
                             Team Verified
                         </label>
                     </div>
-                    <% if (User.IsInRole("Administrator"))
-                        { %>
-                    <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
-                            Stability
-                Verified</label>
+                    <div id="divShowTeamVerifiedFeatures" runat="server" visible="false">
+                        <div class="form-group form-check">
+                            <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
+                            <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
+                                Stability Verified
+                            </label>
+                        </div>
+                        <div class="form-group form-check">
+                            <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
+                            <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
+                                Make Team Administrator
+                            </label>
+                        </div>
                     </div>
-                    <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
-                            Make
-                Team Administrator</label>
+                    <div class="form-group">
+                        <label for="rblManageUserStatus" style="font-weight: bold !important;">Update Member Vetting Status:</label>
+                        <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
+                            <asp:ListItem Text="Start Vetting" Value="1" CssClass="form-check-input"></asp:ListItem>
+                            <asp:ListItem Text="Passed Vetting" Value="2" CssClass="form-check-input"></asp:ListItem>
+                            <asp:ListItem Text="Failed Vetting" Value="3" CssClass="form-check-input"></asp:ListItem>
+                        </asp:RadioButtonList>
                     </div>
-                    <% } %>
-                </div>
-                <div class="form-group">
-                    <label for="rblManageUserStatus">Update Member Vetting Status:</label>
-                    <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
-                        <asp:ListItem Text="Start Vetting" Value="1" CssClass="form-check-input"></asp:ListItem>
-                        <asp:ListItem Text="Passed Vetting" Value="2" CssClass="form-check-input"></asp:ListItem>
-                        <asp:ListItem Text="Failed Vetting" Value="3" CssClass="form-check-input"></asp:ListItem>
-                    </asp:RadioButtonList>
-                </div>
 
-                <!-- Vetting Notes Textarea -->
-                <div class="form-group">
-                    <label for="txtManageVettingNotes">Vetting Notes:</label>
-                    <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
-                        placeholder="Enter Vetting Notes"></asp:TextBox>
-                </div>
+                    <!-- Vetting Notes Textarea -->
+                    <div class="form-group">
+                        <label for="txtManageVettingNotes">Vetting Notes:</label>
+                        <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
+                            placeholder="Enter Vetting Notes"></asp:TextBox>
+                    </div>
 
+                </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
+                    <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
                         Save Changes</button>
                 </div>
             </div>
