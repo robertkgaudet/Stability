@@ -15,6 +15,7 @@
         var state;
         var zip;
         var lookupComplete = false;
+        var IsDuplicateClear = true;
 
         $(document).ready(function () {
 
@@ -39,6 +40,63 @@
                 document.location.href = "/default.aspx";
             });
         });
+
+        function CheckDuplicate(controlName, sender) {
+            if (sender.value) {
+                $.ajax(
+                    {
+                        type: "GET",
+                        url: "/V1/Handlers/GetDuplicateUserDetails.ashx?control=" + controlName + "&value=" + sender.value,
+                        contentType: "text/plain; charset=utf-8",
+                        dataType: "html",
+                        success: function (data) {
+                            if (data == "Yes") {
+                                IsDuplicateClear = false;
+                                if (controlName == "Email") {
+                                    $(".error-message-email").show();
+                                    $(".response-message-email").hide();
+                                }
+                                else {
+                                    $(".error-message-username").show();
+                                    $(".response-message-username").hide();
+                                }
+                                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                            }
+                            else {
+                                IsDuplicateClear = true;
+                                if (controlName == "Email") {
+                                    $(".error-message-email").hide();
+                                    $(".response-message-email").show();
+                                }
+                                else {
+                                    $(".error-message-username").hide();
+                                    $(".response-message-username").show();
+                                }
+                                if (lookupComplete) {
+                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                }
+                            }
+                        },
+                        error: function (request, status, error) {
+                            if (controlName == "Email") {
+                                $(".error-message-email").text("An error occurred. Please try again.").show();
+                                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                            }
+                            else {
+                                $(".error-message-username").text("An error occurred. Please try again.").show();
+                                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                            }
+                        }
+                    });
+            }
+            else {
+                $(".error-message-username").hide();
+                $(".response-message-username").hide();
+                $(".error-message-email").hide();
+                $(".response-message-email").hide();
+                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+            }
+        }
 
         function CheckAddressValues(controlName, sender) {
             switch (controlName) {
@@ -108,7 +166,9 @@
                                 $("#<%=hidAddressData.ClientID%>").val(data);
                                 $('#<%=lblAddressMessage.ClientID%>').text(successMessage);
                                 lookupComplete = true;
-                                $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                if (IsDuplicateClear) {
+                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                }
                             }
                             else if (duplicate == 'True' || duplicate == 'true') {
                                 //Address already exists.
@@ -120,7 +180,9 @@
                                 lookupComplete = false;
                                 var errorMessage = " This address already exists (" + address + "). Press 'Next' to edit in the Stability Location Manager. Web Service Message: " + data;
                                 $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
-                                $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                if (IsDuplicateClear) {
+                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                }
                             }
                             else {
                                 //Error getting the information
@@ -187,6 +249,18 @@
             font-size: 12px;
             color: #495057;
             pointer-events: none;
+        }
+
+        .response-message {
+            font-size: 20px;
+            color: green;
+            display: none;
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+            display: none;
         }
     </style>
 
@@ -324,7 +398,11 @@
 
                             <div class="form-group col-lg-12">
                                 <label>Email Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox type="email" ID="txtEmail" runat="server" CssClass="form-control" required="" placeholder="Email"></asp:TextBox>
+                                <asp:TextBox type="email" ID="txtEmail" runat="server" onblur="CheckDuplicate('Email', this)" CssClass="form-control" required="" placeholder="Email"></asp:TextBox>
+                                <span class="error-message error-message-email">This email address already exists. Do you want to <a href="/SignIn">Sign In</a>?</span>
+                                <span class="response-message response-message-email">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </span>
                             </div>
                             <div class="form-group col-lg-12">
                                 <label>Phone Number  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
@@ -332,7 +410,11 @@
                             </div>
                             <div class="form-group col-lg-12">
                                 <label>Username  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" required="" placeholder="Username"></asp:TextBox>
+                                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" onblur="CheckDuplicate('Username', this)" required="" placeholder="Username"></asp:TextBox>
+                                <span class="error-message error-message-username">This user is already in use.</span>
+                                <span class="response-message response-message-username">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </span>
                             </div>
                             <div class="form-group col-lg-12">
                                 <label>Password  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
