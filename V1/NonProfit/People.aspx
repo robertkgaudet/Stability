@@ -318,7 +318,6 @@
             });
         }
 		function btnManageSaveChanges() {
-			debugger;
             if (!currentUserId) {
                 alert("No user selected.");
                 return;
@@ -326,23 +325,19 @@
             var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
             var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
             var showTeamLogo = false;
-            // Check if the checkbox is visible using the JavaScript style display property
-           <% if (chkManageShowDonateButton.Visible)
-        { %>
-            showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
-              <% }
-        else
-        { %>
-            showTeamLogo = false;
-           <% } %>
+            var showTeamLogoVisible = document.getElementById('<%= hiddenShowTeamLogo.ClientID %>').value === "1";
+             if (showTeamLogoVisible) {
+                showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
+            } else {
+                showTeamLogo = false;
+            }
             var stabilityVerified = false;
             var makeTeamAdministrator = false;
-             <% if (User.IsInRole("Administrator"))
-        { %>
-            stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
-			makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
-			
-    <% } %>
+            var isAdmin = document.getElementById('<%= hiddenAdminRole.ClientID %>').value === "1";
+            if (isAdmin) {
+                stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
+              makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
+           }
             updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
         }
         function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator) {
@@ -436,7 +431,7 @@
                     }
                 );
         }
-	</script>
+    </script>
     <script type="text/javascript">
         var currentPagination = '';
         $(document).ready(function () {
@@ -1031,6 +1026,9 @@
         </div>
     </div>
     <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
+    <asp:HiddenField ID="hiddenAdminRole" runat="server" />
+    <asp:HiddenField ID="hiddenShowTeamLogo" runat="server" />
+
    <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1069,6 +1067,7 @@
                         Enable Team Logo
                     </label>
                 </div>
+                 <asp:PlaceHolder ID="phAdminControls" runat="server" Visible="false">
 				<div id="divShowTeamVerifiedFeatures" runat="server" visible="false">
 	  				<div class="form-group form-check">
 						<asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
@@ -1083,6 +1082,8 @@
 						</label>
 					</div>
 				</div>
+               </asp:PlaceHolder>
+
             </div>
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
