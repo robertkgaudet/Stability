@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_8013_staging" Class="CrowdReliefDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_8013_stabilityNew" Class="CrowdReliefDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.aspnet_Membership" Member="aspnet_Memberships">
     <Type Name="aspnet_Membership">
       <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
@@ -2159,21 +2159,15 @@
       <Column Name="TotalCount" Type="System.Int32" DbType="Int" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">
-    <Parameter Name="EventId" Parameter="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <Parameter Name="LocationTypeId" Parameter="locationTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <Parameter Name="ParentTypeId" Parameter="parentTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <Parameter Name="StatusId" Parameter="statusId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="GetGeoJsonByDisasterResult">
+  <Function Name="dbo.MapStabilityLocations" Method="MapStabilityLocations">
+    <Parameter Name="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="MapStabilityLocationsResult">
       <Column Name="" Member="Column1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
     </ElementType>
   </Function>
-  <Function Name="dbo.MapStabilityLocations" Method="MapStabilityLocations">
-    <Parameter Name="EventId" Parameter="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <Parameter Name="Status" Parameter="status" Type="System.Guid" DbType="UniqueIdentifier" />
-    <Parameter Name="LocationTypeId" Parameter="locationTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <Parameter Name="LocationParentTypeId" Parameter="locationParentTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
-    <ElementType Name="MapStabilityLocationsResult">
+  <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">
+    <Parameter Name="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <ElementType Name="GetGeoJsonByDisasterResult">
       <Column Name="" Member="Column1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
     </ElementType>
   </Function>
