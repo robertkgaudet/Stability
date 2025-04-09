@@ -208,33 +208,33 @@ public partial class V1_Register : System.Web.UI.Page
 					cityId = duplicateCity.CityId;
 				}
 
-				Address adres = new Address();
-				adres.AddressId = Guid.NewGuid();
-				adres.GooglePlaceId = addressList[10];
-				adres.FormattedAddress = addressList[11];
-				adres.StreetNumber = addressList[3];
-				adres.StreetName = addressList[4];
-				adres.Address1 = address;
-				adres.City = city;
-				adres.State = state;
-				adres.Zip = zipCode;
-				adres.Country = addressList[7];
-				adres.County = addressList[9];
-				adres.Latitude = addressList[1];
-				adres.Longitude = addressList[2];
-				adres.IsActive = true;
-				adres.CreatedOn = DateTime.Now;
-				adres.CreatedBy = userProfile.UserId;
-				adres.CountyId = countyId;
-				adres.CityId = cityId;
-				adres.LocationType = addressList[13];
-				dc.Addresses.InsertOnSubmit(adres);
+				Address newAddress = new Address();
+				newAddress.AddressId = Guid.NewGuid();
+				newAddress.GooglePlaceId = addressList[10];
+				newAddress.FormattedAddress = addressList[11];
+				newAddress.StreetNumber = addressList[3];
+				newAddress.StreetName = addressList[4];
+				newAddress.Address1 = address;
+				newAddress.City = city;
+				newAddress.State = state;
+				newAddress.Zip = zipCode;
+				newAddress.Country = addressList[7];
+				newAddress.County = addressList[9];
+				newAddress.Latitude = addressList[1];
+				newAddress.Longitude = addressList[2];
+				newAddress.IsActive = true;
+				newAddress.CreatedOn = DateTime.Now;
+				newAddress.CreatedBy = userProfile.UserId;
+				newAddress.CountyId = countyId;
+				newAddress.CityId = cityId;
+				newAddress.LocationType = addressList[13];
+				dc.Addresses.InsertOnSubmit(newAddress);
 				dc.SubmitChanges();
 
 				ProfileAddress proadres = new ProfileAddress();
 				proadres.ProfileAddressId = Guid.NewGuid();
 				proadres.ProfileId = userProfile.ProfileId;
-				proadres.AddressId = adres.AddressId;
+				proadres.AddressId = newAddress.AddressId;
 				proadres.HomeTypeId = new Guid("C478785A-014D-4DFF-86FE-3693E6F33FAC");
 				proadres.HomeRelationshipOwnRentTypeId = new Guid("58526C73-5469-4B5E-81B1-831476784C56");
 				proadres.IsPrimaryResidence = false;
@@ -249,6 +249,10 @@ public partial class V1_Register : System.Web.UI.Page
 				proadres.HasCrawlspace = false;
 				dc.ProfileAddresses.InsertOnSubmit(proadres);
 				dc.SubmitChanges();
+			}
+			else
+			{
+				//Insert profileId and addressId into ProfileAddress table.
 			}
 			#endregion
 			ListDictionary ldEmailBodyReplacements = new ListDictionary();
