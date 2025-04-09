@@ -148,7 +148,7 @@ public partial class V1_Administration_DisasterCounty : BaseOrganizationWebForm
         try
         {
             string baseUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
-            string handlerUrl = baseUrl + "/V1/Handlers/GetLatitudeLongitude.ashx?userId=" +
+            string handlerUrl = baseUrl + "/V1/Handlers/SearchByLocationType.ashx?userId=" +
                                 HttpUtility.UrlEncode(userId) +
                                 "&address=" + HttpUtility.UrlEncode(address) +
                                 "&locationType=" + HttpUtility.UrlEncode(locationType);
@@ -163,10 +163,7 @@ public partial class V1_Administration_DisasterCounty : BaseOrganizationWebForm
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error calling GetLatitudeLongitude.ashx: " + ex.Message);
+            Console.WriteLine("Error calling SearchByLocationType.ashx: " + ex.Message);
         }
     }
-
-
-
 }
