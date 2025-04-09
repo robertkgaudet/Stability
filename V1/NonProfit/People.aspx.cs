@@ -192,10 +192,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 				litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr>You must be on this team to see the team members.";
 			}
 
-			if (isOwner || User.IsInRole("Administrator") || (isUserOnTeam && User.IsInRole("Team Administrator")))
-			{
-				divShowTeamVerifiedFeatures.Visible = true;
-			}
+		
         }
         else
         {
@@ -521,13 +518,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             Guid orgId;
             if (Guid.TryParse(organizationId, out orgId))
             {
-                var positions = (from pos in dc.Positions
-                                 where pos.OrganizationId == orgId
-                                 select new
-                                 {
-                                     pos.PositionId,
-                                     pos.Name
-                                 }).ToList();
+               var positions = (from pos in dc.Positions
+                 where pos.OrganizationId == orgId
+                 orderby pos.Name
+                 select new
+                 {
+                     pos.PositionId,
+                     pos.Name
+                 }).ToList();
+
                 ddlTraining.DataSource = positions;
                 ddlTraining.DataTextField = "Name";
                 ddlTraining.DataValueField = "PositionId";
