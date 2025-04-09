@@ -35,6 +35,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     public bool isOwner = false;
     protected void Page_Load(object sender, EventArgs e)
     {
+
         organizationId = Request.QueryString["organizationId"];
         skillId = Request.QueryString["skillId"];
         resourceId = Request.QueryString["resourceId"];
@@ -62,12 +63,18 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                     isOwner = true;
                 }
             }
-                                                                                                                                                                                                                                                                                                                                             }
+
+        }
         var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId)
                             select new { o.Name, o.LogoSquare, o.HideTeamList, o.OwnerId, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName, o.EnableTeamMemberVerification }).SingleOrDefault();
-    
-        hiddenManageShowDonateButtonn.Value = (isOwner || (organization != null && organization.EnableTeamMemberVerification == true)) ? "1" : "0";
+
+        phAdminControls.Visible = (
+       User.IsInRole("Administrator")
+       || User.IsInRole("Team Administrator")
+       || isOwner
+       || (organization != null && organization.EnableTeamMemberVerification == true)
+   );
 
 
         string squareLogo = string.Empty;
@@ -111,7 +118,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         //ucTeamHeader.TeamDescription = organization.Description;
         //ucTeamHeader.TeamName = organization.Name;
         //ucTeamHeader.TeamSquareLogo = squareLogo;  
-      
+
 
         ////////////////////////
         //END HEADER PROPERTIES
@@ -202,7 +209,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr><a href=\"\\signin\">Sign in</a> to see the list of team members.";
         }
         if (!IsPostBack)
-        {      
+        {
             string type = Request.QueryString["type"];
             bool isVisible = (type == "email" || type == "sms");
 
@@ -231,10 +238,10 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
         }
     }
-  
+
     [WebMethod]
     public static string sendSms(string selectedUserIds, string smsMessage)
-    {   
+    {
         if (!string.IsNullOrEmpty(selectedUserIds) && !string.IsNullOrEmpty(smsMessage))
         {
             string[] userIds = selectedUserIds.Split(',');
@@ -297,10 +304,10 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                             out error
                         );
                     }
-                  
+
                 }
             }
-       
+
         }
 
 
@@ -632,7 +639,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 // Execute stored procedure and return mapped results
                 dc.CommandTimeout = 300;
                 var result = dc.ExecuteQuery<PeopleList>(
-                    "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS).ToList();				
+                    "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS).ToList();
 
                 // Show Filter Message if Any Filter Applied
                 divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS;

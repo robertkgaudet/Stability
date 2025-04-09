@@ -1,4 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs"Inherits="V1_NonProfit_People" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"
+    EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs"
+    Inherits="V1_NonProfit_People" %>
+
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
@@ -111,7 +114,7 @@
         }
 
         .justify-content-center {
-          /*  display: flex !important;*/
+            /*  display: flex !important;*/
             justify-content: center !important;
         }
 
@@ -130,15 +133,16 @@
             margin-bottom: 155px;
         }
 
-      /*  label {
+        /*  label {
             margin: 16px 0px 10px 10px;
             font-size: 17px;
         }
 */
-          #manageMemberModal .modal-body label,
-          #manageMemberModal .form-check-label {
-       font-weight: normal !important;
-       }
+        #manageMemberModal .modal-body label,
+        #manageMemberModal .form-check-label {
+            font-weight: normal !important;
+        }
+
         #txtEmail {
             margin-right: 0px !important;
         }
@@ -324,23 +328,14 @@
             }
             var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
             var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
-            var showTeamLogo = false;
-            // Check if the checkbox is visible using the JavaScript style display property
-           <% if (chkManageShowDonateButton.Visible)
-        { %>
-            showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
-              <% }
-        else
-        { %>
-            showTeamLogo = false;
-           <% } %>
+            var showTeamLogo = false;  
+       
             var stabilityVerified = false;
-            var makeTeamAdministrator = false;
-             <% if (User.IsInRole("Administrator"))
-        { %>
+            var makeTeamAdministrator = false;  
+            showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
             stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
             makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
-    <% } %>
+ 
             updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
         }
         function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator) {
@@ -748,7 +743,8 @@
             ClientIDMode="Static" TextMode="MultiLine" ValidateRequestMode="Disabled" Rows="3"></asp:TextBox>
         <div class="input-group-append">
             <button type="button" class="ladda-button ladda-button-demo ladda-button-email btn btn-primary b2"
-                data-style="slide-right" onclick="sendEmail()">Send Email</button>
+                data-style="slide-right" onclick="sendEmail()">
+                Send Email</button>
         </div>
     </div>
     <div id="divSms" runat="server" class="input-group">
@@ -756,7 +752,8 @@
             rows="6" cols="95"></textarea>
         <div class="input-group-append">
             <button type="button" class="ladda-button ladda-button-demo ladda-button-sms btn btn-primary "
-                data-style="slide-right" onclick="sendSms()">Send SMS</button>
+                data-style="slide-right" onclick="sendSms()">
+                Send SMS</button>
         </div>
     </div>
 
@@ -1029,66 +1026,68 @@
         </div>
     </div>
     <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
-   <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="color-line"></div>
-            <div class="modal-header text-center">
-                <h5 class="modal-title">Update Member Status</h5>
-            </div>
-            <!-- Success and Error Messages -->
-            <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
-                <i class="fa fa-check-circle"></i>Changes saved successfully.
-            </div>
-            <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
-                <i class="fa fa-exclamation-triangle"></i>
-                <div id="divManageErrorMessage"></div>
-            </div>
-            <!-- Modal body -->
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="rblManageUserStatus">Update Member Vetting Status:</label>
-                    <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
-                        <asp:ListItem Text="Start Vetting" Value="1" CssClass="form-check-input"></asp:ListItem>
-                        <asp:ListItem Text="Passed Vetting" Value="2" CssClass="form-check-input"></asp:ListItem>
-                        <asp:ListItem Text="Failed Vetting" Value="3" CssClass="form-check-input"></asp:ListItem>
-                    </asp:RadioButtonList>
+    <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="color-line"></div>
+                <div class="modal-header text-center">
+                    <h5 class="modal-title">Update Member Status</h5>
                 </div>
+                <!-- Success and Error Messages -->
+                <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
+                    <i class="fa fa-check-circle"></i>Changes saved successfully.
+                </div>
+                <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <div id="divManageErrorMessage"></div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="rblManageUserStatus">Update Member Vetting Status:</label>
+                        <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
+                            <asp:ListItem Text="Start Vetting" Value="1" CssClass="form-check-input"></asp:ListItem>
+                            <asp:ListItem Text="Passed Vetting" Value="2" CssClass="form-check-input"></asp:ListItem>
+                            <asp:ListItem Text="Failed Vetting" Value="3" CssClass="form-check-input"></asp:ListItem>
+                        </asp:RadioButtonList>
+                    </div>
 
-                <!-- Vetting Notes Textarea -->
-                <div class="form-group">
-                    <label for="txtManageVettingNotes">Vetting Notes:</label>
-                    <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
-                        placeholder="Enter Vetting Notes"></asp:TextBox>
+                    <!-- Vetting Notes Textarea -->
+                    <div class="form-group">
+                        <label for="txtManageVettingNotes">Vetting Notes:</label>
+                        <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
+                            placeholder="Enter Vetting Notes"></asp:TextBox>
+                    </div>
+                      <asp:PlaceHolder ID="phAdminControls" runat="server" Visible="false">
+                    <div class="form-group form-check donateDiv">
+                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
+                        <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
+                            Enable Team Logo
+                        </label>
+                    </div>
+                  
+                        <div class="form-group form-check">
+                            <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
+                            <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
+                                Stability Verified
+                            </label>
+                        </div>
+                        <div class="form-group form-check">
+                            <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
+                            <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
+                                Make Team Administrator
+                            </label>
+                        </div>
+                    </asp:PlaceHolder>
+
                 </div>
-                <div class="form-group form-check donateDiv">
-                    <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
-                    <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
-                        Enable Team Logo
-                    </label>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
+                        Save Changes</button>
                 </div>
-                <% if (User.IsInRole("Administrator") || isOwner) { %>
-                <div class="form-group form-check">
-                    <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
-                    <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
-                        Stability Verified
-                    </label>
-                </div>
-                <div class="form-group form-check">
-                    <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
-                    <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
-                        Make Team Administrator
-                    </label>
-                </div>
-                <% } %>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
-                    Save Changes</button>
             </div>
         </div>
     </div>
-</div>
     <uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>
