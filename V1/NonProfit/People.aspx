@@ -1,4 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs" Inherits="V1_NonProfit_People" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"
+    EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs"
+    Inherits="V1_NonProfit_People" %>
 
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
@@ -104,7 +106,7 @@
 
         .form-check label {
             margin-left: 8px;
-            font-weight:normal!important;
+            font-weight: normal !important;
         }
 
         .margin {
@@ -126,7 +128,7 @@
         .form-group {
             margin-bottom: 15px !important;
             margin-left: 28px !important;
-                margin: -6px;
+            margin: -6px;
         }
 
         .note-editor.note-frame.panel.panel-default {
@@ -143,13 +145,14 @@
             font-size: 17px;
         }
 */
-        
+
         .modal-body {
-    position: relative;
-    padding: 15px;
-    margin-left: -14px;
-    margin-bottom:-13px;
-}
+            position: relative;
+            padding: 15px;
+            margin-left: -14px;
+            margin-bottom: -13px;
+        }
+
         #txtEmail {
             margin-right: 0px !important;
         }
@@ -173,8 +176,9 @@
             margin: 20px auto;
             margin-top: 106px;
         }
-        #ContentPlaceHolder1_txtManageVettingNotes{
-            margin-left:-9px;
+
+        #ContentPlaceHolder1_txtManageVettingNotes {
+            margin-left: -9px;
         }
     </style>
     <script>
@@ -327,7 +331,6 @@
             return false;
         }
         function fetchUserData() {
-            debugger;
             if (!currentUserId) {
                 alert("User ID not set.");
                 return;
@@ -358,32 +361,29 @@
                 }
             });
         }
-        function saveChanges() {
+        function btnManageSaveChanges() {
             if (!currentUserId) {
                 alert("No user selected.");
                 return;
             }
             var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
             var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
-            var showTeamLogo = false;
-            // Check if the checkbox is visible using the JavaScript style display property
-           <% if (chkManageShowDonateButton.Visible)
-        { %>
-            showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
-              <% }
-        else
-        { %>
-            showTeamLogo = false;
-           <% } %>
-            var stabilityVerified = false;
-            var makeTeamAdministrator = false;
-             <% if (User.IsInRole("Administrator"))
-        { %>
-            stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
+                  var showTeamLogo = false;
+                  var showTeamLogoVisible = document.getElementById('<%= hiddenShowTeamLogo.ClientID %>').value === "1";
+                  if (showTeamLogoVisible) {
+                      showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
+                  } else {
+                      showTeamLogo = false;
+                  }
+                  var stabilityVerified = false;
+                  var makeTeamAdministrator = false;
+                  var isAdmin = document.getElementById('<%= hiddenAdminRole.ClientID %>').value === "1";
+                  if (isAdmin) {
+                      stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
             makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
-    <% } %>
-            updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
-        }
+                  }
+                  updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
+              }
         function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator) {
             var data = {
                 action: "update",
@@ -483,7 +483,7 @@
             $(document).on("click", "#nextBtn", function () {
 
                 if (!$('#nextBtn').hasClass('disabled')) {
-                    debugger;
+                   
                     var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
                     // var currentPage = Math.max(...$(".pagination .page-link").map(function () {
                     //   return parseInt($(this).attr("tabindex")) || 0;
@@ -522,7 +522,7 @@
 
             // Function to handle the "Previous" button click
             $(document).on("click", "#previousBtn", function () {
-                debugger;
+               
                 if (!$('#previousBtn').hasClass('disabled')) {
                     var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
                     //var currentPage = Math.max(...$(".pagination .page-link").map(function () {
@@ -566,7 +566,7 @@
 
 
         function triggerSearch(pn) {
-            debugger;
+          
             // Set a value to the hidden field            
             document.getElementById('<%= currentPageValue.ClientID %>').value = pn; // Set custom value here
             document.getElementById('firstpn').value = pn;
@@ -1106,7 +1106,10 @@
             </div>
         </div>
     </div>
+
     <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
+    <asp:HiddenField ID="hiddenAdminRole" runat="server" />
+    <asp:HiddenField ID="hiddenShowTeamLogo" runat="server" />
     <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1131,21 +1134,22 @@
                             Team Verified
                         </label>
                     </div>
-                    <% if (User.IsInRole("Administrator"))
-                        { %>
-                    <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
-                            Stability
-                Verified</label>
-                    </div>
-                    <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
-                            Make
-                Team Administrator</label>
-                    </div>
-                    <% } %>
+                    <asp:PlaceHolder ID="phAdminControls" runat="server" Visible="false">
+                        <div id="divShowTeamVerifiedFeatures" runat="server">
+                            <div class="form-group form-check">
+                                <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
+                                <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
+                                    Stability Verified
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
+                                <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
+                                    Make Team Administrator
+                                </label>
+                            </div>
+                        </div>
+                    </asp:PlaceHolder>
                 </div>
                 <div class="form-group">
                     <label for="rblManageUserStatus">Update Member Vetting Status:</label>
@@ -1165,7 +1169,7 @@
 
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
+                    <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
                         Save Changes</button>
                 </div>
             </div>
