@@ -67,9 +67,14 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId)
                             select new { o.Name, o.LogoSquare, o.HideTeamList, o.OwnerId, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName, o.EnableTeamMemberVerification }).SingleOrDefault();
-        hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true|| isOwner ? "1" : "0";
+        hiddenManageShowDonateButtonn.Value =
+        (User.IsInRole("Administrator")
+        || (isUserOnTeam && User.IsInRole("Team Administrator"))
+        || (organization != null && organization.EnableTeamMemberVerification == true)
+        || isOwner)
+        ? "1" : "0";
 
-        bool showAdminControls = User.IsInRole("Administrator") || User.IsInRole("Team Administrator") || isOwner;
+        bool showAdminControls = User.IsInRole("Administrator") || (isUserOnTeam && User.IsInRole("Team Administrator")) || isOwner;
 
         phAdminControls.Visible = showAdminControls;
         hiddenAdminRole.Value = showAdminControls ? "1" : "0"; string squareLogo = string.Empty;
