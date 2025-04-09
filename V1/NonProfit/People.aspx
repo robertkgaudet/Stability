@@ -358,7 +358,7 @@
                 }
             });
         }
-        function saveChanges() {
+		function btnManageSaveChanges() {
             if (!currentUserId) {
                 alert("No user selected.");
                 return;
@@ -366,22 +366,19 @@
             var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
             var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
             var showTeamLogo = false;
-            // Check if the checkbox is visible using the JavaScript style display property
-           <% if (chkManageShowDonateButton.Visible)
-        { %>
-            showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
-              <% }
-        else
-        { %>
-            showTeamLogo = false;
-           <% } %>
+            var showTeamLogoVisible = document.getElementById('<%= hiddenShowTeamLogo.ClientID %>').value === "1";
+             if (showTeamLogoVisible) {
+                showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
+            } else {
+                showTeamLogo = false;
+            }
             var stabilityVerified = false;
             var makeTeamAdministrator = false;
-             <% if (User.IsInRole("Administrator"))
-        { %>
-            stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
-            makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
-    <% } %>
+            var isAdmin = document.getElementById('<%= hiddenAdminRole.ClientID %>').value === "1";
+            if (isAdmin) {
+                stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
+              makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
+           }
             updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
         }
         function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator) {
@@ -1107,46 +1104,26 @@
         </div>
     </div>
     <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
-    <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="color-line"></div>
-                <div class="modal-header text-center">
-                    <h5 class="modal-title">Update Member Status</h5>
+    <asp:HiddenField ID="hiddenAdminRole" runat="server" />
+    <asp:HiddenField ID="hiddenShowTeamLogo" runat="server" />
 
-                </div>
-                <!-- Success and Error Messages -->
-                <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
-                    <i class="fa fa-check-circle"></i>Changes saved successfully.
-                </div>
-                <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
-                    <i class="fa fa-exclamation-triangle"></i>
-                    <div id="divManageErrorMessage"></div>
-                </div>
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <div class="form-group form-check donateDiv">
-                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
-                        <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
-                            Team Verified
-                        </label>
-                    </div>
-                    <% if (User.IsInRole("Administrator"))
-                        { %>
-                    <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
-                            Stability
-                Verified</label>
-                    </div>
-                    <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
-                        <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
-                            Make
-                Team Administrator</label>
-                    </div>
-                    <% } %>
-                </div>
+   <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="color-line"></div>
+            <div class="modal-header text-center">
+                <h5 class="modal-title">Update Member Status</h5>
+            </div>
+            <!-- Success and Error Messages -->
+            <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
+                <i class="fa fa-check-circle"></i>Changes saved successfully.
+            </div>
+            <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
+                <i class="fa fa-exclamation-triangle"></i>
+                <div id="divManageErrorMessage"></div>
+            </div>
+            <!-- Modal body -->
+            <div class="modal-body">
                 <div class="form-group">
                     <label for="rblManageUserStatus">Update Member Vetting Status:</label>
                     <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
@@ -1162,14 +1139,37 @@
                     <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
                         placeholder="Enter Vetting Notes"></asp:TextBox>
                 </div>
-
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
-                        Save Changes</button>
+                <div class="form-group form-check donateDiv">
+                    <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
+                    <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
+                        Enable Team Logo
+                    </label>
                 </div>
+                 <asp:PlaceHolder ID="phAdminControls" runat="server" Visible="false">
+				<div id="divShowTeamVerifiedFeatures" runat="server" visible="false">
+	  				<div class="form-group form-check">
+						<asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
+						<label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
+							Stability Verified
+						</label>
+					</div>
+				  <div class="form-group form-check">
+						<asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
+						<label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
+							Make Team Administrator
+						</label>
+					</div>
+				</div>
+               </asp:PlaceHolder>
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
+                    Save Changes</button>
             </div>
         </div>
     </div>
+</div>
     <uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>

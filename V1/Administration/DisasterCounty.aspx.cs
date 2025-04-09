@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -109,6 +110,9 @@ public partial class V1_Administration_DisasterCounty : BaseOrganizationWebForm
                 }
             }
             dc.SubmitChanges();
+            // Fetch all location types ONCE (reduces DB queries)
+            var allLocationTypes = dc.LocationTypes.Select(lt => lt.Name).ToList();
+
             foreach (ListItem item in cblCounties.Items)
             {
                 if (item.Selected)
@@ -116,23 +120,39 @@ public partial class V1_Administration_DisasterCounty : BaseOrganizationWebForm
                     var county = dc.Counties.FirstOrDefault(c => c.CountyId == new Guid(item.Value));
                     if (county != null)
                     {
-                        string address = string.Format("{0}, {1}", county.Name, county.State);
-                        CallGetLatLngHandler(userId.ToString(), address);
+                       string address = string.Format("{0}, {1}", county.Name, county.State);
+                      
+                        // Process each location type
+                        foreach (string locationType in allLocationTypes)
+                        {
+                            try
+                            {
+                                CallGetLatLngHandler(userId.ToString(), address, locationType);
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log error (e.g., to a file or database)
+                              
+                            }
+                        }
                     }
                 }
             }
+
         }
         lblMessage.Text = "County information has been updated with Google Places data.";
         Response.Redirect("/Disaster/" + disasterURLFriendlyName);
     }
-    private void CallGetLatLngHandler(string userId, string address)
+    private void CallGetLatLngHandler(string userId, string address, string locationType)
     {
         try
         {
             string baseUrl = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
-            string handlerUrl = baseUrl + "/V1/Handlers/GetLatitudeLongitude.ashx?userId=" +
+            string handlerUrl = baseUrl + "/V1/Handlers/SearchByLocationType.ashx?userId=" +
                                 HttpUtility.UrlEncode(userId) +
-                                "&address=" + HttpUtility.UrlEncode(address);
+                                "&address=" + HttpUtility.UrlEncode(address) +
+                                "&locationType=" + HttpUtility.UrlEncode(locationType);
+
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(handlerUrl);
             request.Method = "GET";
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
@@ -143,13 +163,7 @@ public partial class V1_Administration_DisasterCounty : BaseOrganizationWebForm
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error calling GetLatitudeLongitude.ashx: " + ex.Message);
+            Console.WriteLine("Error calling SearchByLocationType.ashx: " + ex.Message);
         }
     }
-
-
-
-
-
-
 }

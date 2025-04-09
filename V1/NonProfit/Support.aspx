@@ -106,7 +106,6 @@
 
 <script>
     $(document).ready(function () {
-        debugger;
         $('#btnContactForm').click(function () {
             debugger;
             let name = $("#name").val();
@@ -116,14 +115,18 @@
             
             $.ajax({
                 type: "POST",
-                url: "/V1/NonProfit/V1_NonProfit_Support.aspx/SendEmail",
+                url: "/V1/NonProfit/Support.aspx/SendEmail",
                 data: JSON.stringify({ name: name, email: email, subject: subject, message: message }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (response) {
-                    if (response === "success") {
+                    if (response.d === 'success') {
                         $(".response-message").show();
                         $(".error-message").hide();
+                        $("#name").val('');
+                        $("#email").val('');
+                        $("#subject").val('');
+                        $("#message").val('');
                     } else {
                         $(".response-message").hide();
                         $(".error-message").show();
