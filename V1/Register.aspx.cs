@@ -172,6 +172,7 @@ public partial class V1_Register : System.Web.UI.Page
 			#region save address 
 			var addressList = addressData.Split('|');
 			var duplicateAddress = dc.Addresses.FirstOrDefault(f => f.GooglePlaceId == addressList[10]);
+			var addressId = duplicateAddress.AddressId;
 			if (duplicateAddress == null)
 			{
 				var duplicateCounty = dc.Counties.FirstOrDefault(f => f.Name == addressList[9]); 
@@ -231,30 +232,30 @@ public partial class V1_Register : System.Web.UI.Page
 				dc.Addresses.InsertOnSubmit(newAddress);
 				dc.SubmitChanges();
 
-				ProfileAddress proadres = new ProfileAddress();
-				proadres.ProfileAddressId = Guid.NewGuid();
-				proadres.ProfileId = userProfile.ProfileId;
-				proadres.AddressId = newAddress.AddressId;
-				proadres.HomeTypeId = new Guid("C478785A-014D-4DFF-86FE-3693E6F33FAC");
-				proadres.HomeRelationshipOwnRentTypeId = new Guid("58526C73-5469-4B5E-81B1-831476784C56");
-				proadres.IsPrimaryResidence = false;
-				proadres.HasFloodInsurance = false;
-				proadres.HasHomeownersInsurance = false;
-				proadres.ShowOnAgencyMap = false;
-				proadres.ShowOnCleanupMap = false;
-				proadres.IsMultistory = false;
-				proadres.HasBasement = false;
-				proadres.HasGarage = false;
-				proadres.HasCarport = false;
-				proadres.HasCrawlspace = false;
-				dc.ProfileAddresses.InsertOnSubmit(proadres);
-				dc.SubmitChanges();
+				addressId = newAddress.AddressId;
 			}
-			else
-			{
-				//Insert profileId and addressId into ProfileAddress table.
-			}
+			
+			//Insert profileId and addressId into ProfileAddress table.
+			ProfileAddress newProfileAddress = new ProfileAddress();
+			newProfileAddress.ProfileAddressId = Guid.NewGuid();
+			newProfileAddress.ProfileId = userProfile.ProfileId;
+			newProfileAddress.AddressId = addressId;
+			newProfileAddress.HomeTypeId = new Guid("C478785A-014D-4DFF-86FE-3693E6F33FAC");
+			newProfileAddress.HomeRelationshipOwnRentTypeId = new Guid("58526C73-5469-4B5E-81B1-831476784C56");
+			newProfileAddress.IsPrimaryResidence = false;
+			newProfileAddress.HasFloodInsurance = false;
+			newProfileAddress.HasHomeownersInsurance = false;
+			newProfileAddress.ShowOnAgencyMap = false;
+			newProfileAddress.ShowOnCleanupMap = false;
+			newProfileAddress.IsMultistory = false;
+			newProfileAddress.HasBasement = false;
+			newProfileAddress.HasGarage = false;
+			newProfileAddress.HasCarport = false;
+			newProfileAddress.HasCrawlspace = false;
+			dc.ProfileAddresses.InsertOnSubmit(newProfileAddress);
+			dc.SubmitChanges();
 			#endregion
+			
 			ListDictionary ldEmailBodyReplacements = new ListDictionary();
 			ldEmailBodyReplacements.Add("<% RecipientsName %>", firstName);
 
