@@ -108,8 +108,18 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 							where o.OrganizationId == new Guid(organizationId)
 							select o).SingleOrDefault();
 
-			organization.Address = address;
-			organization.City = city;
+			if(!String.IsNullOrEmpty(address))
+				organization.Address = address;
+
+			if (!String.IsNullOrEmpty(city))
+				organization.City = city;
+
+			if (!String.IsNullOrEmpty(zip))
+				organization.Zip = zip;
+
+			if (!String.IsNullOrEmpty(state))
+				organization.State = state;
+
 			organization.CreatedBy = userId;
 			organization.CreatedOn = DateTime.Now;
 			organization.Description = description;
@@ -124,19 +134,20 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 			organization.PointOfContactEmail = POCEmail;
 			organization.PointOfContactName = POCName;
 			organization.PointOfContactPhoneNumber = POCPhone;
-			organization.PrimaryPhone = primaryPhone;
+
+			if (!String.IsNullOrEmpty(primaryPhone))
+				organization.PrimaryPhone = primaryPhone;
+
 			organization.PublicEmail = string.IsNullOrEmpty(publicEmail) ? null : publicEmail;
 			organization.PublicPhoneNumber = string.IsNullOrEmpty(publicPhone) ? null : publicPhone;
 			organization.PurposeMission = purposeMission;
 			organization.SecondaryPhone = string.IsNullOrEmpty(secondaryPhone) ? null : secondaryPhone;
-			organization.State = state;
 			organization.TwitterURL = string.IsNullOrEmpty(twitter) ? null : twitter;
 			organization.Website = string.IsNullOrEmpty(website) ? null : website;
 			organization.BlogURL = string.IsNullOrEmpty(blogURL) ? null : blogURL;
 			organization.DonationURL = string.IsNullOrEmpty(donationLink) ? null : donationLink;
 			organization.YearFounded = yearFounded;
 			organization.YouTubeURL = string.IsNullOrEmpty(youTube) ? null : youTube;
-			organization.Zip = zip;
 			organization._501c3Status = status501c3;
 			organization.EIN = ein;
 			dc.SubmitChanges();
