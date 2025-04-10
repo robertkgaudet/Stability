@@ -206,7 +206,7 @@
 
                     // FIXED: Always use LocationName/LocationType (your data structure)
                     const campaignName = feature.getProperty('Location Name') || 'Location name not available';
-                    const organizationName = feature.getProperty('LocationType') || 'Type not specified';
+                    const organizationName = feature.getProperty('Location Type') || 'Type not specified';
                     const label1 = "Location Type";
 
                     // FIXED: Only show contact if data exists
