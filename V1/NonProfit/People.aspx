@@ -327,7 +327,7 @@
                 success: function (response) {
 
                     if (response.success) {
-                      
+
                         $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
                         $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
                         $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
@@ -567,6 +567,8 @@
             document.getElementById('<%= txtOptedSMS.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtEmailconnect.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtIsVerified.ClientID %>').checked = false; // Set custom value here
+            document.getElementById('<%= txtTeamVerified.ClientID %>').checked = false; // Set custom value here
+            document.getElementById('<%= txtStabilityVerified.ClientID %>').checked = false; // Set custom value here
             document.getElementById('<%= ddlEvent.ClientID %>').value = ''; // Set custom value here
             $('#hiddenEvent').val('');
             document.getElementById('<%= ddlTraining.ClientID %>').value = ''; // Set custom value here
@@ -629,7 +631,7 @@
                 if (checkbox.checked) {
                     selectedUserIds.push(checkbox.getAttribute("data-userid"));
                 }
-            });
+            }); n   
 
             hiddenField.value = selectedUserIds.join(",");
         }
@@ -817,7 +819,7 @@
                     <h4 style="margin-left: 18px;">Search</h4>
                     <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-                            
+
                             <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center"
                                 style="margin-bottom: 20px;" visible="false">
                                 <asp:Literal ID="litMessage" runat="server"></asp:Literal>
@@ -932,6 +934,18 @@
                                                     <label class="form-check-label" for="<%=txtIsVerified.ClientID%>">Is Verified</label>
                                                 </div>
                                             </div>
+                                            <div class="col-sm-3 mb-2">
+                                                <div class="form-check">
+                                                    <asp:CheckBox ID="txtTeamVerified" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtTeamVerified.ClientID%>">Team Verified</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 mb-2">
+                                                <div class="form-check">
+                                                    <asp:CheckBox ID="txtStabilityVerified" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtStabilityVerified.ClientID%>">Stability Verified</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -954,7 +968,7 @@
         ClientIDMode="Static" />
     <asp:UpdatePanel runat="server" ID="updatePeopleList" UpdateMode="Conditional">
         <ContentTemplate>
-             <div id="loader" class="custom-spinner"></div>
+            <div id="loader" class="custom-spinner"></div>
             <asp:Panel runat="server" ID="pnlTable">
                 <asp:HiddenField ID="currentPageValue" runat="server" />
                 <asp:HiddenField ID="totalPageValue" runat="server" />
@@ -1132,3 +1146,4 @@
     </div>
     <uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>
+    
