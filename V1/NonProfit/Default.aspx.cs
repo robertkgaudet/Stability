@@ -106,6 +106,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 								o.ParentOrganizationId
                             }).SingleOrDefault();
 
+		BindChapterOrganizations(organizationId);
 
 		string squareLogo = string.Empty;
         if (organization != null)
@@ -143,9 +144,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
         Master.FbImageType = "image/jpg";
         Master.FbURL = Request.Url.AbsoluteUri;
 
-
-
-
         bool isOwner = false;
         if (User.Identity.IsAuthenticated == true)
         {
@@ -157,11 +155,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
             if (userOrganizationOwner != null)
             {
-
-				if (!IsPostBack)
-				{
-					BindOrganizations(organizationId);
-				}
 
 				if ((userOrganizationOwner.OwnerId == userId))
                 {
@@ -341,11 +334,13 @@ public partial class V1_NonProfit_Default : BaseWebForm
         }
 
     }
-	private void BindOrganizations(string parentOrganizationId)
+
+	private void BindChapterOrganizations(string parentOrganizationId)
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 			var organizations = (from org in dc.Organizations
 								 where org.IsActive == true && org.ParentOrganizationId == new Guid(parentOrganizationId)
+								 && org.OrganizationId != org.ParentOrganizationId
 								 orderby org.Name
 								 select new
 								 {

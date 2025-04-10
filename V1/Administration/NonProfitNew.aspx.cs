@@ -1,17 +1,39 @@
 ﻿using System;
+using System.Activities.Expressions;
 using System.Collections.Generic;
+using System.IdentityModel.Metadata;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 {
 	string organizationId = string.Empty;
+	public string nonProfitDropDown = string.Empty;
+	public string preselectedNonProfitJQuery = string.Empty;
+	string parentOrganizationId = string.Empty;
+
+
+	/// <summary>
+	/// ALLOWS SITE ADMINS TO UPDATE AND ADD PAGES.
+	/// SHOULD NOT BE USED BY NON-ADMINS.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+
+
 	protected void Page_Load(object sender, EventArgs e)
 	{
-		organizationId = Request.QueryString["organizationId"];
+		organizationId			= Request.QueryString["organizationId"]; //EDIT MODE
+		parentOrganizationId	= Request.QueryString["parentOrganizationId"]; //IF IT'S CLICKED INTO
+
 		if (!IsPostBack)
 		{
+			if(!String.IsNullOrEmpty(parentOrganizationId))
+				hidParentOrganizationId.Value = parentOrganizationId;
+
 			ListItemCollection statesList = new ListItemCollection();
 			foreach (string state in States.Names())
 			{
@@ -24,39 +46,49 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 
 			if(!String.IsNullOrEmpty(organizationId))
 			{
-				CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+				//EDIT MODE..
+;				CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 				//Select the state for the org.
 				var organization = (from o in dc.Organizations
 								   where o.OrganizationId == new Guid(organizationId)
 								   select o).SingleOrDefault();
 
-				txtParentOrganization.Value = organization.Name;
-				txtDescription.Value = organization.Description;
-				txtAddress.Value = organization.Address;
-				txtCity.Value = organization.City;
-				txtZipCode.Value = organization.Zip;
-				txtDonationLink.Value = organization.DonationURL;
-				txtPrimaryPhonenumber.Value = organization.PrimaryPhone;
-				txtSecondaryPhoneNumber.Value = organization.SecondaryPhone;
-				txtWebsite.Value = organization.Website;
-				chk501c3Status.Checked = organization._501c3Status == null ? false : (bool)organization._501c3Status;
-				txtEIN.Value = organization.EIN;
-				chkVoad.Checked = organization.IsVoadMember == null ? false : (bool)organization.IsVoadMember;
-				txtPOCFullname.Value = organization.PointOfContactName;
-				txtPOCEmailAddress.Value = organization.PointOfContactEmail;
-				txtPOCPhoneNumber.Value = organization.PointOfContactPhoneNumber;
-				txtPublicPhoneNumber.Value = organization.PublicPhoneNumber;
-				txtPublicEmailAddress.Value = organization.PublicEmail;
-				txtPurposeMission.Value = organization.PurposeMission;
-				txtFacebook.Value = organization.FacebookURL;
-				txtFacebookGroup.Value = organization.FacebookGroupURL;
-				txtInstagram.Value = organization.InstagramURL;
-				txtYouTube.Value = organization.YouTubeURL;
-				txtTwitter.Value = organization.TwitterURL;
-				txtblogURL.Value = organization.BlogURL;
-				txtTikTok.Value = organization.TikTokURL;
-				txtYearFounded.Value = organization.YearFounded;
-				txtURLFriendlyName.Value = organization.URLFriendlyName;
+				txtOrganization.Value			= organization.Name;
+				txtDescription.Value			= organization.Description;
+				txtAddress.Value				= organization.Address;
+				txtCity.Value					= organization.City;
+				txtZipCode.Value				= organization.Zip;
+				txtDonationLink.Value			= organization.DonationURL;
+				txtPrimaryPhonenumber.Value		= organization.PrimaryPhone;
+				txtSecondaryPhoneNumber.Value	= organization.SecondaryPhone;
+				txtWebsite.Value				= organization.Website;
+				chk501c3Status.Checked			= organization._501c3Status == null ? false : (bool)organization._501c3Status;
+				txtEIN.Value					= organization.EIN;
+				chkVoad.Checked					= organization.IsVoadMember == null ? false : (bool)organization.IsVoadMember;
+				txtPOCFullname.Value			= organization.PointOfContactName;
+				txtPOCEmailAddress.Value		= organization.PointOfContactEmail;
+				txtPOCPhoneNumber.Value			= organization.PointOfContactPhoneNumber;
+				txtPublicPhoneNumber.Value		= organization.PublicPhoneNumber;
+				txtPublicEmailAddress.Value		= organization.PublicEmail;
+				txtPurposeMission.Value			= organization.PurposeMission;
+				txtFacebook.Value				= organization.FacebookURL;
+				txtFacebookGroup.Value			= organization.FacebookGroupURL;
+				txtInstagram.Value				= organization.InstagramURL;
+				txtYouTube.Value				= organization.YouTubeURL;
+				txtTwitter.Value				= organization.TwitterURL;
+				txtblogURL.Value				= organization.BlogURL;
+				txtTikTok.Value					= organization.TikTokURL;
+				txtYearFounded.Value			= organization.YearFounded;
+				txtURLFriendlyName.Value		= organization.URLFriendlyName;
+
+				if (organization.ParentOrganizationId != null)
+				{
+					//HAS A PARENT ORGANIZATION
+					//LOAD PARENT ORGANIZATION INTO DROP DOWN IF THERE IS ONE.
+					//EDI MODE, SO IGNORE THE ONE PASSED IN AND CHOOSE THE
+					parentOrganizationId = organization.ParentOrganizationId.ToString();
+					hidParentOrganizationId.Value = parentOrganizationId;
+				}
 
 				ListItem item = ddlState.Items.FindByValue(organization.State);
 				if (item != null)
@@ -64,13 +96,68 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 					ddlState.SelectedValue = item.Value;
 				}
 			}
+
+			//Load the non-profit parent list with a selected parent in the link
+			//if it is passed in OR if it comes from edit mode.
+			LoadParentNonProfits(parentOrganizationId);
+		}
+	}
+
+	[WebMethod]
+	public static bool IsFriendlyNameUnique(string urlFriendlyName)
+	{
+		using (var dc = new CrowdReliefDBDataContext())
+		{
+			// Check if the URLFriendlyCampaignName already exists
+			return !dc.Organizations.Any(o => o.URLFriendlyName == urlFriendlyName);
+		}
+	}
+
+	public void LoadParentNonProfits(string parentOrganizationId)
+	{
+
+		//Only use this if the person selected Volunteer.
+		//If they have chosen an event filter down the volunteer orgs working on the event otherwise show all events.
+		//If a nonprofitid is sent on the QS filter down to just that nonprofit.
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		//Load all available non-profits
+		//If they chose an event, filter to orgs that are added to the event.
+		var nonProfits = from o in dc.Organizations
+							where o.IsActive == true
+							orderby o.Name
+							select new { o };
+
+		nonProfitDropDown = nonProfitDropDown + "<li><a href=\"#\">Choose A Parent Organization (Optional)</a></li>" + Environment.NewLine;
+		nonProfitDropDown = nonProfitDropDown + "<li><a href=\"#\">------ None ------</a></li>" + Environment.NewLine;
+		foreach (var nonProfit in nonProfits)
+		{
+			nonProfitDropDown = nonProfitDropDown + "<li id=\"" + nonProfit.o.OrganizationId + "\"><a href=\"#\">" + nonProfit.o.Name + "</a></li>" + Environment.NewLine;
+
+		}
+
+		if(parentOrganizationId != null)
+		{
+			//Get the parent.
+			var nonProfitParent = (from o in dc.Organizations
+									where o.OrganizationId == new Guid(parentOrganizationId)
+									orderby o.Name
+									select new { o.Name }).Take(1).SingleOrDefault();
+
+			if(nonProfitParent != null)
+			{
+				//If this is the parent non-profit, pre-select the item in the dropdown list and pre-set the hidden field value.
+				preselectedNonProfitJQuery = "$(\"#btn-NonProfitDropdown.nonProfit\").html('" + nonProfitParent.Name + "');";
+			}
+
 		}
 	}
 
 	protected void btnSubmit_Click(object sender, EventArgs e)
 	{
 		organizationId = Request.QueryString["organizationId"];
-		string organizationName = txtParentOrganization.Value;
+		parentOrganizationId = hidParentOrganizationId.Value;
+
+		string organizationName = txtOrganization.Value;
 		string description		= txtDescription.Value;
 		string address			= txtAddress.Value;
 		string city				= txtCity.Value;
@@ -103,6 +190,7 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 
 		if (!String.IsNullOrEmpty(organizationId))
 		{
+			//EDIT MODE
 			//Select the state for the org.
 			Organization organization = (from o in dc.Organizations
 							where o.OrganizationId == new Guid(organizationId)
@@ -119,6 +207,9 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 
 			if (!String.IsNullOrEmpty(state))
 				organization.State = state;
+
+			if(!string.IsNullOrEmpty(parentOrganizationId))
+				organization.ParentOrganizationId = new Guid(parentOrganizationId);
 
 			organization.CreatedBy = userId;
 			organization.CreatedOn = DateTime.Now;
@@ -152,11 +243,16 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 			organization.EIN = ein;
 			dc.SubmitChanges();
 
-			Response.Redirect("/V1/NonProfit/Default.aspx??userActionModal=false&organizationId=" + organization.OrganizationId);
+			Response.Redirect("/V1/NonProfit/Default.aspx?userActionModal=false&organizationId=" + organization.OrganizationId);
 		}
 		else
 		{
+			//ADD MODE
 			Organization organization = new Organization();
+
+			if (!string.IsNullOrEmpty(parentOrganizationId))
+				organization.ParentOrganizationId = new Guid(parentOrganizationId);
+
 			organization.Address = address;
 			organization.City = city;
 			organization.CreatedBy = userId;
@@ -201,13 +297,21 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 			dc.UserOrganizations.InsertOnSubmit(userOrganization);
 			dc.SubmitChanges();
 
+			//Response.Redirect("/V1/NonProfit/Default.aspx??userActionModal=false&organizationId=" + organization.OrganizationId);
 			Response.Redirect("/V1/NonProfitAdministration/InviteTeam.aspx?userActionModal=false&organizationId=" + organization.OrganizationId);
 		}
-
 	}
 
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
-		Response.Redirect("/V1/Administration/NonProfitList.aspx?userActionModal=false&");
+		if (!String.IsNullOrEmpty(organizationId))
+		{ 
+			Response.Redirect("/V1/NonProfit/Default.aspx?userActionModal=false&organizationId=" + organizationId); 
+		}
+		else
+		{
+			Response.Redirect("/V1/Administration/NonProfitList.aspx?userActionModal=false");
+		}
+		
 	}
 }

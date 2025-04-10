@@ -43,38 +43,55 @@ public partial class V1_Login : System.Web.UI.Page
                 username = userInfo.UserName;
             }
         }
+		var user = Membership.GetUser(username);
+		if (user == null)
+		{
+			lblErrorMessage.Text = "Username does not exist.";
+			lblErrorMessage.Visible = true;
+		}
+		else if (!Membership.ValidateUser(username, password))
+		{
+			lblErrorMessage.Text = "Incorrect password.";
+			lblErrorMessage.Visible = true;
+		}
+		else
+		{
+			// Success: proceed with login
 
-        // Validate the user against the Membership framework user store
-        if (Membership.ValidateUser(username, password))
-        {
-            FormsAuthentication.SetAuthCookie(username, true);
+			// Validate the user against the Membership framework user store
+			if (Membership.ValidateUser(username, password))
+			{
+				FormsAuthentication.SetAuthCookie(username, true);
 
-            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-            var userId = (from u in dc.aspnet_Users
-                          where u.UserName == username
-                          select u.UserId).SingleOrDefault();
-            ListDictionary ldEmailBodyReplacements = new ListDictionary();
-            ldEmailBodyReplacements.Add("<% UserName %>", username);
-            ldEmailBodyReplacements.Add("<% UserId %>", userId.ToString());
-            string error = string.Empty;
-            Tools.SendEmail(
-            string.Empty,
-            "Stability User Has Signed In",
-            ldEmailBodyReplacements,
-            "robertkgaudet@gmail.com",
-            "Stability Login Alert",
-            string.Empty,
-            string.Empty,
-            "~\\EmailTemplates\\SignIn.html",
-            out error);
+				CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+				var userId = (from u in dc.aspnet_Users
+							  where u.UserName == username
+							  select u.UserId).SingleOrDefault();
+				ListDictionary ldEmailBodyReplacements = new ListDictionary();
+				ldEmailBodyReplacements.Add("<% UserName %>", username);
+				ldEmailBodyReplacements.Add("<% UserId %>", userId.ToString());
+				string error = string.Empty;
+				Tools.SendEmail(
+				string.Empty,
+				"Stability User Has Signed In",
+				ldEmailBodyReplacements,
+				"robertkgaudet@gmail.com",
+				"Stability Login Alert",
+				string.Empty,
+				string.Empty,
+				"~\\EmailTemplates\\SignIn.html",
+				out error);
 
-            //Response.Redirect("V1/NonProfit/TakAction.aspx?organizationId=e1c2150a-056c-45dc-9cdc-31153384e732");
-            Redirect(username);
-
-            // Log the user into the site
-            //FormsAuthentication.RedirectFromLoginPage(username, true);
-        }
-    }
+				Redirect(username);
+			}
+			else
+			{
+				//Error
+				lblErrorMessage.Text = "Unknown error, check your username or password and try again.";
+				lblErrorMessage.Visible = true;
+			}
+		}
+	}
 
     protected void Redirect(string username)
     {

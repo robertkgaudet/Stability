@@ -56,10 +56,10 @@
 				return false;
 			});
 
-			$('.editButton').click(function () {
+<%--			$('.editButton').click(function () {
 				window.location.href = '<%=editLink%>';
 				return false;
-			}); 
+			}); --%>
 
 			// Function for collapse hpanel
 			$('.showhide').on('click', function (event) {
