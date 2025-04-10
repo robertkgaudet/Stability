@@ -172,10 +172,10 @@ public partial class V1_Register : System.Web.UI.Page
 			#region save address 
 			var addressList = addressData.Split('|');
 			var duplicateAddress = dc.Addresses.FirstOrDefault(f => f.GooglePlaceId == addressList[10]);
-			var addressId = duplicateAddress.AddressId;
+			var addressId = new Guid();
 			if (duplicateAddress == null)
 			{
-				var duplicateCounty = dc.Counties.FirstOrDefault(f => f.Name == addressList[9]); 
+				var duplicateCounty = dc.Counties.FirstOrDefault(f => f.Name == addressList[9]);
 				var countyId = Guid.NewGuid();
 				if (duplicateCounty == null)
 				{
@@ -234,7 +234,11 @@ public partial class V1_Register : System.Web.UI.Page
 
 				addressId = newAddress.AddressId;
 			}
-			
+			else
+			{
+				addressId = duplicateAddress.AddressId;
+			}
+
 			//Insert profileId and addressId into ProfileAddress table.
 			ProfileAddress newProfileAddress = new ProfileAddress();
 			newProfileAddress.ProfileAddressId = Guid.NewGuid();
@@ -255,7 +259,7 @@ public partial class V1_Register : System.Web.UI.Page
 			dc.ProfileAddresses.InsertOnSubmit(newProfileAddress);
 			dc.SubmitChanges();
 			#endregion
-			
+
 			ListDictionary ldEmailBodyReplacements = new ListDictionary();
 			ldEmailBodyReplacements.Add("<% RecipientsName %>", firstName);
 
