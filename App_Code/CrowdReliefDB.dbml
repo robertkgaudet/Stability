@@ -2161,12 +2161,18 @@
   </Function>
   <Function Name="dbo.MapStabilityLocations" Method="MapStabilityLocations">
     <Parameter Name="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="locationTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="locationParentTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="locationStatusId" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="MapStabilityLocationsResult">
       <Column Name="" Member="Column1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
     </ElementType>
   </Function>
   <Function Name="dbo.GetGeoJsonByDisaster" Method="GetGeoJsonByDisaster">
     <Parameter Name="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="locationTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="locationParentTypeId" Type="System.Guid" DbType="UniqueIdentifier" />
+    <Parameter Name="locationStatusId" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="GetGeoJsonByDisasterResult">
       <Column Name="" Member="Column1" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
     </ElementType>

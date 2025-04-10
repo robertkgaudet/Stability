@@ -1591,16 +1591,16 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 	}
 	
 	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.MapStabilityLocations")]
-	public ISingleResult<MapStabilityLocationsResult> MapStabilityLocations([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId)
+	public ISingleResult<MapStabilityLocationsResult> MapStabilityLocations([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationTypeId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationParentTypeId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationStatusId)
 	{
-		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId);
+		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId, locationTypeId, locationParentTypeId, locationStatusId);
 		return ((ISingleResult<MapStabilityLocationsResult>)(result.ReturnValue));
 	}
 	
 	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetGeoJsonByDisaster")]
-	public ISingleResult<GetGeoJsonByDisasterResult> GetGeoJsonByDisaster([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId)
+	public ISingleResult<GetGeoJsonByDisasterResult> GetGeoJsonByDisaster([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationTypeId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationParentTypeId, [global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationStatusId)
 	{
-		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId);
+		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId, locationTypeId, locationParentTypeId, locationStatusId);
 		return ((ISingleResult<GetGeoJsonByDisasterResult>)(result.ReturnValue));
 	}
 }
