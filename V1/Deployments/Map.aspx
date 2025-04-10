@@ -342,35 +342,157 @@
     .side-by-side div:last-child {
       margin-right: 0; /* Remove margin for the last div */
     }
+        /* Improved dropdown styling */
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 0;
+        }
+
+       .filter-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.filter-dropdown .dropdown-menu {
+    max-height: 300px; /* Set a max height to prevent overflow */
+    overflow-y: auto; /* Enable scroll if too many items */
+    min-width: 250px; /* Adjust width as needed */
+    white-space: nowrap; /* Prevent text wrapping */
+    background-color: #fff; /* Ensure background color */
+    border: 1px solid #ccc; /* Add a border for clarity */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add slight shadow */
+}
+
+.filter-dropdown .dropdown-toggle {
+    width: auto; /* Ensure button width adjusts dynamically */
+    min-width: 200px; /* Set a reasonable width */
+}
+
+.filter-dropdown .dropdown-menu a {
+    padding: 3px; /* Adjust padding for better spacing */
+    display: block;
+    color: #333; /* Adjust text color */
+    text-decoration: none;
+}
+
+.filter-dropdown .dropdown-menu a:hover {
+    background-color: #f0f0f0; /* Highlight on hover */
+}
+
+        .dropdown-toggle::after {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .map-filter-dropdown {
+            min-width: 180px;
+        }
+
+        .portal-dropdown {
+            min-width: 200px;
+        }
+
+        .deployment-section {
+            margin-left: auto;
+            text-align: right;
+        }
+
+        @media (max-width: 992px) {
+            .filter-container {
+                gap: 5px;
+            }
+
+            .filter-dropdown {
+                min-width: 100%;
+            }
+        }
+        .deployment-section {
+    display: flex;
+    align-items: center; /* Vertically center-aligns the items */
+    justify-content: flex-start; /* Aligns items to the left */
+    gap: 10px; /* Optional: Adds space between elements */
+}
+
+.deployment-text {
+    margin-right: 20px; /* Adjust space between the text and the buttons */
+}
+
+.deployment-text b {
+    font-weight: bold;
+}
+
+.disasterEvent-dropdown {
+    position: relative;
+    display: inline-block;
+}  
+    
+    /* Smooth transitions */
+    .filter-dropdown {
+        transition: all 0.3s ease;
+    }
+
 	</style>
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 	<div class="row form-group no-gutter">
-		<div class="col-xs-12 col-sm-6" style="max-width:260px;">
+		<div class="col-xs-12" >
+              <div class="filter-container">
+                    <div class="filter-dropdown map-filter-dropdown">
 			<button id="btn-mapDropDown" class="btn btn-outline btn-default ddlMapFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Modify Map Filter <i class="fa fa-sort-down"></i></button>
 			<ul id="ddlMapFilter" class="dropdown-menu text-center dropdown-map-filter">
 				<li id="All" Selected="True"><a href="#">All Locations</a></li>
 				<li id="Community"><a href="#">Stability.org Deployments</a></li>
 				<li id="Critical"><a href="#">Critical Facilities</a></li>
 				<%=liCases%>
-<%--			<li id="VOAD"><a href="#">VOAD Organizations</a></li>
-				<li id="Professional"><a href="#">Emergency Response Companies</a></li>--%>
 			</ul>
 		</div>
-		<div class="col-xs-12 col-sm-6">
-			<button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i> </button>
+        
+        <!-- New Location Type Filter -->
+         <div class="filter-dropdown additional-filter">
+             <button id="btn-locationType" class="btn btn-outline btn-default locationTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Location Types <i class="fa fa-sort-down"></i></button>
+            <ul id="ddlLocationType" class="dropdown-menu text-center dropdown-map-filter">
+                <%=locationTypeDropDown%>
+            </ul>
+        </div>
+        
+        <!-- New Parent Type Filter -->
+       <div class="filter-dropdown additional-filter">
+           <button id="btn-parentType" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Parent Types <i class="fa fa-sort-down"></i></button>
+            <ul id="ddlParentType" class="dropdown-menu text-center dropdown-map-filter">
+                <%=locationParentTypeDropDown%>
+            </ul>
+        </div>
+        
+        <!-- New Status Filter -->
+        <div class="filter-dropdown additional-filter">
+         <button id="btn-status" class="btn btn-outline btn-default statusFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Status <i class="fa fa-sort-down"></i></button>
+            <ul id="ddlStatus" class="dropdown-menu text-center dropdown-map-filter">
+                <%=locationStatusDropDown%>
+            </ul>
+        </div>
+        
+	  <div class="filter-dropdown">
+  		<button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i> </button>
 			<ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
 				<%=disasterDropDown%>
 			</ul>
 		</div>
-		<div class="text-right">
-		<b>Share Your Team Deployment</b>
-			<br />
+		<div class="deployment-section">
+   
+        <b>Share Your Team Deployment</b>
+  
 			<asp:HyperLink ID="hypCreateDeployment" CssClass="btn m-l-md btn-info btn-md pull-right" runat="server"></asp:HyperLink>
 			<asp:HyperLink ID="hypSignIn" CssClass="btn btn-info btn-md pull-right" runat="server" Text="Sign In" NavigateUrl="/SignIn" Visible="false"></asp:HyperLink>
 		</div>
 	</div>
+                </div>
+</div>
 	<div class="row no-gutter">
 		<div class="col-xs-12 col-sm-9">
 			<div id="map"></div>
