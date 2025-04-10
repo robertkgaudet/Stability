@@ -18,17 +18,6 @@
         });
 
         function updateFilterStates(mapFilterType) {
-            // Always keep dropdown enabled
-            $("#btn-mapDropDown").removeClass("disabled").prop("disabled", false);
-
-            // No longer disable additional filters based on selection
-            // So we remove this block entirely:
-            // $(".additional-filter")
-            //     .toggleClass("disabled", !isCritical)
-            //     .find("button")
-            //     .prop("disabled", !isCritical);
-
-            // Just update the button text
             const $selectedItem = $(`#ddlMapFilter.dropdown-menu li[id="${mapFilterType}"]`);
             if ($selectedItem.length) {
                 $("#btn-mapDropDown").html($selectedItem.text() + ' <i class="fa fa-sort-down"></i>');
@@ -104,9 +93,14 @@
         function updateFilterDisplay(storageKey, dropdownSelector) {
             const value = getStoredFilter(storageKey);
             if (value) {
-                $(`${dropdownSelector}.dropdown-menu li[id="${value}"]`).trigger('click');
+                const $selectedItem = $(`${dropdownSelector}.dropdown-menu li[id="${value}"]`);
+                const $button = $(`${dropdownSelector}`).siblings("button"); // Assumes the button is a sibling
+                if ($selectedItem.length && $button.length) {
+                    $button.html($selectedItem.text() + ' <i class="fa fa-sort-down"></i>');
+                }
             }
         }
+
 
         function handleFilterClick(storageKey, buttonSelector) {
             return function (event) {
