@@ -190,7 +190,7 @@
 							
                             <div class="form-group" runat="server" id="divChooseNonprofit">
 								<label class="col-sm-2 control-label">Select A Parent Organization (Optional)</label>
-                                <small>Use if this is a chapter, division or child of another team.</small>
+                                <small>Use if you are adding a chapter, division or child of another team.</small>
                                 <div id="div2" class="dropdown m-b-md" runat="server">
                                     <button id="btn-NonProfitDropdown" class="btn btn-outline btn-default nonProfit dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Select A Team (Optional) <i class="fa fa-sort-down"></i></button>
                                     <ul id="nonProfit" class="dropdown-menu text-center dropdown-volunteer">
