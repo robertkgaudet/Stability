@@ -308,16 +308,16 @@
             // PageRequestManager reference
             var prm = Sys.WebForms.PageRequestManager.getInstance();
 
-            // Before async postback starts
             prm.add_beginRequest(function () {
                 document.getElementById("loader").style.display = "block";
                 document.getElementById("tblVolunteers").style.display = "none";
             });
 
-            // After async postback completes (this includes when Repeater's data is bound)
             prm.add_endRequest(function () {
                 document.getElementById("loader").style.display = "none";
-                document.getElementById("tblVolunteers").style.display = "table"; // or "block" based on your styling
+                document.getElementById("tblVolunteers").style.display = "table";
+
+                $('html, body').animate({ scrollTop: 0 }, 'slow');
             });
         });
         var currentUserId = null;
@@ -368,22 +368,22 @@
             }
             var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
             var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
-                  var showTeamLogo = false;
-                  var showTeamLogoVisible = document.getElementById('<%= hiddenShowTeamLogo.ClientID %>').value === "1";
-                  if (showTeamLogoVisible) {
-                      showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
-                  } else {
-                      showTeamLogo = false;
-                  }
-                  var stabilityVerified = false;
-                  var makeTeamAdministrator = false;
-                  var isAdmin = document.getElementById('<%= hiddenAdminRole.ClientID %>').value === "1";
-                  if (isAdmin) {
-                      stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
-            makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
-                  }
-                  updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
-              }
+            var showTeamLogo = false;
+            var showTeamLogoVisible = document.getElementById('<%= hiddenShowTeamLogo.ClientID %>').value === "1";
+            if (showTeamLogoVisible) {
+                showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
+            } else {
+                showTeamLogo = false;
+            }
+            var stabilityVerified = false;
+            var makeTeamAdministrator = false;
+            var isAdmin = document.getElementById('<%= hiddenAdminRole.ClientID %>').value === "1";
+            if (isAdmin) {
+                stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
+                makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
+            }
+            updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
+        }
         function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator) {
             var data = {
                 action: "update",
@@ -479,106 +479,73 @@
     <script type="text/javascript">
         var currentPagination = '';
         $(document).ready(function () {
-            // Function to handle the "Next" button click
             $(document).on("click", "#nextBtn", function () {
-
                 if (!$('#nextBtn').hasClass('disabled')) {
-                   
-                    var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
-                    // var currentPage = Math.max(...$(".pagination .page-link").map(function () {
-                    //   return parseInt($(this).attr("tabindex")) || 0;
-                    //}).get());
-                    var currentPage = parseInt($(".firstpn").eq(0).text()) || 0;
-                    // Increment the current page number
-                    if (currentPage < totalPages - 3) {
 
-                        // Update tabindex for each page link
-                        var updateIndex = 0;
+                    var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
+                    var currentPage = parseInt($('.pagination .active .page-link').text());
+                    var newPage = currentPage + 1;
+                    if (newPage <= totalPages) {
                         $('.page-item a').each(function (index) {
-                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0" && updateIndex < 3) {
-                                $(this).attr('tabindex', index + currentPage - 2);
-                                $(this).text(index + currentPage - 2);
-                                $(this).attr("onclick", `triggerSearch(${(index + currentPage - 2)}); return false;`);
-                                updateIndex++;
+                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
+                                $(this).attr('tabindex', index + newPage - 2);
+                                $(this).text(index + newPage - 2);
+                                $(this).attr("onclick", `triggerSearch(${index + newPage - 2}); return false;`);
                             }
                         });
-
-                        // Enable Previous button if not on the first page
-                        if (currentPage > 2) {
-                            $('#previousBtn').removeClass('disabled');
-                        }
-                    }
-
-                    // Disable Next button if on the last page
-                    if (currentPage == totalPages - 4) {
-                        $('#nextBtn').addClass('disabled');
-                        $(".dotpage").hide();
-                    } else {
-                        $('#nextBtn').removeClass('disabled');
-                        $(".dotpage").show();
+                        triggerSearch(newPage);
                     }
                 }
-            });
-
-            // Function to handle the "Previous" button click
-            $(document).on("click", "#previousBtn", function () {
-               
-                if (!$('#previousBtn').hasClass('disabled')) {
-                    var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
-                    //var currentPage = Math.max(...$(".pagination .page-link").map(function () {
-                    //    return parseInt($(this).attr("tabindex")) || 0;
-                    //}).get());
-                    var currentPage = parseInt($(".firstpn").eq(0).text()) || 0;
-                    // Decrease the current page number
-                    var firstPage = 1 + currentPage - 4;
-                    if (firstPage >= 1) {
-
-
-                        // Update tabindex for each page link
-                        var updateIndex = 0;
-                        $('.page-item a').each(function (index) {
-                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0" && updateIndex < 3) {
-                                $(this).attr('tabindex', index + currentPage - 4);
-                                $(this).text(index + currentPage - 4);
-                                $(this).attr("onclick", `triggerSearch(${(index + currentPage - 4)}); return false;`);
-                                updateIndex++;
-                            }
-                        });
-
-                        // Enable Next button if not on the last page
-                        if (firstPage + 2 < totalPages) {
-                            $('#nextBtn').removeClass('disabled');
-                        }
-
-                        // Disable Previous button if on the first page                    
-                    }
-                    if (firstPage == 1) {
-                        $('#previousBtn').addClass('disabled');
-                        $(".dotpage").hide();
-                    } else {
-                        $('#previousBtn').removeClass('disabled');
-                        $(".dotpage").show();
-                    }
-                }
-
             });
         });
 
+        $(document).on("click", "#previousBtn", function () {
+            if (!$('#previousBtn').hasClass('disabled')) {
+
+                var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
+                var currentPage = parseInt($('.pagination .active .page-link').text());
+                var newPage = currentPage - 1;
+
+                if (newPage >= 1) {
+
+                    $('.page-item a').each(function (index) {
+                        if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
+                            $(this).attr('tabindex', index + newPage - 2);
+                            $(this).text(index + newPage - 2);
+                            $(this).attr("onclick", `triggerSearch(${(index + newPage - 2)}); return false;`);
+                        }
+                    });
+                    triggerSearch(newPage);
+                }
+            }
+        });
+
+
+
 
         function triggerSearch(pn) {
-          
-            // Set a value to the hidden field            
-            document.getElementById('<%= currentPageValue.ClientID %>').value = pn; // Set custom value here
-            document.getElementById('firstpn').value = pn;
-            // Remove "active" class from all <li> elements
+            document.getElementById('<%= currentPageValue.ClientID %>').value = pn;
             $(".pagination .page-item").removeClass("active");
-
-            // Find the <a> tag with matching tabindex and add "active" to its parent <li>
             $(".pagination .page-link[tabindex='" + pn + "']").closest(".page-item").addClass("active");
+
+            var totalPages = parseInt(document.getElementById('<%= totalPageValue.ClientID %>').value);
+
+            if (pn <= 1) {
+                $('#previousBtn').addClass('disabled');
+            } else {
+                $('#previousBtn').removeClass('disabled');
+            }
+
+            if (pn >= totalPages) {
+                $('#nextBtn').addClass('disabled');
+            } else {
+                $('#nextBtn').removeClass('disabled');
+            }
+
             currentPagination = $('.navClass').html();
-            // Trigger the search button click event
             __doPostBack('<%= SearchButton.UniqueID %>', '');
         }
+
         function searchButton() {
             // Set a value to the hidden field
             document.getElementById('<%= currentPageValue.ClientID %>').value = 1; // Set custom value here    
@@ -592,9 +559,8 @@
             document.getElementById('<%= txtOptedSMS.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtEmailconnect.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtIsVerified.ClientID %>').checked = false; // Set custom value here
-         document.getElementById('<%= txtTeamVerified.ClientID %>').checked = false; // Set custom value here
-       document.getElementById('<%= txtStabilityVerified.ClientID %>').checked = false; // Set custom value here
-          
+            document.getElementById('<%= txtTeamVerified.ClientID %>').checked = false; // Set custom value here
+            document.getElementById('<%= txtStabilityVerified.ClientID %>').checked = false; // Set custom value here
             document.getElementById('<%= ddlEvent.ClientID %>').value = ''; // Set custom value here
             $('#hiddenEvent').val('');
             document.getElementById('<%= ddlTraining.ClientID %>').value = ''; // Set custom value here
@@ -636,20 +602,11 @@
                 $(".page-item").not("#previousBtn, #nextBtn").remove();
                 var newPageItem = ''
                 for (var i = 0; i < parseFloat(totalPage); i++) {
-                    if (i < 3) {
-                        newPageItem += '<li class="page-item' + (i == 0 ? " active" : "") + (i == 2 ? " firstpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
-                    }
-                    else if (i > 3 && i <= 4) {
-                        newPageItem += '<li class="page-item disabled dotpage"><a class="page-link">...</a></li>';
-                    }
-
-                }
-                for (var i = Math.max(parseFloat(totalPage) - 3, 3), j = 0; i < parseFloat(totalPage); i++, j++) {
-
-                    newPageItem += '<li class="page-item' + (j == 0 ? " lastpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                    if (i == 3) break;
+                    newPageItem += '<li class="page-item' + (i == 0 ? " active" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
                 }
                 if (newPageItem != '') $('#previousBtn').after(newPageItem);
-                if (totalPage <= currentPage) $('#nextBtn').addClass('disabled');
+                if (totalPage <= 3) $('#nextBtn').addClass('disabled');
                 else $('#nextBtn').removeClass('disabled');
             }
             else {
@@ -666,7 +623,7 @@
                 if (checkbox.checked) {
                     selectedUserIds.push(checkbox.getAttribute("data-userid"));
                 }
-            });
+            }); n
 
             hiddenField.value = selectedUserIds.join(",");
         }
@@ -925,7 +882,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3" style="margin-left:-13px;">
+                                <div class="col-md-6 mb-3" style="margin-left: -13px;">
                                     <div class="form-group margin ">
                                         <b class="text-line">Location :</b>
                                         <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
@@ -968,13 +925,13 @@
                                                     <label class="form-check-label" for="<%=txtIsVerified.ClientID%>">Is Verified</label>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3 mb-2" style="margin-left:8px;">
+                                            <div class="col-sm-3 mb-2" style="margin-left: 8px;">
                                                 <div class="form-check">
                                                     <asp:CheckBox ID="txtTeamVerified" runat="server" CssClass="form-check-input" />
                                                     <label class="form-check-label" for="<%=txtTeamVerified.ClientID%>">Team Verified</label>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3 mb-2" style="margin-left:-8px;">
+                                            <div class="col-sm-3 mb-2" style="margin-left: -8px;">
                                                 <div class="form-check">
                                                     <asp:CheckBox ID="txtStabilityVerified" runat="server" CssClass="form-check-input" />
                                                     <label class="form-check-label" for="<%=txtStabilityVerified.ClientID%>">Stability Verified</label>
