@@ -38,6 +38,8 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             }
             BindOrganizationEventDropDown();
             BindDonationCampaigns();
+            BindEmailTemplate();
+
         }
     }
     private void BindOrganizationEventDropDown()
@@ -180,6 +182,63 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
     }
 
 
+    protected void SaveEmailTemplate(object sender, EventArgs e)
+    {
+        string emailBody = emailbody.Text.Trim();
+        string ccText = cc.Text.Trim();
+        string bccText = bcc.Text.Trim();
+        string orgIdValue = Request.QueryString["organizationId"];
+        string templateIdValue = hdnSelectedEmailTemplateId.Value;
+
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            Guid organizationId = Guid.Parse(orgIdValue);
+
+            if (!string.IsNullOrWhiteSpace(templateIdValue))
+            {
+                Guid templateId = Guid.Parse(templateIdValue);
+                var existingTemplate = dc.EmailTemplates
+                    .SingleOrDefault(t => t.EmailTemplateId == templateId);
+
+                if (existingTemplate != null)
+                {
+                    existingTemplate.EmailBody = emailBody;
+                    existingTemplate.CC = ccText;
+                    existingTemplate.BCC = bccText;
+                }
+            }
+            else
+            {
+                var existingTemplate = dc.EmailTemplates
+                    .SingleOrDefault(t => t.OrganizationId == organizationId);
+
+                if (existingTemplate == null)
+                {
+                    EmailTemplate newTemplate = new EmailTemplate
+                    {
+                        EmailTemplateId = Guid.NewGuid(),
+                        OrganizationId = organizationId,
+                        EmailBody = emailBody,
+                        CC = ccText,
+                        BCC = bccText
+                    };
+                    dc.EmailTemplates.InsertOnSubmit(newTemplate);
+                }
+                else
+                {
+                    existingTemplate.EmailBody = emailBody;
+                    existingTemplate.CC = ccText;
+                    existingTemplate.BCC = bccText;
+                }
+            }
+
+            dc.SubmitChanges();
+            hdnSelectedEmailTemplateId.Value = "";
+            BindEmailTemplate();
+        }
+    }
+
+
 
 
     private void ClearControls()
@@ -215,6 +274,27 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             gvDonationCampaigns.DataBind();
         }
     }
+    private void BindEmailTemplate()
+    {
+        Guid orgId = new Guid(organizationId);
+
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            var templates = (from template in dc.EmailTemplates
+                             where template.OrganizationId == orgId
+                             select new
+                             {
+                                 EmailTemplateId = template.EmailTemplateId,
+                                 EmailBody = template.EmailBody,
+                                 CC = template.CC,
+                                 BCC = template.BCC
+                             }).ToList();
+
+            gvEmailTemplates.DataSource = templates;
+            gvEmailTemplates.DataBind();
+        }
+    }
+
     private string FormatAmount(string amount)
     {
         if (string.IsNullOrEmpty(amount))
@@ -262,7 +342,34 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
 
         }
     }
+    protected void gvEmailTemplates_RowCommand(object sender, GridViewCommandEventArgs e)
+    {
+        if (e.CommandName == "EditRow")
+        {
+            Guid templateId = new Guid(e.CommandArgument.ToString());
+            hdnSelectedEmailTemplateId.Value = templateId.ToString();
 
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                var template = dc.EmailTemplates.FirstOrDefault(x => x.EmailTemplateId == templateId);
+                if (template != null)
+                {
+                    emailbody.Text = template.EmailBody;
+                    cc.Text = template.CC;
+                    bcc.Text = template.BCC;
+                }
+            }
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenModal", "showModalEmail('Edit EmailTemplate');", true);
+        }
+        else if (e.CommandName == "DeleteRow")
+        {
+            Guid templateId = new Guid(e.CommandArgument.ToString());
+            hdnSelectedEmailTemplateId.Value = templateId.ToString();
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenModal", "DeleteModalEmail();", true);
+        }
+    }
     protected void DeleteCampaign(object sender, EventArgs e)
     {
         Guid campaignId = new Guid(hdnSelectedCampaignId.Value);
@@ -279,6 +386,25 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         BindDonationCampaigns();
         BindOrganizationEventDropDown();
     }
+
+    protected void DeleteEmailTemplate(object sender, EventArgs e)
+    {
+        Guid templateId = new Guid(hdnSelectedEmailTemplateId.Value);
+
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            var templateToDelete = dc.EmailTemplates.SingleOrDefault(t => t.EmailTemplateId == templateId);
+            if (templateToDelete != null)
+            {
+                dc.EmailTemplates.DeleteOnSubmit(templateToDelete);
+                dc.SubmitChanges();
+            }
+        }
+
+        hdnSelectedEmailTemplateId.Value = "";
+        BindEmailTemplate();
+    }
+
 
     protected void btnClose_Click(object sender, EventArgs e)
     {

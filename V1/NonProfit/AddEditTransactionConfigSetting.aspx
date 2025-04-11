@@ -94,6 +94,10 @@
             width: 80%;
             height: 100vh;
         }
+        .btn-xs, .btn-group-xs > .btn {
+            font-size:15px!important;
+        }
+
     </style>
     <style>
         
@@ -180,6 +184,26 @@
                 <div class="col-12" style="display: flex; justify-content: end; margin-bottom: 15px;">
                     <asp:Button type="button" class="compaign-btn" runat="server" Text="Add EmailTemplate" CssClass="btn btn-primary" OnClientClick="showModalEmail('Add EmailTemplate' ); return false;" />
                 </div>
+
+                <asp:GridView ID="gvEmailTemplates" runat="server" AutoGenerateColumns="False" OnRowCommand="gvEmailTemplates_RowCommand" CssClass="table table-bordered">
+                    <Columns>
+                        <asp:BoundField DataField="EmailBody" HeaderText="Email Body" HtmlEncode="False" />
+                        <asp:BoundField DataField="CC" HeaderText="CC" HtmlEncode="False" />
+                        <asp:BoundField DataField="BCC" HeaderText="BCC" HtmlEncode="False" />
+
+
+                        <asp:TemplateField HeaderText="Actions">
+                            <ItemTemplate>
+                                <asp:Button ID="btnEdit" runat="server" Text="Edit" CommandName="EditRow"
+                                    CommandArgument='<%# Eval("EmailTemplateId") %>' CssClass="btn btn-primary btn-xs" />
+
+                                <asp:Button ID="btnDelete" runat="server" Text="Delete" CommandName="DeleteRow"
+                                    CommandArgument='<%# Eval("EmailTemplateId") %>' CssClass="btn btn-danger btn-xs" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                </asp:GridView>
+
                 <div id="campaignModal" class="modal fade" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-lg modal-fullscreen" role="document">
                         <div class="modal-content">
@@ -244,9 +268,9 @@
                             </div>
                         </div>
                     </div>
-             
+
                 </div>
-                  <div id="emailModal" class="modal fade" tabindex="-1" role="dialog">
+                <div id="emailModal" class="modal fade" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-lg modal-fullscreen" role="document">
                         <div class="modal-content">
                             <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
@@ -275,13 +299,13 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <%--<asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Campaign" OnClick="SaveEmailTemplate" />--%>
+                                    <asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Campaign" OnClick="SaveEmailTemplate" />
                                     <asp:Button ID="Button1" runat="server" CssClass=" btn btn-secondary" Text="Close" OnClick="btnClose_Click" />
                                 </div>
                             </div>
                         </div>
                     </div>
-             
+
                 </div>
             </div>
         </div>
@@ -304,7 +328,7 @@
                 </div>
             </div>
         </div>
-                <div id="deleteEmailModal" class="modal fade" tabindex="-1" role="dialog">
+        <div id="deleteEmailModal" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
@@ -317,7 +341,7 @@
                         Are you sure want to delete this item?
                     </div>
                     <div class="modal-footer">
-                        <%--<asp:Button type="submit" class="btn btn-danger" runat="server" Text="Delete" OnClick="DeleteEmailTemplate" />--%>
+                        <asp:Button type="submit" class="btn btn-danger" runat="server" Text="Delete" OnClick="DeleteEmailTemplate" />
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
@@ -326,7 +350,9 @@
 
     </div>
 
-        <asp:HiddenField ID="hdnSelectedCampaignId" Value="" runat="server" />
+    <asp:HiddenField ID="hdnSelectedCampaignId" Value="" runat="server" />
+    <asp:HiddenField ID="hdnSelectedEmailTemplateId" Value="" runat="server" />
+
     <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
     <script>
         function showModal(title) {
