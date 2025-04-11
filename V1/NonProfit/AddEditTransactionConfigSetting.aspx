@@ -49,6 +49,42 @@
                 ],
                 height: 125
             });
+            $('#<%=emailbody.ClientID%>').summernote({
+                toolbar: [
+                    ['style', ['bold', 'italic']],
+                    ['alignment', ['ul', 'ol', 'paragraph']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link', 'table']],
+                ],
+                height: 125
+            });
+            $('#<%=cc.ClientID%>').summernote({
+                toolbar: [
+                    ['style', ['bold', 'italic']],
+                    ['alignment', ['ul', 'ol', 'paragraph']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link', 'table']],
+                ],
+                height: 125
+            });
+            $('#<%=bcc.ClientID%>').summernote({
+                toolbar: [
+                    ['style', ['bold', 'italic']],
+                    ['alignment', ['ul', 'ol', 'paragraph']],
+                    ['fontname', ['fontname']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['height', ['height']],
+                    ['insert', ['picture', 'link', 'table']],
+                ],
+                height: 125
+            });
         });
 
     </script>
@@ -58,9 +94,6 @@
             width: 80%;
             height: 100vh;
         }
-     
-
-
     </style>
     <style>
         
@@ -108,6 +141,13 @@
                         <input class="form-control custom-input" type="url" required id="txtCashPay" runat="server" placeholder="Enter Cash Pay URL" />
                     </div>
                 </div>
+                <div class="col-12" style="display: flex; justify-content: end; gap: 10px; margin-bottom: 10px;">
+                    <asp:Button type="submit" class="save-btn" runat="server" CssClass="btn btn-primary" Text="Save" OnClick="PaymentConfigration_Click" />
+                    <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="btn btn-secondary" OnClick="btnCancel_Click" />
+                </div>
+                <div class="panel-heading" style="margin-left: -15px;">
+                    <h3>Deployment</h3>
+                </div>
                 <div class="col-12" style="display: flex; justify-content: end; margin-bottom: 15px;">
                     <asp:Button type="button" class="compaign-btn" runat="server" Text="Add New Campaign" CssClass="btn btn-primary" OnClientClick="showModal('Add New Campaign' ); return false;" />
                 </div>
@@ -134,24 +174,15 @@
                         </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
-                <div class="col-12" style="display: flex; justify-content: end; gap: 10px;">
-                    <asp:Button type="submit" class="save-btn" runat="server" CssClass="btn btn-primary" Text="Save" OnClick="PaymentConfigration_Click" />
-                    <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="btn btn-secondary" OnClick="btnCancel_Click" />
+                <div class="panel-heading" style="margin-left: -15px;">
+                    <h3>Email Template</h3>
+                </div>
+                <div class="col-12" style="display: flex; justify-content: end; margin-bottom: 15px;">
+                    <asp:Button type="button" class="compaign-btn" runat="server" Text="Add EmailTemplate" CssClass="btn btn-primary" OnClientClick="showModalEmail('Add EmailTemplate' ); return false;" />
                 </div>
                 <div id="campaignModal" class="modal fade" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-lg modal-fullscreen" role="document">
                         <div class="modal-content">
-                            <%-- <div class="modal-header">
-                                <h5 class="modal-title text-center">Add New Campaign</h5>
-                                <button type="button"
-                                    class="close btn btn-secondary"
-                                    runat="server"
-                                    aria-label="Close"
-                                    onserverclick="btnClose_Click">
-                                    <span aria-hidden="true">X</span>
-                                </button>
-
-                            </div>--%>
                             <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
                                 <h5 class="modal-title" style="flex-grow: 1; text-align: center;">Add New Campaign</h5>
                                 <button type="button" class="close btn btn-secondary" runat="server" aria-label="Close" onserverclick="btnClose_Click">
@@ -198,59 +229,103 @@
                                     <div class="col-sm-8">
                                         <input class="form-control" type="text" id="textAmount"
                                             placeholder="Enter Amount e.g. 10,30,50,100,500"
-                                             runat="server"
+                                            runat="server"
                                             style="font-size: 18px;"
                                             oninput="validateAmount(this);" />
                                         <span id="amountError" class="text-danger" style="display: none;">Please enter a valid Amount</span>
                                     </div>
                                 </div>
 
-                           
-                            <div class="modal-footer">
-                                <asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Campaign" OnClick="SaveCampaign" />
-                                <%--        <button type="button" class="btn btn-secondary" data-dismiss="modal">close</button>   --%>
-                                <asp:Button ID="btnClose" runat="server" CssClass=" btn btn-secondary" Text="Close" OnClick="btnClose_Click" />
 
+                                <div class="modal-footer">
+                                    <asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Campaign" OnClick="SaveCampaign" />
+                                    <asp:Button ID="btnClose" runat="server" CssClass=" btn btn-secondary" Text="Close" OnClick="btnClose_Click" />
+                                </div>
                             </div>
                         </div>
                     </div>
+             
                 </div>
-                <%--  <div class="modal-footer">
-                    <asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Campaign" OnClick="SaveCampaign" />
-                    <%--        <button type="button" class="btn btn-secondary" data-dismiss="modal">close</button>   --%>
-                <%--<asp:Button
-                        ID="btnClose"
-                        runat="server"
-                        Text="Close"
-                        CssClass="btn btn-secondary"
-                        OnClick="btnClose_Click" />
-                </div>--%>
+                  <div id="emailModal" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg modal-fullscreen" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+                                <h5 class="modal-title" style="flex-grow: 1; text-align: center;">Add EmailTemplate</h5>
+                                <button type="button" class="close btn btn-secondary" runat="server" aria-label="Close" onserverclick="btnClose_Click">
+                                    <span aria-hidden="true">X</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Email Body</label>
+                                    <div class="col-sm-8">
+                                        <asp:TextBox ID="emailbody" runat="server" class="form-control" TextMode="MultiLine" ClientIDMode="Static" Style="height: 150px; font-size: 18px;"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Email CC</label>
+                                    <div class="col-sm-8">
+                                        <asp:TextBox ID="cc" runat="server" class="form-control" TextMode="MultiLine" ClientIDMode="Static" Style="height: 150px; font-size: 18px;"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">Email BCC</label>
+                                    <div class="col-sm-8">
+                                        <asp:TextBox ID="bcc" runat="server" class="form-control" TextMode="MultiLine" ClientIDMode="Static" Style="height: 150px; font-size: 18px;"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <%--<asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Campaign" OnClick="SaveEmailTemplate" />--%>
+                                    <asp:Button ID="Button1" runat="server" CssClass=" btn btn-secondary" Text="Close" OnClick="btnClose_Click" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+             
+                </div>
             </div>
         </div>
-    </div>
-    <div id="deleteCampaignModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h5 class="modal-title" style="flex-grow: 1; text-align: center;">Delete Campaign</h5>
-                    <button type="button" class="close btn btn-secondary" data-dismiss="modal">
-                        <span aria-hidden="true">X</span>
-                    </button>
-                </div>
-                <%-- <button type="button" class="btn btn-secondary" data-dismiss="modal">X</button>--%>
-                <div class="modal-body">
-                    Are you sure want to delete this item?
-                </div>
-                <div class="modal-footer">
-                    <asp:Button type="submit" class="btn btn-danger" runat="server" Text="Delete" OnClick="DeleteCampaign" />
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <div id="deleteCampaignModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <h5 class="modal-title" style="flex-grow: 1; text-align: center;">Delete Campaign</h5>
+                        <button type="button" class="close btn btn-secondary" data-dismiss="modal">
+                            <span aria-hidden="true">X</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure want to delete this item?
+                    </div>
+                    <div class="modal-footer">
+                        <asp:Button type="submit" class="btn btn-danger" runat="server" Text="Delete" OnClick="DeleteCampaign" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+                <div id="deleteEmailModal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
+                        <h5 class="modal-title" style="flex-grow: 1; text-align: center;">Delete EmailTemplate</h5>
+                        <button type="button" class="close btn btn-secondary" data-dismiss="modal">
+                            <span aria-hidden="true">X</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure want to delete this item?
+                    </div>
+                    <div class="modal-footer">
+                        <%--<asp:Button type="submit" class="btn btn-danger" runat="server" Text="Delete" OnClick="DeleteEmailTemplate" />--%>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
-        </div>
+
         <asp:HiddenField ID="hdnSelectedCampaignId" Value="" runat="server" />
     <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
     <script>
@@ -267,43 +342,56 @@
                 $('#deleteCampaignModal').modal('show');
             }, 1000);
         }
+        function showModalEmail(title) {
+            setTimeout(function () {
+                $('.modal-title').text(title);
+                $('#emailModal').modal('show');
+            }, 1000);
+
+        }
+
+        function DeleteModalEmail() {
+            setTimeout(function () {
+                $('#deleteEmailModal').modal('show');
+            }, 1000);
+        }
 
 
         $(document).ready(function () {
-        var checkbox = $('#<%= chkIsDefault.ClientID %>');
+            var checkbox = $('#<%= chkIsDefault.ClientID %>');
 
-        // Function to toggle the visibility of the dropdown
-        function toggleDeploymentGroup() {
-            if (checkbox.is(':checked')) {
-                $('#deploymentGroup').hide();
-            } else {
-                $('#deploymentGroup').show();
+            // Function to toggle the visibility of the dropdown
+            function toggleDeploymentGroup() {
+                if (checkbox.is(':checked')) {
+                    $('#deploymentGroup').hide();
+                } else {
+                    $('#deploymentGroup').show();
+                }
+            }
+
+            // Run on page load
+            toggleDeploymentGroup();
+
+            // Run on checkbox change
+            checkbox.change(function () {
+                toggleDeploymentGroup();
+            });
+        });
+
+
+        function validateAmount(input) {
+            // Regular expression: Allows numbers, commas, and decimals only
+            let regex = /^[0-9.,]+$/;
+            let isValid = regex.test(input.value);
+
+            // Show or hide the error message
+            document.getElementById("amountError").style.display = isValid ? "none" : "block";
+
+            // Remove invalid characters in real time
+            if (!isValid) {
+                input.value = input.value.replace(/[^0-9.,]/g, '');
             }
         }
-
-        // Run on page load
-        toggleDeploymentGroup();
-
-        // Run on checkbox change
-        checkbox.change(function () {
-            toggleDeploymentGroup();
-        });
-    });
-
-
-   function validateAmount(input) {
-        // Regular expression: Allows numbers, commas, and decimals only
-        let regex = /^[0-9.,]+$/;
-        let isValid = regex.test(input.value);
-
-        // Show or hide the error message
-        document.getElementById("amountError").style.display = isValid ? "none" : "block";
-
-        // Remove invalid characters in real time
-        if (!isValid) {
-            input.value = input.value.replace(/[^0-9.,]/g, '');
-        }
-    }
 
 
     </script>
