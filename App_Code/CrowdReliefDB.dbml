@@ -2018,6 +2018,7 @@
       <Association Name="Organization_Position" Member="Positions" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Position" />
       <Association Name="Organization_PaymentConfiguration" Member="PaymentConfigurations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="PaymentConfiguration" />
       <Association Name="Organization_UserOrganization" Member="UserOrganizations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganization" />
+      <Association Name="Organization_EmailTemplate" Member="EmailTemplates" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="EmailTemplate" />
       <Association Name="aspnet_User_Organization" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="aspnet_User_Organization1" Member="aspnet_User1" ThisKey="OwnerId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
@@ -2117,6 +2118,16 @@
       <Column Name="ReceiveEmailNotifications" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="Profile_ProfileAddress" Member="ProfileAddresses" ThisKey="ProfileId" OtherKey="ProfileId" Type="ProfileAddress" />
       <Association Name="aspnet_User_Profile" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EmailTemplate" Member="EmailTemplates">
+    <Type Name="EmailTemplate">
+      <Column Name="EmailTemplateId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="EmailBody" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="CC" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="BCC" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Association Name="Organization_EmailTemplate" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisasterForCleanupMap" Method="GetGeoJsonByDisasterForCleanupMap">
