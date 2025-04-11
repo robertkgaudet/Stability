@@ -313,6 +313,7 @@ public partial class V1_Register : System.Web.UI.Page
 								 orderby o.Name
 								 select new { o, oe };
 
+				nonProfitDropDown = nonProfitDropDown + "<li><a href=\"#\">------ None ------</a></li>" + Environment.NewLine;
 				foreach (var nonProfit in nonProfits)
 				{
 					nonProfitDropDown = nonProfitDropDown + "<li id=\"" + nonProfit.o.OrganizationId + "\"><a href=\"#\">" + nonProfit.o.Name + "</a></li>" + Environment.NewLine;
@@ -328,6 +329,7 @@ public partial class V1_Register : System.Web.UI.Page
 								 select new { o };
 
 
+				nonProfitDropDown = nonProfitDropDown + "<li><a href=\"#\">------ None ------</a></li>" + Environment.NewLine;
 				foreach (var nonProfit in nonProfits)
 				{
 					nonProfitDropDown = nonProfitDropDown + "<li id=\"" + nonProfit.o.OrganizationId + "\"><a href=\"#\">" + nonProfit.o.Name + "</a></li>" + Environment.NewLine;

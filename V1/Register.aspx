@@ -330,6 +330,26 @@
             font-weight: bold;
             display: none;
         }
+		
+		#nonProfit {
+			max-height: 350px;
+			overflow-y: auto;
+			overflow-x: hidden;
+			font-size: 16px;
+			padding: 12px 20px;
+		}	
+		#nonProfit::-webkit-scrollbar {
+		width: 16px; /* wider scrollbar */
+		}
+
+		#nonProfit::-webkit-scrollbar-thumb {
+			background-color: #888; /* color of scrollbar handle */
+			border-radius: 8px; /* rounded corners */
+		}
+
+		#nonProfit::-webkit-scrollbar-thumb:hover {
+			background-color: #555; /* color on hover */
+		}
     </style>
 
 </asp:Content>

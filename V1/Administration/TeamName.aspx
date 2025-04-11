@@ -69,7 +69,7 @@
 		margin-top:-200px;
 	  padding:0px !important ;
 	}
-
+	
 	#nonProfit {
 		left: 0 !important;
 		right: auto !important;
@@ -77,7 +77,24 @@
 		overflow-y: auto;
 		overflow-x: hidden;
 		text-align: left; /* optional, helps if your content is centered */
+			font-size: 16px;
+			padding: 12px 20px;
 	}	
+		#nonProfit::-webkit-scrollbar {
+		width: 16px; /* wider scrollbar */
+		}
+
+		#nonProfit::-webkit-scrollbar-thumb {
+			background-color: #888; /* color of scrollbar handle */
+			border-radius: 8px; /* rounded corners */
+		}
+
+		#nonProfit::-webkit-scrollbar-thumb:hover {
+			background-color: #555; /* color on hover */
+		}
+	.btn-NonProfitDropdown {
+		position: relative;
+	}
 	.btn-NonProfitDropdown {
     position: relative;
 }
