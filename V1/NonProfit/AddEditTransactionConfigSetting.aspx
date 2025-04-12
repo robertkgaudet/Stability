@@ -61,30 +61,7 @@
                 ],
                 height: 125
             });
-            $('#<%=cc.ClientID%>').summernote({
-                toolbar: [
-                    ['style', ['bold', 'italic']],
-                    ['alignment', ['ul', 'ol', 'paragraph']],
-                    ['fontname', ['fontname']],
-                    ['fontsize', ['fontsize']],
-                    ['color', ['color']],
-                    ['height', ['height']],
-                    ['insert', ['picture', 'link', 'table']],
-                ],
-                height: 125
-            });
-            $('#<%=bcc.ClientID%>').summernote({
-                toolbar: [
-                    ['style', ['bold', 'italic']],
-                    ['alignment', ['ul', 'ol', 'paragraph']],
-                    ['fontname', ['fontname']],
-                    ['fontsize', ['fontsize']],
-                    ['color', ['color']],
-                    ['height', ['height']],
-                    ['insert', ['picture', 'link', 'table']],
-                ],
-                height: 125
-            });
+         
         });
 
     </script>
@@ -182,7 +159,7 @@
                     <h3>Email Template</h3>
                 </div>
                 <div class="col-12" style="display: flex; justify-content: end; margin-bottom: 15px;">
-                    <asp:Button type="button" class="compaign-btn" runat="server" Text="Add EmailTemplate" CssClass="btn btn-primary" OnClientClick="showModalEmail('Add EmailTemplate' ); return false;" />
+                    <asp:Button type="button" class="compaign-btn" runat="server" Text="Add Email Template" CssClass="btn btn-primary" OnClientClick="showModalEmail('Add EmailTemplate' ); return false;" />
                 </div>
 
                 <asp:GridView ID="gvEmailTemplates" runat="server" AutoGenerateColumns="False" OnRowCommand="gvEmailTemplates_RowCommand" CssClass="table table-bordered">
@@ -274,7 +251,7 @@
                     <div class="modal-dialog modal-lg modal-fullscreen" role="document">
                         <div class="modal-content">
                             <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center;">
-                                <h5 class="modal-title" style="flex-grow: 1; text-align: center;">Add EmailTemplate</h5>
+                                <h5 class="modal-title" style="flex-grow: 1; text-align: center;">Add Email Template</h5>
                                 <button type="button" class="close btn btn-secondary" runat="server" aria-label="Close" onserverclick="btnClose_Click">
                                     <span aria-hidden="true">X</span>
                                 </button>
@@ -289,17 +266,17 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Email CC</label>
                                     <div class="col-sm-8">
-                                        <asp:TextBox ID="cc" runat="server" class="form-control" TextMode="MultiLine" ClientIDMode="Static" Style="height: 150px; font-size: 18px;"></asp:TextBox>
+                                        <asp:TextBox ID="cc" runat="server" class="form-control"  ClientIDMode="Static" Style="height: 150px; font-size: 15px;"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Email BCC</label>
                                     <div class="col-sm-8">
-                                        <asp:TextBox ID="bcc" runat="server" class="form-control" TextMode="MultiLine" ClientIDMode="Static" Style="height: 150px; font-size: 18px;"></asp:TextBox>
+                                        <asp:TextBox ID="bcc" runat="server" class="form-control"  ClientIDMode="Static" Style="height: 150px; font-size: 15px;"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Campaign" OnClick="SaveEmailTemplate" />
+                                    <asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Email Template" OnClick="SaveEmailTemplate" />
                                     <asp:Button ID="Button1" runat="server" CssClass=" btn btn-secondary" Text="Close" OnClick="btnClose_Click" />
                                 </div>
                             </div>
