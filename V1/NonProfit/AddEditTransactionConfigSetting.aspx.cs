@@ -39,7 +39,6 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             BindOrganizationEventDropDown();
             BindDonationCampaigns();
             BindEmailTemplate();
-
         }
     }
     private void BindOrganizationEventDropDown()
@@ -233,6 +232,7 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             }
 
             dc.SubmitChanges();
+            ClearControls();
             hdnSelectedEmailTemplateId.Value = "";
             BindEmailTemplate();
         }
@@ -252,6 +252,13 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         campaignId = null;
         chkIsDefault.Checked = false;
         hdnSelectedCampaignId.Value = "";
+    }
+    private void EmailClearControls()
+    {
+        emailbody.Text = string.Empty;
+        cc.Text = string.Empty;
+        bcc.Text = string.Empty;
+        
     }
     private void BindDonationCampaigns()
     {
@@ -289,7 +296,18 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
                                  CC = template.CC,
                                  BCC = template.BCC
                              }).ToList();
+            if (templates.Any())
+            {
+                btnAddEmailTemplate.Visible = false;
+                ViewEmail.Visible = true;
+            }
+            else
+            {
+                btnAddEmailTemplate.Visible = true;
+                ViewEmail.Visible = false;
 
+
+            }
             gvEmailTemplates.DataSource = templates;
             gvEmailTemplates.DataBind();
         }
@@ -402,11 +420,17 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
         }
 
         hdnSelectedEmailTemplateId.Value = "";
+
         BindEmailTemplate();
     }
 
 
     protected void btnClose_Click(object sender, EventArgs e)
+    {
+        ClearControls();
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "closeModal", "$('#yourModal').modal('hide');", true);
+    }
+    protected void btnClose_Email(object sender, EventArgs e)
     {
         ClearControls();
         ScriptManager.RegisterStartupScript(this, this.GetType(), "closeModal", "$('#yourModal').modal('hide');", true);

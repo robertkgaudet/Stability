@@ -61,7 +61,7 @@
                 ],
                 height: 125
             });
-         
+
         });
 
     </script>
@@ -71,10 +71,10 @@
             width: 80%;
             height: 100vh;
         }
-        .btn-xs, .btn-group-xs > .btn {
-            font-size:15px!important;
-        }
 
+        .btn-xs, .btn-group-xs > .btn {
+            font-size: 15px !important;
+        }
     </style>
     <style>
         
@@ -156,30 +156,40 @@
                     </Columns>
                 </asp:GridView>
                 <div class="panel-heading" style="margin-left: -15px;">
-                    <h3>Email Template</h3>
+                   <h3>Donation Email Received</h3>
                 </div>
                 <div class="col-12" style="display: flex; justify-content: end; margin-bottom: 15px;">
-                    <asp:Button type="button" class="compaign-btn" runat="server" Text="Add Email Template" CssClass="btn btn-primary" OnClientClick="showModalEmail('Add EmailTemplate' ); return false;" />
+                    <asp:Button ID="btnAddEmailTemplate" class="compaign-btn" runat="server" Text="Add Email Template" CssClass="btn btn-primary" OnClientClick="showModalEmail('Add EmailTemplate' ); return false;" />
                 </div>
-
-                <asp:GridView ID="gvEmailTemplates" runat="server" AutoGenerateColumns="False" OnRowCommand="gvEmailTemplates_RowCommand" CssClass="table table-bordered">
+                <div class="col-12" style="display: flex; margin-bottom: 15px;">
+                    <asp:Button ID="ViewEmail" class="compaign-btn" runat="server" Text="View Email Template" CssClass="btn btn-primary" OnClientClick="return false;" />
+                </div>
+                <asp:GridView ID="gvEmailTemplates" runat="server" AutoGenerateColumns="False" OnRowCommand="gvEmailTemplates_RowCommand" CssClass="table table-bordered" Style="display: none;">
                     <Columns>
-                        <asp:BoundField DataField="EmailBody" HeaderText="Email Body" HtmlEncode="False" />
-                        <asp:BoundField DataField="CC" HeaderText="CC" HtmlEncode="False" />
-                        <asp:BoundField DataField="BCC" HeaderText="BCC" HtmlEncode="False" />
+                        <asp:TemplateField HeaderText="Email Body" ItemStyle-Width="40%">
+                            <ItemTemplate>
+                                <div class="email-body-box">
+                                    <div class="email-body">
+                                        <%# Eval("EmailBody") %>
+                                    </div>
+                                </div>
+                            </ItemTemplate>
+                        </asp:TemplateField>
 
+                        <asp:BoundField DataField="CC" HeaderText="CC" HtmlEncode="False" ItemStyle-Width="20%" />
+                        <asp:BoundField DataField="BCC" HeaderText="BCC" HtmlEncode="False" ItemStyle-Width="20%" />
 
-                        <asp:TemplateField HeaderText="Actions">
+                        <asp:TemplateField HeaderText="Actions" ItemStyle-Width="20%">
                             <ItemTemplate>
                                 <asp:Button ID="btnEdit" runat="server" Text="Edit" CommandName="EditRow"
                                     CommandArgument='<%# Eval("EmailTemplateId") %>' CssClass="btn btn-primary btn-xs" />
-
                                 <asp:Button ID="btnDelete" runat="server" Text="Delete" CommandName="DeleteRow"
                                     CommandArgument='<%# Eval("EmailTemplateId") %>' CssClass="btn btn-danger btn-xs" />
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
+
 
                 <div id="campaignModal" class="modal fade" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-lg modal-fullscreen" role="document">
@@ -266,18 +276,18 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Email CC</label>
                                     <div class="col-sm-8">
-                                        <asp:TextBox ID="cc" runat="server" class="form-control"  ClientIDMode="Static" Style="height: 150px; font-size: 15px;"></asp:TextBox>
+                                        <asp:TextBox ID="cc" runat="server" class="form-control" ClientIDMode="Static" Style="height: 150px; font-size: 15px;"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">Email BCC</label>
                                     <div class="col-sm-8">
-                                        <asp:TextBox ID="bcc" runat="server" class="form-control"  ClientIDMode="Static" Style="height: 150px; font-size: 15px;"></asp:TextBox>
+                                        <asp:TextBox ID="bcc" runat="server" class="form-control" ClientIDMode="Static" Style="height: 150px; font-size: 15px;"></asp:TextBox>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <asp:Button type="submit" class="btn btn-primary" runat="server" Text="Save Email Template" OnClick="SaveEmailTemplate" />
-                                    <asp:Button ID="Button1" runat="server" CssClass=" btn btn-secondary" Text="Close" OnClick="btnClose_Click" />
+                                    <asp:Button ID="Button1" runat="server" CssClass=" btn btn-secondary" Text="Close" OnClick="btnClose_Email" />
                                 </div>
                             </div>
                         </div>
@@ -348,6 +358,11 @@
         function showModalEmail(title) {
             setTimeout(function () {
                 $('.modal-title').text(title);
+                if (title.includes("Add")) {
+                    $('#<%=emailbody.ClientID%>').summernote('code', '');
+                    $('#cc').val('');
+                    $('#bcc').val('');
+                }
                 $('#emailModal').modal('show');
             }, 1000);
 
@@ -395,7 +410,12 @@
                 input.value = input.value.replace(/[^0-9.,]/g, '');
             }
         }
-
+        $(document).ready(function () {
+            $('#<%= ViewEmail.ClientID %>').click(function () {
+                $(this).hide();
+                $('#<%= gvEmailTemplates.ClientID %>').show();
+            });
+        });
 
     </script>
     <script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
