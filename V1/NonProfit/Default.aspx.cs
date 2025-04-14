@@ -346,10 +346,24 @@ public partial class V1_NonProfit_Default : BaseWebForm
 								 {
 									 org.OrganizationId,
 									 org.Name
-								 }).Take(200).ToList();
+								 }).ToList();
 
 			rptOrganizations.DataSource = organizations;
 			rptOrganizations.DataBind();
+	}
+	protected void rptOrganizations_ItemDataBound(object sender, RepeaterItemEventArgs e)
+	{
+		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+		{
+			RepeaterItem dataItem = (RepeaterItem)e.Item;
+
+			HyperLink lnk = (HyperLink)e.Item.FindControl("lnkOrg");
+			if (lnk != null)
+			{
+				lnk.Text = (string)DataBinder.Eval(dataItem.DataItem, "Name");
+				lnk.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + DataBinder.Eval(dataItem.DataItem, "OrganizationId");
+			}
+		}
 	}
 	protected void btnDonationsDashboard_Click(object sender, EventArgs e)
     {

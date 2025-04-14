@@ -290,13 +290,11 @@
 						</div>
 						<h3>Chapters</h3>
 						<ul>
-							<asp:Repeater ID="rptOrganizations" runat="server">
+							<asp:Repeater ID="rptOrganizations" runat="server" OnItemDataBound="rptOrganizations_ItemDataBound">
 								<ItemTemplate>
-									<li style="margin-bottom: 6px;">
-										<a href='/V1/NonProfit/Default.aspx?id=<%# Eval("OrganizationId") %>'>
-											<%# Eval("Name") %>
-										</a>
-									</li>
+									<div style="margin-bottom: 8px;">
+										<asp:HyperLink Target="_blank" ID="lnkOrg" runat="server" />
+									</div>
 								</ItemTemplate>
 							</asp:Repeater>
 						</ul>

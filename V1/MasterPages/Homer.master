@@ -492,6 +492,57 @@
             display: inline-block;
             }
            }
+
+		   .header-link.dropdown .dropdown-menu {
+				background-color: #fff;
+				color: #333;
+				min-width: 180px;
+			}
+
+			.header-link.dropdown .dropdown-menu li a {
+				padding: 10px 15px;
+				display: block;
+				color: #333;
+			}
+
+			.header-link.dropdown .dropdown-menu li a:hover {
+				background-color: #f5f5f5;
+			}
+
+.narrow-mobile-dropdown {
+    width: 90vw;
+    max-width: 325px; /* typical max mobile viewport width */
+    min-width: 275px;
+	margin-left: -120px;
+    left: 0 !important;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 6px;
+}
+
+.narrow-mobile-dropdown .scrollable-menu {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.narrow-mobile-dropdown li a {
+    display: block;
+    text-align: left;
+    padding: 10px;
+    color: #333;
+    white-space: normal;
+}
+
+.narrow-mobile-dropdown li a:hover {
+    background-color: #f5f5f5;
+}
+@media (max-width: 768px) {
+    .narrow-mobile-dropdown {
+		width: 90vw;
+		max-width: 325px; /* typical max mobile viewport width */
+		min-width: 275px;
+    }
+}
 		</style>
 
 	<asp:ContentPlaceHolder id="head" runat="server">
@@ -533,10 +584,27 @@
                         <asp:Image ID="imgresponsive" CssClass="pull-left mobile-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/mobile-logo.png" />
 	                    <div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs"></i></div>					
                         <div class="header-link text-white" onclick="window.location.href='/feed';">
-                        <i class="fa fa-home fa-2x m-t-xs"></i>
-                  </div>
+							<i class="fa fa-home fa-2x m-t-xs"></i>
+						</div>
 						<div class="header-link load-map text-white" onclick="window.location.href='/V1/Member/Default.aspx';"><i class="fa fa-user fa-2x m-t-xs"></i></div>
-						<div class="header-link load-map text-white" onclick="window.location.href='/V1/NonProfit/Default.aspx';"><i class="fa fa-users fa-2x m-t-xs"></i></div>
+						<div class="header-link dropdown text-white">
+							<a class="dropdown-toggle text-white" href="#" data-toggle="dropdown" aria-expanded="false">
+								<i class="fa fa-users fa-2x m-t-xs text-white"></i>
+							</a>
+							<ul class="dropdown-menu hdropdown animated flipInX narrow-mobile-dropdown">
+								<div style="max-height: 400px; overflow-y: auto;">
+									<li><h4 class="m-l-md">My Teams</h4></li>
+									<asp:Repeater ID="rptUserGroups" runat="server" OnItemDataBound="rptUserGroups_ItemDataBound">
+										<ItemTemplate>
+											<li><asp:Image CssClass="img-circle img-small pull-left m-r-md" Width="40" Height="40" ID="imgTeam" runat="server" />
+												<asp:Literal ID="litGroupLink" runat="server"></asp:Literal>
+											</li>
+										</ItemTemplate>
+									</asp:Repeater>
+								</div>
+							</ul>
+						</div>
+
 						<div class="header-link load-map text-white" onclick="window.location.href='/MapZone';"><i class="fa fa-map fa-2x m-t-xs"></i></div>
 
 						<div role="search" class="navbar-form-custom">
