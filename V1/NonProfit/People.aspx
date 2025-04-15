@@ -314,10 +314,9 @@
             });
 
             prm.add_endRequest(function () {
-                document.getElementById("loader").style.display = "none";
-                document.getElementById("tblVolunteers").style.display = "table";
+               
 
-                $('html, body').animate({ scrollTop: 0 }, 'slow');
+                /*$('html, body').animate({ scrollTop: $('#ContentPlaceHolder1_hypInviteTeamMembers').offset().top }, 'slow');*/
             });
         });
         var currentUserId = null;
@@ -478,6 +477,7 @@
     </script>
     <script type="text/javascript">
         var currentPagination = '';
+        var scroll = false;
         $(document).ready(function () {
             $(document).on("click", "#nextBtn", function () {
                 if (!$('#nextBtn').hasClass('disabled')) {
@@ -543,6 +543,7 @@
             }
 
             currentPagination = $('.navClass').html();
+
             __doPostBack('<%= SearchButton.UniqueID %>', '');
         }
 
@@ -611,7 +612,7 @@
             }
             else {
                 $('.navClass').html(currentPagination);
-            }
+            }           
             updateCheckboxSelection();
         }
         function updateSelectedUsers() {
@@ -625,7 +626,7 @@
                 }
             }); n
 
-            hiddenField.value = selectedUserIds.join(",");
+            hiddenField.value = selectedUserIds.join(",");           
         }
         function sendEmail() {
             var selectedUserIds = document.getElementById('<%= hdnSelectedUsers.ClientID %>').value;
@@ -736,11 +737,8 @@
                 }
             });
         }
-        $(document).on("click", ".pagination .page-link", function () {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+        $(document).on("click", ".pagination .page-link", function () {    
+            scroll = true;
         });
 
         function updateCheckboxSelection() {
@@ -748,14 +746,16 @@
             var userCheckboxes = document.querySelectorAll(".select-user");
             var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
 
-            selectAllCheckbox.addEventListener("change", function () {
-                var isChecked = this.checked;
-                userCheckboxes.forEach(function (checkbox) {
-                    checkbox.checked = isChecked;
+            if (selectAllCheckbox != null) {
+                selectAllCheckbox.addEventListener("change", function () {
+                    var isChecked = this.checked;
+                    userCheckboxes.forEach(function (checkbox) {
+                        checkbox.checked = isChecked;
+                    });
+                    updateSelectedUsers();
                 });
-                updateSelectedUsers();
-            });
-
+            }
+            
             userCheckboxes.forEach(function (checkbox) {
                 checkbox.addEventListener("change", function () {
                     var allChecked = Array.from(userCheckboxes).every(cb => cb.checked);
@@ -763,6 +763,19 @@
                     updateSelectedUsers();
                 });
             });
+
+            window.setTimeout(function () {                
+                if (scroll) {
+                    window.scrollTo({
+                        top: $('.memberDetail').offset().top,
+                        behavior: 'smooth'
+                    });
+                }                
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("tblVolunteers").style.display = "table";
+            }, 800);
+
+           
 
         }
     </script>
