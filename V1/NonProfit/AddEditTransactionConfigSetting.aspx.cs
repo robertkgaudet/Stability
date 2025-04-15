@@ -299,12 +299,10 @@ public partial class V1_NonProfit_AddEdit : System.Web.UI.Page
             if (templates.Any())
             {
                 btnAddEmailTemplate.Visible = false;
-                ViewEmail.Visible = true;
             }
             else
             {
                 btnAddEmailTemplate.Visible = true;
-                ViewEmail.Visible = false;
 
 
             }

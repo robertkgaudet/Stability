@@ -329,11 +329,7 @@
 			{
 				background-color:#F1F3F6;
 			}
-			.content
-			{
-				background-color:#F1F3F6 !important;
-				color:#6A6C6F;
-			}
+		
 			#header
 			{
 				background-color:#5e2e91;

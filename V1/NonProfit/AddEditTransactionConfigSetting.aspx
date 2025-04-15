@@ -59,9 +59,8 @@
                     ['height', ['height']],
                     ['insert', ['picture', 'link', 'table']],
                 ],
-                height: 125
+                height: 500
             });
-
         });
 
     </script>
@@ -74,6 +73,10 @@
 
         .btn-xs, .btn-group-xs > .btn {
             font-size: 15px !important;
+        }
+
+        button.btn.btn-primary.view-body-btn {
+            margin-left: 75px;
         }
     </style>
     <style>
@@ -156,25 +159,26 @@
                     </Columns>
                 </asp:GridView>
                 <div class="panel-heading" style="margin-left: -15px;">
-                   <h3>Donation Email Received</h3>
+                    <h3>Donation Email Received</h3>
                 </div>
                 <div class="col-12" style="display: flex; justify-content: end; margin-bottom: 15px;">
                     <asp:Button ID="btnAddEmailTemplate" class="compaign-btn" runat="server" Text="Add Email Template" CssClass="btn btn-primary" OnClientClick="showModalEmail('Add EmailTemplate' ); return false;" />
                 </div>
-                <div class="col-12" style="display: flex; margin-bottom: 15px;">
-                    <asp:Button ID="ViewEmail" class="compaign-btn" runat="server" Text="View Email Template" CssClass="btn btn-primary" OnClientClick="return false;" />
-                </div>
-                <asp:GridView ID="gvEmailTemplates" runat="server" AutoGenerateColumns="False" OnRowCommand="gvEmailTemplates_RowCommand" CssClass="table table-bordered" Style="display: none;">
+
+                <asp:GridView ID="gvEmailTemplates" runat="server" AutoGenerateColumns="False" OnRowCommand="gvEmailTemplates_RowCommand" CssClass="table table-bordered">
                     <Columns>
-                        <asp:TemplateField HeaderText="Email Body" ItemStyle-Width="40%">
+                        <asp:TemplateField HeaderText="Email Body" ItemStyle-Width="30%">
                             <ItemTemplate>
-                                <div class="email-body-box">
-                                    <div class="email-body">
+                                <div class="email-body-box" style="max-height: 150px; padding: 5px;">
+                                    <div class="email-body-content" style="display: none;">
                                         <%# Eval("EmailBody") %>
                                     </div>
+                                    <button type="button" class="btn btn-primary view-body-btn">View EmailContent</button>
                                 </div>
                             </ItemTemplate>
                         </asp:TemplateField>
+
+
 
                         <asp:BoundField DataField="CC" HeaderText="CC" HtmlEncode="False" ItemStyle-Width="20%" />
                         <asp:BoundField DataField="BCC" HeaderText="BCC" HtmlEncode="False" ItemStyle-Width="20%" />
@@ -189,7 +193,20 @@
                         </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
-
+                <div class="modal fade" id="emailBodyModal" tabindex="-1" role="dialog" aria-labelledby="emailBodyModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content" style="width: 800px; margin-left: -112px;">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="emailBodyModalLabel">Email Content</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">X</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" id="emailBodyContent">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div id="campaignModal" class="modal fade" tabindex="-1" role="dialog">
                     <div class="modal-dialog modal-lg modal-fullscreen" role="document">
@@ -358,15 +375,22 @@
         function showModalEmail(title) {
             setTimeout(function () {
                 $('.modal-title').text(title);
+                debugger
                 if (title.includes("Add")) {
-                    $('#<%=emailbody.ClientID%>').summernote('code', '');
+                    $.get('/Homer/DefaultEmailTemplate.html', function (html) {
+                        debugger
+                        $('#<%= emailbody.ClientID %>').summernote('code', html);
+                    });
+
                     $('#cc').val('');
                     $('#bcc').val('');
                 }
+
                 $('#emailModal').modal('show');
             }, 1000);
-
         }
+
+
 
         function DeleteModalEmail() {
             setTimeout(function () {
@@ -410,11 +434,10 @@
                 input.value = input.value.replace(/[^0-9.,]/g, '');
             }
         }
-        $(document).ready(function () {
-            $('#<%= ViewEmail.ClientID %>').click(function () {
-                $(this).hide();
-                $('#<%= gvEmailTemplates.ClientID %>').show();
-            });
+        $(document).on('click', '.view-body-btn', function () {
+            var emailBody = $(this).siblings('.email-body-content').html();
+            $('#emailBodyContent').html(emailBody);
+            $('#emailBodyModal').modal('show');
         });
 
     </script>
