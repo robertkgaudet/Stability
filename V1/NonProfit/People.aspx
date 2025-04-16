@@ -312,13 +312,14 @@
                 document.getElementById("loader").style.display = "block";
                 document.getElementById("tblVolunteers").style.display = "none";
             });
-
             prm.add_endRequest(function () {
-               
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("tblVolunteers").style.display = "table";
 
-                /*$('html, body').animate({ scrollTop: $('#ContentPlaceHolder1_hypInviteTeamMembers').offset().top }, 'slow');*/
+                window.scrollTo({ top: 300, behavior: "instant" });
             });
         });
+
         var currentUserId = null;
         function setUserId(button) {
             currentUserId = button.getAttribute('data-userid');
@@ -343,6 +344,7 @@
                 success: function (response) {
                     if (response.success) {
                         $('#loader').hide();
+
                         $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
                         $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
                         $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
@@ -612,7 +614,7 @@
             }
             else {
                 $('.navClass').html(currentPagination);
-            }           
+            }
             updateCheckboxSelection();
         }
         function updateSelectedUsers() {
@@ -626,7 +628,7 @@
                 }
             }); n
 
-            hiddenField.value = selectedUserIds.join(",");           
+            hiddenField.value = selectedUserIds.join(",");
         }
         function sendEmail() {
             var selectedUserIds = document.getElementById('<%= hdnSelectedUsers.ClientID %>').value;
@@ -737,7 +739,7 @@
                 }
             });
         }
-        $(document).on("click", ".pagination .page-link", function () {    
+        $(document).on("click", ".pagination .page-link", function () {
             scroll = true;
         });
 
@@ -755,7 +757,7 @@
                     updateSelectedUsers();
                 });
             }
-            
+
             userCheckboxes.forEach(function (checkbox) {
                 checkbox.addEventListener("change", function () {
                     var allChecked = Array.from(userCheckboxes).every(cb => cb.checked);
@@ -763,21 +765,13 @@
                     updateSelectedUsers();
                 });
             });
-
-            window.setTimeout(function () {                
-                if (scroll) {
-                    window.scrollTo({
-                        top: $('.memberDetail').offset().top,
-                        behavior: 'smooth'
-                    });
-                }                
-                document.getElementById("loader").style.display = "none";
-                document.getElementById("tblVolunteers").style.display = "table";
-            }, 800);
-
-           
-
         }
+        $(document).on("click", ".pagination .page-link", function () {
+            window.scrollTo({
+                top: 300,
+                behavior: 'instant'
+            });
+        });
     </script>
 
 </asp:Content>
@@ -816,7 +810,7 @@
             <div class="row">
                 <div class="hpanel hblue">
                     <div class="panel-tools">
-                        <button class="btn btn-link toggle-search-btn" type="button" data-toggle="collapse"
+                        <button class="btn btn-link toggle-search-btn" id="search" type="button" data-toggle="collapse"
                             data-target="#searchFilters" aria-expanded="false" aria-controls="searchFilters">
                             <i class="fa fa-chevron-down"></i>
                         </button>
