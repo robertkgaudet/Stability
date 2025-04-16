@@ -21,12 +21,12 @@
     }
 	.link-group {
     display: flex;
-    align-items: center; /* vertically centers text and images */
-    gap: 2px; /* adjust spacing between links as needed */
+    align-items: center;
+    gap: 2px; 
 }
 
 .link-group a img {
-    height: 20px; /* adjust height to match the text line nicely */
+    height: 20px; 
     width: auto;
     vertical-align: middle;
 }
@@ -35,10 +35,10 @@
 <asp:HyperLink ID="hypName" runat="server" CssClass="Userlink" Visible="false">
     <asp:Label ID="lblprofileusername" runat="server" CssClass="user-name" Visible="false"></asp:Label>
 </asp:HyperLink>
-<asp:HyperLink ID="hypStabilityLogo" runat="server" CssClass="Userlink" Visible="false">
-    <asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge" Visible="false" data-toggle="tooltip" data-placement="top" title="Stability Verified" />
+<asp:HyperLink ID="hypStabilityLogo" runat="server" CssClass="Userlink" Visible="true" Style="display: none;">
+    <asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge" Visible="true" Style="display: none;" data-toggle="tooltip" data-placement="top" title="Stability Verified" />
 </asp:HyperLink>
-<asp:HyperLink ID="hypTeamLogo" runat="server" NavigateUrl="/V1/NonProfit/Default.aspx" CssClass="Userlink" Visible="false">
-    <asp:Image ID="imgTeamLogo" runat="server" CssClass="stability-badge" Visible="false" data-toggle="tooltip" data-placement="top" />
+<asp:HyperLink ID="hypTeamLogo" runat="server" NavigateUrl="/V1/NonProfit/Default.aspx" CssClass="Userlink" Visible="true" Style="display: none;">
+    <asp:Image ID="imgTeamLogo" runat="server" CssClass="stability-badge" Visible="true" Style="display: none;" data-toggle="tooltip" data-placement="top" />
 </asp:HyperLink>
 </div>

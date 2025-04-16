@@ -152,7 +152,7 @@
 					<asp:HyperLink CssClass="btn btn-xs btn-default" runat="server" id="hypProfileEdit" NavigateUrl="/V1/Profile/ProfileEdit.aspx" Visible="false"><i class="fa fa-user-circle"></i> Edit Profile</asp:HyperLink>
 				</div>
             </div>
-			<div class="row memberDetail">
+			<div class="row memberDetail" id="memberHeader">
                 <div class="col-xs-12 col-lg-8">
 					<div style="margin-top:10px; width:100%;">
 					<span style="color:darkslategrey; font-size:20px; font-weight:800; margin-right:10px;">		

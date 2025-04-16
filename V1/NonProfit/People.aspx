@@ -383,8 +383,36 @@
                 stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
                 makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
             }
+
+            var $input = $("input[data-userid='" + currentUserId + "']");
+
+            // Traverse up to the panel container
+            var $panel = $input.closest('.hpanel');
+
+            // Find the image tags inside the panel
+            var $stabilityImg = $panel.find("img[id*='imgStabilityBadge']");
+            var $stabilityLink = $panel.find("a[id*='hypStabilityLogo']");
+            var $teamLogoImg = $panel.find("img[id*='imgTeamLogo']");
+            var $teamLogoLink = $panel.find("a[id*='hypTeamLogo']");
+            if (showTeamLogo) {
+                $teamLogoImg.show();
+                $teamLogoLink.show();
+            }
+            else {
+                $teamLogoImg.hide();
+                $teamLogoLink.hide();
+            }
+            if (stabilityVerified) {
+                $stabilityImg.show();
+                $stabilityLink.show();
+            }
+            else {
+                $stabilityImg.hide();
+                $stabilityLink.hide();
+            }
+
             updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
-        }
+        } 
         function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator) {
             var data = {
                 action: "update",
@@ -404,7 +432,7 @@
                 success: function (response) {
                     if (response.Success) {
                         $('#manageMemberModal').modal('hide');
-                        resetSearch();
+                        //resetSearch();
                     } else {
                         alert("Error: " + response.Message);
                     }
@@ -772,7 +800,7 @@
                 behavior: 'instant'
             });
         });
-    </script>
+    </script>    
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
