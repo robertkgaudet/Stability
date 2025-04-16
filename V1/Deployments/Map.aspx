@@ -535,7 +535,7 @@ function updateFilterStates(mapFilterType) {
 		</div>
         
         <!-- New Location Type Filter -->
-         <div class="filter-dropdown additional-filter">
+       <%--  <div class="filter-dropdown additional-filter">
              <button id="btn-locationType" class="btn btn-outline btn-default locationTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Location Types <i class="fa fa-sort-down"></i></button>
             <ul id="ddlLocationType" class="dropdown-menu text-center dropdown-map-filter">
                 <%=locationTypeDropDown%>
@@ -556,7 +556,7 @@ function updateFilterStates(mapFilterType) {
             <ul id="ddlStatus" class="dropdown-menu text-center dropdown-map-filter">
                 <%=locationStatusDropDown%>
             </ul>
-        </div>
+        </div>--%>
         
 	  <div class="filter-dropdown">
   		<button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i> </button>

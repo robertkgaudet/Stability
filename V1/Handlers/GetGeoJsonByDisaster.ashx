@@ -18,63 +18,63 @@ public class GetGeoJsonByDisaster: IHttpHandler, IReadOnlySessionState
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 			switch (mapFilterType)
 			{
-				case "All":
-					var allLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
+				//case "All":
+				//	var allLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
 
-					results = (new JavaScriptSerializer().Serialize(allLocationJson));
-					results = results.Remove(0, 13);
-					results = results.Remove(results.Length - 3, 3);
-					results = results.Replace("\\", "");
-                break;
+				//	results = (new JavaScriptSerializer().Serialize(allLocationJson));
+				//	results = results.Remove(0, 13);
+				//	results = results.Remove(results.Length - 3, 3);
+				//	results = results.Replace("\\", "");
+				//            break;
 
-				case "Community":
-					var communityLocationJson = dc.MapStabilityLocations(new Guid(keyId));
+				//case "Community":
+				//	var communityLocationJson = dc.MapStabilityLocations(new Guid(keyId));
 
-					results = (new JavaScriptSerializer().Serialize(communityLocationJson));
-					results = results.Remove(0, 13);
-					results = results.Remove(results.Length - 3, 3);
-					results = results.Replace("\\", "");
-                break;
-				
+				//	results = (new JavaScriptSerializer().Serialize(communityLocationJson));
+				//	results = results.Remove(0, 13);
+				//	results = results.Remove(results.Length - 3, 3);
+				//	results = results.Replace("\\", "");
+				//            break;
 
-				case "Critical":
-					var criticalLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
 
-					results = (new JavaScriptSerializer().Serialize(criticalLocationJson));
-					results = results.Remove(0, 13);
-					results = results.Remove(results.Length - 3, 3);
-					results = results.Replace("\\", "");
-                break;
-				
+				//case "Critical":
+				//	var criticalLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
 
-				case "VOAD":
-					var VOADLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
+				//	results = (new JavaScriptSerializer().Serialize(criticalLocationJson));
+				//	results = results.Remove(0, 13);
+				//	results = results.Remove(results.Length - 3, 3);
+				//	results = results.Replace("\\", "");
+				//            break;
 
-					results = (new JavaScriptSerializer().Serialize(VOADLocationJson));
-					results = results.Remove(0, 13);
-					results = results.Remove(results.Length - 3, 3);
-					results = results.Replace("\\", "");
-                break;
-				
 
-				case "Professional":
-					var professionalLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
+				//case "VOAD":
+				//	var VOADLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
 
-					results = (new JavaScriptSerializer().Serialize(professionalLocationJson));
-					results = results.Remove(0, 13);
-					results = results.Remove(results.Length - 3, 3);
-					results = results.Replace("\\", "");
-                break;
+				//	results = (new JavaScriptSerializer().Serialize(VOADLocationJson));
+				//	results = results.Remove(0, 13);
+				//	results = results.Remove(results.Length - 3, 3);
+				//	results = results.Replace("\\", "");
+				//	break;
+
+
+				//case "Professional":
+				//	var professionalLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
+
+				//	results = (new JavaScriptSerializer().Serialize(professionalLocationJson));
+				//	results = results.Remove(0, 13);
+				//	results = results.Remove(results.Length - 3, 3);
+				//	results = results.Replace("\\", "");
+				//	break;
 
 
 				default:
-					var defaultLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
+					//var defaultLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
 
-					results = (new JavaScriptSerializer().Serialize(defaultLocationJson));
-					results = results.Remove(0, 13);
-					results = results.Remove(results.Length - 3, 3);
-					results = results.Replace("\\", "");
-                break;
+					//results = (new JavaScriptSerializer().Serialize(defaultLocationJson));
+					//results = results.Remove(0, 13);
+					//results = results.Remove(results.Length - 3, 3);
+					//results = results.Replace("\\", "");
+					break;
 			}
 			//return results;
 		}

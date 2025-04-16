@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="india" Class="CrowdReliefDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_8013_stability" Class="CrowdReliefDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.aspnet_Membership" Member="aspnet_Memberships">
     <Type Name="aspnet_Membership">
       <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
@@ -2017,6 +2017,7 @@
       <Association Name="Organization_Position" Member="Positions" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Position" />
       <Association Name="Organization_PaymentConfiguration" Member="PaymentConfigurations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="PaymentConfiguration" />
       <Association Name="Organization_UserOrganization" Member="UserOrganizations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganization" />
+      <Association Name="Organization_EmailTemplate" Member="EmailTemplates" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="EmailTemplate" />
       <Association Name="aspnet_User_Organization" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="aspnet_User_Organization1" Member="aspnet_User1" ThisKey="OwnerId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
@@ -2116,6 +2117,16 @@
       <Association Name="Address_LocationProfileEvent" Member="LocationProfileEvents" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfileEvent" />
       <Association Name="Address_LocationLocationStatus" Member="LocationLocationStatus" ThisKey="AddressId" OtherKey="AddressId" Type="LocationLocationStatus" />
       <Association Name="Address_LocationProfile" Member="LocationProfiles" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfile" />
+    </Type>
+  </Table>
+  <Table Name="dbo.EmailTemplate" Member="EmailTemplates">
+    <Type Name="EmailTemplate">
+      <Column Name="EmailTemplateId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="EmailBody" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="CC" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="BCC" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Association Name="Organization_EmailTemplate" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisasterForCleanupMap" Method="GetGeoJsonByDisasterForCleanupMap">
