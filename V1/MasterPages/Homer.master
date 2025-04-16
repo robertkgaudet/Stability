@@ -334,11 +334,11 @@
 				background-color:#F1F3F6 !important;
 				color:#6A6C6F;
 			}
+
 			#header
-			{
-				background-color:#5e2e91;
-				height:58px;
-			}
+			<%=adminHeaderStyle%>
+			
+
 			#logo:hover	{cursor:pointer; }
 			.header-link
 			{
@@ -553,10 +553,10 @@
 		<asp:Panel ID="adminFeatureSection" runat="server" Visible="false">
 			<div style="background-color: lightgray;
 						height:65px;
-						padding:4px 10px 0px 0px;
-						text-align: right;
+						padding:10px;
+						text-align: left;
 						color: dimgray;
-						position: relative;
+						position: fixed;
 						top: 0;
 						left: 0;
 						width: 100%;

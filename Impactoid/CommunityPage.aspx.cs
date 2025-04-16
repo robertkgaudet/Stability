@@ -22,6 +22,7 @@ public partial class Impactoid_CommunityPage : System.Web.UI.Page
 	public string pageTitle = string.Empty;
 	public string pageDescription = string.Empty;
 	public string causePhotoFolder = string.Empty;
+
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();

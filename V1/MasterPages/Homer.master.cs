@@ -44,6 +44,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
     public string calendarUpdated = "grey";
     public string _masterCoverImage = "";
     public string FeatureTypeCounterTitle = string.Empty;
+	public string adminHeaderStyle = "{background-color:#5e2e91;height:58px;}";
     public string TimeAgo { get; set; }
     public string notificationCounting { get; set; }
     public class FeatureTypeCounter
@@ -149,8 +150,10 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
             if (HttpContext.Current.User.IsInRole("Administrator"))
             {
                 adminFeatureSection.Visible = true;
+				adminHeaderStyle = "{position: fixed; top: 65px; left: 0;width: 100%;z-index: 9999; background-color: #5e2e91; height: 58px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}";
 
-                string FeatureTypeRedirectUrl = HttpContext.Current.Request.Url.AbsolutePath;
+
+				string FeatureTypeRedirectUrl = HttpContext.Current.Request.Url.AbsolutePath;
 
                 if (!string.IsNullOrEmpty(FeatureTypeRedirectUrl))
                 {
