@@ -1,15 +1,16 @@
 ﻿<%@ Page Title="" EnableEventValidation="false" Language="C#" ValidateRequest="false" MasterPageFile="~/V1/MasterPages/1-Column-Child.master" AutoEventWireup="true" CodeFile="RespondToEvent.aspx.cs" Inherits="V1_NonProfitAdministration_RespondToEvent" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
-	<script src="/Homer/vendor/iCheck/icheck.min.js"></script>	<script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
-	<script src="/Homer/vendor/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js"></script>
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <script src="/Homer/vendor/iCheck/icheck.min.js"></script>
+    <script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script src="/Homer/vendor/bootstrap-datepicker-master/dist/js/bootstrap-datepicker.min.js"></script>
 
     <link rel="stylesheet" href="/Homer/vendor/sweetalert/lib/sweet-alert.css" />
-	<link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
-	<link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote.css" />
-	<link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />	
+    <link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
+    <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote.css" />
+    <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />
 
-	<script>
+    <script>
 
         $(document).ready(function () {
 
@@ -21,25 +22,25 @@
 
             $('input[type="checkbox"]').each(function () {
                 $(this).addClass("i-checks");
-			});
+            });
 
-			$(function () {
-				$('.input-group.date').datepicker({});
-			});
+            $(function () {
+                $('.input-group.date').datepicker({});
+            });
 
-			$('#<%=txtVolunteerInstructions.ClientID%>').summernote({
-				toolbar: [
-					['style', ['bold', 'italic', 'underline']],
-					['alignment', ['ul', 'ol', 'paragraph']]
-				],
+            $('#<%=txtVolunteerInstructions.ClientID%>').summernote({
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline']],
+                    ['alignment', ['ul', 'ol', 'paragraph']]
+                ],
 
-				height: 125
-			});
+                height: 125
+            });
         });
 
         // Function to validate alphanumeric input on keypress
         function validateAlphaNumericInput(event) {
-            // Get the input element
+        // Get the input element
             <%--var inputElement = document.getElementById('<%=txtURLFriendlyCampaignName.ClientID%>');--%>
 
             // Get the current input value
@@ -60,7 +61,7 @@
                 event.preventDefault();
                 return false;
             }
-		}
+        }
 
 <%--		function updateCountyId() {
 			var hiddenField = $("#<%=hidCountyId.ClientID%>");
@@ -120,309 +121,311 @@
             }
         }--%>
 
-		$(function () {
+        $(function () {
 
-			$("#form1").validate({
-				rules: {
+            $("#form1").validate({
+                rules: {
 					<%=txtAddress1.UniqueID%>: {
-						required: true
-					},
+                required: true
+            },
 					<%=txtCity1.UniqueID%>: {
-					required: true
-					},
+                    required: true
+                },
 					<%=txtZip1.UniqueID%>: {
-					required: true
-					},
+                    required: true
+                },
 					<%=txtPOCFullname.UniqueID%>: {
-					required: true,
-					maxlength: 100
-					},
+                    required: true,
+                    maxlength: 100
+                },
 					<%=txtPhonenumber.UniqueID%>: {
-						number: true,
-						maxlength: 12
-					},
+                    number: true,
+                    maxlength: 12
+                },
 					<%=txtURLFriendlyCampaignName.UniqueID%>: {
-						required: true
-					},
+                    required: true
+                },
 					<%=txtCampaignName.UniqueID%>: {
-						required: true,
-						maxlength: 1000
-					}, 
+                    required: true,
+                    maxlength: 1000
+                },
 					<%=txtEmailAddress.UniqueID%>: {
-						email: true
-					},
-					email:
-					{
-							required: true,
-							minlength: 5
-					}
+                    email: true
+                },
+                email:
+                {
+                    required: true,
+                    minlength: 5
+                }
 				},
-				submitHandler: function (form) {
-					form.submit();
-				}
+            submitHandler: function (form) {
+                form.submit();
+            }
 			});
 		});
 
 
-		function checkUniqueName(name) {
-			if (name.trim() === '') {
-				// If the textbox is empty, clear the status message
-				$('#urlFriendlyNameStatus').text('');
-				return;
-			}
+        function checkUniqueName(name) {
+            if (name.trim() === '') {
+                // If the textbox is empty, clear the status message
+                $('#urlFriendlyNameStatus').text('');
+                return;
+            }
 
-			$.ajax({
-				type: "POST",
-				url: "/V1/NonProfitAdministration/RespondToEvent.aspx/IsURLFriendlyNameUnique", // Replace with your ASP.NET page name
-				data: JSON.stringify({ urlFriendlyName: name }),
-				contentType: "application/json; charset=utf-8",
-				dataType: "json",
-				success: function (response) {
-					if (response.d) {
-						// The name is unique
-						$('#urlFriendlyNameStatus').text('This name is available.').css('color', 'green');
-					} else {
-						// The name is not unique
-						$('#urlFriendlyNameStatus').text('This name is already taken.').css('color', 'red');
-					}
-				},
-				error: function (xhr, status, error) {
-					console.error("Error: " + error);
-				}
-			});
-		}
+            $.ajax({
+                type: "POST",
+                url: "/V1/NonProfitAdministration/RespondToEvent.aspx/IsURLFriendlyNameUnique", // Replace with your ASP.NET page name
+                data: JSON.stringify({ urlFriendlyName: name }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d) {
+                        // The name is unique
+                        $('#urlFriendlyNameStatus').text('This name is available.').css('color', 'green');
+                    } else {
+                        // The name is not unique
+                        $('#urlFriendlyNameStatus').text('This name is already taken.').css('color', 'red');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error: " + error);
+                }
+            });
+        }
 
-	</script>
-	<style>
-		.container
-		{
-			background-color:white !important;
-		}
-	</style>
+    </script>
+    <style>
+    	.container {
+    		background-color: white !important;
+    	}
+    </style>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="form-group col-lg-12" runat="server" id="divSelectEvent">
-					<label>Choose an Event/Disaster</label>
-					<div id="div1" class="dropdown m-b-md" runat="server">
-						<button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Choose The Event/Disaster<i class="fa fa-sort-down"></i></button>
-						<ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
-							<%=disasterDropDown%>
-						</ul>
-					</div>
-					<input type="hidden" id="hidEventId" runat="server" />
-				</div>
-				<h4><asp:Literal id="litEventName" runat="server"></asp:Literal></h4>
-			</div>
-		</div>
-		<div class="content" runat="server" visible="false" id="divCreateCause">
-			<div class="row" id="divForm" runat="server">
-				<div class="col-sm-12 container">
-					<div class="hpanel form-horizontal">
-						Creating a deployment allows you to add your team, raise money, track your hours, share your impact and more.
-						<br /><br />
-						Note, you will need to enter an exact address for your deployment. This can be modified later so if you're not yet sure where you will deploy just enter the nearest reasonable address you can find.
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="form-group col-lg-12" runat="server" id="divSelectEvent">
+                <label>Choose an Event/Disaster</label>
+                <div id="div1" class="dropdown m-b-md" runat="server">
+                    <button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Choose The Event/Disaster<i class="fa fa-sort-down"></i></button>
+                    <ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
+                        <%=disasterDropDown%>
+                    </ul>
+                </div>
+                <input type="hidden" id="hidEventId" runat="server" />
+            </div>
+            <h4>
+                <asp:Literal ID="litEventName" runat="server"></asp:Literal></h4>
+        </div>
+    </div>
+    <div class="content" runat="server" visible="false" id="divCreateCause">
+        <div class="row" id="divForm" runat="server">
+            <div class="col-sm-12 container">
+                <div class="hpanel form-horizontal">
+                    Creating a deployment allows you to add your team, raise money, track your hours, share your impact and more.
+						<br />
+                    <br />
+                    Note, you will need to enter an exact address for your deployment. This can be modified later so if you're not yet sure where you will deploy just enter the nearest reasonable address you can find.
 						<div class="panel-heading hbuilt">
-							Create a New Deployment
-						</div>
-						<div class="panel-body">
+                            Create a New Deployment
+                        </div>
+                    <div class="panel-body">
 
-							<div class="form-group">
-								<label class="col-sm-3 control-label">Deployment Name *</label>
-								<div class="col-sm-6">
-									<input type="text" runat="server" id="txtCampaignName" class="form-control" placeholder="What do you want to call this deployment?">
-								</div>
-							</div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Deployment Name *</label>
+                            <div class="col-sm-6">
+                                <input type="text" runat="server" id="txtCampaignName" class="form-control" placeholder="What do you want to call this deployment?">
+                            </div>
+                        </div>
 
-							<div class="form-group">
-								<label class="col-sm-3 control-label">URL Friendly Deployment Name *</label>
-								<div class="col-sm-6">
-									<input type="text" runat="server" id="txtURLFriendlyCampaignName" class="form-control" placeholder="URL Friendly Name" oninput="checkUniqueName(this.value)">
-									<span id="urlFriendlyNameStatus"></span>
-								</div>
-							</div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">URL Friendly Deployment Name *</label>
+                            <div class="col-sm-6">
+                                <input type="text" runat="server" id="txtURLFriendlyCampaignName" class="form-control" placeholder="URL Friendly Name" oninput="checkUniqueName(this.value)">
+                                <span id="urlFriendlyNameStatus"></span>
+                            </div>
+                        </div>
 
-							<div class="form-group">
-								<label class="col-sm-3 control-label">Welcome Message</label>
-								<div class="col-sm-6">
-									<small>You can enter location instructions, reminders, a welcome message or other relevant information.</small>
-									<asp:TextBox ID="txtVolunteerInstructions" CssClass="form-control" runat="server" TextMode="MultiLine" Rows="10" ClientIDMode="Static"></asp:TextBox>
-									
-								</div>
-							</div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Welcome Message</label>
+                            <div class="col-sm-6">
+                                <small>You can enter location instructions, reminders, a welcome message or other relevant information.</small>
+                                <asp:TextBox ID="txtVolunteerInstructions" CssClass="form-control" runat="server" TextMode="MultiLine" Rows="10" ClientIDMode="Static"></asp:TextBox>
 
-
+                            </div>
+                        </div>
 
 
 
 
 
 
-							<script>
-								var address;
-								var city;
-								var state;
-								var zip;
-								var lookupComplete = false;
-								$(document).ready(function () {
-									$('#divAddressMessage').hide();
-									$('#divMessage').hide();
+
+
+                        <script>
+                            var address;
+                            var city;
+                            var state;
+                            var zip;
+                            var lookupComplete = false;
+                            $(document).ready(function () {
+                                $('#divAddressMessage').hide();
+                                $('#divMessage').hide();
 									<%--$("#<%=btnSubmit.ClientID%>").attr("disabled", true);--%>
-								});
+                                });
 
-								function CheckAddressValues(controlName, sender) {
+                            function CheckAddressValues(controlName, sender) {
 
-									switch (controlName) {
-										case "address":
-											if (sender.value) {
-												address = sender.value;
-											}
-											break;
-										case "city":
-											if (sender.value) {
-												city = sender.value;
-											}
-											break;
-										case "state":
-											if (sender.value) {
-												state = sender.value;
-											}
-											break;
-										case "zip":
-											if (sender.value) {
-												zip = sender.value;
-											}
-											break;
-										default:
-										// code block
-									}
+                                switch (controlName) {
+                                    case "address":
+                                        if (sender.value) {
+                                            address = sender.value;
+                                        }
+                                        break;
+                                    case "city":
+                                        if (sender.value) {
+                                            city = sender.value;
+                                        }
+                                        break;
+                                    case "state":
+                                        if (sender.value) {
+                                            state = sender.value;
+                                        }
+                                        break;
+                                    case "zip":
+                                        if (sender.value) {
+                                            zip = sender.value;
+                                        }
+                                        break;
+                                    default:
+                                    // code block
+                                }
 
-									if ((address) && (city) && (state) && (zip) && (lookupComplete == false)) {
-										$('#divAddressMessage').show();
-										//alert(address + " " + city + ", " + state + " " + zip);
-										$('#<%=lblMessage.ClientID%>').text(" Retrieving latitude and longitude...");
-										SetLatitudeLongitude('<%=userId%>', address + " " + city + ", " + state + " " + zip);
-									}
-								}
+                                if ((address) && (city) && (state) && (zip) && (lookupComplete == false)) {
+                                    $('#divAddressMessage').show();
+                                    //alert(address + " " + city + ", " + state + " " + zip);
+                                    $('#<%=lblMessage.ClientID%>').text(" Retrieving latitude and longitude...");
+                                        SetLatitudeLongitude('<%=userId%>', address + " " + city + ", " + state + " " + zip);
+                                }
+                            }
 
-								function SetLatitudeLongitude(userId, address) {
-									$.ajax(
-										{
-											type: "GET",
-											url: "/V1/Handlers/InsertDeploymentAddress.ashx?userId=" + userId + "&address=" + address,
-											contentType: "text/plain; charset=utf-8",
-											dataType: "html",
-											success: function (data) {
-												if (data != "") {
-													var results = data.split("|");
-													var isPartialMatch = results[0];
-													var duplicate = results[12];
-													if ((isPartialMatch == 'False' || isPartialMatch == 'false') && (duplicate == 'False' || duplicate == 'false')) {
-														var latitude = results[1];
-														var longitude = results[2];
-														var street_number = results[3];
-														var street = results[4];
-														var city = results[5];
-														var state = results[6];
-														var country = results[7];
-														var postal_code = results[8];
-														var county = results[9];
-														var googlePlaceId = results[10];
-														var formattedAddress = results[11];
-														var addressId = results[13];
+                            function SetLatitudeLongitude(userId, address) {
+                                $.ajax(
+                                    {
+                                        type: "GET",
+                                        url: "/V1/Handlers/InsertDeploymentAddress.ashx?userId=" + userId + "&address=" + address,
+                                        contentType: "text/plain; charset=utf-8",
+                                        dataType: "html",
+                                        success: function (data) {
+                                            if (data != "") {
+                                                var results = data.split("|");
+                                                var isPartialMatch = results[0];
+                                                var duplicate = results[12];
+                                                if ((isPartialMatch == 'False' || isPartialMatch == 'false') && (duplicate == 'False' || duplicate == 'false')) {
+                                                    var latitude = results[1];
+                                                    var longitude = results[2];
+                                                    var street_number = results[3];
+                                                    var street = results[4];
+                                                    var city = results[5];
+                                                    var state = results[6];
+                                                    var country = results[7];
+                                                    var postal_code = results[8];
+                                                    var county = results[9];
+                                                    var googlePlaceId = results[10];
+                                                    var formattedAddress = results[11];
+                                                    var addressId = results[13];
 
-														$("#divMapMessage").addClass("alert-success");
-														$("#divMapMessage").removeClass("alert-danger");
-														$("#iFontAwesome").removeClass("fa-warning");
-														$("#iFontAwesome").addClass("fa-map-marker");
-														var successMessage = " We found your address and returned the following information. (" + data + ")";
-														$("#<%=hidAddressData.ClientID%>").val(data);
-														$('#<%=lblAddressMessage.ClientID%>').text(successMessage);
-														lookupComplete = true;
+                                                    $("#divMapMessage").addClass("alert-success");
+                                                    $("#divMapMessage").removeClass("alert-danger");
+                                                    $("#iFontAwesome").removeClass("fa-warning");
+                                                    $("#iFontAwesome").addClass("fa-map-marker");
+                                                    var successMessage = " We found your address and returned the following information. (" + data + ")";
+                                                    $("#<%=hidAddressData.ClientID%>").val(data);
+                                                        $('#<%=lblAddressMessage.ClientID%>').text(successMessage);
+                                                        lookupComplete = true;
 														<%--$("#<%=btnSubmit.ClientID%>").attr("disabled", false);--%>
-													}
-													else if (duplicate == 'True' || duplicate == 'true') {
-														//Address already exists.
-														$("#divMapMessage").removeClass("alert-success");
-														$("#divMapMessage").addClass("alert-danger");
-														$("#iFontAwesome").addClass("fa-warning");
-														$("#iFontAwesome").removeClass("fa-map-marker");
-														$("#<%=hidAddressData.ClientID%>").val(data);
-														lookupComplete = false;
-														var errorMessage = " This address already exists (" + address + "). Press 'Next' to edit in the Stability Location Manager. Web Service Message: " + data;
-														$('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
+                                                    }
+                                                    else if (duplicate == 'True' || duplicate == 'true') {
+                                                        //Address already exists.
+                                                        $("#divMapMessage").removeClass("alert-success");
+                                                        $("#divMapMessage").addClass("alert-danger");
+                                                        $("#iFontAwesome").addClass("fa-warning");
+                                                        $("#iFontAwesome").removeClass("fa-map-marker");
+                                                        $("#<%=hidAddressData.ClientID%>").val(data);
+                                                        lookupComplete = false;
+                                                        var errorMessage = " This address already exists (" + address + "). Press 'Next' to edit in the Stability Location Manager. Web Service Message: " + data;
+                                                        $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
 														<%--$("#<%=btnSubmit.ClientID%>").attr("disabled", false);--%>
-													}
-													else
-													{
-														//Error getting the information
-														$("#divMapMessage").removeClass("alert-success");
-														$("#divMapMessage").addClass("alert-danger");
-														$("#iFontAwesome").addClass("fa-warning");
-														$("#iFontAwesome").removeClass("fa-map-marker"); 
-														lookupComplete = false;
-														var errorMessage = " Please check your address. Google returned an error matching the address you provided. (" + address + ") Web Service Message: " + data;
-														$('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
+                                                    }
+                                                    else {
+                                                        //Error getting the information
+                                                        $("#divMapMessage").removeClass("alert-success");
+                                                        $("#divMapMessage").addClass("alert-danger");
+                                                        $("#iFontAwesome").addClass("fa-warning");
+                                                        $("#iFontAwesome").removeClass("fa-map-marker");
+                                                        lookupComplete = false;
+                                                        var errorMessage = " Please check your address. Google returned an error matching the address you provided. (" + address + ") Web Service Message: " + data;
+                                                        $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
 														<%--$("#<%=btnSubmit.ClientID%>").attr("disabled", true);--%>
-													}
-												}
-											},
-											error: function (request, status, error)
-											{
-												$("#divMapMessage").removeClass("alert-success");
-												$("#divMapMessage").addClass("alert-danger");
-												$("#iFontAwesome").addClass("fa-warning");
-												$("#iFontAwesome").removeClass("fa-map-marker"); 
-												lookupComplete = false;
-												$('#<%=lblAddressMessage.ClientID%>').text(" Error retrieving address information from Google. " + request.statusText + ' - ' + error + ' - ' + status);
+                                                    }
+                                                }
+                                            },
+                                            error: function (request, status, error) {
+                                                $("#divMapMessage").removeClass("alert-success");
+                                                $("#divMapMessage").addClass("alert-danger");
+                                                $("#iFontAwesome").addClass("fa-warning");
+                                                $("#iFontAwesome").removeClass("fa-map-marker");
+                                                lookupComplete = false;
+                                                $('#<%=lblAddressMessage.ClientID%>').text(" Error retrieving address information from Google. " + request.statusText + ' - ' + error + ' - ' + status);
 												<%--$("#<%=btnSubmit.ClientID%>").attr("disabled", true);--%>
-											}
-										});
-								}
-							</script>
-							<div class="row">
-								<div class="col-lg-12 container">
-									<div class="hpanel form-horizontal">
+                                            }
+                                        });
+                            }
+                        </script>
+                        <div class="row">
+                            <div class="col-lg-12 container">
+                                <div class="hpanel form-horizontal">
 
-										<div class="panel-heading hbuilt">
-											Enter a deployment destination address and it will be verified to be placed on the deployment map.
-										</div>
-										<div class="panel-body">
-							
-											<div id="divMessage" class="alert alert-success m-b-lg">
-												<i class="fa fa-bolt"></i>
-												<asp:Label runat="server" id="lblMessage"></asp:Label>
-											</div>
-							
-											<div id="divAddressMessage" class="form-group">
-												<label class="col-sm-2 control-label">Google Address Details</label>
-												<div id="divMapMessage" class="alert m-b-lg p-sm col-sm-5">
-													<i id="iFontAwesome" class="fa"></i>
-													<asp:Label runat="server" id="lblAddressMessage"></asp:Label>
-													<asp:HiddenField id="hidAddressData" runat="server"></asp:HiddenField>
-												</div>
-											</div>
+                                    <div class="panel-heading hbuilt">
+                                        Enter a deployment destination address and it will be verified to be placed on the deployment map.
+                                    </div>
+                                    <div class="panel-body">
 
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Address</label>
-												<div class="col-sm-5"><input id="txtAddress1" type="text" onblur="CheckAddressValues('address', this)" required runat="server" class="form-control i-check" placeholder="Address"></div>
-											</div>
-											<div class="form-group">
-												<label class="col-sm-2 control-label">City</label>
-												<div class="col-sm-5"><input id="txtCity1" type="text" onblur="CheckAddressValues('city', this)" required runat="server" class="form-control" placeholder="City"></div>
-											</div>
-											<div class="form-group">
-												<label class="col-sm-2 control-label">State</label>
-												<div class="col-sm-5">
-													<asp:DropDownList ID="ddlState1" onblur="CheckAddressValues('state', this)" runat="server" DataTextField="Text" DataValueField="Value" CssClass="form-control" required=""></asp:DropDownList>
-												</div>
-											</div>
-											<div class="form-group">
-												<label class="col-sm-2 control-label">Zip</label>
-												<div class="col-sm-5"><input id="txtZip1" type="text" onblur="CheckAddressValues('zip', this)" required runat="server" class="form-control" placeholder="Zip Code"></div>
-											</div>
-											<%--<div class="form-group">
+                                        <div id="divMessage" class="alert alert-success m-b-lg">
+                                            <i class="fa fa-bolt"></i>
+                                            <asp:Label runat="server" ID="lblMessage"></asp:Label>
+                                        </div>
+
+                                        <div id="divAddressMessage" class="form-group">
+                                            <label class="col-sm-2 control-label">Google Address Details</label>
+                                            <div id="divMapMessage" class="alert m-b-lg p-sm col-sm-5">
+                                                <i id="iFontAwesome" class="fa"></i>
+                                                <asp:Label runat="server" ID="lblAddressMessage"></asp:Label>
+                                                <asp:HiddenField ID="hidAddressData" runat="server"></asp:HiddenField>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Address</label>
+                                            <div class="col-sm-5">
+                                                <input id="txtAddress1" type="text" onblur="CheckAddressValues('address', this)" required runat="server" class="form-control i-check" placeholder="Address"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">City</label>
+                                            <div class="col-sm-5">
+                                                <input id="txtCity1" type="text" onblur="CheckAddressValues('city', this)" required runat="server" class="form-control" placeholder="City"></div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">State</label>
+                                            <div class="col-sm-5">
+                                                <asp:DropDownList ID="ddlState1" onblur="CheckAddressValues('state', this)" runat="server" DataTextField="Text" DataValueField="Value" CssClass="form-control" required=""></asp:DropDownList>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Zip</label>
+                                            <div class="col-sm-5">
+                                                <input id="txtZip1" type="text" onblur="CheckAddressValues('zip', this)" required runat="server" class="form-control" placeholder="Zip Code"></div>
+                                        </div>
+                                        <%--<div class="form-group">
 												<label class="col-sm-2 control-label"></label>
 												<div class="col-sm-5">
 													<div class="pull-right">
@@ -431,17 +434,17 @@
 													</div>
 												</div>
 											</div>--%>
-										</div>
-									</div>
-								</div>
-							</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
 
 
 
-							
-<%--							<div class="form-group">
+
+                        <%--							<div class="form-group">
 								<label class="col-sm-3 control-label">Address</label>
 								<div class="col-sm-5"><input type="text" runat="server" id="txtAddress" class="form-control i-check" placeholder="Address"></div>
 							</div>
@@ -467,7 +470,7 @@
                                 </div>
 							</div>--%>
 
-<%--							<div class="form-group">
+                        <%--							<div class="form-group">
 								<label class="col-sm-3 control-label">Choose Begin Date</label>
 								<div class="col-sm-3">
 									<div class="input-group date">
@@ -485,7 +488,7 @@
 								</div>
 							</div>--%>
 
-<%--							<div class="form-group">
+                        <%--							<div class="form-group">
 								<label class="col-sm-3 control-label">Event Short Name
 								<br />
 								<small>No spaces or special characters allowed.</small></label>
@@ -494,80 +497,89 @@
 								</div>
 							</div>--%>
 
-<%--							<div class="form-group">
+                        <%--							<div class="form-group">
 								<label class="col-sm-3 control-label">Team Member Per Hour Value</label>
 								<div class="col-sm-3 m-t-sm">
 									<input type="text" runat="server" maxlength="5" id="txtVolunteerHourValue" onkeypress="return isNumberKey(event)" class="form-control" placeholder="Enter dollars and cents only. 00.00">
 								</div>
 							</div>--%>
 
-							<div class="form-group">
-								<label class="col-sm-3 control-label">VOAD Participant</label>
-								<div class="col-sm-5 m-t-sm">
-									<input type="checkbox" runat="server" id="chkVoad" class="form-control">
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">VOAD Participant</label>
+                            <div class="col-sm-5 m-t-sm">
+                                <input type="checkbox" runat="server" id="chkVoad" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Send auto SMS notifications to team members once deployment is finished?</label>
+                            <div class="col-sm-5 m-t-sm">
+                                <input type="checkbox" runat="server" id="chkNotification" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-			<div class="row" id="div2" runat="server">
-				<div class="col-xs-12 container">
-					<div class="hpanel form-horizontal m-t-lg">
-						<div class="panel-heading hbuilt">
-							Location and Contact Information
-						</div>
-						<div class="panel-body">
+        <div class="row" id="div2" runat="server">
+            <div class="col-xs-12 container">
+                <div class="hpanel form-horizontal m-t-lg">
+                    <div class="panel-heading hbuilt">
+                        Location and Contact Information
+                    </div>
+                    <div class="panel-body">
 
-							<div class="form-group">
-								<label class="col-sm-3 control-label">Contact Person *</label>
-								<div class="col-sm-5"><input type="text" runat="server" required id="txtPOCFullname" class="form-control" placeholder="Point of Contact First and Last Name"></div>
-							</div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Contact Person *</label>
+                            <div class="col-sm-5">
+                                <input type="text" runat="server" required id="txtPOCFullname" class="form-control" placeholder="Point of Contact First and Last Name"></div>
+                        </div>
 
-							<div class="form-group">
-								<label class="col-sm-3 control-label">Phone Number *</label>
-								<div class="col-sm-5"><input type="text" maxlength="10" required runat="server" id="txtPhonenumber" class="form-control" placeholder="Primary Phone"></div>
-							</div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Phone Number *</label>
+                            <div class="col-sm-5">
+                                <input type="text" maxlength="10" required runat="server" id="txtPhonenumber" class="form-control" placeholder="Primary Phone"></div>
+                        </div>
 
-							<div class="form-group">
-								<label class="col-sm-3 control-label">Email Address *</label>
-								<div class="col-sm-5"><input type="text" runat="server" required id="txtEmailAddress" class="form-control" placeholder="Public Email Address"></div>
-							</div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Email Address *</label>
+                            <div class="col-sm-5">
+                                <input type="text" runat="server" required id="txtEmailAddress" class="form-control" placeholder="Public Email Address"></div>
+                        </div>
 
-						</div>
-					</div>
+                    </div>
+                </div>
 
-					<div class="form-group">
-						<div class="col-sm-2" style="padding:10px;">
-							<div class="pull-left">
-								<asp:LinkButton id="btnSubmit" CausesValidation="false" runat="server" OnClick="btnSubmit_Cancel" CssClass="btn btn-lg btn-default" Text="Cancel" />
-							</div>
-						</div>
-						<div class="col-sm-8" style=""></div>
-						<div class="col-sm-2" style="padding:10px; padding-right:20px;">
-							<div class="pull-right">
-								<asp:Button id="btnCancel" runat="server" OnClick="btnSubmit_Click" CssClass="btn btn-lg btn-primary" Text="Next Step >" />
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
-	<script>
-		document.getElementById('<%=txtCampaignName.ClientID%>').addEventListener('input', function () {
+                <div class="form-group">
+                    <div class="col-sm-2" style="padding: 10px;">
+                        <div class="pull-left">
+                            <asp:LinkButton ID="btnSubmit" CausesValidation="false" runat="server" OnClick="btnSubmit_Cancel" CssClass="btn btn-lg btn-default" Text="Cancel" />
+                        </div>
+                    </div>
+                    <div class="col-sm-8" style=""></div>
+                    <div class="col-sm-2" style="padding: 10px; padding-right: 20px;">
+                        <div class="pull-right">
+                            <asp:Button ID="btnCancel" runat="server" OnClick="btnSubmit_Click" CssClass="btn btn-lg btn-primary" Text="Next Step >" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/Homer/vendor/summernote/dist/summernote.min.js"></script>
+    <script>
+        document.getElementById('<%=txtCampaignName.ClientID%>').addEventListener('input', function () {
 
-			// Get the current value from the input text box
-			const inputText = this.value;
+            // Get the current value from the input text box
+            const inputText = this.value;
 
-			// Filter out non-alphanumeric characters and spaces
-			const filteredText = inputText.replace(/[^a-zA-Z0-9]/g, '');
+            // Filter out non-alphanumeric characters and spaces
+            const filteredText = inputText.replace(/[^a-zA-Z0-9]/g, '');
 
-			// Set the filtered text to the output text box
-			document.getElementById('<%=txtURLFriendlyCampaignName.ClientID%>').value = filteredText;
+            // Set the filtered text to the output text box
+            document.getElementById('<%=txtURLFriendlyCampaignName.ClientID%>').value = filteredText;
 
-			checkUniqueName(filteredText);
-		});
-	</script>
+            checkUniqueName(filteredText);
+        });
+    </script>
 </asp:Content>

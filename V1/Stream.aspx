@@ -7,6 +7,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/#.#.#/jquery.jscroll.min.js"></script>
     <script>
         $(document).ready(function () {
+            if ($('#ContentPlaceHolder1_lblPostMessage').text() === 'Sign in to post') {
+                $(".load-map").hide();
+                $("#notificationDropdown").hide();
+                return;
+            }
+            $(".load-map").show();
+            $("#notificationDropdown").show();
             var pageNumber = 1;
             var gCommentId = "";
             var isEditComment = false;
@@ -617,6 +624,10 @@
         //});
 
         $(document).on('click', '.thankButton', function (e) {
+            if ($('#ContentPlaceHolder1_lblPostMessage').text() === 'Sign in to post') {
+                alert("You are not logged in. Please log in to continue!");
+                return;
+            }
             $("#currentSelectedPost").val($(this).data("item-cid"));
             var tooltip = $('#thankTooltip');
             var buttonOffset = $(this).offset(); // Get the button's position

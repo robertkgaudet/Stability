@@ -442,7 +442,7 @@
                     <div class="col-md-12">
                         <div class="sectino-intro">
                             <h2 class="section-heading">get in touch</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque.</p>
+                            <p>We look forward to hearing from you.</p>
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -557,7 +557,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© Aid. | All rights reserved | Designed by Impactoid</p>
+                <p>© All Rights Reserved | A Stability Portal Site | <a href="https://Stability.org" target="_blank">Get Your Own Stability.org Website Here</a></p>
             </div>
         </footer>
         <!--  FOOTER AREA END -->

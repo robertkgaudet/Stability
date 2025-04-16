@@ -50,10 +50,16 @@
                 window.location.href = '<%=volunteerLink%>';
                 return false;
 			});
-			$('.editButton').click(function () {
+
+			$('.createChapterButton').click(function () {
+				window.location.href = '<%=createChapterLink%>';
+				return false;
+			});
+
+<%--			$('.editButton').click(function () {
 				window.location.href = '<%=editLink%>';
 				return false;
-			}); 
+			}); --%>
 
 			// Function for collapse hpanel
 			$('.showhide').on('click', function (event) {
@@ -100,7 +106,7 @@
 
 
 		});	
-</script>
+	</script>
 	<style>
 		.modal-dialog
 		{
@@ -121,6 +127,7 @@
 				<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
 					<div class="row">
 						<div class="col-xs-12">
+							<asp:LinkButton id="lbCreateChapter" runat="server" CssClass="btn btn-success btn-large createChapterButton pull-right m-l-md" Text="Create Chapter" visible="false"></asp:LinkButton>
 							<asp:LinkButton id="lbVolunteer" runat="server" CssClass="btn btn-success btn-large volunteerButton pull-right m-l-md" Text="Join This Team" visible="false"></asp:LinkButton>
 							<asp:Button ID="btnActiveVolunteer" runat="server" CssClass="btn btn-light btn-large pull-right m-l-md" Visible="false" />
 							<asp:LinkButton id="lbDonate" runat="server" CssClass="btn btn-success pull-right donateButton" Text="Donate" visible="false"></asp:LinkButton>
@@ -281,6 +288,16 @@
 								</div>
 							</div>
 						</div>
+						<h3>Chapters</h3>
+						<ul>
+							<asp:Repeater ID="rptOrganizations" runat="server" OnItemDataBound="rptOrganizations_ItemDataBound">
+								<ItemTemplate>
+									<div style="margin-bottom: 8px;">
+										<asp:HyperLink Target="_blank" ID="lnkOrg" runat="server" />
+									</div>
+								</ItemTemplate>
+							</asp:Repeater>
+						</ul>
 					</div>
 				<uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>

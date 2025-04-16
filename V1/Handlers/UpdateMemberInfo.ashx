@@ -118,11 +118,11 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
 
                     if (role != null)
                     {
-
                         var existingRole = dc.aspnet_UsersInRoles
                                              .FirstOrDefault(ur => ur.UserId == userId && ur.RoleId == role.RoleId);
                         if (existingRole == null)
                         {
+								//Add user to role.
                             var newRoleAssignment = new aspnet_UsersInRole
                             {
                                 UserId = userId,

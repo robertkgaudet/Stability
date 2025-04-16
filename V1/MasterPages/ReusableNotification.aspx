@@ -274,7 +274,6 @@
 
 
 
-
 <ul class="dropdown-menu hdropdown notification animated flipInX" style="width: 300px; max-height: 400px; overflow-y: auto;" id="notificationList">
     <li class="title">Notifications</li>
     <li id="notificationContainer" class="decreaseCount">

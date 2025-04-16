@@ -8,9 +8,10 @@
 
 			$("#form1").validate({
 				rules: {
-				<%=txtParentOrganization.UniqueID%>: {
-				required: true
-			},
+					<%=txtOrganization.UniqueID%>: {
+					required: true
+					},
+				},
 				submitHandler: function (form) {
 					form.submit();
 				}
@@ -18,17 +19,86 @@
 		});
 
 		$(document).ready(function () {
-			$('input[type="checkbox"]').each(function () {
-				$(this).addClass("i-checks");
-			});
 
 			$('.btnJoinTeam').click(function () {
 				window.location.href = '/V1/Profile/EditNonProfits.aspx?userActionModal=false';
 				return false;
 			});
+			
+			<%=preselectedNonProfitJQuery%>
+
+            $("#nonProfit.dropdown-menu li").click(function () {
+                $("#btn-NonProfitDropdown.nonProfit").html($(this).text());
+				$("#<%=hidParentOrganizationId.ClientID%>").val($(this).attr('id'));
+			});
 		});
 
+		function checkUniqueName(name) 
+		{
+			if (name.trim() === '') 
+			{
+				// If the textbox is empty, clear the status message
+				$('#friendlyNameStatus').text('');
+				return;
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "/V1/Administration/TeamName.aspx/IsFriendlyNameUnique", // Replace with your ASP.NET page name
+				data: JSON.stringify({ urlFriendlyName: name }),
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+				success: function (response) {
+					if (response.d) {
+						// The name is unique
+						$('#friendlyNameStatus').html('This name is available.').css('color', 'green');
+					} else {
+						// The name is not unique
+						$('#friendlyNameStatus').html('This name is already taken.').css('color', 'red');
+					}
+				},
+				error: function (xhr, status, error) {
+					console.error("Error: " + error);
+				}
+			});
+		}
 	</script>
+	<style>
+	#friendlyNameStatus
+	{
+		margin-top:-200px;
+	  padding:0px !important ;
+	}
+	
+	#nonProfit {
+		left: 0 !important;
+		right: auto !important;
+		max-height: 350px;
+		overflow-y: auto;
+		overflow-x: hidden;
+		text-align: left; /* optional, helps if your content is centered */
+			font-size: 16px;
+			padding: 12px 20px;
+	}	
+		#nonProfit::-webkit-scrollbar {
+		width: 16px; /* wider scrollbar */
+		}
+
+		#nonProfit::-webkit-scrollbar-thumb {
+			background-color: #888; /* color of scrollbar handle */
+			border-radius: 8px; /* rounded corners */
+		}
+
+		#nonProfit::-webkit-scrollbar-thumb:hover {
+			background-color: #555; /* color on hover */
+		}
+	.btn-NonProfitDropdown {
+		position: relative;
+	}
+	.btn-NonProfitDropdown {
+    position: relative;
+}
+	</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 		<div class="row">
@@ -72,10 +142,32 @@
 								<i class="fa fa-bolt"></i>
 								<asp:Literal runat="server" id="lblMessage"></asp:Literal>
 							</div>
+							
+                            <div class="form-group" runat="server" id="divChooseNonprofit">
+								<label class="col-sm-2 control-label">Select A Parent Organization (Optional)</label>
+                                <small>Use if you are adding a chapter, division or child of another team.</small>
+                                <div id="div2" class="dropdown m-b-md" runat="server">
+                                    <button id="btn-NonProfitDropdown" class="btn btn-outline btn-default nonProfit dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Select A Team (Optional) <i class="fa fa-sort-down"></i></button>
+                                    <ul id="nonProfit" class="dropdown-menu text-center dropdown-volunteer">
+                                        <%=nonProfitDropDown%>
+                                    </ul>
+                                </div>
+                                <input type="hidden" id="hidParentOrganizationId" runat="server" />
+                            </div>
 
 							<div class="form-group">
 								<label class="col-sm-2 control-label">Team/Organization Name *</label>
-								<div class="col-sm-5"><input type="text" required runat="server" id="txtParentOrganization" class="form-control" placeholder="Enter A Team/Organization Name. Examples (Smith Family Responders, Texas Task Force)"></div>
+								<div class="col-sm-5"><input type="text" required runat="server" id="txtOrganization" class="form-control" placeholder="Team/Organization Name. Examples (Smith Family Responders, Texas Task Force)"></div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2 control-label">URL Friendly Name (NO Spaces or Special Characters) *</label>
+								<div class="col-sm-5"><input type="text" required runat="server" id="txtURLFriendlyName" oninput="checkUniqueName(this.value)" class="form-control" placeholder="Enter A Name with NO Spaces. Examples (SmithFamilyResponders, TexasTaskForce)"></div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-2"></label>
+								<div class="col-sm-5"> <span id="friendlyNameStatus"></span> </div>
 							</div>
 						</div>
 						<div class="form-group">
@@ -90,5 +182,20 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div>	
+		<script>
+			document.getElementById('<%=txtOrganization.ClientID%>').addEventListener('input', function () {
+
+				// Get the current value from the input text box
+				const inputText = this.value;
+
+				// Filter out non-alphanumeric characters and spaces
+				const filteredText = inputText.replace(/[^a-zA-Z0-9]/g, '');
+
+				// Set the filtered text to the output text box
+				document.getElementById('<%=txtURLFriendlyName.ClientID%>').value = filteredText;
+
+				checkUniqueName(filteredText);
+			});
+		</script>
 </asp:Content>
