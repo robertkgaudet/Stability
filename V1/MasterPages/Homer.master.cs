@@ -619,18 +619,29 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			string organizationUrl = "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
 			string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
 			string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
+			Guid ownerId = (Guid)DataBinder.Eval(dataItem.DataItem, "OwnerId");
 			string imgTeamPath = "/V1/Images/Logo-Placeholder.png";
+			string isOwner = string.Empty;
+			
+			if(ownerId != null)
+			{
+				if(ownerId == userId)
+				{
+					//User is the owner of the group.
+					isOwner = "*";
+				}
+			}
 
 			if (!string.IsNullOrEmpty(organizationTeamLogo))
 			{
-				imgTeamPath = "/V1/Images/" + organizationTeamLogo;
+				imgTeamPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
 			}
 
 			// Optional: set values manually to controls inside the template if you prefer
 			// e.g., if using Literal controls instead of Eval()
 
 			Literal lit = (Literal)e.Item.FindControl("litGroupLink");
-			lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + "</a>";
+			lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + isOwner + "</a>";
 			Image imgTeam = (Image)e.Item.FindControl("imgTeam");
 			imgTeam.ImageUrl = imgTeamPath;
 		}

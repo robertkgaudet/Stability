@@ -596,8 +596,13 @@
 									<li><h4 class="m-l-md">My Teams</h4></li>
 									<asp:Repeater ID="rptUserGroups" runat="server" OnItemDataBound="rptUserGroups_ItemDataBound">
 										<ItemTemplate>
-											<li><asp:Image CssClass="img-circle img-small pull-left m-r-md" Width="40" Height="40" ID="imgTeam" runat="server" />
-												<asp:Literal ID="litGroupLink" runat="server"></asp:Literal>
+											<li>
+												<div style="display: inline-block; vertical-align: middle;">
+													<asp:Image CssClass="img-circle img-small pull-left" Width="40" Height="40" ID="imgTeam" runat="server" />
+												</div>
+												<div style="display: inline-block; vertical-align: middle;">
+													<asp:Literal ID="litGroupLink" runat="server"></asp:Literal>
+												</div>
 											</li>
 										</ItemTemplate>
 									</asp:Repeater>
