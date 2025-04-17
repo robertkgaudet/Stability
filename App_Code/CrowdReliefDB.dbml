@@ -2118,6 +2118,15 @@
       <Association Name="Address_LocationProfile" Member="LocationProfiles" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfile" />
     </Type>
   </Table>
+  <Table Name="dbo.EmailTemplate" Member="EmailTemplates">
+    <Type Name="EmailTemplate">
+      <Column Name="EmailTemplateId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="EmailBody" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="CC" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="BCC" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+    </Type>
+  </Table>
   <Function Name="dbo.GetGeoJsonByDisasterForCleanupMap" Method="GetGeoJsonByDisasterForCleanupMap">
     <Parameter Name="eventId" Type="System.Guid" DbType="UniqueIdentifier" />
     <ElementType Name="GetGeoJsonByDisasterForCleanupMapResult">

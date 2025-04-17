@@ -437,6 +437,9 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertAddress(Address instance);
   partial void UpdateAddress(Address instance);
   partial void DeleteAddress(Address instance);
+  partial void InsertEmailTemplate(EmailTemplate instance);
+  partial void UpdateEmailTemplate(EmailTemplate instance);
+  partial void DeleteEmailTemplate(EmailTemplate instance);
     #endregion
     public CrowdReliefDBDataContext() :
 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
@@ -1552,6 +1555,14 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 		get
 		{
 			return this.GetTable<Address>();
+		}
+	}
+	
+	public System.Data.Linq.Table<EmailTemplate> EmailTemplates
+	{
+		get
+		{
+			return this.GetTable<EmailTemplate>();
 		}
 	}
 	
@@ -49303,6 +49314,164 @@ public partial class Address : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this.SendPropertyChanging();
 		entity.Address = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.EmailTemplate")]
+public partial class EmailTemplate : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _EmailTemplateId;
+	
+	private System.Nullable<System.Guid> _OrganizationId;
+	
+	private string _EmailBody;
+	
+	private string _CC;
+	
+	private string _BCC;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnEmailTemplateIdChanging(System.Guid value);
+    partial void OnEmailTemplateIdChanged();
+    partial void OnOrganizationIdChanging(System.Nullable<System.Guid> value);
+    partial void OnOrganizationIdChanged();
+    partial void OnEmailBodyChanging(string value);
+    partial void OnEmailBodyChanged();
+    partial void OnCCChanging(string value);
+    partial void OnCCChanged();
+    partial void OnBCCChanging(string value);
+    partial void OnBCCChanged();
+    #endregion
+	
+	public EmailTemplate()
+	{
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmailTemplateId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid EmailTemplateId
+	{
+		get
+		{
+			return this._EmailTemplateId;
+		}
+		set
+		{
+			if ((this._EmailTemplateId != value))
+			{
+				this.OnEmailTemplateIdChanging(value);
+				this.SendPropertyChanging();
+				this._EmailTemplateId = value;
+				this.SendPropertyChanged("EmailTemplateId");
+				this.OnEmailTemplateIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmailBody", DbType="NVarChar(MAX)")]
+	public string EmailBody
+	{
+		get
+		{
+			return this._EmailBody;
+		}
+		set
+		{
+			if ((this._EmailBody != value))
+			{
+				this.OnEmailBodyChanging(value);
+				this.SendPropertyChanging();
+				this._EmailBody = value;
+				this.SendPropertyChanged("EmailBody");
+				this.OnEmailBodyChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CC", DbType="NVarChar(500)")]
+	public string CC
+	{
+		get
+		{
+			return this._CC;
+		}
+		set
+		{
+			if ((this._CC != value))
+			{
+				this.OnCCChanging(value);
+				this.SendPropertyChanging();
+				this._CC = value;
+				this.SendPropertyChanged("CC");
+				this.OnCCChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BCC", DbType="NVarChar(500)")]
+	public string BCC
+	{
+		get
+		{
+			return this._BCC;
+		}
+		set
+		{
+			if ((this._BCC != value))
+			{
+				this.OnBCCChanging(value);
+				this.SendPropertyChanging();
+				this._BCC = value;
+				this.SendPropertyChanged("BCC");
+				this.OnBCCChanged();
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }
 

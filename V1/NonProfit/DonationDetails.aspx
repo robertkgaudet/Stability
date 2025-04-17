@@ -85,7 +85,19 @@
                     </div>
                     <div class="col-6 donatAmn">
                     </div>
-                    <%--   <div class="col-12"><span class="legend" for="firstname">Frequency</span></div>                    <div class="col-12">                        <div class="containerLabel">                            <label class="item freqLabel selected" for="Frequency1">                                One Time            <asp:RadioButton ID="Frequency1" runat="server" GroupName="Frequency" Checked="true" CssClass="radioBtn" value="1" />                            </label>                            <label class="item freqLabel" for="Frequency2">                                Monthly            <asp:RadioButton ID="Frequency2" runat="server" GroupName="Frequency" CssClass="radioBtn" value="2" />                            </label>                        </div>                    </div>--%>
+                    <%--   <div class="col-12"><span class="legend" for="firstname">Frequency</span></div>
+                    <div class="col-12">
+                        <div class="containerLabel">
+                            <label class="item freqLabel selected" for="Frequency1">
+                                One Time
+            <asp:RadioButton ID="Frequency1" runat="server" GroupName="Frequency" Checked="true" CssClass="radioBtn" value="1" />
+                            </label>
+                            <label class="item freqLabel" for="Frequency2">
+                                Monthly
+            <asp:RadioButton ID="Frequency2" runat="server" GroupName="Frequency" CssClass="radioBtn" value="2" />
+                            </label>
+                        </div>
+                    </div>--%>
                     <div class="col-12  ">
                         <asp:TextBox type="checkbox" ID="coverfee" name="CoverFee" runat="server" Style="margin-right: 5px" />
                         <span for="coverfee">Yes, I'd like to cover the $<span id="coverFeeAmount"><%= LiteralAmountList[0]*0.06 %></span> transaction fee</span>
@@ -219,10 +231,115 @@
         </div>
     </div>
     <script src="https://js.stripe.com/v3/"></script>
-    <script type="text/javascript">        $(document).ready(function () {            $(function () {                $('.input-group.date').datepicker({                    autoclose: true,                });            });            $("#honordonation").on('click', function () {                if ($(this).prop("checked")) {                    $('.showHonor').attr("style", "display:block");                } else {                    $('.showHonor').attr("style", "display:none");                }            });            $('input[type="radio"][name="Amount"]').on('click', function () {                $(".item:not(.freqLabel)").removeClass("selected");                $(this).closest("label").addClass("selected");                var selectedValue = $(this).val();                if (selectedValue == "0") {                    $('#txtDonationAmount').val('').show().focus();                    $('.donatAmn').show();                    updateTransactionFee(0);                } else {                    $('#txtDonationAmount').val(selectedValue).hide();                    $('.donatAmn').hide();                    updateTransactionFee(selectedValue);                }            });            $('#txtDonationAmount').on('input', function () {                let donationAmount = parseFloat($(this).val()) || 0;                updateTransactionFee(donationAmount);            });            function updateTransactionFee(amount) {                let transactionFee = amount > 0 ? `${(amount * 0.06).toFixed(2)}` : "--";                $('#coverFeeAmount').text(transactionFee);            }        });        function isNumberKey(evt) {            var charCode = (evt.which) ? evt.which : evt.keyCode;            if (charCode == 110 || charCode == 190 || charCode == 46)                return true;            if (charCode > 31 && (charCode < 48 || charCode > 57))                return false;            return true;        }        function checkFields() {            var requiredFields = [                '<%= txtfirstname.ClientID %>',                '<%= txtlastname.ClientID %>',                '<%= txtemail.ClientID %>',                '<%= txthomeaddress.ClientID %>',                '<%= txtCity.ClientID %>',                '<%= ddlState.ClientID %>',                '<%= txtZip.ClientID %>'            ];            var isValid = true;            requiredFields.forEach(function (id) {                var element = document.getElementById(id);                if (element) {                    if (element.tagName === "SELECT") {                        if (element.value === "") {                            isValid = false;                        }                    } else if (element.value.trim() === "") {                        isValid = false;                    }                }            });            document.getElementById('<%= btnEnterPayment.ClientID %>').disabled = !isValid;        }        function validateForm() {            var email = document.getElementById('<%= txtemail.ClientID %>').value.trim();            var donationAmount = document.getElementById('<%= txtDonationAmount.ClientID %>').value.trim();            if (email == '') {                $("#rfvEmail").css("display", "block");
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () {
+                $('.input-group.date').datepicker({
+                    autoclose: true,
+                });
+            });
+            $("#honordonation").on('click', function () {
+                if ($(this).prop("checked")) {
+                    $('.showHonor').attr("style", "display:block");
+                } else {
+                    $('.showHonor').attr("style", "display:none");
+                }
+            });
+
+            $('input[type="radio"][name="Amount"]').on('click', function () {
+                $(".item:not(.freqLabel)").removeClass("selected");
+                $(this).closest("label").addClass("selected");
+
+                var selectedValue = $(this).val();
+                if (selectedValue == "0") {
+                    $('#txtDonationAmount').val('').show().focus();
+                    $('.donatAmn').show();
+                    updateTransactionFee(0);
+                } else {
+                    $('#txtDonationAmount').val(selectedValue).hide();
+                    $('.donatAmn').hide();
+                    updateTransactionFee(selectedValue);
+                }
+            });
+
+            $('#txtDonationAmount').on('input', function () {
+                let donationAmount = parseFloat($(this).val()) || 0;
+                updateTransactionFee(donationAmount);
+            });
+
+            function updateTransactionFee(amount) {
+                let transactionFee = amount > 0 ? `${(amount * 0.06).toFixed(2)}` : "--";
+                $('#coverFeeAmount').text(transactionFee);
+            }
+        });
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode == 110 || charCode == 190 || charCode == 46)
+                return true;
+
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
                 return false;
-            } else {                $("#rfvEmail").css("display", "none");
-            }            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;            if (!emailPattern.test(email)) {                $("#revEmail").css("display", "block");                return false;            } else {                $("#revEmail").css("display", "none");
-            }            if (isNaN(donationAmount) || parseFloat(donationAmount) <= 0) {                return false;            }            return true;        }    </script>
+
+            return true;
+        }
+
+        function checkFields() {
+            var requiredFields = [
+                '<%= txtfirstname.ClientID %>',
+                '<%= txtlastname.ClientID %>',
+                '<%= txtemail.ClientID %>',
+                '<%= txthomeaddress.ClientID %>',
+                '<%= txtCity.ClientID %>',
+                '<%= ddlState.ClientID %>',
+                '<%= txtZip.ClientID %>'
+            ];
+
+            var isValid = true;
+            requiredFields.forEach(function (id) {
+                var element = document.getElementById(id);
+                if (element) {
+                    if (element.tagName === "SELECT") {
+                        if (element.value === "") {
+                            isValid = false;
+                        }
+                    } else if (element.value.trim() === "") {
+                        isValid = false;
+                    }
+                }
+            });
+
+
+            document.getElementById('<%= btnEnterPayment.ClientID %>').disabled = !isValid;
+        }
+
+        function validateForm() {
+            var email = document.getElementById('<%= txtemail.ClientID %>').value.trim();
+            var donationAmount = document.getElementById('<%= txtDonationAmount.ClientID %>').value.trim();
+            if (email == '') {
+                $("#rfvEmail").css("display", "block");
+                return false;
+            } else {
+                $("#rfvEmail").css("display", "none");
+            }
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            if (!emailPattern.test(email)) {
+                $("#revEmail").css("display", "block");
+                return false;
+            } else {
+                $("#revEmail").css("display", "none");
+            }
+
+            if (isNaN(donationAmount) || parseFloat(donationAmount) <= 0) {
+                return false;
+            }
+
+            return true;
+        }
+
+
+
+
+    </script>
 </body>
 </html>
