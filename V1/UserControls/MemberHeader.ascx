@@ -13,9 +13,12 @@
 	}
 	.memberImageContainer
 	{
-        overflow: hidden;		display: flex;
-		margin-top: -125px; /* Default margin */		z-index: 1;
-		position: relative	}
+        overflow: hidden;
+		display: flex;
+		margin-top: -125px; /* Default margin */
+		z-index: 1;
+		position: relative
+	}
     @media (max-width: 767px) 
 	{
         .memberImageContainer
@@ -27,7 +30,8 @@
         }
     }
 	.memberPhoto
-	{		width: 150px;
+	{
+		width: 150px;
 		height: 150px;
 		border-radius: 50%;
 		object-fit: cover; /* Ensures the image covers the entire area */
@@ -35,7 +39,8 @@
 		position: relative
     }
 	.memberDetail
-	{		z-index: 0;
+	{
+		z-index: 0;
 		text-align:left;
 	}
 	.content
