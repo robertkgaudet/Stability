@@ -10,7 +10,33 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
 	public string _userId = string.Empty;
 	protected void Page_Load(object sender, EventArgs e)
 	{
-		hypMyTeam.Visible = false;
+        hypDeployment.Attributes["data-toggle"] = "tooltip";
+        hypDeployment.Attributes["title"] = "Choose a team deployment to join";
+
+        hypPortals.Attributes["data-toggle"] = "tooltip";
+        hypPortals.Attributes["title"] = "Select a community portal";
+
+        hypTimeSheet.Attributes["data-toggle"] = "tooltip";
+        hypTimeSheet.Attributes["title"] = "View my time sheet";	
+        hypMyProfile.Attributes["data-toggle"] = "tooltip";
+        hypMyProfile.Attributes["title"] = "Go to your profile page";
+
+        hypMyTeama.Attributes["data-toggle"] = "tooltip";
+        hypMyTeama.Attributes["title"] = "Go to your team's page";
+
+        hypCalendar.Attributes["data-toggle"] = "tooltip";
+        hypCalendar.Attributes["title"] = "Select the dates you are available to volunteer";
+
+        hypSkills.Attributes["data-toggle"] = "tooltip";
+        hypSkills.Attributes["title"] = "Choose your skills";
+
+        hypResources.Attributes["data-toggle"] = "tooltip";
+        hypResources.Attributes["title"] = "Choose the types of resources you can contribute";
+
+        hypIDCard.Attributes["data-toggle"] = "tooltip";
+        hypIDCard.Attributes["title"] = "Get your printable ID card";
+
+        hypMyTeama.Visible = false;
 		hypDeployments.Visible = false;
 		hypMyProfile.Visible = false;
 		hypPositions.Visible = false;
@@ -31,8 +57,8 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
 				hypDeployments.Visible = true;
 				hypDeployments.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + orgUser.OrganizationId.ToString();
 
-				hypMyTeam.Visible = true;
-				hypMyTeam.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId.ToString();
+				hypMyTeama.Visible = true;
+				hypMyTeama.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId.ToString();
 			}
 			divMemberNavigation.Visible = true;
 			hypMyProfile.Visible = true;

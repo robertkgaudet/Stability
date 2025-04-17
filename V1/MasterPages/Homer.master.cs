@@ -54,6 +54,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
     protected void Page_Load(object sender, EventArgs e)
     {
+
         form1.Action = HttpContext.Current.Request.RawUrl;
         divLogin.Visible = true;
         divSettings.Visible = false;

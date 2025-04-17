@@ -19,7 +19,7 @@
                 </asp:HyperLink>
             </li>
             <li>
-                <asp:HyperLink ID="hypMyTeam" runat="server">
+                <asp:HyperLink ID="hypMyTeama" runat="server">
                     <i class="fa fa-users"></i> Team
                 </asp:HyperLink>
             </li>
@@ -86,3 +86,4 @@
         </ul>
     </div>
 </div>
+
