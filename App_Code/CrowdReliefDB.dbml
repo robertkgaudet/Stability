@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="india" Class="CrowdReliefDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="DB_8013_staging" Class="CrowdReliefDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="dbo.aspnet_Membership" Member="aspnet_Memberships">
     <Type Name="aspnet_Membership">
       <Column Name="ApplicationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
@@ -2116,6 +2116,15 @@
       <Association Name="Address_LocationProfileEvent" Member="LocationProfileEvents" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfileEvent" />
       <Association Name="Address_LocationLocationStatus" Member="LocationLocationStatus" ThisKey="AddressId" OtherKey="AddressId" Type="LocationLocationStatus" />
       <Association Name="Address_LocationProfile" Member="LocationProfiles" ThisKey="AddressId" OtherKey="AddressId" Type="LocationProfile" />
+    </Type>
+  </Table>
+  <Table Name="dbo.InvitedMembers" Member="InvitedMembers">
+    <Type Name="InvitedMember">
+      <Column Name="InvitedMemberId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="EmailAddress" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="IsMember" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsCancelled" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisasterForCleanupMap" Method="GetGeoJsonByDisasterForCleanupMap">

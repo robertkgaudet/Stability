@@ -20,7 +20,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 
 
-[global::System.Data.Linq.Mapping.DatabaseAttribute(Name = "DB_8013_staging")]
+
+[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="DB_8013_staging")]
 public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 {
 	
@@ -436,15 +437,16 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertAddress(Address instance);
   partial void UpdateAddress(Address instance);
   partial void DeleteAddress(Address instance);
+  partial void InsertInvitedMember(InvitedMember instance);
+  partial void UpdateInvitedMember(InvitedMember instance);
+  partial void DeleteInvitedMember(InvitedMember instance);
 	#endregion
-
 
 	public CrowdReliefDBDataContext() :
 	base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
 	{
 		OnCreated();
 	}
-
 	public CrowdReliefDBDataContext(string connection) : 
 			base(connection, mappingSource)
 	{
@@ -1554,6 +1556,14 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<Address>();
+		}
+	}
+	
+	public System.Data.Linq.Table<InvitedMember> InvitedMembers
+	{
+		get
+		{
+			return this.GetTable<InvitedMember>();
 		}
 	}
 	
@@ -49305,6 +49315,164 @@ public partial class Address : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this.SendPropertyChanging();
 		entity.Address = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.InvitedMembers")]
+public partial class InvitedMember : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _InvitedMemberId;
+	
+	private string _EmailAddress;
+	
+	private System.Nullable<bool> _IsMember;
+	
+	private System.Nullable<bool> _IsCancelled;
+	
+	private System.DateTime _CreatedOn;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnInvitedMemberIdChanging(System.Guid value);
+    partial void OnInvitedMemberIdChanged();
+    partial void OnEmailAddressChanging(string value);
+    partial void OnEmailAddressChanged();
+    partial void OnIsMemberChanging(System.Nullable<bool> value);
+    partial void OnIsMemberChanged();
+    partial void OnIsCancelledChanging(System.Nullable<bool> value);
+    partial void OnIsCancelledChanged();
+    partial void OnCreatedOnChanging(System.DateTime value);
+    partial void OnCreatedOnChanged();
+    #endregion
+	
+	public InvitedMember()
+	{
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_InvitedMemberId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid InvitedMemberId
+	{
+		get
+		{
+			return this._InvitedMemberId;
+		}
+		set
+		{
+			if ((this._InvitedMemberId != value))
+			{
+				this.OnInvitedMemberIdChanging(value);
+				this.SendPropertyChanging();
+				this._InvitedMemberId = value;
+				this.SendPropertyChanged("InvitedMemberId");
+				this.OnInvitedMemberIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmailAddress", DbType="VarChar(200) NOT NULL", CanBeNull=false)]
+	public string EmailAddress
+	{
+		get
+		{
+			return this._EmailAddress;
+		}
+		set
+		{
+			if ((this._EmailAddress != value))
+			{
+				this.OnEmailAddressChanging(value);
+				this.SendPropertyChanging();
+				this._EmailAddress = value;
+				this.SendPropertyChanged("EmailAddress");
+				this.OnEmailAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsMember", DbType="Bit")]
+	public System.Nullable<bool> IsMember
+	{
+		get
+		{
+			return this._IsMember;
+		}
+		set
+		{
+			if ((this._IsMember != value))
+			{
+				this.OnIsMemberChanging(value);
+				this.SendPropertyChanging();
+				this._IsMember = value;
+				this.SendPropertyChanged("IsMember");
+				this.OnIsMemberChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsCancelled", DbType="Bit")]
+	public System.Nullable<bool> IsCancelled
+	{
+		get
+		{
+			return this._IsCancelled;
+		}
+		set
+		{
+			if ((this._IsCancelled != value))
+			{
+				this.OnIsCancelledChanging(value);
+				this.SendPropertyChanging();
+				this._IsCancelled = value;
+				this.SendPropertyChanged("IsCancelled");
+				this.OnIsCancelledChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }
 
