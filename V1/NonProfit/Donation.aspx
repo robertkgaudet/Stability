@@ -20,7 +20,7 @@
                 if (DefaultCampaign == null || DefaultCampaign.DonationCampaignId == Guid.Empty)
                 { %>
         <a class="donate-button" style="pointer-events: none;">
-            <span class="heart-icon">&#10084;</span> DONATE NOW
+            <span class="heart-icon">&#10084;</span> DONATE Now
         </a>
         <% }
             else
