@@ -1,4 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs"Inherits="V1_NonProfit_People" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"
+    EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs"
+    Inherits="V1_NonProfit_People" %>
+
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
@@ -102,7 +105,8 @@
         }
 
         .form-check label {
-            margin-left: 3px;
+            margin-left: 8px;
+            font-weight: normal !important;
         }
 
         .margin {
@@ -111,7 +115,7 @@
         }
 
         .justify-content-center {
-          /*  display: flex !important;*/
+            /*  display: flex !important;*/
             justify-content: center !important;
         }
 
@@ -119,6 +123,12 @@
             margin-bottom: 160px;
             margin-left: 110px;
             width: 123px;
+        }
+
+        .form-group {
+            margin-bottom: 15px !important;
+            margin-left: 28px !important;
+            margin: -6px;
         }
 
         .note-editor.note-frame.panel.panel-default {
@@ -130,15 +140,19 @@
             margin-bottom: 155px;
         }
 
-      /*  label {
+        /*  label {
             margin: 16px 0px 10px 10px;
             font-size: 17px;
         }
 */
-          #manageMemberModal .modal-body label,
-          #manageMemberModal .form-check-label {
-       font-weight: normal !important;
-       }
+
+        .modal-body {
+            position: relative;
+            padding: 15px;
+            margin-left: -14px;
+            margin-bottom: -13px;
+        }
+
         #txtEmail {
             margin-right: 0px !important;
         }
@@ -150,6 +164,21 @@
         button.btn.btn-primary {
             margin-left: 10px;
             margin-bottom: 90px;
+        }
+        /*  <----- -------------/>*/
+        .custom-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ccc;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            margin-top: 106px;
+        }
+
+        #ContentPlaceHolder1_txtManageVettingNotes {
+            margin-left: -9px;
         }
     </style>
     <script>
@@ -276,8 +305,21 @@
                 allSelectedText: 'All Selected',
                 numberDisplayed: 2
             });
+            // PageRequestManager reference
+            var prm = Sys.WebForms.PageRequestManager.getInstance();
 
+            prm.add_beginRequest(function () {
+                document.getElementById("loader").style.display = "block";
+                document.getElementById("tblVolunteers").style.display = "none";
+            });
+            prm.add_endRequest(function () {
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("tblVolunteers").style.display = "table";
+
+                window.scrollTo({ top: 300, behavior: "instant" });
+            });
         });
+
         var currentUserId = null;
         function setUserId(button) {
             currentUserId = button.getAttribute('data-userid');
@@ -293,6 +335,7 @@
                 alert("User ID not set.");
                 return;
             }
+            $('#loader').show();
             $.ajax({
                 type: "GET",
                 url: "/V1/Handlers/UpdateMemberInfo.ashx",
@@ -300,6 +343,7 @@
                 dataType: "json",
                 success: function (response) {
                     if (response.success) {
+                        $('#loader').hide();
 
                         $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
                         $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
@@ -308,6 +352,7 @@
                         $('#<%= chkManageTeamAdministrator.ClientID %>').prop('checked', response.makeTeamAdministrator);
                         console.log("User data fetched successfully:", response);
                     } else {
+                        $('#loader').hide();
                         alert("Failed to fetch user data.");
                     }
                 },
@@ -317,7 +362,7 @@
                 }
             });
         }
-        function saveChanges() {
+        function btnManageSaveChanges() {
             if (!currentUserId) {
                 alert("No user selected.");
                 return;
@@ -325,24 +370,49 @@
             var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
             var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
             var showTeamLogo = false;
-            // Check if the checkbox is visible using the JavaScript style display property
-           <% if (chkManageShowDonateButton.Visible)
-        { %>
-            showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
-              <% }
-        else
-        { %>
-            showTeamLogo = false;
-           <% } %>
+            var showTeamLogoVisible = document.getElementById('<%= hiddenShowTeamLogo.ClientID %>').value === "1";
+            if (showTeamLogoVisible) {
+                showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
+            } else {
+                showTeamLogo = false;
+            }
             var stabilityVerified = false;
             var makeTeamAdministrator = false;
-             <% if (User.IsInRole("Administrator"))
-        { %>
-            stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
-            makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
-    <% } %>
+            var isAdmin = document.getElementById('<%= hiddenAdminRole.ClientID %>').value === "1";
+            if (isAdmin) {
+                stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
+                makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
+            }
+
+            var $input = $("input[data-userid='" + currentUserId + "']");
+
+            // Traverse up to the panel container
+            var $panel = $input.closest('.hpanel');
+
+            // Find the image tags inside the panel
+            var $stabilityImg = $panel.find("img[id*='imgStabilityBadge']");
+            var $stabilityLink = $panel.find("a[id*='hypStabilityLogo']");
+            var $teamLogoImg = $panel.find("img[id*='imgTeamLogo']");
+            var $teamLogoLink = $panel.find("a[id*='hypTeamLogo']");
+            if (showTeamLogo) {
+                $teamLogoImg.show();
+                $teamLogoLink.show();
+            }
+            else {
+                $teamLogoImg.hide();
+                $teamLogoLink.hide();
+            }
+            if (stabilityVerified) {
+                $stabilityImg.show();
+                $stabilityLink.show();
+            }
+            else {
+                $stabilityImg.hide();
+                $stabilityLink.hide();
+            }
+
             updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
-        }
+        } 
         function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator) {
             var data = {
                 action: "update",
@@ -362,7 +432,7 @@
                 success: function (response) {
                     if (response.Success) {
                         $('#manageMemberModal').modal('hide');
-                        resetSearch();
+                        //resetSearch();
                     } else {
                         alert("Error: " + response.Message);
                     }
@@ -437,93 +507,76 @@
     </script>
     <script type="text/javascript">
         var currentPagination = '';
+        var scroll = false;
         $(document).ready(function () {
-            // Function to handle the "Next" button click
             $(document).on("click", "#nextBtn", function () {
                 if (!$('#nextBtn').hasClass('disabled')) {
+
                     var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
-                    var currentPage = Math.max(...$(".pagination .page-link").map(function () {
-                        return parseInt($(this).attr("tabindex")) || 0;
-                    }).get());
-
-                    // Increment the current page number
-                    if (currentPage <= totalPages) {
-
-                        // Update tabindex for each page link
+                    var currentPage = parseInt($('.pagination .active .page-link').text());
+                    var newPage = currentPage + 1;
+                    if (newPage <= totalPages) {
                         $('.page-item a').each(function (index) {
                             if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
-                                $(this).attr('tabindex', index + currentPage - 2);
-                                $(this).text(index + currentPage - 2);
-                                $(this).attr("onclick", `triggerSearch(${(index + currentPage - 2)}); return false;`);
+                                $(this).attr('tabindex', index + newPage - 2);
+                                $(this).text(index + newPage - 2);
+                                $(this).attr("onclick", `triggerSearch(${index + newPage - 2}); return false;`);
                             }
                         });
-
-                        // Enable Previous button if not on the first page
-                        if (currentPage > 2) {
-                            $('#previousBtn').removeClass('disabled');
-                        }
-                    }
-
-                    // Disable Next button if on the last page
-                    if (currentPage == totalPages) {
-                        $('#nextBtn').addClass('disabled');
-                    } else {
-                        $('#nextBtn').removeClass('disabled');
+                        triggerSearch(newPage);
                     }
                 }
-            });
-
-            // Function to handle the "Previous" button click
-            $(document).on("click", "#previousBtn", function () {
-                if (!$('#previousBtn').hasClass('disabled')) {
-                    var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
-                    var currentPage = Math.max(...$(".pagination .page-link").map(function () {
-                        return parseInt($(this).attr("tabindex")) || 0;
-                    }).get());
-                    // Decrease the current page number
-                    var firstPage = 1 + currentPage - 4;
-                    if (firstPage >= 1) {
-
-
-                        // Update tabindex for each page link
-                        $('.page-item a').each(function (index) {
-                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
-                                $(this).attr('tabindex', index + currentPage - 4);
-                                $(this).text(index + currentPage - 4);
-                                $(this).attr("onclick", `triggerSearch(${(index + currentPage - 4)}); return false;`);
-                            }
-                        });
-
-                        // Enable Next button if not on the last page
-                        if (firstPage + 2 < totalPages) {
-                            $('#nextBtn').removeClass('disabled');
-                        }
-
-                        // Disable Previous button if on the first page                    
-                    }
-                    if (firstPage == 1) {
-                        $('#previousBtn').addClass('disabled');
-                    } else {
-                        $('#previousBtn').removeClass('disabled');
-                    }
-                }
-
             });
         });
 
+        $(document).on("click", "#previousBtn", function () {
+            if (!$('#previousBtn').hasClass('disabled')) {
+
+                var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
+                var currentPage = parseInt($('.pagination .active .page-link').text());
+                var newPage = currentPage - 1;
+
+                if (newPage >= 1) {
+
+                    $('.page-item a').each(function (index) {
+                        if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
+                            $(this).attr('tabindex', index + newPage - 2);
+                            $(this).text(index + newPage - 2);
+                            $(this).attr("onclick", `triggerSearch(${(index + newPage - 2)}); return false;`);
+                        }
+                    });
+                    triggerSearch(newPage);
+                }
+            }
+        });
+
+
+
 
         function triggerSearch(pn) {
-            // Set a value to the hidden field            
-            document.getElementById('<%= currentPageValue.ClientID %>').value = pn; // Set custom value here
-            // Remove "active" class from all <li> elements
+            document.getElementById('<%= currentPageValue.ClientID %>').value = pn;
             $(".pagination .page-item").removeClass("active");
-
-            // Find the <a> tag with matching tabindex and add "active" to its parent <li>
             $(".pagination .page-link[tabindex='" + pn + "']").closest(".page-item").addClass("active");
+
+            var totalPages = parseInt(document.getElementById('<%= totalPageValue.ClientID %>').value);
+
+            if (pn <= 1) {
+                $('#previousBtn').addClass('disabled');
+            } else {
+                $('#previousBtn').removeClass('disabled');
+            }
+
+            if (pn >= totalPages) {
+                $('#nextBtn').addClass('disabled');
+            } else {
+                $('#nextBtn').removeClass('disabled');
+            }
+
             currentPagination = $('.navClass').html();
-            // Trigger the search button click event
+
             __doPostBack('<%= SearchButton.UniqueID %>', '');
         }
+
         function searchButton() {
             // Set a value to the hidden field
             document.getElementById('<%= currentPageValue.ClientID %>').value = 1; // Set custom value here    
@@ -537,6 +590,8 @@
             document.getElementById('<%= txtOptedSMS.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtEmailconnect.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtIsVerified.ClientID %>').checked = false; // Set custom value here
+            document.getElementById('<%= txtTeamVerified.ClientID %>').checked = false; // Set custom value here
+            document.getElementById('<%= txtStabilityVerified.ClientID %>').checked = false; // Set custom value here
             document.getElementById('<%= ddlEvent.ClientID %>').value = ''; // Set custom value here
             $('#hiddenEvent').val('');
             document.getElementById('<%= ddlTraining.ClientID %>').value = ''; // Set custom value here
@@ -599,7 +654,7 @@
                 if (checkbox.checked) {
                     selectedUserIds.push(checkbox.getAttribute("data-userid"));
                 }
-            });
+            }); n
 
             hiddenField.value = selectedUserIds.join(",");
         }
@@ -712,20 +767,24 @@
                 }
             });
         }
-
+        $(document).on("click", ".pagination .page-link", function () {
+            scroll = true;
+        });
 
         function updateCheckboxSelection() {
             var selectAllCheckbox = document.getElementById("chkSelectAll");
             var userCheckboxes = document.querySelectorAll(".select-user");
             var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
 
-            selectAllCheckbox.addEventListener("change", function () {
-                var isChecked = this.checked;
-                userCheckboxes.forEach(function (checkbox) {
-                    checkbox.checked = isChecked;
+            if (selectAllCheckbox != null) {
+                selectAllCheckbox.addEventListener("change", function () {
+                    var isChecked = this.checked;
+                    userCheckboxes.forEach(function (checkbox) {
+                        checkbox.checked = isChecked;
+                    });
+                    updateSelectedUsers();
                 });
-                updateSelectedUsers();
-            });
+            }
 
             userCheckboxes.forEach(function (checkbox) {
                 checkbox.addEventListener("change", function () {
@@ -734,9 +793,14 @@
                     updateSelectedUsers();
                 });
             });
-
         }
-    </script>
+        $(document).on("click", ".pagination .page-link", function () {
+            window.scrollTo({
+                top: 300,
+                behavior: 'instant'
+            });
+        });
+    </script>    
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -748,7 +812,8 @@
             ClientIDMode="Static" TextMode="MultiLine" ValidateRequestMode="Disabled" Rows="3"></asp:TextBox>
         <div class="input-group-append">
             <button type="button" class="ladda-button ladda-button-demo ladda-button-email btn btn-primary b2"
-                data-style="slide-right" onclick="sendEmail()">Send Email</button>
+                data-style="slide-right" onclick="sendEmail()">
+                Send Email</button>
         </div>
     </div>
     <div id="divSms" runat="server" class="input-group">
@@ -756,7 +821,8 @@
             rows="6" cols="95"></textarea>
         <div class="input-group-append">
             <button type="button" class="ladda-button ladda-button-demo ladda-button-sms btn btn-primary "
-                data-style="slide-right" onclick="sendSms()">Send SMS</button>
+                data-style="slide-right" onclick="sendSms()">
+                Send SMS</button>
         </div>
     </div>
 
@@ -772,7 +838,7 @@
             <div class="row">
                 <div class="hpanel hblue">
                     <div class="panel-tools">
-                        <button class="btn btn-link toggle-search-btn" type="button" data-toggle="collapse"
+                        <button class="btn btn-link toggle-search-btn" id="search" type="button" data-toggle="collapse"
                             data-target="#searchFilters" aria-expanded="false" aria-controls="searchFilters">
                             <i class="fa fa-chevron-down"></i>
                         </button>
@@ -851,7 +917,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-6 mb-3" style="margin-left: -13px;">
                                     <div class="form-group margin ">
                                         <b class="text-line">Location :</b>
                                         <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
@@ -894,6 +960,18 @@
                                                     <label class="form-check-label" for="<%=txtIsVerified.ClientID%>">Is Verified</label>
                                                 </div>
                                             </div>
+                                            <div class="col-sm-3 mb-2" style="margin-left: 8px;">
+                                                <div class="form-check">
+                                                    <asp:CheckBox ID="txtTeamVerified" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtTeamVerified.ClientID%>">Team Verified</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 mb-2" style="margin-left: -8px;">
+                                                <div class="form-check">
+                                                    <asp:CheckBox ID="txtStabilityVerified" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtStabilityVerified.ClientID%>">Stability Verified</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -916,6 +994,13 @@
         ClientIDMode="Static" />
     <asp:UpdatePanel runat="server" ID="updatePeopleList" UpdateMode="Conditional">
         <ContentTemplate>
+            <%--   <div id="loader" style="text-align: center; padding: 20px;">
+        <img src="/path-to-your-loader.gif" alt="Loading..." />
+    </div>--%>
+            <%--  <div  id="loader"  class="spinner-border" role="status">
+  <span class="sr-only">Loading...</span>
+</div>--%>
+            <div id="loader" class="custom-spinner"></div>
             <asp:Panel runat="server" ID="pnlTable">
                 <asp:HiddenField ID="currentPageValue" runat="server" />
                 <asp:HiddenField ID="totalPageValue" runat="server" />
@@ -1028,24 +1113,51 @@
             </div>
         </div>
     </div>
+
     <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
-   <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="color-line"></div>
-            <div class="modal-header text-center">
-                <h5 class="modal-title">Update Member Status</h5>
-            </div>
-            <!-- Success and Error Messages -->
-            <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
-                <i class="fa fa-check-circle"></i>Changes saved successfully.
-            </div>
-            <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
-                <i class="fa fa-exclamation-triangle"></i>
-                <div id="divManageErrorMessage"></div>
-            </div>
-            <!-- Modal body -->
-            <div class="modal-body">
+    <asp:HiddenField ID="hiddenAdminRole" runat="server" />
+    <asp:HiddenField ID="hiddenShowTeamLogo" runat="server" />
+    <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="color-line"></div>
+                <div class="modal-header text-center">
+                    <h5 class="modal-title">Update Member Status</h5>
+
+                </div>
+                <!-- Success and Error Messages -->
+                <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
+                    <i class="fa fa-check-circle"></i>Changes saved successfully.
+                </div>
+                <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <div id="divManageErrorMessage"></div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group form-check donateDiv">
+                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
+                        <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
+                            Team Verified
+                        </label>
+                    </div>
+                    <asp:PlaceHolder ID="phAdminControls" runat="server" Visible="false">
+                        <div id="divShowTeamVerifiedFeatures" runat="server">
+                            <div class="form-group form-check">
+                                <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
+                                <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
+                                    Stability Verified
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
+                                <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
+                                    Make Team Administrator
+                                </label>
+                            </div>
+                        </div>
+                    </asp:PlaceHolder>
+                </div>
                 <div class="form-group">
                     <label for="rblManageUserStatus">Update Member Vetting Status:</label>
                     <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
@@ -1061,34 +1173,14 @@
                     <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
                         placeholder="Enter Vetting Notes"></asp:TextBox>
                 </div>
-                <div class="form-group form-check donateDiv">
-                    <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
-                    <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
-                        Enable Team Logo
-                    </label>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
+                        Save Changes</button>
                 </div>
-                <% if (User.IsInRole("Administrator") || isOwner) { %>
-                <div class="form-group form-check">
-                    <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
-                    <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
-                        Stability Verified
-                    </label>
-                </div>
-                <div class="form-group form-check">
-                    <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
-                    <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
-                        Make Team Administrator
-                    </label>
-                </div>
-                <% } %>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
-                    Save Changes</button>
             </div>
         </div>
     </div>
-</div>
     <uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>
