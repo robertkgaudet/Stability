@@ -437,6 +437,9 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertAddress(Address instance);
   partial void UpdateAddress(Address instance);
   partial void DeleteAddress(Address instance);
+  partial void InsertEmailTemplate(EmailTemplate instance);
+  partial void UpdateEmailTemplate(EmailTemplate instance);
+  partial void DeleteEmailTemplate(EmailTemplate instance);
     #endregion
     public CrowdReliefDBDataContext() :
 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
@@ -1552,6 +1555,14 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 		get
 		{
 			return this.GetTable<Address>();
+		}
+	}
+	
+	public System.Data.Linq.Table<EmailTemplate> EmailTemplates
+	{
+		get
+		{
+			return this.GetTable<EmailTemplate>();
 		}
 	}
 	
@@ -45731,6 +45742,8 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 	
 	private EntitySet<UserOrganization> _UserOrganizations;
 	
+	private EntitySet<EmailTemplate> _EmailTemplates;
+	
 	private EntityRef<aspnet_User> _aspnet_User;
 	
 	private EntityRef<aspnet_User> _aspnet_User1;
@@ -45850,6 +45863,7 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		this._Positions = new EntitySet<Position>(new Action<Position>(this.attach_Positions), new Action<Position>(this.detach_Positions));
 		this._PaymentConfigurations = new EntitySet<PaymentConfiguration>(new Action<PaymentConfiguration>(this.attach_PaymentConfigurations), new Action<PaymentConfiguration>(this.detach_PaymentConfigurations));
 		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
+		this._EmailTemplates = new EntitySet<EmailTemplate>(new Action<EmailTemplate>(this.attach_EmailTemplates), new Action<EmailTemplate>(this.detach_EmailTemplates));
 		this._aspnet_User = default(EntityRef<aspnet_User>);
 		this._aspnet_User1 = default(EntityRef<aspnet_User>);
 		OnCreated();
@@ -46954,6 +46968,19 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_EmailTemplate", Storage="_EmailTemplates", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<EmailTemplate> EmailTemplates
+	{
+		get
+		{
+			return this._EmailTemplates;
+		}
+		set
+		{
+			this._EmailTemplates.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Organization", Storage="_aspnet_User", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
 	public aspnet_User aspnet_User
 	{
@@ -47121,6 +47148,18 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 	}
 	
 	private void detach_UserOrganizations(UserOrganization entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = null;
+	}
+	
+	private void attach_EmailTemplates(EmailTemplate entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = this;
+	}
+	
+	private void detach_EmailTemplates(EmailTemplate entity)
 	{
 		this.SendPropertyChanging();
 		entity.Organization = null;
@@ -49303,6 +49342,205 @@ public partial class Address : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this.SendPropertyChanging();
 		entity.Address = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.EmailTemplate")]
+public partial class EmailTemplate : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _EmailTemplateId;
+	
+	private System.Nullable<System.Guid> _OrganizationId;
+	
+	private string _EmailBody;
+	
+	private string _CC;
+	
+	private string _BCC;
+	
+	private EntityRef<Organization> _Organization;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnEmailTemplateIdChanging(System.Guid value);
+    partial void OnEmailTemplateIdChanged();
+    partial void OnOrganizationIdChanging(System.Nullable<System.Guid> value);
+    partial void OnOrganizationIdChanged();
+    partial void OnEmailBodyChanging(string value);
+    partial void OnEmailBodyChanged();
+    partial void OnCCChanging(string value);
+    partial void OnCCChanged();
+    partial void OnBCCChanging(string value);
+    partial void OnBCCChanged();
+    #endregion
+	
+	public EmailTemplate()
+	{
+		this._Organization = default(EntityRef<Organization>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmailTemplateId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid EmailTemplateId
+	{
+		get
+		{
+			return this._EmailTemplateId;
+		}
+		set
+		{
+			if ((this._EmailTemplateId != value))
+			{
+				this.OnEmailTemplateIdChanging(value);
+				this.SendPropertyChanging();
+				this._EmailTemplateId = value;
+				this.SendPropertyChanged("EmailTemplateId");
+				this.OnEmailTemplateIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				if (this._Organization.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_EmailBody", DbType="NVarChar(MAX)")]
+	public string EmailBody
+	{
+		get
+		{
+			return this._EmailBody;
+		}
+		set
+		{
+			if ((this._EmailBody != value))
+			{
+				this.OnEmailBodyChanging(value);
+				this.SendPropertyChanging();
+				this._EmailBody = value;
+				this.SendPropertyChanged("EmailBody");
+				this.OnEmailBodyChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CC", DbType="NVarChar(500)")]
+	public string CC
+	{
+		get
+		{
+			return this._CC;
+		}
+		set
+		{
+			if ((this._CC != value))
+			{
+				this.OnCCChanging(value);
+				this.SendPropertyChanging();
+				this._CC = value;
+				this.SendPropertyChanged("CC");
+				this.OnCCChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BCC", DbType="NVarChar(500)")]
+	public string BCC
+	{
+		get
+		{
+			return this._BCC;
+		}
+		set
+		{
+			if ((this._BCC != value))
+			{
+				this.OnBCCChanging(value);
+				this.SendPropertyChanging();
+				this._BCC = value;
+				this.SendPropertyChanged("BCC");
+				this.OnBCCChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_EmailTemplate", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
+	public Organization Organization
+	{
+		get
+		{
+			return this._Organization.Entity;
+		}
+		set
+		{
+			Organization previousValue = this._Organization.Entity;
+			if (((previousValue != value) 
+						|| (this._Organization.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Organization.Entity = null;
+					previousValue.EmailTemplates.Remove(this);
+				}
+				this._Organization.Entity = value;
+				if ((value != null))
+				{
+					value.EmailTemplates.Add(this);
+					this._OrganizationId = value.OrganizationId;
+				}
+				else
+				{
+					this._OrganizationId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("Organization");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }
 
