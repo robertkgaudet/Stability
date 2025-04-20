@@ -25,6 +25,7 @@ namespace Stability
             public string timeOut { get; set; }
             public double duration { get; set; }
             public string comments { get; set; }
+            public int totalHours { get; set; }
         }
 
         [HttpGet, Route("")]
@@ -33,42 +34,122 @@ namespace Stability
         {
             var user = Membership.GetUser(User.Identity.Name);
             var uid = (Guid)user.ProviderUserKey;
-            // Join Timesheet -> UserOrganizationEvent -> OrganizationEvent, and TaskType
-            var query = from t in db.Timesheets
-                        where t.UserId == uid && !t.IsDeleted && t.UserOrganizationEventId.HasValue && t.TaskTypeId.HasValue
-                        join ue in db.UserOrganizationEvents on t.UserOrganizationEventId.Value equals ue.UserOrganizationEventId
-                        join ev in db.OrganizationEvents on ue.OrganizationEventId equals ev.OrganizationEventId
-                        join tt in db.TaskTypes on t.TaskTypeId.Value equals tt.TaskTypeId
-                        select new 
-                        {
-                            TimesheetId = t.TimesheetId,
-                            DeploymentName = ev.CampaignName,
-                            DeploymentType = tt.Name,
-                            TimeIn = t.TimeIn,
-                            TimeOut = t.TimeOut,
-                            Location = ev.StagingCity,
-                            Description = t.Description,
-                            WorkCompleted = t.WorkCompleted
-                        };
-                        
-            // Execute the query first to get data from database
-            var results = query.ToList();
             
-            // Then format the data in memory
-            var list = results.Select(r => new TimeEntryDto
-            {
-                id = r.TimesheetId,
-                deploymentName = r.DeploymentName,
-                deploymentType = r.DeploymentType,
-                date = r.TimeIn.ToString("yyyy-MM-dd"),
-                timeSlot = r.TimeOut.HasValue
-                    ? r.TimeIn.ToString("HH:mm") + " - " + r.TimeOut.Value.ToString("HH:mm")
-                    : r.TimeIn.ToString("HH:mm"),
-                location = r.Location,
-                timeIn = r.TimeIn.ToString("o"),
-                timeOut = r.TimeOut.HasValue ? r.TimeOut.Value.ToString("o") : null,
-                duration = r.TimeOut.HasValue ? (r.TimeOut.Value - r.TimeIn).TotalHours : 0,
-                comments = r.WorkCompleted ?? r.Description
+            // Using the same query logic as in LoadTimeSheet() method
+            var timesheet = from t in db.Timesheets
+                           join tt in db.TaskTypes on t.TaskTypeId equals tt.TaskTypeId into timeJoin
+                           from time in timeJoin.DefaultIfEmpty()
+                           where t.UserId == uid && !t.IsDeleted
+                           orderby t.TimeIn descending
+                           select new 
+                           {
+                               t.TimesheetId,
+                               t.TimeIn, 
+                               t.TimeOut, 
+                               t.Description, 
+                               taskname = time.Name, 
+                               t.UserId,
+                               t.WorkCompleted
+                           };
+            
+            // Execute the query to get data from database
+            var results = timesheet.ToList();
+            
+            // Format the data in memory
+            var list = results.Select(r => {
+                // Calculate hours similar to dlTimesheet_ItemDataBound method
+                int timeSpanHoursInt = 0;
+                int timeSpanMinutesInt = 0;
+                
+                if (r.TimeOut.HasValue)
+                {
+                    TimeSpan? span = (r.TimeOut.Value - r.TimeIn);
+                    timeSpanHoursInt = span.Value.Hours;
+                    timeSpanMinutesInt = span.Value.Minutes;
+                    
+                    if(timeSpanMinutesInt > 30)
+                    {
+                        timeSpanHoursInt = timeSpanHoursInt + 1;
+                    }
+                }
+                
+                return new TimeEntryDto
+                {
+                    id = r.TimesheetId,
+                    deploymentType = r.taskname,
+                    date = r.TimeIn.ToString("yyyy-MM-dd"),
+                    timeSlot = r.TimeOut.HasValue
+                        ? r.TimeIn.ToString("HH:mm") + " - " + r.TimeOut.Value.ToString("HH:mm")
+                        : r.TimeIn.ToString("HH:mm"),
+                    timeIn = r.TimeIn.ToString("o"),
+                    timeOut = r.TimeOut.HasValue ? r.TimeOut.Value.ToString("o") : null,
+                    duration = r.TimeOut.HasValue ? (r.TimeOut.Value - r.TimeIn).TotalHours : 0,
+                    comments = r.WorkCompleted ?? r.Description,
+                    totalHours = timeSpanHoursInt
+                };
+            }).ToList();
+            
+            return Ok(list);
+        }
+
+        [HttpGet, Route("all")]
+        [Authorize]
+        public IHttpActionResult GetAll()
+        {
+            // This mimics the functionality when Request["all"] is not empty in LoadTimeSheet()
+            
+            // Using the same query logic as in LoadTimeSheet() method but for all users
+            var timesheet = from t in db.Timesheets
+                           join tt in db.TaskTypes on t.TaskTypeId equals tt.TaskTypeId into timeJoin
+                           from time in timeJoin.DefaultIfEmpty()
+                           where !t.IsDeleted
+                           orderby t.TimeIn descending
+                           select new 
+                           {
+                               t.TimesheetId,
+                               t.TimeIn, 
+                               t.TimeOut, 
+                               t.Description, 
+                               taskname = time.Name, 
+                               t.UserId,
+                               t.WorkCompleted
+                           };
+            
+            // Execute the query to get data from database
+            var results = timesheet.ToList();
+            
+            // Format the data in memory
+            var list = results.Select(r => {
+                // Calculate hours similar to dlTimesheet_ItemDataBound method
+                int timeSpanHoursInt = 0;
+                int timeSpanMinutesInt = 0;
+                
+                if (r.TimeOut.HasValue)
+                {
+                    TimeSpan? span = (r.TimeOut.Value - r.TimeIn);
+                    timeSpanHoursInt = span.Value.Hours;
+                    timeSpanMinutesInt = span.Value.Minutes;
+                    
+                    if(timeSpanMinutesInt > 30)
+                    {
+                        timeSpanHoursInt = timeSpanHoursInt + 1;
+                    }
+                }
+                
+                return new TimeEntryDto
+                {
+                    id = r.TimesheetId,
+                    deploymentType = r.taskname,
+                    date = r.TimeIn.ToString("yyyy-MM-dd"),
+                    timeSlot = r.TimeOut.HasValue
+                        ? r.TimeIn.ToString("HH:mm") + " - " + r.TimeOut.Value.ToString("HH:mm")
+                        : r.TimeIn.ToString("HH:mm"),
+                    timeIn = r.TimeIn.ToString("o"),
+                    timeOut = r.TimeOut.HasValue ? r.TimeOut.Value.ToString("o") : null,
+                    duration = r.TimeOut.HasValue ? (r.TimeOut.Value - r.TimeIn).TotalHours : 0,
+                    comments = r.WorkCompleted ?? r.Description,
+                    totalHours = timeSpanHoursInt
+                };
             }).ToList();
             
             return Ok(list);
