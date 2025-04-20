@@ -1,11 +1,14 @@
 using System;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Security;
 using System.Web.Profile;
 
 namespace Stability
 {
-    [RoutePrefix("api/auth")]
+// Enable CORS for this controller
+[EnableCors(origins: "*", headers: "*", methods: "*")]
+[RoutePrefix("api/auth")]
     public class AuthController : ApiController
     {
         public class RegisterModel { public string FullName { get; set; } public string Email { get; set; } public string Password { get; set; } }

@@ -1,11 +1,14 @@
 using System;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Security;
 
 namespace Stability
 {
-    [RoutePrefix("api/timesheets")]
+// Enable CORS for this controller
+[EnableCors(origins: "*", headers: "*", methods: "*")]
+[RoutePrefix("api/timesheets")]
     public class TimeSheetsController : ApiController
     {
         private readonly CrowdReliefDBDataContext db = new CrowdReliefDBDataContext();

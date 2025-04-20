@@ -1,10 +1,13 @@
 using System;
 using System.Linq;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Stability
 {
-    [RoutePrefix("api/deployments")]
+// Enable CORS for this controller
+[EnableCors(origins: "*", headers: "*", methods: "*")]
+[RoutePrefix("api/deployments")]
     public class DeploymentsController : ApiController
     {
         private readonly CrowdReliefDBDataContext db = new CrowdReliefDBDataContext();
