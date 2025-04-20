@@ -26,13 +26,32 @@ namespace Stability
             public string logoUrl { get; set; }
         }
 
+        // Helper method to count available slots for a deployment
+        private int CountAvailableSlots(Guid deploymentId)
+        {
+            // Get all positions that aren't deleted
+            var allPositions = db.OrganizationEventPositions
+                .Where(p => p.OrganizationEventId == deploymentId && !p.IsDeleted)
+                .ToList();
+                
+            // Get claimed position IDs
+            var claimedPositionIds = db.UserOrganizationEventPositions
+                .Where(c => c.IsActive)
+                .Select(c => c.OrganizationEventPositionId)
+                .ToList();
+                
+            // Count available positions by excluding claimed ones
+            return allPositions.Count(p => !claimedPositionIds.Contains(p.OrganizationEventPositionId));
+        }
+
         [HttpGet, Route("")]
         public IHttpActionResult GetDeployments()
         {
-            var items = db.OrganizationEvents
+            var events = db.OrganizationEvents
                 .Where(e => e.AcceptsVolunteers == true && (e.IsActive ?? false))
-                .AsEnumerable() // switch to LINQ-to-Objects for DateTime operations
-                .Select(e => new DeploymentDto
+                .ToList();
+                
+            var items = events.Select(e => new DeploymentDto
                 {
                     id = e.OrganizationEventId,
                     title = e.CampaignName,
@@ -44,7 +63,7 @@ namespace Stability
                         ? ((e.EndDate.Value - e.BeginDate.Value).Days + " days")
                         : null,
                     teamMembers = e.UserOrganizationEvents.Count,
-                    slots = e.OrganizationEventPositions.Count,
+                    slots = CountAvailableSlots(e.OrganizationEventId),
                     logoUrl = string.IsNullOrEmpty(e.LogoFileName)
                         ? null
                         : Url.Content("~/Uploads/" + e.LogoFileName)
@@ -70,7 +89,7 @@ namespace Stability
                     ? ((e.EndDate.Value - e.BeginDate.Value).Days + " days")
                     : null,
                 teamMembers = e.UserOrganizationEvents.Count,
-                slots = e.OrganizationEventPositions.Count,
+                slots = CountAvailableSlots(e.OrganizationEventId),
                 logoUrl = string.IsNullOrEmpty(e.LogoFileName)
                     ? null
                     : Url.Content("~/Uploads/" + e.LogoFileName)
