@@ -178,33 +178,54 @@ namespace Stability
             // Find TaskType
             var tt = db.TaskTypes.FirstOrDefault(x => x.Name == model.deploymentType);
             if (tt == null) return BadRequest("Invalid deploymentType");
+            
+            DateTime timeIn = DateTime.Parse(model.timeIn);
+            DateTime timeOut = DateTime.Parse(model.timeOut);
+            
             var entry = new Timesheet
             {
                 TimesheetId = Guid.NewGuid(),
                 UserId = uid,
                 TaskTypeId = tt.TaskTypeId,
-                TimeIn = DateTime.Parse(model.timeIn),
-                TimeOut = DateTime.Parse(model.timeOut),
+                TimeIn = timeIn,
+                TimeOut = timeOut,
                 Description = model.comments,
-                WorkCompleted = model.comments,
+                WorkCompleted = null,
                 CreatedOn = DateTime.UtcNow,
                 IsDeleted = false
             };
+            
             db.Timesheets.InsertOnSubmit(entry);
             db.SubmitChanges();
+            
+            // Calculate hours in the same way as Get/GetAll methods
+            int timeSpanHoursInt = 0;
+            int timeSpanMinutesInt = 0;
+            
+            TimeSpan span = (timeOut - timeIn);
+            timeSpanHoursInt = span.Hours;
+            timeSpanMinutesInt = span.Minutes;
+            
+            if(timeSpanMinutesInt > 30)
+            {
+                timeSpanHoursInt = timeSpanHoursInt + 1;
+            }
+            
             var dto = new TimeEntryDto
             {
                 id = entry.TimesheetId,
-                deploymentName = model.deploymentName,
-                deploymentType = model.deploymentType,
-                date = model.date,
-                timeSlot = model.timeSlot,
+                deploymentType = tt.Name,
+                date = timeIn.ToString("yyyy-MM-dd"),
+                timeSlot = timeIn.ToString("HH:mm") + " - " + timeOut.ToString("HH:mm"),
                 location = model.location,
-                timeIn = entry.TimeIn.ToString("o"),
-                timeOut = entry.TimeOut.Value.ToString("o"),
-                duration = model.duration,
-                comments = model.comments
+                timeIn = timeIn.ToString("o"),
+                timeOut = timeOut.ToString("o"),
+                duration = span.TotalHours,
+                comments = model.comments,
+                totalHours = timeSpanHoursInt,
+                deploymentName = model.deploymentName
             };
+            
             return Created(string.Empty, dto);
         }
 
