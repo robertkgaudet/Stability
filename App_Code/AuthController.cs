@@ -3,11 +3,13 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Security;
 using System.Web.Profile;
+using System.Linq;
 
 namespace Stability
 {
 // Enable CORS for this controller
-[EnableCors(origins: "*", headers: "*", methods: "*")]
+// [EnableCors(origins: "*", headers: "*", methods: "*")]
+[EnableCors(origins: "http://localhost:19006", headers: "*", methods: "*", SupportsCredentials = true)]
 [RoutePrefix("api/auth")]
     public class AuthController : ApiController
     {
@@ -25,10 +27,27 @@ namespace Stability
             if (status != MembershipCreateStatus.Success)
                 return BadRequest(status.ToString());
 
-            // Save FullName into profile
-            var profile = ProfileBase.Create(model.Email);
-            profile.SetPropertyValue("FullName", model.FullName);
-            profile.Save();
+            // Create a profile for this user using the Profile class
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            Profile userProfile = new Profile();
+            userProfile.UserId = new Guid(user.ProviderUserKey.ToString());
+            userProfile.ProfileId = Guid.NewGuid();
+            
+            // Parse full name into first and last name
+            string[] nameParts = model.FullName.Split(new char[] { ' ' }, 2);
+            userProfile.Firstname = nameParts[0];
+            userProfile.Lastname = nameParts.Length > 1 ? nameParts[1] : string.Empty;
+            
+            // Set default values for other fields
+            userProfile.PhoneNumber = string.Empty;
+            userProfile.Address = string.Empty;
+            userProfile.City = string.Empty;
+            userProfile.State = string.Empty;
+            userProfile.Zip = string.Empty;
+            userProfile.ReceiveDeploymentSMS = false;
+            
+            dc.Profiles.InsertOnSubmit(userProfile);
+            dc.SubmitChanges();
 
             return Created(string.Empty, new { id = user.ProviderUserKey, fullName = model.FullName, email = user.Email });
         }
@@ -43,20 +62,25 @@ namespace Stability
                 return Unauthorized();
 
             var user = Membership.GetUser(model.Email);
-            // Generate a simple token (replace with JWT as needed)
-            var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-            var expiresIn = 3600; // seconds
-            var profile = ProfileBase.Create(model.Email);
-            var fullName = profile.GetPropertyValue("FullName") as string;
+            
+            // Set authentication cookie
+            FormsAuthentication.SetAuthCookie(model.Email, true);
+            
+            // Get user profile from database
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            var userProfile = dc.Profiles.FirstOrDefault(p => p.UserId == new Guid(user.ProviderUserKey.ToString()));
+            string fullName = userProfile != null ? $"{userProfile.Firstname} {userProfile.Lastname}".Trim() : string.Empty;
 
-            return Ok(new { token, expiresIn, user = new { id = user.ProviderUserKey, fullName, email = user.Email } });
+            return Ok(new { id = user.ProviderUserKey, fullName, email = user.Email });
         }
 
         [HttpPost, Route("logout")]
         [Authorize]
         public IHttpActionResult Logout()
         {
-            // Token-based logout: client can discard token
+            // Sign out the user
+            FormsAuthentication.SignOut();
+            
             return StatusCode(System.Net.HttpStatusCode.NoContent);
         }
 
@@ -66,8 +90,12 @@ namespace Stability
         {
             var user = Membership.GetUser(User.Identity.Name);
             if (user == null) return Unauthorized();
-            var profile = ProfileBase.Create(user.UserName);
-            var fullName = profile.GetPropertyValue("FullName") as string;
+            
+            // Get user profile from database
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            var userProfile = dc.Profiles.FirstOrDefault(p => p.UserId == new Guid(user.ProviderUserKey.ToString()));
+            string fullName = userProfile != null ? $"{userProfile.Firstname} {userProfile.Lastname}".Trim() : string.Empty;
+            
             return Ok(new { id = user.ProviderUserKey, fullName, email = user.Email });
         }
     }
