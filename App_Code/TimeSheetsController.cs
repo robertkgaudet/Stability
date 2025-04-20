@@ -34,26 +34,43 @@ namespace Stability
             var user = Membership.GetUser(User.Identity.Name);
             var uid = (Guid)user.ProviderUserKey;
             // Join Timesheet -> UserOrganizationEvent -> OrganizationEvent, and TaskType
-            var list = (from t in db.Timesheets
+            var query = from t in db.Timesheets
                         where t.UserId == uid && !t.IsDeleted && t.UserOrganizationEventId.HasValue && t.TaskTypeId.HasValue
                         join ue in db.UserOrganizationEvents on t.UserOrganizationEventId.Value equals ue.UserOrganizationEventId
                         join ev in db.OrganizationEvents on ue.OrganizationEventId equals ev.OrganizationEventId
                         join tt in db.TaskTypes on t.TaskTypeId.Value equals tt.TaskTypeId
-                        select new TimeEntryDto
+                        select new 
                         {
-                            id = t.TimesheetId,
-                            deploymentName = ev.CampaignName,
-                            deploymentType = tt.Name,
-                            date = t.TimeIn.ToString("yyyy-MM-dd"),
-                            timeSlot = t.TimeOut.HasValue
-                                ? t.TimeIn.ToString("HH:mm") + " - " + t.TimeOut.Value.ToString("HH:mm")
-                                : t.TimeIn.ToString("HH:mm"),
-                            location = ev.StagingCity,
-                            timeIn = t.TimeIn.ToString("o"),
-                            timeOut = t.TimeOut.HasValue ? t.TimeOut.Value.ToString("o") : null,
-                            duration = t.TimeOut.HasValue ? (t.TimeOut.Value - t.TimeIn).TotalHours : 0,
-                            comments = t.WorkCompleted ?? t.Description
-                        }).ToList();
+                            TimesheetId = t.TimesheetId,
+                            DeploymentName = ev.CampaignName,
+                            DeploymentType = tt.Name,
+                            TimeIn = t.TimeIn,
+                            TimeOut = t.TimeOut,
+                            Location = ev.StagingCity,
+                            Description = t.Description,
+                            WorkCompleted = t.WorkCompleted
+                        };
+                        
+            // Execute the query first to get data from database
+            var results = query.ToList();
+            
+            // Then format the data in memory
+            var list = results.Select(r => new TimeEntryDto
+            {
+                id = r.TimesheetId,
+                deploymentName = r.DeploymentName,
+                deploymentType = r.DeploymentType,
+                date = r.TimeIn.ToString("yyyy-MM-dd"),
+                timeSlot = r.TimeOut.HasValue
+                    ? r.TimeIn.ToString("HH:mm") + " - " + r.TimeOut.Value.ToString("HH:mm")
+                    : r.TimeIn.ToString("HH:mm"),
+                location = r.Location,
+                timeIn = r.TimeIn.ToString("o"),
+                timeOut = r.TimeOut.HasValue ? r.TimeOut.Value.ToString("o") : null,
+                duration = r.TimeOut.HasValue ? (r.TimeOut.Value - r.TimeIn).TotalHours : 0,
+                comments = r.WorkCompleted ?? r.Description
+            }).ToList();
+            
             return Ok(list);
         }
 
@@ -114,6 +131,15 @@ namespace Stability
         {
             if (disposing) db.Dispose();
             base.Dispose(disposing);
+        }
+        
+        [HttpGet, Route("task-types")]
+        [Authorize]
+        public IHttpActionResult GetTaskTypes()
+        {
+            // Return all task types from the database
+            var taskTypes = db.TaskTypes.Select(tt => new { id = tt.TaskTypeId, name = tt.Name }).ToList();
+            return Ok(taskTypes);
         }
     }
 }
