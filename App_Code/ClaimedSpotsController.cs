@@ -29,21 +29,43 @@ namespace Stability
         {
             var user = Membership.GetUser(User.Identity.Name);
             var uid = (Guid)user.ProviderUserKey;
-            var list = db.UserOrganizationEventPositions
+            
+            // First get raw data without any string formatting
+            var rawData = db.UserOrganizationEventPositions
                 .Where(c => c.UserId == uid && c.IsActive)
-                .Select(c => new ClaimDto
+                .Select(c => new 
                 {
-                    id = c.UserOrganizationEventPositionId,
-                    deploymentName = c.OrganizationEventPosition.OrganizationEvent.CampaignName,
-                    date = c.OrganizationEventPosition.DeploymentDate.Value.ToString("yyyy-MM-dd"),
-                    role = c.OrganizationEventPosition.Position.Name,
-                    time = (c.OrganizationEventPosition.ArrivalTime.HasValue && c.OrganizationEventPosition.DepartureTime.HasValue)
-                        ? c.OrganizationEventPosition.ArrivalTime.Value.ToString("hh\\:mm") + " - " + c.OrganizationEventPosition.DepartureTime.Value.ToString("hh\\:mm")
-                        : null,
-                    location = c.OrganizationEventPosition.OrganizationEvent.StagingCity
+                    c.UserOrganizationEventPositionId,
+                    c.OrganizationEventPosition.OrganizationEvent.CampaignName,
+                    c.OrganizationEventPosition.DeploymentDate,
+                    c.OrganizationEventPosition.Position.Name,
+                    c.OrganizationEventPosition.ArrivalTime,
+                    c.OrganizationEventPosition.DepartureTime,
+                    c.OrganizationEventPosition.OrganizationEvent.StagingCity
                 })
                 .ToList();
+
+            // Then apply string formatting in memory
+            var list = rawData.Select(c => new ClaimDto
+            {
+                id = c.UserOrganizationEventPositionId,
+                deploymentName = c.CampaignName,
+                date = c.DeploymentDate.HasValue ? c.DeploymentDate.Value.ToString("yyyy-MM-dd") : string.Empty,
+                role = c.Name,
+                time = (c.ArrivalTime.HasValue && c.DepartureTime.HasValue)
+                    ? FormatTimeSpan(c.ArrivalTime.Value) + " - " + FormatTimeSpan(c.DepartureTime.Value)
+                    : null,
+                location = c.StagingCity
+            }).ToList();
+            
             return Ok(list);
+        }
+
+        // Helper method to format TimeSpan objects
+        private string FormatTimeSpan(TimeSpan timeSpan)
+        {
+            DateTime dateTime = DateTime.Today.Add(timeSpan);
+            return dateTime.ToString("hh:mm");
         }
 
         public class ClaimInput
@@ -62,11 +84,15 @@ namespace Stability
             if (model == null) return BadRequest("Invalid input");
             var user = Membership.GetUser(User.Identity.Name);
             var uid = (Guid)user.ProviderUserKey;
+            
+            // Fetch raw data first without string formatting
             var pos = db.OrganizationEventPositions
-                .FirstOrDefault(p => p.OrganizationEventId == model.deploymentId
-                    && p.DeploymentDate.HasValue && p.DeploymentDate.Value.ToString("yyyy-MM-dd") == model.date
-                    && p.Position.Name == model.role);
+                .Where(p => p.OrganizationEventId == model.deploymentId && p.DeploymentDate.HasValue && p.Position.Name == model.role)
+                .ToList()
+                .FirstOrDefault(p => p.DeploymentDate.Value.ToString("yyyy-MM-dd") == model.date);
+                
             if (pos == null) return BadRequest("Position not found");
+            
             var claim = new UserOrganizationEventPosition
             {
                 UserOrganizationEventPositionId = Guid.NewGuid(),
@@ -77,6 +103,7 @@ namespace Stability
             };
             db.UserOrganizationEventPositions.InsertOnSubmit(claim);
             db.SubmitChanges();
+            
             var dto = new ClaimDto
             {
                 id = claim.UserOrganizationEventPositionId,

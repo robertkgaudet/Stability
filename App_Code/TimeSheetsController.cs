@@ -7,7 +7,7 @@ using System.Web.Security;
 namespace Stability
 {
 // Enable CORS for this controller
-[EnableCors(origins: "*", headers: "*", methods: "*")]
+[EnableCors(origins: "http://localhost:19006", headers: "*", methods: "*", SupportsCredentials = true)]
 [RoutePrefix("api/timesheets")]
     public class TimeSheetsController : ApiController
     {
