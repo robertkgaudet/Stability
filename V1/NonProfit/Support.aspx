@@ -81,17 +81,20 @@
 
         <div class="contact-form">
             <h3>Contact Us for Help</h3>
-            <form id="support-form">
+            <form id="contactForm">
                 <label for="name">Your Name:</label>
                 <input type="text" id="name" name="name" required>
 
                 <label for="email">Your Email:</label>
                 <input type="email" id="email" name="email" required>
 
+                <label for="subject">Subject:</label>
+                <input type="text" id="subject" name="subject" required />
+
                 <label for="message">Your Message:</label>
                 <textarea id="message" name="message" rows="5" required></textarea>
 
-                <button type="submit">Send Message</button>
+                <button type="button" id="btnContactForm">Send Message</button>
             </form>
             <div class="response-message">Your message has been sent successfully!</div>
             <div class="error-message">Oops, there was an error. Please try again.</div>
@@ -101,37 +104,47 @@
     </div>
     <uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 
-    <script>
-        $(document).ready(function () {
-            $("#support-form").submit(function (e) {
-                e.preventDefault(); // Prevent form from submitting the default way
+<script>
+    $(document).ready(function () {
+        $('#btnContactForm').click(function () {
+            let name = $("#name").val();
+            let email = $("#email").val();
+            let subject = $("#subject").val();
+            let message = $("#message").val();
 
-                var formData = {
-                    name: $("#name").val(),
-                    email: $("#email").val(),
-                    message: $("#message").val()
-                };
+            if (name === null || name === "" || name === undefined
+                || email === null || email === "" || email === undefined
+                || subject === null || subject === "" || subject === undefined
+                || message === null || message === "" || message === undefined) {
+                alert("Please enter all required fields!");
+                return;
+            }
 
-                $.ajax({
-                    type: "POST",
-                    url: "send_email.php", // This should be the backend script
-                    data: formData,
-                    success: function (response) {
-                        if (response === "success") {
-                            $(".response-message").show();
-                            $(".error-message").hide();
-                        } else {
-                            $(".response-message").hide();
-                            $(".error-message").show();
-                        }
-                    },
-                    error: function () {
+            $.ajax({
+                type: "POST",
+                url: "/V1/NonProfit/Support.aspx/SendEmail",
+                data: JSON.stringify({ name: name, email: email, subject: subject, message: message }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d === 'success') {
+                        $(".response-message").show();
+                        $(".error-message").hide();
+                        $("#name").val('');
+                        $("#email").val('');
+                        $("#subject").val('');
+                        $("#message").val('');
+                    } else {
                         $(".response-message").hide();
                         $(".error-message").show();
                     }
-                });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error: " + error);
+                }
             });
         });
-    </script>
+    });
+</script>
 
 </asp:Content>

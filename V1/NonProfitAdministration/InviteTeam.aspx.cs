@@ -79,19 +79,19 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 					//Email the user.
 				}
 
-                //Get the team name and creator name to send in the email.
-                var organizationInfo = (from p in dc.Profiles
-                                        join o in dc.UserOrganizations on p.UserId equals o.UserId
-                                        where p.UserId == userId
-                                        select new { organizationName = o.Organization.Name, p.Firstname, senderName = p.Firstname + " " + p.Lastname }).FirstOrDefault();
+				//Get the team name and creator name to send in the email.
+				var organizationInfo = (from p in dc.Profiles
+										join o in dc.UserOrganizations on p.UserId equals o.UserId
+										where p.UserId == userId
+										select new { organizationName = o.Organization.Name, p.Firstname, senderName = p.Firstname + " " + p.Lastname }).FirstOrDefault();
 
-                string senderName				= organizationInfo.senderName;
-				string organizationName			= organizationInfo.organizationName;
-				string firstName				= organizationInfo.Firstname;
+				string senderName = organizationInfo.senderName;
+				string organizationName = organizationInfo.organizationName;
+				string firstName = organizationInfo.Firstname;
 
 				ListDictionary ldEmailBodyReplacements = new ListDictionary();
-				ldEmailBodyReplacements.Add("<% SenderName %>", senderName);
-				ldEmailBodyReplacements.Add("<% TeamName %>", organizationName);
+				//ldEmailBodyReplacements.Add("<% SenderName %>", senderName);
+				//ldEmailBodyReplacements.Add("<% TeamName %>", organizationName);
 				ldEmailBodyReplacements.Add("<% FirstName %>", firstName);
 				ldEmailBodyReplacements.Add("<% UserOrganizationInviteId %>", UserOrganizationInviteId.ToString());
 				string emailFrom = ConfigurationManager.AppSettings["emailFrom"].ToString();
@@ -108,11 +108,10 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 					"~\\EmailTemplates\\MemberInvitation.html",
 					out emailError
 					);
-
 				//SendEmailInvitations(email, new Guid(organizationId), UserOrganizationInviteId, senderName, organizationName, firstName);
-
 			}
 			//Redirect to setup their website.
+			dc.SubmitChanges();
 			Response.Redirect("/V1/NonProfit/Default.aspx?OrganizationId=" + organizationId);
 		}
 	}
