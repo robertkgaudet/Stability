@@ -552,7 +552,7 @@
         </style>
     </asp:Literal>
 		<form id="form1" runat="server" role="form">
-			<div style="margin-bottom:500px;">
+			<div>
 				<div id="header" runat="server">
 					<nav role="navigation">
 						<asp:Image ID="imgLogo" CssClass="pull-left desktop-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png" />
