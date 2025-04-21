@@ -88,25 +88,18 @@ namespace Stability
             var user = Membership.GetUser(User.Identity.Name);
             var uid = (Guid)user.ProviderUserKey;
             
-            // Log the received input
-            System.Diagnostics.Debug.WriteLine($"Claim request received: DeploymentId={model.deploymentId}, Role={model.role}, Date={model.date}, ID={model.id}");
-            
             try
             {
                 // Check if we need to use position ID if provided
                 if (model.id != Guid.Empty || !string.IsNullOrEmpty(model.idString))
                 {
                     // Use the position ID directly if provided
-                    System.Diagnostics.Debug.WriteLine($"Looking up position by ID: {model.id} or idString: {model.idString}");
-                    
                     Guid positionId;
                     // If the ID is a string in the JSON, try to parse it
                     if (model.id == Guid.Empty && !string.IsNullOrEmpty(model.idString))
                     {
-                        System.Diagnostics.Debug.WriteLine($"Trying to parse string ID: {model.idString}");
                         if (!Guid.TryParse(model.idString, out positionId))
                         {
-                            System.Diagnostics.Debug.WriteLine($"Failed to parse position ID from string: {model.idString}");
                             return BadRequest("Invalid position ID format");
                         }
                     }
@@ -115,26 +108,21 @@ namespace Stability
                         positionId = model.id;
                     }
                     
-                    System.Diagnostics.Debug.WriteLine($"Looking up position with ID: {positionId}");
                     var pos = db.OrganizationEventPositions.FirstOrDefault(p => 
                         p.OrganizationEventPositionId == positionId);
                         
                     if (pos == null) 
                     {
-                        System.Diagnostics.Debug.WriteLine($"Position not found with ID: {positionId}");
                         return BadRequest("Position not found");
                     }
                     
                     // Count existing active claims for this position
                     int activeClaimsCount = db.UserOrganizationEventPositions
                         .Count(c => c.OrganizationEventPositionId == pos.OrganizationEventPositionId && c.IsActive);
-                        
-                    System.Diagnostics.Debug.WriteLine($"Position found. NumberNeeded={pos.NumberNeeded}, ActiveClaims={activeClaimsCount}");
                     
                     // Check if there are remaining spots based on NumberNeeded
                     if (activeClaimsCount >= pos.NumberNeeded)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Position {pos.OrganizationEventPositionId} is full: {activeClaimsCount}/{pos.NumberNeeded} spots claimed");
                         // All spots are filled
                         return BadRequest("All spots for this position have already been claimed");
                     }
@@ -149,8 +137,6 @@ namespace Stability
                     };
                     db.UserOrganizationEventPositions.InsertOnSubmit(claim);
                     db.SubmitChanges();
-                    
-                    System.Diagnostics.Debug.WriteLine($"Successfully claimed position {pos.OrganizationEventPositionId} for user {uid}");
                     
                     var dto = new ClaimDto
                     {
@@ -166,8 +152,6 @@ namespace Stability
                 else
                 {
                     // Try to find by other attributes when ID is not provided
-                    System.Diagnostics.Debug.WriteLine($"Looking up position by attributes: DeploymentId={model.deploymentId}, Role={model.role}, Date={model.date}");
-                    
                     var query = db.OrganizationEventPositions
                         .Where(p => p.OrganizationEventId == model.deploymentId);
                         
@@ -179,7 +163,6 @@ namespace Stability
                     // Get all matching positions and filter by date in memory 
                     // (since DateTime formatting in LINQ to SQL can be problematic)
                     var positions = query.ToList();
-                    System.Diagnostics.Debug.WriteLine($"Found {positions.Count} positions matching deployment ID and role");
                     
                     // Apply date filter if present
                     if (!string.IsNullOrEmpty(model.date))
@@ -187,30 +170,23 @@ namespace Stability
                         positions = positions.Where(p => 
                             p.DeploymentDate.HasValue && 
                             p.DeploymentDate.Value.ToString("yyyy-MM-dd") == model.date).ToList();
-                        System.Diagnostics.Debug.WriteLine($"After date filter: {positions.Count} positions remain");
                     }
                     
                     var pos = positions.FirstOrDefault();
                         
                     if (pos == null)
                     {
-                        System.Diagnostics.Debug.WriteLine("No positions found matching the criteria");
                         return BadRequest("Position not found");
                     }
-                    
-                    System.Diagnostics.Debug.WriteLine($"Found position {pos.OrganizationEventPositionId}");
                     
                     // Count existing active claims for this position
                     int activeClaimsCount = db.UserOrganizationEventPositions
                         .Count(c => c.OrganizationEventPositionId == pos.OrganizationEventPositionId && c.IsActive);
-                        
-                    System.Diagnostics.Debug.WriteLine($"Position info: NumberNeeded={pos.NumberNeeded}, ActiveClaims={activeClaimsCount}");
                     
                     // Check if there are remaining spots based on NumberNeeded
                     if (activeClaimsCount >= pos.NumberNeeded)
                     {
                         // All spots are filled
-                        System.Diagnostics.Debug.WriteLine($"Position {pos.OrganizationEventPositionId} is full: {activeClaimsCount}/{pos.NumberNeeded} spots claimed");
                         return BadRequest("All spots for this position have already been claimed");
                     }
                     
@@ -224,8 +200,6 @@ namespace Stability
                     };
                     db.UserOrganizationEventPositions.InsertOnSubmit(claim);
                     db.SubmitChanges();
-                    
-                    System.Diagnostics.Debug.WriteLine($"Successfully claimed position {pos.OrganizationEventPositionId} for user {uid}");
                     
                     var dto = new ClaimDto
                     {
@@ -241,8 +215,6 @@ namespace Stability
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Exception in claim process: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
                 return InternalServerError(ex);
             }
         }
