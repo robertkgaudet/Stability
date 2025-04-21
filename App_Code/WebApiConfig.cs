@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Stability
 {
@@ -8,8 +9,10 @@ namespace Stability
 		{
 			// Web API routes
 
-			// Enable attribute routing
-			config.MapHttpAttributeRoutes();
+            // Enable CORS for localhost:19006 with credentials support
+            config.EnableCors(new EnableCorsAttribute("http://localhost:19006", "*", "*") { SupportsCredentials = true });
+            // Enable attribute routing
+            config.MapHttpAttributeRoutes();
 
 			// Define default route for Web API
 			config.Routes.MapHttpRoute(
