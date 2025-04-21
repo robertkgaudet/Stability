@@ -338,11 +338,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             String phoneNUmber = (String)DataBinder.Eval(dataItem.DataItem, "phoneNUmber");
             String description = (String)DataBinder.Eval(dataItem.DataItem, "Description");
             V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
+            bool receiveSMSNotifications = DataBinder.Eval(dataItem.DataItem, "ReceiveSMSNotifications") != DBNull.Value &&
+                                    (bool)DataBinder.Eval(dataItem.DataItem, "ReceiveSMSNotifications");
+
             if (ucTeamLogo != null)
             {
                 ucTeamLogo.UserId = userId;
                 ucTeamLogo.LoadNameWithBadges();
             }
+
             MembershipUser profileUser = Membership.GetUser(userId);
             bool isLockedOut = false;
             HtmlGenericControl divFooter = (HtmlGenericControl)e.Item.FindControl("divFooter");
@@ -370,6 +374,14 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 else
                 {
                     h5Container.Style.Remove("display");
+                }
+                if (receiveSMSNotifications)
+                {
+                    btnContact.Visible = true;
+                }
+                else
+                {
+                    btnContact.Visible = false;
                 }
                 btnManage.Visible = true;
                 isLockedOut = !profileUser.IsApproved;
@@ -714,8 +726,10 @@ internal class PeopleList
     public DateTime LastLoginDate { get; set; }
     public DateTime LastActivityDate { get; set; }
     public bool? IsApproved { get; set; }
+    public bool? ReceiveSMSNotifications { get; set; }
 
-    public PeopleList(string firstname, DateTime createDate, string description, string loweredEmail, string phoneNumber, string lastname, Guid userId, DateTime? dateVettingCompleted, DateTime? dateVettingStarted, string vettingNotes, bool? vettingActive, bool? vettingComplete, bool? passedVetting, string title, string zelloName, DateTime lastLoginDate, DateTime lastActivityDate, bool? isApproved)
+
+    public PeopleList(string firstname, DateTime createDate, string description, string loweredEmail, string phoneNumber, string lastname, Guid userId, DateTime? dateVettingCompleted, DateTime? dateVettingStarted, string vettingNotes, bool? vettingActive, bool? vettingComplete, bool? passedVetting, string title, string zelloName, DateTime lastLoginDate, DateTime lastActivityDate, bool? isApproved, bool? receiveSMSNotifications)
     {
         Firstname = firstname;
         CreateDate = createDate;
@@ -735,6 +749,7 @@ internal class PeopleList
         LastLoginDate = lastLoginDate;
         LastActivityDate = lastActivityDate;
         IsApproved = isApproved;
+        ReceiveSMSNotifications = receiveSMSNotifications;
     }
 
     public PeopleList()
@@ -745,24 +760,27 @@ internal class PeopleList
     {
         PeopleList other = obj as PeopleList;
         return !ReferenceEquals(other, null) &&
-               Firstname == other.Firstname &&
-               CreateDate == other.CreateDate &&
-               Description == other.Description &&
-               LoweredEmail == other.LoweredEmail &&
-               Lastname == other.Lastname &&
-               UserId.Equals(other.UserId) &&
-               DateVettingCompleted == other.DateVettingCompleted &&
-               DateVettingStarted == other.DateVettingStarted &&
-               VettingNotes == other.VettingNotes &&
-               VettingActive == other.VettingActive &&
-               VettingComplete == other.VettingComplete &&
-               PassedVetting == other.PassedVetting &&
-               Title == other.Title &&
-               ZelloName == other.ZelloName &&
-               LastLoginDate == other.LastLoginDate &&
-               LastActivityDate == other.LastActivityDate &&
-               IsApproved == other.IsApproved;
+                Firstname == other.Firstname &&
+                CreateDate == other.CreateDate &&
+                Description == other.Description &&
+                LoweredEmail == other.LoweredEmail &&
+                Lastname == other.Lastname &&
+                UserId.Equals(other.UserId) &&
+                DateVettingCompleted == other.DateVettingCompleted &&
+                DateVettingStarted == other.DateVettingStarted &&
+                VettingNotes == other.VettingNotes &&
+                VettingActive == other.VettingActive &&
+                VettingComplete == other.VettingComplete &&
+                PassedVetting == other.PassedVetting &&
+                Title == other.Title &&
+                ZelloName == other.ZelloName &&
+                LastLoginDate == other.LastLoginDate &&
+                LastActivityDate == other.LastActivityDate &&
+                IsApproved == other.IsApproved &&
+                // Compare new fields
+                ReceiveSMSNotifications == other.ReceiveSMSNotifications;
     }
+
 
     public override int GetHashCode()
     {
@@ -784,6 +802,8 @@ internal class PeopleList
         hashCode = hashCode * -1521134295 + LastLoginDate.GetHashCode();
         hashCode = hashCode * -1521134295 + LastActivityDate.GetHashCode();
         hashCode = hashCode * -1521134295 + IsApproved.GetHashCode();
+        hashCode = hashCode * -1521134295 + ReceiveSMSNotifications.GetHashCode();
+
         return hashCode;
     }
 }
