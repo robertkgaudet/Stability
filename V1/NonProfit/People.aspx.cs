@@ -66,6 +66,18 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId)
                             select new { o.Name, o.LogoSquare, o.HideTeamList, o.OwnerId, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName, o.EnableTeamMemberVerification }).SingleOrDefault();
+        hiddenManageShowDonateButtonn.Value =
+        (User.IsInRole("Administrator")
+        || (isUserOnTeam && User.IsInRole("Team Administrator"))
+        || (organization != null && organization.EnableTeamMemberVerification == true)
+        || isOwner)
+        ? "1" : "0";
+
+        bool showAdminControls = User.IsInRole("Administrator") || (isUserOnTeam && User.IsInRole("Team Administrator")) || isOwner;
+
+        phAdminControls.Visible = showAdminControls;
+        hiddenAdminRole.Value = showAdminControls ? "1" : "0";
+        hiddenShowTeamLogo.Value = chkManageShowDonateButton.Visible ? "1" : "0";
         hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true || isOwner ? "1" : "0";
         string squareLogo = string.Empty;
         if (organization != null)
@@ -191,6 +203,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 divUpdateMessage.Visible = true;
                 litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr>You must be on this team to see the team members.";
             }
+
+
         }
         else
         {
@@ -518,11 +532,13 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             {
                 var positions = (from pos in dc.Positions
                                  where pos.OrganizationId == orgId
+                                 orderby pos.Name
                                  select new
                                  {
                                      pos.PositionId,
                                      pos.Name
                                  }).ToList();
+
                 ddlTraining.DataSource = positions;
                 ddlTraining.DataTextField = "Name";
                 ddlTraining.DataValueField = "PositionId";
