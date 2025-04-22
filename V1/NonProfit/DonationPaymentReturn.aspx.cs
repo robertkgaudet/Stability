@@ -83,13 +83,16 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
             {
                 ListDictionary ldEmailBodyReplacements = new ListDictionary
             {
-                { "<% DonorFirstName %>", donation.FirstName },
-                { "<% DonorLastName %>", donation.LastName },
-                { "<% RecipLastName %>", "Update Later" }
+                      { "<% DonorFirstName %>", donation.FirstName },
+                       { "<% DonorLastName %>", donation.LastName },
+                     { "<% DonationDate %>", donation.CreatedAt.ToString("MM/dd/yyyy") },
+                      { "<% DonationAmount %>", donation.Amount.ToString("F2") }
             };
-
+                Organization organization = dc.Organizations.Where(x => x.OrganizationId == new Guid(donation.AuthorizedTransactionId)).FirstOrDefault();
+                EmailTemplate emailTemplate = dc.EmailTemplates
+                .Where(e => e.OrganizationId == organization.OrganizationId)
+                .FirstOrDefault();
                 string error = string.Empty;
-
                 Tools.SendEmail(
                      string.Empty,
                      "Thanks for Donation to Stability",
@@ -98,12 +101,12 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
                      donation.FirstName + " " + donation.LastName,
                      string.Empty,
                      string.Empty,
-                     "~\\EmailTemplates\\DonorLetter.html",
+                     //"~\\EmailTemplates\\DonorLetter.html",
+                     emailTemplate.EmailBody,
                      out error);
 
                 if (!string.IsNullOrEmpty(donation.AuthorizedTransactionId))
                 {
-                    Organization organization = dc.Organizations.Where(x => x.OrganizationId == new Guid(donation.AuthorizedTransactionId)).FirstOrDefault();
                     ldEmailBodyReplacements = new ListDictionary
                 {
                     { "<% OwnerName %>", organization.Name },
