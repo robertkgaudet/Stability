@@ -36,151 +36,162 @@
     <script src="../../Homer/vendor/ladda/dist/ladda.jquery.min.js"></script>
 
     <style>
-        .website {
-            background-color: #5E2E91;
-            padding: 17px;
+    #messageModelTitle {
+        width: 94%;
+        margin-left: 19px;
+    }
+
+   #ContentPlaceHolder1_txtMessage {
+        width: 94% !important;
+        margin-left: 19px;
+    }
+
+    .website {
+        background-color: #5E2E91;
+        padding: 17px;
+        color: white;
+    }
+
+        .website:hover {
+            background-color: #902F91;
             color: white;
+            cursor: pointer;
         }
 
-            .website:hover {
-                background-color: #902F91;
-                color: white;
-                cursor: pointer;
-            }
+    .modal-dialog {
+        margin-top: 100px;
+    }
 
-        .modal-dialog {
-            margin-top: 100px;
-        }
+    .container-search {
+        margin-bottom: 10px;
+    }
 
-        .container-search {
-            margin-bottom: 10px;
-        }
+    .panel-heading h4 {
+        margin-bottom: 0 !important;
+        margin-top: -4px;
+    }
 
-        .panel-heading h4 {
-            margin-bottom: 0 !important;
-            margin-top: -4px;
-        }
+    .container-search {
+        margin-top: 5px !important;
+    }
 
-        .container-search {
-            margin-top: 5px !important;
-        }
+    .fix {
+        margin-right: 8px;
+        margin-left: 8px;
+    }
 
-        .fix {
-            margin-right: 8px;
-            margin-left: 8px;
-        }
+    .m-b-xs {
+        margin-bottom: 0;
+    }
 
-        .m-b-xs {
-            margin-bottom: 0;
-        }
+    .messageButton {
+        margin-left: auto;
+        padding: 5px 15px;
+        font-size: 14px;
+        border-radius: 5px;
+    }
 
-        .messageButton {
-            margin-left: auto;
-            padding: 5px 15px;
-            font-size: 14px;
-            border-radius: 5px;
-        }
+    .input-group {
+        display: flex;
+        align-items: center;
+        margin-right: -40px
+    }
 
-        .input-group {
-            display: flex;
-            align-items: center;
-            margin-right: -40px
-        }
+    .input-group-append {
+        margin-left: 10px;
+    }
 
-        .input-group-append {
-            margin-left: 10px;
-        }
+    .chkSelectAll {
+        margin-top: 9px;
+    }
 
-        .chkSelectAll {
-            margin-top: 9px;
-        }
+    input#ContentPlaceHolder1_chkSelectAll {
+        margin-top: 10px;
+        margin-right: 10px;
+    }
 
-        input#ContentPlaceHolder1_chkSelectAll {
-            margin-top: 10px;
-            margin-right: 10px;
-        }
+    .stability-badge {
+        margin-right: 4px !important;
+    }
 
-        .stability-badge {
-            margin-right: 4px !important;
-        }
+    .form-check label {
+        margin-left: 8px;
+        font-weight: normal !important;
+    }
 
-        .form-check label {
-            margin-left: 8px;
-            font-weight: normal !important;
-        }
+    .margin {
+        margin-left: -6px;
+        margin-right: 6px;
+    }
 
-        .margin {
-            margin-left: -6px;
-            margin-right: 6px;
-        }
+    .justify-content-center {
+        /*  display: flex !important;*/
+        justify-content: center !important;
+    }
 
-        .justify-content-center {
-            /*  display: flex !important;*/
-            justify-content: center !important;
-        }
+    .b2 {
+        margin-bottom: 160px;
+        margin-left: 110px;
+        width: 123px;
+    }
 
-        .b2 {
-            margin-bottom: 160px;
-            margin-left: 110px;
-            width: 123px;
-        }
+    .form-group {
+        margin-bottom: 15px !important;
+        margin-left: 28px !important;
+        margin: -6px;
+    }
 
-        .form-group {
-            margin-bottom: 15px !important;
-            margin-left: 28px !important;
-            margin: -6px;
-        }
+    .note-editor.note-frame.panel.panel-default {
+        margin-left: 22px;
+        width: 655px;
+    }
 
-        .note-editor.note-frame.panel.panel-default {
-            margin-left: 22px;
-            width: 655px;
-        }
+    button.ladda-button.ladda-button-demo.ladda-button-email.btn.btn-primary.b2 {
+        margin-bottom: 155px;
+    }
 
-        button.ladda-button.ladda-button-demo.ladda-button-email.btn.btn-primary.b2 {
-            margin-bottom: 155px;
-        }
-
-        /*  label {
+    /*  label {
             margin: 16px 0px 10px 10px;
             font-size: 17px;
         }
 */
 
-        .modal-body {
-            position: relative;
-            padding: 15px;
-            margin-left: -14px;
-            margin-bottom: -13px;
-        }
+    .modal-body {
+        position: relative;
+        padding: 15px;
+        margin-left: -14px;
+        margin-bottom: -13px;
+    }
 
-        #txtEmail {
-            margin-right: 0px !important;
-        }
+    #txtEmail {
+        margin-right: 0px !important;
+    }
 
-        .input-group-append {
-            margin-left: -1px; /* Removes unwanted space */
-        }
+    .input-group-append {
+        margin-left: -1px; /* Removes unwanted space */
+    }
 
-        button.btn.btn-primary {
-            margin-left: 10px;
-            margin-bottom: 90px;
-        }
-        /*  <----- -------------/>*/
-        .custom-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #ccc;
-            border-top: 4px solid #007bff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-            margin-top: 106px;
-        }
+    button.btn.btn-primary {
+        margin-left: 10px;
+        margin-bottom: 90px;
+    }
+    /*  <----- -------------/>*/
+    .custom-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #ccc;
+        border-top: 4px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+        margin-top: 106px;
+    }
 
-        #ContentPlaceHolder1_txtManageVettingNotes {
-            margin-left: -9px;
-        }
-    </style>
+    #ContentPlaceHolder1_txtManageVettingNotes {
+        margin-left: -9px;
+    }
+
+  </style>
     <script>
         var recipientsName;
         var recipientsEmail;
@@ -838,7 +849,8 @@
             Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
     </div>
     <asp:ScriptManager runat="server" ID="ScriptManager1" />
-    <div class="panel-body" style="margin-bottom: -27px; padding: 0px;">
+    <div class="panel-body" style="        margin-bottom: -27px;
+        padding: 0px;">
         <div class="col-lg-12">
             <div class="row">
                 <div class="hpanel hblue">
@@ -848,14 +860,14 @@
                             <i class="fa fa-chevron-down"></i>
                         </button>
                     </div>
-                    <h4 style="margin-left: 18px;">Search</h4>
+                    <h4 style="        margin-left: 18px;">Search</h4>
                     <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
                             <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center"
-                                style="margin-bottom: 20px;" visible="false">
+                                style="        margin-bottom: 20px;" visible="false">
                                 <asp:Literal ID="litMessage" runat="server"></asp:Literal>
                             </div>
-                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;"
+                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="        margin-bottom: 20px;"
                                 visible="false">
                                 <asp:Literal ID="litFilterMessage" runat="server"></asp:Literal>
                             </div>
@@ -928,7 +940,7 @@
                                         <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3" id="radiusSection" style="display: none;">
+                                <div class="col-md-6 mb-3" id="radiusSection" style="        display: none;">
                                     <div class="form-group fix">
                                         <b>Radius (km):</b>
                                         <input type="range" id="radiusSlider" min="100" max="1000" step="100" value="100"
@@ -969,7 +981,8 @@
                                     </div>
                                 </div>
 
-                                <div class="row mt-4" style="margin-right: 6px; margin-bottom: 8px;">
+                                <div class="row mt-4" style="        margin-right: 6px;
+        margin-bottom: 8px;">
                                     <div class="col-md-12 text-right ">
                                         <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2"
                                             Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
@@ -1002,14 +1015,15 @@
                         <asp:Repeater ID="rptVolunteers" runat="server" OnItemDataBound="rptVolunteers_ItemDataBound">
                             <ItemTemplate>
                                 <tr>
-                                    <td style="background-color: white;">
+                                    <td style="        background-color: white;">
                                         <div class="hpanel">
                                             <div class="panel-body">
 
 
-                                                <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: normal;">
+                                                <h5 class="m-b-xs" id="h5Container" runat="server" style="        align-items: center;
+        justify-content: normal;">
 
-                                                    <input type="checkbox" runat="server" class="select-user" style="margin-top: -2px;"
+                                                    <input type="checkbox" runat="server" class="select-user" style="        margin-top: -2px;"
                                                         data-userid='<%# Eval("UserID") %>' visible='<%# (Request.QueryString["type"] == "email" || Request.QueryString["type"] == "sms") %>' />
 
                                                     &nbsp;&nbsp;                              
@@ -1038,7 +1052,7 @@
                                                         OnClientClick="setUserId(this); fetchUserData(); return false;"></asp:Button>
                                                 </div>
 
-                                                <div class="text-muted small" style="width: 100%;">
+                                                <div class="text-muted small" style="        width: 100%;">
                                                     <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
                                                 </div>
                                             </div>
@@ -1119,16 +1133,15 @@
 
                 </div>
                 <!-- Success and Error Messages -->
-                <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
+                <div id="divManageSuccess" class="alert alert-success text-uppercase" style="        display: none;">
                     <i class="fa fa-check-circle"></i>Changes saved successfully.
                 </div>
-                <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
+                <div id="divManageError" class="alert alert-warning text-uppercase" style="        display: none;">
                     <i class="fa fa-exclamation-triangle"></i>
                     <div id="divManageErrorMessage"></div>
                 </div>
                 <!-- Modal body -->
-                <div class="modal-body">
-                    <div class="form-group form-check donateDiv">
+                <div         class ="modal-body"> <div class="form-group form-check donateDiv">
                         <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
                         <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
                             Team Verified
