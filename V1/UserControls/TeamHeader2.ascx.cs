@@ -28,6 +28,33 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 		ucTeamNavigation.PageName = _pageName;
 		ucTeamNavigation.TeamName = _teamName;
 		ucTeamNavigation.organizationId = _organizationId;
+
+		if (!String.IsNullOrEmpty(_organizationId))
+		{
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+			var parentOrganization = (from o in dc.Organizations
+									  where o.OrganizationId == new Guid(_organizationId)
+									  select new { o.Name, o.ParentOrganizationId }).SingleOrDefault();
+
+			if(parentOrganization != null)
+			{
+				if(parentOrganization.ParentOrganizationId != new Guid(_organizationId))
+				{
+					var parentOrganizationName = (from o in dc.Organizations
+												where o.OrganizationId == parentOrganization.ParentOrganizationId
+												  select new { o.Name }).SingleOrDefault();
+					if(parentOrganizationName != null )
+					{ 
+						//Don't show if this IS the parent id.
+						hypParentOrganization.Visible = true;
+						litChapterLabel.Visible = true;
+						hypParentOrganization.Text = parentOrganizationName.Name;
+						hypParentOrganization.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + parentOrganization.ParentOrganizationId;
+					}
+				}
+			}
+		}
 	}
 
 	public string StreamClass

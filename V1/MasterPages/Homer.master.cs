@@ -44,6 +44,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
     public string calendarUpdated = "grey";
     public string _masterCoverImage = "";
     public string FeatureTypeCounterTitle = string.Empty;
+	public string adminHeaderStyle = "{background-color:#5e2e91;height:58px;}";
     public string TimeAgo { get; set; }
     public string notificationCounting { get; set; }
     public class FeatureTypeCounter
@@ -59,8 +60,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         divSettings.Visible = false;
         litVolunteerPending.Text = " Volunteer";
         litVolunteerIcon.Text = "<i class=\"fa fa-heart\"></i>";
-
-
+		
         PlaceHolder PlaceHolderContent = (PlaceHolder)FindControl("PlaceHolderContent");
 
         if (PlaceHolderContent != null)
@@ -141,13 +141,19 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
             divSettings.Visible = true;
             divLogin.Visible = false;
 
-            //Get the users information.
-            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			//Load users groups.
+
+			BindUserGroups();
+
+			//Get the users information.
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
             if (HttpContext.Current.User.IsInRole("Administrator"))
             {
                 adminFeatureSection.Visible = true;
+				adminHeaderStyle = "{position: fixed; top: 65px; left: 0;width: 100%;z-index: 9999; background-color: #5e2e91; height: 58px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}";
 
-                string FeatureTypeRedirectUrl = HttpContext.Current.Request.Url.AbsolutePath;
+
+				string FeatureTypeRedirectUrl = HttpContext.Current.Request.Url.AbsolutePath;
 
                 if (!string.IsNullOrEmpty(FeatureTypeRedirectUrl))
                 {
@@ -606,9 +612,64 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         }
     }
 
+	protected void rptUserGroups_ItemDataBound(object sender, RepeaterItemEventArgs e)
+	{
+		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+		{
+			RepeaterItem dataItem = (RepeaterItem)e.Item;
 
+			// Optionally, manipulate values here (e.g., URL formatting)
+			string organizationUrl = "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
+			string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
+			string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
+			Guid ownerId = (Guid)DataBinder.Eval(dataItem.DataItem, "OwnerId");
+			string imgTeamPath = "/V1/Images/Logo-Placeholder.png";
+			string isOwner = string.Empty;
+			
+			if(ownerId != null)
+			{
+				if(ownerId == userId)
+				{
+					//User is the owner of the group.
+					isOwner = "*";
+				}
+			}
 
-    private bool CheckResources(Guid userId)
+			if (!string.IsNullOrEmpty(organizationTeamLogo))
+			{
+				imgTeamPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
+			}
+
+			// Optional: set values manually to controls inside the template if you prefer
+			// e.g., if using Literal controls instead of Eval()
+
+			Literal lit = (Literal)e.Item.FindControl("litGroupLink");
+			lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + isOwner + "</a>";
+			Image imgTeam = (Image)e.Item.FindControl("imgTeam");
+			imgTeam.ImageUrl = imgTeamPath;
+		}
+	}
+
+	private void BindUserGroups()
+	{
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		var userGroups = (from g in dc.UserOrganizations
+						  join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
+						  where g.UserId == userId
+						  orderby o.Name
+						  select new
+						  {
+							  OrganizationName = o.Name,
+							  OrganizationId = o.OrganizationId,
+							  imgTeam = o.LogoSquare,
+							  OwnerId = o.OwnerId
+						  }).ToList();
+
+		rptUserGroups.DataSource = userGroups;
+		rptUserGroups.DataBind();
+	}
+
+	private bool CheckResources(Guid userId)
     {
         bool hasResources = false;
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
