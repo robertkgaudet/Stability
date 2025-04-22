@@ -289,48 +289,46 @@
         </script>
 
 		<style>
-			#featureTypeCounter {
-				margin-right: 17px;
-				margin-top: 20px;
-				color: white;
+			#featureTypeCounter{
+				    margin-right: 17px;
+					margin-top: 20px;
+					color: white;
 			}
-
-			#featureCounter {
-				top: 0;
-				bottom: 0;
-				right: 0;
-				left: 0;
-				margin-top: 0;
-				margin-bottom: 0;
-				margin-right: 0;
-				margin-left: 0;
+			#featureCounter{
+				top:0;
+				bottom:0;
+				right:0;
+				left:0;
+				margin-top:0;
+				margin-bottom:0;
+				margin-right:0;
+				margin-left:0;
 			}
+			    #notificationDropdown a:hover {
+					background: none;
+				}
+				#notificationDropdown a {
+					background: none;
+					border-bottom:none;
+				}
 
-			#notificationDropdown a:hover {
-				background: none;
+            .btn-purple
+            {
+                background-color:#5E2E91;
+                color:white;
+            }
+          .toast-message
+			{
+               color: #000;
+            }
+			.bodyBGColor
+			{
+				background-color:#F1F3F6;
 			}
-
-			#notificationDropdown a {
-				background: none;
-				border-bottom: none;
-			}
-
-			.btn-purple {
-				background-color: #5E2E91;
-				color: white;
-			}
-
-			.toast-message {
-				color: #000;
-			}
-
-			.bodyBGColor {
-				background-color: #F1F3F6;
-			}
-
-			.content {
-				background-color: #F1F3F6 !important;
-				color: #6A6C6F;
+			.content
+			{
+				background-color:#F1F3F6 !important;
+				color:#6A6C6F;
 			}
 
 			#header
@@ -345,136 +343,107 @@
 				margin-top:-10px;
 				padding:18px 5px;
 			}
-
-			.header-link {
-				background: none;
-				border: none;
-				margin-top: -10px;
-				padding: 18px 5px;
+			.header-link:hover
+			{
+				background:none;
+				border:none;
 			}
-
-				.header-link:hover {
-					background: none;
-					border: none;
-				}
-
-			#<%=imgProfile.ClientID% > :hover {
-				cursor: pointer;
+			#<%=imgProfile.ClientID%>:hover
+			{
+				cursor:pointer;
 			}
-
-			.fa-bars {
-				height: 50px;
-				margin-left: -20px;
+			.fa-bars
+			{
+				height:50px;
+				margin-left:-20px;
 			}
-
-				.fa-bars:hover {
-					color: none;
-				}
-
-			#<%=imgProfile.ClientID% > {
-				width: 60%;
+			.fa-bars:hover
+			{
+				color:none;
 			}
+			#<%=imgProfile.ClientID%> {width:60%;}
 
-			.toggle.ios, .toggle-on.ios, .toggle-off.ios {
-				border-radius: 10px;
-				width: 200px;
+			.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 10px; width:200px; }
+			.toggle.ios .toggle-handle { border-radius: 10px; }
+			#<%=imgLogo.ClientID%>
+			{
+				margin:8px;
 			}
-
-				.toggle.ios .toggle-handle {
-					border-radius: 10px;
-				}
-
-			#<%=imgLogo.ClientID% > {
-				margin: 8px;
+			#<%=imgLogo.ClientID%>:hover
+			{
+				cursor:pointer;
 			}
-
-				#<%=imgLogo.ClientID% > :hover {
-					cursor: pointer;
-				}
-
-			.liUserAction:hover {
-				cursor: pointer;
-				background-color: none;
-				color: white;
+			.liUserAction:hover
+			{
+				cursor:pointer;
+				background-color:none;
+				color:white;
 			}
-
-			.ul_legend li {
+			.ul_legend li
+			{
 				display: inline-block;
 			}
-
-			.link-margin {
-				margin-top: 10px;
+			.link-margin{
+				margin-top:10px;
 			}
 		</style>
         <style>
-        	.skin-option {
-        		position: fixed;
-        		text-align: center;
-        		right: -1px;
-        		padding: 10px;
-        		font-size: 12px;
-        		top: 5px;
-        		text-transform: uppercase;
-        		background-color: #ffffff;
-        		box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.05), 10px 5px 7px 3px rgba(0, 0, 0, .1);
-        		border-radius: 4px 0 0 4px;
-        		z-index: 100000;
-        	}
+			.skin-option {
+					position: fixed;
+					text-align: center;
+					right: -1px;
+					padding: 10px;
+					font-size:12px;
+					top: 5px;
+					text-transform: uppercase;	
+					background-color: #ffffff;
+					box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.05), 10px 5px 7px 3px rgba(0, 0, 0, .1);
+					border-radius: 4px 0 0 4px;
+					z-index: 100000;
+				}
+			.pe-7s-mail, .pe-7s-config, .pe-7s-keypad
+			{
+				color:white;
+			}
+			.pe-7s-mail:hover, .pe-7s-config:hover, .pe-7s-keypad:hover
+			{
+				color:black;
+			}
+			.text-danger{color:#FF0000;}
+			.text-warning{color:#ffb606;}
+			.text-success{color:#63CB31;}
+			.text-website{color:#5E2E91;}
 
-        	.pe-7s-mail, .pe-7s-config, .pe-7s-keypad {
-        		color: white;
-        	}
+			.divMasterCover {
+				width: 100%;
+				height: 100vh; /* Full viewport height */
+				background-image: url('<%=_masterCoverImage%>'); /* Path to your image */
+				background-size: cover; /* Scale the image to cover the entire div */
+				background-position: center; /* Center the image */
+				background-repeat: no-repeat; /* Prevent the image from repeating */
+				height:300px;
+				margin-left:-1px;
+				margin-top:0px;
+				margin-bottom:-200px;
+				background-color:#ccc;
+			}
 
-        		.pe-7s-mail:hover, .pe-7s-config:hover, .pe-7s-keypad:hover {
-        			color: black;
-        		}
+			.mobileFooter {
+			  position: fixed;
+			  bottom: -20px;
+			  width: 100%;
+			  background-color: #f1f1f1;
+			  padding: 10px;
+			  padding-bottom:50px;
+			  text-align: center;
+			  /* Additional styling for the footer */
+			}
 
-        	.text-danger {
-        		color: #FF0000;
-        	}
-
-        	.text-warning {
-        		color: #ffb606;
-        	}
-
-        	.text-success {
-        		color: #63CB31;
-        	}
-
-        	.text-website {
-        		color: #5E2E91;
-        	}
-
-        	.divMasterCover {
-        		width: 100%;
-        		height: 100vh; /* Full viewport height */
-        		background-image: url('<%=_masterCoverImage%>'); /* Path to your image */
-        		background-size: cover; /* Scale the image to cover the entire div */
-        		background-position: center; /* Center the image */
-        		background-repeat: no-repeat; /* Prevent the image from repeating */
-        		height: 300px;
-        		margin-left: -1px;
-        		margin-top: 0px;
-        		margin-bottom: -200px;
-        		background-color: #ccc;
-        	}
-
-        	.mobileFooter {
-        		position: fixed;
-        		bottom: -20px;
-        		width: 100%;
-        		background-color: #f1f1f1;
-        		padding: 10px;
-        		padding-bottom: 50px;
-        		text-align: center;
-        		/* Additional styling for the footer */
-        	}
-
-        	@media only screen and (min-width: 768px) {
-        		.mobileFooter {
-        			display: none;
-        		}
-        	}
+			@media only screen and (min-width: 768px) {
+			  .mobileFooter {
+				display: none;
+			  }
+			}
 
 			.text-light-grey
 			{
