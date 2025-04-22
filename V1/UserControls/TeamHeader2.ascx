@@ -147,7 +147,8 @@
 									</p>
 								</div>
 								<div class="col-xs-12 col-lg-4 project-info">
-							
+									<asp:Literal id="litChapterLabel" Text="Chapter of " runat="server" Visible="false"></asp:Literal>
+									<asp:HyperLink ID="hypParentOrganization" runat="server" Visible="false"></asp:HyperLink>
 								</div>
 							</div>
 						</div>

@@ -15,11 +15,11 @@
         var state;
         var zip;
         var lookupComplete = false;
+        var IsDuplicateClear = true;
 
         $(document).ready(function () {
 
             $('#divAddressMessage').hide();
-            $('#divMessage').hide();
             $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
 <%--		<%=preselectedDisasterJQuery%>
 
@@ -41,8 +41,64 @@
             });
         });
 
+        function CheckDuplicate(controlName, sender) {
+            if (sender.value) {
+                $.ajax(
+                    {
+                        type: "GET",
+                        url: "/V1/Handlers/GetDuplicateUserDetails.ashx?control=" + controlName + "&value=" + sender.value,
+                        contentType: "text/plain; charset=utf-8",
+                        dataType: "html",
+                        success: function (data) {
+                            if (data == "Yes") {
+                                IsDuplicateClear = false;
+                                if (controlName == "Email") {
+                                    $(".error-message-email").show();
+                                    $(".response-message-email").hide();
+                                }
+                                else {
+                                    $(".error-message-username").show();
+                                    $(".response-message-username").hide();
+                                }
+                                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                            }
+                            else {
+                                IsDuplicateClear = true;
+                                if (controlName == "Email") {
+                                    $(".error-message-email").hide();
+                                    $(".response-message-email").show();
+                                }
+                                else {
+                                    $(".error-message-username").hide();
+                                    $(".response-message-username").show();
+                                }
+                                if (lookupComplete) {
+                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                }
+                            }
+                        },
+                        error: function (request, status, error) {
+                            if (controlName == "Email") {
+                                $(".error-message-email").text("An error occurred. Please try again.").show();
+                                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                            }
+                            else {
+                                $(".error-message-username").text("An error occurred. Please try again.").show();
+                                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                            }
+                        }
+                    });
+            }
+            else {
+                $(".error-message-username").hide();
+                $(".response-message-username").hide();
+                $(".error-message-email").hide();
+                $(".response-message-email").hide();
+                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+            }
+        }
+
         function CheckAddressValues(controlName, sender) {
-            debugger;
             switch (controlName) {
                 case "address":
                     if (sender.value) {
@@ -98,17 +154,21 @@
                                 var county = results[9];
                                 var googlePlaceId = results[10];
                                 var formattedAddress = results[11];
-                                var addressId = results[13];
+                                var locationType = results[13];
+                                var cityCode = results[14];
+                                var addressId = results[15];
 
                                 $("#divMapMessage").addClass("alert-success");
                                 $("#divMapMessage").removeClass("alert-danger");
                                 $("#iFontAwesome").removeClass("fa-warning");
                                 $("#iFontAwesome").addClass("fa-map-marker");
-                                var successMessage = " Google successfully matched your address and returned the following information. (" + data + ")";
+                                var successMessage = "Address Lookup Successful!";
                                 $("#<%=hidAddressData.ClientID%>").val(data);
                                 $('#<%=lblAddressMessage.ClientID%>').text(successMessage);
                                 lookupComplete = true;
-                                $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                if (IsDuplicateClear) {
+                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                }
                             }
                             else if (duplicate == 'True' || duplicate == 'true') {
                                 //Address already exists.
@@ -120,7 +180,9 @@
                                 lookupComplete = false;
                                 var errorMessage = " This address already exists (" + address + "). Press 'Next' to edit in the Stability Location Manager. Web Service Message: " + data;
                                 $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
-                                $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                if (IsDuplicateClear) {
+                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                }
                             }
                             else {
                                 //Error getting the information
@@ -152,6 +214,74 @@
         .logo-name:hover {
             cursor: pointer;
         }
+			
+		.rotating-logo:hover .spin-label {
+			color: #5a2ca0;
+		}
+		/* Base logo container */
+		.rotating-logo {
+			justify-content: center;
+			align-items: center;
+			margin: 10px auto;
+			width: 100px;
+			height: 100px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+			cursor: pointer; /* 👈 This makes the pinwheel show the finger cursor on hover */
+		}
+
+
+		/* Already defined keyframes */
+		@keyframes spin {
+			from {
+				transform: rotate(0deg);
+			}
+
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		@keyframes spin-reverse {
+			from {
+				transform: rotate(0deg);
+			}
+
+			to {
+				transform: rotate(-360deg);
+			}
+		}
+
+		/* Base logo */
+		.rotating-logo img {
+			width: 100px;
+			height: auto;
+			animation: spin 5s linear infinite;
+			transition: all 0.3s ease-in-out;
+		}
+
+		/* Behaviors */
+		.rotating-logo.fast img {
+			animation-duration: 0.8s;
+		}
+
+		.rotating-logo.slow img {
+			animation-duration: 12s;
+		}
+
+		.rotating-logo.reverse img {
+			animation-name: spin-reverse;
+		}
+
+		.rotating-logo.paused img {
+			animation-play-state: paused;
+		}
+
+		.rotating-logo.burst img {
+			animation-duration: 0.4s;
+		}
     </style>
     <style>
         .dropdown-wrapper {
@@ -188,6 +318,38 @@
             color: #495057;
             pointer-events: none;
         }
+
+        .response-message {
+            font-size: 20px;
+            color: green;
+            display: none;
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+            display: none;
+        }
+		
+		#nonProfit {
+			max-height: 350px;
+			overflow-y: auto;
+			overflow-x: hidden;
+			font-size: 16px;
+			padding: 12px 20px;
+		}	
+		#nonProfit::-webkit-scrollbar {
+		width: 16px; /* wider scrollbar */
+		}
+
+		#nonProfit::-webkit-scrollbar-thumb {
+			background-color: #888; /* color of scrollbar handle */
+			border-radius: 8px; /* rounded corners */
+		}
+
+		#nonProfit::-webkit-scrollbar-thumb:hover {
+			background-color: #555; /* color on hover */
+		}
     </style>
 
 </asp:Content>
@@ -198,6 +360,9 @@
         <div class="col-xs-10 col-sm-8 col-sm-6 col-lg-6" style="min-width: 450px !important; max-width: 500px !important;">
             <div class="middle-box text-center loginscreen animated fadeInDown">
                 <h1 class="loginLogo">
+					<div class="rotating-logo" id="rotatingLogo">
+						<img src="/V1/Images/pinwheel.png" alt="Stability Logo" />
+					</div>
                     <img class="img-responsive" src="/V1/Images/Logo-Horizontal-cs.png" />
                 </h1>
                 <div class="m-t-sm text-center">
@@ -211,7 +376,7 @@
             <div class="m-t" role="form">
                 <h3>Create an Account</h3>
                 Employees, churches or civic organizations can instantly help after a disaster.
-						<hr />
+				<hr />
                 <div runat="server" id="divError" visible="false">
                     <div class="alert alert-danger">
                         <a class="alert-link" href="#">REGISTRATION ERROR!!</a>
@@ -309,15 +474,26 @@
                                     </select>
                                 </div>
                             </div>
-
-
                             <div class="form-group col-lg-12">
                                 <label>Zip Code  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                                 <asp:TextBox ID="txtZipCode" runat="server" CssClass="form-control" onblur="CheckAddressValues('zip', this)" required="" placeholder="Zip Code"></asp:TextBox>
                             </div>
+
+                            <div id="divAddressMessage" class="form-group col-lg-12">
+                                <div id="divMapMessage" class="alert m-b-lg p-sm">
+                                    <i id="iFontAwesome" class="fa"></i>
+                                    <asp:Label runat="server" ID="lblAddressMessage"></asp:Label>
+                                    <asp:HiddenField ID="hidAddressData" runat="server"></asp:HiddenField>
+                                </div>
+                            </div>
+
                             <div class="form-group col-lg-12">
                                 <label>Email Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox type="email" ID="txtEmail" runat="server" CssClass="form-control" required="" placeholder="Email"></asp:TextBox>
+                                <asp:TextBox type="email" ID="txtEmail" runat="server" onblur="CheckDuplicate('Email', this)" CssClass="form-control" required="" placeholder="Email"></asp:TextBox>
+                                <span class="error-message error-message-email">This email address already exists. Do you want to <a href="/SignIn">Sign In</a>?</span>
+                                <span class="response-message response-message-email">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </span>
                             </div>
                             <div class="form-group col-lg-12">
                                 <label>Phone Number  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
@@ -325,7 +501,11 @@
                             </div>
                             <div class="form-group col-lg-12">
                                 <label>Username  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" required="" placeholder="Username"></asp:TextBox>
+                                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" onblur="CheckDuplicate('Username', this)" required="" placeholder="Username"></asp:TextBox>
+                                <span class="error-message error-message-username">This user is already in use.</span>
+                                <span class="response-message response-message-username">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </span>
                             </div>
                             <div class="form-group col-lg-12">
                                 <label>Password  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
@@ -340,7 +520,15 @@
                             <div class="row">
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-8">
-                                    <asp:Button CssClass="btn btn-success btn-block w-lg" runat="server" ID="btnSubmit" OnClick="btnSubmit_Click" Text="Create My Account" />
+                                    <asp:Button CssClass="btn btn-success btn-block w-lg" runat="server" ID="btnSubmit" OnClick="btnSubmit_Click" Text="Create My Account" OnClientClick="return showSpinner();" />
+									<button 
+										id="btnLoading" 
+										type="button" 
+										class="btn btn-success btn-block m-b" 
+										disabled 
+										style="display:none;">
+										<img src="/V1/Images/logo-icon-70x70-white-transparent.png" alt="Loading..." style="width:24px; height:24px; animation: spin 1s linear infinite;" />
+									</button>
                                     <div class="text-muted text-center m-t-lg"><small>Already have an account?</small></div>
                                     <a class="btn btn-sm btn-block btn-info w-lg" href="/SignIn">Sign In</a>
                                 </div>
@@ -352,19 +540,6 @@
             </div>
         </div>
         <div class="col-xs-1 col-sm-2 col-md-3 col-lg-3"></div>
-
-        <div id="divMessage" class="alert alert-success m-b-lg">
-            <i class="fa fa-bolt"></i>
-            <asp:Label runat="server" ID="lblMessage"></asp:Label>
-        </div>
-        <div id="divAddressMessage" class="form-group">
-            <label class="col-sm-2 control-label">Google Address Details</label>
-            <div id="divMapMessage" class="alert m-b-lg p-sm col-sm-5" style="margin-left:300px">
-                <i id="iFontAwesome" class="fa"></i>
-                <asp:Label runat="server" ID="lblAddressMessage"></asp:Label>
-                <asp:HiddenField ID="hidAddressData" runat="server"></asp:HiddenField>
-            </div>
-        </div>
     </div>
     <!-- Meta Pixel Code -->
     <script>
@@ -387,4 +562,49 @@
             src="https://www.facebook.com/tr?id=836626721309055&ev=PageView&noscript=1" />
     </noscript>
     <!-- End Meta Pixel Code -->
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const logo = document.getElementById('rotatingLogo');
+			const behaviors = ['fast', 'slow', 'paused', 'burst', '']; // random fun
+			let isReverse = false; // toggle tracker
+
+			function spinLogo(event) {
+				event.stopPropagation(); // 🚫 Prevent redirect via parent click
+
+				// Remove previous classes
+				logo.classList.remove('fast', 'slow', 'paused', 'burst', 'reverse');
+
+				// Toggle direction
+				isReverse = !isReverse;
+				if (isReverse) {
+					logo.classList.add('reverse');
+				}
+
+				// Apply one random spin behavior
+				const behavior = behaviors[Math.floor(Math.random() * behaviors.length)];
+				if (behavior) {
+					logo.classList.add(behavior);
+				}
+			}
+
+			// Trigger the spin on both events
+			logo.addEventListener('click', spinLogo);
+			logo.addEventListener('mouseenter', spinLogo);
+		});
+		function showSpinner() {
+			var btn = document.getElementById('<%= btnSubmit.ClientID %>');
+		var loadingBtn = document.getElementById('btnLoading');
+
+		// Hide the real ASP.NET button
+		btn.style.display = 'none';
+
+		// Show the spinner button
+		loadingBtn.style.display = 'inline-block';
+
+		// Trigger ASP.NET postback manually
+			__doPostBack('<%= btnSubmit.UniqueID %>', '');
+
+			return false; // Prevent default postback
+		}
+	</script>
 </asp:Content>

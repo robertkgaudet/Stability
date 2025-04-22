@@ -87,7 +87,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypSquareLogoUpload.NavigateUrl = "/V1/NonProfit/SquareLogoUpload.aspx?organizationId=" + organizationId;
         hypCoverImageUpload.NavigateUrl = "/V1/NonProfitAdministration/CoverImage1600x600.aspx?organizationId=" + organizationId;
         hypManagePhotos.NavigateUrl = "/V1/NonProfitAdministration/ManagePhotos.aspx?organizationId=" + organizationId;
-        hypUpdateTeamInfo.NavigateUrl = "/V1/Administration/NonProfitNew.aspx?userActionModal=false&organizationId=" + organizationId;
+        hypUpdateTeamInfo.NavigateUrl = "/V1/NonProfit/NonProfitNew.aspx?userActionModal=false&organizationId=" + organizationId;
         //litTeamName.Text = _teamName;
 
         switch (PageName)
