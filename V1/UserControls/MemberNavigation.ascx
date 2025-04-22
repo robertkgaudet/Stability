@@ -14,7 +14,7 @@
         <h5>MY ACCOUNT</h5>
         <ul class="mailbox-list">
             <li>
-                <asp:HyperLink ID="hypMyProfile" runat="server" NavigateUrl="/V1/Member/Default.aspx">
+                <asp:HyperLink ID="hypMyProfile" runat="server" NavigateUrl="/V1/Member/PeopleSearch.aspx">
                     <i class="fa fa-user"></i> Profile
                 </asp:HyperLink>
             </li>
