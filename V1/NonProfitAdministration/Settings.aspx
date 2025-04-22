@@ -30,15 +30,6 @@
                 <hr />
                 Update Complete
             </div>
-
-            <div class="col-sm-12 m-t-md">
-                <div>
-					<asp:LinkButton ID="btnPaymentConfig" runat="server" Text="Edit Donation Settings" OnClick="btnPaymentConfig_Click"/>
-                    - Raise money for your organization by configuring the Stability donation features.
-                </div>
-           <hr />
-			</div>
-			
             <div class="col-sm-12 m-t-md">
                 <div>
                     <label>
@@ -54,7 +45,7 @@
                         Enable Team Member Verification</label>
                 </div>
             </div>
-             <% } %>
+               <% } %>
             <div class="col-sm-12 m-t-md">
                 <div>
                     <label>
@@ -64,6 +55,8 @@
             </div>
             <div class="col-sm-12 m-t-lg">
                 <asp:Button ID="btnSubmit" runat="server" Text="Update Settings" OnClick="btnSubmit_Click"
+                    CssClass="btn btn-primary" />
+                <asp:Button ID="btnPaymentConfig" runat="server" Text="Edit Donation Settings" OnClick="btnPaymentConfig_Click"
                     CssClass="btn btn-primary" />
             </div>
 
