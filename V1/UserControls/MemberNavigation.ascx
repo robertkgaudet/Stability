@@ -14,7 +14,7 @@
         <h5>MY ACCOUNT</h5>
         <ul class="mailbox-list">
             <li>
-                <asp:HyperLink ID="hypMyProfile" runat="server" NavigateUrl="/V1/Member/PeopleSearch.aspx">
+                <asp:HyperLink ID="hypMyProfile" runat="server" NavigateUrl="/V1/Member/Default.aspx">
                     <i class="fa fa-user"></i> Profile
                 </asp:HyperLink>
             </li>
@@ -52,6 +52,11 @@
             <li>
                 <asp:HyperLink ID="hypDeployments" CssClass="font-weight-bold" runat="server">
                     <i class="fa fa-briefcase"></i> Find Open Positions
+                </asp:HyperLink>
+            </li>
+            <li>
+                <asp:HyperLink ID="hypConnections" CssClass="font-weight-bold" runat="server" NavigateUrl="/V1/Member/PeopleSearch.aspx">
+               <i class="fa fa-search"></i> Find Connections
                 </asp:HyperLink>
             </li>
             <li>
