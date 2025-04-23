@@ -675,8 +675,10 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 // Bind Data.
                 currentPageValue.Value = currentPageValue.Value == "" ? "1" : currentPageValue.Value;
                 var pNumber = Convert.ToInt32(currentPageValue.Value);
+
                 totalPageValue.Value = Convert.ToString(Math.Ceiling((double)result.Count / 50));
-                rptVolunteers.DataSource = result.Skip(20 * (pNumber - 1)).Take(20);
+
+                rptVolunteers.DataSource = result.Skip(50 * (pNumber - 1)).Take(50);
                 rptVolunteers.DataBind();
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "CallMyFunction", "updatePagination();", true);
             }
