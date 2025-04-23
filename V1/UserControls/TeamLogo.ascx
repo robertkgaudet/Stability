@@ -7,38 +7,56 @@
         vertical-align: middle;
         margin-right: 0px;
     }
+
     .volunteer-name {
         margin-right: 2px;
     }
+
     .user-name {
         margin-right: 0px;
         color: #050505;
         font-weight: bold;
         vertical-align: middle;
     }
+
+    .user-phone {
+        margin-right: 0px;
+        color: #050505;
+        vertical-align: middle;
+        font-weight: normal !important;
+        margin-left: 10px;
+    }
+
     .Userlink {
         text-decoration: none !important;
     }
-	.link-group {
-    display: flex;
-    align-items: center; /* vertically centers text and images */
-    gap: 2px; /* adjust spacing between links as needed */
-}
 
-.link-group a img {
-    height: 20px; /* adjust height to match the text line nicely */
-    width: auto;
-    vertical-align: middle;
-}
+    .link-group {
+        display: flex;
+        align-items: center; /* vertically centers text and images */
+        gap: 2px; /* adjust spacing between links as needed */
+    }
+
+        .link-group a img {
+            height: 20px; /* adjust height to match the text line nicely */
+            width: auto;
+            vertical-align: middle;
+        }
 </style>
 <div class="link-group">
-<asp:HyperLink ID="hypName" runat="server" CssClass="Userlink" Visible="false">
-    <asp:Label ID="lblprofileusername" runat="server" CssClass="user-name" Visible="false"></asp:Label>
-</asp:HyperLink>
-<asp:HyperLink ID="hypStabilityLogo" runat="server" CssClass="Userlink" Visible="false">
-    <asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge" Visible="false" data-toggle="tooltip" data-placement="top" title="Stability Verified" />
-</asp:HyperLink>
-<asp:HyperLink ID="hypTeamLogo" runat="server" NavigateUrl="/V1/NonProfit/Default.aspx" CssClass="Userlink" Visible="false">
-    <asp:Image ID="imgTeamLogo" runat="server" CssClass="stability-badge" Visible="false" data-toggle="tooltip" data-placement="top" />
-</asp:HyperLink>
+    <asp:HyperLink ID="hypName" runat="server" CssClass="Userlink" Visible="false">
+        <asp:Label ID="lblprofileusername" runat="server" CssClass="user-name" Visible="false"></asp:Label>
+    </asp:HyperLink>
+    <asp:HyperLink ID="hypStabilityLogo" runat="server" CssClass="Userlink" Visible="false">
+        <asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge" Visible="false" data-toggle="tooltip" data-placement="top" title="Stability Verified" />
+    </asp:HyperLink>
+    <asp:HyperLink ID="hypTeamLogo" runat="server" NavigateUrl="/V1/NonProfit/Default.aspx" CssClass="Userlink" Visible="false">
+        <asp:Image ID="imgTeamLogo" runat="server" CssClass="stability-badge" Visible="false" data-toggle="tooltip" data-placement="top" />
+    </asp:HyperLink>
+    <asp:HyperLink ID="email" runat="server" CssClass="Userlink" Visible="false">
+        <asp:Label ID="lblemail" runat="server" CssClass="user-phone" Visible="false"></asp:Label>
+    </asp:HyperLink>
+    <asp:HyperLink ID="phoneNumber" runat="server" CssClass="Userlink" Visible="false">
+        <asp:Label ID="lblphoneNumber" runat="server" CssClass="user-phone" Visible="false"></asp:Label>
+    </asp:HyperLink>
 </div>
