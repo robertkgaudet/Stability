@@ -339,11 +339,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             bool receiveSMSNotifications = DataBinder.Eval(dataItem.DataItem, "ReceiveSMSNotifications") != DBNull.Value &&
                                     (bool)DataBinder.Eval(dataItem.DataItem, "ReceiveSMSNotifications");
 
-            if (ucTeamLogo != null)
-            {
-                ucTeamLogo.UserId = userId;
-                ucTeamLogo.LoadNameWithBadges();
-            }
+          
 
             MembershipUser profileUser = Membership.GetUser(userId);
             bool isLockedOut = false;
@@ -376,6 +372,21 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 if (divEmail.Visible == true || divSms.Visible == true)
                 {
                     btnContact.Visible = false;
+                }
+                if (ucTeamLogo != null)
+                {
+                    ucTeamLogo.UserId = userId;
+                    if(btnContact.Visible == false)
+                    {
+                        ucTeamLogo.ShowPhoneNumber = true;
+                        ucTeamLogo.ShowEmail = true;
+                    }
+                    else
+                    {
+                        ucTeamLogo.ShowPhoneNumber = false;
+                        ucTeamLogo.ShowEmail = false;
+                    }
+                    ucTeamLogo.LoadNameWithBadges();
                 }
                 btnManage.Visible = true;
                 isLockedOut = !profileUser.IsApproved;
