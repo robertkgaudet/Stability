@@ -405,6 +405,7 @@
                 stabilityVerified: stabilityVerified,
                 showTeamLogo: showTeamLogo,
                 makeTeamAdministrator: makeTeamAdministrator
+
             };
             $.ajax({
                 type: "POST",

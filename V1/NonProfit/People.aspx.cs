@@ -375,11 +375,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 {
                     h5Container.Style.Remove("display");
                 }
-                if (receiveSMSNotifications)
-                {
-                    btnContact.Visible = true;
-                }
-                else
+                if (divEmail.Visible == true || divSms.Visible == true)
                 {
                     btnContact.Visible = false;
                 }
