@@ -405,12 +405,12 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="col-sm-2 control-label">Address</label>
+                                            <label class="col-sm-2 control-label">Address *</label>
                                             <div class="col-sm-5">
                                                 <input id="txtAddress1" type="text" onblur="CheckAddressValues('address', this)" required runat="server" class="form-control i-check" placeholder="Address"></div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-2 control-label">City</label>
+                                            <label class="col-sm-2 control-label">City *</label>
                                             <div class="col-sm-5">
                                                 <input id="txtCity1" type="text" onblur="CheckAddressValues('city', this)" required runat="server" class="form-control" placeholder="City"></div>
                                         </div>
@@ -421,7 +421,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-2 control-label">Zip</label>
+                                            <label class="col-sm-2 control-label">Zip *</label>
                                             <div class="col-sm-5">
                                                 <input id="txtZip1" type="text" onblur="CheckAddressValues('zip', this)" required runat="server" class="form-control" placeholder="Zip Code"></div>
                                         </div>

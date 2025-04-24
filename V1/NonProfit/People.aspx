@@ -800,7 +800,7 @@
         </div>
     </div>
     <div id="divSms" runat="server" class="input-group">
-        <textarea id="txtsms" runat="server" cssclass="form-control" placeholder="Enter SMS Text"
+        <textarea id="txtsms" runat="server" cssclass="form-control" placeholder="Enter SMS Text (Max 450 characters)"
             rows="6" cols="95"></textarea>
         <div class="input-group-append">
             <button type="button" class="ladda-button ladda-button-demo ladda-button-sms btn btn-primary "
