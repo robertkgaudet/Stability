@@ -112,7 +112,14 @@
             let email = $("#email").val();
             let subject = $("#subject").val();
             let message = $("#message").val();
-            
+            if (name === null || name === "" || name === undefined
+                || email === null || email === "" || email === undefined
+                || subject === null || subject === "" || subject === undefined
+                || message === null || message === "" || message === undefined) {
+                alert("Please enter all required fields!");
+                return;
+            }
+
             $.ajax({
                 type: "POST",
                 url: "/V1/NonProfit/Support.aspx/SendEmail",

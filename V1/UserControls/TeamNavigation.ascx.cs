@@ -43,6 +43,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypActivity.NavigateUrl = "/V1/NonProfit/ActivityDashboard.aspx?organizationId=" + organizationId;
         hypTeamCalendar.NavigateUrl = "/V1/NonProfit/TeamAvailabilityCalendar.aspx?organizationId=" + organizationId;
         hypPeople.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId;
+        hypInvitedMembers.NavigateUrl = "/V1/NonProfit/InvitedMembers.aspx?organizationId=" + organizationId;
         hypSettings.NavigateUrl = "/V1/NonProfitAdministration/Settings.aspx?organizationId=" + organizationId;
         hypSupport.NavigateUrl = "/V1/NonProfit/Support.aspx?organizationId=" + organizationId;
         hypTickets.NavigateUrl = "/V1/NonProfitAdministration/Tickets.aspx?organizationId=" + organizationId;
