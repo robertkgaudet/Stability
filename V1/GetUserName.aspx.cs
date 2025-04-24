@@ -13,7 +13,7 @@ public partial class V1_PasswordReset : System.Web.UI.Page
 
     }
 
-    protected void btnRecover_Click(object sender, EventArgs e)
+    protected void btnRecover_Click(object sender,EventArgs e)
     {
         string email = txtEmail.Text.Trim();
         string userName = null;
@@ -24,7 +24,7 @@ public partial class V1_PasswordReset : System.Web.UI.Page
                           where m.Email == email
                           select m.UserId).FirstOrDefault();
 
-            if (userId != Guid.Empty)
+            if (userId !=null)
             {
                 userName = (from u in dc.aspnet_Users
                             where u.UserId == userId
@@ -49,6 +49,8 @@ public partial class V1_PasswordReset : System.Web.UI.Page
                 mail.IsBodyHtml = true;
 
                 SmtpClient smtp = new SmtpClient();
+            
+
                 smtp.Send(mail);
 
                 lblMessage.ForeColor = System.Drawing.Color.Green;
