@@ -147,6 +147,7 @@
 						<img src="/V1/Images/logo-icon-70x70-white-transparent.png" alt="Loading..." style="width:24px; height:24px; animation: spin 1s linear infinite;" />
 					</button>
 					<a href="/V1/PasswordReset.aspx"><small>Forgot password?</small></a>
+					<a href="/V1/GetUserName.aspx"><small style="margin-left:5px;">Get UserName?</small></a>
 					<p class="text-muted text-center"><small>Do not have an account?</small></p>
 					<a class="btn btn-sm btn-info btn-block" href="/Register">Create an Account</a>
 				</div>
