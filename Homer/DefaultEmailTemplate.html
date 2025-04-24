@@ -40,56 +40,53 @@
     </style>
 </head>
 <body>
-    <div class="logo" onclick="document.getElementById('logoUpload').click();">
+    <div class="logo">
         <img id="logoImage" src="/Homer/images/download.png" alt="GFHA Logo" />
-        <input type="file" id="logoUpload" accept="image/*" onchange="replaceLogo(event)">
-    </div>    <p>Ground Force Humanitarian Aid</p>
-    <div class="header">
-        <p>4400-A Ambassador Caffery Pkwy, Ste. #342</p>
-        <p>Lafayette, LA 70508</p>
-        <p>Phone: (318) 572-3161</p>
-        <p><strong>EIN: 81-3926021</strong></p>
-
+        <input type="file" id="logoUpload" accept="image/*">
     </div>
-    <hr />
-    <h3>Official Donation Receipt</h3>
+    <p>Ground Force Humanitarian Aid</p>
+    <div class="non-editable">
+        <div class="header">
+            <p>4400-A Ambassador Caffery Pkwy, Ste. #342</p>
+            <p>Lafayette, LA 70508</p>
+            <p>Phone: (318) 572-3161</p>
+            <p><strong>EIN: 81-3926021</strong></p>
 
-    <div class="info">
-        <p><strong>Donor Name:</strong> <% DonorFirstName %> <% DonorLastName %></p>
-        <p><strong>Donation Date:</strong> <% DonationDate %></p>
-        <p><strong>Donation Amount:</strong> $<% DonationAmount %></p>
+        </div>
+        <hr />
+        <h3>Official Donation Receipt</h3>
 
+        <div class="info">
+            <p><strong>Donor Name:</strong> <% DonorFirstName %> <% DonorLastName %></p>
+            <p><strong>Donation Date:</strong> <% DonationDate %></p>
+            <p><strong>Donation Amount:</strong> $<% DonationAmount %></p>
+
+        </div>
+        <hr />
+        <div class="content">
+            <p>Dear  <% DonorFirstName %>,</p>
+        </div>
     </div>
-    <hr />
-    <div class="content">
-        <p>Dear  <% DonorFirstName %>,</p>`
+    <p>Thank you so much for your generous donation of  $<% DonationAmount %> to Ground Force Humanitarian Aid. Your support directly helps us serve communities in crisis with critical relief, shelter, supplies, and compassionate care. We are incredibly grateful to have you as a part of our mission.</p>
 
-        <p>Thank you so much for your generous donation of  $<% DonationAmount %> to Ground Force Humanitarian Aid. Your support directly helps us serve communities in crisis with critical relief, shelter, supplies, and compassionate care. We are incredibly grateful to have you as a part of our mission.</p>
+    <p>Your contribution makes a real difference. Because of donors like you, we are able to respond quickly and effectively to disasters, helping families regain stability and hope in some of their most difficult times.</p>
 
-        <p>Your contribution makes a real difference. Because of donors like you, we are able to respond quickly and effectively to disasters, helping families regain stability and hope in some of their most difficult times.</p>
+    <p>Please keep this letter as your official tax receipt. No goods or services were provided in exchange for this donation. Ground Force Humanitarian Aid is a 501(c)(3) nonprofit organization, and your donation is tax-deductible to the fullest extent allowed by law.</p>
 
-        <p>Please keep this letter as your official tax receipt. No goods or services were provided in exchange for this donation. Ground Force Humanitarian Aid is a 501(c)(3) nonprofit organization, and your donation is tax-deductible to the fullest extent allowed by law.</p>
-
-        <p>With deepest gratitude,</p>
-    </div>
-
-    <div class="signature">
-        <p><strong>Rob Gaudet</strong></p>
-        <p>Founder & Executive Director</p>
-        <p><a>robgaudet@groundforce.ngo</a></p>
+    <p>With deepest gratitude,</p>
+    <div class="non-editable">
+        <div class="signature">
+            <p><strong>Rob Gaudet</strong></p>
+            <p>Founder & Executive Director</p>
+            <p><a>robgaudet@groundforce.ngo</a></p>
+        </div>
     </div>
 
 </body>
 </html>
 <script>
-    function replaceLogo(event) {
-        const file = event.target.files[0];
-        if (!file) return;
+    document.querySelectorAll('.non-editable').forEach(el => {
+        el.setAttribute('contenteditable', 'false');
+    });
 
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            document.getElementById('logoImage').src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
 </script>
