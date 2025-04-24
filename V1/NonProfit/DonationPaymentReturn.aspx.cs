@@ -81,14 +81,24 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
 
             if (status == Tools.TransactionStatus.Succeeded)
             {
+                Organization organization = dc.Organizations.Where(x => x.OrganizationId == new Guid(donation.AuthorizedTransactionId)).FirstOrDefault();
                 ListDictionary ldEmailBodyReplacements = new ListDictionary
             {
                       { "<% DonorFirstName %>", donation.FirstName },
                        { "<% DonorLastName %>", donation.LastName },
                      { "<% DonationDate %>", donation.CreatedAt.ToString("MM/dd/yyyy") },
-                      { "<% DonationAmount %>", donation.Amount.ToString("F2") }
+                      { "<% DonationAmount %>", donation.Amount.ToString("F2") },
+                      { "<%Logo%>", organization.Logo },
+                      { "<%OrganizationName%>", organization.Name },
+                      { "<%Address%>", organization.Address },
+                      { "<%City%>", organization.City },
+                      { "<%State%>", organization.State },
+                      { "<%Zip%>", organization.Zip },
+                      { "<%PhoneNumber%>", organization.PrimaryPhone },
+                       { "<%EIN%>", organization.EIN },
+                       { "<%FounderName%>", organization.PointOfContactName },
+                       { "<%FounderEmail%>", organization.PointOfContactEmail },
             };
-                Organization organization = dc.Organizations.Where(x => x.OrganizationId == new Guid(donation.AuthorizedTransactionId)).FirstOrDefault();
                 EmailTemplate emailTemplate = dc.EmailTemplates
                 .Where(e => e.OrganizationId == organization.OrganizationId)
                 .FirstOrDefault();
@@ -98,11 +108,10 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
                      "Thanks for Donation to Stability",
                      ldEmailBodyReplacements,
                      donation.EmailAddress,
-                     donation.FirstName + " " + donation.LastName,
-                     string.Empty,
-                     string.Empty,
-                     //"~\\EmailTemplates\\DonorLetter.html",
-                     emailTemplate.EmailBody,
+                      string.Empty,
+                       string.Empty,
+                      string.Empty,
+                     "~\\Homer\\DefaultEmailTemplate.html",
                      out error);
 
                 if (!string.IsNullOrEmpty(donation.AuthorizedTransactionId))

@@ -41,17 +41,15 @@
 </head>
 <body>
     <div class="logo">
-        <img id="logoImage" src="/Homer/images/download.png" alt="GFHA Logo" />
-        <input type="file" id="logoUpload" accept="image/*">
+        <img id="logoImage" src="<%Logo%>" alt="Logo" />
     </div>
-    <p>Ground Force Humanitarian Aid</p>
+    <p><%OrganizationName%></p>
     <div class="non-editable">
         <div class="header">
-            <p>4400-A Ambassador Caffery Pkwy, Ste. #342</p>
-            <p>Lafayette, LA 70508</p>
-            <p>Phone: (318) 572-3161</p>
-            <p><strong>EIN: 81-3926021</strong></p>
-
+            <p><%Address%></p>
+            <p><%City%>,<%State%> <%Zip%></p>
+            <p>Phone: <%PhoneNumber%></p>
+            <p>EIN: <%EIN%></p>
         </div>
         <hr />
         <h3>Official Donation Receipt</h3>
@@ -76,9 +74,9 @@
     <p>With deepest gratitude,</p>
     <div class="non-editable">
         <div class="signature">
-            <p><strong>Rob Gaudet</strong></p>
+            <p><strong><%FounderName%></strong></p>
             <p>Founder & Executive Director</p>
-            <p><a>robgaudet@groundforce.ngo</a></p>
+            <p><a><%FounderEmail%></a></p>
         </div>
     </div>
 
