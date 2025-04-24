@@ -55,6 +55,7 @@ public partial class V1_PasswordReset : System.Web.UI.Page
 
                 lblMessage.ForeColor = System.Drawing.Color.Green;
                 lblMessage.Text = "A UserName has been emailed to you.";
+                txtEmail.Text = "";
             }
             catch (Exception ex)
             {
@@ -66,6 +67,7 @@ public partial class V1_PasswordReset : System.Web.UI.Page
         {
             lblMessage.ForeColor = System.Drawing.Color.Red;
             lblMessage.Text = "Email not found. Please try again.";
+            txtEmail.Text = "";
         }
     }
 }
