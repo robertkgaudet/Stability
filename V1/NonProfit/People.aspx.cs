@@ -35,6 +35,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     public bool isOwner = false;
     protected void Page_Load(object sender, EventArgs e)
     {
+        txtsms.Attributes["maxlength"] = "450";
         organizationId = Request.QueryString["organizationId"];
         skillId = Request.QueryString["skillId"];
         resourceId = Request.QueryString["resourceId"];
