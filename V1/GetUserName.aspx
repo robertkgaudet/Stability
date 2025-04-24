@@ -16,14 +16,14 @@
                 <p>Be the lifeline your community needs.</p>
             </div>
 
-            <p style="font-weight:bold;margin-left: 60px;">Get your User Name?</p>
+            <p style="font-weight:bold;margin-left: 60px;">Get your username?</p>
             <div class="m-t justify-content-center">
                 <asp:Label ID="lblMessage" runat="server" ForeColor="Red" />
                 <div class="form-group">
                     <asp:Label ID="lblEmail" runat="server" Text="Email:" CssClass="font-bold" />
                     <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" />
                 </div>
-                <asp:Button ID="btnRecover" runat="server" Text="Recover User Name" CssClass="btn btn-success btn-block full-width m-b" OnClick="btnRecover_Click" />
+                <asp:Button ID="btnRecover" runat="server" Text="Recover username" CssClass="btn btn-success btn-block full-width m-b" OnClick="btnRecover_Click" />
                 <a class="btn btn-block btn-info m-t-lg" href="/SignIn">Back To Sign In</a>
             </div>
         </div>
