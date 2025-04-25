@@ -442,6 +442,14 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     {
         string resourceList = string.Empty;
 
+        List<string> selectedResourceIds = new List<string>();
+        foreach (ListItem item in ddlResources.Items)
+        {
+            if (item.Selected)
+            {
+                selectedResourceIds.Add(item.Value); 
+            }
+        }
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
         var resources = from ur in dc.UserResources
@@ -449,30 +457,41 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                         where ur.UserId == userId
                         select r;
 
-
         foreach (var resource in resources)
         {
             string resourceName = resource.Name;
             string resourceIdLocal = resource.ResourceId.ToString();
 
             string btnColor = "btn-default";
-            if (!String.IsNullOrEmpty(resourceId))
+            if (selectedResourceIds.Contains(resourceIdLocal))
             {
-                if (resourceId.Equals(resourceIdLocal, StringComparison.OrdinalIgnoreCase))
-                {
-                    //Change button color.
-                    btnColor = "btn-info";
-                }
+                btnColor = "btn-info"; 
             }
 
-            resourceList += "<button type=\"button\" id=\"button\" onclick=\"window.location.href='/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&resourceId=" + resourceIdLocal + "'\" class=\"btn btn-xs " + btnColor + " m-xs\">" + resourceName + "</button>";
+            resourceList += string.Format(
+                "<button type='button' class='btn btn-xs {0} m-xs' data-resource-id='{1}' onclick='onResourceClick(\"{1}\")'>{2}</button>",
+                btnColor,
+                resourceIdLocal,
+                resourceName
+            );
         }
 
         return resourceList;
     }
+
+
     protected string GetSkills(Guid userId)
     {
         string skillList = string.Empty;
+
+        List<string> selectedSkillIds = new List<string>();
+        foreach (ListItem item in ddlSkills.Items)
+        {
+            if (item.Selected)
+            {
+                selectedSkillIds.Add(item.Value); 
+            }
+        }
 
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
@@ -487,20 +506,22 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             string skillIdLocal = skill.SkillId.ToString();
 
             string btnColor = "btn-default";
-            if (!String.IsNullOrEmpty(skillId))
+
+            if (selectedSkillIds.Contains(skillIdLocal))
             {
-                if (skillId.Equals(skillIdLocal, StringComparison.OrdinalIgnoreCase))
-                {
-                    //Change button color.
-                    btnColor = "btn-info";
-                }
+                btnColor = "btn-info"; 
             }
 
-            skillList += "<button type=\"button\" id=\"button\" onclick=\"window.location.href='/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&skillId=" + skillIdLocal + "'\" class=\"btn btn-xs " + btnColor + " m-xs\">" + skillName + "</button>";
+            skillList += string.Format(
+                "<button type='button' class='btn btn-xs {0} m-xs skill-btn' data-skill-id='{1}' onclick='onSkillClick(\"{1}\")'>{2}</button>",
+                btnColor,
+                skillIdLocal,
+                skillName);
         }
 
         return skillList;
     }
+
     private List<string> GetSelectedValues(ListBox listBox)
     {
         return listBox.Items.Cast<ListItem>()

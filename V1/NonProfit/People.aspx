@@ -333,6 +333,7 @@
 
         var currentUserId = null;
         function setUserId(button) {
+            ;
             currentUserId = button.getAttribute('data-userid');
             if (document.getElementById('<%= hiddenManageShowDonateButtonn.ClientID %>').value == "0") {
                 $('.donateDiv').hide();
@@ -342,6 +343,7 @@
             return false;
         }
         function fetchUserData() {
+            ;
             if (!currentUserId) {
                 alert("User ID not set.");
                 return;
@@ -562,6 +564,7 @@
         }
 
         function searchButton() {
+            ;
             // Set a value to the hidden field
             document.getElementById('<%= currentPageValue.ClientID %>').value = 1; // Set custom value here    
         }
@@ -765,6 +768,7 @@
         });
 
         function updateCheckboxSelection() {
+            ;
             var selectAllCheckbox = document.getElementById("chkSelectAll");
             var userCheckboxes = document.querySelectorAll(".select-user");
             var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
@@ -794,7 +798,54 @@
             });
         });
     </script>
+    <script type="text/javascript">
+        function onSkillClick(skillId) {
+            ;
+            var listBox = document.getElementById('<%= ddlSkills.ClientID %>');
+        var options = listBox && listBox.options;
 
+        if (!options) return;
+
+        for (var i = 0; i < options.length; i++) {
+            if (options[i].value === skillId) {
+                options[i].selected = true;
+                var listItem = document.querySelector(`li input[type="checkbox"][value="${skillId}"]`);
+                if (listItem) {
+                    listItem.checked = true;
+                    var parentLi = listItem.closest('li');
+                    if (parentLi) {
+                        parentLi.classList.add('active');
+                    }
+                }
+                break; 
+            }
+        }
+        document.getElementById('<%= currentPageValue.ClientID %>').value = 1;
+        __doPostBack('<%= SearchButton.UniqueID %>', '');
+        }
+        function onResourceClick(resourceId) {
+            var listBox = document.getElementById('<%= ddlResources.ClientID %>');
+    var options = listBox && listBox.options;
+    if (!options) return;
+    for (var i = 0; i < options.length; i++) {
+        if (options[i].value === resourceId) {
+            options[i].selected = true;
+            break;  
+        }
+    }
+    var listItem = document.querySelector(`li input[type="checkbox"][value="${resourceId}"]`);
+            if (listItem) {
+        listItem.checked = true;
+        var parentLi = listItem.closest('li');
+        if (parentLi) {
+            parentLi.classList.add('active');
+        }
+    }
+    document.getElementById('<%= currentPageValue.ClientID %>').value = 1;
+    __doPostBack('<%= SearchButton.UniqueID %>', '');
+        }
+
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
