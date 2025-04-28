@@ -72,6 +72,9 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
     private void HandlePaymentSuccess(Stripe.Checkout.Session paymentIntent, Tools.TransactionStatus status)
     {
         Donation donation = dc.Donations.Where(x => x.DonationId == new Guid(paymentIntent.Metadata.Values.FirstOrDefault().ToString())).FirstOrDefault();
+        var profile = dc.Profiles.Where(p => p.UserId == donation.UserId).FirstOrDefault();
+        var organization = dc.Organizations.Where(x => x.OwnerId == donation.UserId).FirstOrDefault();
+        var donationCampaign = dc.OrganizationEvents.Where(x => x.OrganizationId == organization.OrganizationId).FirstOrDefault();
         if (donation != null)
         {
             donation.TransactionId = paymentIntent.PaymentIntentId;
@@ -86,9 +89,18 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
                       { "<% DonorFirstName %>", donation.FirstName },
                        { "<% DonorLastName %>", donation.LastName },
                      { "<% DonationDate %>", donation.CreatedAt.ToString("MM/dd/yyyy") },
-                      { "<% DonationAmount %>", donation.Amount.ToString("F2") }
+                      { "<% DonationAmount %>", donation.Amount.ToString("F2") },
+                      { "<%LogoUrl%>", organization.Logo },
+                      { "<%OrganizationName%>", organization.Name },
+                      { "<% TeamPageLink %>", organization.Website },
+                      { "<% DonationDeployment %>", donationCampaign.CampaignName},
+                       { "<% ContactLink %>", organization.Website },
+                       { "<% TeamOwnerName %>", organization.PointOfContactName },
+                       { "<% Title %>",profile.Title },
+                       { "<% TeamOwnerEmail %>", organization.PointOfContactEmail },
+                       { "<% TeamWebsiteLink %>", organization.Website }
+
             };
-                Organization organization = dc.Organizations.Where(x => x.OrganizationId == new Guid(donation.AuthorizedTransactionId)).FirstOrDefault();
                 EmailTemplate emailTemplate = dc.EmailTemplates
                 .Where(e => e.OrganizationId == organization.OrganizationId)
                 .FirstOrDefault();
@@ -98,11 +110,10 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
                      "Thanks for Donation to Stability",
                      ldEmailBodyReplacements,
                      donation.EmailAddress,
-                     donation.FirstName + " " + donation.LastName,
-                     string.Empty,
-                     string.Empty,
-                     //"~\\EmailTemplates\\DonorLetter.html",
-                     emailTemplate.EmailBody,
+                      string.Empty,
+                       string.Empty,
+                      string.Empty,
+                     "~\\Homer\\DefaultEmailTemplate.html",
                      out error);
 
                 if (!string.IsNullOrEmpty(donation.AuthorizedTransactionId))

@@ -111,23 +111,33 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label custom-label">PayPal Link:</label>
                     <div class="col-sm-8">
-                        <input class="form-control custom-input" type="url" required id="txtPayPal" runat="server" placeholder="Enter PayPal URL" />
+                        <input class="form-control custom-input" type="url" id="txtPayPal" runat="server" placeholder="Enter PayPal URL" />
+                        <asp:RequiredFieldValidator ID="rfvPayPal" runat="server" ControlToValidate="txtPayPal"
+                            ErrorMessage="PayPal link is required" ForeColor="Red" Display="Dynamic" ValidationGroup="PaymentGroup" />
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="col-sm-2 control-label custom-label">Venmo Link:</label>
                     <div class="col-sm-8">
-                        <input class="form-control custom-input" type="url" required id="txtVenmo" runat="server" placeholder="Enter Venmo URL" />
+                        <input class="form-control custom-input" type="url" id="txtVenmo" runat="server" placeholder="Enter Venmo URL" />
+                        <asp:RequiredFieldValidator ID="rfvVenmo" runat="server" ControlToValidate="txtVenmo"
+                            ErrorMessage="Venmo link is required" ForeColor="Red" Display="Dynamic" ValidationGroup="PaymentGroup" />
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="col-sm-2 control-label custom-label">Cash Pay Link:</label>
                     <div class="col-sm-8">
-                        <input class="form-control custom-input" type="url" required id="txtCashPay" runat="server" placeholder="Enter Cash Pay URL" />
+                        <input class="form-control custom-input" type="url" id="txtCashPay" runat="server" placeholder="Enter Cash Pay URL" />
+                        <asp:RequiredFieldValidator ID="rfvCashPay" runat="server" ControlToValidate="txtCashPay"
+                            ErrorMessage="Cash Pay link is required" ForeColor="Red" Display="Dynamic" ValidationGroup="PaymentGroup" />
                     </div>
                 </div>
+
                 <div class="col-12" style="display: flex; justify-content: end; gap: 10px; margin-bottom: 10px;">
-                    <asp:Button type="submit" class="save-btn" runat="server" CssClass="btn btn-primary" Text="Save" OnClick="PaymentConfigration_Click" />
+                    <asp:Button ID="btnSavePayment" runat="server" CssClass="btn btn-primary" Text="Save"
+                        OnClick="PaymentConfigration_Click" ValidationGroup="PaymentGroup" />
                     <asp:Button ID="btnCancel" runat="server" Text="Cancel" CssClass="btn btn-secondary" OnClick="btnCancel_Click" />
                 </div>
                 <div class="panel-heading" style="margin-left: -15px;">
