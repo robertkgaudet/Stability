@@ -72,6 +72,8 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
     private void HandlePaymentSuccess(Stripe.Checkout.Session paymentIntent, Tools.TransactionStatus status)
     {
         Donation donation = dc.Donations.Where(x => x.DonationId == new Guid(paymentIntent.Metadata.Values.FirstOrDefault().ToString())).FirstOrDefault();
+        var donationCampaign = dc.DonationCampaigns.Where(x => x.DonationCampaignId == donation.CampaignId).FirstOrDefault();
+        var profile = dc.Profiles.Where(p => p.UserId == donation.UserId).FirstOrDefault();
         if (donation != null)
         {
             donation.TransactionId = paymentIntent.PaymentIntentId;
@@ -81,23 +83,23 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
 
             if (status == Tools.TransactionStatus.Succeeded)
             {
-                Organization organization = dc.Organizations.Where(x => x.OrganizationId == new Guid(donation.AuthorizedTransactionId)).FirstOrDefault();
+                var organization = dc.Organizations.Where(x => x.OwnerId == donation.UserId).FirstOrDefault();
                 ListDictionary ldEmailBodyReplacements = new ListDictionary
             {
                       { "<% DonorFirstName %>", donation.FirstName },
                        { "<% DonorLastName %>", donation.LastName },
                      { "<% DonationDate %>", donation.CreatedAt.ToString("MM/dd/yyyy") },
                       { "<% DonationAmount %>", donation.Amount.ToString("F2") },
-                      { "<%Logo%>", organization.Logo },
+                      { "<%LogoUrl%>", organization.Logo },
                       { "<%OrganizationName%>", organization.Name },
-                      { "<%Address%>", organization.Address },
-                      { "<%City%>", organization.City },
-                      { "<%State%>", organization.State },
-                      { "<%Zip%>", organization.Zip },
-                      { "<%PhoneNumber%>", organization.PrimaryPhone },
-                       { "<%EIN%>", organization.EIN },
-                       { "<%FounderName%>", organization.PointOfContactName },
-                       { "<%FounderEmail%>", organization.PointOfContactEmail },
+                      { "<% TeamPageLink %>", organization.Website },
+                      { "<% DonationDeployment %>", donationCampaign.Summary},
+                       { "<% ContactLink %>", organization.Website },
+                       { "<% TeamOwnerName %>", organization.PointOfContactName },
+                       { "<% Title %>",profile.Title },
+                       { "<% TeamOwnerEmail %>", organization.PointOfContactEmail },
+                       { "<% TeamWebsiteLink %>", organization.Website }
+
             };
                 EmailTemplate emailTemplate = dc.EmailTemplates
                 .Where(e => e.OrganizationId == organization.OrganizationId)
