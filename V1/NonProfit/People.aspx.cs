@@ -33,6 +33,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     public bool userIsOwner = false;
     public bool hideTeamList = false;
     public bool isOwner = false;
+    private int pageSize = 50;
+    private int pageNumber = 1;
     protected void Page_Load(object sender, EventArgs e)
     {
         txtsms.Attributes["maxlength"] = "450";
@@ -454,6 +456,14 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     {
         string resourceList = string.Empty;
 
+        List<string> selectedResourceIds = new List<string>();
+        foreach (ListItem item in ddlResources.Items)
+        {
+            if (item.Selected)
+            {
+                selectedResourceIds.Add(item.Value); 
+            }
+        }
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
         var resources = from ur in dc.UserResources
@@ -461,30 +471,41 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                         where ur.UserId == userId
                         select r;
 
-
         foreach (var resource in resources)
         {
             string resourceName = resource.Name;
             string resourceIdLocal = resource.ResourceId.ToString();
 
             string btnColor = "btn-default";
-            if (!String.IsNullOrEmpty(resourceId))
+            if (selectedResourceIds.Contains(resourceIdLocal))
             {
-                if (resourceId.Equals(resourceIdLocal, StringComparison.OrdinalIgnoreCase))
-                {
-                    //Change button color.
-                    btnColor = "btn-info";
-                }
+                btnColor = "btn-info"; 
             }
 
-            resourceList += "<button type=\"button\" id=\"button\" onclick=\"window.location.href='/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&resourceId=" + resourceIdLocal + "'\" class=\"btn btn-xs " + btnColor + " m-xs\">" + resourceName + "</button>";
+            resourceList += string.Format(
+                "<button type='button' class='btn btn-xs {0} m-xs' data-resource-id='{1}' onclick='onResourceClick(\"{1}\")'>{2}</button>",
+                btnColor,
+                resourceIdLocal,
+                resourceName
+            );
         }
 
         return resourceList;
     }
+
+
     protected string GetSkills(Guid userId)
     {
         string skillList = string.Empty;
+
+        List<string> selectedSkillIds = new List<string>();
+        foreach (ListItem item in ddlSkills.Items)
+        {
+            if (item.Selected)
+            {
+                selectedSkillIds.Add(item.Value); 
+            }
+        }
 
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
@@ -499,20 +520,22 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             string skillIdLocal = skill.SkillId.ToString();
 
             string btnColor = "btn-default";
-            if (!String.IsNullOrEmpty(skillId))
+
+            if (selectedSkillIds.Contains(skillIdLocal))
             {
-                if (skillId.Equals(skillIdLocal, StringComparison.OrdinalIgnoreCase))
-                {
-                    //Change button color.
-                    btnColor = "btn-info";
-                }
+                btnColor = "btn-info"; 
             }
 
-            skillList += "<button type=\"button\" id=\"button\" onclick=\"window.location.href='/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&skillId=" + skillIdLocal + "'\" class=\"btn btn-xs " + btnColor + " m-xs\">" + skillName + "</button>";
+            skillList += string.Format(
+                "<button type='button' class='btn btn-xs {0} m-xs skill-btn' data-skill-id='{1}' onclick='onSkillClick(\"{1}\")'>{2}</button>",
+                btnColor,
+                skillIdLocal,
+                skillName);
         }
 
         return skillList;
     }
+
     private List<string> GetSelectedValues(ListBox listBox)
     {
         return listBox.Items.Cast<ListItem>()
@@ -667,11 +690,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 var selectedSkillsParam = !selectedSkills.Any() ? skillId == null ? "" : skillId : string.Join(",", selectedSkills);
                 var selectedResourcesParam = !selectedResources.Any() ? resourceId == null ? "" : resourceId : string.Join(",", selectedResources);
                 var nameSearchTermParam = string.IsNullOrEmpty(nameSearchTerm) ? "" : nameSearchTerm;
+                currentPageValue.Value = currentPageValue.Value == "" ? "1" : currentPageValue.Value;
 
                 // Execute stored procedure and return mapped results
                 dc.CommandTimeout = 300;
                 var result = dc.ExecuteQuery<PeopleList>(
-                   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified).ToList();
+                   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14},{15},{16}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified, currentPageValue.Value, pageSize).ToList();
+
+                var totalcount = dc.ExecuteQuery<int>(
+                  "EXEC [GetPeopleListCount] {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified).FirstOrDefault();
 
                 // Show Filter Message if Any Filter Applied
                 divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS || teamVerified || stabilityVerified;
@@ -679,18 +706,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
                 if (isUserOnTeam && !User.IsInRole("Administrator") && !userIsOwner)
                 {
-                    //User is on team but it's not the admin or team owner so limit what they can see.
-                    //Hide unapproved users and unvetted users
                     result = result.Where(x => x.IsApproved == true && x.PassedVetting == true).ToList();
                 }
 
                 // Bind Data.
-                currentPageValue.Value = currentPageValue.Value == "" ? "1" : currentPageValue.Value;
-                var pNumber = Convert.ToInt32(currentPageValue.Value);
+                //var pNumber = Convert.ToInt32(currentPageValue.Value);
 
-                totalPageValue.Value = Convert.ToString(Math.Ceiling((double)result.Count / 50));
+                totalPageValue.Value = Convert.ToString(Math.Ceiling((double)totalcount / 50));
 
-                rptVolunteers.DataSource = result.Skip(50 * (pNumber - 1)).Take(50);
+                rptVolunteers.DataSource = result;
                 rptVolunteers.DataBind();
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "CallMyFunction", "updatePagination();", true);
             }
