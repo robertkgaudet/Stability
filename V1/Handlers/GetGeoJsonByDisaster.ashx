@@ -4,92 +4,103 @@ using System.Web;
 using System.Web.Services;
 using System.Web.SessionState;
 using System.Web.Script.Serialization;
+
 [WebService(Namespace = "http://tempuri.org/")]
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 public class GetGeoJsonByDisaster: IHttpHandler, IReadOnlySessionState
 {
-	public void ProcessRequest (HttpContext context)
-	{
-		string keyId = context.Request.QueryString["keyId"];
-		string mapFilterType = context.Request.QueryString["mapFilterType"];
-		string results = string.Empty;
-		try
-		{
-			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-			switch (mapFilterType)
-			{
-				case "All":
-					var allLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
+    public void ProcessRequest (HttpContext context)
+    {
+        string keyId = context.Request.QueryString["keyId"];
+        string mapFilterType = context.Request.QueryString["mapFilterType"];
+        string locationTypeId = context.Request.QueryString["locationTypeId"];
+        string parentTypeId = context.Request.QueryString["parentTypeId"];
+        string statusId = context.Request.QueryString["statusId"];
 
-					results = (new JavaScriptSerializer().Serialize(allLocationJson));
-					results = results.Remove(0, 13);
-					results = results.Remove(results.Length - 3, 3);
-					results = results.Replace("\\", "");
-                break;
+        string results = string.Empty;
+        try
+        {
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();     
+            Guid? locTypeId = !string.IsNullOrEmpty(locationTypeId) ? new Guid(locationTypeId) : (Guid?)null;
+            Guid? parTypeId = !string.IsNullOrEmpty(parentTypeId) ? new Guid(parentTypeId) : (Guid?)null;
+            Guid? statId = !string.IsNullOrEmpty(statusId) ? new Guid(statusId) : (Guid?)null;
 
-				case "Community":
-					var communityLocationJson = dc.MapStabilityLocations(new Guid(keyId));
+            switch (mapFilterType)
+            {
+                case "All":
+                    var allLocationJson = dc.GetGeoJsonByDisaster(
+                        new Guid(keyId),
+                        locTypeId,
+                        parTypeId,
+                        statId);
+                    results = ProcessJsonResults(allLocationJson);
+                    break;
+                case "Community":
+                    var communityLocationJson = dc.MapStabilityLocations(
+                        new Guid(keyId),
+                        locTypeId,
+                        parTypeId,
+                        statId);
+                    results = ProcessJsonResults(communityLocationJson);
+                    break;                
+                case "Critical":
+                    var criticalLocationJson = dc.GetGeoJsonByDisaster(
+                        new Guid(keyId),
+                        locTypeId,
+                        parTypeId,
+                        statId);
+                    results = ProcessJsonResults(criticalLocationJson);
+                    break;
+                case "VOAD":
+                    var VOADLocationJson = dc.GetGeoJsonByDisaster(
+                        new Guid(keyId),
+                        locTypeId,
+                        parTypeId,
+                        statId);
+                    results = ProcessJsonResults(VOADLocationJson);
+                    break;
+                case "Professional":
+                    var professionalLocationJson = dc.GetGeoJsonByDisaster(
+                        new Guid(keyId),
+                        locTypeId,
+                        parTypeId,
+                        statId);
+                    results = ProcessJsonResults(professionalLocationJson);
+                    break;
+                default:
+                    var defaultLocationJson = dc.GetGeoJsonByDisaster(
+                        new Guid(keyId),
+                        locTypeId,
+                        parTypeId,
+                        statId);
+                    results = ProcessJsonResults(defaultLocationJson);
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            results = "Error: " + ex.Message;
+            // Log the full error details if needed
+            // System.Diagnostics.Debug.WriteLine(ex.ToString());
+        }
+        
+        context.Response.ContentType = "application/json";
+        context.Response.Write(results);
+    }
 
-					results = (new JavaScriptSerializer().Serialize(communityLocationJson));
-					results = results.Remove(0, 13);
-					results = results.Remove(results.Length - 3, 3);
-					results = results.Replace("\\", "");
-                break;
-				
+    private string ProcessJsonResults(object jsonData)
+    {
+        string results = (new JavaScriptSerializer().Serialize(jsonData));
+        // Clean up the JSON string (remove wrapper properties if needed)
+        results = results.Remove(0, 13);  // Remove initial wrapper
+        results = results.Remove(results.Length - 3, 3);  // Remove trailing wrapper
+        results = results.Replace("\\", "");  // Remove escape characters
+        return results;
+    }
 
-				case "Critical":
-					var criticalLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
-
-					results = (new JavaScriptSerializer().Serialize(criticalLocationJson));
-					results = results.Remove(0, 13);
-					results = results.Remove(results.Length - 3, 3);
-					results = results.Replace("\\", "");
-                break;
-				
-
-				case "VOAD":
-					var VOADLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
-
-					results = (new JavaScriptSerializer().Serialize(VOADLocationJson));
-					results = results.Remove(0, 13);
-					results = results.Remove(results.Length - 3, 3);
-					results = results.Replace("\\", "");
-                break;
-				
-
-				case "Professional":
-					var professionalLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
-
-					results = (new JavaScriptSerializer().Serialize(professionalLocationJson));
-					results = results.Remove(0, 13);
-					results = results.Remove(results.Length - 3, 3);
-					results = results.Replace("\\", "");
-                break;
-
-
-				default:
-					var defaultLocationJson = dc.GetGeoJsonByDisaster(new Guid(keyId));
-
-					results = (new JavaScriptSerializer().Serialize(defaultLocationJson));
-					results = results.Remove(0, 13);
-					results = results.Remove(results.Length - 3, 3);
-					results = results.Replace("\\", "");
-                break;
-			}
-			//return results;
-		}
-		catch (Exception ex)
-		{
-			results += results + ex.Data + "<br> " + ex.HelpLink + "<br> " + ex.HResult + "<br> " + ex.InnerException + "<br> " + ex.Message + "<br> " + ex.Source + "<br>" + ex.StackTrace + "<br>" + ex.TargetSite;
-		}
-		context.Response.ContentType = "text/plain";
-		context.Response.Write(results);
-	}
-
-	public bool IsReusable {
-		get {
-			return false;
-		}
-	}
-
+    public bool IsReusable {
+        get {
+            return false;
+        }
+    }
 }
