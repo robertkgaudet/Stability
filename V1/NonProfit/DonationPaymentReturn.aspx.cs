@@ -72,8 +72,9 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
     private void HandlePaymentSuccess(Stripe.Checkout.Session paymentIntent, Tools.TransactionStatus status)
     {
         Donation donation = dc.Donations.Where(x => x.DonationId == new Guid(paymentIntent.Metadata.Values.FirstOrDefault().ToString())).FirstOrDefault();
-        var donationCampaign = dc.DonationCampaigns.Where(x => x.DonationCampaignId == donation.CampaignId).FirstOrDefault();
         var profile = dc.Profiles.Where(p => p.UserId == donation.UserId).FirstOrDefault();
+        var organization = dc.Organizations.Where(x => x.OwnerId == donation.UserId).FirstOrDefault();
+        var donationCampaign = dc.OrganizationEvents.Where(x => x.OrganizationId == organization.OrganizationId).FirstOrDefault();
         if (donation != null)
         {
             donation.TransactionId = paymentIntent.PaymentIntentId;
@@ -83,7 +84,6 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
 
             if (status == Tools.TransactionStatus.Succeeded)
             {
-                var organization = dc.Organizations.Where(x => x.OwnerId == donation.UserId).FirstOrDefault();
                 ListDictionary ldEmailBodyReplacements = new ListDictionary
             {
                       { "<% DonorFirstName %>", donation.FirstName },
@@ -93,7 +93,7 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
                       { "<%LogoUrl%>", organization.Logo },
                       { "<%OrganizationName%>", organization.Name },
                       { "<% TeamPageLink %>", organization.Website },
-                      { "<% DonationDeployment %>", donationCampaign.Summary},
+                      { "<% DonationDeployment %>", donationCampaign.CampaignName},
                        { "<% ContactLink %>", organization.Website },
                        { "<% TeamOwnerName %>", organization.PointOfContactName },
                        { "<% Title %>",profile.Title },
