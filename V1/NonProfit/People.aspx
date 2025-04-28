@@ -495,22 +495,33 @@
         var scroll = false;
         $(document).ready(function () {
             $(document).on("click", "#nextBtn", function () {
-
+                debugger;
                 if (!$('#nextBtn').hasClass('disabled')) {
 
                     var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
                     var currentPage = parseInt($('.pagination .active .page-link').text());
                     var newPage = currentPage + 1;
                     if (newPage <= totalPages) {
-                        $('.page-item a').each(function (index) {
-                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
-                                $(this).attr('tabindex', index + newPage - 2);
-                                $(this).text(index + newPage - 2);
-                                $(this).attr("onclick", `triggerSearch(${index + newPage - 2}); return false;`);
-                            }
-                        });
+                        $(".page-item").not("#previousBtn, #nextBtn").remove();
+                        var newPageItem = '';
+                        for (var i = 0; i < Math.min(3, totalPages); i++) {
+                            newPageItem += '<li class="page-item' + (i == (newPage - 1) ? " active" : "") + (i == 2 ? " firstpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                        }
+                        if (totalPages > 3) {
+                            newPageItem += '<li class="page-item disabled dotpage"><a class="page-link">...</a></li>';
+                        }
+                        for (var i = Math.max(totalPages - 3, 3), j = 0; i < totalPages; i++, j++) {
+                            newPageItem += '<li class="page-item' + (i == (newPage - 1) ? " active" : "") + (j == 0 ? " lastpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                        }
+                        if (newPageItem != '') $('#previousBtn').after(newPageItem);
+                        if (totalPages <= newPage) {
+                            $('#nextBtn').addClass('disabled');
+                        } else {
+                            $('#nextBtn').removeClass('disabled');
+                        }
                         triggerSearch(newPage);
                     }
+
                 }
             });
         });
@@ -524,13 +535,35 @@
 
                 if (newPage >= 1) {
 
-                    $('.page-item a').each(function (index) {
-                        if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
-                            $(this).attr('tabindex', index + newPage - 2);
-                            $(this).text(index + newPage - 2);
-                            $(this).attr("onclick", `triggerSearch(${(index + newPage - 2)}); return false;`);
-                        }
-                    });
+                    $(".page-item").not("#previousBtn, #nextBtn").remove();
+                    var newPageItem = '';
+
+                    // Displaying the first 3 pages
+                    for (var i = 0; i < Math.min(3, totalPages); i++) {
+                        newPageItem += '<li class="page-item' + (i == (newPage - 1) ? " active" : "") + (i == 2 ? " firstpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                    }
+
+                    // Show "..." if more than 3 pages
+                    if (totalPages > 3) {
+                        newPageItem += '<li class="page-item disabled dotpage"><a class="page-link">...</a></li>';
+                    }
+
+                    // Displaying the last 3 pages
+                    for (var i = Math.max(totalPages - 3, 3), j = 0; i < totalPages; i++, j++) {
+                        newPageItem += '<li class="page-item' + (i == (newPage - 1) ? " active" : "") + (j == 0 ? " lastpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                    }
+
+                    // Insert new page items after the previous button
+                    if (newPageItem != '') $('#previousBtn').after(newPageItem);
+
+                    // Disable Next button if on last page
+                    if (totalPages <= newPage) {
+                        $('#nextBtn').addClass('disabled');
+                    } else {
+                        $('#nextBtn').removeClass('disabled');
+                    }
+
+                    // Trigger the search for the previous page
                     triggerSearch(newPage);
                 }
             }
@@ -614,6 +647,7 @@
             __doPostBack('<%= SearchButton.UniqueID %>', '');
         }
         function updatePagination() {
+            debugger;
             var totalPage = document.getElementById('<%= totalPageValue.ClientID %>').value;
             var currentPage = document.getElementById('<%= currentPageValue.ClientID %>').value;
             if (currentPage == '1') {
