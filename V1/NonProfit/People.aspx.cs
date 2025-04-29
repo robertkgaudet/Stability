@@ -694,11 +694,13 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
                 // Execute stored procedure and return mapped results
                 dc.CommandTimeout = 300;
+                //var result = dc.ExecuteQuery<PeopleList>(
+                //   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified).ToList();
+
                 var result = dc.ExecuteQuery<PeopleList>(
                    "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14},{15},{16}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified, currentPageValue.Value, pageSize).ToList();
-
-                var totalcount = dc.ExecuteQuery<int>(
-                  "EXEC [GetPeopleListCount] {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified).FirstOrDefault();
+                
+                var totalCount = result.Any() ? result.First().TotalCount : 0;
 
                 // Show Filter Message if Any Filter Applied
                 divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS || teamVerified || stabilityVerified;
@@ -712,7 +714,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 // Bind Data.
                 //var pNumber = Convert.ToInt32(currentPageValue.Value);
 
-                totalPageValue.Value = Convert.ToString(Math.Ceiling((double)totalcount / 50));
+                totalPageValue.Value = Convert.ToString(Math.Ceiling((double)totalCount / 50));
 
                 rptVolunteers.DataSource = result;
                 rptVolunteers.DataBind();
@@ -765,6 +767,7 @@ internal class PeopleList
     public DateTime LastActivityDate { get; set; }
     public bool? IsApproved { get; set; }
     public bool? ReceiveSMSNotifications { get; set; }
+    public int TotalCount { get; set; }
 
 
     public PeopleList(string firstname, DateTime createDate, string description, string loweredEmail, string phoneNumber, string lastname, Guid userId, DateTime? dateVettingCompleted, DateTime? dateVettingStarted, string vettingNotes, bool? vettingActive, bool? vettingComplete, bool? passedVetting, string title, string zelloName, DateTime lastLoginDate, DateTime lastActivityDate, bool? isApproved, bool? receiveSMSNotifications)

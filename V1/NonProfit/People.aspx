@@ -191,6 +191,11 @@
         margin-left: -9px;
     }
 
+    .custom-flex-end {
+      display: flex;
+      justify-content: flex-end;
+      padding: 0 15px 15px 0;
+    }
   </style>
     <script>
         var recipientsName;
@@ -496,7 +501,6 @@
         var scroll = false;
         $(document).ready(function () {
             $(document).on("click", "#nextBtn", function () {
-                debugger;
                 if (!$('#nextBtn').hasClass('disabled')) {
 
                     var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
@@ -648,7 +652,6 @@
             __doPostBack('<%= SearchButton.UniqueID %>', '');
         }
         function updatePagination() {
-            debugger;
             var totalPage = document.getElementById('<%= totalPageValue.ClientID %>').value;
             var currentPage = document.getElementById('<%= currentPageValue.ClientID %>').value;
             if (currentPage == '1') {
@@ -675,6 +678,7 @@
                 $('.navClass').html(currentPagination);
             }
             updateCheckboxSelection();
+            checkSkillResourceFilter();
         }
         function updateSelectedUsers() {
             var selectedUserIds = [];
@@ -835,7 +839,6 @@
     </script>
     <script type="text/javascript">
         function onSkillClick(skillId) {
-            ;
             var listBox = document.getElementById('<%= ddlSkills.ClientID %>');
         var options = listBox && listBox.options;
 
@@ -879,7 +882,64 @@
     document.getElementById('<%= currentPageValue.ClientID %>').value = 1;
     __doPostBack('<%= SearchButton.UniqueID %>', '');
         }
+        function clearSkillResource() {
+            var anySkill = false;
+            var anyResource = false;
+            var listBoxS = document.getElementById('<%= ddlSkills.ClientID %>');
+            var optionsS = listBoxS && listBoxS.options;
+            anySkill = Array.from(listBoxS.options).filter(option => option.selected).length > 0;
+            if (optionsS && anySkill) {
+                for (var i = 0; i < optionsS.length; i++) {
+                    optionsS[i].selected = false;
+                    var listItem = document.querySelector(`li input[type="checkbox"][value="${optionsS[i].value}"]`);
+                    if (listItem) {
+                        listItem.checked = false;
+                        var parentLi = listItem.closest('li');
+                        if (parentLi) {
+                            parentLi.classList.remove('active');
+                        }
+                    }
+                }
+            }            
 
+            var listBoxR = document.getElementById('<%= ddlResources.ClientID %>');
+            var optionsR = listBoxR && listBoxR.options;
+            anyResource = Array.from(listBoxR.options).filter(option => option.selected).length > 0;
+            if (optionsR && anyResource) {
+                for (var i = 0; i < optionsR.length; i++) {                    
+                    optionsR[i].selected = false;
+                    var listItem = document.querySelector(`li input[type="checkbox"][value="${optionsR[i].value}"]`);
+                    if (listItem) {
+                        listItem.checked = false;
+                        var parentLi = listItem.closest('li');
+                        if (parentLi) {
+                            parentLi.classList.remove('active');
+                        }
+                    }
+                    
+                }
+                
+            }
+            if (anySkill || anyResource) {
+                document.getElementById('<%= currentPageValue.ClientID %>').value = 1;
+                __doPostBack('<%= SearchButton.UniqueID %>', '');
+            }            
+        }
+        function checkSkillResourceFilter() {
+            var anySkill = false;
+            var anyResource = false;
+            var listBoxS = document.getElementById('<%= ddlSkills.ClientID %>');
+            anySkill = Array.from(listBoxS.options).filter(option => option.selected).length > 0;
+
+            var listBoxR = document.getElementById('<%= ddlResources.ClientID %>');
+            anyResource = Array.from(listBoxR.options).filter(option => option.selected).length > 0;
+
+            if (anySkill || anyResource) {
+                $("#clearSkillResourceId").show();
+            } else {
+                $("#clearSkillResourceId").hide();
+            }
+        }
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -1067,7 +1127,13 @@
                             </div>
                         </div>
                     </div>
+                   
                 </div>
+            </div>
+            <div class="row">
+                 <div class="custom-flex-end">
+                     <button type="button" style="display:none" id="clearSkillResourceId" onclick="clearSkillResource()" class="btn btn-sm btn-info">clear skills & resource filter</button>                        
+                 </div>
             </div>
         </div>
     </div>
