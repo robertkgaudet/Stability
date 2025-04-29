@@ -1,12 +1,17 @@
-﻿using Stability;
+﻿using CrowdRelief;
+using Stability;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Security;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Twilio.Types;
 
 public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 {
@@ -456,4 +461,94 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 			//}
 		}
 	}
+
+
+    protected void btnSendInvitation_Click(object sender, EventArgs e)
+    {
+        string eventId = Request.QueryString["organizationEventId"];
+        string messageType = Request.Form["sendOption"]; 
+        if (messageType == "Email")
+        {
+            string emailBody = txtEmail.Text;
+             SendEmail(eventId, emailBody);
+        }
+        else if (messageType == "SMS")
+        {
+            string smsBody = txtsms.Value;
+              sendSms(eventId, smsBody);
+        }
+        txtEmail.Text = "";
+        txtsms.Value = "";
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Invitation sent successfully!');", true);
+    }
+
+    [WebMethod]
+    public static string sendSms(string eventId, string smsMessage)
+    {
+        if (!string.IsNullOrEmpty(eventId) && !string.IsNullOrEmpty(smsMessage))
+        {
+            smsMessage = Regex.Replace(smsMessage, "<.*?>", string.Empty);
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                    var phoneNumbers = (from u in dc.UserOrganizationEvents
+                                       join p in dc.Profiles on u.UserId equals p.UserId
+                                       where u.OrganizationEventId == Guid.Parse(eventId) && p.ReceiveSMSNotifications == true
+                                        select p.PhoneNumber).ToList();
+				foreach (string phoneNumber in phoneNumbers)
+				{
+					string accountSid = ConfigurationManager.AppSettings["twilioAccountSID"].ToString();
+					string authToken = ConfigurationManager.AppSettings["twilioAuthToken"].ToString();
+					string fromNumber = ConfigurationManager.AppSettings["twilioPhoneNumber"].ToString();
+					var tools = new Tools(accountSid, authToken, fromNumber);
+					tools.SendSms(smsMessage, new string[] { phoneNumber });
+				}
+		}
+        }
+        return "Sms sent successfully!";
+    }
+
+
+    [WebMethod]
+    public static string SendEmail(string eventId, string userMessage)
+    {
+        if (!string.IsNullOrEmpty(eventId))
+        {
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            { 
+                    var userEmails = (from u in dc.UserOrganizationEvents
+                                      join m in dc.aspnet_Memberships on u.UserId equals m.UserId
+                                      join p in dc.Profiles on u.UserId equals p.UserId
+                                      where u.OrganizationEventId == Guid.Parse(eventId) && p.ReceiveEmailNotifications == true
+                                      select m.Email).ToList();
+
+                var fromEmail = dc.OrganizationEvents.Where(o=>o.OrganizationEventId.ToString()==eventId)
+                 .Select(e => e.Email) 
+                 .FirstOrDefault();
+                foreach (string userEmail in userEmails)
+				{
+					if (!string.IsNullOrEmpty(userEmail))
+					{
+						ListDictionary ldEmailBodyReplacements = new ListDictionary
+						{
+							{ "<% Message %>", userMessage },
+						};
+						string error = string.Empty;
+						Tools.SendEmail(
+							userMessage,
+							"You're Invited! Join Us for the Upcoming Event",
+							ldEmailBodyReplacements,
+							userEmail,
+							string.Empty,
+							string.Empty,
+							fromEmail,
+                            "~\\EmailTemplates\\InviteMemberMessage .html",
+                            out error
+						);
+					}
+				}
+			}
+        }
+        return "Emails sent successfully!";
+    }
+
 }
