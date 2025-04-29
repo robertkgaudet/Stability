@@ -48,6 +48,10 @@
             <a href="/V1/NonProfitAdministration/PositionsNeeded.aspx?organizationEventId=<%=_organizationEventId%>" <%=_positionsActive%>>Add New Positions</a>
 			<a href="/V1/NonProfitAdministration/Participants.aspx?organizationEventId=<%=_organizationEventId%>" <%=_participantsActive%>>View Participant List</a>
             <a href="/V1/NonProfitAdministration/EditNonProfitCampaign.aspx?OrganizationEventId=<%=_organizationEventId%>" <%=_viewPositionsActive%>>Edit Deployment</a>
+	        <a href="javascript:void(0);" onclick="openInviteModal()">Invite Team Members</a>
+
+
+
             <span class="pull-right"> <i class="fa fa-arrow-circle-o-up"></i> <b><a href="/SignUp/<%=_urlFriendlyName%>" target="_blank" <%=_viewPositionsActive%>>View Open Positions</a></b></span>
             <%--<a href="/V1/NonProfitAdministration/EventMessages.aspx?organizationEventId=<%=_organizationEventId%>" <%=_messagesActive%>>Message</a>
             <a href="/V1/NonProfitAdministration/EventReports.aspx?organizationEventId=<%=_organizationEventId%>" <%=_reportsActive%>>Reports</a>
