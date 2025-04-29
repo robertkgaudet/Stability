@@ -146,6 +146,7 @@ public partial class V1_Deployments_Map : BaseWebForm
         var locationTypes = from lt in dc.LocationTypes
                             orderby lt.Name
                             select new { lt.Name, lt.LocationTypeId };
+        string locationtype = Request.QueryString["locationtype"];
 
         foreach (var type in locationTypes)
         {
@@ -158,6 +159,7 @@ public partial class V1_Deployments_Map : BaseWebForm
         var parentTypes = from pt in dc.LocationParentTypes
                           orderby pt.Name
                           select new { pt.Name, pt.LocationParentTypeId };
+        string parentlocationtype = Request.QueryString["parentlocationtype"];
 
         foreach (var type in parentTypes)
         {
@@ -171,6 +173,7 @@ public partial class V1_Deployments_Map : BaseWebForm
         var statuses = from s in dc.LocationStatus
                        orderby s.Name
                        select new { s.Name, s.LocationStatusId };
+        string activestatus = Request.QueryString["status"];
 
         foreach (var status in statuses)
         {

@@ -1,57 +1,65 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Portal.master" AutoEventWireup="true" CodeFile="Map.aspx.cs" Inherits="V1_Deployments_Map" %>
-<%@ MasterType VirtualPath="~/V1/MasterPages/Portal.master"%>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
-	
-<script type="text/javascript">
-    $(document).ready(function () {
+<%@ MasterType VirtualPath="~/V1/MasterPages/Portal.master" %>
 
-        // Initialize with stored filter or default to Critical
-        const storedFilter = sessionStorage.getItem('mapFilterType') || "Critical";
-        updateFilterStates(storedFilter);
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 
-        // Handle map filter changes
-        $("#ddlMapFilter.dropdown-menu li").click(function () {
-            const mapFilterType = $(this).attr('id');
-            sessionStorage.setItem('mapFilterType', mapFilterType);
-            updateFilterStates(mapFilterType);
-        });
+    <script type="text/javascript">
+        $(document).ready(function () {
 
-        function updateFilterStates(mapFilterType) {
-            // Always keep dropdown enabled
-            $("#btn-mapDropDown").removeClass("disabled").prop("disabled", false);
+            // Initialize with stored filter or default to Critical
+            const storedFilter = sessionStorage.getItem('mapFilterType') || "Critical";
+            updateFilterStates(storedFilter);
 
-            // No longer disable additional filters based on selection
-            // So we remove this block entirely:
-            // $(".additional-filter")
-            //     .toggleClass("disabled", !isCritical)
-            //     .find("button")
-            //     .prop("disabled", !isCritical);
+            // Handle map filter changes
+            $("#ddlMapFilter.dropdown-menu li").click(function () {
+                const mapFilterType = $(this).attr('id');
+                sessionStorage.setItem('mapFilterType', mapFilterType);
+                updateFilterStates(mapFilterType);
+            });
 
-            // Just update the button text
-            const $selectedItem = $(`#ddlMapFilter.dropdown-menu li[id="${mapFilterType}"]`);
-            if ($selectedItem.length) {
-                $("#btn-mapDropDown").html($selectedItem.text() + ' <i class="fa fa-sort-down"></i>');
+            function updateFilterStates(mapFilterType) {
+                // Always keep dropdown enabled
+                $("#btn-mapDropDown").removeClass("disabled").prop("disabled", false);
+
+                // No longer disable additional filters based on selection
+                // So we remove this block entirely:
+                // $(".additional-filter")
+                //     .toggleClass("disabled", !isCritical)
+                //     .find("button")
+                //     .prop("disabled", !isCritical);
+
+                // Just update the button text
+                const $selectedItem = $(`#ddlMapFilter.dropdown-menu li[id="${mapFilterType}"]`);
+                if ($selectedItem.length) {
+                    $("#btn-mapDropDown").html($selectedItem.text() + ' <i class="fa fa-sort-down"></i>');
+                }
             }
-        }
 
 
-        // V4: State management constants
-        const STORAGE_KEYS = {
-            MAP_FILTER: 'mapFilterType',
-            LOCATION_TYPE: 'locationTypeId',
-            PARENT_TYPE: 'parentTypeId',
-            STATUS: 'statusId'
-        };
-        const DEFAULT_FILTER = "Critical";
+            // V4: State management constants
+            const STORAGE_KEYS = {
+                MAP_FILTER: 'mapFilterType',
+                LOCATION_TYPE: 'locationTypeId',
+                PARENT_TYPE: 'parentTypeId',
+                STATUS: 'statusId'
+            };
+            const DEFAULT_FILTER = "Critical";
 
-        // Initialize UI
-        $("#btn-dropdown.disasterEvent").html('<%=_eventName%>');
+            // Initialize UI
+            $("#btn-dropdown.disasterEvent").html('<%=_eventName%>');
 
         // Redirect handler remains unchanged
-        $("#disasterEvent.dropdown-menu li").click(function (event) {
-            window.location.href = "/Maps/" + $(this).attr('name');
-            event.preventDefault();
+            $("#disasterEvent.dropdown-menu li").click(function (event) {
+                debugger;
+                var locationval = getStoredFilter(STORAGE_KEYS.LOCATION_TYPE);
+                var parentval = getStoredFilter(STORAGE_KEYS.PARENT_TYPE);
+                var statusval = getStoredFilter(STORAGE_KEYS.STATUS);
+                window.location.href = "/Maps/" + $(this).attr('name') +
+                    "?parentlocationtype=" + encodeURIComponent(parentval || '') +
+                    "&locationtype=" + encodeURIComponent(locationval || '') +
+                    "&status=" + encodeURIComponent(statusval || '');
+                event.preventDefault();
         });
 
         // Initialize with stored state or defaults
@@ -83,6 +91,7 @@
         $("#ddlParentType.dropdown-menu li").click(handleFilterClick(STORAGE_KEYS.PARENT_TYPE, '#btn-parentType.parentTypeFilter'));
         $("#ddlStatus.dropdown-menu li").click(handleFilterClick(STORAGE_KEYS.STATUS, '#btn-status.statusFilter'));
 
+
         // V4 Helper functions
         function getStoredFilter(key) {
             return sessionStorage.getItem(key);
@@ -101,9 +110,9 @@
             }
         }
 
-        function updateFilterDisplay(storageKey, dropdownSelector) {
+            function updateFilterDisplay(storageKey, dropdownSelector) {
             const value = getStoredFilter(storageKey);
-            if (value) {
+                if (value) {
                 $(`${dropdownSelector}.dropdown-menu li[id="${value}"]`).trigger('click');
             }
         }
@@ -247,6 +256,7 @@
 
             //Load the info window when a user clicks on it.
             switch (mapFilterType) {
+                
                 case "Cases":
                     map.data.addListener('click', function (event) {
                         var feat = event.feature;
@@ -353,76 +363,95 @@
             }
         }
     });
-</script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=<%=mapApiKey%>"></script>
-	<style>
-    /* Set the size of the div element that contains the map */
-    #map 
-	{
-		width: 100%;
-		height:700px;
-		margin-top:0px !important;
-		float: left;
-    }
-	#list {
-      height: 700px;
-      width: 100%;
-	  min-width:200px;
-      float: left;
-      overflow-y: scroll;
-      padding: 10px;
-      border-left: 2px solid #ccc;
-    }
-    .list-item {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-      cursor: pointer;
-    }
-    .list-item:hover {
-      background-color: #f0f0f0;
-    }
-	a{
-		outline:none !important;
-		border: none !important;
-	}
-	.map-icon-label .map-icon 
-	{
-		font-size: 24px;
-		color: #FFFFFF;
-		line-height: 48px;
-		text-align: center;
-		white-space: nowrap;
-	}
+        $(document).ready(function () {
+            $(".additional-filter").show();
+            $("#ddlMapFilter li").on("click", function (e) {
+                e.preventDefault();
+                var selectedId = $(this).attr("id");
+                $("#btn-mapDropDown").html($(this).text() + ' <i class="fa fa-sort-down"></i>');
+                if (selectedId === "Critical") {
+                    $(".additional-filter").show();
+                } else {
+                    $(".additional-filter").hide();
+                }
+            });
+        });
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%=mapApiKey%>"></script>
+    <style>
+        /* Set the size of the div element that contains the map */
+        #map {
+            width: 100%;
+            height: 700px;
+            margin-top: 0px !important;
+            float: left;
+        }
 
-	.form-group
-	{
-		padding:20px;
-		background-color:white;
-		margin-bottom:0px !important;
-	}
-	.hpanel
-	{
-		margin-bottom:0px !important;
-	}
-	.row.no-gutter {
-      margin-left: 0;
-      margin-right: 0;
-    }
-    .row.no-gutter [class*='col-'] {
-      padding-left: 0;
-      padding-right: 0;
-    }
-    .side-by-side div {
-      display: inline-block;
-      width: 100%; /* Adjust the width to fit your layout */
-      vertical-align: top; /* Align the divs to the top */
-      background-color: lightblue;
-      padding: 10px;
-      margin-right: 1%;
-    }
-    .side-by-side div:last-child {
-      margin-right: 0; /* Remove margin for the last div */
-    }
+        #list {
+            height: 700px;
+            width: 100%;
+            min-width: 200px;
+            float: left;
+            overflow-y: scroll;
+            padding: 10px;
+            border-left: 2px solid #ccc;
+        }
+
+        .list-item {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+            .list-item:hover {
+                background-color: #f0f0f0;
+            }
+
+        a {
+            outline: none !important;
+            border: none !important;
+        }
+
+        .map-icon-label .map-icon {
+            font-size: 24px;
+            color: #FFFFFF;
+            line-height: 48px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .form-group {
+            padding: 20px;
+            background-color: white;
+            margin-bottom: 0px !important;
+        }
+
+        .hpanel {
+            margin-bottom: 0px !important;
+        }
+
+        .row.no-gutter {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+            .row.no-gutter [class*='col-'] {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+        .side-by-side div {
+            display: inline-block;
+            width: 100%; /* Adjust the width to fit your layout */
+            vertical-align: top; /* Align the divs to the top */
+            background-color: lightblue;
+            padding: 10px;
+            margin-right: 1%;
+        }
+
+            .side-by-side div:last-child {
+                margin-right: 0; /* Remove margin for the last div */
+            }
         /* Improved dropdown styling */
         .filter-container {
             display: flex;
@@ -432,36 +461,36 @@
             padding: 10px 0;
         }
 
-       .filter-dropdown {
-    position: relative;
-    display: inline-block;
-}
+        .filter-dropdown {
+            position: relative;
+            display: inline-block;
+        }
 
-.filter-dropdown .dropdown-menu {
-    max-height: 300px; /* Set a max height to prevent overflow */
-    overflow-y: auto; /* Enable scroll if too many items */
-    min-width: 250px; /* Adjust width as needed */
-    white-space: nowrap; /* Prevent text wrapping */
-    background-color: #fff; /* Ensure background color */
-    border: 1px solid #ccc; /* Add a border for clarity */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add slight shadow */
-}
+            .filter-dropdown .dropdown-menu {
+                max-height: 300px; /* Set a max height to prevent overflow */
+                overflow-y: auto; /* Enable scroll if too many items */
+                min-width: 250px; /* Adjust width as needed */
+                white-space: nowrap; /* Prevent text wrapping */
+                background-color: #fff; /* Ensure background color */
+                border: 1px solid #ccc; /* Add a border for clarity */
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Add slight shadow */
+            }
 
-.filter-dropdown .dropdown-toggle {
-    width: auto; /* Ensure button width adjusts dynamically */
-    min-width: 200px; /* Set a reasonable width */
-}
+            .filter-dropdown .dropdown-toggle {
+                width: auto; /* Ensure button width adjusts dynamically */
+                min-width: 200px; /* Set a reasonable width */
+            }
 
-.filter-dropdown .dropdown-menu a {
-    padding: 3px; /* Adjust padding for better spacing */
-    display: block;
-    color: #333; /* Adjust text color */
-    text-decoration: none;
-}
+            .filter-dropdown .dropdown-menu a {
+                padding: 3px; /* Adjust padding for better spacing */
+                display: block;
+                color: #333; /* Adjust text color */
+                text-decoration: none;
+            }
 
-.filter-dropdown .dropdown-menu a:hover {
-    background-color: #f0f0f0; /* Highlight on hover */
-}
+                .filter-dropdown .dropdown-menu a:hover {
+                    background-color: #f0f0f0; /* Highlight on hover */
+                }
 
         .dropdown-toggle::after {
             position: absolute;
@@ -492,95 +521,95 @@
                 min-width: 100%;
             }
         }
+
         .deployment-section {
-    display: flex;
-    align-items: center; /* Vertically center-aligns the items */
-    justify-content: flex-start; /* Aligns items to the left */
-    gap: 10px; /* Optional: Adds space between elements */
-}
+            display: flex;
+            align-items: center; /* Vertically center-aligns the items */
+            justify-content: flex-start; /* Aligns items to the left */
+            gap: 10px; /* Optional: Adds space between elements */
+        }
 
-.deployment-text {
-    margin-right: 20px; /* Adjust space between the text and the buttons */
-}
+        .deployment-text {
+            margin-right: 20px; /* Adjust space between the text and the buttons */
+        }
 
-.deployment-text b {
-    font-weight: bold;
-}
+            .deployment-text b {
+                font-weight: bold;
+            }
 
-.disasterEvent-dropdown {
-    position: relative;
-    display: inline-block;
-}  
-    
-    /* Smooth transitions */
-    .filter-dropdown {
-        transition: all 0.3s ease;
-    }
+        .disasterEvent-dropdown {
+            position: relative;
+            display: inline-block;
+        }
 
-	</style>
+        /* Smooth transitions */
+        .filter-dropdown {
+            transition: all 0.3s ease;
+        }
+    </style>
 </asp:Content>
 
-<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-	<div class="row form-group no-gutter">
-		<div class="col-xs-12" >
-              <div class="filter-container">
-                    <div class="filter-dropdown map-filter-dropdown">
-			<button id="btn-mapDropDown" class="btn btn-outline btn-default ddlMapFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Modify Map Filter <i class="fa fa-sort-down"></i></button>
-			<ul id="ddlMapFilter" class="dropdown-menu text-center dropdown-map-filter">
-				<li id="All" Selected="True"><a href="#">All Locations</a></li>
-				<li id="Community"><a href="#">Stability.org Deployments</a></li>
-				<li id="Critical"><a href="#">Critical Facilities</a></li>
-				<%=liCases%>
-			</ul>
-		</div>
-        
-        <!-- New Location Type Filter -->
-         <div class="filter-dropdown additional-filter">
-             <button id="btn-locationType" class="btn btn-outline btn-default locationTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Location Types <i class="fa fa-sort-down"></i></button>
-            <ul id="ddlLocationType" class="dropdown-menu text-center dropdown-map-filter">
-                <%=locationTypeDropDown%>
-            </ul>
-        </div>
-        
-        <!-- New Parent Type Filter -->
-       <div class="filter-dropdown additional-filter">
-           <button id="btn-parentType" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Parent Types <i class="fa fa-sort-down"></i></button>
-            <ul id="ddlParentType" class="dropdown-menu text-center dropdown-map-filter">
-                <%=locationParentTypeDropDown%>
-            </ul>
-        </div>
-        
-        <!-- New Status Filter -->
-        <div class="filter-dropdown additional-filter">
-         <button id="btn-status" class="btn btn-outline btn-default statusFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Status <i class="fa fa-sort-down"></i></button>
-            <ul id="ddlStatus" class="dropdown-menu text-center dropdown-map-filter">
-                <%=locationStatusDropDown%>
-            </ul>
-        </div>
-        
-	  <div class="filter-dropdown">
-  		<button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i> </button>
-			<ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
-				<%=disasterDropDown%>
-			</ul>
-		</div>
-		<div class="deployment-section">
-   
-        <b>Share Your Team Deployment</b>
-  
-			<asp:HyperLink ID="hypCreateDeployment" CssClass="btn m-l-md btn-info btn-md pull-right" runat="server"></asp:HyperLink>
-			<asp:HyperLink ID="hypSignIn" CssClass="btn btn-info btn-md pull-right" runat="server" Text="Sign In" NavigateUrl="/SignIn" Visible="false"></asp:HyperLink>
-		</div>
-	</div>
+<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <div class="row form-group no-gutter">
+        <div class="col-xs-12">
+            <div class="filter-container">
+                <div class="filter-dropdown map-filter-dropdown">
+                    <button id="btn-mapDropDown" class="btn btn-outline btn-default ddlMapFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Modify Map Filter <i class="fa fa-sort-down"></i></button>
+                    <ul id="ddlMapFilter" class="dropdown-menu text-center dropdown-map-filter">
+                        <li id="All" selected="True"><a href="#">All Locations</a></li>
+                        <li id="Community"><a href="#">Stability.org Deployments</a></li>
+                        <li id="Critical"><a href="#">Critical Facilities</a></li>
+                        <%=liCases%>
+                    </ul>
                 </div>
-</div>
-	<div class="row no-gutter">
-		<div class="col-xs-12 col-sm-9">
-			<div id="map"></div>
-		</div>
-		<div class="col-xs-12 col-sm-3">
-			<div id="list"></div>
-		</div>
-	</div>
-	<div style="height:200px;"></div>
+                <!-- New Parent Type Filter -->
+                <div class="filter-dropdown additional-filter">
+                    <button id="btn-parentType" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Parent Types <i class="fa fa-sort-down"></i></button>
+                    <ul id="ddlParentType" class="dropdown-menu text-center dropdown-map-filter">
+                        <%=locationParentTypeDropDown%>
+                    </ul>
+                </div>
+
+                <!-- New Location Type Filter -->
+                <div class="filter-dropdown additional-filter">
+                    <button id="btn-locationType" class="btn btn-outline btn-default locationTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Location Types <i class="fa fa-sort-down"></i></button>
+                    <ul id="ddlLocationType" class="dropdown-menu text-center dropdown-map-filter">
+                        <%=locationTypeDropDown%>
+                    </ul>
+                </div>
+
+
+                <!-- New Status Filter -->
+                <div class="filter-dropdown additional-filter">
+                    <button id="btn-status" class="btn btn-outline btn-default statusFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Status <i class="fa fa-sort-down"></i></button>
+                    <ul id="ddlStatus" class="dropdown-menu text-center dropdown-map-filter">
+                        <%=locationStatusDropDown%>
+                    </ul>
+                </div>
+
+                <div class="filter-dropdown">
+                    <button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i></button>
+                    <ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
+                        <%=disasterDropDown%>
+                    </ul>
+                </div>
+                <div class="deployment-section">
+
+                    <b>Share Your Team Deployment</b>
+
+                    <asp:HyperLink ID="hypCreateDeployment" CssClass="btn m-l-md btn-info btn-md pull-right" runat="server"></asp:HyperLink>
+                    <asp:HyperLink ID="hypSignIn" CssClass="btn btn-info btn-md pull-right" runat="server" Text="Sign In" NavigateUrl="/SignIn" Visible="false"></asp:HyperLink>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row no-gutter">
+        <div class="col-xs-12 col-sm-9">
+            <div id="map"></div>
+        </div>
+        <div class="col-xs-12 col-sm-3">
+            <div id="list"></div>
+        </div>
+    </div>
+    <div style="height: 200px;"></div>
 </asp:Content>

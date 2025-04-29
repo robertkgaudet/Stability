@@ -19,7 +19,7 @@ public class GetGeoJsonByDisaster: IHttpHandler, IReadOnlySessionState
 
         string results = string.Empty;
         try
-        {
+        {   
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();     
             Guid? locTypeId = !string.IsNullOrEmpty(locationTypeId) ? new Guid(locationTypeId) : (Guid?)null;
             Guid? parTypeId = !string.IsNullOrEmpty(parentTypeId) ? new Guid(parentTypeId) : (Guid?)null;
