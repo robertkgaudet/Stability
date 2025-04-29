@@ -86,19 +86,19 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
             {
                 ListDictionary ldEmailBodyReplacements = new ListDictionary
             {
-                      { "## DonorFirstName ##", donation.FirstName },
-                       { "## DonorLastName ##", donation.LastName },
-                     { "## DonationDate ##", donation.CreatedAt.ToString("MM/dd/yyyy") },
-                      { "## DonationAmount ##", donation.Amount.ToString("F2") },
-                      { "## LogoUrl ##", organization.Logo },
-                      { "## OrganizationName ##", organization.Name },
-                      { "## TeamPageLink ##", organization.Website },
-                      { "## DonationDeployment ##", donationCampaign.CampaignName},
-                       { "## ContactLink ##", organization.Website },
-                       { "## TeamOwnerName ##", organization.PointOfContactName },
-                       { "## Title ##",profile.Title },
-                       { "## TeamOwnerEmail ##", organization.PointOfContactEmail },
-                       { "## TeamWebsiteLink ##", organization.Website }
+                      { "##DonorFirstName##", donation.FirstName },
+                       { "##DonorLastName##", donation.LastName },
+                     { "##DonationDate##", donation.CreatedAt.ToString("MM/dd/yyyy") },
+                      { "##DonationAmount##", donation.Amount.ToString("F2") },
+                      { "##LogoUrl##", organization.Logo },
+                      { "##OrganizationName##", organization.Name },
+                      { "##TeamPageLink##", organization.Website },
+                      { "##DonationDeployment##", donationCampaign.CampaignName},
+                       { "##ContactLink##", organization.Website },
+                       { "##TeamOwnerName##", organization.PointOfContactName },
+                       { "##Title##",profile.Title },
+                       { "##TeamOwnerEmail##", organization.PointOfContactEmail },
+                       { "##TeamWebsiteLink##", organization.Website }
 
             };
                 EmailTemplate emailTemplate = dc.EmailTemplates
@@ -130,7 +130,7 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
                     ldEmailBodyReplacements = new ListDictionary
                 {
                     { "<% OwnerName %>", organization.Name },
-                    { "<% donAmount %>", paymentIntent.AmountTotal/100 }
+                    { "<% donAmount %>", (paymentIntent.AmountTotal/100).ToString() }
                 };
                     Tools.SendEmail(
                      string.Empty,
