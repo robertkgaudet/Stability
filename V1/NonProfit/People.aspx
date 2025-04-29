@@ -1131,7 +1131,7 @@
             </div>
             <div class="row">
                  <div class="custom-flex-end">
-                     <button type="button" style="display:none" id="clearSkillResourceId" onclick="clearSkillResource()" class="btn btn-sm btn-info">clear skills & resource filter</button>                        
+                     <button type="button" style="display:none" id="clearSkillResourceId" onclick="clearSkillResource()" class="btn btn-sm btn-info">Clear Skills/Resources</button>                        
                  </div>
             </div>
         </div>
