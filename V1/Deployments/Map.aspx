@@ -51,7 +51,6 @@
 
         // Redirect handler remains unchanged
             $("#disasterEvent.dropdown-menu li").click(function (event) {
-                debugger;
                 var locationval = getStoredFilter(STORAGE_KEYS.LOCATION_TYPE);
                 var parentval = getStoredFilter(STORAGE_KEYS.PARENT_TYPE);
                 var statusval = getStoredFilter(STORAGE_KEYS.STATUS);
@@ -65,7 +64,7 @@
         // Initialize with stored state or defaults
         initMap(getStoredFilter(STORAGE_KEYS.MAP_FILTER) || DEFAULT_FILTER);
         updateDropdownDisplays();
-
+       
         // Map filter handler with state management
         $("#ddlMapFilter.dropdown-menu li").click(function (event) {
             const mapFilterType = $(this).attr('id');
@@ -112,8 +111,13 @@
 
             function updateFilterDisplay(storageKey, dropdownSelector) {
             const value = getStoredFilter(storageKey);
-                if (value) {
-                $(`${dropdownSelector}.dropdown-menu li[id="${value}"]`).trigger('click');
+            if (value) {
+                setTimeout(function () {
+                    const liId = '#'+value;
+                    if ($(liId).length) {
+                        $(liId).find('a').trigger('click');
+                    } 
+                }, 1000);                           
             }
         }
 
