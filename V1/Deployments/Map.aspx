@@ -199,7 +199,7 @@
             }
 
             // Build the GeoJSON URL with filters
-            var mapsURL = '<%=host%>/V1/Handlers/GetGeoJsonByDisaster.ashx?keyId=<%=_eventId%>&mapFilterType=' + (mapFilterType || "Critical");
+            var mapsURL = '/V1/Handlers/GetGeoJsonByDisaster.ashx?keyId=<%=_eventId%>&mapFilterType=' + (mapFilterType || "Critical");
 
             // Only add additional parameters if in Critical mode
             if (mapFilterType === "Critical") {
