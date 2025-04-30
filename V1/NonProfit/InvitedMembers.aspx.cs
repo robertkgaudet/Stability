@@ -29,7 +29,7 @@ public partial class V1_NonProfit_InvitedMembers : BaseOrganizationWebForm
         }
         else
         {
-        }
+         }
         LoadInvitedMemberList();
     }
 
@@ -38,7 +38,7 @@ public partial class V1_NonProfit_InvitedMembers : BaseOrganizationWebForm
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
             var invitedMembers = (from i in dc.UserOrganizationInvites
-                                  where i.InvitationCancelled == false
+                                  where i.InvitationCancelled == false || i.EmailSent == false
                                   orderby i.CreatedOn descending
                                   select new
                                   {
@@ -89,8 +89,6 @@ public partial class V1_NonProfit_InvitedMembers : BaseOrganizationWebForm
                 string firstName = organizationInfo.Firstname;
 
                 ListDictionary ldEmailBodyReplacements = new ListDictionary();
-                //ldEmailBodyReplacements.Add("<% SenderName %>", senderName);
-                //ldEmailBodyReplacements.Add("<% TeamName %>", organizationName);
                 ldEmailBodyReplacements.Add("<% FirstName %>", firstName);
                 ldEmailBodyReplacements.Add("<% UserOrganizationInviteId %>", userOrgInviteId);
                 string emailFrom = ConfigurationManager.AppSettings["emailFrom"].ToString();
@@ -106,9 +104,9 @@ public partial class V1_NonProfit_InvitedMembers : BaseOrganizationWebForm
                     senderName,
                     emailFrom,
                     "~\\EmailTemplates\\MemberInvitation.html",
-                    out emailError
+                    out emailError 
                     );
-                inviteMember.IsCancelled = false;
+                inviteMember.EmailSent = true;
                 dc.SubmitChanges();
             }
         }
