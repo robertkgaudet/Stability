@@ -170,7 +170,7 @@
                     </Columns>
                 </asp:GridView>
                 <div class="panel-heading" style="margin-left: -15px;">
-                    <h3>Donation Email Received</h3>
+                    <h3>Donation Email Template</h3>
                 </div>
                 <div class="col-12" style="display: flex; justify-content: end; margin-bottom: 15px;">
                     <asp:Button ID="btnAddEmailTemplate" class="compaign-btn" runat="server" Text="Add Email Template" CssClass="btn btn-primary" OnClientClick="showModalEmail('Add EmailTemplate' ); return false;" />

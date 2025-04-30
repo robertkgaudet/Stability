@@ -86,42 +86,51 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
             {
                 ListDictionary ldEmailBodyReplacements = new ListDictionary
             {
-                      { "<% DonorFirstName %>", donation.FirstName },
-                       { "<% DonorLastName %>", donation.LastName },
-                     { "<% DonationDate %>", donation.CreatedAt.ToString("MM/dd/yyyy") },
-                      { "<% DonationAmount %>", donation.Amount.ToString("F2") },
-                      { "<%LogoUrl%>", organization.Logo },
-                      { "<%OrganizationName%>", organization.Name },
-                      { "<% TeamPageLink %>", organization.Website },
-                      { "<% DonationDeployment %>", donationCampaign.CampaignName},
-                       { "<% ContactLink %>", organization.Website },
-                       { "<% TeamOwnerName %>", organization.PointOfContactName },
-                       { "<% Title %>",profile.Title },
-                       { "<% TeamOwnerEmail %>", organization.PointOfContactEmail },
-                       { "<% TeamWebsiteLink %>", organization.Website }
+                      { "##DonorFirstName##", donation.FirstName },
+                       { "##DonorLastName##", donation.LastName },
+                     { "##DonationDate##", donation.CreatedAt.ToString("MM/dd/yyyy") },
+                      { "##DonationAmount##", donation.Amount.ToString("F2") },
+                      { "##LogoUrl##", organization.Logo },
+                      { "##OrganizationName##", organization.Name },
+                      { "##TeamPageLink##", organization.Website },
+                      { "##DonationDeployment##", donationCampaign.CampaignName},
+                       { "##ContactLink##", organization.Website },
+                       { "##TeamOwnerName##", organization.PointOfContactName },
+                       { "##Title##",profile.Title },
+                       { "##TeamOwnerEmail##", organization.PointOfContactEmail },
+                       { "##TeamWebsiteLink##", organization.Website }
 
             };
                 EmailTemplate emailTemplate = dc.EmailTemplates
                 .Where(e => e.OrganizationId == organization.OrganizationId)
                 .FirstOrDefault();
                 string error = string.Empty;
+                string emailBody = string.Empty;
+                string templatePath = "~\\Homer\\DefaultEmailTemplate.html";
+
+                if (emailTemplate != null && !string.IsNullOrEmpty(emailTemplate.EmailBody))
+                {
+                    emailBody = emailTemplate.EmailBody;
+                    templatePath = string.Empty;
+                }
+
                 Tools.SendEmail(
-                     string.Empty,
-                     "Thanks for Donation to Stability",
-                     ldEmailBodyReplacements,
-                     donation.EmailAddress,
-                      string.Empty,
-                       string.Empty,
-                      string.Empty,
-                     "~\\Homer\\DefaultEmailTemplate.html",
-                     out error);
+                    emailBody,
+                    "Thanks for Donation to Stability",
+                    ldEmailBodyReplacements,
+                    donation.EmailAddress,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    templatePath,
+                    out error);
 
                 if (!string.IsNullOrEmpty(donation.AuthorizedTransactionId))
                 {
                     ldEmailBodyReplacements = new ListDictionary
                 {
                     { "<% OwnerName %>", organization.Name },
-                    { "<% donAmount %>", paymentIntent.AmountTotal/100 }
+                    { "<% donAmount %>", (paymentIntent.AmountTotal/100).ToString() }
                 };
                     Tools.SendEmail(
                      string.Empty,
