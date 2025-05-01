@@ -44,6 +44,9 @@
     margin: 0 5px;          
     float: right;           
 }
+          #txtsms{
+                 min-height: min-content
+          }
 
     </style>
     <script type="text/javascript">
@@ -81,7 +84,6 @@
             document.getElementById('<%= txtEmail.ClientID %>').value = ''; 
             document.getElementById('<%= txtsms.ClientID %>').value = '';
             $('#<%= txtEmail.ClientID %>').summernote('code', '');
-            $('#<%= txtsms.ClientID %>').summernote('code', '');
             $("input[name='sendOption'][value='SMS']").prop('checked', true);
             document.getElementById('inviteModal').style.display = 'none';
             document.getElementById('modalOverlay').style.display = 'none';
@@ -120,10 +122,10 @@
                 ],
                 height: 100
             });
-            $('#<%= txtsms.ClientID %>').summernote({
+           <%-- $('#<%= txtsms.ClientID %>').summernote({
                 toolbar: [],
                 height: 100
-            });
+            });--%>
         });
         function sendInvitationAjax() {
             if (!validateBeforeSend()) return false;
@@ -147,7 +149,6 @@
             document.getElementById('<%= txtEmail.ClientID %>').value = '';  
             document.getElementById('<%= txtsms.ClientID %>').value = ''; 
             $('#<%= txtEmail.ClientID %>').summernote('code', '');
-            $('#<%= txtsms.ClientID %>').summernote('code', '');
             $("input[name='sendOption'][value='SMS']").prop('checked', true);
             document.getElementById('inviteModal').style.display = 'none';
             document.getElementById('modalOverlay').style.display = 'none';
@@ -436,7 +437,7 @@
 
         <div id="smsContainer">
           <textarea id="txtsms" runat="server" ClientIDMode="Static" class="form-control"
-          placeholder="Enter SMS Text" rows="6" cols="95"></textarea>
+          placeholder="Enter SMS Text (Max 450 characters)" rows="6" cols="95"></textarea>
 
             <asp:RequiredFieldValidator
                 ID="rfvSMS"
@@ -448,9 +449,7 @@
                 EnableClientScript="true"
                 Enabled="false">
             </asp:RequiredFieldValidator>
-
         </div>
-
         <div id="emailContainer" style="display: none;">
             <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="4" ClientIDMode="Static" placeholder="Enter Email Text"></asp:TextBox>
             <asp:RequiredFieldValidator
