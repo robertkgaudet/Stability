@@ -90,8 +90,8 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 				string firstName				= organizationInfo.Firstname;
 
 				ListDictionary ldEmailBodyReplacements = new ListDictionary();
-				ldEmailBodyReplacements.Add("<% SenderName %>", senderName);
-				ldEmailBodyReplacements.Add("<% TeamName %>", organizationName);
+				//ldEmailBodyReplacements.Add("<% SenderName %>", senderName);
+				//ldEmailBodyReplacements.Add("<% TeamName %>", organizationName);
 				ldEmailBodyReplacements.Add("<% FirstName %>", firstName);
 				ldEmailBodyReplacements.Add("<% UserOrganizationInviteId %>", UserOrganizationInviteId.ToString());
 				string emailFrom = ConfigurationManager.AppSettings["emailFrom"].ToString();
@@ -113,6 +113,7 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 
 			}
 			//Redirect to setup their website.
+			dc.SubmitChanges();
 			Response.Redirect("/V1/NonProfit/Default.aspx?OrganizationId=" + organizationId);
 		}
 	}
