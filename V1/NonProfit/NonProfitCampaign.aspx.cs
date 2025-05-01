@@ -75,6 +75,7 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        txtsms.Attributes["maxlength"] = "450";
         string organizationEventId = string.Empty;
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
@@ -561,4 +562,4 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
         return string.Format("Invitation for member {0} has been sent successfully!", sentCount);
 
     }
-}
+} 
