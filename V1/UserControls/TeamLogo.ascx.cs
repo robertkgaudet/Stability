@@ -61,8 +61,8 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                         phoneNumber.Visible = ShowPhoneNumber;
                         email.Visible = ShowEmail;
                         hypName.NavigateUrl = "/V1/Member/Default.aspx?userId=" + UserId;
-						hypStabilityLogo.NavigateUrl = "/V1/Member/Default.aspx?userId=" + UserId;
-					}
+                        hypStabilityLogo.NavigateUrl = "/V1/Member/Default.aspx?userId=" + UserId;
+                    }
                     else
                     {
                         hypName.Visible = true;
@@ -71,9 +71,9 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                         hypName.NavigateUrl = string.Empty;
                         hypName.Attributes.Remove("href");
 
-						hypStabilityLogo.NavigateUrl = string.Empty;
-						hypStabilityLogo.Attributes.Remove("href");
-					}
+                        hypStabilityLogo.NavigateUrl = string.Empty;
+                        hypStabilityLogo.Attributes.Remove("href");
+                    }
                     var orgUser = (from o in dc.Organizations
                                    join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
                                    where uo.UserId == UserId
@@ -89,37 +89,32 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
 
                     if (orgUser != null)
                     {
-                        if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
-                        {
-                          
-                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare)
+                        imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare)
                                 ? teamLogo + orgUser.LogoSquare
                                 : "/V1/Images/DefaultLogo.png";
-
-                         
-                            imgTeamLogo.Visible = true;
-                            imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
-                            hypTeamLogo.Visible = true;
+                        imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
+                        if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
+                        {
+                            imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
+                            hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
                         }
                         else
                         {
-                            // Hide the team logo if conditions are not met
-                            hypTeamLogo.Visible = false;
+                            hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "none");
+                            imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "none");
                         }
                     }
+                    hypStabilityLogo.NavigateUrl = "/V1/Member/Default.aspx?userId=" + UserId;
+                    imgStabilityBadge.ImageUrl = teamLogo + "purplebadge.png";
                     if (profile.IsDisasterReadyCertified)
-					{
-						//Stability Verified, show purple logo.
-						hypStabilityLogo.Visible = true;
-						hypStabilityLogo.NavigateUrl = "/V1/Member/Default.aspx?userId=" + UserId;
-
-						imgStabilityBadge.ImageUrl = teamLogo + "purplebadge.png";
-                        imgStabilityBadge.Visible = true;
+                    {
+                        imgStabilityBadge.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
+                        hypStabilityLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
                     }
                     else
                     {
-						hypStabilityLogo.Visible = false;
-						imgStabilityBadge.Visible = false;
+                        imgStabilityBadge.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "none");
+                        hypStabilityLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "none");
                     }
                 }
             }

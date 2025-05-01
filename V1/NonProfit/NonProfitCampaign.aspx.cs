@@ -356,8 +356,6 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
                 getHelpLink = organizationEvent.oe.HelpURL;
             }
         }
-
-
     }
     protected void rpNonProfitPeople_ItemDataBound(object sender, RepeaterItemEventArgs e)
     {
@@ -462,90 +460,105 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
         }
     }
 
+    [WebMethod]
 
-    protected void btnSendInvitation_Click(object sender, EventArgs e)
+    public static string SendSms(string eventId, string smsMessage)
     {
-        string eventId = Request.QueryString["organizationEventId"];
-        string messageType = Request.Form["sendOption"];
-        if (messageType == "Email")
+         if (string.IsNullOrWhiteSpace(eventId) || string.IsNullOrWhiteSpace(smsMessage))
+        return "0";
+    smsMessage = Regex.Replace(smsMessage, "<.*?>", string.Empty);
+
+    try
+    {
+        using (var dc = new CrowdReliefDBDataContext())
         {
-            string emailBody = txtEmail.Text;
-            SendEmail(eventId, emailBody);
+            Guid parsedEventId;
+            if (!Guid.TryParse(eventId, out parsedEventId))
+                return "0";
+            var phoneNumbers = (
+                from u in dc.UserOrganizationEvents
+                join p in dc.Profiles on u.UserId equals p.UserId
+                where u.OrganizationEventId == parsedEventId && p.ReceiveSMSNotifications == true
+                select p.PhoneNumber
+            ).Distinct().ToList();
+
+            if (!phoneNumbers.Any())
+                return "0";
+
+            // Read Twilio config
+            string accountSid = ConfigurationManager.AppSettings["twilioAccountSID"];
+            string authToken = ConfigurationManager.AppSettings["twilioAuthToken"];
+            string fromNumber = ConfigurationManager.AppSettings["twilioPhoneNumber"];
+
+            var tools = new Tools(accountSid, authToken, fromNumber);
+
+            foreach (var phoneNumber in phoneNumbers)
+            {
+                 tools.SendSms(smsMessage, new string[] { phoneNumber });
+            }
+
+                return string.Format("Invitation for member {0} has been sent successfully!", phoneNumbers.Count.ToString());
+
+            }
         }
-        else if (messageType == "SMS")
-        {
-            string smsBody = txtsms.Value;
-            sendSms(eventId, smsBody);
-        }
-        txtEmail.Text = "";
-        txtsms.Value = "";
-        ScriptManager.RegisterStartupScript(this, this.GetType(), "alert", "alert('Invitation sent successfully!');", true);
+    catch (Exception ex)
+    {
+        return ex.Message;
+    }
     }
 
-    [WebMethod]
-    public static string sendSms(string eventId, string smsMessage)
+
+    [System.Web.Services.WebMethod]
+
+    public static string SendEmail(string eventId, string smsMessage)
     {
-        if (!string.IsNullOrEmpty(eventId) && !string.IsNullOrEmpty(smsMessage))
+        if (string.IsNullOrWhiteSpace(eventId) || string.IsNullOrWhiteSpace(smsMessage))
+            return "0";
+        int sentCount = 0;
+        try
         {
-            smsMessage = Regex.Replace(smsMessage, "<.*?>", string.Empty);
-            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            using (var dc = new CrowdReliefDBDataContext())
             {
-                var phoneNumbers = (from u in dc.UserOrganizationEvents
-                                    join p in dc.Profiles on u.UserId equals p.UserId
-                                    where u.OrganizationEventId == Guid.Parse(eventId) && p.ReceiveSMSNotifications == true
-                                    select p.PhoneNumber).ToList();
-                foreach (string phoneNumber in phoneNumbers)
+
+                var userEmails = (
+                    from u in dc.UserOrganizationEvents
+                    join m in dc.aspnet_Memberships on u.UserId equals m.UserId
+                    join p in dc.Profiles on u.UserId equals p.UserId
+                    where u.OrganizationEventId == Guid.Parse(eventId) && p.ReceiveEmailNotifications == true
+                    select m.Email
+                ).Distinct().ToList();
+
+                foreach (var userEmail in userEmails)
                 {
-                    string accountSid = ConfigurationManager.AppSettings["twilioAccountSID"].ToString();
-                    string authToken = ConfigurationManager.AppSettings["twilioAuthToken"].ToString();
-                    string fromNumber = ConfigurationManager.AppSettings["twilioPhoneNumber"].ToString();
-                    var tools = new Tools(accountSid, authToken, fromNumber);
-                    tools.SendSms(smsMessage, new string[] { phoneNumber });
+                    if (string.IsNullOrWhiteSpace(userEmail))
+                        continue;
+
+                    var emailBodyReplacements = new ListDictionary
+                {
+                    { "<% Message %>", smsMessage }
+                };
+
+                    string error;
+                    Tools.SendEmail(
+                        smsMessage,
+                        "You're Invited! Join Us for the Upcoming Event",
+                        emailBodyReplacements,
+                        userEmail,
+                        string.Empty,
+                        string.Empty,
+                        string.Empty,
+                        "~/EmailTemplates/InviteMemberMessage.html",
+                        out error
+                    );
+                    sentCount++;
                 }
             }
         }
-        return "Sms sent successfully!";
-    }
-
-
-    [WebMethod]
-    public static string SendEmail(string eventId, string userMessage)
-    {
-        if (!string.IsNullOrEmpty(eventId))
+        catch (Exception ex)
         {
-            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
-            {
-                var userEmails = (from u in dc.UserOrganizationEvents
-                                  join m in dc.aspnet_Memberships on u.UserId equals m.UserId
-                                  join p in dc.Profiles on u.UserId equals p.UserId
-                                  where u.OrganizationEventId == Guid.Parse(eventId) && p.ReceiveEmailNotifications == true
-                                  select m.Email).ToList();
-
-                foreach (string userEmail in userEmails)
-                {
-                    if (!string.IsNullOrEmpty(userEmail))
-                    {
-                        ListDictionary ldEmailBodyReplacements = new ListDictionary
-                        {
-                            { "<% Message %>", userMessage },
-                        };
-                        string error = string.Empty;
-                        Tools.SendEmail(
-                            userMessage,
-                            "You're Invited! Join Us for the Upcoming Event",
-                            ldEmailBodyReplacements,
-                            userEmail,
-                            string.Empty,
-                            string.Empty,
-                            string.Empty,
-                            "~\\EmailTemplates\\InviteMemberMessage .html",
-                            out error
-                        );
-                    }
-                }
-            }
+            return ex.Message;
         }
-        return "Emails sent successfully!";
-    }
+        return string.Format("Invitation for member {0} has been sent successfully!", sentCount);
 
+    }
 }

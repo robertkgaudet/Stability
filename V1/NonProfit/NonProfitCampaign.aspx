@@ -7,6 +7,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
+       <link href="../../Homer/vendor/sweetalert/lib/sweet-alert.css" rel="stylesheet" />
+   <script src="../../Homer/vendor/sweetalert/lib/sweet-alert.min.js"></script>
     <style>
 
 
@@ -75,16 +77,18 @@
             document.getElementById('inviteModal').style.display = 'block';
             document.getElementById('modalOverlay').style.display = 'block';
         }
-
         function closeInviteModal() {
-            debugger;
+            document.getElementById('<%= txtEmail.ClientID %>').value = ''; 
+            document.getElementById('<%= txtsms.ClientID %>').value = '';
+            $('#<%= txtEmail.ClientID %>').summernote('code', '');
+            $('#<%= txtsms.ClientID %>').summernote('code', '');
+            $("input[name='sendOption'][value='SMS']").prop('checked', true);
             document.getElementById('inviteModal').style.display = 'none';
             document.getElementById('modalOverlay').style.display = 'none';
-            document.getElementById('<%= txtEmail.ClientID %>').value = '';
-            document.getElementById('<%= txtsms.ClientID %>').value = '';
-            const validators = document.querySelectorAll('.text-danger');
+       const validators = document.querySelectorAll('.text-danger');
             validators.forEach(v => v.style.display = 'none');
-        }
+            toggleMessageType();
+   }
 
         function validateBeforeSend() {
             var selectedOption = document.querySelector('input[name="sendOption"]:checked').value;
@@ -104,7 +108,6 @@
             document.getElementById('emailContainer').style.display = (selected === 'Email') ? 'block' : 'none';
         }
         $(document).ready(function () {
-            // Initialize Summernote on the TextArea element
             $('#<%= txtEmail.ClientID %>').summernote({
                 toolbar: [
                     ['style', ['bold', 'italic']],
@@ -122,6 +125,52 @@
                 height: 100
             });
         });
+        function sendInvitationAjax() {
+            if (!validateBeforeSend()) return false;
+
+            var eventId = new URLSearchParams(window.location.search).get("organizationEventId");
+            var messageType = $("input[name='sendOption']:checked").val(); 
+            var messageBody = messageType === "Email" ? $("#<%= txtEmail.ClientID %>").val() : $("#<%= txtsms.ClientID %>").val();
+    $.ajax({
+        type: "POST",
+        url: messageType === "SMS"
+            ? "/V1/NonProfit/NonProfitCampaign.aspx/SendSms"
+            : "/V1/NonProfit/NonProfitCampaign.aspx/SendEmail",  
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify({
+            eventId: eventId,
+            smsMessage: messageBody
+        }),
+        success: function (response) {
+            //alert(response.d);
+            document.getElementById('<%= txtEmail.ClientID %>').value = '';  
+            document.getElementById('<%= txtsms.ClientID %>').value = ''; 
+            $('#<%= txtEmail.ClientID %>').summernote('code', '');
+            $('#<%= txtsms.ClientID %>').summernote('code', '');
+            $("input[name='sendOption'][value='SMS']").prop('checked', true);
+            document.getElementById('inviteModal').style.display = 'none';
+            document.getElementById('modalOverlay').style.display = 'none';
+            toggleMessageType();
+
+            swal({
+                title: "Success",
+                text: response.d || "Invitation sent successfully!",
+                icon: "success"
+            });
+        },
+        error: function (xhr, status, error) {
+            //alert("AJAX Error: " + error);
+            swal({
+                title: "Error",
+                text: "An error occurred while sending the invitation.",
+                icon: "error"
+            });
+        }
+    });
+
+            return false; 
+        }
     </script>
 
 </asp:Content>
@@ -374,9 +423,6 @@
     <!-- Modal Window -->
     <div id="inviteModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 20px; border-radius: 8px; width: 50%; box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 1000; position: fixed;">
 
-        <!-- Close Button -->
-        <%--<button type="button" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Close" onclick="closeInviteModal()">X</button>--%>
-
      <div class="modal-header-line">
     <h3 class="modal-title">Send Invitation</h3>
         <label class="radio-option">
@@ -389,7 +435,9 @@
 
 
         <div id="smsContainer">
-            <textarea id="txtsms" runat="server" class="form-control" placeholder="Enter SMS Text" rows="6" cols="95"></textarea>
+          <textarea id="txtsms" runat="server" ClientIDMode="Static" class="form-control"
+          placeholder="Enter SMS Text" rows="6" cols="95"></textarea>
+
             <asp:RequiredFieldValidator
                 ID="rfvSMS"
                 runat="server"
@@ -418,12 +466,10 @@
 
 
         <div class="text-end btn">
-            <button class="btn btn-secondary" onclick="closeInviteModal()">Cancel</button>
-            <asp:Button ID="btnSendInvitation" runat="server" CssClass="btn btn-primary me-2" Text="Send" OnClientClick="return validateBeforeSend();" OnClick="btnSendInvitation_Click" />
-
+<button class="btn btn-secondary" onclick="event.preventDefault(); closeInviteModal();">Cancel</button>
+            <asp:Button ID="btnSendInvitation" runat="server" CssClass="btn btn-primary me-2" Text="Send" OnClientClick="return sendInvitationAjax();" />
         </div>
     </div>
-
 </asp:Content>
 
 
