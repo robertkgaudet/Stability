@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/1-Column-Child.master" AutoEventWireup="true" CodeFile="NonProfitCampaign.aspx.cs" Inherits="V1_NonProfit_NonProfitCampaign" ValidateRequest="false" %>
-<%@ MasterType VirtualPath="~/V1/MasterPages/1-Column-Child.master"%>
+
+<%@ MasterType VirtualPath="~/V1/MasterPages/1-Column-Child.master" %>
 <%@ Register Src="~/V1/UserControls/TimeBoard.ascx" TagPrefix="uc1" TagName="TimeBoard" %>
 <%@ Register Src="~/V1/UserControls/PositionNavigation.ascx" TagPrefix="uc1" TagName="PostionNavigation" %>
 
@@ -7,8 +8,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-       <link href="../../Homer/vendor/sweetalert/lib/sweet-alert.css" rel="stylesheet" />
-   <script src="../../Homer/vendor/sweetalert/lib/sweet-alert.min.js"></script>
+    <link href="../../Homer/vendor/sweetalert/lib/sweet-alert.css" rel="stylesheet" />
+    <script src="../../Homer/vendor/sweetalert/lib/sweet-alert.min.js"></script>
     <style>
 
 
@@ -122,10 +123,6 @@
                 ],
                 height: 100
             });
-           <%-- $('#<%= txtsms.ClientID %>').summernote({
-                toolbar: [],
-                height: 100
-            });--%>
         });
         function sendInvitationAjax() {
             if (!validateBeforeSend()) return false;
@@ -145,7 +142,6 @@
             smsMessage: messageBody
         }),
         success: function (response) {
-            //alert(response.d);
             document.getElementById('<%= txtEmail.ClientID %>').value = '';  
             document.getElementById('<%= txtsms.ClientID %>').value = ''; 
             $('#<%= txtEmail.ClientID %>').summernote('code', '');
@@ -156,12 +152,11 @@
 
             swal({
                 title: "Success",
-                text: response.d || "Invitation sent successfully!",
+                text: "Invitation sent successfully to "+response.d+" members.",
                 icon: "success"
             });
         },
         error: function (xhr, status, error) {
-            //alert("AJAX Error: " + error);
             swal({
                 title: "Error",
                 text: "An error occurred while sending the invitation.",
@@ -424,20 +419,22 @@
     <!-- Modal Window -->
     <div id="inviteModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 20px; border-radius: 8px; width: 50%; box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 1000; position: fixed;">
 
-     <div class="modal-header-line">
-    <h3 class="modal-title">Send Invitation</h3>
-        <label class="radio-option">
-            <input type="radio" name="sendOption" value="SMS" checked onchange="toggleMessageType()"> SMS
-        </label>
-        <label class="radio-option">
-            <input type="radio" name="sendOption" value="Email" onchange="toggleMessageType()"> Email
-        </label>
-</div>
+        <div class="modal-header-line">
+            <h3 class="modal-title">Send Invitation</h3>
+            <label class="radio-option">
+                <input type="radio" name="sendOption" value="SMS" checked onchange="toggleMessageType()">
+                SMS
+            </label>
+            <label class="radio-option">
+                <input type="radio" name="sendOption" value="Email" onchange="toggleMessageType()">
+                Email
+            </label>
+        </div>
 
 
         <div id="smsContainer">
-          <textarea id="txtsms" runat="server" ClientIDMode="Static" class="form-control"
-          placeholder="Enter SMS Text (Max 450 characters)" rows="6" cols="95"></textarea>
+            <textarea id="txtsms" runat="server" clientidmode="Static" class="form-control"
+                placeholder="Enter SMS Text (Max 450 characters)" rows="6" cols="95"></textarea>
 
             <asp:RequiredFieldValidator
                 ID="rfvSMS"
@@ -465,7 +462,7 @@
 
 
         <div class="text-end btn">
-<button class="btn btn-secondary" onclick="event.preventDefault(); closeInviteModal();">Cancel</button>
+            <button class="btn btn-secondary" onclick="event.preventDefault(); closeInviteModal();">Cancel</button>
             <asp:Button ID="btnSendInvitation" runat="server" CssClass="btn btn-primary me-2" Text="Send" OnClientClick="return sendInvitationAjax();" />
         </div>
     </div>
