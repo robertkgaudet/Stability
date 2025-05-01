@@ -463,58 +463,53 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 
     [WebMethod]
 
-    public static string SendSms(string eventId, string smsMessage)
+    public static int SendSms(string eventId, string smsMessage)
     {
-         if (string.IsNullOrWhiteSpace(eventId) || string.IsNullOrWhiteSpace(smsMessage))
-        return "0";
-    smsMessage = Regex.Replace(smsMessage, "<.*?>", string.Empty);
-
-    try
-    {
-        using (var dc = new CrowdReliefDBDataContext())
+        smsMessage = Regex.Replace(smsMessage, "<.*?>", string.Empty);
+        try
         {
-            Guid parsedEventId;
-            if (!Guid.TryParse(eventId, out parsedEventId))
-                return "0";
-            var phoneNumbers = (
-                from u in dc.UserOrganizationEvents
-                join p in dc.Profiles on u.UserId equals p.UserId
-                where u.OrganizationEventId == parsedEventId && p.ReceiveSMSNotifications == true
-                select p.PhoneNumber
-            ).Distinct().ToList();
-
-            if (!phoneNumbers.Any())
-                return "0";
-
-            // Read Twilio config
-            string accountSid = ConfigurationManager.AppSettings["twilioAccountSID"];
-            string authToken = ConfigurationManager.AppSettings["twilioAuthToken"];
-            string fromNumber = ConfigurationManager.AppSettings["twilioPhoneNumber"];
-
-            var tools = new Tools(accountSid, authToken, fromNumber);
-
-            foreach (var phoneNumber in phoneNumbers)
+            using (var dc = new CrowdReliefDBDataContext())
             {
-                 tools.SendSms(smsMessage, new string[] { phoneNumber });
-            }
+                Guid parsedEventId;
+                if (!Guid.TryParse(eventId, out parsedEventId))
+                    return 0;
+                var phoneNumbers = (
+                    from u in dc.UserOrganizationEvents
+                    join p in dc.Profiles on u.UserId equals p.UserId
+                    where u.OrganizationEventId == parsedEventId && p.ReceiveSMSNotifications == true
+                    select p.PhoneNumber
+                ).Distinct().ToList();
 
-                return string.Format("Invitation for member {0} has been sent successfully!", phoneNumbers.Count.ToString());
+                if (!phoneNumbers.Any())
+                    return 0;
+
+                // Read Twilio config
+                string accountSid = ConfigurationManager.AppSettings["twilioAccountSID"];
+                string authToken = ConfigurationManager.AppSettings["twilioAuthToken"];
+                string fromNumber = ConfigurationManager.AppSettings["twilioPhoneNumber"];
+
+                var tools = new Tools(accountSid, authToken, fromNumber);
+
+                foreach (var phoneNumber in phoneNumbers)
+                {
+                    tools.SendSms(smsMessage, new string[] { phoneNumber });
+                }
+
+                return phoneNumbers.Count;
 
             }
         }
-    catch (Exception ex)
-    {
-        return ex.Message;
-    }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 
 
     [System.Web.Services.WebMethod]
 
-    public static string SendEmail(string eventId, string smsMessage)
+    public static int SendEmail(string eventId, string smsMessage)
     {
-        if (string.IsNullOrWhiteSpace(eventId) || string.IsNullOrWhiteSpace(smsMessage))
-            return "0";
         int sentCount = 0;
         try
         {
@@ -557,9 +552,9 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
         }
         catch (Exception ex)
         {
-            return ex.Message;
+            throw ex;
         }
-        return string.Format("Invitation for member {0} has been sent successfully!", sentCount);
+        return sentCount;
 
     }
-} 
+}

@@ -149,12 +149,20 @@
             document.getElementById('inviteModal').style.display = 'none';
             document.getElementById('modalOverlay').style.display = 'none';
             toggleMessageType();
-
-            swal({
-                title: "Success",
-                text: "Invitation sent successfully to "+response.d+" members.",
-                icon: "success"
-            });
+            if (parseInt(response.d) > 0) {
+                swal({
+                    title: "Success",
+                    text: "Invitation sent successfully for " + response.d + " members.",
+                    icon: "success"
+                });
+            }
+            else {
+                swal({
+                    title: "Error",
+                    text: "No member found to receive invite.",
+                    icon: "error"
+                });
+            }
         },
         error: function (xhr, status, error) {
             swal({
