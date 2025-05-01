@@ -96,7 +96,7 @@
                             <tr>
                                 <th>Email Address</th>
                                 <th>Status</th>
-                                <th>Created Date</th>
+                                <th>Invited Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
