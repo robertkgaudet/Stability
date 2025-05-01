@@ -529,28 +529,31 @@
         $(document).ready(function () {
             $(document).on("click", "#nextBtn", function () {
                 if (!$('#nextBtn').hasClass('disabled')) {
-
                     var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
                     var currentPage = parseInt($('.pagination .active .page-link').text());
-                    var newPage = currentPage + 1;
+                    
+                    var newPage = currentPage + 1;                   
                     if (newPage <= totalPages) {
-                        $(".page-item").not("#previousBtn, #nextBtn").remove();
-                        var newPageItem = '';
-                        for (var i = 0; i < Math.min(3, totalPages); i++) {
-                            newPageItem += '<li class="page-item' + (i == (newPage - 1) ? " active" : "") + (i == 2 ? " firstpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
-                        }
-                        if (totalPages > 3) {
-                            newPageItem += '<li class="page-item disabled dotpage"><a class="page-link">...</a></li>';
-                        }
-                        for (var i = Math.max(totalPages - 3, 3), j = 0; i < totalPages; i++, j++) {
-                            newPageItem += '<li class="page-item' + (i == (newPage - 1) ? " active" : "") + (j == 0 ? " lastpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
-                        }
-                        if (newPageItem != '') $('#previousBtn').after(newPageItem);
-                        if (totalPages <= newPage) {
-                            $('#nextBtn').addClass('disabled');
-                        } else {
-                            $('#nextBtn').removeClass('disabled');
-                        }
+                         if(newPage > 3) {
+                            $(".page-item").not("#previousBtn, #nextBtn").remove();
+                            var newPageItem = '';
+                            for (var i = 0; i < Math.min(3, totalPages); i++) {
+
+                                newPageItem += '<li class="page-item' + (i == 1 ? " active" : "") + (i == 2 ? " firstpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + newPage - 2) + '); return false;" tabindex="' + (i + newPage - 2) + '" href="javascript:void(0)">' + (i  + newPage - 2) + '</a></li>';
+                            }
+                            if (totalPages > 3 && newPage < Math.max(totalPages - 3, 3)) {
+                                newPageItem += '<li class="page-item disabled dotpage"><a class="page-link">...</a></li>';
+                            }
+                            for (var i = Math.max(totalPages - 3, 3), j = 0; i < totalPages; i++, j++) {
+                                newPageItem += '<li class="page-item' + (i == (newPage - 1) ? " " : "") + (j == 0 ? " lastpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                            }
+                            if (newPageItem != '') $('#previousBtn').after(newPageItem);
+                            if (totalPages <= newPage+3) {
+                                $('#nextBtn').addClass('disabled');
+                            } else {
+                                $('#nextBtn').removeClass('disabled');
+                            }
+                        }                        
                         triggerSearch(newPage);
                     }
 
@@ -617,7 +620,7 @@
                 $('#previousBtn').removeClass('disabled');
             }
 
-            if (pn >= totalPages) {
+            if (pn+3 >= totalPages) {
                 $('#nextBtn').addClass('disabled');
             } else {
                 $('#nextBtn').removeClass('disabled');
