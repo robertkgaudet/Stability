@@ -96,6 +96,7 @@
                             <tr>
                                 <th>Email Address</th>
                                 <th>Status</th>
+                                <th>Created Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -105,6 +106,8 @@
                                     <tr>
                                         <td><%# Eval("EmailAddress") %></td>
                                         <td><%# Eval("Status") %></td>
+                                        <td><%# Eval("CreatedOn", "{0:dd-MM-yyyy}") %></td>
+
                                         <td>
                                             <button class="btn btn-primary ResendInvite" data-id='<%# Eval("UserOrganizationInviteId") %>'>Resend Invite</button>
                                             <button class="btn btn-danger CancelInvite" data-id='<%# Eval("UserOrganizationInviteId") %>'>Cancel Invite</button>

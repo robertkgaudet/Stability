@@ -156,9 +156,7 @@
                     <li <%=_resourcesPageActive%>>
                         <asp:HyperLink runat="server" ID="hypResources"><i class="fa fa-truck"></i> Resources</asp:HyperLink>
                     </li>
-                    <li <%=_peoplePageActive%>>
-                        <asp:HyperLink runat="server" ID="hypInvitedMembers"><i class="fa fa-indent"></i> Invited Members</asp:HyperLink>
-                    </li>
+
                 </ul>
                 <hr runat="server" id="hrAdmin" visible="false"></hr>
                 <li><b>Response Tools</b></li>
@@ -191,6 +189,9 @@
                 <li>
                     <asp:HyperLink runat="server" ID="hypDonationDashboard" CssClass="donationDashboard"> <i class="fa fa-tachometer text-primary"></i> Donations Dashboard
                     </asp:HyperLink>
+                </li>
+                <li <%=_peoplePageActive%>>
+                    <asp:HyperLink runat="server" ID="hypInvitedMembers"><i class="fa fa-indent"></i> Invited Members</asp:HyperLink>
                 </li>
                 <hr runat="server" id="hr5"></hr>
                 <li>Image Manager</li>
