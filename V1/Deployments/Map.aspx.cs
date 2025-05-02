@@ -135,51 +135,9 @@ public partial class V1_Deployments_Map : BaseWebForm
         hypCreateDeployment.NavigateUrl = createDeploymentURL;
         hypCreateDeployment.Text = createDeploymentTEXT;
 
-        LoadDisasters();
-        LoadLocationTypes();
-        LoadLocationParentTypes();
-        LoadLocationStatuses();
+        LoadDisasters();       
     }
-    protected void LoadLocationTypes()
-    {
-        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-        var locationTypes = from lt in dc.LocationTypes
-                            orderby lt.Name
-                            select new { lt.Name, lt.LocationTypeId };
-        string locationtype = Request.QueryString["locationtype"];
-
-        foreach (var type in locationTypes)
-        {
-            locationTypeDropDown += "<li id=\"" + type.LocationTypeId + "\"><a href=\"#\">" + type.Name + "</a></li>" + Environment.NewLine;
-        }
-    }
-    protected void LoadLocationParentTypes()
-    {
-        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-        var parentTypes = from pt in dc.LocationParentTypes
-                          orderby pt.Name
-                          select new { pt.Name, pt.LocationParentTypeId };
-        string parentlocationtype = Request.QueryString["parentlocationtype"];
-
-        foreach (var type in parentTypes)
-        {
-            locationParentTypeDropDown += "<li id=\"" + type.LocationParentTypeId + "\"><a href=\"#\">" + type.Name + "</a></li>" + Environment.NewLine;
-        }
-    }
-
-    protected void LoadLocationStatuses()
-    {
-        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-        var statuses = from s in dc.LocationStatus
-                       orderby s.Name
-                       select new { s.Name, s.LocationStatusId };
-        string activestatus = Request.QueryString["status"];
-
-        foreach (var status in statuses)
-        {
-            locationStatusDropDown += "<li id=\"" + status.LocationStatusId + "\"><a href=\"#\">" + status.Name + "</a></li>" + Environment.NewLine;
-        }
-    }
+    
     public void LoadDisasters()
     {
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
