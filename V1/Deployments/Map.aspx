@@ -9,13 +9,12 @@
         $(document).ready(function () {
 
             // Initialize with stored filter or default to Critical
-            const storedFilter = sessionStorage.getItem('mapFilterType') || "Critical";
+            const storedFilter = "Critical";
             updateFilterStates(storedFilter);
 
             // Handle map filter changes
             $("#ddlMapFilter.dropdown-menu li").click(function () {
                 const mapFilterType = $(this).attr('id');
-                sessionStorage.setItem('mapFilterType', mapFilterType);
                 updateFilterStates(mapFilterType);
             });
 
@@ -52,9 +51,9 @@
 
         // Redirect handler remains unchanged
             $("#disasterEvent.dropdown-menu li").click(function (event) {
-                var locationval = getStoredFilter(STORAGE_KEYS.LOCATION_TYPE);
-                var parentval = getStoredFilter(STORAGE_KEYS.PARENT_TYPE);
-                var statusval = getStoredFilter(STORAGE_KEYS.STATUS);
+                var locationval = null;
+                var parentval = null;
+                var statusval = null;
                 window.location.href = "/Maps/" + $(this).attr('name') +
                     "?parentlocationtype=" + encodeURIComponent(parentval || '') +
                     "&locationtype=" + encodeURIComponent(locationval || '') +
@@ -63,63 +62,29 @@
         });
 
         // Initialize with stored state or defaults
-        initMap(getStoredFilter(STORAGE_KEYS.MAP_FILTER) || DEFAULT_FILTER);
+        initMap(DEFAULT_FILTER);
         updateDropdownDisplays();
        
         // Map filter handler with state management
         $("#ddlMapFilter.dropdown-menu li").click(function (event) {
             const mapFilterType = $(this).attr('id');
-            sessionStorage.setItem(STORAGE_KEYS.MAP_FILTER, mapFilterType);
             $("#btn-mapDropDown.ddlMapFilter").html($(this).text());
 
             // Apply filters only for Critical view
-            if (mapFilterType === "Critical") {
-                initMapWithFilters(
-                    mapFilterType,
-                    getStoredFilter(STORAGE_KEYS.LOCATION_TYPE),
-                    getStoredFilter(STORAGE_KEYS.PARENT_TYPE),
-                    getStoredFilter(STORAGE_KEYS.STATUS)
-                );
-            } else {
-                initMapWithFilters(mapFilterType, null, null, null);
-            }
+            initMapWithFilters(mapFilterType, null, null, null);
+
             event.preventDefault();
         });
-
-        // Filter handlers (only active for Critical)
-      
-        //$("#ddlStatus.dropdown-menu li").click(handleFilterClick(STORAGE_KEYS.STATUS, '#btn-status.statusFilter'));
-
-
-        // V4 Helper functions
-        function getStoredFilter(key) {
-            return sessionStorage.getItem(key);
-        }
-
+             
         function updateDropdownDisplays() {
             // Update main filter display
-            const currentFilter = getStoredFilter(STORAGE_KEYS.MAP_FILTER) || DEFAULT_FILTER;
+            const currentFilter = DEFAULT_FILTER;
             $(`#ddlMapFilter.dropdown-menu li[id="${currentFilter}"]`).trigger('click');
 
-            // Update sub-filter displays only if in Critical mode
-            if (currentFilter === "Critical") {
-                updateFilterDisplay(STORAGE_KEYS.LOCATION_TYPE, '#ddlLocationType');
-                updateFilterDisplay(STORAGE_KEYS.PARENT_TYPE, '#ddlParentType');
-                updateFilterDisplay(STORAGE_KEYS.STATUS, '#ddlStatus');
-            }
+            
+            
         }
-
-            function updateFilterDisplay(storageKey, dropdownSelector) {
-            const value = getStoredFilter(storageKey);
-            if (value) {
-                // setTimeout(function () {
-                //     const liId = '#'+value;
-                //     if ($(liId).length) {
-                //         $(liId).find('a').trigger('click');
-                //     } 
-                // }, 1000);                           
-            }
-        }
+            
          $(document).on('click', '#ddlLocationType.dropdown-menu li', function (event) {
             handleFilterClick(STORAGE_KEYS.LOCATION_TYPE, '#btn-locationType.locationTypeFilter').call(this, event);
         });
@@ -135,16 +100,19 @@
             ddlChange = false;
             return function (event) {
                 var filterValue = $(this).attr('id') == 'null' ? '': $(this).attr('id');
-                sessionStorage.setItem(storageKey, filterValue);
+                $(buttonSelector).attr('selData', filterValue);
                 $(buttonSelector).html($(this).text());
 
+                var ltId = $('#btn-locationType.locationTypeFilter').attr('selData');
+                var pltId = $('#btn-parentType.parentTypeFilter').attr('selData');
+                var lsId = $('#btn-status.statusFilter').attr('selData');
                 // Only refresh if in Critical mode
-                if ((getStoredFilter(STORAGE_KEYS.MAP_FILTER) || DEFAULT_FILTER) === "Critical") {
+                if (DEFAULT_FILTER === "Critical") {
                     initMapWithFilters(
                         DEFAULT_FILTER,
-                        getStoredFilter(STORAGE_KEYS.LOCATION_TYPE),
-                        getStoredFilter(STORAGE_KEYS.PARENT_TYPE),
-                        getStoredFilter(STORAGE_KEYS.STATUS)
+                        ltId == ''? null : ltId,
+                        pltId == ''? null : pltId, 
+                        lsId == ''? null : lsId
                     );
                 }
                 event.preventDefault();
@@ -164,9 +132,9 @@
             }
             initMapWithFilters(
                 mapFilterType,
-                mapFilterType === "Critical" ? getStoredFilter(STORAGE_KEYS.LOCATION_TYPE) : null,
-                mapFilterType === "Critical" ? getStoredFilter(STORAGE_KEYS.PARENT_TYPE) : null,
-                mapFilterType === "Critical" ? getStoredFilter(STORAGE_KEYS.STATUS) : null
+                null,
+                null,
+                null
             );
         }
 
@@ -628,7 +596,7 @@
 
                 <!-- New Parent Type Filter -->
                 <div class="filter-dropdown additional-filter">
-                    <button id="btn-parentType" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Parent Types <i class="fa fa-sort-down"></i></button>
+                    <button id="btn-parentType" selData="" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Parent Types <i class="fa fa-sort-down"></i></button>
                     <ul id="ddlParentType" class="dropdown-menu text-center dropdown-map-filter">
                         
                     </ul>
@@ -636,7 +604,7 @@
 
                 <!-- New Location Type Filter -->
                 <div class="filter-dropdown additional-filter">
-                    <button id="btn-locationType" class="btn btn-outline btn-default locationTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Location Types <i class="fa fa-sort-down"></i></button>
+                    <button id="btn-locationType" selData="" class="btn btn-outline btn-default locationTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Location Types <i class="fa fa-sort-down"></i></button>
                     <ul id="ddlLocationType" class="dropdown-menu text-center dropdown-map-filter">
                         
                     </ul>
@@ -645,7 +613,7 @@
 
                 <!-- New Status Filter -->
                 <div class="filter-dropdown additional-filter">
-                    <button id="btn-status" class="btn btn-outline btn-default statusFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Status <i class="fa fa-sort-down"></i></button>
+                    <button id="btn-status" selData="" class="btn btn-outline btn-default statusFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Status <i class="fa fa-sort-down"></i></button>
                     <ul id="ddlStatus" class="dropdown-menu text-center dropdown-map-filter">
                         
                     </ul>
