@@ -230,7 +230,8 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
             PaymentProvider = (int)Tools.TransactionType.CreditCard,
             DonationStatus = (int)Tools.TransactionStatus.Started,
             DonationCampaignId = donationCampaignId,
-            IsTest = Convert.ToBoolean(ConfigurationManager.AppSettings["isTestPayment"])
+            IsTest = Convert.ToBoolean(ConfigurationManager.AppSettings["isTestPayment"]),
+            UserId = organization.OwnerId.Value
         };
 
         dc.Donations.InsertOnSubmit(donation);
