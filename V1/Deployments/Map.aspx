@@ -5,6 +5,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 
     <script type="text/javascript">
+        var ddlChange = true;
         $(document).ready(function () {
 
             // Initialize with stored filter or default to Critical
@@ -86,9 +87,8 @@
         });
 
         // Filter handlers (only active for Critical)
-        $("#ddlLocationType.dropdown-menu li").click(handleFilterClick(STORAGE_KEYS.LOCATION_TYPE, '#btn-locationType.locationTypeFilter'));
-        $("#ddlParentType.dropdown-menu li").click(handleFilterClick(STORAGE_KEYS.PARENT_TYPE, '#btn-parentType.parentTypeFilter'));
-        $("#ddlStatus.dropdown-menu li").click(handleFilterClick(STORAGE_KEYS.STATUS, '#btn-status.statusFilter'));
+      
+        //$("#ddlStatus.dropdown-menu li").click(handleFilterClick(STORAGE_KEYS.STATUS, '#btn-status.statusFilter'));
 
 
         // V4 Helper functions
@@ -112,18 +112,29 @@
             function updateFilterDisplay(storageKey, dropdownSelector) {
             const value = getStoredFilter(storageKey);
             if (value) {
-                setTimeout(function () {
-                    const liId = '#'+value;
-                    if ($(liId).length) {
-                        $(liId).find('a').trigger('click');
-                    } 
-                }, 1000);                           
+                // setTimeout(function () {
+                //     const liId = '#'+value;
+                //     if ($(liId).length) {
+                //         $(liId).find('a').trigger('click');
+                //     } 
+                // }, 1000);                           
             }
         }
+         $(document).on('click', '#ddlLocationType.dropdown-menu li', function (event) {
+            handleFilterClick(STORAGE_KEYS.LOCATION_TYPE, '#btn-locationType.locationTypeFilter').call(this, event);
+        });
 
+        $(document).on('click', '#ddlParentType.dropdown-menu li', function (event) {
+            handleFilterClick(STORAGE_KEYS.PARENT_TYPE, '#btn-parentType.parentTypeFilter').call(this, event);
+        });
+
+        $(document).on('click', '#ddlStatus.dropdown-menu li', function (event) {
+            handleFilterClick(STORAGE_KEYS.STATUS, '#btn-status.statusFilter').call(this, event);
+        });
         function handleFilterClick(storageKey, buttonSelector) {
+            ddlChange = false;
             return function (event) {
-                const filterValue = $(this).attr('id');
+                var filterValue = $(this).attr('id') == 'null' ? '': $(this).attr('id');
                 sessionStorage.setItem(storageKey, filterValue);
                 $(buttonSelector).html($(this).text());
 
@@ -212,7 +223,12 @@
             map.data.loadGeoJson(mapsURL, null, function (features) {
                 // Once the data is loaded, generate the list
                 const listContainer = document.getElementById('list');
-
+                var locationTypeDdl = '';
+                var locationTypeIds = [];
+                var parentLocationTypeDdl = '';
+                var parentLocationTypeIds = [];
+                var statusDdl = '';
+                var statusIds = [];
                 //Create the list 
                 // Iterate through each feature in the GeoJSON data
                 features.forEach(function (feature) {
@@ -236,7 +252,33 @@
                         if (phoneNumber) contact += '</br><strong>Phone:</strong> ' + phoneNumber;
                         contact += '</p>';
                     }
-
+                    const pltId = feature.getProperty('LocationParentTypeId') || '';
+                    const pltName = feature.getProperty('LocationType') || '';
+                    const ltId = feature.getProperty('LocationTypeId') || '';
+                    const ltName = feature.getProperty('LocationTypeName') || '';
+                    const lsName = feature.getProperty('Status') || 'All';
+                    const lsId = feature.getProperty('LocationStatusId') || 'null';
+                    if(pltId != '' && pltName != '') {
+                        if(!parentLocationTypeIds.includes(pltId)) {
+                            parentLocationTypeIds.push(pltId);
+                            parentLocationTypeDdl += "<li id='" + pltId + "'><a href='#'>" + pltName + "</a></li>";
+                        }
+                        
+                    }
+                    if(ltId != '' && ltName != '') {
+                        if(!locationTypeIds.includes(ltId)) {
+                            locationTypeIds.push(ltId);
+                            locationTypeDdl += "<li id='" + ltId + "'><a href='#'>" + ltName + "</a></li>";
+                        }
+ 
+                    }
+                     if(lsId != '' && lsName != '') {
+                         if(!statusIds.includes(lsId)) {
+                             statusIds.push(lsId);
+                             statusDdl += "<li id='" + lsId + "'><a href='#'>" + lsName + "</a></li>";
+                         }
+ 
+                     }
                     const coordinates = feature.getGeometry().get();  // Get coordinates (Google Maps LatLng object)
 
                     // Create a list item for each feature
@@ -256,6 +298,18 @@
                         map.setZoom(15);
                     });
                 });
+                if(ddlChange) {
+                    $('#ddlParentType').empty();
+                    $('#ddlParentType').append(parentLocationTypeDdl);
+                
+                    $('#ddlLocationType').empty();
+                    $('#ddlLocationType').append(locationTypeDdl);
+
+                    $('#ddlStatus').empty();
+                    $('#ddlStatus').append(statusDdl);
+                }
+                
+                
             });
 
             //Load the info window when a user clicks on it.
@@ -405,9 +459,8 @@
             padding: 10px;
             border-bottom: 1px solid #ddd;
             cursor: pointer;
-        }
-
-            .list-item:hover {
+        } 
+           .list-item:hover {
                 background-color: #f0f0f0;
             }
 
@@ -566,11 +619,18 @@
                         <%=liCases%>
                     </ul>
                 </div>
+                 <div class="filter-dropdown">
+                     <button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i></button>
+                     <ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
+                         <%=disasterDropDown%>
+                     </ul>
+                 </div>
+
                 <!-- New Parent Type Filter -->
                 <div class="filter-dropdown additional-filter">
                     <button id="btn-parentType" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Parent Types <i class="fa fa-sort-down"></i></button>
                     <ul id="ddlParentType" class="dropdown-menu text-center dropdown-map-filter">
-                        <%=locationParentTypeDropDown%>
+                        
                     </ul>
                 </div>
 
@@ -578,7 +638,7 @@
                 <div class="filter-dropdown additional-filter">
                     <button id="btn-locationType" class="btn btn-outline btn-default locationTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Location Types <i class="fa fa-sort-down"></i></button>
                     <ul id="ddlLocationType" class="dropdown-menu text-center dropdown-map-filter">
-                        <%=locationTypeDropDown%>
+                        
                     </ul>
                 </div>
 
@@ -587,16 +647,11 @@
                 <div class="filter-dropdown additional-filter">
                     <button id="btn-status" class="btn btn-outline btn-default statusFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Status <i class="fa fa-sort-down"></i></button>
                     <ul id="ddlStatus" class="dropdown-menu text-center dropdown-map-filter">
-                        <%=locationStatusDropDown%>
+                        
                     </ul>
                 </div>
 
-                <div class="filter-dropdown">
-                    <button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i></button>
-                    <ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
-                        <%=disasterDropDown%>
-                    </ul>
-                </div>
+               
                 <div class="deployment-section">
 
                     <b>Share Your Team Deployment</b>
