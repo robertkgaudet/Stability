@@ -513,7 +513,7 @@
                             </div>
                             <div class="form-group col-lg-12" style="display: flex; align-items: center;">
                                 <asp:CheckBox ID="chkMessageOptIn" runat="server" Text="" />
-                                <label for="chkMessageOptIn" style="margin-left: 10px;">Receive SMS Messages For Volunteer Opportunities and Deployments</label>
+                                <label for="ContentPlaceHolder1_chkMessageOptIn" style="margin: 5px 10px 0px;">Receive SMS Messages For Volunteer Opportunities</label>
                             </div>
                         </div>
                         <div class="text-center center-block justify-content-center">
