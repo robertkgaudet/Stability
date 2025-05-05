@@ -38,8 +38,8 @@ public partial class V1_NonProfit_InvitedMembers : BaseOrganizationWebForm
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
             var invitedMembers = (from i in dc.UserOrganizationInvites
-                                  where i.InvitationCancelled == false || i.EmailSent == false
-                                  orderby i.CreatedOn descending
+                                  where   i.InvitationCancelled==false
+                                  orderby i.CreatedOn ascending
                                   select new
                                   {
                                       i.EmailAddress,
@@ -107,6 +107,7 @@ public partial class V1_NonProfit_InvitedMembers : BaseOrganizationWebForm
                     out emailError 
                     );
                 inviteMember.EmailSent = true;
+                inviteMember.CreatedOn = DateTime.Now;
                 dc.SubmitChanges();
             }
         }
