@@ -16,33 +16,33 @@
         //});
 
         // Function to automatically collapse the div on small screens
-   //     function checkWindowSize() {
-			//if ($(window).width() < 768) {
-			//	collapseElement.removeClass('in'); // Hide collapse manually
-			//	//collapseElement.collapse({ 'toggle': true }).collapse('hide');
-   //         }
-   //     }
+        //     function checkWindowSize() {
+        //if ($(window).width() < 768) {
+        //	collapseElement.removeClass('in'); // Hide collapse manually
+        //	//collapseElement.collapse({ 'toggle': true }).collapse('hide');
+        //         }
+        //     }
 
-		function checkWindowSize() {
-			if ($(window).width() < 768) {
-				collapseElement.removeClass('in'); // Hide it on small screens
-			} else {
-				collapseElement.addClass('in'); // Show it on larger screens
-			}
-		}
+        function checkWindowSize() {
+            if ($(window).width() < 768) {
+                collapseElement.removeClass('in'); // Hide it on small screens
+            } else {
+                collapseElement.addClass('in'); // Show it on larger screens
+            }
+        }
 
         // Check window size on page load and window resize
-		$(window).on('resize', checkWindowSize);
-		checkWindowSize();  // Initial check on page load
+        $(window).on('resize', checkWindowSize);
+        checkWindowSize();  // Initial check on page load
 
         // Adjust caret direction based on collapse state
         collapseElement.on('hidden.bs.collapse', function () {
             caret.removeClass('caret-up');
-		});
+        });
 
         collapseElement.on('shown.bs.collapse', function () {
             caret.addClass('caret-up');
-		});
+        });
 
 
         // Prevent toggling while scrolling – removed touch event logic to avoid interference during scroll
@@ -56,11 +56,11 @@
         //         $(this).click();
         //     }
         // });
-		
-		$('#<%=divTeamConfiguration.ClientID%>').click(function () {
-			window.location.href = '/V1/DeploymentDirectorSplash.html';
-			return false;
-		});
+
+        $('#<%=divTeamConfiguration.ClientID%>').click(function () {
+            window.location.href = '/V1/DeploymentDirectorSplash.html';
+            return false;
+        });
 
         $('#<%=divWebsite.ClientID%>').click(function () {
             window.location.href = '/Impactoid/CommunityPage.aspx?organizationId=<%=organizationId%>';
@@ -101,7 +101,7 @@
 
     .caret-up {
         transform: rotate(180deg);
-		 display: inline-block;
+        display: inline-block;
     }
 
     .panelNav:hover {
@@ -121,43 +121,44 @@
 </style>
 <div class="hpanel">
     <div class="panel-body">
-		<div id="desktopNavigation" class="m-b-lg">
-			<div id="divTeamConfiguration" runat="server" class="alert alert-info text-center deployment">
-				<h5 class="v1"><i class="fa fa-user pe-2x"></i><b>Launch Deployment Director Training</b></h5>
-				Team, Website, and Deployment Management
-			</div>
-		</div>
+        <div id="desktopNavigation" class="m-b-lg">
+            <div id="divTeamConfiguration" runat="server" class="alert alert-info text-center deployment">
+                <h5 class="v1"><i class="fa fa-user pe-2x"></i><b>Launch Deployment Director Training</b></h5>
+                Team, Website, and Deployment Management
+            </div>
+        </div>
         <asp:HyperLink runat="server" ID="hypGetHelp" CssClass="btn btn-danger btn-block"><i class='fa fa-check'></i> Get Help From This Team</asp:HyperLink>
-		<button class="btn panelNav btn-block" 
-				type="button" 
-				data-toggle="collapse" 
-				data-target="#collapseTeamNavigation" 
-				aria-expanded="false" 
-				aria-controls="collapseTeamNavigation">
-			<span class="caret"></span> Team Navigation 
-		</button>
+        <button class="btn panelNav btn-block"
+            type="button"
+            data-toggle="collapse"
+            data-target="#collapseTeamNavigation"
+            aria-expanded="false"
+            aria-controls="collapseTeamNavigation">
+            <span class="caret"></span>Team Navigation 
+        </button>
         <div class="collapse in mt-2" id="collapseTeamNavigation">
             <ul class="mailbox-list">
                 <hr runat="server" id="hr2"></hr>
-            <ul class="mailbox-list" runat="server" id="ul1">
-                <li><b>Team Resources</b></li>
-                <li <%=_peoplePageActive%>>
-                    <asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-vcard"></i> Team Members</asp:HyperLink>
-                </li>
-                <li <%=_teamRolesActive%>>
-                    <asp:HyperLink runat="server" ID="hypTeamRoles"><i class="fa fa-vcard"></i> Training</asp:HyperLink>
-                </li>
-                <li <%=_deploymentTeamActive%>>
-                    <asp:HyperLink runat="server" ID="hypDeploymentTeam"><i class="fa fa-users"></i> Find Open Positions</asp:HyperLink>
-                </li>
-                <li <%=_skillsPageActive%>>
-                    <asp:HyperLink runat="server" ID="hypSkillsets"><i class="fa fa-hand-pointer-o"></i> Skillsets</asp:HyperLink>
-                </li>
-                <li <%=_resourcesPageActive%>>
-                    <asp:HyperLink runat="server" ID="hypResources"><i class="fa fa-truck"></i> Resources</asp:HyperLink>
-                </li>
-            </ul>
-            <hr runat="server" id="hrAdmin" visible="false"></hr>
+                <ul class="mailbox-list" runat="server" id="ul1">
+                    <li><b>Team Resources</b></li>
+                    <li <%=_peoplePageActive%>>
+                        <asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-vcard"></i> Team Members</asp:HyperLink>
+                    </li>
+                    <li <%=_teamRolesActive%>>
+                        <asp:HyperLink runat="server" ID="hypTeamRoles"><i class="fa fa-vcard"></i> Training</asp:HyperLink>
+                    </li>
+                    <li <%=_deploymentTeamActive%>>
+                        <asp:HyperLink runat="server" ID="hypDeploymentTeam"><i class="fa fa-users"></i> Find Open Positions</asp:HyperLink>
+                    </li>
+                    <li <%=_skillsPageActive%>>
+                        <asp:HyperLink runat="server" ID="hypSkillsets"><i class="fa fa-hand-pointer-o"></i> Skillsets</asp:HyperLink>
+                    </li>
+                    <li <%=_resourcesPageActive%>>
+                        <asp:HyperLink runat="server" ID="hypResources"><i class="fa fa-truck"></i> Resources</asp:HyperLink>
+                    </li>
+
+                </ul>
+                <hr runat="server" id="hrAdmin" visible="false"></hr>
                 <li><b>Response Tools</b></li>
                 <li <%=_streamActive%>>
                     <asp:HyperLink runat="server" ID="hypStream"><i class="fa fa-home"></i> Posts</asp:HyperLink>
@@ -189,16 +190,19 @@
                     <asp:HyperLink runat="server" ID="hypDonationDashboard" CssClass="donationDashboard"> <i class="fa fa-tachometer text-primary"></i> Donations Dashboard
                     </asp:HyperLink>
                 </li>
+                <li <%=_peoplePageActive%>>
+                    <asp:HyperLink runat="server" ID="hypInvitedMembers"><i class="fa fa-indent"></i> Invited Members</asp:HyperLink>
+                </li>
                 <hr runat="server" id="hr5"></hr>
                 <li>Image Manager</li>
                 <li>
-                    <asp:HyperLink runat="server" ID="hypSquareLogoUpload"  CssClass="squareLogoUploadButton">  <i class="fa fa-upload text-primary"></i>Upload Team Logo
+                    <asp:HyperLink runat="server" ID="hypSquareLogoUpload" CssClass="squareLogoUploadButton">  <i class="fa fa-upload text-primary"></i>Upload Team Logo
                     </asp:HyperLink>
                 </li>
                 <li>
                     <asp:HyperLink runat="server" ID="hypLogoUpload" CssClass="logoUploadButton"> <i class="fa fa-upload text-primary"></i> Upload Website Logo
                     </asp:HyperLink>
-                </li>         
+                </li>
                 <li>
                     <asp:HyperLink runat="server" ID="hypCoverImageUpload" CssClass="coverUploadButton">  <i class="fa fa-image text-primary"></i> Upload Cover Image
                     </asp:HyperLink>
@@ -210,10 +214,10 @@
                 <hr runat="server" id="hr4"></hr>
                 <li>Message All Team Members</li>
                 <li <%=_teamMember%>>
-                <asp:HyperLink runat="server" ID="hypMail" Visible="true"><i class="fa fa-envelope"></i>Email Team Members </asp:HyperLink>
+                    <asp:HyperLink runat="server" ID="hypMail" Visible="true"><i class="fa fa-envelope"></i>Email Team Members </asp:HyperLink>
                 </li>
                 <li <%=_teamMember%>>
-                <asp:HyperLink runat="server" ID="hypSms" Visible="true"><i class="fa fa-file-text text-warning"></i>Text Team Members</asp:HyperLink>
+                    <asp:HyperLink runat="server" ID="hypSms" Visible="true"><i class="fa fa-file-text text-warning"></i>Text Team Members</asp:HyperLink>
                 </li>
                 <hr runat="server" id="hr3"></hr>
 

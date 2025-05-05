@@ -55,6 +55,11 @@
                 </asp:HyperLink>
             </li>
             <li>
+                <asp:HyperLink ID="hypConnections" CssClass="font-weight-bold" runat="server" NavigateUrl="/V1/Member/PeopleSearch.aspx">
+               <i class="fa fa-search"></i> Find Connections
+                </asp:HyperLink>
+            </li>
+            <li>
                 <asp:HyperLink ID="hypPositions" runat="server" NavigateUrl="/V1/Member/Positions.aspx">
                     <i class="fa fa-calendar"></i> My Volunteer Schedule
                 </asp:HyperLink>

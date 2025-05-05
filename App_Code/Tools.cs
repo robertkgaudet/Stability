@@ -712,12 +712,12 @@ namespace CrowdRelief
 				}
 
 				MailDefinition mailDefinition	= new MailDefinition();
-				mailDefinition.BodyFileName		= HttpContext.Current.Server.MapPath(bodyFileNamePath);
+				mailDefinition.BodyFileName		= string.IsNullOrEmpty(bodyFileNamePath)? bodyFileNamePath : HttpContext.Current.Server.MapPath(bodyFileNamePath);
 				mailDefinition.Subject			= subject;
 				mailDefinition.IsBodyHtml		= true;
 				mailDefinition.From				= emailFrom;
 
-				MailMessage mail = mailDefinition.CreateMailMessage(recipientsEmail, ldEmailBodyReplacements, new System.Web.UI.Control());
+				MailMessage mail = string.IsNullOrEmpty(bodyFileNamePath) ? mailDefinition.CreateMailMessage(recipientsEmail, ldEmailBodyReplacements, message, new System.Web.UI.Control()) : mailDefinition.CreateMailMessage(recipientsEmail, ldEmailBodyReplacements, new System.Web.UI.Control());
 				mail.From = new MailAddress(emailFrom, emailFromDisplayName);
 				MailAddress bcc = new MailAddress(bccAdmin);
 				MailAddress to = new MailAddress(recipientsEmail, recipientsName);

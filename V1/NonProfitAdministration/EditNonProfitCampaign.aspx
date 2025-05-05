@@ -250,7 +250,7 @@
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-2 control-label">Point of Contact First and Last Name</label>
+								<label class="col-sm-2 control-label">* Point of Contact First and Last Name </label>
 								<div class="col-sm-5"><input type="text" runat="server" required id="txtPOCFullname" class="form-control" placeholder="Point of Contact First and Last Name"></div>
 							</div>
 
@@ -312,15 +312,15 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">Staging Address</label>
+								<label class="col-sm-2 control-label">* Staging Address</label>
 								<div class="col-sm-5"><input type="text" required runat="server" id="txtAddress" class="form-control i-check" placeholder="Address"></div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">Staging City</label>
+								<label class="col-sm-2 control-label">* Staging City</label>
 								<div class="col-sm-5"><input type="text" required runat="server" id="txtCity" class="form-control" placeholder="City"></div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label">Staging Zip</label>
+								<label class="col-sm-2 control-label">* Staging Zip</label>
 								<div class="col-sm-5"><input type="text" required runat="server" id="txtZipCode" maxlength="5" class="form-control" placeholder="Zip Code"></div>
 							</div>
 									
@@ -336,7 +336,7 @@
 						<div class="panel-body">
 
 							<div class="form-group">
-								<label class="col-sm-2 control-label">Phone Number</label>
+								<label class="col-sm-2 control-label">* Phone Number</label>
 								<div class="col-sm-5"><input type="text" maxlength="10" required runat="server" id="txtPhonenumber" class="form-control" placeholder="Primary Phone"></div>
 							</div>
 
@@ -346,7 +346,7 @@
 							</div>
 
 							<div class="form-group">
-								<label class="col-sm-2 control-label">Public Email Address</label>
+								<label class="col-sm-2 control-label">* Public Email Address</label>
 								<div class="col-sm-5"><input type="text" runat="server" required id="txtEmailAddress" class="form-control" placeholder="Public Email Address"></div>
 							</div>
 

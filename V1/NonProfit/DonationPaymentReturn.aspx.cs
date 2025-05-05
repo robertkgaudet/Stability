@@ -72,6 +72,9 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
     private void HandlePaymentSuccess(Stripe.Checkout.Session paymentIntent, Tools.TransactionStatus status)
     {
         Donation donation = dc.Donations.Where(x => x.DonationId == new Guid(paymentIntent.Metadata.Values.FirstOrDefault().ToString())).FirstOrDefault();
+        var profile = dc.Profiles.Where(p => p.UserId == donation.UserId).FirstOrDefault();
+        var organization = dc.Organizations.Where(x => x.OwnerId == donation.UserId).FirstOrDefault();
+        var donationCampaign = dc.OrganizationEvents.Where(x => x.OrganizationId == organization.OrganizationId).FirstOrDefault();
         if (donation != null)
         {
             donation.TransactionId = paymentIntent.PaymentIntentId;
@@ -83,31 +86,51 @@ public partial class V1_NonProfit_DonationPaymentReturn : System.Web.UI.Page
             {
                 ListDictionary ldEmailBodyReplacements = new ListDictionary
             {
-                { "<% DonorFirstName %>", donation.FirstName },
-                { "<% DonorLastName %>", donation.LastName },
-                { "<% RecipLastName %>", "Update Later" }
-            };
+                      { "##DonorFirstName##", donation.FirstName },
+                       { "##DonorLastName##", donation.LastName },
+                     { "##DonationDate##", donation.CreatedAt.ToString("MM/dd/yyyy") },
+                      { "##DonationAmount##", donation.Amount.ToString("F2") },
+                      { "##LogoUrl##", organization.Logo },
+                      { "##OrganizationName##", organization.Name },
+                      { "##TeamPageLink##", organization.Website },
+                      { "##DonationDeployment##", donationCampaign.CampaignName},
+                       { "##ContactLink##", organization.Website },
+                       { "##TeamOwnerName##", organization.PointOfContactName },
+                       { "##Title##",profile.Title },
+                       { "##TeamOwnerEmail##", organization.PointOfContactEmail },
+                       { "##TeamWebsiteLink##", organization.Website }
 
+            };
+                EmailTemplate emailTemplate = dc.EmailTemplates
+                .Where(e => e.OrganizationId == organization.OrganizationId)
+                .FirstOrDefault();
                 string error = string.Empty;
+                string emailBody = string.Empty;
+                string templatePath = "~\\Homer\\DefaultEmailTemplate.html";
+
+                if (emailTemplate != null && !string.IsNullOrEmpty(emailTemplate.EmailBody))
+                {
+                    emailBody = emailTemplate.EmailBody;
+                    templatePath = string.Empty;
+                }
 
                 Tools.SendEmail(
-                     string.Empty,
-                     "Thanks for Donation to Stability",
-                     ldEmailBodyReplacements,
-                     donation.EmailAddress,
-                     donation.FirstName + " " + donation.LastName,
-                     string.Empty,
-                     string.Empty,
-                     "~\\EmailTemplates\\DonorLetter.html",
-                     out error);
+                    emailBody,
+                    "Thanks for Donation to Stability",
+                    ldEmailBodyReplacements,
+                    donation.EmailAddress,
+                    string.Empty,
+                    string.Empty,
+                    string.Empty,
+                    templatePath,
+                    out error);
 
                 if (!string.IsNullOrEmpty(donation.AuthorizedTransactionId))
                 {
-                    Organization organization = dc.Organizations.Where(x => x.OrganizationId == new Guid(donation.AuthorizedTransactionId)).FirstOrDefault();
                     ldEmailBodyReplacements = new ListDictionary
                 {
                     { "<% OwnerName %>", organization.Name },
-                    { "<% donAmount %>", paymentIntent.AmountTotal/100 }
+                    { "<% donAmount %>", (paymentIntent.AmountTotal/100).ToString() }
                 };
                     Tools.SendEmail(
                      string.Empty,
