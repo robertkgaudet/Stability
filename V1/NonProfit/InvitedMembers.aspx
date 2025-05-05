@@ -61,7 +61,7 @@
                     if (response.d) {
                         swal({
                             title: "Success!",
-                            text: "Invite sent Successfully!",
+                            text: "Invite sent successfully!",
                             icon: "success",
                             button: "OK"
                         }).then(() => {
@@ -102,7 +102,7 @@
                             if (response.d) {
                                 swal({
                                     title: "Success!",
-                                    text: "Invite Cancelled Successfully!",
+                                    text: "Invite cancelled successfully!",
                                     icon: "success",
                                     button: "OK"
                                 }).then(() => {
