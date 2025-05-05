@@ -69,7 +69,7 @@
                 var userOrgInviteId = $(this).data('id');
                 $.ajax({
                     type: "POST",
-                    url: "/V1/InvitedMembers.aspx/CancelInviteById",
+                    url: "/V1/NonProfit/InvitedMembers.aspx/CancelInviteById",
                     data: JSON.stringify({ userOrgInviteId: userOrgInviteId }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
@@ -116,7 +116,7 @@
                                 </ItemTemplate>
                             </asp:Repeater>
                         </tbody>
-                    </table>
+                    </table> 
                 </div>
             </div>
         </div>
