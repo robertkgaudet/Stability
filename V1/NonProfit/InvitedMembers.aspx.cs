@@ -38,7 +38,7 @@ public partial class V1_NonProfit_InvitedMembers : BaseOrganizationWebForm
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
             var invitedMembers = (from i in dc.UserOrganizationInvites
-                                  where i.InvitationCancelled == false || i.EmailSent == false
+                                  where   i.EmailSent == false && i.InvitationCancelled==false
                                   orderby i.CreatedOn ascending
                                   select new
                                   {
