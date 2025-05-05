@@ -24,7 +24,6 @@
     <script src="../../Homer/vendor/ladda/dist/spin.min.js"></script>
     <script src="../../Homer/vendor/ladda/dist/ladda.min.js"></script>
     <script src="../../Homer/vendor/ladda/dist/ladda.jquery.min.js"></script>
-
     <style>
         table {
             width: 80%;
@@ -43,48 +42,88 @@
             background-color: #f4f4f4;
         }
     </style>
-    <script>
-        $(document).ready(function () {
-            $('.ResendInvite').on('click', function () {
-                var userOrgInviteId = $(this).data('id');
-                debugger;
-                $.ajax({
-                    type: "POST",
-                    url: "/V1/NonProfit/InvitedMembers.aspx/ResendInviteById",
-                    data: JSON.stringify({ userOrgInviteId: userOrgInviteId }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        if (response.d) {
-                            alert('Invite Resend Successfully!');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error: " + error);
-                    }
-                });
-            });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-            $('.CancelInvite').on('click', function () {
-                var userOrgInviteId = $(this).data('id');
-                $.ajax({
-                    type: "POST",
-                    url: "/V1/NonProfit/InvitedMembers.aspx/CancelInviteById",
-                    data: JSON.stringify({ userOrgInviteId: userOrgInviteId }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (response) {
-                        if (response.d) {
-                            alert('Invite Cancel Successfully!');
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error: " + error);
+<script>
+    $(document).ready(function () {
+        $('.ResendInvite').on('click', function (e) {
+            e.preventDefault();
+            var userOrgInviteId = $(this).data('id');
+
+            $.ajax({
+                type: "POST",
+                url: "/V1/NonProfit/InvitedMembers.aspx/ResendInviteById",
+                data: JSON.stringify({ userOrgInviteId: userOrgInviteId }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response.d) {
+                        swal({
+                            title: "Success!",
+                            text: "Invite sent Successfully!",
+                            icon: "success",
+                            button: "OK"
+                        }).then(() => {
+                            location.reload(); 
+                        });
                     }
-                });
+                },
+                error: function () {
+                    swal({
+                        title: "Error!",
+                        text: "Failed to resend invite. Please try again.",
+                        icon: "error",
+                        button: "OK"
+                    });
+                }
             });
         });
-    </script>
+
+        $('.CancelInvite').on('click', function (e) {
+            e.preventDefault(); 
+            var userOrgInviteId = $(this).data('id');
+
+            swal({
+                title: "Are you sure?",
+                text: "This will cancel the invite. Do you want to continue?",
+                icon: "warning",
+                buttons: ["No, keep it", "Yes, cancel it!"],
+                dangerMode: true,
+            }).then((willCancel) => {
+                if (willCancel) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/V1/NonProfit/InvitedMembers.aspx/CancelInviteById",
+                        data: JSON.stringify({ userOrgInviteId: userOrgInviteId }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.d) {
+                                swal({
+                                    title: "Success!",
+                                    text: "Invite Cancelled Successfully!",
+                                    icon: "success",
+                                    button: "OK"
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            }
+                        },
+                        error: function () {
+                            swal({
+                                title: "Error!",
+                                text: "Failed to cancel invite. Please try again.",
+                                icon: "error",
+                                button: "OK"
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div class="content animate-panel" data-child="hpanel" data-effect="fadeInDown">
@@ -116,7 +155,7 @@
                                 </ItemTemplate>
                             </asp:Repeater>
                         </tbody>
-                    </table> 
+                    </table>
                 </div>
             </div>
         </div>
