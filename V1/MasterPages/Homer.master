@@ -539,15 +539,11 @@
 		min-width: 275px;
     }
 }
-		</style>
-
-	<asp:ContentPlaceHolder id="head" runat="server">
-		</asp:ContentPlaceHolder>
-	</head>
-	<%=bodyTag%>
-    <body class="sidebar-scroll hide-sidebar fixed-navbar <%=fixedFooter%> <%=fixedHeader%> bodyBGColor">		
-		<asp:Panel ID="adminFeatureSection" runat="server" Visible="false">
-			<div style="background-color: lightgray;
+div#adminFeatureSection {
+						margin-bottom: 30px;
+}
+div#adminFeatureSection div {
+    background-color: lightgray;
 						height:65px;
 						padding:10px;
 						text-align: left;
@@ -556,8 +552,17 @@
 						top: 0;
 						left: 0;
 						width: 100%;
-						z-index: 1000;">
-				
+						z-index: 1000;
+}
+		</style>
+
+	<asp:ContentPlaceHolder id="head" runat="server">
+		</asp:ContentPlaceHolder>
+	</head>
+	<%=bodyTag%>
+    <body class="sidebar-scroll hide-sidebar fixed-navbar <%=fixedFooter%> <%=fixedHeader%> bodyBGColor">		
+		<asp:Panel ID="adminFeatureSection" runat="server" Visible="false">
+			<div>
 				<h5>Site Admin Panel</h5>
 				<%=FeatureTypeCounterTitle %>  
 				<asp:Label ID="FeatureTypeCounterNumber" runat="server"></asp:Label>
