@@ -49,7 +49,7 @@
             // Initialize UI
             $("#btn-dropdown.disasterEvent").html('<%= _eventName %> <i class="fa fa-sort-down"></i>');
 
-        // Redirect handler remains unchanged
+            // Redirect handler remains unchanged
             $("#disasterEvent.dropdown-menu li").click(function (event) {
                 var locationval = null;
                 var parentval = null;
@@ -59,105 +59,114 @@
                     "&locationtype=" + encodeURIComponent(locationval || '') +
                     "&status=" + encodeURIComponent(statusval || '');
                 event.preventDefault();
-        });
+            });
 
-        // Initialize with stored state or defaults
-        initMap(DEFAULT_FILTER);
-        updateDropdownDisplays();
-       
-        // Map filter handler with state management
-        $("#ddlMapFilter.dropdown-menu li").click(function (event) {
-            const mapFilterType = $(this).attr('id');
-            $("#btn-mapDropDown.ddlMapFilter").html($(this).text());
+            // Initialize with stored state or defaults
+            initMap(DEFAULT_FILTER);
+            updateDropdownDisplays();
 
-            // Apply filters only for Critical view
-            initMapWithFilters(mapFilterType, null, null, null);
+            // Map filter handler with state management
+            $("#ddlMapFilter.dropdown-menu li").click(function (event) {
+                const mapFilterType = $(this).attr('id');
+                $("#btn-mapDropDown.ddlMapFilter").html($(this).text());
 
-            event.preventDefault();
-        });
-             
-        function updateDropdownDisplays() {
-            // Update main filter display
-            const currentFilter = DEFAULT_FILTER;
-            $(`#ddlMapFilter.dropdown-menu li[id="${currentFilter}"]`).trigger('click');
+                // Apply filters only for Critical view
+                initMapWithFilters(mapFilterType, null, null, null);
 
-            
-            
-        }
-            
-         $(document).on('click', '#ddlLocationType.dropdown-menu li', function (event) {
-            handleFilterClick(STORAGE_KEYS.LOCATION_TYPE, '#btn-locationType.locationTypeFilter').call(this, event);
-        });
-
-        $(document).on('click', '#ddlParentType.dropdown-menu li', function (event) {
-            handleFilterClick(STORAGE_KEYS.PARENT_TYPE, '#btn-parentType.parentTypeFilter').call(this, event);
-        });
-
-        $(document).on('click', '#ddlStatus.dropdown-menu li', function (event) {
-            handleFilterClick(STORAGE_KEYS.STATUS, '#btn-status.statusFilter').call(this, event);
-        });
-        function handleFilterClick(storageKey, buttonSelector) {
-            ddlChange = false;
-            return function (event) {
-                var filterValue = $(this).attr('id') == 'null' ? '': $(this).attr('id');
-                $(buttonSelector).attr('selData', filterValue);
-                $(buttonSelector).html($(this).text());
-
-                var ltId = $('#btn-locationType.locationTypeFilter').attr('selData');
-                var pltId = $('#btn-parentType.parentTypeFilter').attr('selData');
-                var lsId = $('#btn-status.statusFilter').attr('selData');
-                // Only refresh if in Critical mode
-                if (DEFAULT_FILTER === "Critical") {
-                    initMapWithFilters(
-                        DEFAULT_FILTER,
-                        ltId == ''? null : ltId,
-                        pltId == ''? null : pltId, 
-                        lsId == ''? null : lsId
-                    );
-                }
                 event.preventDefault();
-            };
-        }
+            });
 
-        // Existing map functions remain exactly the same below this point
-        var map;
-        let GEOJsonPath = '<%=_mapGEOJsonPath%>';
-
-        function initMap(mapFilterType) {
-            // Clear non-Critical filters when switching modes
-            if (mapFilterType !== "Critical") {
-                [STORAGE_KEYS.LOCATION_TYPE, STORAGE_KEYS.PARENT_TYPE, STORAGE_KEYS.STATUS].forEach(key => {
-                    sessionStorage.removeItem(key);
-                });
-            }
-            initMapWithFilters(
-                mapFilterType,
-                null,
-                null,
-                null
-            );
-        }
+            function updateDropdownDisplays() {
+                // Update main filter display
+                const currentFilter = DEFAULT_FILTER;
+                $(`#ddlMapFilter.dropdown-menu li[id="${currentFilter}"]`).trigger('click');
 
 
-        function initMapWithFilters(mapFilterType, locationTypeId, parentTypeId, statusId) {
-            if (mapFilterType !== "Critical") {
-                locationTypeId = null;
-                parentTypeId = null;
-                statusId = null;
+
             }
 
-            $('#list').empty();
-            var infowindow = new google.maps.InfoWindow();
+            $(document).on('click', '#ddlLocationType.dropdown-menu li', function (event) {
+                handleFilterClick(STORAGE_KEYS.LOCATION_TYPE, '#btn-locationType.locationTypeFilter').call(this, event);
+                var selectedText = $(this).text().trim();
+                $('#btn-locationType.locationTypeFilter').html(selectedText + ' <i class="fa fa-sort-down"></i>');
 
-            // Clear existing features if map already exists
-            if (map) {
-                map.data.forEach(function (feature) {
-                    map.data.remove(feature);
-                });
-            } else {
-                // Initialize map if it doesn't exist
-                map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: <%=_zoom%>,
+            });
+
+            $(document).on('click', '#ddlParentType.dropdown-menu li', function (event) {
+                handleFilterClick(STORAGE_KEYS.PARENT_TYPE, '#btn-parentType.parentTypeFilter').call(this, event);
+                var selectedText = $(this).text().trim();
+                $('#btn-parentType.parentTypeFilter').html(selectedText + ' <i class="fa fa-sort-down"></i>');
+
+            });
+
+            $(document).on('click', '#ddlStatus.dropdown-menu li', function (event) {
+                handleFilterClick(STORAGE_KEYS.STATUS, '#btn-status.statusFilter').call(this, event);
+                var selectedText = $(this).text().trim();
+                $('#btn-status.statusFilter').html(selectedText + ' <i class="fa fa-sort-down"></i>');
+
+            });
+            function handleFilterClick(storageKey, buttonSelector) {
+                ddlChange = false;
+                return function (event) {
+                    var filterValue = $(this).attr('id') == 'null' ? '' : $(this).attr('id');
+                    $(buttonSelector).attr('selData', filterValue);
+                    $(buttonSelector).html($(this).text());
+
+                    var ltId = $('#btn-locationType.locationTypeFilter').attr('selData');
+                    var pltId = $('#btn-parentType.parentTypeFilter').attr('selData');
+                    var lsId = $('#btn-status.statusFilter').attr('selData');
+                    // Only refresh if in Critical mode
+                    if (DEFAULT_FILTER === "Critical") {
+                        initMapWithFilters(
+                            DEFAULT_FILTER,
+                            ltId == '' ? null : ltId,
+                            pltId == '' ? null : pltId,
+                            lsId == '' ? null : lsId
+                        );
+                    }
+                    event.preventDefault();
+                };
+            }
+
+            // Existing map functions remain exactly the same below this point
+            var map;
+            let GEOJsonPath = '<%=_mapGEOJsonPath%>';
+
+            function initMap(mapFilterType) {
+                // Clear non-Critical filters when switching modes
+                if (mapFilterType !== "Critical") {
+                    [STORAGE_KEYS.LOCATION_TYPE, STORAGE_KEYS.PARENT_TYPE, STORAGE_KEYS.STATUS].forEach(key => {
+                        sessionStorage.removeItem(key);
+                    });
+                }
+                initMapWithFilters(
+                    mapFilterType,
+                    null,
+                    null,
+                    null
+                );
+            }
+
+
+            function initMapWithFilters(mapFilterType, locationTypeId, parentTypeId, statusId) {
+                if (mapFilterType !== "Critical") {
+                    locationTypeId = null;
+                    parentTypeId = null;
+                    statusId = null;
+                }
+
+                $('#list').empty();
+                var infowindow = new google.maps.InfoWindow();
+
+                // Clear existing features if map already exists
+                if (map) {
+                    map.data.forEach(function (feature) {
+                        map.data.remove(feature);
+                    });
+                } else {
+                    // Initialize map if it doesn't exist
+                    map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: <%=_zoom%>,
                     center: { lat: <%=_latitude%>, lng: <%=_longitude%> },
                     styles: [{ "stylers": [{ "saturation": -11 }] }]
                 });
@@ -180,215 +189,215 @@
             // Build the GeoJSON URL with filters
             var mapsURL = '<%=host%>/V1/Handlers/GetGeoJsonByDisaster.ashx?keyId=<%=_eventId%>&mapFilterType=' + (mapFilterType || "Critical");
 
-            // Only add additional parameters if in Critical mode
-            if (mapFilterType === "Critical") {
-                if (locationTypeId) mapsURL += '&locationTypeId=' + locationTypeId;
-                if (parentTypeId) mapsURL += '&parentTypeId=' + parentTypeId;
-                if (statusId) mapsURL += '&statusId=' + statusId;
-            }
+                // Only add additional parameters if in Critical mode
+                if (mapFilterType === "Critical") {
+                    if (locationTypeId) mapsURL += '&locationTypeId=' + locationTypeId;
+                    if (parentTypeId) mapsURL += '&parentTypeId=' + parentTypeId;
+                    if (statusId) mapsURL += '&statusId=' + statusId;
+                }
 
-            // Load GeoJSON data from your .ashx handler
-            map.data.loadGeoJson(mapsURL, null, function (features) {
-                // Once the data is loaded, generate the list
-                const listContainer = document.getElementById('list');
-                var locationTypeDdl = '';
-                var locationTypeIds = [];
-                var parentLocationTypeDdl = '';
-                var parentLocationTypeIds = [];
-                var statusDdl = '';
-                var statusIds = [];
-                //Create the list 
-                // Iterate through each feature in the GeoJSON data
-                features.forEach(function (feature) {
-                    // Get properties with fallbacks
-                    const address = feature.getProperty('Address') || 'Address not available';
-                    const icon = feature.getProperty('icon')
-                        ? '<img src="' + feature.getProperty('icon') + '" class="pull-left" style="width:35px; margin-right:10px;">'
-                        : '';
+                // Load GeoJSON data from your .ashx handler
+                map.data.loadGeoJson(mapsURL, null, function (features) {
+                    // Once the data is loaded, generate the list
+                    const listContainer = document.getElementById('list');
+                    var locationTypeDdl = '';
+                    var locationTypeIds = [];
+                    var parentLocationTypeDdl = '';
+                    var parentLocationTypeIds = [];
+                    var statusDdl = '';
+                    var statusIds = [];
+                    //Create the list 
+                    // Iterate through each feature in the GeoJSON data
+                    features.forEach(function (feature) {
+                        // Get properties with fallbacks
+                        const address = feature.getProperty('Address') || 'Address not available';
+                        const icon = feature.getProperty('icon')
+                            ? '<img src="' + feature.getProperty('icon') + '" class="pull-left" style="width:35px; margin-right:10px;">'
+                            : '';
 
-                    // FIXED: Always use LocationName/LocationType (your data structure)
-                    const campaignName = feature.getProperty('LocationName') || 'Location name not available';
-                    const organizationName = feature.getProperty('LocationType') || 'Type not specified';
-                    const label1 = "Location Type";
+                        // FIXED: Always use LocationName/LocationType (your data structure)
+                        const campaignName = feature.getProperty('LocationName') || 'Location name not available';
+                        const organizationName = feature.getProperty('LocationType') || 'Type not specified';
+                        const label1 = "Location Type";
 
-                    // FIXED: Only show contact if data exists
-                    var contact = '';
-                    const contactName = feature.getProperty('PointOfContactName');
-                    const phoneNumber = feature.getProperty('PhoneNumber');
-                    if (contactName) {
-                        contact = '<p><strong>Contact:</strong> ' + contactName;
-                        if (phoneNumber) contact += '</br><strong>Phone:</strong> ' + phoneNumber;
-                        contact += '</p>';
-                    }
-                    const pltId = feature.getProperty('LocationParentTypeId') || '';
-                    const pltName = feature.getProperty('LocationType') || '';
-                    const ltId = feature.getProperty('LocationTypeId') || '';
-                    const ltName = feature.getProperty('LocationTypeName') || '';
-                    const lsName = feature.getProperty('Status') || 'All';
-                    const lsId = feature.getProperty('LocationStatusId') || 'null';
-                    if(pltId != '' && pltName != '') {
-                        if(!parentLocationTypeIds.includes(pltId)) {
-                            parentLocationTypeIds.push(pltId);
-                            parentLocationTypeDdl += "<li id='" + pltId + "'><a href='#'>" + pltName + "</a></li>";
+                        // FIXED: Only show contact if data exists
+                        var contact = '';
+                        const contactName = feature.getProperty('PointOfContactName');
+                        const phoneNumber = feature.getProperty('PhoneNumber');
+                        if (contactName) {
+                            contact = '<p><strong>Contact:</strong> ' + contactName;
+                            if (phoneNumber) contact += '</br><strong>Phone:</strong> ' + phoneNumber;
+                            contact += '</p>';
                         }
-                        
-                    }
-                    if(ltId != '' && ltName != '') {
-                        if(!locationTypeIds.includes(ltId)) {
-                            locationTypeIds.push(ltId);
-                            locationTypeDdl += "<li id='" + ltId + "'><a href='#'>" + ltName + "</a></li>";
-                        }
- 
-                    }
-                     if(lsId != '' && lsName != '') {
-                         if(!statusIds.includes(lsId)) {
-                             statusIds.push(lsId);
-                             statusDdl += "<li id='" + lsId + "'><a href='#'>" + lsName + "</a></li>";
-                         }
- 
-                     }
-                    const coordinates = feature.getGeometry().get();  // Get coordinates (Google Maps LatLng object)
+                        const pltId = feature.getProperty('LocationParentTypeId') || '';
+                        const pltName = feature.getProperty('LocationType') || '';
+                        const ltId = feature.getProperty('LocationTypeId') || '';
+                        const ltName = feature.getProperty('LocationTypeName') || '';
+                        const lsName = feature.getProperty('Status') || 'All';
+                        const lsId = feature.getProperty('LocationStatusId') || 'null';
+                        if (pltId != '' && pltName != '') {
+                            if (!parentLocationTypeIds.includes(pltId)) {
+                                parentLocationTypeIds.push(pltId);
+                                parentLocationTypeDdl += "<li id='" + pltId + "'><a href='#'>" + pltName + "</a></li>";
+                            }
 
-                    // Create a list item for each feature
-                    const listItem = document.createElement('div');
-                    listItem.className = 'list-item';
-                    listItem.innerHTML = ` ${icon}
+                        }
+                        if (ltId != '' && ltName != '') {
+                            if (!locationTypeIds.includes(ltId)) {
+                                locationTypeIds.push(ltId);
+                                locationTypeDdl += "<li id='" + ltId + "'><a href='#'>" + ltName + "</a></li>";
+                            }
+
+                        }
+                        if (lsId != '' && lsName != '') {
+                            if (!statusIds.includes(lsId)) {
+                                statusIds.push(lsId);
+                                statusDdl += "<li id='" + lsId + "'><a href='#'>" + lsName + "</a></li>";
+                            }
+
+                        }
+                        const coordinates = feature.getGeometry().get();  // Get coordinates (Google Maps LatLng object)
+
+                        // Create a list item for each feature
+                        const listItem = document.createElement('div');
+                        listItem.className = 'list-item';
+                        listItem.innerHTML = ` ${icon}
                         <h4>${campaignName}</h4>
                         <p><strong>${label1}</strong> ${organizationName}</p>
                         <p><strong>Address:</strong> ${address}</p>
                         ${contact}
                     `;
-                    listContainer.appendChild(listItem);
+                        listContainer.appendChild(listItem);
 
 
-                    listItem.addEventListener('click', () => {
-                        map.setCenter(coordinates);
-                        map.setZoom(15);
+                        listItem.addEventListener('click', () => {
+                            map.setCenter(coordinates);
+                            map.setZoom(15);
+                        });
                     });
+                    if (ddlChange) {
+                        $('#ddlParentType').empty();
+                        $('#ddlParentType').append(parentLocationTypeDdl);
+
+                        $('#ddlLocationType').empty();
+                        $('#ddlLocationType').append(locationTypeDdl);
+
+                        $('#ddlStatus').empty();
+                        $('#ddlStatus').append(statusDdl);
+                    }
+
+
                 });
-                if(ddlChange) {
-                    $('#ddlParentType').empty();
-                    $('#ddlParentType').append(parentLocationTypeDdl);
-                
-                    $('#ddlLocationType').empty();
-                    $('#ddlLocationType').append(locationTypeDdl);
 
-                    $('#ddlStatus').empty();
-                    $('#ddlStatus').append(statusDdl);
+                //Load the info window when a user clicks on it.
+                switch (mapFilterType) {
+
+                    case "Cases":
+                        map.data.addListener('click', function (event) {
+                            var feat = event.feature;
+                            var formattedAddress = feat.getProperty('Address');
+                            var isActive = feat.getProperty('IsActive');
+                            var campaignName = feat.getProperty('CampaignName');
+                            var URLFriendlyCampaignName = feat.getProperty('URLFriendlyCampaignName');
+                            var pointOfContactName = feat.getProperty('PointOfContactName');
+                            var phoneNumber = feat.getProperty('PhoneNumber');
+                            var organizationId = feat.getProperty('OrganizationId');
+                            var organizationName = feat.getProperty('OrganizationName');
+                            var URLFriendlyOrganizationName = feat.getProperty('URLFriendlyOrganizationName');
+                            var btnSignUp = "<a target='_blank' href='/SignUp/" + URLFriendlyCampaignName + "'>View Open Positions</a>";
+
+                            var html = "<div class='col-sm-12'>" +
+                                "<h4 style='margin:0px;'><a href='/Cause/" + URLFriendlyCampaignName + "'>" + campaignName + "</a></h4>" +
+                                "<b><a target='_blank' href='/V1/NonProfit/Default.aspx?organizationId=" + organizationId + "'>" + organizationName + "</a></b></br>" +
+                                "<b>Address: </b>" + formattedAddress + "</br>" +
+                                "<b>Contact:</b> " + pointOfContactName + "</b></br>" +
+                                "<b>Phone: </b> " + phoneNumber + "</br > " +
+                                btnSignUp +
+                                "</div >";
+
+                            infowindow.setContent(html);
+                            infowindow.setPosition(event.latLng);
+                            infowindow.open(map);
+                        });
+                        break;
+                    case "Community":
+                        map.data.addListener('click', function (event) {
+                            var feat = event.feature;
+                            var formattedAddress = feat.getProperty('Address');
+                            var isActive = feat.getProperty('IsActive');
+                            var campaignName = feat.getProperty('CampaignName');
+                            var URLFriendlyCampaignName = feat.getProperty('URLFriendlyCampaignName');
+                            var pointOfContactName = feat.getProperty('PointOfContactName');
+                            var phoneNumber = feat.getProperty('PhoneNumber');
+                            var organizationId = feat.getProperty('OrganizationId');
+                            var organizationName = feat.getProperty('OrganizationName');
+                            var URLFriendlyOrganizationName = feat.getProperty('URLFriendlyOrganizationName');
+                            var btnSignUp = "<a target='_blank' href='/SignUp/" + URLFriendlyCampaignName + "'>View Open Positions</a>";
+
+                            var html = "<div class='col-sm-12'>" +
+                                "<h4 style='margin:0px;'><a href='/Cause/" + URLFriendlyCampaignName + "'>" + campaignName + "</a></h4>" +
+                                "<b><a target='_blank' href='/V1/NonProfit/Default.aspx?organizationId=" + organizationId + "'>" + organizationName + "</a></b></br>" +
+                                "<b>Address: </b>" + formattedAddress + "</br>" +
+                                "<b>Contact:</b> " + pointOfContactName + "</b></br>" +
+                                "<b>Phone: </b> " + phoneNumber + "</br > " +
+                                btnSignUp +
+                                "</div >";
+
+                            infowindow.setContent(html);
+                            infowindow.setPosition(event.latLng);
+                            infowindow.open(map);
+                        });
+                        break;
+                    case "All":
+                        map.data.addListener('click', function (event) {
+                            var feat = event.feature;
+                            var html = "<div class='col-sm-12'> <b><a style='text-decoration:underline;' target='_blank' href='/V1/Location.aspx?locationProfileId=" + feat.getProperty('locationProfileId') + "'>"
+                                + feat.getProperty('LocationName') + "</a></b></br>"
+                                + feat.getProperty('Address') + "</br></br>"
+                                + "<b>" + feat.getProperty('LocationType') + "</b></br>"
+                                + feat.getProperty('Description') + "</b></br></br>"
+                                + "Seeking Volunteers: " + feat.getProperty('SeekingVolunteers') + "</br>"
+                                + "Allows Pets: " + feat.getProperty('AllowsPets') + "</br>"
+                                + "Provides Medical Help: " + feat.getProperty('ProvidesMedicalHelp') + "</br>"
+                                + "Capacity: " + feat.getProperty('Capacity') + "</br></br>"
+                            if (feat.getProperty('donationURL')) { html += "<a style='text-decoration:underline;' class='btn btn-success btn-sm pull-left m-r-sm' target='_blank' href='" + feat.getProperty('donationURL') + "'>Donate To This Location</a>"; }
+                            html += " <a class='btn btn-info btn-sm pull-left' target='_blank' href='/V1/Location.aspx?locationProfileId=" + feat.getProperty('locationProfileId') + "'>Visit this Location</a>";
+                            html += "</div>";
+
+                            infowindow.setContent(html);
+                            infowindow.setPosition(event.latLng);
+                            infowindow.open(map);
+                        });
+                        break;
+                    case "Critical":
+                        map.data.addListener('click', function (event) {
+                            var feat = event.feature;
+                            var html = "<div class='col-sm-12'> <b><a style='text-decoration:underline;' target='_blank' href='/V1/Location.aspx?locationProfileId=" + feat.getProperty('locationProfileId') + "'>"
+                                + feat.getProperty('LocationName') + "</a></b></br>"
+                                + feat.getProperty('Address') + "</br></br>"
+                                + "<b>" + feat.getProperty('LocationType') + "</b></br>"
+                                + feat.getProperty('Description') + "</b></br></br>"
+                                + "Seeking Volunteers: " + feat.getProperty('SeekingVolunteers') + "</br>"
+                                + "Allows Pets: " + feat.getProperty('AllowsPets') + "</br>"
+                                + "Provides Medical Help: " + feat.getProperty('ProvidesMedicalHelp') + "</br>"
+                                + "Capacity: " + feat.getProperty('Capacity') + "</br></br>"
+                            if (feat.getProperty('donationURL')) { html += "<a style='text-decoration:underline;' class='btn btn-success btn-sm pull-left m-r-sm' target='_blank' href='" + feat.getProperty('donationURL') + "'>Donate To This Location</a>"; }
+                            html += " <a class='btn btn-info btn-sm pull-left' target='_blank' href='/V1/Location.aspx?locationProfileId=" + feat.getProperty('locationProfileId') + "'>Visit this Location</a>";
+                            html += "</div>";
+
+                            infowindow.setContent(html);
+                            infowindow.setPosition(event.latLng);
+                            infowindow.open(map);
+                        });
+                        break;
+                    case "VOAD":
+                        break;
+                    case "Professional":
+                        break;
+                    default:
                 }
-                
-                
-            });
-
-            //Load the info window when a user clicks on it.
-            switch (mapFilterType) {
-                
-                case "Cases":
-                    map.data.addListener('click', function (event) {
-                        var feat = event.feature;
-                        var formattedAddress = feat.getProperty('Address');
-                        var isActive = feat.getProperty('IsActive');
-                        var campaignName = feat.getProperty('CampaignName');
-                        var URLFriendlyCampaignName = feat.getProperty('URLFriendlyCampaignName');
-                        var pointOfContactName = feat.getProperty('PointOfContactName');
-                        var phoneNumber = feat.getProperty('PhoneNumber');
-                        var organizationId = feat.getProperty('OrganizationId');
-                        var organizationName = feat.getProperty('OrganizationName');
-                        var URLFriendlyOrganizationName = feat.getProperty('URLFriendlyOrganizationName');
-                        var btnSignUp = "<a target='_blank' href='/SignUp/" + URLFriendlyCampaignName + "'>View Open Positions</a>";
-
-                        var html = "<div class='col-sm-12'>" +
-                            "<h4 style='margin:0px;'><a href='/Cause/" + URLFriendlyCampaignName + "'>" + campaignName + "</a></h4>" +
-                            "<b><a target='_blank' href='/V1/NonProfit/Default.aspx?organizationId=" + organizationId + "'>" + organizationName + "</a></b></br>" +
-                            "<b>Address: </b>" + formattedAddress + "</br>" +
-                            "<b>Contact:</b> " + pointOfContactName + "</b></br>" +
-                            "<b>Phone: </b> " + phoneNumber + "</br > " +
-                            btnSignUp +
-                            "</div >";
-
-                        infowindow.setContent(html);
-                        infowindow.setPosition(event.latLng);
-                        infowindow.open(map);
-                    });
-                    break;
-                case "Community":
-                    map.data.addListener('click', function (event) {
-                        var feat = event.feature;
-                        var formattedAddress = feat.getProperty('Address');
-                        var isActive = feat.getProperty('IsActive');
-                        var campaignName = feat.getProperty('CampaignName');
-                        var URLFriendlyCampaignName = feat.getProperty('URLFriendlyCampaignName');
-                        var pointOfContactName = feat.getProperty('PointOfContactName');
-                        var phoneNumber = feat.getProperty('PhoneNumber');
-                        var organizationId = feat.getProperty('OrganizationId');
-                        var organizationName = feat.getProperty('OrganizationName');
-                        var URLFriendlyOrganizationName = feat.getProperty('URLFriendlyOrganizationName');
-                        var btnSignUp = "<a target='_blank' href='/SignUp/" + URLFriendlyCampaignName + "'>View Open Positions</a>";
-
-                        var html = "<div class='col-sm-12'>" +
-                            "<h4 style='margin:0px;'><a href='/Cause/" + URLFriendlyCampaignName + "'>" + campaignName + "</a></h4>" +
-                            "<b><a target='_blank' href='/V1/NonProfit/Default.aspx?organizationId=" + organizationId + "'>" + organizationName + "</a></b></br>" +
-                            "<b>Address: </b>" + formattedAddress + "</br>" +
-                            "<b>Contact:</b> " + pointOfContactName + "</b></br>" +
-                            "<b>Phone: </b> " + phoneNumber + "</br > " +
-                            btnSignUp +
-                            "</div >";
-
-                        infowindow.setContent(html);
-                        infowindow.setPosition(event.latLng);
-                        infowindow.open(map);
-                    });
-                    break;
-                case "All":
-                    map.data.addListener('click', function (event) {
-                        var feat = event.feature;
-                        var html = "<div class='col-sm-12'> <b><a style='text-decoration:underline;' target='_blank' href='/V1/Location.aspx?locationProfileId=" + feat.getProperty('locationProfileId') + "'>"
-                            + feat.getProperty('LocationName') + "</a></b></br>"
-                            + feat.getProperty('Address') + "</br></br>"
-                            + "<b>" + feat.getProperty('LocationType') + "</b></br>"
-                            + feat.getProperty('Description') + "</b></br></br>"
-                            + "Seeking Volunteers: " + feat.getProperty('SeekingVolunteers') + "</br>"
-                            + "Allows Pets: " + feat.getProperty('AllowsPets') + "</br>"
-                            + "Provides Medical Help: " + feat.getProperty('ProvidesMedicalHelp') + "</br>"
-                            + "Capacity: " + feat.getProperty('Capacity') + "</br></br>"
-                        if (feat.getProperty('donationURL')) { html += "<a style='text-decoration:underline;' class='btn btn-success btn-sm pull-left m-r-sm' target='_blank' href='" + feat.getProperty('donationURL') + "'>Donate To This Location</a>"; }
-                        html += " <a class='btn btn-info btn-sm pull-left' target='_blank' href='/V1/Location.aspx?locationProfileId=" + feat.getProperty('locationProfileId') + "'>Visit this Location</a>";
-                        html += "</div>";
-
-                        infowindow.setContent(html);
-                        infowindow.setPosition(event.latLng);
-                        infowindow.open(map);
-                    });
-                    break;
-                case "Critical":
-                    map.data.addListener('click', function (event) {
-                        var feat = event.feature;
-                        var html = "<div class='col-sm-12'> <b><a style='text-decoration:underline;' target='_blank' href='/V1/Location.aspx?locationProfileId=" + feat.getProperty('locationProfileId') + "'>"
-                            + feat.getProperty('LocationName') + "</a></b></br>"
-                            + feat.getProperty('Address') + "</br></br>"
-                            + "<b>" + feat.getProperty('LocationType') + "</b></br>"
-                            + feat.getProperty('Description') + "</b></br></br>"
-                            + "Seeking Volunteers: " + feat.getProperty('SeekingVolunteers') + "</br>"
-                            + "Allows Pets: " + feat.getProperty('AllowsPets') + "</br>"
-                            + "Provides Medical Help: " + feat.getProperty('ProvidesMedicalHelp') + "</br>"
-                            + "Capacity: " + feat.getProperty('Capacity') + "</br></br>"
-                        if (feat.getProperty('donationURL')) { html += "<a style='text-decoration:underline;' class='btn btn-success btn-sm pull-left m-r-sm' target='_blank' href='" + feat.getProperty('donationURL') + "'>Donate To This Location</a>"; }
-                        html += " <a class='btn btn-info btn-sm pull-left' target='_blank' href='/V1/Location.aspx?locationProfileId=" + feat.getProperty('locationProfileId') + "'>Visit this Location</a>";
-                        html += "</div>";
-
-                        infowindow.setContent(html);
-                        infowindow.setPosition(event.latLng);
-                        infowindow.open(map);
-                    });
-                    break;
-                case "VOAD":
-                    break;
-                case "Professional":
-                    break;
-                default:
             }
-        }
-    });
+        });
         $(document).ready(function () {
             $(".additional-filter").show();
             $("#ddlMapFilter li").on("click", function (e) {
@@ -427,8 +436,9 @@
             padding: 10px;
             border-bottom: 1px solid #ddd;
             cursor: pointer;
-        } 
-           .list-item:hover {
+        }
+
+            .list-item:hover {
                 background-color: #f0f0f0;
             }
 
@@ -587,41 +597,43 @@
                         <%=liCases%>
                     </ul>
                 </div>
-                 <div class="filter-dropdown">
-                     <button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" 
-                         type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i></button>
-                     <ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
-                         <%=disasterDropDown%>
-                     </ul>
-                 </div>
+                <div class="filter-dropdown">
+                    <button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer"
+                        type="button" data-toggle="dropdown">
+                        Change Community Portals <i class="fa fa-sort-down"></i>
+                    </button>
+                    <ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
+                        <%=disasterDropDown%>
+                    </ul>
+                </div>
 
                 <!-- New Parent Type Filter -->
                 <div class="filter-dropdown additional-filter">
-                    <button id="btn-parentType" selData="" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle
-                        dropdown-map-filter" type="button" data-toggle="dropdown">Parent Types <i class="fa fa-sort-down"></i></button>
+                    <button id="btn-parentType" seldata="" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle
+                        dropdown-map-filter"
+                        type="button" data-toggle="dropdown">
+                        Parent Types <i class="fa fa-sort-down"></i>
+                    </button>
                     <ul id="ddlParentType" class="dropdown-menu text-center dropdown-map-filter">
-                        
                     </ul>
                 </div>
 
                 <!-- New Location Type Filter -->
                 <div class="filter-dropdown additional-filter">
-                    <button id="btn-locationType" selData="" class="btn btn-outline btn-default locationTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Location Types <i class="fa fa-sort-down"></i></button>
+                    <button id="btn-locationType" seldata="" class="btn btn-outline btn-default locationTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Location Types <i class="fa fa-sort-down"></i></button>
                     <ul id="ddlLocationType" class="dropdown-menu text-center dropdown-map-filter">
-                        
                     </ul>
                 </div>
 
 
                 <!-- New Status Filter -->
                 <div class="filter-dropdown additional-filter">
-                    <button id="btn-status" selData="" class="btn btn-outline btn-default statusFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Status <i class="fa fa-sort-down"></i></button>
+                    <button id="btn-status" seldata="" class="btn btn-outline btn-default statusFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Status <i class="fa fa-sort-down"></i></button>
                     <ul id="ddlStatus" class="dropdown-menu text-center dropdown-map-filter">
-                        
                     </ul>
                 </div>
 
-               
+
                 <div class="deployment-section">
 
                     <b>Share Your Team Deployment</b>
