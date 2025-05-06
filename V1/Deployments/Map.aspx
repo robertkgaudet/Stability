@@ -47,7 +47,7 @@
             const DEFAULT_FILTER = "Critical";
 
             // Initialize UI
-            $("#btn-dropdown.disasterEvent").html('<%=_eventName%>');
+            $("#btn-dropdown.disasterEvent").html('<%= _eventName %> <i class="fa fa-sort-down"></i>');
 
         // Redirect handler remains unchanged
             $("#disasterEvent.dropdown-menu li").click(function (event) {
@@ -588,7 +588,8 @@
                     </ul>
                 </div>
                  <div class="filter-dropdown">
-                     <button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i></button>
+                     <button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer" 
+                         type="button" data-toggle="dropdown">Change Community Portals <i class="fa fa-sort-down"></i></button>
                      <ul id="disasterEvent" class="dropdown-menu text-center dropdown-volunteer required">
                          <%=disasterDropDown%>
                      </ul>
@@ -596,7 +597,8 @@
 
                 <!-- New Parent Type Filter -->
                 <div class="filter-dropdown additional-filter">
-                    <button id="btn-parentType" selData="" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Parent Types <i class="fa fa-sort-down"></i></button>
+                    <button id="btn-parentType" selData="" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle
+                        dropdown-map-filter" type="button" data-toggle="dropdown">Parent Types <i class="fa fa-sort-down"></i></button>
                     <ul id="ddlParentType" class="dropdown-menu text-center dropdown-map-filter">
                         
                     </ul>
