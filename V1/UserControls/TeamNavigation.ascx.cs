@@ -34,6 +34,33 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        hypPeople.Attributes["data-toggle"] = "tooltip";
+        hypPeople.Attributes["title"] = "View members of this team";
+
+        hypTeamRoles.Attributes["data-toggle"] = "tooltip";
+        hypTeamRoles.Attributes["title"] = "Enter disaster-relief training portal";
+
+        hypDeploymentTeam.Attributes["data-toggle"] = "tooltip";
+        hypDeploymentTeam.Attributes["title"] = "Search this team's open positions";
+
+        hypSkillsets.Attributes["data-toggle"] = "tooltip";
+        hypSkillsets.Attributes["title"] = "View this team's skillsets";
+
+        hypResources.Attributes["data-toggle"] = "tooltip";
+        hypResources.Attributes["title"] = "View this team's resources";
+
+        hypStream.Attributes["data-toggle"] = "tooltip";
+        hypStream.Attributes["title"] = "View this team's posts";
+
+        hypDeployments.Attributes["data-toggle"] = "tooltip";
+        hypDeployments.Attributes["title"] = "View this team's deployments";
+
+        hypPrograms.Attributes["data-toggle"] = "tooltip";
+        hypPrograms.Attributes["title"] = "View this team's programs";
+
+        hypTeamCalendar.Attributes["data-toggle"] = "tooltip";
+        hypTeamCalendar.Attributes["title"] = "View this team's calendar";
+
         //organizationId = Request.QueryString["organizationId"];
         hypStream.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + organizationId;
         hypTeamRoles.NavigateUrl = "/V1/NonProfit/TeamRoles.aspx?organizationId=" + organizationId;
@@ -43,6 +70,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypActivity.NavigateUrl = "/V1/NonProfit/ActivityDashboard.aspx?organizationId=" + organizationId;
         hypTeamCalendar.NavigateUrl = "/V1/NonProfit/TeamAvailabilityCalendar.aspx?organizationId=" + organizationId;
         hypPeople.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId;
+        hypInvitedMembers.NavigateUrl = "/V1/NonProfit/InvitedMembers.aspx?organizationId=" + organizationId;
         hypSettings.NavigateUrl = "/V1/NonProfitAdministration/Settings.aspx?organizationId=" + organizationId;
         hypSupport.NavigateUrl = "/V1/NonProfit/Support.aspx?organizationId=" + organizationId;
         hypTickets.NavigateUrl = "/V1/NonProfitAdministration/Tickets.aspx?organizationId=" + organizationId;
@@ -60,7 +88,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypSquareLogoUpload.NavigateUrl = "/V1/NonProfit/SquareLogoUpload.aspx?organizationId=" + organizationId;
         hypCoverImageUpload.NavigateUrl = "/V1/NonProfitAdministration/CoverImage1600x600.aspx?organizationId=" + organizationId;
         hypManagePhotos.NavigateUrl = "/V1/NonProfitAdministration/ManagePhotos.aspx?organizationId=" + organizationId;
-        hypUpdateTeamInfo.NavigateUrl = "/V1/Administration/NonProfitNew.aspx?userActionModal=false&organizationId=" + organizationId;
+        hypUpdateTeamInfo.NavigateUrl = "/V1/NonProfit/NonProfitNew.aspx?userActionModal=false&organizationId=" + organizationId;
         //litTeamName.Text = _teamName;
 
         switch (PageName)

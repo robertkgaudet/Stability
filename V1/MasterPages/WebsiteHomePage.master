@@ -77,18 +77,12 @@
 		{
 			font-size:18px !important;
 		}
-		.container{
-		}
-		.heading{    
-
-		}
 	</style>
 
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
 <body class="landing-page">
-
     <form id="form1" runat="server">
         <div>
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
@@ -137,6 +131,7 @@
                     </li>
                     <li><a class="page-scroll" page-scroll href="#team">About Us</a></li>
                     <li><a class="page-scroll" page-scroll href="/SignIn">Sign In</a></li>
+                    <li><a class="page-scroll" page-scroll href="/Register">Join</a></li>
                     <li><a class="page-scroll" page-scroll href="#contact">Contact</a></li>
                 </ul>
             </div>
@@ -146,18 +141,18 @@
     <header id="page-top">
         <div class="container">
             <div class="heading">
-                <h1>Disaster-Ready Communities
-                </h1>
-                <span class="font-size-medium">Turn your friend network into a proficient disaster response
+                <div style="max-width: 450px; margin-top: 20px; margin-bottom: 20px; color: white; font-size:16px;">
+					<h1>Disaster-Ready Communities
+					</h1>
+                </div>
+					<span class="font-size-medium">Turn your friend network into a proficient disaster response
                     team, ready to meet urgent needs in your own community.</span>
-                <div style="max-width: 450px; margin-top: 20px; margin-bottom: 20px; color: white;">
                     For Emergency Management Professionals, Stability offers simulation features that
                     transitions from planning into a coordinated, community-empowered response during
-                    disasters.
-                </div>
-                <a class="btn btn-success btn-sm btn-w-m" role="button" page-scroll href="#groupResponse">
-                    Read More</a>
-                <a class="btn btn-success btn-sm btn-w-m" role="button" href="/SignIn">Sign In</a>
+                    disasters.<br /><a style="text-decoration:underline; color:white;" page-scroll href="#groupResponse">Learn More</a>
+					<br />
+					<a style="font-size: 20px; font-weight: bold;" class="btn btn-success btn-md btn-w-m" role="button" href="/SignIn">Sign In</a>
+					<a style="font-size: 20px; font-weight: bold;" class="btn btn-success btn-md btn-w-m" role="button" href="/Register">Join</a>
             </div>
         </div>
     </header>

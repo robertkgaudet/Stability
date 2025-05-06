@@ -70,7 +70,7 @@
                 });
             });
 
-			$(document).ready(function () {
+            $(document).ready(function () {
                 $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 
 				<%=_showUserActionModal%>
@@ -132,28 +132,27 @@
                     checkTaskType = false;
                 }
 
-				$('#<%=imgLogo.ClientID%>').click(function () {
-                  window.location.href = '/V1/NonProfit/Default.aspx';
-					return false;
-				});
-
-				$('#<%=imgProfile.ClientID%>').click(function () {
-					window.location.href = <%=profileURL%>;
-					return false;
+                $('#<%=imgLogo.ClientID%>').click(function () {
+                    window.location.href = '/V1/NonProfit/Default.aspx';
+                    return false;
                 });
 
-				toastr.options = {
-					"debug": false,
-					"newestOnTop": true,
-					"positionClass": "toast-top-center",
-					"closeButton": true,
-					"showDuration": "600",
-					"toastClass": "animated fadeInDown",
-				};
-			});
+                $('#<%=imgProfile.ClientID%>').click(function () {
+                    window.location.href = <%=profileURL%>;
+                    return false;
+                });
 
-            function chooseCause()
-            {
+                toastr.options = {
+                    "debug": false,
+                    "newestOnTop": true,
+                    "positionClass": "toast-top-center",
+                    "closeButton": true,
+                    "showDuration": "600",
+                    "toastClass": "animated fadeInDown",
+                };
+            });
+
+            function chooseCause() {
                 //Now that we have a cause we can activate these items.
 
                 divTimesheet.hidden = false;
@@ -161,7 +160,7 @@
                 //Remove the cause Divs
                 divChooseCause.hidden = true;
                 $("#btn-causeDropdownB.dropdown-chooseCauseB").html("<i class='fa fa-globe'></i> " + causeName);
-			}
+            }
 
 
             function checkSignOutStatus() {
@@ -172,33 +171,32 @@
                     dataType: "json",
                     success: function (response) {
                         if (response && response.shouldSignOut) {
-                         
+
                             document.getElementById('<%= btnSignOut.ClientID %>').click();
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Error checking sign-out status: " + error);
-            }
-        });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error checking sign-out status: " + error);
+                    }
+                });
             }
 
-           
+
             setInterval(checkSignOutStatus, 30000);
 
-          
+
             $(document).ready(function () {
                 checkSignOutStatus();
             });
 
-            function updateTime(isUserActive)
-			{
-				
+            function updateTime(isUserActive) {
+
                 workDescription = document.getElementById('<%=txtWorkDescription.ClientID%>').value;
                 workCompleteDescription = document.getElementById('<%=txtWorkCompleteDescription.ClientID%>').value;
                 taskTypeId = document.getElementById('<%=hidTaskTypeId.ClientID%>').value;
                 activeStatusButtonId = document.getElementById('<%=activeStatusButton.ClientID%>');
                 causeCountyMessage = document.getElementById('causeCountyMessage');
-                btnSubmitTime = document.getElementById('<%=btnSubmitTime.ClientID%>'); 
+                btnSubmitTime = document.getElementById('<%=btnSubmitTime.ClientID%>');
                 timeEntryDiv = document.getElementById('timeEntry');
                 timeEntryAlertDiv = document.getElementById('timeEntryAlert');
                 activeTrackingButton = document.getElementById('<%=activeTrackingButton.ClientID%>');
@@ -207,36 +205,34 @@
                     workDescription = workCompleteDescription;
                 }
 
-               
+
                 if (isUserActive && taskTypeId == "" && checkTaskType) {
                     toastr.error('Error - Please choose a Volunteer Role.');
                     return;
                 }
-                else
-                {
-				    $.ajax(
-					{
-						type: "GET",
+                else {
+                    $.ajax(
+                        {
+                            type: "GET",
                             url: "/V1/Handlers/UpdateTimesheet.ashx?noCause=<%=_noCause%>&taskTypeId=" + taskTypeId + "&organizationEventId=" + organizationEventId + "&userOrganizationEventId=" + userOrganizationEventId + "&workDescription=" + workDescription + "&userId=<%=userId%>&isUserActive=" + isUserActive,
-							data: "",
-							contentType: "text/plain; charset=utf-8",
-							dataType: "html",
-							success: function (data) {
-								if (data != "") {
-									$('#console-event').html(data);
+                            data: "",
+                            contentType: "text/plain; charset=utf-8",
+                            dataType: "html",
+                            success: function (data) {
+                                if (data != "") {
+                                    $('#console-event').html(data);
                                 }
                                 if (isUserActive) {
                                     //User signed in.
                                     timeEntryDiv.style.visibility = 'hidden';
-                                    causeCountyMessage.style.visibility = 'hidden'; 
+                                    causeCountyMessage.style.visibility = 'hidden';
                                     btnSubmitTime.style.visibility = 'hidden';
                                     activeStatusButtonId.style.visibility = 'hidden';
                                     activeTrackingButton.style.visibility = 'visible';
                                     timeEntryAlertDiv.hidden = false;
                                     checkTaskType = false;
                                 }
-                                else
-                                {
+                                else {
                                     //User signed out.
                                     timeEntryDiv.style.visibility = 'visible';
                                     causeCountyMessage.style.visibility = 'visible';
@@ -246,18 +242,18 @@
                                     timeEntryAlertDiv.hidden = true;
                                     checkTaskType = true;
                                 }
-							},
-							error: function (request, status, error) {
-								request.statusText + ' - ' + error + ' - ' + status;
-							}
-				    });
-                 }
-             }
+                            },
+                            error: function (request, status, error) {
+                                request.statusText + ' - ' + error + ' - ' + status;
+                            }
+                        });
+                }
+            }
         </script>
 		<script type="text/javascript">
             var baseUrl = '<%= ResolveUrl("~/") %>';
             console.log("Base URL:", baseUrl);
-		</script>
+        </script>
 		
 
 		<script>
@@ -334,11 +330,11 @@
 				background-color:#F1F3F6 !important;
 				color:#6A6C6F;
 			}
+
 			#header
-			{
-				background-color:#5e2e91;
-				height:58px;
-			}
+			<%=adminHeaderStyle%>
+			
+
 			#logo:hover	{cursor:pointer; }
 			.header-link
 			{
@@ -492,6 +488,57 @@
             display: inline-block;
             }
            }
+
+		   .header-link.dropdown .dropdown-menu {
+				background-color: #fff;
+				color: #333;
+				min-width: 180px;
+			}
+
+			.header-link.dropdown .dropdown-menu li a {
+				padding: 10px 15px;
+				display: block;
+				color: #333;
+			}
+
+			.header-link.dropdown .dropdown-menu li a:hover {
+				background-color: #f5f5f5;
+			}
+
+.narrow-mobile-dropdown {
+    width: 90vw;
+    max-width: 325px; /* typical max mobile viewport width */
+    min-width: 275px;
+	margin-left: -120px;
+    left: 0 !important;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 6px;
+}
+
+.narrow-mobile-dropdown .scrollable-menu {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.narrow-mobile-dropdown li a {
+    display: block;
+    text-align: left;
+    padding: 10px;
+    color: #333;
+    white-space: normal;
+}
+
+.narrow-mobile-dropdown li a:hover {
+    background-color: #f5f5f5;
+}
+@media (max-width: 768px) {
+    .narrow-mobile-dropdown {
+		width: 90vw;
+		max-width: 325px; /* typical max mobile viewport width */
+		min-width: 275px;
+    }
+}
 		</style>
 
 	<asp:ContentPlaceHolder id="head" runat="server">
@@ -502,10 +549,10 @@
 		<asp:Panel ID="adminFeatureSection" runat="server" Visible="false">
 			<div style="background-color: lightgray;
 						height:65px;
-						padding:4px 10px 0px 0px;
-						text-align: right;
+						padding:10px;
+						text-align: left;
 						color: dimgray;
-						position: relative;
+						position: fixed;
 						top: 0;
 						left: 0;
 						width: 100%;
@@ -520,24 +567,46 @@
  <!-- Add a Literal control to dynamically include the style block -->
     <asp:Literal ID="bodyStyle" runat="server" Visible="false">
         <style>
-            body {
-                padding-top: 30px; 
-            }
+        	body {
+        		padding-top: 30px;
+        	}
         </style>
     </asp:Literal>
 		<form id="form1" runat="server" role="form">
-			<div style="margin-bottom:500px;">
+			<div>
 				<div id="header" runat="server">
 					<nav role="navigation">
 						<asp:Image ID="imgLogo" CssClass="pull-left desktop-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png" />
                         <asp:Image ID="imgresponsive" CssClass="pull-left mobile-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/mobile-logo.png" />
 	                    <div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs"></i></div>					
-                        <div class="header-link text-white" onclick="window.location.href='/feed';">
-                        <i class="fa fa-home fa-2x m-t-xs"></i>
-                  </div>
-						<div class="header-link load-map text-white" onclick="window.location.href='/V1/Member/Default.aspx';"><i class="fa fa-user fa-2x m-t-xs"></i></div>
-						<div class="header-link load-map text-white" onclick="window.location.href='/V1/NonProfit/Default.aspx';"><i class="fa fa-users fa-2x m-t-xs"></i></div>
-						<div class="header-link load-map text-white" onclick="window.location.href='/MapZone';"><i class="fa fa-map fa-2x m-t-xs"></i></div>
+                        <div class="header-link text-white"data-toggle="tooltip"title="Civic Feed" onclick="window.location.href='/feed';">
+							<i class="fa fa-home fa-2x m-t-xs"></i>
+						</div>
+						<div class="header-link load-map text-white" data-toggle="tooltip"title="My profile" onclick="window.location.href='/V1/Member/Default.aspx';"><i class="fa fa-user fa-2x m-t-xs"></i></div>
+						<div class="header-link dropdown text-white" data-toggle="tooltip"title=" My team">
+							<a class="dropdown-toggle text-white" href="#" data-toggle="dropdown" aria-expanded="false">
+								<i class="fa fa-users fa-2x m-t-xs text-white"></i>
+							</a>
+							<ul class="dropdown-menu hdropdown animated flipInX narrow-mobile-dropdown">
+								<div style="max-height: 400px; overflow-y: auto;">
+									<li><h4 class="m-l-md">My Teams</h4></li>
+									<asp:Repeater ID="rptUserGroups" runat="server" OnItemDataBound="rptUserGroups_ItemDataBound">
+										<ItemTemplate>
+											<li>
+												<div style="display: inline-block; vertical-align: middle;">
+													<asp:Image CssClass="img-circle img-small pull-left" Width="40" Height="40" ID="imgTeam" runat="server" />
+												</div>
+												<div style="display: inline-block; vertical-align: middle;">
+													<asp:Literal ID="litGroupLink" runat="server"></asp:Literal>
+												</div>
+											</li>
+										</ItemTemplate>
+									</asp:Repeater>
+								</div>
+							</ul>
+						</div>
+
+						<div class="header-link load-map text-white" data-toggle="tooltip"title="Portal map" onclick="window.location.href='/MapZone';"><i class="fa fa-map fa-2x m-t-xs"></i></div>
 
 						<div role="search" class="navbar-form-custom">
 							<div class="input-group">

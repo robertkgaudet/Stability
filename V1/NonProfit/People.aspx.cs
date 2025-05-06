@@ -33,8 +33,11 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     public bool userIsOwner = false;
     public bool hideTeamList = false;
     public bool isOwner = false;
+    private int pageSize = 50;
+    private int pageNumber = 1;
     protected void Page_Load(object sender, EventArgs e)
     {
+        txtsms.Attributes["maxlength"] = "450";
         organizationId = Request.QueryString["organizationId"];
         skillId = Request.QueryString["skillId"];
         resourceId = Request.QueryString["resourceId"];
@@ -66,7 +69,19 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId)
                             select new { o.Name, o.LogoSquare, o.HideTeamList, o.OwnerId, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName, o.EnableTeamMemberVerification }).SingleOrDefault();
-        hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true|| isOwner ? "1" : "0";
+        hiddenManageShowDonateButtonn.Value =
+        (User.IsInRole("Administrator")
+        || (isUserOnTeam && User.IsInRole("Team Administrator"))
+        || (organization != null && organization.EnableTeamMemberVerification == true)
+        || isOwner)
+        ? "1" : "0";
+
+        bool showAdminControls = User.IsInRole("Administrator") || (isUserOnTeam && User.IsInRole("Team Administrator")) || isOwner;
+
+        phAdminControls.Visible = showAdminControls;
+        hiddenAdminRole.Value = showAdminControls ? "1" : "0";
+        hiddenShowTeamLogo.Value = chkManageShowDonateButton.Visible ? "1" : "0";
+        hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true || isOwner ? "1" : "0";
         string squareLogo = string.Empty;
         if (organization != null)
         {
@@ -108,7 +123,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         //ucTeamHeader.TeamDescription = organization.Description;
         //ucTeamHeader.TeamName = organization.Name;
         //ucTeamHeader.TeamSquareLogo = squareLogo;  
-      
+
 
         ////////////////////////
         //END HEADER PROPERTIES
@@ -191,6 +206,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 divUpdateMessage.Visible = true;
                 litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr>You must be on this team to see the team members.";
             }
+
+
         }
         else
         {
@@ -199,7 +216,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             litMessage.Text = "<i class=\"fa fa-2x fa-exclamation-circle\"></i><hr><a href=\"\\signin\">Sign in</a> to see the list of team members.";
         }
         if (!IsPostBack)
-        {      
+        {
             string type = Request.QueryString["type"];
             bool isVisible = (type == "email" || type == "sms");
 
@@ -228,10 +245,10 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
         }
     }
-  
+
     [WebMethod]
     public static string sendSms(string selectedUserIds, string smsMessage)
-    {   
+    {
         if (!string.IsNullOrEmpty(selectedUserIds) && !string.IsNullOrEmpty(smsMessage))
         {
             string[] userIds = selectedUserIds.Split(',');
@@ -294,10 +311,10 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                             out error
                         );
                     }
-                  
+
                 }
             }
-       
+
         }
 
 
@@ -324,11 +341,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             String phoneNUmber = (String)DataBinder.Eval(dataItem.DataItem, "phoneNUmber");
             String description = (String)DataBinder.Eval(dataItem.DataItem, "Description");
             V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
+            bool receiveSMSNotifications = DataBinder.Eval(dataItem.DataItem, "ReceiveSMSNotifications") != DBNull.Value &&
+                                    (bool)DataBinder.Eval(dataItem.DataItem, "ReceiveSMSNotifications");
+
             if (ucTeamLogo != null)
             {
                 ucTeamLogo.UserId = userId;
                 ucTeamLogo.LoadNameWithBadges();
             }
+
             MembershipUser profileUser = Membership.GetUser(userId);
             bool isLockedOut = false;
             HtmlGenericControl divFooter = (HtmlGenericControl)e.Item.FindControl("divFooter");
@@ -356,6 +377,25 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 else
                 {
                     h5Container.Style.Remove("display");
+                }
+                if (divEmail.Visible == true || divSms.Visible == true)
+                {
+                    btnContact.Visible = false;
+                }
+                if (ucTeamLogo != null)
+                {
+                    ucTeamLogo.UserId = userId;
+                    if(btnContact.Visible == false)
+                    {
+                        ucTeamLogo.ShowPhoneNumber = true;
+                        ucTeamLogo.ShowEmail = true;
+                    }
+                    else
+                    {
+                        ucTeamLogo.ShowPhoneNumber = false;
+                        ucTeamLogo.ShowEmail = false;
+                    }
+                    ucTeamLogo.LoadNameWithBadges();
                 }
                 btnManage.Visible = true;
                 isLockedOut = !profileUser.IsApproved;
@@ -416,6 +456,14 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     {
         string resourceList = string.Empty;
 
+        List<string> selectedResourceIds = new List<string>();
+        foreach (ListItem item in ddlResources.Items)
+        {
+            if (item.Selected)
+            {
+                selectedResourceIds.Add(item.Value); 
+            }
+        }
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
         var resources = from ur in dc.UserResources
@@ -423,30 +471,41 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                         where ur.UserId == userId
                         select r;
 
-
         foreach (var resource in resources)
         {
             string resourceName = resource.Name;
             string resourceIdLocal = resource.ResourceId.ToString();
 
             string btnColor = "btn-default";
-            if (!String.IsNullOrEmpty(resourceId))
+            if (selectedResourceIds.Contains(resourceIdLocal))
             {
-                if (resourceId.Equals(resourceIdLocal, StringComparison.OrdinalIgnoreCase))
-                {
-                    //Change button color.
-                    btnColor = "btn-info";
-                }
+                btnColor = "btn-info"; 
             }
 
-            resourceList += "<button type=\"button\" id=\"button\" onclick=\"window.location.href='/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&resourceId=" + resourceIdLocal + "'\" class=\"btn btn-xs " + btnColor + " m-xs\">" + resourceName + "</button>";
+            resourceList += string.Format(
+                "<button type='button' class='btn btn-xs {0} m-xs' data-resource-id='{1}' onclick='onResourceClick(\"{1}\")'>{2}</button>",
+                btnColor,
+                resourceIdLocal,
+                resourceName
+            );
         }
 
         return resourceList;
     }
+
+
     protected string GetSkills(Guid userId)
     {
         string skillList = string.Empty;
+
+        List<string> selectedSkillIds = new List<string>();
+        foreach (ListItem item in ddlSkills.Items)
+        {
+            if (item.Selected)
+            {
+                selectedSkillIds.Add(item.Value); 
+            }
+        }
 
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
@@ -461,20 +520,22 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             string skillIdLocal = skill.SkillId.ToString();
 
             string btnColor = "btn-default";
-            if (!String.IsNullOrEmpty(skillId))
+
+            if (selectedSkillIds.Contains(skillIdLocal))
             {
-                if (skillId.Equals(skillIdLocal, StringComparison.OrdinalIgnoreCase))
-                {
-                    //Change button color.
-                    btnColor = "btn-info";
-                }
+                btnColor = "btn-info"; 
             }
 
-            skillList += "<button type=\"button\" id=\"button\" onclick=\"window.location.href='/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&skillId=" + skillIdLocal + "'\" class=\"btn btn-xs " + btnColor + " m-xs\">" + skillName + "</button>";
+            skillList += string.Format(
+                "<button type='button' class='btn btn-xs {0} m-xs skill-btn' data-skill-id='{1}' onclick='onSkillClick(\"{1}\")'>{2}</button>",
+                btnColor,
+                skillIdLocal,
+                skillName);
         }
 
         return skillList;
     }
+
     private List<string> GetSelectedValues(ListBox listBox)
     {
         return listBox.Items.Cast<ListItem>()
@@ -518,11 +579,13 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             {
                 var positions = (from pos in dc.Positions
                                  where pos.OrganizationId == orgId
+                                 orderby pos.Name
                                  select new
                                  {
                                      pos.PositionId,
                                      pos.Name
                                  }).ToList();
+
                 ddlTraining.DataSource = positions;
                 ddlTraining.DataTextField = "Name";
                 ddlTraining.DataValueField = "PositionId";
@@ -597,6 +660,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             bool isVerified = txtIsVerified.Checked;
             bool isVetted = txtIsVetted.Checked;
             bool optedSMS = txtOptedSMS.Checked;
+            bool teamVerified = txtTeamVerified.Checked;
+            bool stabilityVerified = txtStabilityVerified.Checked;
 
             string startDateText = Request.Form[StartDate.UniqueID];
             string endDateText = Request.Form[EndDate.UniqueID];
@@ -625,28 +690,33 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 var selectedSkillsParam = !selectedSkills.Any() ? skillId == null ? "" : skillId : string.Join(",", selectedSkills);
                 var selectedResourcesParam = !selectedResources.Any() ? resourceId == null ? "" : resourceId : string.Join(",", selectedResources);
                 var nameSearchTermParam = string.IsNullOrEmpty(nameSearchTerm) ? "" : nameSearchTerm;
+                currentPageValue.Value = currentPageValue.Value == "" ? "1" : currentPageValue.Value;
 
                 // Execute stored procedure and return mapped results
                 dc.CommandTimeout = 300;
+                //var result = dc.ExecuteQuery<PeopleList>(
+                //   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified).ToList();
+
                 var result = dc.ExecuteQuery<PeopleList>(
-                    "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS).ToList();				
+                   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14},{15},{16}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified, currentPageValue.Value, pageSize).ToList();
+                
+                var totalCount = result.Any() ? result.First().TotalCount : 0;
 
                 // Show Filter Message if Any Filter Applied
-                divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS;
+                divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS || teamVerified || stabilityVerified;
                 litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
 
                 if (isUserOnTeam && !User.IsInRole("Administrator") && !userIsOwner)
                 {
-                    //User is on team but it's not the admin or team owner so limit what they can see.
-                    //Hide unapproved users and unvetted users
                     result = result.Where(x => x.IsApproved == true && x.PassedVetting == true).ToList();
                 }
 
                 // Bind Data.
-                currentPageValue.Value = currentPageValue.Value == "" ? "1" : currentPageValue.Value;
-                var pNumber = Convert.ToInt32(currentPageValue.Value);
-                totalPageValue.Value = Convert.ToString(Math.Ceiling((double)result.Count / 20));
-                rptVolunteers.DataSource = result.Skip(20 * (pNumber - 1)).Take(20);
+                //var pNumber = Convert.ToInt32(currentPageValue.Value);
+
+                totalPageValue.Value = Convert.ToString(Math.Ceiling((double)totalCount / 50));
+
+                rptVolunteers.DataSource = result;
                 rptVolunteers.DataBind();
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "CallMyFunction", "updatePagination();", true);
             }
@@ -665,6 +735,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         txtOptedSMS.Checked = false;
         txtEmailconnect.Checked = false;
         txtIsVerified.Checked = false;
+        txtTeamVerified.Checked = false;
+        txtStabilityVerified.Checked = false;
         rptVolunteers.DataSource = null;
         divFilterMessage.Visible = false;
         litFilterMessage.Text = string.Empty;
@@ -694,8 +766,11 @@ internal class PeopleList
     public DateTime LastLoginDate { get; set; }
     public DateTime LastActivityDate { get; set; }
     public bool? IsApproved { get; set; }
+    public bool? ReceiveSMSNotifications { get; set; }
+    public int TotalCount { get; set; }
 
-    public PeopleList(string firstname, DateTime createDate, string description, string loweredEmail, string phoneNumber, string lastname, Guid userId, DateTime? dateVettingCompleted, DateTime? dateVettingStarted, string vettingNotes, bool? vettingActive, bool? vettingComplete, bool? passedVetting, string title, string zelloName, DateTime lastLoginDate, DateTime lastActivityDate, bool? isApproved)
+
+    public PeopleList(string firstname, DateTime createDate, string description, string loweredEmail, string phoneNumber, string lastname, Guid userId, DateTime? dateVettingCompleted, DateTime? dateVettingStarted, string vettingNotes, bool? vettingActive, bool? vettingComplete, bool? passedVetting, string title, string zelloName, DateTime lastLoginDate, DateTime lastActivityDate, bool? isApproved, bool? receiveSMSNotifications)
     {
         Firstname = firstname;
         CreateDate = createDate;
@@ -715,6 +790,7 @@ internal class PeopleList
         LastLoginDate = lastLoginDate;
         LastActivityDate = lastActivityDate;
         IsApproved = isApproved;
+        ReceiveSMSNotifications = receiveSMSNotifications;
     }
 
     public PeopleList()
@@ -725,24 +801,27 @@ internal class PeopleList
     {
         PeopleList other = obj as PeopleList;
         return !ReferenceEquals(other, null) &&
-               Firstname == other.Firstname &&
-               CreateDate == other.CreateDate &&
-               Description == other.Description &&
-               LoweredEmail == other.LoweredEmail &&
-               Lastname == other.Lastname &&
-               UserId.Equals(other.UserId) &&
-               DateVettingCompleted == other.DateVettingCompleted &&
-               DateVettingStarted == other.DateVettingStarted &&
-               VettingNotes == other.VettingNotes &&
-               VettingActive == other.VettingActive &&
-               VettingComplete == other.VettingComplete &&
-               PassedVetting == other.PassedVetting &&
-               Title == other.Title &&
-               ZelloName == other.ZelloName &&
-               LastLoginDate == other.LastLoginDate &&
-               LastActivityDate == other.LastActivityDate &&
-               IsApproved == other.IsApproved;
+                Firstname == other.Firstname &&
+                CreateDate == other.CreateDate &&
+                Description == other.Description &&
+                LoweredEmail == other.LoweredEmail &&
+                Lastname == other.Lastname &&
+                UserId.Equals(other.UserId) &&
+                DateVettingCompleted == other.DateVettingCompleted &&
+                DateVettingStarted == other.DateVettingStarted &&
+                VettingNotes == other.VettingNotes &&
+                VettingActive == other.VettingActive &&
+                VettingComplete == other.VettingComplete &&
+                PassedVetting == other.PassedVetting &&
+                Title == other.Title &&
+                ZelloName == other.ZelloName &&
+                LastLoginDate == other.LastLoginDate &&
+                LastActivityDate == other.LastActivityDate &&
+                IsApproved == other.IsApproved &&
+                // Compare new fields
+                ReceiveSMSNotifications == other.ReceiveSMSNotifications;
     }
+
 
     public override int GetHashCode()
     {
@@ -764,6 +843,8 @@ internal class PeopleList
         hashCode = hashCode * -1521134295 + LastLoginDate.GetHashCode();
         hashCode = hashCode * -1521134295 + LastActivityDate.GetHashCode();
         hashCode = hashCode * -1521134295 + IsApproved.GetHashCode();
+        hashCode = hashCode * -1521134295 + ReceiveSMSNotifications.GetHashCode();
+
         return hashCode;
     }
 }
