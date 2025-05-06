@@ -539,6 +539,9 @@
 		min-width: 275px;
     }
 }
+div#adminFeatureSection {
+    margin-bottom: 30px;
+}
 		</style>
 
 	<asp:ContentPlaceHolder id="head" runat="server">
