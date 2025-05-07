@@ -190,6 +190,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
         lbl501c3.Text = organization._501c3Status.ToString();
 
         lbVolunteer.Visible = true;
+        lbleave.Visible = false;
         if (User.Identity.IsAuthenticated)
         {
 
@@ -208,9 +209,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
             {
                 //User is already volunteering for this nonprofit, show that message and disable the volunteer button.
                 lbVolunteer.Visible = false;
-                btnActiveVolunteer.Text = "You are on this team.";
-                btnActiveVolunteer.Visible = true;
-                btnActiveVolunteer.Enabled = false;
+                lbleave.Visible = true;
+              
             }
         }
         else
@@ -334,8 +334,35 @@ public partial class V1_NonProfit_Default : BaseWebForm
         }
 
     }
+    protected void lbleave_Click(object sender, EventArgs e)
+    {
+        organizationId = Request.QueryString["organizationId"];
 
-	private void BindChapterOrganizations(string parentOrganizationId)
+        if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(organizationId))
+        {
+            Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
+            Guid orgId = new Guid(organizationId);
+
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                var userOrg = dc.UserOrganizations
+                                .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+
+                if (userOrg != null)
+                {
+                    dc.UserOrganizations.DeleteOnSubmit(userOrg);
+                    dc.SubmitChanges();
+
+                }
+            }
+
+        }
+        Response.Redirect(Request.RawUrl);
+    }
+
+
+
+    private void BindChapterOrganizations(string parentOrganizationId)
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 			var organizations = (from org in dc.Organizations

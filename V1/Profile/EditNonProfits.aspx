@@ -3,7 +3,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <link rel="stylesheet" href="/Homer/vendor/sweetalert/lib/sweet-alert.css" />
-	<script src="/Homer/vendor/iCheck/icheck.min.js"></script>
+	<script src="/Homer/vendor/iCheck/icheck.min.js"></script>
+
 	<script type="text/javascript">
 	$(document).ready(function(){
 		$('input[type="checkbox"]').each(function () {
@@ -58,7 +59,7 @@
 						</div>
 						<div class="panel-body p-lg">
                             <div class="radio radio-success">
-							    <asp:RadioButtonList ID="rblOrganizations" runat="server" DataTextField="Name" DataValueField="OrganizationId"></asp:RadioButtonList>
+							    <asp:CheckBoxList ID="rblOrganizations" runat="server" DataTextField="Name" DataValueField="OrganizationId"></asp:CheckBoxList>
 							 </div>
 						</div>
 						<div class="panel-footer">
