@@ -702,7 +702,7 @@
 					</nav>
 				</div>
 				<!-- Navigation 1-->
-				<aside id="menu" runat="server" style="z-index:1001;">
+				<aside id="menu" runat="server" style="margin-top:60px;">
 					<div id="navigation">
 						<ul class="nav m-b" id="side-menu">
 							<div class="profile-picture m-b-xs">
