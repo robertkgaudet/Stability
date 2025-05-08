@@ -25,9 +25,9 @@ public partial class V1_NonProfit_Default : BaseWebForm
     public string donateLink = string.Empty;
     public string impactoidLink = string.Empty;
     public string activityPageLink = string.Empty;
-    public string nonProfitDropDown = string.Empty; 
-	public string createChapterLink = string.Empty; 
-	public string editLink = string.Empty;
+    public string nonProfitDropDown = string.Empty;
+    public string createChapterLink = string.Empty;
+    public string editLink = string.Empty;
     public string DefaultCampaignId = string.Empty;
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -69,7 +69,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             }
         }
 
-		var organization = (from o in dc.Organizations
+        var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId) && o.IsActive == true
                             select new
                             {
@@ -103,12 +103,12 @@ public partial class V1_NonProfit_Default : BaseWebForm
                                 o.Logo,
                                 o.CoverImage,
                                 o.URLFriendlyName,
-								o.ParentOrganizationId
+                                o.ParentOrganizationId
                             }).SingleOrDefault();
 
-		BindChapterOrganizations(organizationId);
+        BindChapterOrganizations(organizationId);
 
-		string squareLogo = string.Empty;
+        string squareLogo = string.Empty;
         if (organization != null)
         {
             if (organization.CoverImage != null)
@@ -156,22 +156,22 @@ public partial class V1_NonProfit_Default : BaseWebForm
             if (userOrganizationOwner != null)
             {
 
-				if ((userOrganizationOwner.OwnerId == userId))
+                if ((userOrganizationOwner.OwnerId == userId))
                 {
                     isOwner = true;
                 }
             }
         }
 
-		if(isOwner || User.IsInRole("Team Administrator") || User.IsInRole("Administrator"))
-		{
-			//Only show if the parentOrganizationId and organizationId are the same.
-			if(organization.ParentOrganizationId == new Guid(organizationId))
-			{ 
-				lbCreateChapter.Visible = true;
-				createChapterLink = "/V1/NonProfit/NonProfitNew.aspx?parentOrganizationId=" + organizationId;
-			}
-		}
+        if (isOwner || User.IsInRole("Team Administrator") || User.IsInRole("Administrator"))
+        {
+            //Only show if the parentOrganizationId and organizationId are the same.
+            if (organization.ParentOrganizationId == new Guid(organizationId))
+            {
+                lbCreateChapter.Visible = true;
+                createChapterLink = "/V1/NonProfit/NonProfitNew.aspx?parentOrganizationId=" + organizationId;
+            }
+        }
 
         ////////////////////////
         //END HEADER PROPERTIES
@@ -191,6 +191,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
         lbVolunteer.Visible = true;
         lbleave.Visible = false;
+        lbprimary.Visible = false;
         if (User.Identity.IsAuthenticated)
         {
 
@@ -199,18 +200,25 @@ public partial class V1_NonProfit_Default : BaseWebForm
                                    where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
                                    && uo.OrganizationId == new Guid(organizationId)
                                    select uo;
-
+            var userOrg = dc.UserOrganizations
+                                 .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
             if (userOrganization.Count() == 0)
             {
-                //Tell the user they can choose this nonprofit to volunteer with.
                 volunteerLink = "/V1/Profile/EditNonProfits.aspx?organizationId=" + organizationId;
+            }
+            else if(userOrg.IsPrimary==true)
+            {
+                lbVolunteer.Visible = false;
+                lbleave.Visible = true;
+                lbprimary.Visible = false;
+                btnActivePrimary.Text = "This is your primary team.";
+                btnActivePrimary.Visible = true;
             }
             else
             {
-                //User is already volunteering for this nonprofit, show that message and disable the volunteer button.
                 lbVolunteer.Visible = false;
                 lbleave.Visible = true;
-              
+                lbprimary.Visible = true;
             }
         }
         else
@@ -361,41 +369,69 @@ public partial class V1_NonProfit_Default : BaseWebForm
     }
 
 
+    protected void lbprimary_Click(object sender, EventArgs e)
+    {
+        string organizationId = Request.QueryString["organizationId"];
 
+        if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(organizationId))
+        {
+            Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
+            Guid orgId = new Guid(organizationId);
+
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                var currentPrimary = dc.UserOrganizations
+                                       .FirstOrDefault(uo => uo.UserId == userId && uo.IsPrimary == true);
+                if (currentPrimary != null)
+                {
+                    currentPrimary.IsPrimary = false;
+                }
+
+                var newPrimary = dc.UserOrganizations
+                                   .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+                if (newPrimary != null)
+                {
+                    newPrimary.IsPrimary = true;
+                    dc.SubmitChanges(); 
+                }
+            }
+        }
+         Response.Redirect(Request.RawUrl);
+    }
     private void BindChapterOrganizations(string parentOrganizationId)
-	{
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-			var organizations = (from org in dc.Organizations
-								 where org.IsActive == true && org.ParentOrganizationId == new Guid(parentOrganizationId)
-								 && org.OrganizationId != org.ParentOrganizationId
-								 orderby org.Name
-								 select new
-								 {
-									 org.OrganizationId,
-									 org.Name
-								 }).ToList();
+    {
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        var organizations = (from org in dc.Organizations
+                             where org.IsActive == true && org.ParentOrganizationId == new Guid(parentOrganizationId)
+                             && org.OrganizationId != org.ParentOrganizationId
+                             orderby org.Name
+                             select new
+                             {
+                                 org.OrganizationId,
+                                 org.Name
+                             }).ToList();
 
-			rptOrganizations.DataSource = organizations;
-			rptOrganizations.DataBind();
-	}
-	protected void rptOrganizations_ItemDataBound(object sender, RepeaterItemEventArgs e)
-	{
-		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-		{
-			RepeaterItem dataItem = (RepeaterItem)e.Item;
+        rptOrganizations.DataSource = organizations;
+        rptOrganizations.DataBind();
+    }
+    protected void rptOrganizations_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        {
+            RepeaterItem dataItem = (RepeaterItem)e.Item;
 
-			HyperLink lnk = (HyperLink)e.Item.FindControl("lnkOrg");
-			if (lnk != null)
-			{
-				lnk.Text = (string)DataBinder.Eval(dataItem.DataItem, "Name");
-				lnk.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + DataBinder.Eval(dataItem.DataItem, "OrganizationId");
-			}
-		}
-	}
-	protected void btnDonationsDashboard_Click(object sender, EventArgs e)
+            HyperLink lnk = (HyperLink)e.Item.FindControl("lnkOrg");
+            if (lnk != null)
+            {
+                lnk.Text = (string)DataBinder.Eval(dataItem.DataItem, "Name");
+                lnk.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + DataBinder.Eval(dataItem.DataItem, "OrganizationId");
+            }
+        }
+    }
+    protected void btnDonationsDashboard_Click(object sender, EventArgs e)
     {
         Response.Redirect("~/V1/NonProfit/DonationDashboard.aspx?organizationId=" + organizationId);
     }
 
-    
+
 }
