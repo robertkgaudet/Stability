@@ -160,9 +160,8 @@
             <asp:LinkButton ID="lbVolunteer" runat="server" CssClass="btn btn-success btn-large volunteerButton pull-right m-l-md" Text="Join This Team" Visible="false"></asp:LinkButton>
             <asp:LinkButton ID="lbleave" runat="server" Text="Leave This Team" CssClass="btn btn-danger btn-large pull-right m-l-md"
                 OnClick="lbleave_Click" OnClientClick="return confirmLeave();" CausesValidation="false" Visible="true"></asp:LinkButton>
-            <asp:LinkButton ID="lbprimary" runat="server" Text="Set Primary Team" CssClass="btn btn-primary btn-large pull-right m-l-md"
+            <asp:LinkButton ID="lbprimary" runat="server" Text="Set Primary Team" CssClass="btn btn-success btn-large pull-right m-l-md"
                 OnClick="lbprimary_Click" OnClientClick="return setprimary();" CausesValidation="false" Visible="true"></asp:LinkButton>
-            	<asp:Button ID="btnActivePrimary" runat="server" CssClass="btn btn-light btn-large pull-right m-l-md" Visible="false" />
             <asp:LinkButton ID="lbDonate" runat="server" CssClass="btn btn-success pull-right donateButton" Text="Donate" Visible="false"></asp:LinkButton>
         </div>
     </div>

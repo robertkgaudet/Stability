@@ -211,8 +211,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                 lbVolunteer.Visible = false;
                 lbleave.Visible = true;
                 lbprimary.Visible = false;
-                btnActivePrimary.Text = "This is your primary team.";
-                btnActivePrimary.Visible = true;
+              
             }
             else
             {
