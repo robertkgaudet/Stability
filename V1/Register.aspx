@@ -359,11 +359,11 @@
         }
 
         .m-t-sm.text-center {
-            margin-left: -70px;
+            margin-right: 70px;
         }
 
         h1.loginLogo {
-            margin-left: -80px;
+            margin-right: 80px;
         }
     </style>
 
