@@ -110,7 +110,7 @@
                     title: "Are you sure?",
                     text: "You will leave this team!",
                     icon: "warning",
-                    buttons: ["No, keep it", "Yes, cancel it!"],
+                    buttons: ["No, Stay", "Yes, Leave"],
                 dangerMode: true,
             }).then((result) => {
                 if (result) {
