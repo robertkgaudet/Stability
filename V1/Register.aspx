@@ -214,74 +214,74 @@
         .logo-name:hover {
             cursor: pointer;
         }
-			
-		.rotating-logo:hover .spin-label {
-			color: #5a2ca0;
-		}
-		/* Base logo container */
-		.rotating-logo {
-			justify-content: center;
-			align-items: center;
-			margin: 10px auto;
-			width: 100px;
-			height: 100px;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			text-align: center;
-			cursor: pointer; /* 👈 This makes the pinwheel show the finger cursor on hover */
-		}
+
+        .rotating-logo:hover .spin-label {
+            color: #5a2ca0;
+        }
+        /* Base logo container */
+        .rotating-logo {
+            justify-content: center;
+            align-items: center;
+            margin: 10px auto;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer; /* 👈 This makes the pinwheel show the finger cursor on hover */
+        }
 
 
-		/* Already defined keyframes */
-		@keyframes spin {
-			from {
-				transform: rotate(0deg);
-			}
+        /* Already defined keyframes */
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
 
-			to {
-				transform: rotate(360deg);
-			}
-		}
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-		@keyframes spin-reverse {
-			from {
-				transform: rotate(0deg);
-			}
+        @keyframes spin-reverse {
+            from {
+                transform: rotate(0deg);
+            }
 
-			to {
-				transform: rotate(-360deg);
-			}
-		}
+            to {
+                transform: rotate(-360deg);
+            }
+        }
 
-		/* Base logo */
-		.rotating-logo img {
-			width: 100px;
-			height: auto;
-			animation: spin 5s linear infinite;
-			transition: all 0.3s ease-in-out;
-		}
+        /* Base logo */
+        .rotating-logo img {
+            width: 100px;
+            height: auto;
+            animation: spin 5s linear infinite;
+            transition: all 0.3s ease-in-out;
+        }
 
-		/* Behaviors */
-		.rotating-logo.fast img {
-			animation-duration: 0.8s;
-		}
+        /* Behaviors */
+        .rotating-logo.fast img {
+            animation-duration: 0.8s;
+        }
 
-		.rotating-logo.slow img {
-			animation-duration: 12s;
-		}
+        .rotating-logo.slow img {
+            animation-duration: 12s;
+        }
 
-		.rotating-logo.reverse img {
-			animation-name: spin-reverse;
-		}
+        .rotating-logo.reverse img {
+            animation-name: spin-reverse;
+        }
 
-		.rotating-logo.paused img {
-			animation-play-state: paused;
-		}
+        .rotating-logo.paused img {
+            animation-play-state: paused;
+        }
 
-		.rotating-logo.burst img {
-			animation-duration: 0.4s;
-		}
+        .rotating-logo.burst img {
+            animation-duration: 0.4s;
+        }
     </style>
     <style>
         .dropdown-wrapper {
@@ -330,26 +330,41 @@
             font-weight: bold;
             display: none;
         }
-		
-		#nonProfit {
-			max-height: 350px;
-			overflow-y: auto;
-			overflow-x: hidden;
-			font-size: 16px;
-			padding: 12px 20px;
-		}	
-		#nonProfit::-webkit-scrollbar {
-		width: 16px; /* wider scrollbar */
-		}
 
-		#nonProfit::-webkit-scrollbar-thumb {
-			background-color: #888; /* color of scrollbar handle */
-			border-radius: 8px; /* rounded corners */
-		}
+        #nonProfit {
+            max-height: 350px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            font-size: 16px;
+            padding: 12px 20px;
+        }
 
-		#nonProfit::-webkit-scrollbar-thumb:hover {
-			background-color: #555; /* color on hover */
-		}
+            #nonProfit::-webkit-scrollbar {
+                width: 16px; /* wider scrollbar */
+            }
+
+            #nonProfit::-webkit-scrollbar-thumb {
+                background-color: #888; /* color of scrollbar handle */
+                border-radius: 8px; /* rounded corners */
+            }
+
+                #nonProfit::-webkit-scrollbar-thumb:hover {
+                    background-color: #555; /* color on hover */
+                }
+
+        img.img-responsive {
+            max-width: 100%;
+            height: auto;
+            display: inline;
+        }
+
+        .m-t-sm.text-center {
+            margin-right: 70px;
+        }
+
+        h1.loginLogo {
+            margin-right: 80px;
+        }
     </style>
 
 </asp:Content>
@@ -360,18 +375,19 @@
         <div class="col-xs-10 col-sm-8 col-sm-6 col-lg-6" style="min-width: 450px !important; max-width: 500px !important;">
             <div class="middle-box text-center loginscreen animated fadeInDown">
                 <h1 class="loginLogo">
-					<div class="rotating-logo" id="rotatingLogo">
-						<img src="/V1/Images/pinwheel.png" alt="Stability Logo" />
-					</div>
+                    <div class="rotating-logo" id="rotatingLogo">
+                        <img src="/V1/Images/pinwheel.png" alt="Stability Logo" />
+                    </div>
                     <img class="img-responsive" src="/V1/Images/Logo-Horizontal-cs.png" />
                 </h1>
                 <div class="m-t-sm text-center">
                     <h4>Disaster-Ready Communities
                     </h4>
+
+                    <p>
+                        Be the lifeline your community needs.
+                    </p>
                 </div>
-                <p>
-                    Be the lifeline your community needs.
-                </p>
             </div>
             <div class="m-t" role="form">
                 <h3>Create an Account</h3>
@@ -521,14 +537,14 @@
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-8">
                                     <asp:Button CssClass="btn btn-success btn-block w-lg" runat="server" ID="btnSubmit" OnClick="btnSubmit_Click" Text="Create My Account" OnClientClick="return showSpinner();" />
-									<button 
-										id="btnLoading" 
-										type="button" 
-										class="btn btn-success btn-block m-b" 
-										disabled 
-										style="display:none;">
-										<img src="/V1/Images/logo-icon-70x70-white-transparent.png" alt="Loading..." style="width:24px; height:24px; animation: spin 1s linear infinite;" />
-									</button>
+                                    <button
+                                        id="btnLoading"
+                                        type="button"
+                                        class="btn btn-success btn-block m-b"
+                                        disabled
+                                        style="display: none;">
+                                        <img src="/V1/Images/logo-icon-70x70-white-transparent.png" alt="Loading..." style="width: 24px; height: 24px; animation: spin 1s linear infinite;" />
+                                    </button>
                                     <div class="text-muted text-center m-t-lg"><small>Already have an account?</small></div>
                                     <a class="btn btn-sm btn-block btn-info w-lg" href="/SignIn">Sign In</a>
                                 </div>
@@ -562,49 +578,49 @@
             src="https://www.facebook.com/tr?id=836626721309055&ev=PageView&noscript=1" />
     </noscript>
     <!-- End Meta Pixel Code -->
-	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-			const logo = document.getElementById('rotatingLogo');
-			const behaviors = ['fast', 'slow', 'paused', 'burst', '']; // random fun
-			let isReverse = false; // toggle tracker
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const logo = document.getElementById('rotatingLogo');
+            const behaviors = ['fast', 'slow', 'paused', 'burst', '']; // random fun
+            let isReverse = false; // toggle tracker
 
-			function spinLogo(event) {
-				event.stopPropagation(); // 🚫 Prevent redirect via parent click
+            function spinLogo(event) {
+                event.stopPropagation(); // 🚫 Prevent redirect via parent click
 
-				// Remove previous classes
-				logo.classList.remove('fast', 'slow', 'paused', 'burst', 'reverse');
+                // Remove previous classes
+                logo.classList.remove('fast', 'slow', 'paused', 'burst', 'reverse');
 
-				// Toggle direction
-				isReverse = !isReverse;
-				if (isReverse) {
-					logo.classList.add('reverse');
-				}
+                // Toggle direction
+                isReverse = !isReverse;
+                if (isReverse) {
+                    logo.classList.add('reverse');
+                }
 
-				// Apply one random spin behavior
-				const behavior = behaviors[Math.floor(Math.random() * behaviors.length)];
-				if (behavior) {
-					logo.classList.add(behavior);
-				}
-			}
+                // Apply one random spin behavior
+                const behavior = behaviors[Math.floor(Math.random() * behaviors.length)];
+                if (behavior) {
+                    logo.classList.add(behavior);
+                }
+            }
 
-			// Trigger the spin on both events
-			logo.addEventListener('click', spinLogo);
-			logo.addEventListener('mouseenter', spinLogo);
-		});
-		function showSpinner() {
-			var btn = document.getElementById('<%= btnSubmit.ClientID %>');
-		var loadingBtn = document.getElementById('btnLoading');
+            // Trigger the spin on both events
+            logo.addEventListener('click', spinLogo);
+            logo.addEventListener('mouseenter', spinLogo);
+        });
+        function showSpinner() {
+            var btn = document.getElementById('<%= btnSubmit.ClientID %>');
+            var loadingBtn = document.getElementById('btnLoading');
 
-		// Hide the real ASP.NET button
-		btn.style.display = 'none';
+            // Hide the real ASP.NET button
+            btn.style.display = 'none';
 
-		// Show the spinner button
-		loadingBtn.style.display = 'inline-block';
+            // Show the spinner button
+            loadingBtn.style.display = 'inline-block';
 
-		// Trigger ASP.NET postback manually
-			__doPostBack('<%= btnSubmit.UniqueID %>', '');
+            // Trigger ASP.NET postback manually
+            __doPostBack('<%= btnSubmit.UniqueID %>', '');
 
-			return false; // Prevent default postback
-		}
-	</script>
+            return false; // Prevent default postback
+        }
+    </script>
 </asp:Content>
