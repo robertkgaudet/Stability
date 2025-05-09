@@ -42,7 +42,11 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             bool showTeamLogo = userOrg.ShowTeamLogo ?? false;
             var teamAdministratorRole = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
             Guid teamAdministratorRoleId = teamAdministratorRole.RoleId;
+            var teamOwnerRole = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Owner");
+           Guid teamOwnerRoleID = teamOwnerRole.RoleId;
             bool makeTeamAdministrator = dc.aspnet_UsersInRoles.Any(r => r.UserId == userId && r.RoleId == teamAdministratorRoleId);
+             bool makeTeamOwner = dc.aspnet_UsersInRoles.Any(r => r.UserId == userId && r.RoleId == teamAdministratorRoleId);
+
             string vettingStatus = "";
             if (profile.VettingActive == true)
             {
