@@ -5,7 +5,7 @@
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript">
 
         $(document).ready(function () {
@@ -104,22 +104,38 @@
 
         });
         function confirmLeave() {
-            event.preventDefault(); 
+            event.preventDefault();
 
-                swal({
-                    title: "Are you sure?",
-                    text: "You will leave this team!",
-                    icon: "warning",
-                    buttons: ["No, keep it", "Yes, cancel it!"],
+            swal({
+                title: "Are you sure?",
+                text: "You will leave this team!",
+                icon: "warning",
+                buttons: ["No, Stay", "Yes, Leave"],
                 dangerMode: true,
             }).then((result) => {
                 if (result) {
                     __doPostBack('<%= lbleave.UniqueID %>', '');
-            }
-        });
+                }
+            });
 
-          return false; 
-      }
+            return false;
+        }
+        function setprimary() {
+            event.preventDefault();
+
+            swal({
+                title: "Are you sure?",
+                text: "You will set this team as your primary team!",
+                icon: "success",
+                buttons: ["No", "Yes, Set Primary"]
+            }).then((result) => {
+                if (result) {
+                    __doPostBack('<%= lbprimary.UniqueID %>', '');
+         }
+     });
+
+             return false;
+         }
     </script>
     <style>
         .modal-dialog {
@@ -144,6 +160,8 @@
             <asp:LinkButton ID="lbVolunteer" runat="server" CssClass="btn btn-success btn-large volunteerButton pull-right m-l-md" Text="Join This Team" Visible="false"></asp:LinkButton>
             <asp:LinkButton ID="lbleave" runat="server" Text="Leave This Team" CssClass="btn btn-danger btn-large pull-right m-l-md"
                 OnClick="lbleave_Click" OnClientClick="return confirmLeave();" CausesValidation="false" Visible="true"></asp:LinkButton>
+            <asp:LinkButton ID="lbprimary" runat="server" Text="Set Primary Team" CssClass="btn btn-success btn-large pull-right m-l-md"
+                OnClick="lbprimary_Click" OnClientClick="return setprimary();" CausesValidation="false" Visible="true"></asp:LinkButton>
             <asp:LinkButton ID="lbDonate" runat="server" CssClass="btn btn-success pull-right donateButton" Text="Donate" Visible="false"></asp:LinkButton>
         </div>
     </div>
