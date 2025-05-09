@@ -248,7 +248,8 @@
                             }
                         });
                 }
-            }
+			}
+		
         </script>
 		<script type="text/javascript">
             var baseUrl = '<%= ResolveUrl("~/") %>';
@@ -528,7 +529,12 @@
     color: #333;
     white-space: normal;
 }
-
+	.close-sidebar-btn {
+      		position: absolute;
+      		top: 5px;
+      		right: 3px;
+      		cursor: pointer;
+   	}
 .narrow-mobile-dropdown li a:hover {
     background-color: #f5f5f5;
 }
@@ -709,6 +715,7 @@ div#adminFeatureSection div {
 				<!-- Navigation 1-->
 				<aside id="menu" runat="server" style="z-index:1001;">
 					<div id="navigation">
+					<button id="btnCloseSidebar" class="close-sidebar-btn" type="button">&times;</button>
 						<ul class="nav m-b" id="side-menu">
 							<div class="profile-picture m-b-xs">
 								<img class="m-b img-rounded" width="10" src="../Images/icons8-customer-64.png" runat="server" id="imgProfile" />
@@ -1187,3 +1194,8 @@ div#adminFeatureSection div {
 
 	</body>
 </html>
+<script>
+    $('#btnCloseSidebar').click(function () {
+        $("body").toggleClass("hide-sidebar");
+	});
+</script>
