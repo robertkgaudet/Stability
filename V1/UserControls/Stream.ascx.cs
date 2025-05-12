@@ -272,9 +272,14 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
                 string fixedURL = SharedURL.StartsWith("http://") || SharedURL.StartsWith("https://")
                 ? SharedURL
                 :"https://" + SharedURL;
-                postHtml += "<div class=\"text-container URLPost\"><small class=\"text-muted\"><a href='" + fixedURL + "' target='_blank'>" + SharedURL + "</a></small><br/>";
+
+                postHtml += "<a href='" + fixedURL + "' target='_blank' style='text-decoration: none; color: inherit;'>";
+                postHtml += "<div class=\"text-container URLPost\">";
+                postHtml += "<small class=\"text-muted\">" + SharedURL + "</small><br/>";
                 postHtml += "<b>" + URLTitle + "</b>";
-                postHtml += "<p>" + URLDescription + "</p></div>";
+                postHtml += "<p>" + URLDescription + "</p>";
+                postHtml += "</div>";
+                postHtml += "</a>";
             }
 
             string divSingleImage = string.Empty;
