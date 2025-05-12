@@ -315,7 +315,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		var posts = (from p in dc.Posts
 					 join pr in dc.Profiles on p.CreatedBy equals pr.UserId
 					 join us in dc.aspnet_Memberships on p.CreatedBy equals us.UserId
-					 where p.IsVisible == true && us.IsLockedOut == false && us.IsApproved == true
+					 where p.IsVisible == true 
 					 orderby p.CreatedOn descending
 					 select new
 					 {
