@@ -584,12 +584,17 @@ public partial class V1_Stream : BaseOrganizationWebForm
                   : "https://" + SharedURL;
 
 
-                postHtml += "<div class=\"text-container URLPost\"><small class=\"text-muted\"><a href='" + fixedURL + "' target='_blank'>" + SharedURL + "</a></small><br/>";
+                postHtml += "<a href='" + fixedURL + "' target='_blank' style='text-decoration: none; color: inherit;'>";
+                postHtml += "<div class=\"text-container URLPost\">";
+                postHtml += "<small class=\"text-muted\">" + SharedURL + "</small><br/>";
                 postHtml += "<b>" + URLTitle + "</b>";
-				postHtml += "<p>" + URLDescription + "</p></div>";
-			}
+                postHtml += "<p>" + URLDescription + "</p>";
+                postHtml += "</div>";
+                postHtml += "</a>";
 
-			string divSingleImage = string.Empty;
+            }
+
+            string divSingleImage = string.Empty;
 			var postImages = from pi in dc.PostImages
 							 where pi.PostId == postId
 							 select new { pi.ImageFilename, pi.PostImageId };
