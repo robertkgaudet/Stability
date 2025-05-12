@@ -315,7 +315,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		var posts = (from p in dc.Posts
 					 join pr in dc.Profiles on p.CreatedBy equals pr.UserId
 					 join us in dc.aspnet_Memberships on p.CreatedBy equals us.UserId
-					 where p.IsVisible == true && us.IsLockedOut == false && us.IsApproved == true
+					 where p.IsVisible == true 
 					 orderby p.CreatedOn descending
 					 select new
 					 {
@@ -331,7 +331,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 						 pr.UserId,
 						 EventId = p.EventId ?? new Guid(),
 						 fullname = pr.Firstname + " " + pr.Lastname
-					 }).Take(10);
+					 });
 		rptPosts.DataSource = posts;
 		rptPosts.DataBind();
 	}
@@ -579,8 +579,13 @@ public partial class V1_Stream : BaseOrganizationWebForm
 				{
 					postHtml += "<div onclick =\'window.open(\"" + URLLink + "\", \"_blank\")\' class=\"image-container URLPost\"><img class=\"responsive-image\" src=\"" + URLImage + "\" alt=\"Image\"></div>";
 				}
-				postHtml += "<div class=\"text-container URLPost\"><small class=\"text-muted\">" + SharedURL + "</small></br>";
-				postHtml += "<b>" + URLTitle + "</b>";
+                string fixedURL = SharedURL.StartsWith("http://") || SharedURL.StartsWith("https://")
+                 ? SharedURL
+                  : "https://" + SharedURL;
+
+
+                postHtml += "<div class=\"text-container URLPost\"><small class=\"text-muted\"><a href='" + fixedURL + "' target='_blank'>" + SharedURL + "</a></small><br/>";
+                postHtml += "<b>" + URLTitle + "</b>";
 				postHtml += "<p>" + URLDescription + "</p></div>";
 			}
 
