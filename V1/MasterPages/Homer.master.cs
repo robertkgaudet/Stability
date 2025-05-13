@@ -149,6 +149,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
             if (HttpContext.Current.User.IsInRole("Administrator"))
             {
+                menu.Style["margin-top"] = "60px";
                 adminFeatureSection.Visible = true;
 				adminHeaderStyle = "{position: fixed; top: 65px; left: 0;width: 100%;z-index: 9999; background-color: #5e2e91; height: 58px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}";
 
