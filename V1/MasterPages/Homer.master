@@ -535,6 +535,9 @@
       		right: 3px;
       		cursor: pointer;
    	}
+.tooltip{
+    background: none !important;
+}
 .narrow-mobile-dropdown li a:hover {
     background-color: #f5f5f5;
 }
