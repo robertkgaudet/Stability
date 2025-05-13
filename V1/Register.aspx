@@ -359,11 +359,11 @@
         }
 
         .m-t-sm.text-center {
-            margin-right: 70px;
+            margin-right: 40px;
         }
 
         h1.loginLogo {
-            margin-right: 80px;
+            margin-right: 40px;
         }
     </style>
 
@@ -372,7 +372,7 @@
 
     <div class="row">
         <div class="col-xs-1 col-sm-2 col-md-3 col-lg-3"></div>
-        <div class="col-xs-10 col-sm-8 col-sm-6 col-lg-6" style="min-width: 450px !important; max-width: 500px !important;">
+        <div class="col-xs-10 col-sm-8 col-sm-6 col-lg-6" style="min-width: 450px !important; max-width: 500px !important;margin-left:30px !important;">
             <div class="middle-box text-center loginscreen animated fadeInDown">
                 <h1 class="loginLogo">
                     <div class="rotating-logo" id="rotatingLogo">
