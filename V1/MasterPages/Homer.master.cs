@@ -133,6 +133,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
         if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
+            menu.Style["margin-top"] = "60px";
             bool hasTeam = false;
             bool hasDeployment = false;
             bool hasPortal = false;
