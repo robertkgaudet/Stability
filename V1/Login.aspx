@@ -116,6 +116,8 @@
 
     <div class="row">
         <div class="col-xs-2 col-sm-4 col-lg-4"></div>
+           <div class="container">
+       <div class="row justify-content-center">
         <div class="col-xs-8 col-sm-4 col-lg-4" style="min-width: 320px !important; max-width: 320px !important; margin-left: 35px;">
             <div class="middle-box text-center loginscreen animated fadeInDown">
                 <h1 class="loginLogo">
@@ -161,6 +163,8 @@
                 <small>Stability empowers community groups to become force multipliers after natural disasters coordinating efforts between citizen run organizations and local emergency managers.</small>
             </p>
         </div>
+           </div>
+               </div>
         <div class="col-xs-2 col-sm-4 col-lg-4"></div>
     </div>
     <script>
