@@ -34,6 +34,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
         {
             var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
             var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
+            bool isOwner = userOrg != null && userOrg.IsOwner;
             if (profile == null || userOrg == null)
             {
                 throw new InvalidOperationException("User profile or organization not found.");
@@ -42,7 +43,11 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             bool showTeamLogo = userOrg.ShowTeamLogo ?? false;
             var teamAdministratorRole = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
             Guid teamAdministratorRoleId = teamAdministratorRole.RoleId;
+            ////var teamOwnerRole = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Owner");
+            //Guid teamOwnerRoleID = teamOwnerRole.RoleId;
             bool makeTeamAdministrator = dc.aspnet_UsersInRoles.Any(r => r.UserId == userId && r.RoleId == teamAdministratorRoleId);
+            //bool makeTeamOwner = dc.aspnet_UsersInRoles.Any(r => r.UserId == userId && r.RoleId == teamAdministratorRoleId);
+
             string vettingStatus = "";
             if (profile.VettingActive == true)
             {
@@ -55,6 +60,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             var response = new
             {
                 success = true,
+                isOwner = isOwner,
                 vettingStatus = vettingStatus,
                 vettingNotes = profile.VettingNotes,
                 stabilityVerified = stabilityVerified,
@@ -156,7 +162,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                     }
                     else
                     {
-                         userOrg.TeamVerifiedDate = null;
+                        userOrg.TeamVerifiedDate = null;
                     }
                 }
                 dc.SubmitChanges();
