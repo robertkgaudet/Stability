@@ -364,17 +364,17 @@
                 success: function (response) {
                     if (response.success) {
                         $('#loader').hide();
-                        if (response.isOwner) {
-                            $('#btnteamOwner').hide();
-                        } else {
-                            $('#btnteamOwner').show();
-                        }
+                       
                         $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
                         $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
                         $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
                         $('#<%= chkManageShowDonateButton.ClientID %>').prop('checked', response.showTeamLogo);
                         $('#<%= chkManageTeamAdministrator.ClientID %>').prop('checked', response.makeTeamAdministrator);
-
+                        if (response.isOwner) {
+                            $('#btnteamOwner').hide();
+                        } else {
+                            $('#btnteamOwner').show();
+                        }
                         console.log("User data fetched successfully:", response);
                     } else {
                         $('#loader').hide();
