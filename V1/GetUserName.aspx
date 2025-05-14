@@ -5,9 +5,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <div class="row">
         <div class="col-xs-2 col-sm-3 col-lg-4"></div>
+           <div class="container">
+       <div class="row justify-content-center">
         <div class="col-xs-8 col-sm-6 col-lg-4" style="min-width:320px !important;max-width:320px !important;">
             <div class="middle-box text-center loginscreen animated fadeInDown">
-                <h1 class="loginLogo">
+					<h1 class="loginLogo" style="margin-left:25px;">
                     <img class="img-responsive" src="/V1/Images/Logo-Horizontal-cs.png" />
                 </h1>
                 <div class="m-t-sm text-center">
@@ -26,6 +28,8 @@
                 <asp:Button ID="btnRecover" runat="server" Text="Recover username" CssClass="btn btn-success btn-block full-width m-b" OnClick="btnRecover_Click" />
                 <a class="btn btn-block btn-info m-t-lg" href="/SignIn">Back To Sign In</a>
             </div>
+        </div>
+        </div>
         </div>
         <div class="col-xs-2 col-sm-3 col-lg-4"></div>
     </div>
