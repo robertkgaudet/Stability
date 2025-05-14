@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Globalization;
 using System.IdentityModel.Metadata;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Web;
 using System.Web.Security;
 using System.Web.Services;
@@ -23,12 +24,14 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     public string _organizationId;
     public string _nonProfitDropDown;
     public string _coverImage;
-    public string organizationId = string.Empty;
+    public static string organizationId = string.Empty;
     public string signedInUserFullName = string.Empty;
     public bool isUserOnTeam = false;
     public Guid organizationOwnerId = Guid.Empty;
     public string teamName = string.Empty;
     public string skillId = string.Empty;
+    public static Guid pevUserId = Guid.Empty;
+    public static Guid newUserId = Guid.Empty;
     public string resourceId = string.Empty;
     public bool userIsOwner = false;
     public bool hideTeamList = false;
@@ -321,7 +324,91 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         return "Emails sent successfully!";
 
     }
+    [WebMethod]
+    public static string MakeTeamOwner(Guid selectedUser)
+    {
+        string orgId = organizationId;
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            var organization = dc.Organizations.FirstOrDefault(o => o.OrganizationId == new Guid(orgId));
+            Guid oldOwnerId = organization.OwnerId.Value;
+            organization.OwnerId = selectedUser;
+            dc.SubmitChanges();
+            var oldUserOrg = dc.UserOrganizations
+                .FirstOrDefault(x => x.UserId == oldOwnerId && x.OrganizationId == organization.OrganizationId);
 
+            var newUserOrg = dc.UserOrganizations
+             .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId);
+            var previousOwners = dc.UserOrganizations
+           .Where(x => x.OrganizationId == organization.OrganizationId && x.IsPreviousOwner == true)
+           .FirstOrDefault();
+            if (previousOwners != null)
+            {
+                previousOwners.IsPreviousOwner = false;
+            }
+
+            if (oldUserOrg != null)
+            {
+                oldUserOrg.IsOwner = false;
+                oldUserOrg.IsPreviousOwner = true;
+            }
+
+            if (newUserOrg != null)
+            {
+                newUserOrg.IsOwner = true;
+            }
+            dc.SubmitChanges();
+            pevUserId = oldOwnerId;
+            newUserId = selectedUser;
+            SendTeamOwnerChangeEmail(pevUserId, newUserId, new Guid(organizationId));
+        }
+        return "Team owner updated successfully.";
+    }
+    public static void SendTeamOwnerChangeEmail(Guid pevUserId, Guid newUserId, Guid organizationId)
+    {
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            string orgName = dc.Organizations.Where(o => o.OrganizationId == organizationId).Select(o => o.Name).FirstOrDefault();
+            var oldusername = dc.Profiles.Where(p => p.UserId == pevUserId).FirstOrDefault();
+            var newusername = dc.Profiles.Where(p => p.UserId == newUserId).FirstOrDefault();
+            string oldemail = dc.aspnet_Memberships.Where(am => am.UserId == pevUserId).Select(am => am.Email).FirstOrDefault();
+            string newemail = dc.aspnet_Memberships.Where(am => am.UserId == newUserId).Select(am => am.Email).FirstOrDefault();
+            ListDictionary ldEmailBodyReplacements = new ListDictionary
+            {
+                {"##OrganizationName##",orgName },
+                {"##OldOwnerFirstName##",oldusername.Firstname},
+                {"##OldOwnerLastName##",oldusername.Lastname},
+                {"##NewOwnerFirstName##",newusername.Firstname},
+                {"##NewOwnerLastName##",newusername.Lastname},
+                {"##NewOwnerEmail##",newemail}
+            };
+            string error = string.Empty;
+            // Send email to old owner
+            Tools.SendEmail(
+                           "Team Owner Change for " + orgName,
+                           "You have been removed as the team owner of " + orgName,
+                           ldEmailBodyReplacements,
+                           oldemail,
+                           "Team Ownership Change",
+                           string.Empty,
+                           string.Empty,
+                           "~/EmailTemplates/TeamOwnerChanged.html",
+                           out error
+                       );
+            // Send email to new owner
+            Tools.SendEmail(
+                "Team Owner Change for " + orgName,
+                "You are now the team owner of " + orgName,
+                ldEmailBodyReplacements,
+                newemail,
+                "Team Ownership Change",
+                "", "",
+                "~/EmailTemplates/TeamOwnerChanged.html",
+                out error
+            );
+        }
+
+    }
     protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
     {
         if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -385,7 +472,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 if (ucTeamLogo != null)
                 {
                     ucTeamLogo.UserId = userId;
-                    if(btnContact.Visible == false)
+                    if (btnContact.Visible == false)
                     {
                         ucTeamLogo.ShowPhoneNumber = true;
                         ucTeamLogo.ShowEmail = true;
@@ -461,7 +548,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         {
             if (item.Selected)
             {
-                selectedResourceIds.Add(item.Value); 
+                selectedResourceIds.Add(item.Value);
             }
         }
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -479,7 +566,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             string btnColor = "btn-default";
             if (selectedResourceIds.Contains(resourceIdLocal))
             {
-                btnColor = "btn-info"; 
+                btnColor = "btn-info";
             }
 
             resourceList += string.Format(
@@ -503,7 +590,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         {
             if (item.Selected)
             {
-                selectedSkillIds.Add(item.Value); 
+                selectedSkillIds.Add(item.Value);
             }
         }
 
@@ -523,7 +610,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
             if (selectedSkillIds.Contains(skillIdLocal))
             {
-                btnColor = "btn-info"; 
+                btnColor = "btn-info";
             }
 
             skillList += string.Format(
@@ -699,7 +786,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
                 var result = dc.ExecuteQuery<PeopleList>(
                    "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14},{15},{16}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified, currentPageValue.Value, pageSize).ToList();
-                
+
                 var totalCount = result.Any() ? result.First().TotalCount : 0;
 
                 // Show Filter Message if Any Filter Applied

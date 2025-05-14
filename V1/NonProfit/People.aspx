@@ -34,6 +34,7 @@
     <script src="../../Homer/vendor/ladda/dist/spin.min.js"></script>
     <script src="../../Homer/vendor/ladda/dist/ladda.min.js"></script>
     <script src="../../Homer/vendor/ladda/dist/ladda.jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <style>
         #messageModelTitle {
@@ -170,10 +171,11 @@
         .input-group-append {
             margin-left: -1px; /* Removes unwanted space */
         }
-
+        button#btnteamOwner {
+    margin-right: 188px;
+}
         button.btn.btn-primary {
             margin-left: 10px;
-            margin-bottom: 90px;
         }
         /*  <----- -------------/>*/
         .custom-spinner {
@@ -362,13 +364,16 @@
                 success: function (response) {
                     if (response.success) {
                         $('#loader').hide();
-
+                        if (response.isOwner) {
+                            $('#btnteamOwner').hide();
+                        } else {
+                            $('#btnteamOwner').show();
+                        }
                         $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
                         $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
                         $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
                         $('#<%= chkManageShowDonateButton.ClientID %>').prop('checked', response.showTeamLogo);
                         $('#<%= chkManageTeamAdministrator.ClientID %>').prop('checked', response.makeTeamAdministrator);
-                        $('#<%= chkManageTeamOwner.ClientID %>').prop('checked', response.makeTeamOwner);
 
                         console.log("User data fetched successfully:", response);
                     } else {
@@ -379,6 +384,36 @@
                 error: function (xhr, status, error) {
                     console.error("Error fetching user data:", error);
                     alert("An error occurred while fetching user data.");
+                }
+            });
+        }
+        function btnMakeTeamOwner() {
+            event.preventDefault();
+            swal({
+                title: 'Are you sure?',
+                text: "Do you want to make this user the team owner?",
+                icon: "warning",
+                buttons: ["No", "Yes, make owner!"],
+                dangerMode: true
+            }).then(function (willSet) {
+                if (willSet) {
+                    var selectedUser = currentUserId;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "People.aspx/MakeTeamOwner",
+                        data: JSON.stringify({ selectedUser: selectedUser }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            swal("Success", response.d, "success");
+                            $('#manageMemberModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error:", error);
+                            swal("Error", "An error occurred while making the user a team owner.", "error");
+                        }
+                    });
                 }
             });
         }
@@ -402,7 +437,6 @@
             if (isAdmin) {
                 stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
                 makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
-                makeTeamOwner = document.getElementById('<%= chkManageTeamOwner.ClientID %>').checked;
 
             }
 
@@ -865,12 +899,17 @@
                 });
             });
         }
+           
+
         $(document).on("click", ".pagination .page-link", function () {
             window.scrollTo({
                 top: 300,
                 behavior: 'instant'
             });
         });
+
+
+                
     </script>
     <script type="text/javascript">
         function onSkillClick(skillId) {
@@ -975,6 +1014,8 @@
                 $("#clearSkillResourceId").hide();
             }
         }
+       
+        
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -1297,6 +1338,7 @@
     <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
     <asp:HiddenField ID="hiddenAdminRole" runat="server" />
     <asp:HiddenField ID="hiddenShowTeamLogo" runat="server" />
+
     <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1335,12 +1377,7 @@
                                     Make Team Administrator
                                 </label>
                             </div>
-                            <div class="form-group form-check">
-                                <asp:CheckBox ID="chkManageTeamOwner" runat="server" class="form-check-input" />
-                                <label class="form-check-label" for="<%= chkManageTeamOwner.ClientID %>">
-                                    Make Team Owner
-                                </label>
-                            </div>
+                           
                         </div>
                     </asp:PlaceHolder>
                 </div>
@@ -1361,6 +1398,8 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-primary" id="btnteamOwner" visible="false" onclick="btnMakeTeamOwner();">
+                     Make Team Owner</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
                         Save Changes</button>
