@@ -39,8 +39,9 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
 	}
 
 	protected void rptTeams_ItemDataBound(object sender, RepeaterItemEventArgs e)
-	{
-		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+    {
+        string teamParam = Request.QueryString["team"];
+        if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
 		{
 			string campaignImageFolder = System.Configuration.ConfigurationManager.AppSettings["CampaignImageFolder"].ToString();
 
@@ -67,8 +68,15 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
 			}
 			imgLogo.ImageUrl = logoSquare;
 			hypTeamName.Text = teamName;
-			hypTeamName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId.ToString();
-			//lblDescription.Text = description;
+			if (teamParam != null)
+			{
+				hypTeamName.NavigateUrl = "/V1/Profile/EditSkills.aspx?skill=false";
+
+			}
+			else
+			{
+				hypTeamName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId.ToString();
+			}
 		}
 	}
 }

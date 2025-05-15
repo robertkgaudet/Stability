@@ -49,7 +49,7 @@ public partial class V1_Profile_Resources : BaseOrganizationWebForm
 
 	protected void btnSubmit_Click(object sender, EventArgs e)
 	{
-		divMessage.Visible = true;
+	    divMessage.Visible = true;
 		lblMessage.Text = "Your resources have been updated.";
 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -92,6 +92,12 @@ public partial class V1_Profile_Resources : BaseOrganizationWebForm
 				}
 			}
 		}
-		Response.Redirect("/V1/Member/Default.aspx");
-	}
+        var userOrg = (from org in dc.UserOrganizations
+                       where org.UserId == userId
+                       select org).FirstOrDefault();
+		
+       
+			Response.Redirect("/V1/Member/Default.aspx");
+        
+    }
 }
