@@ -12,7 +12,8 @@ public partial class V1_Profile_Skills : BaseOrganizationWebForm
 	{
 		if(!IsPostBack)
 		{
-			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 			var events = from c in dc.Skills
 									orderby c.Name
@@ -49,7 +50,8 @@ public partial class V1_Profile_Skills : BaseOrganizationWebForm
 
 	protected void btnSubmit_Click(object sender, EventArgs e)
 	{
-		divMessage.Visible = true;
+        string skillParam = Request.QueryString["skill"];
+        divMessage.Visible = true;
 		lblMessage.Text = "Your skills have been updated.";
 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -92,6 +94,13 @@ public partial class V1_Profile_Skills : BaseOrganizationWebForm
 				}
 			}
 		}
-		Response.Redirect("/V1/Member/Default.aspx");
+		if (skillParam != null)
+		{
+            Response.Redirect("/V1/Profile/EditResources.aspx?Resources=false");
+        }
+		else
+		{
+			Response.Redirect("/V1/Member/Default.aspx");
+		}
 	}
 }
