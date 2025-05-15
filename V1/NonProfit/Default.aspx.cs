@@ -115,7 +115,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             {
                 //	_coverImage = causePhotoFolder + organization.CoverImage;
             }
-
+            
             ucTeamHeader.CoverImage = _coverImage;
             ucTeamHeader.TeamDescription = organization.Description;
             ucTeamHeader._teamTitle = organization.Name;
@@ -208,6 +208,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             }
             else if(userOrg.IsPrimary==true)
             {
+                ucTeamHeader.IsPrimary=true;
                 lbVolunteer.Visible = false;
                 lbleave.Visible = true;
                 lbprimary.Visible = false;
