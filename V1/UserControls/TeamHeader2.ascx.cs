@@ -17,19 +17,25 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 	public string _organizationId = string.Empty;
 	public string _teamName = string.Empty;
 	public string _streamClass = string.Empty;
-
-	protected void Page_Load(object sender, EventArgs e)
+    public bool _isPrimary;
+    protected void Page_Load(object sender, EventArgs e)
 	{
 		imgTeamLogo.ImageUrl = _teamLogo;
 		litTitle.Text = _teamTitle;
 		litMemberDescription.Text = _teamDescription;
 		litPageName.Text = _pageName;
-
-		ucTeamNavigation.PageName = _pageName;
+        ucTeamNavigation.PageName = _pageName;
 		ucTeamNavigation.TeamName = _teamName;
 		ucTeamNavigation.organizationId = _organizationId;
-
-		if (!String.IsNullOrEmpty(_organizationId))
+        if (_isPrimary == true)
+        {
+            isprimaryteam.Visible = true;
+        }
+        else
+        {
+            isprimaryteam.Visible = false;
+        }
+        if (!String.IsNullOrEmpty(_organizationId))
 		{
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
@@ -82,6 +88,11 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 		get { return _teamName; }
 		set { _teamName = value; }
 	}
+	public bool IsPrimary
+{
+	get { return _isPrimary; }
+	set { _isPrimary = value; }
+}
 	public string TeamLogo
 	{
 		get { return _teamLogo; }
