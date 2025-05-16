@@ -131,11 +131,15 @@
             }).then((result) => {
                 if (result) {
                     __doPostBack('<%= lbprimary.UniqueID %>', '');
-         }
-     });
+                }
+            });
 
-             return false;
-         }
+            return false;
+        }
+        $(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+
     </script>
     <style>
         .modal-dialog {
@@ -148,6 +152,12 @@
 
         .content {
             bottom: 0px;
+        }
+
+        a.btn.disabled {
+            background-color: gray;
+            color: white;
+            pointer-events: all;
         }
     </style>
 </asp:Content>
