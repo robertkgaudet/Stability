@@ -111,16 +111,10 @@
 	.stream {
 		background-color: #F1F3F6 !important;
 	}
-
 	.badge {
-    font-size: 16px;
-    line-height: 2;
-    text-align: center;
-    background-color: #5cb85c;
-    text-align: left;
-    margin-left: 131%;
-    
-}
+		line-height:2 !important;
+		font-size:0.9rem;
+	}
 </style>
 <%--SECTION: End Header Styles--%>
 
@@ -153,11 +147,11 @@
                                     <span style="color: darkslategrey; font-size: 20px; font-weight: 800; margin-right: 10px;">
                                         <asp:Literal ID="litTitle" runat="server"></asp:Literal>
                                     </span>
+									<span class="badge badge-secondary" id="isprimaryteam" runat="server" visible="false">Primary Team</span>
                                 </div>
                                 <p style="font-size: 16px;">
                                     <asp:Literal ID="litMemberDescription" runat="server"></asp:Literal>
                                 </p>
-                                <span class="badge badge-secondary" id="isprimaryteam" runat="server" visible="false">Primary Team</span>
                             </div>
                             <div class="col-xs-12 col-lg-4 project-info">
                                 <asp:Literal ID="litChapterLabel" Text="Chapter of " runat="server" Visible="false"></asp:Literal>
