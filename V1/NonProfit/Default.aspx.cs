@@ -147,16 +147,16 @@ public partial class V1_NonProfit_Default : BaseWebForm
         bool isOwner = false;
         if (User.Identity.IsAuthenticated == true)
         {
-            var userOrganizationOwner = (from uo in dc.UserOrganizations
+            var userOrganizationOwners = (from uo in dc.UserOrganizations
                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
                                          where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
                                          && uo.OrganizationId == new Guid(organizationId)
                                          select o).Take(1).SingleOrDefault();
 
-            if (userOrganizationOwner != null)
+            if (userOrganizationOwners != null)
             {
 
-                if ((userOrganizationOwner.OwnerId == userId))
+                if ((userOrganizationOwners.OwnerId == userId))
                 {
                     isOwner = true;
                 }
@@ -194,11 +194,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
         lbprimary.Visible = false;
         if (User.Identity.IsAuthenticated)
         {
-            var userOrganizationOwner = (from uo in dc.UserOrganizations
-                                         join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-                                         && uo.OrganizationId == new Guid(organizationId)
-                                         select o).Take(1).SingleOrDefault();
+           
             //If the user is logged in and not in a nonprofit already then send to choose a nonprofit.
             var userOrganization = from uo in dc.UserOrganizations
                                    where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
@@ -212,17 +208,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
             }
             else if(userOrg.IsPrimary==true)
             {
-                if (userOrganizationOwner != null)
-                {
+               
                     lbleave.Visible = true;
-                    lbleave.CssClass = "btn btn-secondary  btn-large pull-right m-l-md disabled";
-                    lbleave.Attributes["data-toggle"] = "tooltip";
-                    lbleave.Attributes["title"] = "Transfer ownership of this team before leaving it.";
-                }
-                else
-                {
-                    lbleave.Visible = true;
-                }
                 ucTeamHeader.IsPrimary=true;
                 lbVolunteer.Visible = false;
                 lbprimary.Visible = false;
@@ -239,7 +226,18 @@ public partial class V1_NonProfit_Default : BaseWebForm
         {
             volunteerLink = "/Register/" + organizationId;
         }
-
+        var userOrganizationOwner = (from uo in dc.UserOrganizations
+                                     join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
+                                     where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+                                     && uo.OrganizationId == new Guid(organizationId)
+                                     select o).Take(1).SingleOrDefault();
+        if (userOrganizationOwner != null)
+        {
+            lbleave.Visible = true;
+            lbleave.CssClass = "btn btn-secondary  btn-large pull-right m-l-md disabled";
+            lbleave.Attributes["data-toggle"] = "tooltip";
+            lbleave.Attributes["title"] = "Transfer ownership of this team before leaving it.";
+        }
 
         lblPointOfContactPerson.Text = organization.PointOfContactName;
         if (!String.IsNullOrEmpty(organization.PointOfContactPhoneNumber))
