@@ -111,10 +111,6 @@
 	.stream {
 		background-color: #F1F3F6 !important;
 	}
-	.badge {
-		line-height:2 !important;
-		font-size:0.9rem;
-	}
 </style>
 <%--SECTION: End Header Styles--%>
 
@@ -143,7 +139,7 @@
                         </div>
                         <div class="row memberDetail">
                             <div class="col-xs-12 col-lg-8">
-                                <div style="margin-top: 10px; width: 100%;">
+                                <div style="margin-top: 10px; width: 100%; display: flex; align-items: center;">
                                     <span style="color: darkslategrey; font-size: 20px; font-weight: 800; margin-right: 10px;">
                                         <asp:Literal ID="litTitle" runat="server"></asp:Literal>
                                     </span>
