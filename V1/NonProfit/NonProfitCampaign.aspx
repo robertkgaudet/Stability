@@ -48,6 +48,12 @@
           #txtsms{
                  min-height: min-content
           }
+          i{
+              color:white !important;
+          }
+          i.fa.fa-arrow-circle-o-up {
+    color: #5E2E91 !important;
+}
 
     </style>
     <script type="text/javascript">
