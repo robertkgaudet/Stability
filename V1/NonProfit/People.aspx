@@ -381,6 +381,7 @@
             });
         }
         function btnManageSaveChanges() {
+           
             if (!currentUserId) {
                 alert("No user selected.");
                 return;
@@ -397,10 +398,10 @@
             var stabilityVerified = false;
             var makeTeamAdministrator = false;
             var isAdmin = document.getElementById('<%= hiddenAdminRole.ClientID %>').value === "1";
-            if (isAdmin) {
+            //if (isAdmin) {
                 stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
                 makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
-            }
+            //}
 
             var $input = $("input[data-userid='" + currentUserId + "']");
 
@@ -1319,7 +1320,7 @@
                             Team Verified
                         </label>
                     </div>
-                    <asp:PlaceHolder ID="phAdminControls" runat="server" Visible="false">
+                    <asp:PlaceHolder ID="phAdminControls" runat="server">
                         <div id="divShowTeamVerifiedFeatures" runat="server">
                             <div class="form-group form-check">
                                 <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />

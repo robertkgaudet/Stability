@@ -77,8 +77,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         ? "1" : "0";
 
         bool showAdminControls = User.IsInRole("Administrator") || (isUserOnTeam && User.IsInRole("Team Administrator")) || isOwner;
-
-        phAdminControls.Visible = showAdminControls;
+        divShowTeamVerifiedFeatures.Style["display"] = showAdminControls ? "block" : "none";
         hiddenAdminRole.Value = showAdminControls ? "1" : "0";
         hiddenShowTeamLogo.Value = chkManageShowDonateButton.Visible ? "1" : "0";
         hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true || isOwner ? "1" : "0";
@@ -385,7 +384,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 if (ucTeamLogo != null)
                 {
                     ucTeamLogo.UserId = userId;
-                    if(btnContact.Visible == false)
+                    if (btnContact.Visible == false)
                     {
                         ucTeamLogo.ShowPhoneNumber = true;
                         ucTeamLogo.ShowEmail = true;
@@ -461,7 +460,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         {
             if (item.Selected)
             {
-                selectedResourceIds.Add(item.Value); 
+                selectedResourceIds.Add(item.Value);
             }
         }
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -479,7 +478,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             string btnColor = "btn-default";
             if (selectedResourceIds.Contains(resourceIdLocal))
             {
-                btnColor = "btn-info"; 
+                btnColor = "btn-info";
             }
 
             resourceList += string.Format(
@@ -503,7 +502,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         {
             if (item.Selected)
             {
-                selectedSkillIds.Add(item.Value); 
+                selectedSkillIds.Add(item.Value);
             }
         }
 
@@ -523,7 +522,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
             if (selectedSkillIds.Contains(skillIdLocal))
             {
-                btnColor = "btn-info"; 
+                btnColor = "btn-info";
             }
 
             skillList += string.Format(
@@ -699,7 +698,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
                 var result = dc.ExecuteQuery<PeopleList>(
                    "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14},{15},{16}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified, currentPageValue.Value, pageSize).ToList();
-                
+
                 var totalCount = result.Any() ? result.First().TotalCount : 0;
 
                 // Show Filter Message if Any Filter Applied
