@@ -13,8 +13,7 @@ public class GetGeoJsonByDisaster: IHttpHandler, IReadOnlySessionState
     {
         string keyId = context.Request.QueryString["keyId"];
         string mapFilterType = context.Request.QueryString["mapFilterType"];
-        string locationTypeId = context.Request.QueryString["locationTypeId"];
-        string parentTypeId = context.Request.QueryString["parentTypeId"];
+        string locationTypeId = context.Request.QueryString["locationTypeId"];        
         string statusId = context.Request.QueryString["statusId"];
 
         string results = string.Empty;
@@ -22,7 +21,6 @@ public class GetGeoJsonByDisaster: IHttpHandler, IReadOnlySessionState
         {   
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();     
             Guid? locTypeId = !string.IsNullOrEmpty(locationTypeId) ? new Guid(locationTypeId) : (Guid?)null;
-            Guid? parTypeId = !string.IsNullOrEmpty(parentTypeId) ? new Guid(parentTypeId) : (Guid?)null;
             Guid? statId = !string.IsNullOrEmpty(statusId) ? new Guid(statusId) : (Guid?)null;
 
             switch (mapFilterType)
@@ -31,7 +29,6 @@ public class GetGeoJsonByDisaster: IHttpHandler, IReadOnlySessionState
                     var allLocationJson = dc.GetGeoJsonByDisaster(
                         new Guid(keyId),
                         locTypeId,
-                        parTypeId,
                         statId);
                     results = ProcessJsonResults(allLocationJson);
                     break;
@@ -39,7 +36,6 @@ public class GetGeoJsonByDisaster: IHttpHandler, IReadOnlySessionState
                     var communityLocationJson = dc.MapStabilityLocations(
                         new Guid(keyId),
                         locTypeId,
-                        parTypeId,
                         statId);
                     results = ProcessJsonResults(communityLocationJson);
                     break;                
@@ -47,7 +43,6 @@ public class GetGeoJsonByDisaster: IHttpHandler, IReadOnlySessionState
                     var criticalLocationJson = dc.GetGeoJsonByDisaster(
                         new Guid(keyId),
                         locTypeId,
-                        parTypeId,
                         statId);
                     results = ProcessJsonResults(criticalLocationJson);
                     break;
@@ -55,7 +50,6 @@ public class GetGeoJsonByDisaster: IHttpHandler, IReadOnlySessionState
                     var VOADLocationJson = dc.GetGeoJsonByDisaster(
                         new Guid(keyId),
                         locTypeId,
-                        parTypeId,
                         statId);
                     results = ProcessJsonResults(VOADLocationJson);
                     break;
@@ -63,7 +57,6 @@ public class GetGeoJsonByDisaster: IHttpHandler, IReadOnlySessionState
                     var professionalLocationJson = dc.GetGeoJsonByDisaster(
                         new Guid(keyId),
                         locTypeId,
-                        parTypeId,
                         statId);
                     results = ProcessJsonResults(professionalLocationJson);
                     break;
@@ -71,7 +64,6 @@ public class GetGeoJsonByDisaster: IHttpHandler, IReadOnlySessionState
                     var defaultLocationJson = dc.GetGeoJsonByDisaster(
                         new Guid(keyId),
                         locTypeId,
-                        parTypeId,
                         statId);
                     results = ProcessJsonResults(defaultLocationJson);
                     break;
