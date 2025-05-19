@@ -124,10 +124,7 @@ margin-left: 10px;
 font-size: 15px;
 text-align: center;
 }
-		a {
-    text-decoration: none;
-	color:black;
-   }
+	
 </style>
 <%--SECTION: End Header Styles--%>
 
