@@ -111,6 +111,10 @@
 	.stream {
 		background-color: #F1F3F6 !important;
 	}
+		a {
+    text-decoration: none;
+	color:black;
+   }
 </style>
 <%--SECTION: End Header Styles--%>
 
@@ -143,11 +147,19 @@
                                     <span style="color: darkslategrey; font-size: 20px; font-weight: 800; margin-right: 10px;">
                                         <asp:Literal ID="litTitle" runat="server"></asp:Literal>
                                     </span>
-									<span class="badge badge-secondary" id="isprimaryteam" runat="server" visible="false">Primary Team</span>
+                                    <span class="badge badge-secondary" id="isprimaryteam" runat="server" visible="false">Primary Team</span>
                                 </div>
                                 <p style="font-size: 16px;">
                                     <asp:Literal ID="litMemberDescription" runat="server"></asp:Literal>
                                 </p>
+                                <div class="d-flex align-items-center bg-dark text-white p-2 rounded">
+                                    <asp:Image ID="imgTeamOwner" runat="server" Class="rounded-circle" Width="40" Height="40" />
+                                    <asp:Label ID="lbTeamOwner" runat="server" Class="fw-semibold"></asp:Label>
+                                </div>
+                                <div class="d-flex align-items-center bg-dark text-white p-2 rounded">
+                                    <asp:Image ID="imgTeamAdministrator" runat="server" Class="rounded-circle" Width="40" Height="40" />
+                                    <asp:Label ID="lbTeamAdministrator" runat="server" Class="fw-semibold"></asp:Label>
+                                </div>
                             </div>
                             <div class="col-xs-12 col-lg-4 project-info">
                                 <asp:Literal ID="litChapterLabel" Text="Chapter of " runat="server" Visible="false"></asp:Literal>
