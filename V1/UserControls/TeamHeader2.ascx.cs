@@ -59,7 +59,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
             }
             else
             {
-                imgTeamOwner.ImageUrl = profilePhotoFolder + "profilepicture.png";
+                imgTeamOwner.ImageUrl = profilePhotoFolder + "V1/Images/icons8-customer-64.png";
             }
             var teamAdministratorRoleId = dc.aspnet_Roles
         .Where(r => r.RoleName == "Team Administrator")
@@ -85,7 +85,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
             }
             else
             {
-                imgTeamAdministrator.ImageUrl = teamAdministratoprofilePhoto + "profilepicture.png";
+                imgTeamAdministrator.ImageUrl = teamAdministratoprofilePhoto + "V1/Images/icons8-customer-64.png";
             }
         }
         if (!String.IsNullOrEmpty(_organizationId))
