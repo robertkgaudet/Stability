@@ -80,8 +80,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         ? "1" : "0";
 
         bool showAdminControls = User.IsInRole("Administrator") || (isUserOnTeam && User.IsInRole("Team Administrator")) || isOwner;
-
-        phAdminControls.Visible = showAdminControls;
+        divShowTeamVerifiedFeatures.Style["display"] = showAdminControls ? "block" : "none";
         hiddenAdminRole.Value = showAdminControls ? "1" : "0";
         hiddenShowTeamLogo.Value = chkManageShowDonateButton.Visible ? "1" : "0";
         hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true || isOwner ? "1" : "0";
