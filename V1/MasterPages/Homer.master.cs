@@ -624,10 +624,10 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
 			string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
 			Guid ownerId = (Guid)DataBinder.Eval(dataItem.DataItem, "OwnerId");
-			string imgTeamPath = "/V1/Images/Logo-Placeholder.png";
+            string imgTeamPath = "/V1/Images/Logo-Placeholder.png";
 			string isOwner = string.Empty;
-			
-			if(ownerId != null)
+            bool isPrimary = Convert.ToBoolean(DataBinder.Eval(dataItem.DataItem, "IsPrimary") ?? false);
+            if (ownerId != null)
 			{
 				if(ownerId == userId)
 				{
@@ -640,13 +640,12 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			{
 				imgTeamPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
 			}
-
-			// Optional: set values manually to controls inside the template if you prefer
-			// e.g., if using Literal controls instead of Eval()
-
-			Literal lit = (Literal)e.Item.FindControl("litGroupLink");
-			lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + isOwner + "</a>";
-			Image imgTeam = (Image)e.Item.FindControl("imgTeam");
+            Literal litPrimaryBadge = (Literal)e.Item.FindControl("litPrimaryBadge");
+            litPrimaryBadge.Text = isPrimary ? " <span class='badge badge-secondary' style='margin-left: 55px;margin-top:-20px;'>Primary Team</span>" : "";
+            //string primaryStar = isPrimary ? " ★" : "";
+            Literal lit = (Literal)e.Item.FindControl("litGroupLink");
+            lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + isOwner + "</a>";
+            Image imgTeam = (Image)e.Item.FindControl("imgTeam");
 			imgTeam.ImageUrl = imgTeamPath;
 		}
 	}
@@ -654,19 +653,20 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 	private void BindUserGroups()
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-		var userGroups = (from g in dc.UserOrganizations
-						  join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
-						  where g.UserId == userId
-						  orderby o.Name
-						  select new
-						  {
-							  OrganizationName = o.Name,
-							  OrganizationId = o.OrganizationId,
-							  imgTeam = o.LogoSquare,
-							  OwnerId = o.OwnerId
-						  }).ToList();
+        var userGroups = (from g in dc.UserOrganizations
+                          join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
+                          where g.UserId == userId
+                          orderby g.IsPrimary descending, o.Name
+                          select new
+                          {
+                              OrganizationName = o.Name,
+                              OrganizationId = o.OrganizationId,
+                              imgTeam = o.LogoSquare,
+                              OwnerId = o.OwnerId,
+                              IsPrimary = g.IsPrimary
+                          }).ToList();
 
-		rptUserGroups.DataSource = userGroups;
+        rptUserGroups.DataSource = userGroups;
 		rptUserGroups.DataBind();
 	}
 

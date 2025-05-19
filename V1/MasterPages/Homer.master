@@ -541,8 +541,16 @@
 .tooltip{
     background: none !important;
 }
+.team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
+}
 .narrow-mobile-dropdown li a:hover {
     background-color: #f5f5f5;
+}
+#hlMyTeams{
+	color:#337ab7;
 }
 @media (max-width: 768px) {
     .narrow-mobile-dropdown {
@@ -606,7 +614,14 @@ div#adminFeatureSection div {
 							</a>
 							<ul class="dropdown-menu hdropdown animated flipInX narrow-mobile-dropdown">
 								<div style="max-height: 400px; overflow-y: auto;">
-									<li><h4 class="m-l-md">My Teams</h4></li>
+	                             <li>
+                                    <div class="team-header">
+                                   <h4>My Teams</h4>
+                                    <asp:HyperLink ID="hlMyTeams" runat="server" NavigateUrl="~/V1/NonProfit/TeamList.aspx">
+                                    <h4>View all teams</h4>
+                                      </asp:HyperLink>
+                                           </div>
+			                                  	</li>					
 									<asp:Repeater ID="rptUserGroups" runat="server" OnItemDataBound="rptUserGroups_ItemDataBound">
 										<ItemTemplate>
 											<li>
@@ -616,6 +631,7 @@ div#adminFeatureSection div {
 												<div style="display: inline-block; vertical-align: middle;">
 													<asp:Literal ID="litGroupLink" runat="server"></asp:Literal>
 												</div>
+												<asp:Literal ID="litPrimaryBadge" runat="server"></asp:Literal>
 											</li>
 										</ItemTemplate>
 									</asp:Repeater>

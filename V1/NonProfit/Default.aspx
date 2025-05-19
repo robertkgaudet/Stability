@@ -104,6 +104,11 @@
 
         });
         function confirmLeave() {
+            var btn = document.getElementById('<%= lbleave.ClientID %>');
+            if (btn && btn.getAttribute("data-disabled") === "true") {
+                return false;
+            }
+
             event.preventDefault();
 
             swal({
@@ -115,11 +120,12 @@
             }).then((result) => {
                 if (result) {
                     __doPostBack('<%= lbleave.UniqueID %>', '');
-                }
-            });
+        }
+    });
 
             return false;
         }
+
         function setprimary() {
             event.preventDefault();
 
