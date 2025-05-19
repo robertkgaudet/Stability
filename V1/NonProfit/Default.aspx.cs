@@ -4,6 +4,7 @@ using System.Data.Linq;
 using System.EnterpriseServices.Internal;
 using System.IdentityModel.Metadata;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Security;
@@ -30,7 +31,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 	public string editLink = string.Empty;
     public string DefaultCampaignId = string.Empty;
     protected void Page_Load(object sender, EventArgs e)
-    {
+   {
         ucTeamFooter.PageName = "teamPage";
         ucTeamHeader.PageName = "Team Page";
 
@@ -108,6 +109,9 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
 		BindChapterOrganizations(organizationId);
 
+        
+
+
 		string squareLogo = string.Empty;
         if (organization != null)
         {
@@ -144,6 +148,55 @@ public partial class V1_NonProfit_Default : BaseWebForm
         Master.FbImageType = "image/jpg";
         Master.FbURL = Request.Url.AbsoluteUri;
 
+
+        var orgid=organizationId;
+        var teamowner=dc.Organizations.Where(o=>o.OrganizationId==new Guid(orgid)).Select(o => o.OwnerId)
+                  .FirstOrDefault();
+        var teamownerfullname = dc.Profiles.Where(p=>p.UserId == teamowner).Select(p=>p.Firstname+" "+ p.Lastname)
+                  .FirstOrDefault();
+        var teamownerr = teamownerfullname +" <span class='badge badge-secondary' runat='server' visible='false'>Team Owner</span>";
+        string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
+        var profilePhoto = (from p in dc.Photos
+                            join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
+                            where ph.UserId == teamowner
+                            orderby p.CreatedOn descending
+                            select p).Take(1).SingleOrDefault();
+        ucTeamHeader.TeamOwner = teamownerr;
+        if (profilePhoto != null)
+        {
+            ucTeamHeader.TeamOwnerImageUrl = profilePhotoFolder + profilePhoto.FilenameCropped;
+        }
+        else
+        {
+            ucTeamHeader.TeamOwnerImageUrl = profilePhotoFolder + "profilepicture.png";
+        }
+
+        var teamAdministratorRoleId = dc.aspnet_Roles
+          .Where(r => r.RoleName == "Team Administrator")
+          .Select(r => r.RoleId)
+        .FirstOrDefault();
+        var teamAdministratoUserId = (from ur in dc.aspnet_UsersInRoles
+                              join uo in dc.UserOrganizations on ur.UserId equals uo.UserId
+                              where ur.RoleId == teamAdministratorRoleId
+                              && uo.OrganizationId == new Guid(orgid)
+                              select ur.UserId).FirstOrDefault();
+        var teamAdministratorfullname = dc.Profiles.Where(p => p.UserId == teamAdministratoUserId).Select(p => p.Firstname + " " + p.Lastname)
+                  .FirstOrDefault();
+        var teamAdministrator = teamAdministratorfullname + " <span class='badge badge-secondary' runat='server' visible='false'>Team Administrator</span>";
+        var teamAdministratoprofilePhoto = (from p in dc.Photos
+                            join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
+                            where ph.UserId == teamAdministratoUserId
+                                            orderby p.CreatedOn descending
+                            select p).Take(1).SingleOrDefault();
+        ucTeamHeader.TeamAdministrator = teamAdministrator;
+        if (teamAdministratoprofilePhoto != null)
+        {
+            ucTeamHeader.TeamAdministratorImageUrl = profilePhotoFolder + teamAdministratoprofilePhoto.FilenameCropped;
+        }
+        else
+        {
+            ucTeamHeader.TeamAdministratorImageUrl = teamAdministratoprofilePhoto + "profilepicture.png";
+        }
         bool isOwner = false;
         if (User.Identity.IsAuthenticated == true)
         {

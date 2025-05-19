@@ -13,6 +13,10 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 	public string _teamTitle = string.Empty;
 	public string _teamDescription = string.Empty;
 	public string _pageName = string.Empty;
+    public string _teamOwner = string.Empty;
+    public string _teamAdministrator = string.Empty;
+    public string _teamOwnerImageUrl = string.Empty;
+    public string _teamAdministratorImageUrl = string.Empty;
 	public string _URLFriendlyPageName = string.Empty;
 	public string _organizationId = string.Empty;
 	public string _teamName = string.Empty;
@@ -28,8 +32,11 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 		ucTeamNavigation.PageName = _pageName;
 		ucTeamNavigation.TeamName = _teamName;
 		ucTeamNavigation.organizationId = _organizationId;
-
-		if (!String.IsNullOrEmpty(_organizationId))
+        imgTeamOwner.ImageUrl = _teamOwnerImageUrl; 
+        lbTeamOwner.Text = _teamOwner;
+        imgTeamAdministrator.ImageUrl = _teamAdministratorImageUrl;
+        lbTeamAdministrator.Text = _teamAdministrator;
+        if (!String.IsNullOrEmpty(_organizationId))
 		{
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
@@ -77,7 +84,30 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 		get { return _pageName; }
 		set { _pageName = value; }
 	}
-	public string TeamName
+    public string TeamOwner
+    {
+        get { return _teamOwner; }
+        set { _teamOwner = value; }
+    }
+
+    public string TeamAdministrator
+    {
+        get { return _teamAdministrator; }
+        set { _teamAdministrator = value; }
+    }
+
+    public string TeamOwnerImageUrl
+    {
+        get { return _teamOwnerImageUrl; }
+        set { _teamOwnerImageUrl = value; }
+    }
+
+    public string TeamAdministratorImageUrl
+    {
+        get { return _teamAdministratorImageUrl; }
+        set { _teamAdministratorImageUrl = value; }
+    }
+    public string TeamName
 	{
 		get { return _teamName; }
 		set { _teamName = value; }
