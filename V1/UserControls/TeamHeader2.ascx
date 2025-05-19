@@ -121,7 +121,7 @@
 	.fw-semibold{
 		color: black;
     margin-left: 10px;
-    font-size: 20px;
+    font-size: 15px;
     text-align: center;
 	}
 	a {
