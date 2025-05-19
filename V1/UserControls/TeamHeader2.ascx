@@ -111,6 +111,19 @@
 	.stream {
 		background-color: #F1F3F6 !important;
 	}
+	.rounded-circle{
+height: 40px;
+width: 40px;
+border-radius: 50% !important;
+object-fit: cover;
+margin-bottom: 8px;
+}
+.fw-semibold{
+	color: black;
+margin-left: 10px;
+font-size: 15px;
+text-align: center;
+}
 		a {
     text-decoration: none;
 	color:black;
