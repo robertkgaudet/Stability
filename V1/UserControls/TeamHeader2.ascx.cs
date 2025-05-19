@@ -1,6 +1,7 @@
 ﻿using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Metadata;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -13,29 +14,73 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 	public string _teamTitle = string.Empty;
 	public string _teamDescription = string.Empty;
 	public string _pageName = string.Empty;
-    public string _teamOwner = string.Empty;
-    public string _teamAdministrator = string.Empty;
-    public string _teamOwnerImageUrl = string.Empty;
-    public string _teamAdministratorImageUrl = string.Empty;
 	public string _URLFriendlyPageName = string.Empty;
 	public string _organizationId = string.Empty;
 	public string _teamName = string.Empty;
 	public string _streamClass = string.Empty;
+    public string organizationId = string.Empty;
 
-	protected void Page_Load(object sender, EventArgs e)
+
+    protected void Page_Load(object sender, EventArgs e)
 	{
-		imgTeamLogo.ImageUrl = _teamLogo;
+        organizationId = Request.QueryString["organizationId"];
+        imgTeamLogo.ImageUrl = _teamLogo;
 		litTitle.Text = _teamTitle;
 		litMemberDescription.Text = _teamDescription;
 		litPageName.Text = _pageName;
-
 		ucTeamNavigation.PageName = _pageName;
 		ucTeamNavigation.TeamName = _teamName;
 		ucTeamNavigation.organizationId = _organizationId;
-        imgTeamOwner.ImageUrl = _teamOwnerImageUrl; 
-        lbTeamOwner.Text = _teamOwner;
-        imgTeamAdministrator.ImageUrl = _teamAdministratorImageUrl;
-        lbTeamAdministrator.Text = _teamAdministrator;
+		if(organizationId!=null)
+        {
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            var teamowner = dc.Organizations.Where(o => o.OrganizationId == new Guid(organizationId)).Select(o => o.OwnerId)
+                .FirstOrDefault();
+            var teamownerfullname = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.Firstname + " " + p.Lastname)
+                      .FirstOrDefault();
+            var teamownerr = "<a href='/V1/Member/Default.aspx?userId=" + teamowner + "'>" + teamownerfullname + "</a> <span class='badge badge-secondary' runat='server' visible='false'>Team Owner</span>";
+            string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
+            var profilePhoto = (from p in dc.Photos
+                                join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
+                                where ph.UserId == teamowner
+                                orderby p.CreatedOn descending
+                                select p).Take(1).SingleOrDefault();
+            lbTeamOwner.Text = teamownerr;
+            if (profilePhoto != null)
+            {
+                imgTeamOwner.ImageUrl = profilePhotoFolder + profilePhoto.FilenameCropped;
+            }
+            else
+            {
+                imgTeamOwner.ImageUrl = profilePhotoFolder + "profilepicture.png";
+            }
+            var teamAdministratorRoleId = dc.aspnet_Roles
+        .Where(r => r.RoleName == "Team Administrator")
+        .Select(r => r.RoleId)
+      .FirstOrDefault();
+            var teamAdministratoUserId = (from ur in dc.aspnet_UsersInRoles
+                                          join uo in dc.UserOrganizations on ur.UserId equals uo.UserId
+                                          where ur.RoleId == teamAdministratorRoleId
+                                          && uo.OrganizationId == new Guid(organizationId)
+                                          select ur.UserId).FirstOrDefault();
+            var teamAdministratorfullname = dc.Profiles.Where(p => p.UserId == teamAdministratoUserId).Select(p => p.Firstname + " " + p.Lastname)
+                      .FirstOrDefault();
+            var teamAdministrator = "<a href='/V1/Member/Default.aspx?userId=" + teamAdministratoUserId + "'>" + teamAdministratorfullname + "</a> <span class='badge badge-secondary' runat='server' visible='false'>Team Administrator</span>";
+            var teamAdministratoprofilePhoto = (from p in dc.Photos
+                                                join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
+                                                where ph.UserId == teamAdministratoUserId
+                                                orderby p.CreatedOn descending
+                                                select p).Take(1).SingleOrDefault();
+            lbTeamAdministrator.Text = teamAdministrator;
+            if (teamAdministratoprofilePhoto != null)
+            {
+                imgTeamAdministrator.ImageUrl = profilePhotoFolder + teamAdministratoprofilePhoto.FilenameCropped;
+            }
+            else
+            {
+                imgTeamAdministrator.ImageUrl = teamAdministratoprofilePhoto + "profilepicture.png";
+            }
+        }
         if (!String.IsNullOrEmpty(_organizationId))
 		{
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -84,29 +129,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 		get { return _pageName; }
 		set { _pageName = value; }
 	}
-    public string TeamOwner
-    {
-        get { return _teamOwner; }
-        set { _teamOwner = value; }
-    }
-
-    public string TeamAdministrator
-    {
-        get { return _teamAdministrator; }
-        set { _teamAdministrator = value; }
-    }
-
-    public string TeamOwnerImageUrl
-    {
-        get { return _teamOwnerImageUrl; }
-        set { _teamOwnerImageUrl = value; }
-    }
-
-    public string TeamAdministratorImageUrl
-    {
-        get { return _teamAdministratorImageUrl; }
-        set { _teamAdministratorImageUrl = value; }
-    }
+   
     public string TeamName
 	{
 		get { return _teamName; }
