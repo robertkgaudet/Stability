@@ -45,7 +45,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                 .FirstOrDefault();
             var teamownerfullname = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.Firstname + " " + p.Lastname)
                       .FirstOrDefault();
-            var teamownerr = "<a href='/V1/Member/Default.aspx?userId=" + teamowner + "'>" + teamownerfullname + "</a> <span class='badge badge-secondary' runat='server' visible='false'>Team Owner</span>";
+            var teamownerr = "<a href='/V1/Member/Default.aspx?userId=" + teamowner + "'style='color: black;'>" + teamownerfullname + "</a> <span class='badge badge-secondary' runat='server' visible='false'>Team Owner</span>";
             string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
             var profilePhoto = (from p in dc.Photos
                                 join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
@@ -72,7 +72,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                                           select ur.UserId).FirstOrDefault();
             var teamAdministratorfullname = dc.Profiles.Where(p => p.UserId == teamAdministratoUserId).Select(p => p.Firstname + " " + p.Lastname)
                       .FirstOrDefault();
-            var teamAdministrator = "<a href='/V1/Member/Default.aspx?userId=" + teamAdministratoUserId + "'>" + teamAdministratorfullname + "</a> <span class='badge badge-secondary' runat='server' visible='false'>Team Administrator</span>";
+            var teamAdministrator = "<a href='/V1/Member/Default.aspx?userId=" + teamAdministratoUserId + "'style='color: black;'>" + teamAdministratorfullname + "</a> <span class='badge badge-secondary' runat='server' visible='false'>Team Administrator</span>";
             var teamAdministratoprofilePhoto = (from p in dc.Photos
                                                 join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
                                                 where ph.UserId == teamAdministratoUserId
