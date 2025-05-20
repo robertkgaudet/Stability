@@ -357,7 +357,8 @@
             $.ajax({
                 type: "GET",
                 url: "/V1/Handlers/UpdateMemberInfo.ashx",
-                data: { action: "fetch", userId: currentUserId },
+                data: { action: "fetch", userId: currentUserId,organizationId: '<%= Request.QueryString["organizationId"] %>'
+                 },
                 dataType: "json",
                 success: function (response) {
                     if (response.success) {
@@ -439,7 +440,8 @@
                 vettingNotes: vettingNotes,
                 stabilityVerified: stabilityVerified,
                 showTeamLogo: showTeamLogo,
-                makeTeamAdministrator: makeTeamAdministrator
+                makeTeamAdministrator: makeTeamAdministrator,
+                organizationId: '<%= Request.QueryString["organizationId"] %>'
 
             };
             $.ajax({

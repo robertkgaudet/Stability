@@ -30,11 +30,12 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
     private void FetchUserData(HttpContext context)
     {
         Guid userId = new Guid(context.Request["userId"]);
-
+        Guid orgId = new Guid(context.Request["organizationId"]);
         using (var dc = new CrowdReliefDBDataContext())
         {
             var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
-            var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
+                       var userOrg = dc.UserOrganizations
+.FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
             if (profile == null || userOrg == null)
             {
                 throw new InvalidOperationException("User profile or organization not found.");
@@ -67,9 +68,11 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
     }
     private void UpdateUserData(HttpContext context)
     {
+
         context.Response.ContentType = "application/json";
         try
         {
+            Guid orgId = new Guid(context.Request.Form["organizationId"]);
             Guid userId = new Guid(context.Request.Form["userId"]);
             string vettingStatus = context.Request.Form["vettingStatus"];
             string vettingNotes = context.Request.Form["vettingNotes"];
@@ -107,7 +110,8 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                     }
                 }
 
-                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
+                var userOrg = dc.UserOrganizations
+     .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
 
                 var role = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
 
