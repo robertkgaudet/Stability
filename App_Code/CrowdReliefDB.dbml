@@ -112,10 +112,10 @@
       <Association Name="aspnet_User_Post" Member="Posts" ThisKey="UserId" OtherKey="CreatedBy" Type="Post" />
       <Association Name="aspnet_User_Organization" Member="Organizations" ThisKey="UserId" OtherKey="CreatedBy" Type="Organization" />
       <Association Name="aspnet_User_Organization1" Member="Organizations1" ThisKey="UserId" OtherKey="OwnerId" Type="Organization" />
-      <Association Name="aspnet_User_UserOrganization" Member="UserOrganizations" ThisKey="UserId" OtherKey="UserId" Type="UserOrganization" />
       <Association Name="aspnet_User_Profile" Member="Profiles" ThisKey="UserId" OtherKey="UserId" Type="Profile" />
       <Association Name="aspnet_User_UserOrganizationInvite" Member="UserOrganizationInvites" ThisKey="UserId" OtherKey="CreatedBy" Type="UserOrganizationInvite" />
       <Association Name="aspnet_User_UserOrganizationInvite1" Member="UserOrganizationInvites1" ThisKey="UserId" OtherKey="UserId" Type="UserOrganizationInvite" />
+      <Association Name="aspnet_User_UserOrganization" Member="UserOrganizations" ThisKey="UserId" OtherKey="UserId" Type="UserOrganization" />
       <Association Name="StreamDonation_aspnet_User" Member="StreamDonation" Storage="_Donation" ThisKey="UserId" OtherKey="UserId" Type="StreamDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User" Member="UserDonation" ThisKey="UserId" OtherKey="DonorId" Type="UserDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User1" Member="UserDonation1" ThisKey="UserId" OtherKey="RecipientId" Type="UserDonation" IsForeignKey="true" />
@@ -1997,23 +1997,11 @@
       <Association Name="Organization_OrganizationEvent" Member="OrganizationEvents" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationEvent" />
       <Association Name="Organization_Position" Member="Positions" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Position" />
       <Association Name="Organization_PaymentConfiguration" Member="PaymentConfigurations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="PaymentConfiguration" />
-      <Association Name="Organization_UserOrganization" Member="UserOrganizations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganization" />
       <Association Name="Organization_UserOrganizationInvite" Member="UserOrganizationInvites" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganizationInvite" />
       <Association Name="Organization_EmailTemplate" Member="EmailTemplates" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="EmailTemplate" />
+      <Association Name="Organization_UserOrganization" Member="UserOrganizations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganization" />
       <Association Name="aspnet_User_Organization" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="aspnet_User_Organization1" Member="aspnet_User1" ThisKey="OwnerId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.UserOrganization" Member="UserOrganizations">
-    <Type Name="UserOrganization">
-      <Column Name="UserOrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="IsPrimary" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="ShowTeamLogo" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Column Name="TeamVerifiedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Association Name="aspnet_User_UserOrganization" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
-      <Association Name="Organization_UserOrganization" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.City" Member="Cities">
@@ -2127,6 +2115,21 @@
       <Column Name="CC" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
       <Column Name="BCC" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
       <Association Name="Organization_EmailTemplate" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.UserOrganization" Member="UserOrganizations">
+    <Type Name="UserOrganization">
+      <Column Name="UserOrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="IsPrimary" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ShowTeamLogo" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="TeamVerifiedDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IsPreviousOwner" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsOwner" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsTeamAdministrator" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="aspnet_User_UserOrganization" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+      <Association Name="Organization_UserOrganization" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisasterForCleanupMap" Method="GetGeoJsonByDisasterForCleanupMap">
