@@ -101,17 +101,17 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                     else
                     {
                         orgUserr = (from o in dc.Organizations
-                                   join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                   where uo.UserId == UserId
-                                   orderby o.CreatedOn descending
-                                   select new
-                                   {
-                                       o.LogoSquare,
-                                       o.OrganizationId,
-                                       o.Name,
-                                       o.EnableTeamMemberVerification,
-                                       uo.ShowTeamLogo,
-                                   }).FirstOrDefault();
+                                    join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+                                    where uo.UserId == UserId && uo.ShowTeamLogo == true
+                                    orderby o.CreatedOn descending
+                                    select new
+                                    {
+                                        o.LogoSquare,
+                                        o.OrganizationId,
+                                        o.Name,
+                                        o.EnableTeamMemberVerification,
+                                        uo.ShowTeamLogo,
+                                    }).FirstOrDefault();
                     }
 
                     if (orgUser != null || isprimaryorg !=null || orgUserr !=null)
@@ -147,6 +147,11 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                         else
                         {
                             if (isprimaryorg != null && orgUserr != null)
+                            {
+                                imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
+                                hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
+                            }
+                            else if(orgUserr !=null)
                             {
                                 imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
                                 hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
