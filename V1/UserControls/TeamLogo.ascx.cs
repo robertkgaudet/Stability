@@ -64,10 +64,11 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                         hypStabilityLogo.NavigateUrl = string.Empty;
                         hypStabilityLogo.Attributes.Remove("href");
                     }
+                    dynamic orgUser = null;
+                    dynamic orgUserr = null;
                     var isprimaryorg = (from o in dc.Organizations
                                         join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                        where uo.UserId == UserId
-                                       && uo.IsPrimary == true
+                                        where uo.UserId == UserId && uo.IsPrimary == true
                                         select new
                                         {
                                             o.LogoSquare,
@@ -75,45 +76,87 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                             o.Name,
                                             o.EnableTeamMemberVerification,
                                             uo.ShowTeamLogo,
-                                        }).Take(1).SingleOrDefault();
+                                        }).FirstOrDefault();
+                      Guid orgId;
+                     if (Guid.TryParse(organizationId, out orgId))
+                    {
+                        var userOrg = dc.UserOrganizations
+                            .FirstOrDefault(uo => uo.UserId == UserId && uo.OrganizationId == orgId);
 
-                    var userOrg = dc.UserOrganizations
-.FirstOrDefault(uo => uo.UserId == UserId && uo.OrganizationId == new Guid(organizationId));
-                    var orgUser = dc.Organizations
-        .Where(o => o.OrganizationId == userOrg.OrganizationId)
-        .Select(o => new
-        {
-            o.LogoSquare,
-            o.OrganizationId,
-            o.Name,
-            o.EnableTeamMemberVerification,
-            userOrg.ShowTeamLogo // Accessing ShowTeamLogo from userOrg
-        })
-        .FirstOrDefault();
-                    if (orgUser != null || isprimaryorg != null)
+                        if (userOrg != null)
+                        {
+                            orgUser = dc.Organizations
+                                .Where(o => o.OrganizationId == orgId)
+                                .Select(o => new
+                                {
+                                    o.LogoSquare,
+                                    o.OrganizationId,
+                                    o.Name,
+                                    o.EnableTeamMemberVerification,
+                                    userOrg.ShowTeamLogo
+                                })
+                                .FirstOrDefault();
+                        }
+                    }
+                    else
+                    {
+                        orgUserr = (from o in dc.Organizations
+                                   join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+                                   where uo.UserId == UserId
+                                   orderby o.CreatedOn descending
+                                   select new
+                                   {
+                                       o.LogoSquare,
+                                       o.OrganizationId,
+                                       o.Name,
+                                       o.EnableTeamMemberVerification,
+                                       uo.ShowTeamLogo,
+                                   }).FirstOrDefault();
+                    }
+
+                    if (orgUser != null || isprimaryorg !=null || orgUserr !=null)
                     {
                         if (isprimaryorg != null)
                         {
                             imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(isprimaryorg.LogoSquare)
-                                  ? teamLogo + isprimaryorg.LogoSquare
-                                  : "/V1/Images/DefaultLogo.png";
+                                ? teamLogo + isprimaryorg.LogoSquare
+                                : "/V1/Images/DefaultLogo.png";
+                        }
+                        else if(orgUser!=null)
+                        {
+
+                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare)
+                                ? teamLogo + orgUser.LogoSquare
+                                : "/V1/Images/DefaultLogo.png";
                         }
                         else
                         {
-                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare)
-                                 ? teamLogo + orgUser.LogoSquare
-                                 : "/V1/Images/DefaultLogo.png";
+                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUserr.LogoSquare)
+                                ? teamLogo + orgUserr.LogoSquare
+                                : "/V1/Images/DefaultLogo.png";
                         }
 
-                        if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
+                        if (orgUser != null)
                         {
-                            imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
-                            hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
+                            if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
+                            {
+                                imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
+                                hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
+                            }
                         }
                         else
                         {
-                            hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "none");
-                            imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "none");
+                            if (isprimaryorg != null && orgUserr != null)
+                            {
+                                imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
+                                hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
+                            }
+                            else
+                            {
+                                hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "none");
+                                imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "none");
+                            }
+
                         }
                     }
                     hypStabilityLogo.NavigateUrl = "/V1/Member/Default.aspx?userId=" + UserId;

@@ -35,7 +35,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
         {
             var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
                        var userOrg = dc.UserOrganizations
-.FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+            .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
             if (profile == null || userOrg == null)
             {
                 throw new InvalidOperationException("User profile or organization not found.");

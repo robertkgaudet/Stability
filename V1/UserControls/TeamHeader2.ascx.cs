@@ -64,10 +64,10 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
             {
                 imgTeamOwner.ImageUrl = profilePhotoFolder + "V1/Images/icons8-customer-64.png";
             }
-            var teamAdministratoUserId = (from uo in dc.UserOrganizations
-                                          where uo.OrganizationId == new Guid(organizationId)
-                                                && uo.IsTeamAdministrator == true
-                                          select uo.UserId).ToList();
+                var teamAdministratoUserId = (from uo in dc.UserOrganizations
+                                              where uo.OrganizationId == new Guid(organizationId)
+                                                    && uo.IsTeamAdministrator == true
+                                              select uo.UserId).ToList();
             string allTeamAdministrator = "<div class='card-container '>";
 
             foreach (var userId in teamAdministratoUserId)
