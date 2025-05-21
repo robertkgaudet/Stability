@@ -342,12 +342,6 @@
         function setUserId(button) {
             ;
             currentUserId = button.getAttribute('data-userid');
-            if (document.getElementById('<%= hiddenManageShowDonateButtonn.ClientID %>').value == "0") {
-                $('.donateDiv').hide();
-            } else {
-                $('.donateDiv').show();
-            }
-            return false;
         }
         function fetchUserData() {
             ;
@@ -359,7 +353,8 @@
             $.ajax({
                 type: "GET",
                 url: "/V1/Handlers/UpdateMemberInfo.ashx",
-                data: { action: "fetch", userId: currentUserId },
+                data: { action: "fetch", userId: currentUserId,organizationId: '<%= Request.QueryString["organizationId"] %>'
+                 },
                 dataType: "json",
                 success: function (response) {
                     if (response.success) {
@@ -477,7 +472,8 @@
                 vettingNotes: vettingNotes,
                 stabilityVerified: stabilityVerified,
                 showTeamLogo: showTeamLogo,
-                makeTeamAdministrator: makeTeamAdministrator
+                makeTeamAdministrator: makeTeamAdministrator,
+                organizationId: '<%= Request.QueryString["organizationId"] %>'
 
             };
             $.ajax({
@@ -489,7 +485,6 @@
                 success: function (response) {
                     if (response.Success) {
                         $('#manageMemberModal').modal('hide');
-                        //  resetSearch();
                     } else {
                         alert("Error: " + response.Message);
                     }
@@ -1356,14 +1351,14 @@
                     <div id="divManageErrorMessage"></div>
                 </div>
                 <!-- Modal body -->
-                <div class="modal-body">
-                    <div class="form-group form-check donateDiv">
+                <div class ="modal-body">
+                    <asp:PlaceHolder ID="phAdminControls" runat="server" Visible="false">
+                    <div class="form-group form-check">
                         <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
                         <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
                             Team Verified
                         </label>
                     </div>
-                    <asp:PlaceHolder ID="phAdminControls" runat="server">
                         <div id="divShowTeamVerifiedFeatures" runat="server">
                             <div class="form-group form-check">
                                 <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />

@@ -9,6 +9,7 @@ using System.Web.Script.Serialization;
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
 {
+
     public void ProcessRequest(HttpContext context)
     {
         context.Response.ContentType = "application/json";
@@ -29,11 +30,12 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
     private void FetchUserData(HttpContext context)
     {
         Guid userId = new Guid(context.Request["userId"]);
-
+        Guid orgId = new Guid(context.Request["organizationId"]);
         using (var dc = new CrowdReliefDBDataContext())
         {
             var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
-            var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
+                       var userOrg = dc.UserOrganizations
+            .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
             bool isOwner = userOrg != null && userOrg.IsOwner;
             if (profile == null || userOrg == null)
             {
@@ -72,15 +74,18 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
     }
     private void UpdateUserData(HttpContext context)
     {
+
         context.Response.ContentType = "application/json";
         try
         {
+            Guid orgId = new Guid(context.Request.Form["organizationId"]);
             Guid userId = new Guid(context.Request.Form["userId"]);
             string vettingStatus = context.Request.Form["vettingStatus"];
             string vettingNotes = context.Request.Form["vettingNotes"];
             bool stabilityVerified = bool.Parse(context.Request.Form["stabilityVerified"]);
             bool showTeamLogo = bool.Parse(context.Request.Form["showTeamLogo"]);
             bool makeTeamAdministrator = bool.Parse(context.Request.Form["makeTeamAdministrator"]);
+
             using (var dc = new CrowdReliefDBDataContext())
             {
                 var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
@@ -88,15 +93,8 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                 {
                     profile.VettingNotes = vettingNotes;
                     profile.IsDisasterReadyCertified = stabilityVerified;
+                    profile.StabilityVerifiedDate = stabilityVerified ? DateTime.Now : (DateTime?)null;
 
-                    if (stabilityVerified == true)
-                    {
-                        profile.StabilityVerifiedDate = DateTime.Now;
-                    }
-                    else
-                    {
-                        profile.StabilityVerifiedDate = null;
-                    }
                     switch (vettingStatus)
                     {
                         case "VettingStarted":
@@ -117,16 +115,19 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                             break;
                     }
                 }
+
+                var userOrg = dc.UserOrganizations
+     .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+
+                var role = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
+
                 if (makeTeamAdministrator)
                 {
-                    var role = dc.aspnet_Roles
-                                  .FirstOrDefault(r => r.RoleName == "Team Administrator");
-
                     if (role != null)
                     {
-
                         var existingRole = dc.aspnet_UsersInRoles
                                              .FirstOrDefault(ur => ur.UserId == userId && ur.RoleId == role.RoleId);
+
                         if (existingRole == null)
                         {
                             var newRoleAssignment = new aspnet_UsersInRole
@@ -135,39 +136,43 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                                 RoleId = role.RoleId
                             };
                             dc.aspnet_UsersInRoles.InsertOnSubmit(newRoleAssignment);
-                            dc.SubmitChanges();
+                        }
+
+                        if (userOrg != null)
+                        {
+                            userOrg.IsTeamAdministrator = true;
                         }
                     }
                 }
                 else
                 {
-                    var role = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
                     if (role != null)
                     {
-                        var userRole = dc.aspnet_UsersInRoles.FirstOrDefault(ur => ur.UserId == userId && ur.RoleId == role.RoleId);
-                        if (userRole != null)
+                        var existingRole = dc.aspnet_UsersInRoles
+                                             .FirstOrDefault(ur => ur.UserId == userId && ur.RoleId == role.RoleId);
+
+                        if (existingRole != null)
                         {
-                            dc.aspnet_UsersInRoles.DeleteOnSubmit(userRole);
-                            dc.SubmitChanges();
+                            dc.aspnet_UsersInRoles.DeleteOnSubmit(existingRole);
+                        }
+
+                        if (userOrg != null)
+                        {
+                            userOrg.IsTeamAdministrator = false;
                         }
                     }
                 }
-                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
+
                 if (userOrg != null)
                 {
                     userOrg.ShowTeamLogo = showTeamLogo;
-                    if (showTeamLogo == true)
-                    {
-                        userOrg.TeamVerifiedDate = DateTime.Now;
-                    }
-                    else
-                    {
-                        userOrg.TeamVerifiedDate = null;
-                    }
+                    userOrg.TeamVerifiedDate = showTeamLogo ? DateTime.Now : (DateTime?)null;
                 }
+
                 dc.SubmitChanges();
             }
-            var data = new { Success = true, Message = "Role updated successfully." };
+
+            var data = new { Success = true, Message = "User data updated successfully." };
             JavaScriptSerializer js = new JavaScriptSerializer();
             string json = js.Serialize(data);
             context.Response.Write(json);

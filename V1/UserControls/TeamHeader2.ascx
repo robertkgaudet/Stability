@@ -3,128 +3,161 @@
 
 <%--SECTION: Begin Header Styles--%>
 <style>
-	.divCover {
-		width: 100%;
-		background-image: url('<%=_coverImage%>'); /* Path to your image */
-		background-size: cover; /* Scale the image to cover the entire div */
-		background-position: center; /* Center the image */
-		background-repeat: no-repeat; /* Prevent the image from repeating */
-		height: 200px;
-		border-top-left-radius: 10px !important;
-		border-top-right-radius: 10px !important;
-	}
+    .divCover {
+        width: 100%;
+        background-image: url('<%=_coverImage%>'); /* Path to your image */
+        background-size: cover; /* Scale the image to cover the entire div */
+        background-position: center; /* Center the image */
+        background-repeat: no-repeat; /* Prevent the image from repeating */
+        height: 200px;
+        border-top-left-radius: 10px !important;
+        border-top-right-radius: 10px !important;
+    }
 
-	.memberImageContainer {
-		overflow: hidden;
-		display: flex;
-		margin-top: -125px; /* Default margin */
-		z-index: 1;
-		position: relative
-	}
+    .memberImageContainer {
+        overflow: hidden;
+        display: flex;
+        margin-top: -125px; /* Default margin */
+        z-index: 1;
+        position: relative
+    }
 
-	@media (max-width: 767px) {
-		.memberImageContainer {
-			justify-content: center;
-			margin-top: -145px; /* Default margin */
-			width: 50%;
-			position: relative
-		}
-	}
+    @media (max-width: 767px) {
+        .memberImageContainer {
+            justify-content: center;
+            margin-top: -145px; /* Default margin */
+            width: 50%;
+            position: relative
+        }
+    }
 
-	.memberPhoto {
-		width: 150px;
-		height: 150px;
-		border-radius: 50%;
-		object-fit: cover; /* Ensures the image covers the entire area */
-		border: 2px solid white; /* Adds the white border */
-		position: relative;
-		background-color: white;
-	}
+    .memberPhoto {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover; /* Ensures the image covers the entire area */
+        border: 2px solid white; /* Adds the white border */
+        position: relative;
+        background-color: white;
+    }
 
-	.memberDetail {
-		z-index: 0;
-		text-align: left;
-	}
+    .memberDetail {
+        z-index: 0;
+        text-align: left;
+    }
 
-	.content {
-		padding: 0px 0px 0px 0px !important;
-	}
+    .content {
+        padding: 0px 0px 0px 0px !important;
+    }
 
-	.member-panel-body {
-		border-bottom-left-radius: 10px !important;
-		border-bottom-right-radius: 10px !important;
-	}
+    .member-panel-body {
+        border-bottom-left-radius: 10px !important;
+        border-bottom-right-radius: 10px !important;
+    }
 
-	.camera-icon {
-		position: absolute;
-		bottom: 10px;
-		right: 120px;
-		background-color: rgba(0, 0, 0, 0.3); /* Optional background for better visibility */
-		color: white;
-		padding: 4px;
-		border-radius: 40%;
-		cursor: pointer;
-		font-size: 15px;
-	}
+    .camera-icon {
+        position: absolute;
+        bottom: 10px;
+        right: 120px;
+        background-color: rgba(0, 0, 0, 0.3); /* Optional background for better visibility */
+        color: white;
+        padding: 4px;
+        border-radius: 40%;
+        cursor: pointer;
+        font-size: 15px;
+    }
 
-		.camera-icon:hover {
-			background-color: rgba(0, 0, 0, 0.8); /* Darker background on hover */
-		}
+        .camera-icon:hover {
+            background-color: rgba(0, 0, 0, 0.8); /* Darker background on hover */
+        }
 
-	.hpanel {
-		margin-bottom: 5px !important;
-	}
+    .hpanel {
+        margin-bottom: 5px !important;
+    }
 
-	.member-panel-body {
-		border-radius: 10px !important;
-		margin-bottom: 0px !important;
-	}
-	/* Custom gutter class for rows */
-	.row.no-gutter {
-		margin-left: 0;
-		margin-right: 0;
-	}
+    .member-panel-body {
+        border-radius: 10px !important;
+        margin-bottom: 0px !important;
+    }
+    /* Custom gutter class for rows */
+    .row.no-gutter {
+        margin-left: 0;
+        margin-right: 0;
+    }
 
-		.row.no-gutter [class*="col-"] {
-			padding-left: 1px; /* Reduced gutter padding */
-			padding-right: 1px;
-		}
+        .row.no-gutter [class*="col-"] {
+            padding-left: 1px; /* Reduced gutter padding */
+            padding-right: 1px;
+        }
 
-	#desktopNavigation {
-		display: block;
-	}
+    #desktopNavigation {
+        display: block;
+    }
 
-	#mobileNavigation {
-		display: none;
-	}
-	/* Media query for mobile devices */
-	@media screen and (max-width: 768px) {
-		#desktopNavigation {
-			display: none;
-		}
+    #mobileNavigation {
+        display: none;
+    }
+    /* Media query for mobile devices */
+    @media screen and (max-width: 768px) {
+        #desktopNavigation {
+            display: none;
+        }
 
-		#mobileNavigation {
-			display: block;
-		}
-	}
+        #mobileNavigation {
+            display: block;
+        }
+    }
 
-	.stream {
-		background-color: #F1F3F6 !important;
-	}
-	.rounded-circle{
-height: 40px;
-width: 40px;
-border-radius: 50% !important;
-object-fit: cover;
-margin-bottom: 8px;
-}
-.fw-semibold{
-	color: black;
-margin-left: 10px;
-font-size: 15px;
-text-align: center;
-}
-	
+    .stream {
+        background-color: #F1F3F6 !important;
+    }
+
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 255px;
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 20px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        background-color: #fff;
+    }
+
+    .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+    }
+
+    .info {
+        flex: 1;
+    }
+
+    .name-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .name-row h2 {
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+    .location {
+        color: #666;
+        margin: 4px 0;
+    }
+
 </style>
 <%--SECTION: End Header Styles--%>
 
@@ -149,27 +182,41 @@ text-align: center;
                     <div class="panel-body member-panel-body">
                         <div class="memberImageContainer col-xs-3 col-md-4">
                             <asp:Image runat="server" ID="imgTeamLogo" class="memberPhoto" />
-                            <a href="/V1/Profile/ProfilePhotoUpload.aspx?userId=" class="camera-icon" title="Edit" runat="server" id="linkCamera" visible="false"><i class="fa fa-camera"></i></a>
+                            <a href="/V1/Profile/ProfilePhotoUpload.aspx?userId=" class="camera-icon" title="Edit"
+                                runat="server" id="linkCamera" visible="false"><i class="fa fa-camera"></i></a>
                         </div>
                         <div class="row memberDetail">
-                            <div class="col-xs-12 col-lg-8">
+                            <div class="col-xs-12 col-lg-12">
                                 <div style="margin-top: 10px; width: 100%; display: flex; align-items: center;">
                                     <span style="color: darkslategrey; font-size: 20px; font-weight: 800; margin-right: 10px;">
                                         <asp:Literal ID="litTitle" runat="server"></asp:Literal>
                                     </span>
-                                    <span class="badge badge-secondary" id="isprimaryteam" runat="server" visible="false">Primary Team</span>
+                                    <span class="badge badge-secondary" id="isprimaryteam" runat="server" visible="false">
+                                        Primary Team</span>
                                 </div>
                                 <p style="font-size: 16px;">
                                     <asp:Literal ID="litMemberDescription" runat="server"></asp:Literal>
                                 </p>
-                                <div class="d-flex align-items-center bg-dark text-white p-2 rounded">
-                                    <asp:Image ID="imgTeamOwner" runat="server" Class="rounded-circle" Width="40" Height="40" />
-                                    <asp:Label ID="lbTeamOwner" runat="server" Class="fw-semibold"></asp:Label>
+                                <h4>Team Owner</h4>
+                                <div class="card-container">
+                                    <div class="card">
+                                        <asp:Image ID="imgTeamOwner" runat="server" CssClass="avatar" Width="40" Height="40" />
+                                        <div class="info">
+                                            <div class="name-row">
+                                                <h2>
+                                                    <asp:Label ID="lbTeamOwner" runat="server"></asp:Label>
+                                                </h2>
+                                            </div>
+                                            <p class="location">
+                                                <asp:Label ID="lbteamOwnerAddress" runat="server"></asp:Label>
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="d-flex align-items-center bg-dark text-white p-2 rounded">
-                                    <asp:Image ID="imgTeamAdministrator" runat="server" Class="rounded-circle" Width="40" Height="40" />
-                                    <asp:Label ID="lbTeamAdministrator" runat="server" Class="fw-semibold"></asp:Label>
-                                </div>
+                              
+                                <h4>Team Administrator</h4>
+
+                                <asp:Literal ID="ltTeamAdministrators" runat="server"></asp:Literal>
                             </div>
                             <div class="col-xs-12 col-lg-4 project-info">
                                 <asp:Literal ID="litChapterLabel" Text="Chapter of " runat="server" Visible="false"></asp:Literal>
