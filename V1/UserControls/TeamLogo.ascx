@@ -52,7 +52,7 @@
         <asp:Image ID="imgStabilityBadge" runat="server" CssClass="stability-badge" Visible="true"
             Style="display: none;" data-toggle="tooltip" data-placement="top" title="Stability Verified" />
     </asp:HyperLink>
-    <asp:HyperLink ID="hypTeamLogo" runat="server" NavigateUrl="/V1/NonProfit/Default.aspx"
+    <asp:HyperLink ID="hypTeamLogo" runat="server"
         CssClass="Userlink" Visible="true" Style="display: none;">
         <asp:Image ID="imgTeamLogo" runat="server" CssClass="stability-badge" Visible="true"
             Style="display: none;" data-toggle="tooltip" data-placement="top" />
