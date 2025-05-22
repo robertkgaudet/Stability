@@ -673,7 +673,6 @@
             document.getElementById('<%= txtIsVetted.ClientID %>').checked = false;// Set custom value here                        
             document.getElementById('<%= txtOptedSMS.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtEmailconnect.ClientID %>').checked = false; // Set custom value here                        
-            document.getElementById('<%= txtIsVerified.ClientID %>').checked = false; // Set custom value here
             document.getElementById('<%= txtTeamVerified.ClientID %>').checked = false; // Set custom value here
             document.getElementById('<%= txtStabilityVerified.ClientID %>').checked = false; // Set custom value here
             document.getElementById('<%= ddlEvent.ClientID %>').value = ''; // Set custom value here
@@ -1161,17 +1160,11 @@
                                             </div>
                                             <div class="col-sm-3 mb-2">
                                                 <div class="form-check">
-                                                    <asp:CheckBox ID="txtIsVerified" runat="server" CssClass="form-check-input" />
-                                                    <label class="form-check-label" for="<%=txtIsVerified.ClientID%>">Is Verified</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 mb-2" style="margin-left: 8px;">
-                                                <div class="form-check">
                                                     <asp:CheckBox ID="txtTeamVerified" runat="server" CssClass="form-check-input" />
                                                     <label class="form-check-label" for="<%=txtTeamVerified.ClientID%>">Team Verified</label>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3 mb-2" style="margin-left: -8px;">
+                                            <div class="col-sm-3 mb-2" style="margin-left: 9px;">
                                                 <div class="form-check">
                                                     <asp:CheckBox ID="txtStabilityVerified" runat="server" CssClass="form-check-input" />
                                                     <label class="form-check-label" for="<%=txtStabilityVerified.ClientID%>">Stability Verified</label>
