@@ -422,6 +422,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                 litDiasterLabel.Visible = false;
                 divNoPortalGuidance.Visible = true;
             }
+            string virtualPath;
             //List nonprofits a user volunteers for.
             var profileImage = (from ph in dc.ProfilePhotos
                                 join p in dc.Photos on ph.PhotoId equals p.PhotoId
@@ -431,9 +432,19 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             if (profileImage != null)
             {
-                //Get the users profile image
-                imgProfile.Src = profilePhotoFolder + profileImage.FilenameCropped;
+                virtualPath = profilePhotoFolder + profileImage.FilenameCropped;
+                string physicalPath = Server.MapPath(virtualPath);
+
+                if (!File.Exists(physicalPath))
+                {
+                    virtualPath = "~/V1/Images/icons8-customer-64.png";
+                }
             }
+            else
+            {
+                virtualPath = "~/V1/Images/icons8-customer-64.png";
+            }
+            imgProfile.Src = virtualPath;
 
             //         string[] userRoles = Roles.GetRolesForUser(HttpContext.Current.User.Identity.Name);
 

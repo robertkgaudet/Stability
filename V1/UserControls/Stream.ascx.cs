@@ -307,21 +307,31 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 
 			HyperLink hypVolunteer = (HyperLink)e.Item.FindControl("hypVolunteer");
 			HyperLink hypDonate = (HyperLink)e.Item.FindControl("hypDonate");
+			string virtualPath;
 
-			var profileImage = (from ph in dc.ProfilePhotos
+            var profileImage = (from ph in dc.ProfilePhotos
 								join p in dc.Photos on ph.PhotoId equals p.PhotoId
 								where ph.UserId == createdBy && ph.IsCurrrent == true
 								orderby p.CreatedOn descending
 								select new { p.FilenameCropped }).Take(1).SingleOrDefault();
 
-			if (profileImage != null)
-			{
-				//Get the users profile image
-				imgProfile.Src = profilePhotoFolder + profileImage.FilenameCropped;
-			}
+            if (profileImage != null)
+            {
+                virtualPath = profilePhotoFolder + profileImage.FilenameCropped;
+                string physicalPath = Server.MapPath(virtualPath);
 
+                if (!File.Exists(physicalPath))
+                {
+                    virtualPath = "~/V1/Images/icons8-customer-64.png";
+                }
+            }
+            else
+            {
+                virtualPath = "~/V1/Images/icons8-customer-64.png";
+            }
+            imgProfile.Src = virtualPath;
 
-			string reactionHtml = string.Empty;
+            string reactionHtml = string.Empty;
 			if (reactionTypeID == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"))
 			{
 				litReactionTitle.Text = "<span style='color: #286090'> &#128591; Thank </span>";
