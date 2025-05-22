@@ -689,11 +689,13 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         {
             var events = (from ev in dc.Events
                           where ev.IsActive == true
+                          orderby ev.Name
                           select new
                           {
                               ev.EventId,
                               ev.Name
                           }).ToList();
+
             ddlEvent.DataSource = events;
             ddlEvent.DataTextField = "Name";
             ddlEvent.DataValueField = "EventId";
