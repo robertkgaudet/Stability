@@ -564,12 +564,18 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     {
         using (var dc = new CrowdReliefDBDataContext())
         {
-            var skills = dc.Skills.Select(s => new { s.SkillId, s.Name }).ToList();
+            var skills = dc.Skills
+                .OrderBy(s => s.Name)
+                .Select(s => new { s.SkillId, s.Name })
+                .ToList();
             ddlSkills.DataTextField = "Name";
             ddlSkills.DataValueField = "SkillId";
             ddlSkills.DataSource = skills;
             ddlSkills.DataBind();
-            var resources = dc.Resources.Select(r => new { r.ResourceId, r.Name }).ToList();
+            var resources = dc.Resources
+                              .OrderBy(r => r.Name)
+                              .Select(r => new { r.ResourceId, r.Name })
+                              .ToList();
             ddlResources.DataTextField = "Name";
             ddlResources.DataValueField = "ResourceId";
             ddlResources.DataSource = resources;
