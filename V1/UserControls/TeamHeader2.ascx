@@ -171,7 +171,19 @@
 
         $("body").tooltip({ selector: '[data-toggle=tooltip]' });
     });
+    $(document).ready(function () {
+        var totalAdmins = parseInt($('#<%= hfTeamAdminCount.ClientID %>').val()) || 0;
+        if (totalAdmins === 0) {
+            $('#teamAdminTitle').hide(); 
+        } else if (totalAdmins === 1) {
+            $('#teamAdminTitle').text('Team Administrator').show();
+        } else {
+            $('#teamAdminTitle').text('Team Administrators').show();
+        }
+    });
+
 </script>
+<asp:HiddenField ID="hfTeamAdminCount" runat="server" />
 <div class="container" style="padding-bottom: 100px !important;">
     <div class="row justify-content-center" style="margin-top: 40px;">
         <!--MAIN CONTENT CONTAINER-->
@@ -214,7 +226,7 @@
                                     </div>
                                 </div>
                               
-                                <h4>Team Administrator</h4>
+                                <h4 id="teamAdminTitle">Team Administrator</h4>
 
                                 <asp:Literal ID="ltTeamAdministrators" runat="server"></asp:Literal>
                             </div>
@@ -235,3 +247,6 @@
                     <h4>
                         <asp:Literal ID="litPageName" runat="server"></asp:Literal>
                     </h4>
+
+
+        

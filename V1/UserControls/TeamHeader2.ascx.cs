@@ -67,6 +67,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
             lbteamOwnerAddress.Text = teamownerAddress;
 
             string virtualPathh;
+            int teamAdministratorCount = 0;
             if (profilePhoto != null)
             {
                 virtualPathh = profilePhotoFolder + profilePhoto.FilenameCropped;
@@ -88,7 +89,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                                           where uo.OrganizationId == new Guid(organizationId)
                                                 && uo.IsTeamAdministrator == true
                                           select uo.UserId).ToList();
-            string allTeamAdministrator = "<div class='card-container '>";
+            string allTeamAdministrator = "<div class='card-container'>";
 
             foreach (var userId in teamAdministratoUserId)
             {
@@ -127,7 +128,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                 string photoUrl = VirtualPathUtility.ToAbsolute(virtualPath);
 
                 allTeamAdministrator +=
-      "<div class='card'>" +
+         "<div class='card'>" +
           "<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;' />" +
           "<div class='info'>" +
               "<div class='name-row'>" +
@@ -136,11 +137,11 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
               "<p class='location'>" + teamAdministratorAddress + "</p>" +
           "</div>" +
       "</div>";
-
+                teamAdministratorCount++;
             }
             allTeamAdministrator += "</div>";
             ltTeamAdministrators.Text = allTeamAdministrator;
-
+            hfTeamAdminCount.Value = teamAdministratorCount.ToString();
         }
         if (!String.IsNullOrEmpty(_organizationId))
         {
