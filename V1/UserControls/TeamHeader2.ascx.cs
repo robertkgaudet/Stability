@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -18,7 +19,6 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
     public string _organizationId = string.Empty;
     public string _teamName = string.Empty;
     public string _streamClass = string.Empty;
-    public bool _isPrimary;
     public string organizationId = string.Empty;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -30,18 +30,25 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
         ucTeamNavigation.PageName = _pageName;
         ucTeamNavigation.TeamName = _teamName;
         ucTeamNavigation.organizationId = _organizationId;
-        if (_isPrimary == true)
-        {
-            isprimaryteam.Visible = true;
-        }
-        else
-        {
-            isprimaryteam.Visible = false;
-        }
+
         organizationId = Request.QueryString["organizationId"];
         if (organizationId != null)
         {
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            bool isPrimary = dc.UserOrganizations
+             .Where(uo => uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+              && uo.OrganizationId == new Guid(organizationId))
+              .Select(uo => uo.IsPrimary ?? false)
+              .FirstOrDefault();
+            if (isPrimary == true)
+            {
+                isprimaryteam.Visible = true;
+            }
+            else
+            {
+                isprimaryteam.Visible = false;
+            }
+
             var teamowner = dc.Organizations.Where(o => o.OrganizationId == new Guid(organizationId)).Select(o => o.OwnerId)
                 .FirstOrDefault();
             var teamownerfullname = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.Firstname + " " + p.Lastname)
@@ -60,6 +67,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
             lbteamOwnerAddress.Text = teamownerAddress;
 
             string virtualPathh;
+            int teamAdministratorCount = 0;
             if (profilePhoto != null)
             {
                 virtualPathh = profilePhotoFolder + profilePhoto.FilenameCropped;
@@ -67,21 +75,21 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 
                 if (!File.Exists(physicalPath))
                 {
-                    virtualPathh = "~/V1/Images/icons8-customer-64.png"; 
+                    virtualPathh = "~/V1/Images/icons8-customer-64.png";
                 }
             }
             else
             {
-                virtualPathh = "~/V1/Images/icons8-customer-64.png"; 
+                virtualPathh = "~/V1/Images/icons8-customer-64.png";
             }
 
             imgTeamOwner.ImageUrl = VirtualPathUtility.ToAbsolute(virtualPathh);
 
             var teamAdministratoUserId = (from uo in dc.UserOrganizations
-                                              where uo.OrganizationId == new Guid(organizationId)
-                                                    && uo.IsTeamAdministrator == true
-                                              select uo.UserId).ToList();
-            string allTeamAdministrator = "<div class='card-container '>";
+                                          where uo.OrganizationId == new Guid(organizationId)
+                                                && uo.IsTeamAdministrator == true
+                                          select uo.UserId).ToList();
+            string allTeamAdministrator = "<div class='card-container'>";
 
             foreach (var userId in teamAdministratoUserId)
             {
@@ -109,7 +117,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 
                     if (!File.Exists(physicalPath))
                     {
-                        virtualPath = "~/V1/Images/icons8-customer-64.png"; 
+                        virtualPath = "~/V1/Images/icons8-customer-64.png";
                     }
                 }
                 else
@@ -120,7 +128,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                 string photoUrl = VirtualPathUtility.ToAbsolute(virtualPath);
 
                 allTeamAdministrator +=
-      "<div class='card'>" +
+         "<div class='card'>" +
           "<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;' />" +
           "<div class='info'>" +
               "<div class='name-row'>" +
@@ -129,11 +137,11 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
               "<p class='location'>" + teamAdministratorAddress + "</p>" +
           "</div>" +
       "</div>";
-
+                teamAdministratorCount++;
             }
             allTeamAdministrator += "</div>";
             ltTeamAdministrators.Text = allTeamAdministrator;
-
+            hfTeamAdminCount.Value = teamAdministratorCount.ToString();
         }
         if (!String.IsNullOrEmpty(_organizationId))
         {
@@ -188,11 +196,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
         get { return _teamName; }
         set { _teamName = value; }
     }
-    public bool IsPrimary
-    {
-        get { return _isPrimary; }
-        set { _isPrimary = value; }
-    }
+ 
     public string TeamLogo
     {
         get { return _teamLogo; }
