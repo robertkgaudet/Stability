@@ -663,7 +663,6 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             }
 
             bool emailConnected = txtEmailconnect.Checked;
-            bool isVerified = txtIsVerified.Checked;
             bool isVetted = txtIsVetted.Checked;
             bool optedSMS = txtOptedSMS.Checked;
             bool teamVerified = txtTeamVerified.Checked;
@@ -709,7 +708,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 var totalCount = result.Any() ? result.First().TotalCount : 0;
 
                 // Show Filter Message if Any Filter Applied
-                divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS || teamVerified || stabilityVerified;
+                divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVetted || optedSMS || teamVerified || stabilityVerified;
                 litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
 
                 if (isUserOnTeam && !User.IsInRole("Administrator") && !userIsOwner)
@@ -740,7 +739,6 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         txtIsVetted.Checked = false;
         txtOptedSMS.Checked = false;
         txtEmailconnect.Checked = false;
-        txtIsVerified.Checked = false;
         txtTeamVerified.Checked = false;
         txtStabilityVerified.Checked = false;
         rptVolunteers.DataSource = null;
