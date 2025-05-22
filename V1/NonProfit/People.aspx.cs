@@ -56,11 +56,11 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         if (User.Identity.IsAuthenticated == true)
         {
-            var userOrganizationOwner = dc.Organizations.Where(o => o.OrganizationId == new Guid(organizationId)).Select(o => o.OwnerId)
-                .FirstOrDefault();
-            if (userOrganizationOwner != null)
+            bool userOrganizationOwner = dc.Organizations
+            .Any(o => o.OrganizationId == new Guid(organizationId) && o.OwnerId == userId);
+            if (userOrganizationOwner == true)
             {
-                    isOwner = true;
+                isOwner = true;
             }
         }
         var organization = (from o in dc.Organizations
@@ -73,9 +73,9 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         || isOwner)
         ? "1" : "0";
         bool isTeamAdministratorExists = dc.UserOrganizations
-       .Any(uo => uo.OrganizationId == new Guid(organizationId)&&uo.UserId==userId && uo.IsTeamAdministrator == true);
+       .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true);
 
-        bool showAdminControls = isTeamAdministratorExists==true || isOwner;
+        bool showAdminControls = isTeamAdministratorExists == true || isOwner;
         phAdminControls.Visible = showAdminControls;
         hiddenAdminRole.Value = showAdminControls ? "1" : "0";
         hiddenShowTeamLogo.Value = chkManageShowDonateButton.Visible ? "1" : "0";
