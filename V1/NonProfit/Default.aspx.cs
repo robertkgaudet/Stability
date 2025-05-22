@@ -212,7 +212,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
             {
                
                 lbleave.Visible = true;
-                ucTeamHeader.IsPrimary=true;
                 lbVolunteer.Visible = false;
                 lbprimary.Visible = false;
               
