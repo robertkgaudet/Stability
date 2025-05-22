@@ -171,9 +171,11 @@
         .input-group-append {
             margin-left: -1px; /* Removes unwanted space */
         }
+
         button#ContentPlaceHolder1_btnteamOwner {
-    margin-right: 188px;
-}
+            margin-right: 188px;
+        }
+
         button.btn.btn-primary {
             margin-left: 10px;
         }
@@ -353,13 +355,14 @@
             $.ajax({
                 type: "GET",
                 url: "/V1/Handlers/UpdateMemberInfo.ashx",
-                data: { action: "fetch", userId: currentUserId,organizationId: '<%= Request.QueryString["organizationId"] %>'
-                 },
+                data: {
+                    action: "fetch", userId: currentUserId, organizationId: '<%= Request.QueryString["organizationId"] %>'
+                },
                 dataType: "json",
                 success: function (response) {
                     if (response.success) {
                         $('#loader').hide();
-                       
+
                         $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
                         $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
                         $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
@@ -408,7 +411,7 @@
             });
         }
         function btnManageSaveChanges() {
-           
+
             if (!currentUserId) {
                 alert("No user selected.");
                 return;
@@ -426,8 +429,8 @@
             var makeTeamAdministrator = false;
             var isAdmin = document.getElementById('<%= hiddenAdminRole.ClientID %>').value === "1";
             //if (isAdmin) {
-                stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
-                makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
+            stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
+            makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
             //}
 
             var $input = $("input[data-userid='" + currentUserId + "']");
@@ -888,7 +891,7 @@
                 });
             });
         }
-           
+
 
         $(document).on("click", ".pagination .page-link", function () {
             window.scrollTo({
@@ -898,7 +901,7 @@
         });
 
 
-                
+
     </script>
     <script type="text/javascript">
         function onSkillClick(skillId) {
@@ -1003,8 +1006,8 @@
                 $("#clearSkillResourceId").hide();
             }
         }
-       
-        
+
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -1138,8 +1141,20 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-12" style="margin-left:30px;">
                                         <div class="row">
+                                            <div class="col-sm-3 mb-2">
+                                                <div class="form-check">
+                                                    <asp:CheckBox ID="txtTeamVerified" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtTeamVerified.ClientID%>">Team Verified</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3 mb-2" >
+                                                <div class="form-check">
+                                                    <asp:CheckBox ID="txtStabilityVerified" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtStabilityVerified.ClientID%>">Stability Verified</label>
+                                                </div>
+                                            </div>
                                             <div class="col-sm-3 mb-2">
                                                 <div class="form-check fix">
                                                     <asp:CheckBox ID="txtIsVetted" runat="server" CssClass="form-check-input" />
@@ -1158,18 +1173,8 @@
                                                     <label class="form-check-label" for="<%=txtEmailconnect.ClientID%>">Email Connected</label>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-3 mb-2">
-                                                <div class="form-check">
-                                                    <asp:CheckBox ID="txtTeamVerified" runat="server" CssClass="form-check-input" />
-                                                    <label class="form-check-label" for="<%=txtTeamVerified.ClientID%>">Team Verified</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 mb-2" style="margin-left: 9px;">
-                                                <div class="form-check">
-                                                    <asp:CheckBox ID="txtStabilityVerified" runat="server" CssClass="form-check-input" />
-                                                    <label class="form-check-label" for="<%=txtStabilityVerified.ClientID%>">Stability Verified</label>
-                                                </div>
-                                            </div>
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -1339,14 +1344,14 @@
                     <div id="divManageErrorMessage"></div>
                 </div>
                 <!-- Modal body -->
-                <div class ="modal-body">
+                <div class="modal-body">
                     <asp:PlaceHolder ID="phAdminControls" runat="server" Visible="false">
-                    <div class="form-group form-check">
-                        <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
-                        <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
-                            Team Verified
-                        </label>
-                    </div>
+                        <div class="form-group form-check">
+                            <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
+                            <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
+                                Team Verified
+                            </label>
+                        </div>
                         <div id="divShowTeamVerifiedFeatures" runat="server">
                             <div class="form-group form-check">
                                 <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
@@ -1360,7 +1365,7 @@
                                     Make Team Administrator
                                 </label>
                             </div>
-                           
+
                         </div>
                     </asp:PlaceHolder>
                 </div>
@@ -1382,7 +1387,7 @@
 
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-primary" runat="server" id="btnteamOwner" visible="false" onclick="btnMakeTeamOwner();">
-                     Make Team Owner</button>
+                        Make Team Owner</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
                         Save Changes</button>
