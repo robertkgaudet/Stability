@@ -1142,40 +1142,37 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12" style="margin-left:30px;">
-                                        <div class="row">
-                                            <div class="col-sm-3 mb-2">
-                                                <div class="form-check">
-                                                    <asp:CheckBox ID="txtTeamVerified" runat="server" CssClass="form-check-input" />
-                                                    <label class="form-check-label" for="<%=txtTeamVerified.ClientID%>">Team Verified</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 mb-2" >
-                                                <div class="form-check">
-                                                    <asp:CheckBox ID="txtStabilityVerified" runat="server" CssClass="form-check-input" />
-                                                    <label class="form-check-label" for="<%=txtStabilityVerified.ClientID%>">Stability Verified</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 mb-2">
-                                                <div class="form-check fix">
-                                                    <asp:CheckBox ID="txtIsVetted" runat="server" CssClass="form-check-input" />
-                                                    <label class="form-check-label" for="<%=txtIsVetted.ClientID%>">Is Vetted</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 mb-2">
-                                                <div class="form-check">
-                                                    <asp:CheckBox ID="txtOptedSMS" runat="server" CssClass="form-check-input" />
-                                                    <label class="form-check-label" for="<%=txtOptedSMS.ClientID%>">Opted SMS</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 mb-2">
-                                                <div class="form-check">
-                                                    <asp:CheckBox ID="txtEmailconnect" runat="server" CssClass="form-check-input" />
-                                                    <label class="form-check-label" for="<%=txtEmailconnect.ClientID%>">Email Connected</label>
-                                                </div>
-                                            </div>
+                                       <div class="row">
+    <!-- Column 1: First 3 Checkboxes -->
+    <div class="col-sm-6">
+         <div class="form-check mb-2">
+     <asp:CheckBox ID="txtIsVetted" runat="server" CssClass="form-check-input" />
+     <label class="form-check-label" for="<%=txtIsVetted.ClientID%>">Is Vetted</label>
+ </div>
+        <div class="form-check mb-2">
+            <asp:CheckBox ID="txtTeamVerified" runat="server" CssClass="form-check-input" />
+            <label class="form-check-label" for="<%=txtTeamVerified.ClientID%>">Team Verified</label>
+        </div>
+        <div class="form-check mb-2">
+            <asp:CheckBox ID="txtStabilityVerified" runat="server" CssClass="form-check-input" />
+            <label class="form-check-label" for="<%=txtStabilityVerified.ClientID%>">Stability Verified</label>
+        </div>
+       
+    </div>
 
+    <!-- Column 2: Last 2 Checkboxes -->
+    <div class="col-sm-6">
+        <div class="form-check mb-2">
+            <asp:CheckBox ID="txtOptedSMS" runat="server" CssClass="form-check-input" />
+            <label class="form-check-label" for="<%=txtOptedSMS.ClientID%>">Accepts SMS Messages</label>
+        </div>
+        <div class="form-check mb-2">
+            <asp:CheckBox ID="txtEmailconnect" runat="server" CssClass="form-check-input" />
+            <label class="form-check-label" for="<%=txtEmailconnect.ClientID%>">Accepts Email Messages</label>
+        </div>
+    </div>
+</div>
 
-                                        </div>
                                     </div>
                                 </div>
 
