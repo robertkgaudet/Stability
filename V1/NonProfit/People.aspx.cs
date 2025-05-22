@@ -61,6 +61,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             if (userOrganizationOwner == true)
             {
                 isOwner = true;
+                btnteamOwner.Visible = true;
             }
         }
         var organization = (from o in dc.Organizations
