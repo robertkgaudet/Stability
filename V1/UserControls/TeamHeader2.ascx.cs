@@ -1,6 +1,7 @@
 ﻿using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -54,17 +55,29 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                                 where ph.UserId == teamowner
                                 orderby p.CreatedOn descending
                                 select p).Take(1).SingleOrDefault();
+
             lbTeamOwner.Text = teamownerr;
             lbteamOwnerAddress.Text = teamownerAddress;
+
+            string virtualPathh;
             if (profilePhoto != null)
             {
-                imgTeamOwner.ImageUrl = profilePhotoFolder + profilePhoto.FilenameCropped;
+                virtualPathh = profilePhotoFolder + profilePhoto.FilenameCropped;
+                string physicalPath = Server.MapPath(virtualPathh);
+
+                if (!File.Exists(physicalPath))
+                {
+                    virtualPathh = "~/V1/Images/icons8-customer-64.png"; 
+                }
             }
             else
             {
-                imgTeamOwner.ImageUrl = profilePhotoFolder + "V1/Images/icons8-customer-64.png";
+                virtualPathh = "~/V1/Images/icons8-customer-64.png"; 
             }
-                var teamAdministratoUserId = (from uo in dc.UserOrganizations
+
+            imgTeamOwner.ImageUrl = VirtualPathUtility.ToAbsolute(virtualPathh);
+
+            var teamAdministratoUserId = (from uo in dc.UserOrganizations
                                               where uo.OrganizationId == new Guid(organizationId)
                                                     && uo.IsTeamAdministrator == true
                                               select uo.UserId).ToList();
@@ -88,9 +101,23 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                                                     orderby p.CreatedOn descending
                                                     select p).Take(1).SingleOrDefault();
 
-                string photoUrl = (teamAdministratoprofilePhoto != null)
-                    ? profilePhotoFolder + teamAdministratoprofilePhoto.FilenameCropped
-                    : "V1/Images/icons8-customer-64.png";
+                string virtualPath = "";
+                if (teamAdministratoprofilePhoto != null)
+                {
+                    virtualPath = profilePhotoFolder + teamAdministratoprofilePhoto.FilenameCropped;
+                    string physicalPath = HttpContext.Current.Server.MapPath(virtualPath);
+
+                    if (!File.Exists(physicalPath))
+                    {
+                        virtualPath = "~/V1/Images/icons8-customer-64.png"; 
+                    }
+                }
+                else
+                {
+                    virtualPath = "~/V1/Images/icons8-customer-64.png";
+                }
+
+                string photoUrl = VirtualPathUtility.ToAbsolute(virtualPath);
 
                 allTeamAdministrator +=
       "<div class='card'>" +
