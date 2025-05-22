@@ -56,17 +56,11 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         if (User.Identity.IsAuthenticated == true)
         {
-            var userOrganizationOwner = (from uo in dc.UserOrganizations
-                                         join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-                                         && uo.OrganizationId == new Guid(organizationId)
-                                         select o).Take(1).SingleOrDefault();
+            var userOrganizationOwner = dc.Organizations.Where(o => o.OrganizationId == new Guid(organizationId)).Select(o => o.OwnerId)
+                .FirstOrDefault();
             if (userOrganizationOwner != null)
             {
-                if ((userOrganizationOwner.OwnerId != userId))
-                {
                     isOwner = true;
-                }
             }
         }
         var organization = (from o in dc.Organizations

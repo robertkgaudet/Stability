@@ -123,6 +123,7 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                 : "/V1/Images/DefaultLogo.png";
                             string url = "/V1/NonProfit/Default.aspx?organizationId=";
                             hypTeamLogo.NavigateUrl = url+isprimaryorg.OrganizationId;
+                            imgTeamLogo.Attributes["title"] = isprimaryorg.Name + " Verified";
                         }
                         else if(orgUser!=null)
                         {
@@ -132,6 +133,7 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                 : "/V1/Images/DefaultLogo.png";
                             string url = "/V1/NonProfit/Default.aspx?organizationId=";
                             hypTeamLogo.NavigateUrl = url + orgUser.OrganizationId;
+                            imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
                         }
                         else
                         {
@@ -140,6 +142,7 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                 : "/V1/Images/DefaultLogo.png";
                             string url = "/V1/NonProfit/Default.aspx?organizationId=";
                             hypTeamLogo.NavigateUrl = url + orgUserr.OrganizationId;
+                            imgTeamLogo.Attributes["title"] = orgUserr.Name + " Verified";
                         }
 
                         if (orgUser != null)
