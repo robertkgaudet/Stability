@@ -45,6 +45,15 @@
         z-index: 0;
         text-align: left;
     }
+    .connection {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.connection a {
+  color: #888;
+  text-decoration: underline;
+}
 
     .content {
         padding: 0px 0px 0px 0px !important;
@@ -157,7 +166,15 @@
         color: #666;
         margin: 4px 0;
     }
-
+    .owner-badge {
+  position: absolute;
+  bottom: 4px;
+  background-color: #b08e4f;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+}
 </style>
 <%--SECTION: End Header Styles--%>
 
@@ -180,6 +197,27 @@
         } else {
             $('#teamAdminTitle').text('Team Administrators').show();
         }
+    });
+    $(document).ready(function () {
+            $("#btnSendRequest").click(function (e) {
+                var receiverUserIdString = $(this).data("userid");     
+                var requestorUserIdString = $(this).data("senderid");      
+
+                $.ajax({
+                    type: "POST",
+                    url: '/V1/Member/Default.aspx/RequestConnection',
+                    data: JSON.stringify({ receiverUserIdString: receiverUserIdString, requestorUserIdString: requestorUserIdString }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function () {
+                        $("#btnSendRequest").hide();
+                        $("#statusConnected").show();
+                    },
+                    error: function () {
+                        alert("Request failed.");
+                    }
+                });
+            });
     });
 
 </script>
@@ -209,23 +247,6 @@
                                 <p style="font-size: 16px;">
                                     <asp:Literal ID="litMemberDescription" runat="server"></asp:Literal>
                                 </p>
-                                <h4>Team Owner</h4>
-                                <div class="card-container">
-                                    <div class="card">
-                                        <asp:Image ID="imgTeamOwner" runat="server" CssClass="avatar" Width="40" Height="40" />
-                                        <div class="info">
-                                            <div class="name-row">
-                                                <h2>
-                                                    <asp:Label ID="lbTeamOwner" runat="server"></asp:Label>
-                                                </h2>
-                                            </div>
-                                            <p class="location">
-                                                <asp:Label ID="lbteamOwnerAddress" runat="server"></asp:Label>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                              
                                 <h4 id="teamAdminTitle">Team Administrator</h4>
 
                                 <asp:Literal ID="ltTeamAdministrators" runat="server"></asp:Literal>
