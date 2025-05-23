@@ -24,6 +24,11 @@
                 </asp:HyperLink>
             </li>
             <li>
+                <asp:HyperLink ID="hypMyConnections" runat="server" NavigateUrl="/V1/Member/Connections.aspx">
+         <i class="fa fa-users"></i> My Connections
+                </asp:HyperLink>
+            </li>
+            <li>
                 <asp:HyperLink ID="hypCalendar" runat="server" NavigateUrl="/V1/Profile/AvailableDates.aspx">
                     <i class="fa fa-calendar"></i> Calendar
                 </asp:HyperLink>
