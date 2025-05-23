@@ -172,9 +172,7 @@
             margin-left: -1px; /* Removes unwanted space */
         }
 
-        button#ContentPlaceHolder1_btnteamOwner {
-            margin-right: 188px;
-        }
+       
 
         button.btn.btn-primary {
             margin-left: 10px;
@@ -395,6 +393,36 @@
                     $.ajax({
                         type: "POST",
                         url: "People.aspx/MakeTeamOwner",
+                        data: JSON.stringify({ selectedUser: selectedUser }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            swal("Success", response.d, "success");
+                            $('#manageMemberModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error:", error);
+                            swal("Error", "An error occurred while making the user a team owner.", "error");
+                        }
+                    });
+                }
+            });
+        }
+        function btnMakeTeamRemove() {
+            event.preventDefault();
+            swal({
+                title: 'Are you sure?',
+                text: "Are you sure you want to remove this team member?",
+                icon: "warning",
+                buttons: ["No", "Yes, Remove from team!"],
+                dangerMode: true
+            }).then(function (willSet) {
+                if (willSet) {
+                    var selectedUser = currentUserId;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "People.aspx/RemoveTeamMember",
                         data: JSON.stringify({ selectedUser: selectedUser }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
@@ -1141,37 +1169,37 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12" style="margin-left:30px;">
-                                       <div class="row">
-    <!-- Column 1: First 3 Checkboxes -->
-    <div class="col-sm-6">
-         <div class="form-check mb-2">
-     <asp:CheckBox ID="txtIsVetted" runat="server" CssClass="form-check-input" />
-     <label class="form-check-label" for="<%=txtIsVetted.ClientID%>">Is Vetted</label>
- </div>
-        <div class="form-check mb-2">
-            <asp:CheckBox ID="txtTeamVerified" runat="server" CssClass="form-check-input" />
-            <label class="form-check-label" for="<%=txtTeamVerified.ClientID%>">Team Verified</label>
-        </div>
-        <div class="form-check mb-2">
-            <asp:CheckBox ID="txtStabilityVerified" runat="server" CssClass="form-check-input" />
-            <label class="form-check-label" for="<%=txtStabilityVerified.ClientID%>">Stability Verified</label>
-        </div>
-       
-    </div>
+                                    <div class="col-md-12" style="margin-left: 30px;">
+                                        <div class="row">
+                                            <!-- Column 1: First 3 Checkboxes -->
+                                            <div class="col-sm-6">
+                                                <div class="form-check mb-2">
+                                                    <asp:CheckBox ID="txtIsVetted" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtIsVetted.ClientID%>">Is Vetted</label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <asp:CheckBox ID="txtTeamVerified" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtTeamVerified.ClientID%>">Team Verified</label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <asp:CheckBox ID="txtStabilityVerified" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtStabilityVerified.ClientID%>">Stability Verified</label>
+                                                </div>
 
-    <!-- Column 2: Last 2 Checkboxes -->
-    <div class="col-sm-6">
-        <div class="form-check mb-2">
-            <asp:CheckBox ID="txtOptedSMS" runat="server" CssClass="form-check-input" />
-            <label class="form-check-label" for="<%=txtOptedSMS.ClientID%>">Accepts SMS Messages</label>
-        </div>
-        <div class="form-check mb-2">
-            <asp:CheckBox ID="txtEmailconnect" runat="server" CssClass="form-check-input" />
-            <label class="form-check-label" for="<%=txtEmailconnect.ClientID%>">Accepts Email Messages</label>
-        </div>
-    </div>
-</div>
+                                            </div>
+
+                                            <!-- Column 2: Last 2 Checkboxes -->
+                                            <div class="col-sm-6">
+                                                <div class="form-check mb-2">
+                                                    <asp:CheckBox ID="txtOptedSMS" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtOptedSMS.ClientID%>">Accepts SMS Messages</label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <asp:CheckBox ID="txtEmailconnect" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtEmailconnect.ClientID%>">Accepts Email Messages</label>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                     </div>
                                 </div>
@@ -1191,7 +1219,8 @@
             </div>
             <div class="row">
                 <div class="custom-flex-end">
-                    <button type="button" style="display: none" id="clearSkillResourceId" onclick="clearSkillResource()" class="btn btn-sm btn-info">Clear Skills/Resources</button>
+                    <button type="button" style="display: none" id="clearSkillResourceId" onclick="clearSkillResource()"
+                        class="btn btn-sm btn-info">Clear Skills/Resources</button>
                 </div>
             </div>
         </div>
@@ -1383,8 +1412,12 @@
                 </div>
 
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-primary" runat="server" id="btnteamOwner" visible="false" onclick="btnMakeTeamOwner();">
+                    <button type="button" class="btn btn-primary" runat="server" id="btnteamOwner" visible="false"
+                        onclick="btnMakeTeamOwner();">
                         Make Team Owner</button>
+                    <button type="button" class="btn btn-danger" runat="server" id="btnremoveteam" visible="false"
+                        onclick="btnMakeTeamRemove();">
+                        Remove Team Member</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
                         Save Changes</button>
