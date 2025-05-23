@@ -312,49 +312,59 @@ public partial class V1_UserControls_Stream : System.Web.UI.UserControl
 
             litMessage.Text = postHtml;
 
-            HyperLink hypVolunteer = (HyperLink)e.Item.FindControl("hypVolunteer");
-            HyperLink hypDonate = (HyperLink)e.Item.FindControl("hypDonate");
+			HyperLink hypVolunteer = (HyperLink)e.Item.FindControl("hypVolunteer");
+			HyperLink hypDonate = (HyperLink)e.Item.FindControl("hypDonate");
+			string virtualPath;
 
             var profileImage = (from ph in dc.ProfilePhotos
-                                join p in dc.Photos on ph.PhotoId equals p.PhotoId
-                                where ph.UserId == createdBy && ph.IsCurrrent == true
-                                orderby p.CreatedOn descending
-                                select new { p.FilenameCropped }).Take(1).SingleOrDefault();
+								join p in dc.Photos on ph.PhotoId equals p.PhotoId
+								where ph.UserId == createdBy && ph.IsCurrrent == true
+								orderby p.CreatedOn descending
+								select new { p.FilenameCropped }).Take(1).SingleOrDefault();
 
             if (profileImage != null)
             {
-                //Get the users profile image
-                imgProfile.Src = profilePhotoFolder + profileImage.FilenameCropped;
-            }
+                virtualPath = profilePhotoFolder + profileImage.FilenameCropped;
+                string physicalPath = Server.MapPath(virtualPath);
 
-
-            string reactionHtml = string.Empty;
-            if (reactionTypeID == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"))
-            {
-                litReactionTitle.Text = "<span style='color: #286090'> &#128591; Thank </span>";
-            }
-            else if (reactionTypeID == new Guid("b247efe7-3da7-44fa-9452-a331f71d337f"))
-            {
-                litReactionTitle.Text = "<span style='color: #FF0000'> &#10084; Love </span>";
-            }
-            else if (reactionTypeID == new Guid("8fe324d4-3694-4b7d-b710-df277c74b1c4"))
-            {
-                litReactionTitle.Text = "<span style='color: #f0ad4e'> &#128171; Bump </span>";
-            }
-            else if (reactionTypeID == new Guid("6528bbd7-501b-475b-a15f-520bb0a3ffbf"))
-            {
-                litReactionTitle.Text = "<span style='color: #f0ad4e'> &#128074; Be Strong </span>";
-            }
-            else if (reactionTypeID == new Guid("43142e57-f55b-4c8d-b024-84e0e5c664e9"))
-            {
-                litReactionTitle.Text = "<span style='color: #eea236'> &#128558; Wow </span>";
+                if (!File.Exists(physicalPath))
+                {
+                    virtualPath = "~/V1/Images/icons8-customer-64.png";
+                }
             }
             else
             {
-                litReactionTitle.Text = "<span style='color: #777'> &#128077; Thank </span>";
+                virtualPath = "~/V1/Images/icons8-customer-64.png";
             }
-        }
-    }
+            imgProfile.Src = virtualPath;
+
+            string reactionHtml = string.Empty;
+			if (reactionTypeID == new Guid("463be049-a178-4327-948c-eb3e3e7dce73"))
+			{
+				litReactionTitle.Text = "<span style='color: #286090'> &#128591; Thank </span>";
+			}
+			else if (reactionTypeID == new Guid("b247efe7-3da7-44fa-9452-a331f71d337f"))
+			{
+				litReactionTitle.Text = "<span style='color: #FF0000'> &#10084; Love </span>";
+			}
+			else if (reactionTypeID == new Guid("8fe324d4-3694-4b7d-b710-df277c74b1c4"))
+			{
+				litReactionTitle.Text = "<span style='color: #f0ad4e'> &#128171; Bump </span>";
+			}
+			else if (reactionTypeID == new Guid("6528bbd7-501b-475b-a15f-520bb0a3ffbf"))
+			{
+				litReactionTitle.Text = "<span style='color: #f0ad4e'> &#128074; Be Strong </span>";
+			}
+			else if (reactionTypeID == new Guid("43142e57-f55b-4c8d-b024-84e0e5c664e9"))
+			{
+				litReactionTitle.Text = "<span style='color: #eea236'> &#128558; Wow </span>";
+			}
+			else
+			{
+				litReactionTitle.Text = "<span style='color: #777'> &#128077; Thank </span>";
+			}
+		}
+	}
 
     protected Guid SavePost()
     {

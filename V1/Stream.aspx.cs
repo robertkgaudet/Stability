@@ -622,22 +622,29 @@ public partial class V1_Stream : BaseOrganizationWebForm
 
 			HyperLink hypVolunteer = (HyperLink)e.Item.FindControl("hypVolunteer");
 			HyperLink hypDonate = (HyperLink)e.Item.FindControl("hypDonate");
-
-			var profileImage = (from ph in dc.ProfilePhotos
+            string virtualPath;
+            var profileImage = (from ph in dc.ProfilePhotos
 								join p in dc.Photos on ph.PhotoId equals p.PhotoId
 								where ph.UserId == createdBy && ph.IsCurrrent == true
 								orderby p.CreatedOn descending
 								select new { p.FilenameCropped }).Take(1).SingleOrDefault();
 
-			if (profileImage != null)
-			{
-				imgProfile.Src = profilePhotoFolder + profileImage.FilenameCropped;
-			}
-			else
-			{
-				imgProfile.Src = profilePhotoFolder + "profilepicture.png";
-			}
-			linkProfile.HRef = "/V1/Member/Default.aspx?userid=" + createdBy;
+            if (profileImage != null)
+            {
+                virtualPath = profilePhotoFolder + profileImage.FilenameCropped;
+                string physicalPath = Server.MapPath(virtualPath);
+
+                if (!File.Exists(physicalPath))
+                {
+                    virtualPath = "~/V1/Images/icons8-customer-64.png";
+                }
+            }
+            else
+            {
+                virtualPath = "~/V1/Images/icons8-customer-64.png";
+            }
+			imgProfile.Src = virtualPath;
+            linkProfile.HRef = "/V1/Member/Default.aspx?userid=" + createdBy;
 			linkProfile.Target = "_blank";
 			linkProfile.Style["display"] = "inline";
 
