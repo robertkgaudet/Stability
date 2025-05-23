@@ -74,7 +74,6 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                             o.LogoSquare,
                                             o.OrganizationId,
                                             o.Name,
-                                            o.EnableTeamMemberVerification,
                                             uo.ShowTeamLogo,
                                         }).FirstOrDefault();
                       Guid orgId;
@@ -92,7 +91,6 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                     o.LogoSquare,
                                     o.OrganizationId,
                                     o.Name,
-                                    o.EnableTeamMemberVerification,
                                     userOrg.ShowTeamLogo
                                 })
                                 .FirstOrDefault();
@@ -109,7 +107,6 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                         o.LogoSquare,
                                         o.OrganizationId,
                                         o.Name,
-                                        o.EnableTeamMemberVerification,
                                         uo.ShowTeamLogo,
                                     }).FirstOrDefault();
                     }
@@ -147,7 +144,7 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
 
                         if (orgUser != null)
                         {
-                            if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
+                            if ( orgUser.ShowTeamLogo == true)
                             {
                                 imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
                                 hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");

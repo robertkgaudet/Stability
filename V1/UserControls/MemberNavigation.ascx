@@ -71,7 +71,7 @@
             </li>
             <li>
                 <asp:HyperLink ID="hypPortals" runat="server" NavigateUrl="/V1/Profile/EditDisasters.aspx">
-                    <i class="fa fa-map-marker"></i> Portals
+                    <i class="fa fa-globe"></i> Portals
                 </asp:HyperLink>
             </li>
         </ul>

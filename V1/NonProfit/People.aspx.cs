@@ -91,7 +91,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             hiddenAdminRole.Value = "0";
             btnremoveteam.Visible = false;
         }
-         hiddenShowTeamLogo.Value = chkManageShowDonateButton.Visible ? "1" : "0";
+        if (organization.EnableTeamMemberVerification == false)
+        {
+            chkManageShowDonatelabel.Visible = false;
+            chkManageShowDonateButton.Visible = false;
+        }
+        hiddenShowTeamLogo.Value = chkManageShowDonateButton.Visible ? "1" : "0";
         hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true || isOwner ? "1" : "0";
         string squareLogo = string.Empty;
         if (organization != null)
