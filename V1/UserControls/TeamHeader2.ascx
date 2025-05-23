@@ -161,7 +161,7 @@
             font-size: 1.2rem;
             margin: 0;
         }
-
+       
     .location {
         color: #666;
         margin: 4px 0;
@@ -193,27 +193,30 @@
             $('#teamAdminTitle').text('Team Administrators').show();
         }
     });
-    $(document).ready(function () {
-            $("#btnSendRequest").click(function (e) {
-                var receiverUserIdString = $(this).data("userid");     
-                var requestorUserIdString = $(this).data("senderid");      
+   $(document).ready(function () {
+       $(document).on("click", "#btnSendRequest", function (e) {
+           e.preventDefault();
+           var receiverUserIdString = $(this).data("userid");
+           var requestorUserIdString = $(this).data("senderid");
 
-                $.ajax({
-                    type: "POST",
-                    url: '/V1/Member/Default.aspx/RequestConnection',
-                    data: JSON.stringify({ receiverUserIdString: receiverUserIdString, requestorUserIdString: requestorUserIdString }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function () {
-                        $("#btnSendRequest").hide();
-                        $("#statusConnected").show();
-                    },
-                    error: function () {
-                        alert("Request failed.");
-                    }
-                });
-            });
-    });
+           var $button = $(this);
+
+           $.ajax({
+               type: "POST",
+               url: '/V1/Member/Default.aspx/RequestConnection',
+               data: JSON.stringify({ receiverUserIdString: receiverUserIdString, requestorUserIdString: requestorUserIdString }),
+               contentType: "application/json; charset=utf-8",
+               dataType: "json",
+               success: function () {
+                   $button.replaceWith("<strong class='sent-status'>Connection Request Sent</strong>");
+               },
+               error: function () {
+                   alert("Request failed.");
+               }
+           });
+       });
+   });
+
 
 </script>
 <asp:HiddenField ID="hfTeamAdminCount" runat="server" />
