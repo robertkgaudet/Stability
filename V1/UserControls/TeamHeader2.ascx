@@ -208,7 +208,7 @@
                contentType: "application/json; charset=utf-8",
                dataType: "json",
                success: function () {
-                   $button.replaceWith("<strong class='sent-status'>Connection Request Sent</strong>");
+                   $button.replaceWith("<strong class='sent-status'>Connected</strong>");
                },
                error: function () {
                    alert("Request failed.");
