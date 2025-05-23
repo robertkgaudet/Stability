@@ -46,7 +46,7 @@
         text-align: left;
     }
     .connection {
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   color: #555;
 }
 
@@ -166,14 +166,9 @@
         color: #666;
         margin: 4px 0;
     }
-    .owner-badge {
-  position: absolute;
-  bottom: 4px;
-  background-color: #b08e4f;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 0.75rem;
+    .badge {
+  background-color: #b08e4f!important;
+ 
 }
 </style>
 <%--SECTION: End Header Styles--%>

@@ -57,7 +57,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                 .FirstOrDefault();
             var teamownerfullname = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.Firstname + " " + p.Lastname)
                       .FirstOrDefault();
-            var teamownerAddress = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.State + "," + p.City)
+            var teamownerAddress = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.State + ", " + p.City)
                       .FirstOrDefault();
             string icon = "";
             bool stabiltyverfiy = dc.Profiles
@@ -233,7 +233,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
        "</div>" +
        "<p class='location'>" + teamownerAddress + "</p>" +
          connectionHtml +
-       "<span class='owner-badge'>Team Owner</span>" +
+       "<span class='badge badge-secondary'>Team Owner</span>" +
    "</div>" +
  "</div>";
             }
@@ -251,7 +251,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
        "<p class='connection'>" +
        "<strong>" + statushtml + "</strong>" +
         "</p>" +
-       "<span class='owner-badge'style='bottom:10px;'>Team Owner</span>" +
+       "<span class='badge badge-secondary'style='bottom:10px;'>Team Owner</span>" +
    "</div>" +
  "</div>";
             }
@@ -268,7 +268,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
       "<p class='location'>" + teamownerAddress + "</p>" +
       "<p class='connection'>" +
        "</p>" +
-      "<span class='owner-badge'style='bottom:10px;'>Team Owner</span>" +
+      "<span class='badge badge-secondary'style='bottom:10px;'>Team Owner</span>" +
   "</div>" +
    "</div>";
             }
