@@ -24,6 +24,11 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
         hypMyTeam.Attributes["data-toggle"] = "tooltip";
         hypMyTeam.Attributes["title"] = "Go to your team's page";
 
+
+        hypMyConnections.Attributes["data-toggle"] = "tooltip";
+        hypMyConnections.Attributes["title"] = "Go to My Connections";
+
+
         hypCalendar.Attributes["data-toggle"] = "tooltip";
         hypCalendar.Attributes["title"] = "Select the dates you are available to volunteer";
 

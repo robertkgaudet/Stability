@@ -142,13 +142,13 @@
                 <ul class="mailbox-list" runat="server" id="ul1">
                     <li><b>Team Resources</b></li>
                     <li <%=_peoplePageActive%>>
-                        <asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-sitemap"></i> Team Members</asp:HyperLink>
+                        <asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-vcard"></i> Team Members</asp:HyperLink>
                     </li>
                     <li <%=_teamRolesActive%>>
-                        <asp:HyperLink runat="server" ID="hypTeamRoles"><i class="fa fa-graduation-cap"></i> Training</asp:HyperLink>
+                        <asp:HyperLink runat="server" ID="hypTeamRoles"><i class="fa fa-vcard"></i> Training</asp:HyperLink>
                     </li>
                     <li <%=_deploymentTeamActive%>>
-                        <asp:HyperLink runat="server" ID="hypDeploymentTeam"><i class="fa fa-life-ring"></i> Find Volunteer Opportunities</asp:HyperLink>
+                        <asp:HyperLink runat="server" ID="hypDeploymentTeam"><i class="fa fa-users"></i> Find Open Positions</asp:HyperLink>
                     </li>
                     <li <%=_skillsPageActive%>>
                         <asp:HyperLink runat="server" ID="hypSkillsets"><i class="fa fa-hand-pointer-o"></i> Skillsets</asp:HyperLink>
@@ -181,62 +181,10 @@
             </ul>
             <hr runat="server" id="hr1"></hr>
             <ul class="mailbox-list" runat="server" id="ulAdmin" visible="false">
-                <li><b>Administrative Tools</b></li>
-                <li>
-                    <asp:HyperLink runat="server" ID="hypInviteTeam" CssClass="inviteButton"><i class="fa fa-user-plus"></i> Invite Team Members
-                    </asp:HyperLink>
-                </li>
-                <li>
-                    <asp:HyperLink runat="server" ID="hypDonationDashboard" CssClass="donationDashboard"> <i class="fa fa-tachometer text-primary"></i> Donations Dashboard
-                    </asp:HyperLink>
-                </li>
-                <li <%=_peoplePageActive%>>
-                    <asp:HyperLink runat="server" ID="hypInvitedMembers"><i class="fa fa-indent"></i> Invited Members</asp:HyperLink>
-                </li>
-                <hr runat="server" id="hr5"></hr>
-                <li>Image Manager</li>
-                <li>
-                    <asp:HyperLink runat="server" ID="hypSquareLogoUpload" CssClass="squareLogoUploadButton">  <i class="fa fa-upload text-primary"></i>Upload Team Logo
-                    </asp:HyperLink>
-                </li>
-                <li>
-                    <asp:HyperLink runat="server" ID="hypLogoUpload" CssClass="logoUploadButton"> <i class="fa fa-upload text-primary"></i> Upload Website Logo
-                    </asp:HyperLink>
-                </li>
-                <li>
-                    <asp:HyperLink runat="server" ID="hypCoverImageUpload" CssClass="coverUploadButton">  <i class="fa fa-image text-primary"></i> Upload Cover Image
-                    </asp:HyperLink>
-                </li>
-                <li>
-                    <asp:HyperLink runat="server" ID="hypManagePhotos" CssClass="managePhotosButton"> <i class="fa fa-camera text-primary"></i> Manage Photos
-                    </asp:HyperLink>
-                </li>
-                <hr runat="server" id="hr4"></hr>
-                <li>Message All Team Members</li>
-                <li <%=_teamMember%>>
-                    <asp:HyperLink runat="server" ID="hypMail" Visible="true"><i class="fa fa-envelope"></i>Email Team Members </asp:HyperLink>
-                </li>
-                <li <%=_teamMember%>>
-                    <asp:HyperLink runat="server" ID="hypSms" Visible="true"><i class="fa fa-file-text text-warning"></i>Text Team Members</asp:HyperLink>
-                </li>
-                <hr runat="server" id="hr3"></hr>
-
-                <li <%=_ticketPageActive%>>
-                    <asp:HyperLink runat="server" ID="hypTickets" Visible="false"><i class="fa fa-clipboard text-danger"></i> Tickets</asp:HyperLink>
-                </li>
-                <li <%=_reportPageActive%>>
-                    <asp:HyperLink runat="server" ID="hypReports"><i class="fa fa-file-text text-warning"></i> Reports</asp:HyperLink>
-                </li>
-                <li <%=_settingsPageActive%>>
-                    <asp:HyperLink runat="server" ID="hypSettings"><i class="fa fa-cog"></i> Settings</asp:HyperLink>
-                </li>
-                <li>
-                    <asp:HyperLink runat="server" ID="hypUpdateTeamInfo" CssClass="editButton"><i class="fa fa-pencil text-warning"></i> Update Team Information
-                    </asp:HyperLink>
-                </li>
-                <li>
-                    <asp:LinkButton ID="btnDeactivatePage" runat="server" Visible="false" CssClass="deactivateButton" OnClick="btnChangePageStatus_Click"> <i class="fa fa-ban text-danger"></i> De-activate This Team
-                    </asp:LinkButton>
+                <%--<li><b>Team Management </b></li>--%>
+                <li><b>
+                    <asp:HyperLink runat="server" ID="hypTeamManagement" CssClass="inviteButton"><i class="fa fa-users text-success"></i> Team Management
+                    </asp:HyperLink></b>
                 </li>
             </ul>
 
