@@ -75,15 +75,27 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         ? "1" : "0";
         bool isTeamAdministratorExists = dc.UserOrganizations
        .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true);
-
-        bool showAdminControls = isTeamAdministratorExists == true || isOwner;
-        phAdminControls.Visible = showAdminControls;
-        if(organization.EnableTeamMemberVerification==false)
+        if(isTeamAdministratorExists==true || isOwner==true)
         {
-            chkManageShowDonatelabel.Visible=false;
-            chkManageShowDonateButton.Visible=false;
+            btnremoveteam.Visible = true;
+            phAdminControls.Visible = true;
+            hiddenAdminRole.Value = "1";
+            if(isTeamAdministratorExists==true)
+            {
+                btnremoveteam.Style["margin-right"] = "170px";
+            }
         }
-        hiddenAdminRole.Value = showAdminControls ? "1" : "0";
+        else
+        {
+            phAdminControls.Visible = false;
+            hiddenAdminRole.Value = "0";
+            btnremoveteam.Visible = false;
+        }
+        if (organization.EnableTeamMemberVerification == false)
+        {
+            chkManageShowDonatelabel.Visible = false;
+            chkManageShowDonateButton.Visible = false;
+        }
         hiddenShowTeamLogo.Value = chkManageShowDonateButton.Visible ? "1" : "0";
         hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true || isOwner ? "1" : "0";
         string squareLogo = string.Empty;
@@ -147,7 +159,6 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
 
             Profile profile = GetUserProfileByUserId(userId);
             signedInUserFullName = profile.Firstname + " " + profile.Lastname;
-
             if (userCheck != null)
             {
                 //User is on this team.
@@ -364,6 +375,22 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             SendTeamOwnerChangeEmail(pevUserId, newUserId, new Guid(organizationId));
         }
         return "Team owner updated successfully.";
+    }
+    [WebMethod]
+    public static string RemoveTeamMember(Guid selectedUser)
+    {
+        string orgId = organizationId;
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            var userOrg = dc.UserOrganizations
+                        .FirstOrDefault(uo => uo.OrganizationId == new Guid(orgId) && uo.UserId == selectedUser);
+            if(userOrg !=null)
+            {
+                userOrg.IsEnabled = false;
+                dc.SubmitChanges();
+            }
+        }
+         return "Team member remove successfully.";
     }
     public static void SendTeamOwnerChangeEmail(Guid pevUserId, Guid newUserId, Guid organizationId)
     {

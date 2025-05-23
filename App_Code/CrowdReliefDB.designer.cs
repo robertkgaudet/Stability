@@ -49304,6 +49304,8 @@ public partial class UserOrganization : INotifyPropertyChanging, INotifyProperty
 	
 	private System.Nullable<bool> _IsTeamAdministrator;
 	
+	private bool _IsEnabled;
+	
 	private EntityRef<aspnet_User> _aspnet_User;
 	
 	private EntityRef<Organization> _Organization;
@@ -49330,6 +49332,8 @@ public partial class UserOrganization : INotifyPropertyChanging, INotifyProperty
     partial void OnIsOwnerChanged();
     partial void OnIsTeamAdministratorChanging(System.Nullable<bool> value);
     partial void OnIsTeamAdministratorChanged();
+    partial void OnIsEnabledChanging(bool value);
+    partial void OnIsEnabledChanged();
     #endregion
 	
 	public UserOrganization()
@@ -49523,6 +49527,26 @@ public partial class UserOrganization : INotifyPropertyChanging, INotifyProperty
 				this._IsTeamAdministrator = value;
 				this.SendPropertyChanged("IsTeamAdministrator");
 				this.OnIsTeamAdministratorChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsEnabled", DbType="Bit NOT NULL")]
+	public bool IsEnabled
+	{
+		get
+		{
+			return this._IsEnabled;
+		}
+		set
+		{
+			if ((this._IsEnabled != value))
+			{
+				this.OnIsEnabledChanging(value);
+				this.SendPropertyChanging();
+				this._IsEnabled = value;
+				this.SendPropertyChanged("IsEnabled");
+				this.OnIsEnabledChanged();
 			}
 		}
 	}
