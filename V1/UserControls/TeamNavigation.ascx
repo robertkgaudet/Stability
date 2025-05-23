@@ -142,13 +142,13 @@
                 <ul class="mailbox-list" runat="server" id="ul1">
                     <li><b>Team Resources</b></li>
                     <li <%=_peoplePageActive%>>
-                        <asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-vcard"></i> Team Members</asp:HyperLink>
+                        <asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-sitemap"></i> Team Members</asp:HyperLink>
                     </li>
                     <li <%=_teamRolesActive%>>
-                        <asp:HyperLink runat="server" ID="hypTeamRoles"><i class="fa fa-vcard"></i> Training</asp:HyperLink>
+                        <asp:HyperLink runat="server" ID="hypTeamRoles"><i class="fa fa-graduation-cap"></i> Training</asp:HyperLink>
                     </li>
                     <li <%=_deploymentTeamActive%>>
-                        <asp:HyperLink runat="server" ID="hypDeploymentTeam"><i class="fa fa-users"></i> Find Open Positions</asp:HyperLink>
+                        <asp:HyperLink runat="server" ID="hypDeploymentTeam"><i class="fa fa-life-ring"></i> Find Volunteer Opportunities</asp:HyperLink>
                     </li>
                     <li <%=_skillsPageActive%>>
                         <asp:HyperLink runat="server" ID="hypSkillsets"><i class="fa fa-hand-pointer-o"></i> Skillsets</asp:HyperLink>
@@ -183,7 +183,7 @@
             <ul class="mailbox-list" runat="server" id="ulAdmin" visible="false">
                 <li><b>Administrative Tools</b></li>
                 <li>
-                    <asp:HyperLink runat="server" ID="hypInviteTeam" CssClass="inviteButton"><i class="fa fa-users text-success"></i> Invite Team Members
+                    <asp:HyperLink runat="server" ID="hypInviteTeam" CssClass="inviteButton"><i class="fa fa-user-plus"></i> Invite Team Members
                     </asp:HyperLink>
                 </li>
                 <li>
