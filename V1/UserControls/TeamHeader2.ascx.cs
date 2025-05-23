@@ -34,8 +34,10 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
         ucTeamNavigation.organizationId = _organizationId;
 
         organizationId = Request.QueryString["organizationId"];
+
         if (organizationId != null)
         {
+             string path = Request.Url.AbsolutePath.ToLower();
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
             Guid currentUserId = (Guid)Membership.GetUser().ProviderUserKey;
             bool isPrimary = dc.UserOrganizations
@@ -52,294 +54,57 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
             {
                 isprimaryteam.Visible = false;
             }
-
-            var teamowner = dc.Organizations.Where(o => o.OrganizationId == new Guid(organizationId)).Select(o => o.OwnerId)
+            if (path.Contains("/v1/nonprofit/people.aspx") || path.Contains("/v1/nonprofit/default.aspx"))
+             {
+                var teamowner = dc.Organizations.Where(o => o.OrganizationId == new Guid(organizationId)).Select(o => o.OwnerId)
                 .FirstOrDefault();
-            var teamownerfullname = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.Firstname + " " + p.Lastname)
-                      .FirstOrDefault();
-            var teamownerAddress = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.State + "," + p.City)
-                      .FirstOrDefault();
-            string icon = "";
-            bool stabiltyverfiy = dc.Profiles
-           .Any(p => p.UserId == teamowner && p.IsDisasterReadyCertified);
-            if (stabiltyverfiy == true)
-            {
-                icon = "<a href='/V1/Member/Default.aspx?userId=" + teamowner + "'>" +
-                                  "<img src='/Impactoid/Images/Logos/purplebadge.png' style='width: 20px; height: 20px; margin-left:-2px; ' data-toggle='tooltip' title='Stability Verified'/>" +
-                                "</a>";
-            }
-       
+                var teamownerfullname = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.Firstname + " " + p.Lastname)
+                          .FirstOrDefault();
+                var teamownerAddress = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.State + "," + p.City)
+                          .FirstOrDefault();
+                string icon = "";
+                bool stabiltyverfiy = dc.Profiles
+               .Any(p => p.UserId == teamowner && p.IsDisasterReadyCertified);
+                if (stabiltyverfiy == true)
+                {
+                    icon = "<a href='/V1/Member/Default.aspx?userId=" + teamowner + "'>" +
+                                      "<img src='/Impactoid/Images/Logos/purplebadge.png' style='width: 20px; height: 20px; margin-left:-2px; ' data-toggle='tooltip' title='Stability Verified'/>" +
+                                    "</a>";
+                }
+
 
                 string teamlogo = "";
-            string teamlogo1 = "";
-            string teamlogo2 = "";
+                string teamlogo1 = "";
+                string teamlogo2 = "";
 
-            var isprimaryorg = (from o in dc.Organizations
-                                join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                where uo.UserId == teamowner && uo.IsPrimary == true
-                                select new
-                                {
-                                    o.LogoSquare,
-                                    o.OrganizationId,
-                                    o.Name,
-                                    uo.ShowTeamLogo,
-                                }).FirstOrDefault();
-
-            if (isprimaryorg != null)
-            {
-                string primarytitle = isprimaryorg.Name + " Verified";
-                teamlogo = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + isprimaryorg.OrganizationId + "'>" +
-                           "<img src='" +
-                           (!string.IsNullOrEmpty(isprimaryorg.LogoSquare)
-                               ? "/Impactoid/Images/Logos/" + isprimaryorg.LogoSquare
-                               : "/V1/Images/DefaultLogo.png") +
-                           "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle + "' />" +
-                           "</a>";
-            }
-
-            Guid orgId;
-            if (Guid.TryParse(organizationId, out orgId))
-            {
-                var userOrg = dc.UserOrganizations
-                                .FirstOrDefault(uo => uo.UserId == currentUserId && uo.OrganizationId == orgId);
-
-                if (userOrg != null)
-                {
-                    var orgUser = dc.Organizations
-                                    .Where(o => o.OrganizationId == orgId)
-                                    .Select(o => new
+                var isprimaryorg = (from o in dc.Organizations
+                                    join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+                                    where uo.UserId == teamowner && uo.IsPrimary == true
+                                    select new
                                     {
                                         o.LogoSquare,
                                         o.OrganizationId,
                                         o.Name,
-                                        userOrg.ShowTeamLogo
+                                        uo.ShowTeamLogo,
                                     }).FirstOrDefault();
 
-                    if (orgUser != null && orgUser.ShowTeamLogo == true)
-                    {
-                        string primarytitle1 = orgUser.Name + " Verified";
-                        teamlogo1 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId + "'>" +
-                                    "<img src='" +
-                                    (!string.IsNullOrEmpty(orgUser.LogoSquare)
-                                        ? "/Impactoid/Images/Logos/" + orgUser.LogoSquare
-                                        : "/V1/Images/DefaultLogo.png") +
-                                    "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle1 + "' />" +
-                                    "</a>";
-                    }
-                }
-            }
-            else
-            {
-                var orgUserr = (from o in dc.Organizations
-                                join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                where uo.UserId == currentUserId && uo.ShowTeamLogo == true
-                                orderby o.CreatedOn descending
-                                select new
-                                {
-                                    o.LogoSquare,
-                                    o.OrganizationId,
-                                    o.Name,
-                                    uo.ShowTeamLogo,
-                                }).FirstOrDefault();
-
-                if (orgUserr != null && orgUserr.ShowTeamLogo == true)
+                if (isprimaryorg != null)
                 {
-                    string primarytitle2 = orgUserr.Name + " Verified";
-                    teamlogo2 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + orgUserr.OrganizationId + "'>" +
-                                "<img src='" +
-                                (!string.IsNullOrEmpty(orgUserr.LogoSquare)
-                                    ? "/Impactoid/Images/Logos/" + orgUserr.LogoSquare
-                                    : "/V1/Images/DefaultLogo.png") +
-                                "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle2 + "' />" +
-                                "</a>";
-                }
-            }
-
-            string finalTeamLogo = !string.IsNullOrEmpty(teamlogo) ? teamlogo :
-                                   !string.IsNullOrEmpty(teamlogo1) ? teamlogo1 :
-                                   teamlogo2;
-
-            string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
-            var profilePhoto = (from p in dc.Photos
-                                join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
-                                where ph.UserId == teamowner
-                                orderby p.CreatedOn descending
-                                select p).Take(1).SingleOrDefault();
-            string virtualPathh;
-            if (profilePhoto != null)
-            {
-                virtualPathh = profilePhotoFolder + profilePhoto.FilenameCropped;
-                string physicalPath = Server.MapPath(virtualPathh);
-
-                if (!File.Exists(physicalPath))
-                {
-                    virtualPathh = "~/V1/Images/icons8-customer-64.png";
-                }
-            }
-            else
-            {
-                virtualPathh = "~/V1/Images/icons8-customer-64.png";
-            }
-            string statushtml = "";
-            if (teamowner != currentUserId)
-            {
-                var UserUser = (from uu in dc.UserUsers
-                                join uus in dc.UserUserStatus on uu.UserUserStatusId equals uus.UserUserStatusId
-                                where
-                                (uu.RequestingUserId == currentUserId &&
-                                uu.AcceptingUserId == teamowner)
-                                ||
-                                (uu.RequestingUserId == teamowner &&
-                                uu.AcceptingUserId == currentUserId)
-                                select new { uus.Status }).Take(1).SingleOrDefault();
-                if (UserUser != null)
-                {
-                    if (UserUser.Status == "Connected")
-                    {
-                        statushtml = "Connection Connected";
-                    }
-                    else if (UserUser.Status == "Pending")
-                    {
-                        statushtml = " Connection Pending";
-                    }
-                    else if (UserUser.Status == "Delete")
-                    {
-                        statushtml = "Connection Delete";
-                    }
-                    else if (UserUser.Status == "Blocked")
-                    {
-                        statushtml = "Connection Blocked";
-                    }
-                }
-            }
-            string photourl = VirtualPathUtility.ToAbsolute(virtualPathh);
-            string connectionHtml = "";
-            string cardHtml = "";
-            if (teamowner != currentUserId && statushtml=="")
-            {
-                connectionHtml = "<p class='connection'>" +
-                          "<a href=''id='btnSendRequest' data-userid='" + teamowner + "' data-senderid='" + currentUserId + "'>Send Connection Request</a>" +
-                        "</p>";
-            }
-            if (connectionHtml != "")
-            {
-                cardHtml = "<div class='card'>" +
-   "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
-   "<div class='info'>" +
-       "<div class='name-row'>" +
-           "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' style='color: black; font-size: 15px;'>" + teamownerfullname + "</a></h2>" +
-           "<span class='badgge'>" + icon + "</span>" +
-           "<span class='badgge'>" + finalTeamLogo + "</span>" +
-       "</div>" +
-       "<p class='location'>" + teamownerAddress + "</p>" +
-         connectionHtml +
-       "<span class='owner-badge'>Team Owner</span>" +
-   "</div>" +
- "</div>";
-            }
-            else if(statushtml !=null && teamowner!=currentUserId)
-            {
-                cardHtml = "<div class='card'>" +
-   "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
-   "<div class='info'>" +
-       "<div class='name-row'>" +
-           "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' style='color: black; font-size: 15px;'>" + teamownerfullname + "</a></h2>" +
-           "<span class='badgge'>" + icon + "</span>" +
-           "<span class='badgge'>" + finalTeamLogo + "</span>" +
-       "</div>" +
-       "<p class='location'>" + teamownerAddress + "</p>" +
-       "<p class='connection'>" +
-       "<strong>" + statushtml + "</strong>" +
-        "</p>" +
-       "<span class='owner-badge'style='bottom:10px;'>Team Owner</span>" +
-   "</div>" +
- "</div>";
-            }
-            else
-            {
-                cardHtml = "<div class='card'>" +
-  "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;' />" +
-  "<div class='info'>" +
-      "<div class='name-row'>" +
-          "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' style='color: black; font-size: 15px;'>" + teamownerfullname + "</a></h2>" +
-          "<span class='badgge'>" + icon + "</span>" +
-          "<span class='badgge'>" + finalTeamLogo + "</span>" +
-      "</div>" +
-      "<p class='location'>" + teamownerAddress + "</p>" +
-      "<p class='connection'>" +
-       "</p>" +
-      "<span class='owner-badge'style='bottom:10px;'>Team Owner</span>" +
-  "</div>" +
-   "</div>";
-            }
-
-
-
-                int teamAdministratorCount = 1;
-            var teamAdministratoUserId = (from uo in dc.UserOrganizations
-                                          where uo.OrganizationId == new Guid(organizationId)
-                                                && uo.IsTeamAdministrator == true
-                                          select uo.UserId).ToList();
-            string allTeamAdminCards = "";
-            string connectionHtml1 = "";
-
-            foreach (var userId in teamAdministratoUserId)
-            {     
-                string teamlogoo = "";
-                string teamlogoo1 = "";
-                string teamlogoo2 = "";
-                string icons = "";
-                var teamAdministratorfullname = dc.Profiles
-                    .Where(p => p.UserId == userId)
-                    .Select(p => p.Firstname + " " + p.Lastname)
-                    .FirstOrDefault();
-
-                var teamAdministratorAddress = dc.Profiles
-                    .Where(p => p.UserId == userId)
-                    .Select(p => p.City + "," + p.State)
-                    .FirstOrDefault();
-
-                var teamAdministratoprofilePhoto = (from p in dc.Photos
-                                                    join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
-                                                    where ph.UserId == userId
-                                                    orderby p.CreatedOn descending
-                                                    select p).Take(1).SingleOrDefault();
-                bool stabiltyverfiyy = dc.Profiles
-               .Any(p => p.UserId == userId && p.IsDisasterReadyCertified);
-                if (stabiltyverfiyy == true)
-                {
-                    icons = "<a href='/V1/Member/Default.aspx?userId=" + userId + "'>" +
-                                      "<img src='/Impactoid/Images/Logos/purplebadge.png' style='width: 20px; height: 20px; margin-left:-2px; ' data-toggle='tooltip' title='Stability Verified'/>" +
-                                    "</a>";
-                }
-                var isprimaryorgg = (from o in dc.Organizations
-                                     join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                     where uo.UserId == userId && uo.IsPrimary == true
-                                     select new
-                                     {
-                                         o.LogoSquare,
-                                         o.OrganizationId,
-                                         o.Name,
-                                         uo.ShowTeamLogo,
-                                     }).FirstOrDefault();
-
-                if (isprimaryorgg != null)
-                {
-                    string primarytitle = isprimaryorgg.Name + " Verified";
-                    teamlogoo = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + isprimaryorgg.OrganizationId + "'>" +
+                    string primarytitle = isprimaryorg.Name + " Verified";
+                    teamlogo = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + isprimaryorg.OrganizationId + "'>" +
                                "<img src='" +
-                               (!string.IsNullOrEmpty(isprimaryorgg.LogoSquare)
-                                   ? "/Impactoid/Images/Logos/" + isprimaryorgg.LogoSquare
+                               (!string.IsNullOrEmpty(isprimaryorg.LogoSquare)
+                                   ? "/Impactoid/Images/Logos/" + isprimaryorg.LogoSquare
                                    : "/V1/Images/DefaultLogo.png") +
                                "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle + "' />" +
                                "</a>";
                 }
 
-                Guid orggId;
-                if (Guid.TryParse(organizationId, out orggId))
+                Guid orgId;
+                if (Guid.TryParse(organizationId, out orgId))
                 {
                     var userOrg = dc.UserOrganizations
-                                    .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+                                    .FirstOrDefault(uo => uo.UserId == currentUserId && uo.OrganizationId == orgId);
 
                     if (userOrg != null)
                     {
@@ -356,7 +121,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                         if (orgUser != null && orgUser.ShowTeamLogo == true)
                         {
                             string primarytitle1 = orgUser.Name + " Verified";
-                            teamlogoo1 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId + "'>" +
+                            teamlogo1 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId + "'>" +
                                         "<img src='" +
                                         (!string.IsNullOrEmpty(orgUser.LogoSquare)
                                             ? "/Impactoid/Images/Logos/" + orgUser.LogoSquare
@@ -370,7 +135,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                 {
                     var orgUserr = (from o in dc.Organizations
                                     join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                    where uo.UserId == userId && uo.ShowTeamLogo == true
+                                    where uo.UserId == currentUserId && uo.ShowTeamLogo == true
                                     orderby o.CreatedOn descending
                                     select new
                                     {
@@ -383,7 +148,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     if (orgUserr != null && orgUserr.ShowTeamLogo == true)
                     {
                         string primarytitle2 = orgUserr.Name + " Verified";
-                        teamlogoo2 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + orgUserr.OrganizationId + "'>" +
+                        teamlogo2 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + orgUserr.OrganizationId + "'>" +
                                     "<img src='" +
                                     (!string.IsNullOrEmpty(orgUserr.LogoSquare)
                                         ? "/Impactoid/Images/Logos/" + orgUserr.LogoSquare
@@ -393,121 +158,360 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     }
                 }
 
-                string finalTeamLogoo = !string.IsNullOrEmpty(teamlogoo) ? teamlogoo :
-                                       !string.IsNullOrEmpty(teamlogoo1) ? teamlogoo1 :
-                                       teamlogoo2;
+                string finalTeamLogo = !string.IsNullOrEmpty(teamlogo) ? teamlogo :
+                                       !string.IsNullOrEmpty(teamlogo1) ? teamlogo1 :
+                                       teamlogo2;
 
-                string virtualPath = "";
-                if (teamAdministratoprofilePhoto != null)
+                string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
+                var profilePhoto = (from p in dc.Photos
+                                    join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
+                                    where ph.UserId == teamowner
+                                    orderby p.CreatedOn descending
+                                    select p).Take(1).SingleOrDefault();
+                string virtualPathh;
+                if (profilePhoto != null)
                 {
-                    virtualPath = profilePhotoFolder + teamAdministratoprofilePhoto.FilenameCropped;
-                    string physicalPath = HttpContext.Current.Server.MapPath(virtualPath);
+                    virtualPathh = profilePhotoFolder + profilePhoto.FilenameCropped;
+                    string physicalPath = Server.MapPath(virtualPathh);
 
                     if (!File.Exists(physicalPath))
                     {
-                        virtualPath = "~/V1/Images/icons8-customer-64.png";
+                        virtualPathh = "~/V1/Images/icons8-customer-64.png";
                     }
                 }
                 else
                 {
-                    virtualPath = "~/V1/Images/icons8-customer-64.png";
+                    virtualPathh = "~/V1/Images/icons8-customer-64.png";
                 }
-                string statushtml1 = "";
-                if (userId != currentUserId)
+                string statushtml = "";
+                if (teamowner != currentUserId)
                 {
                     var UserUser = (from uu in dc.UserUsers
                                     join uus in dc.UserUserStatus on uu.UserUserStatusId equals uus.UserUserStatusId
                                     where
                                     (uu.RequestingUserId == currentUserId &&
-                                    uu.AcceptingUserId == userId)
+                                    uu.AcceptingUserId == teamowner)
                                     ||
-                                    (uu.RequestingUserId == userId &&
+                                    (uu.RequestingUserId == teamowner &&
                                     uu.AcceptingUserId == currentUserId)
                                     select new { uus.Status }).Take(1).SingleOrDefault();
                     if (UserUser != null)
                     {
                         if (UserUser.Status == "Connected")
                         {
-                            statushtml1 = "Connection Connected";
+                            statushtml = "Connection Connected";
                         }
                         else if (UserUser.Status == "Pending")
                         {
-                            statushtml1 = " Connection Pending";
+                            statushtml = " Connection Pending";
                         }
                         else if (UserUser.Status == "Delete")
                         {
-                            statushtml1 = "Connection Delete";
+                            statushtml = "Connection Delete";
                         }
                         else if (UserUser.Status == "Blocked")
                         {
-                            statushtml1 = "Connection Blocked";
+                            statushtml = "Connection Blocked";
                         }
                     }
                 }
-                    string photoUrl = VirtualPathUtility.ToAbsolute(virtualPath);
-                if (userId != currentUserId && statushtml1 == "")
+                string photourl = VirtualPathUtility.ToAbsolute(virtualPathh);
+                string connectionHtml = "";
+                string cardHtml = "";
+                if (teamowner != currentUserId && statushtml == "")
                 {
-                 connectionHtml1 = "<p class='connection'>" +
-                          "<a href=''id='btnSendRequest' data-userid='" + userId + "' data-senderid='" + currentUserId + "'>Send Connection Request</a>" +
-                        "</p>";
+                    connectionHtml = "<p class='connection'>" +
+                              "<a href=''id='btnSendRequest' data-userid='" + teamowner + "' data-senderid='" + currentUserId + "'>Send Connection Request</a>" +
+                            "</p>";
                 }
-                if(connectionHtml1 !="")
+                if (connectionHtml != "")
                 {
-                    allTeamAdminCards +=
-        "<div class='card'>" +
-         "<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
-         "<div class='info'>" +
-             "<div class='name-row'>" +
-                 "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' style='color: black; font-size: 15px;'>" + teamAdministratorfullname + "</a></h2>" +
-                  "<span class='badgge'>" + icons + "</span>" +
-                   "<span class='badgge'>" + finalTeamLogoo + "</span>" +
-             "</div>" +
-             "<p class='location'>" + teamAdministratorAddress + "</p>" +
-             connectionHtml1+
-         "</div>" +
+                    cardHtml = "<div class='card'>" +
+       "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
+       "<div class='info'>" +
+           "<div class='name-row'>" +
+               "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' style='color: black; font-size: 15px;'>" + teamownerfullname + "</a></h2>" +
+               "<span class='badgge'>" + icon + "</span>" +
+               "<span class='badgge'>" + finalTeamLogo + "</span>" +
+           "</div>" +
+           "<p class='location'>" + teamownerAddress + "</p>" +
+             connectionHtml +
+           "<span class='owner-badge'>Team Owner</span>" +
+       "</div>" +
      "</div>";
                 }
-                else if(statushtml1!= null && userId != currentUserId)
+                else if (statushtml != null && teamowner != currentUserId)
                 {
-                                 allTeamAdminCards +=
-        "<div class='card'>" +
-         "<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
-         "<div class='info'>" +
-             "<div class='name-row'>" +
-                 "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' style='color: black; font-size: 15px;'>" + teamAdministratorfullname + "</a></h2>" +
-                  "<span class='badgge'>" + icons + "</span>" +
-                   "<span class='badgge'>" + finalTeamLogoo + "</span>" +
-             "</div>" +
-             "<p class='location'>" + teamAdministratorAddress + "</p>" +
-                    "<p class='connection'>" +
-       "<strong>" + statushtml1 + "</strong>" +
-        "</p>" +
-         "</div>" +
+                    cardHtml = "<div class='card'>" +
+       "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
+       "<div class='info'>" +
+           "<div class='name-row'>" +
+               "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' style='color: black; font-size: 15px;'>" + teamownerfullname + "</a></h2>" +
+               "<span class='badgge'>" + icon + "</span>" +
+               "<span class='badgge'>" + finalTeamLogo + "</span>" +
+           "</div>" +
+           "<p class='location'>" + teamownerAddress + "</p>" +
+           "<p class='connection'>" +
+           "<strong>" + statushtml + "</strong>" +
+            "</p>" +
+           "<span class='owner-badge'style='bottom:10px;'>Team Owner</span>" +
+       "</div>" +
      "</div>";
                 }
                 else
                 {
-                    allTeamAdminCards +=
-                          "<div class='card'>" +
-                           "<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;' />" +
-                           "<div class='info'>" +
-                               "<div class='name-row'>" +
-                                   "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' style='color: black; font-size: 15px;'>" + teamAdministratorfullname + "</a></h2>" +
-                                    "<span class='badgge'>" + icons + "</span>" +
-                                     "<span class='badgge'>" + finalTeamLogoo + "</span>" +
-                               "</div>" +
-                               "<p class='location'>" + teamAdministratorAddress + "</p>" +
-                                      "<p class='connection'>" +
-                          "</p>" +
-                           "</div>" +
-                       "</div>";
+                    cardHtml = "<div class='card'>" +
+      "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;' />" +
+      "<div class='info'>" +
+          "<div class='name-row'>" +
+              "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' style='color: black; font-size: 15px;'>" + teamownerfullname + "</a></h2>" +
+              "<span class='badgge'>" + icon + "</span>" +
+              "<span class='badgge'>" + finalTeamLogo + "</span>" +
+          "</div>" +
+          "<p class='location'>" + teamownerAddress + "</p>" +
+          "<p class='connection'>" +
+           "</p>" +
+          "<span class='owner-badge'style='bottom:10px;'>Team Owner</span>" +
+      "</div>" +
+       "</div>";
                 }
+
+
+
+                int teamAdministratorCount = 1;
+                var teamAdministratoUserId = (from uo in dc.UserOrganizations
+                                              where uo.OrganizationId == new Guid(organizationId)
+                                                    && uo.IsTeamAdministrator == true
+                                              select uo.UserId).ToList();
+                string allTeamAdminCards = "";
+                string connectionHtml1 = "";
+
+                foreach (var userId in teamAdministratoUserId)
+                {
+                    string teamlogoo = "";
+                    string teamlogoo1 = "";
+                    string teamlogoo2 = "";
+                    string icons = "";
+                    var teamAdministratorfullname = dc.Profiles
+                        .Where(p => p.UserId == userId)
+                        .Select(p => p.Firstname + " " + p.Lastname)
+                        .FirstOrDefault();
+
+                    var teamAdministratorAddress = dc.Profiles
+                        .Where(p => p.UserId == userId)
+                        .Select(p => p.City + "," + p.State)
+                        .FirstOrDefault();
+
+                    var teamAdministratoprofilePhoto = (from p in dc.Photos
+                                                        join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
+                                                        where ph.UserId == userId
+                                                        orderby p.CreatedOn descending
+                                                        select p).Take(1).SingleOrDefault();
+                    bool stabiltyverfiyy = dc.Profiles
+                   .Any(p => p.UserId == userId && p.IsDisasterReadyCertified);
+                    if (stabiltyverfiyy == true)
+                    {
+                        icons = "<a href='/V1/Member/Default.aspx?userId=" + userId + "'>" +
+                                          "<img src='/Impactoid/Images/Logos/purplebadge.png' style='width: 20px; height: 20px; margin-left:-2px; ' data-toggle='tooltip' title='Stability Verified'/>" +
+                                        "</a>";
+                    }
+                    var isprimaryorgg = (from o in dc.Organizations
+                                         join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+                                         where uo.UserId == userId && uo.IsPrimary == true
+                                         select new
+                                         {
+                                             o.LogoSquare,
+                                             o.OrganizationId,
+                                             o.Name,
+                                             uo.ShowTeamLogo,
+                                         }).FirstOrDefault();
+
+                    if (isprimaryorgg != null)
+                    {
+                        string primarytitle = isprimaryorgg.Name + " Verified";
+                        teamlogoo = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + isprimaryorgg.OrganizationId + "'>" +
+                                   "<img src='" +
+                                   (!string.IsNullOrEmpty(isprimaryorgg.LogoSquare)
+                                       ? "/Impactoid/Images/Logos/" + isprimaryorgg.LogoSquare
+                                       : "/V1/Images/DefaultLogo.png") +
+                                   "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle + "' />" +
+                                   "</a>";
+                    }
+
+                    Guid orggId;
+                    if (Guid.TryParse(organizationId, out orggId))
+                    {
+                        var userOrg = dc.UserOrganizations
+                                        .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+
+                        if (userOrg != null)
+                        {
+                            var orgUser = dc.Organizations
+                                            .Where(o => o.OrganizationId == orgId)
+                                            .Select(o => new
+                                            {
+                                                o.LogoSquare,
+                                                o.OrganizationId,
+                                                o.Name,
+                                                userOrg.ShowTeamLogo
+                                            }).FirstOrDefault();
+
+                            if (orgUser != null && orgUser.ShowTeamLogo == true)
+                            {
+                                string primarytitle1 = orgUser.Name + " Verified";
+                                teamlogoo1 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId + "'>" +
+                                            "<img src='" +
+                                            (!string.IsNullOrEmpty(orgUser.LogoSquare)
+                                                ? "/Impactoid/Images/Logos/" + orgUser.LogoSquare
+                                                : "/V1/Images/DefaultLogo.png") +
+                                            "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle1 + "' />" +
+                                            "</a>";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var orgUserr = (from o in dc.Organizations
+                                        join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+                                        where uo.UserId == userId && uo.ShowTeamLogo == true
+                                        orderby o.CreatedOn descending
+                                        select new
+                                        {
+                                            o.LogoSquare,
+                                            o.OrganizationId,
+                                            o.Name,
+                                            uo.ShowTeamLogo,
+                                        }).FirstOrDefault();
+
+                        if (orgUserr != null && orgUserr.ShowTeamLogo == true)
+                        {
+                            string primarytitle2 = orgUserr.Name + " Verified";
+                            teamlogoo2 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + orgUserr.OrganizationId + "'>" +
+                                        "<img src='" +
+                                        (!string.IsNullOrEmpty(orgUserr.LogoSquare)
+                                            ? "/Impactoid/Images/Logos/" + orgUserr.LogoSquare
+                                            : "/V1/Images/DefaultLogo.png") +
+                                        "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle2 + "' />" +
+                                        "</a>";
+                        }
+                    }
+
+                    string finalTeamLogoo = !string.IsNullOrEmpty(teamlogoo) ? teamlogoo :
+                                           !string.IsNullOrEmpty(teamlogoo1) ? teamlogoo1 :
+                                           teamlogoo2;
+
+                    string virtualPath = "";
+                    if (teamAdministratoprofilePhoto != null)
+                    {
+                        virtualPath = profilePhotoFolder + teamAdministratoprofilePhoto.FilenameCropped;
+                        string physicalPath = HttpContext.Current.Server.MapPath(virtualPath);
+
+                        if (!File.Exists(physicalPath))
+                        {
+                            virtualPath = "~/V1/Images/icons8-customer-64.png";
+                        }
+                    }
+                    else
+                    {
+                        virtualPath = "~/V1/Images/icons8-customer-64.png";
+                    }
+                    string statushtml1 = "";
+                    if (userId != currentUserId)
+                    {
+                        var UserUser = (from uu in dc.UserUsers
+                                        join uus in dc.UserUserStatus on uu.UserUserStatusId equals uus.UserUserStatusId
+                                        where
+                                        (uu.RequestingUserId == currentUserId &&
+                                        uu.AcceptingUserId == userId)
+                                        ||
+                                        (uu.RequestingUserId == userId &&
+                                        uu.AcceptingUserId == currentUserId)
+                                        select new { uus.Status }).Take(1).SingleOrDefault();
+                        if (UserUser != null)
+                        {
+                            if (UserUser.Status == "Connected")
+                            {
+                                statushtml1 = "Connection Connected";
+                            }
+                            else if (UserUser.Status == "Pending")
+                            {
+                                statushtml1 = " Connection Pending";
+                            }
+                            else if (UserUser.Status == "Delete")
+                            {
+                                statushtml1 = "Connection Delete";
+                            }
+                            else if (UserUser.Status == "Blocked")
+                            {
+                                statushtml1 = "Connection Blocked";
+                            }
+                        }
+                    }
+                    string photoUrl = VirtualPathUtility.ToAbsolute(virtualPath);
+                    if (userId != currentUserId && statushtml1 == "")
+                    {
+                        connectionHtml1 = "<p class='connection'>" +
+                                 "<a href=''id='btnSendRequest' data-userid='" + userId + "' data-senderid='" + currentUserId + "'>Send Connection Request</a>" +
+                               "</p>";
+                    }
+                    if (connectionHtml1 != "")
+                    {
+                        allTeamAdminCards +=
+            "<div class='card'>" +
+             "<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
+             "<div class='info'>" +
+                 "<div class='name-row'>" +
+                     "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' style='color: black; font-size: 15px;'>" + teamAdministratorfullname + "</a></h2>" +
+                      "<span class='badgge'>" + icons + "</span>" +
+                       "<span class='badgge'>" + finalTeamLogoo + "</span>" +
+                 "</div>" +
+                 "<p class='location'>" + teamAdministratorAddress + "</p>" +
+                 connectionHtml1 +
+             "</div>" +
+         "</div>";
+                    }
+                    else if (statushtml1 != null && userId != currentUserId)
+                    {
+                        allTeamAdminCards +=
+"<div class='card'>" +
+"<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
+"<div class='info'>" +
+    "<div class='name-row'>" +
+        "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' style='color: black; font-size: 15px;'>" + teamAdministratorfullname + "</a></h2>" +
+         "<span class='badgge'>" + icons + "</span>" +
+          "<span class='badgge'>" + finalTeamLogoo + "</span>" +
+    "</div>" +
+    "<p class='location'>" + teamAdministratorAddress + "</p>" +
+           "<p class='connection'>" +
+"<strong>" + statushtml1 + "</strong>" +
+"</p>" +
+"</div>" +
+"</div>";
+                    }
+                    else
+                    {
+                        allTeamAdminCards +=
+                              "<div class='card'>" +
+                               "<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;' />" +
+                               "<div class='info'>" +
+                                   "<div class='name-row'>" +
+                                       "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' style='color: black; font-size: 15px;'>" + teamAdministratorfullname + "</a></h2>" +
+                                        "<span class='badgge'>" + icons + "</span>" +
+                                         "<span class='badgge'>" + finalTeamLogoo + "</span>" +
+                                   "</div>" +
+                                   "<p class='location'>" + teamAdministratorAddress + "</p>" +
+                                          "<p class='connection'>" +
+                              "</p>" +
+                               "</div>" +
+                           "</div>";
+                    }
                     teamAdministratorCount++;
+                }
+
+                ltTeamAdministrators.Text = "<div class='card-container'>" + cardHtml + allTeamAdminCards + "</div>";
+                hfTeamAdminCount.Value = teamAdministratorCount.ToString();
+
             }
-
-            ltTeamAdministrators.Text = "<div class='card-container'>" + cardHtml + allTeamAdminCards + "</div>";
-            hfTeamAdminCount.Value = teamAdministratorCount.ToString();
-
         }
         if (!String.IsNullOrEmpty(_organizationId))
         {

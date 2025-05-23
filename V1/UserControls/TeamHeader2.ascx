@@ -199,26 +199,29 @@
         }
     });
     $(document).ready(function () {
-            $("#btnSendRequest").click(function (e) {
-                var receiverUserIdString = $(this).data("userid");     
-                var requestorUserIdString = $(this).data("senderid");      
+        $(document).on("click", "#btnSendRequest", function (e) {
+            e.preventDefault();
+            var receiverUserIdString = $(this).data("userid");
+            var requestorUserIdString = $(this).data("senderid");
 
-                $.ajax({
-                    type: "POST",
-                    url: '/V1/Member/Default.aspx/RequestConnection',
-                    data: JSON.stringify({ receiverUserIdString: receiverUserIdString, requestorUserIdString: requestorUserIdString }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function () {
-                        $("#btnSendRequest").hide();
-                        $("#statusConnected").show();
-                    },
-                    error: function () {
-                        alert("Request failed.");
-                    }
-                });
+            var $button = $(this);
+
+            $.ajax({
+                type: "POST",
+                url: '/V1/Member/Default.aspx/RequestConnection',
+                data: JSON.stringify({ receiverUserIdString: receiverUserIdString, requestorUserIdString: requestorUserIdString }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function () {
+                    $button.replaceWith("<span class='sent-status'>Connection Request Sent</span>");
+                },
+                error: function () {
+                    alert("Request failed.");
+                }
             });
+        });
     });
+
 
 </script>
 <asp:HiddenField ID="hfTeamAdminCount" runat="server" />
