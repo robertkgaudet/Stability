@@ -74,7 +74,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypSkillsets.NavigateUrl = "/V1/NonProfit/Skillsets.aspx?organizationId=" + organizationId;
         hypResources.NavigateUrl = "/V1/NonProfit/AvailableResources.aspx?organizationId=" + organizationId;
         hypDeploymentTeam.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + organizationId;
-        hypTeamManagement .NavigateUrl = "/V1/NonProfit/TeamManagement.aspx?organizationId=" + organizationId;
+        hypTeamManagement.NavigateUrl = "/V1/NonProfit/TeamManagement.aspx?organizationId=" + organizationId;
         switch (PageName)
         {
             case "teamRolesPage":
