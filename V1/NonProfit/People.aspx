@@ -427,6 +427,8 @@
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         success: function (response) {
+                            debugger;
+                            $("a.Userlink[href*='" + selectedUser +"']").parents('tr').remove();
                             swal("Success", response.d, "success");
                             $('#manageMemberModal').modal('hide');
                         },
