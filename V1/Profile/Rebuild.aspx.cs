@@ -123,8 +123,8 @@ public partial class V1_Profile_Rebuild : BaseOrganizationWebForm
 
 		var userOrganization = (from uo in dc.UserOrganizations
 							   join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-								where uo.UserId == userId && uo.IsPrimary == true
-							   select new { o.Name, Logo = ("/Images/Organizations/" + o.Logo) }).Take(1).SingleOrDefault();
+								where uo.UserId == userId && uo.IsPrimary == true && uo.IsEnabled == true
+                                select new { o.Name, Logo = ("/Images/Organizations/" + o.Logo) }).Take(1).SingleOrDefault();
 
 		if(userOrganization != null)
 		{

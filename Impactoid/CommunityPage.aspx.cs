@@ -156,8 +156,8 @@ public partial class Impactoid_CommunityPage : System.Web.UI.Page
 				   join uo in dc.UserOrganizations on p.UserId equals uo.UserId
 				   where uo.OrganizationId == new Guid(organizationId)
 				   &&
-				   p.ShowOnWebsite == true
-				   select new { fullname = p.Firstname + " " + p.Lastname, p.Title, p.UserId };
+				   p.ShowOnWebsite == true && uo.IsEnabled == true
+                   select new { fullname = p.Firstname + " " + p.Lastname, p.Title, p.UserId };
 
 
 		if(team.Count() > 0)

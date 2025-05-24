@@ -93,7 +93,7 @@ public partial class V1_Profile_Resources : BaseOrganizationWebForm
 			}
 		}
         var userOrg = (from org in dc.UserOrganizations
-                       where org.UserId == userId
+                       where org.UserId == userId && org.IsEnabled == true
                        select org).FirstOrDefault();
 		
        

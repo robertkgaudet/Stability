@@ -68,7 +68,7 @@ public partial class V1_SquareLogo_SquareLogoPhotoCrop : BaseOrganizationWebForm
             // Save the cropped square logo to the database
             using (var dc = new CrowdReliefDBDataContext())
             {
-                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
+                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId && uo.IsEnabled == true);
                 if (userOrg != null)
                 {
                     var organization = dc.Organizations.FirstOrDefault(o => o.OrganizationId == userOrg.OrganizationId);

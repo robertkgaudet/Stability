@@ -75,7 +75,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         || isOwner)
         ? "1" : "0";
         bool isTeamAdministratorExists = dc.UserOrganizations
-       .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true);
+       .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.IsEnabled == true);
         if(isTeamAdministratorExists==true || isOwner==true)
         {
             btnremoveteam.Visible = true;
@@ -154,7 +154,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             //Is logged in user on this team?
 
             var userCheck = (from uo in dc.UserOrganizations
-                             where uo.UserId == userId
+                             where uo.UserId == userId && uo.IsEnabled == true
                              && uo.OrganizationId == new Guid(organizationId)
                              select uo).Take(1).SingleOrDefault();
 
@@ -348,12 +348,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             organization.OwnerId = selectedUser;
             dc.SubmitChanges();
             var oldUserOrg = dc.UserOrganizations
-                .FirstOrDefault(x => x.UserId == oldOwnerId && x.OrganizationId == organization.OrganizationId);
+                .FirstOrDefault(x => x.UserId == oldOwnerId && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
 
             var newUserOrg = dc.UserOrganizations
-             .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId);
+             .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
             var previousOwners = dc.UserOrganizations
-           .Where(x => x.OrganizationId == organization.OrganizationId && x.IsPreviousOwner == true)
+           .Where(x => x.OrganizationId == organization.OrganizationId && x.IsPreviousOwner == true && x.IsEnabled == true)
            .FirstOrDefault();
             if (previousOwners != null)
             {
@@ -384,7 +384,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
             var userOrg = dc.UserOrganizations
-                        .FirstOrDefault(uo => uo.OrganizationId == new Guid(orgId) && uo.UserId == selectedUser);
+                        .FirstOrDefault(uo => uo.OrganizationId == new Guid(orgId) && uo.UserId == selectedUser && uo.IsEnabled == true);
             if(userOrg !=null)
             {
                 userOrg.IsEnabled = false;

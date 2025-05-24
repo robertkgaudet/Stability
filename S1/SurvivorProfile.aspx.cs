@@ -319,10 +319,10 @@ public partial class S1_SurvivorProfile : BaseOrganizationWebForm
 		
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-		var nonProfits = from us in dc.UserOrganizations
-					 join s in dc.Organizations on us.OrganizationId equals s.OrganizationId
-					 where us.UserId == userId
-					 orderby s.Name
+		var nonProfits = from uo in dc.UserOrganizations
+					 join s in dc.Organizations on uo.OrganizationId equals s.OrganizationId
+					 where uo.UserId == userId && uo.IsEnabled == true
+                         orderby s.Name
 					 select s;
 
 		foreach(var nonProfit in nonProfits)

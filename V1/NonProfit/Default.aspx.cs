@@ -55,7 +55,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             {
                 //Get this users team, no team? Send them to pick a team.
                 var userOrganization = (from uo in dc.UserOrganizations
-                                        where uo.UserId == userId
+                                        where uo.UserId == userId && uo.IsEnabled == true
                                         select new { uo.OrganizationId }).Take(1).SingleOrDefault();
 
                 if (userOrganization == null)
@@ -149,7 +149,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
         {
             var userOrganizationOwners = (from uo in dc.UserOrganizations
                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
                                          && uo.OrganizationId == new Guid(organizationId)
                                          select o).Take(1).SingleOrDefault();
 
@@ -194,12 +194,12 @@ public partial class V1_NonProfit_Default : BaseWebForm
            
             //If the user is logged in and not in a nonprofit already then send to choose a nonprofit.
             var userOrganization = from uo in dc.UserOrganizations
-                                   where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+                                   where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
                                    && uo.OrganizationId == new Guid(organizationId)
                                    select uo;
             var userOrganizationOwner = (from uo in dc.UserOrganizations
                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true && uo.IsEnabled == true
                                          && uo.OrganizationId == new Guid(organizationId)
                                          select o).Take(1).SingleOrDefault();
             var userOrg = dc.UserOrganizations
@@ -365,7 +365,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
                 var userOrg = dc.UserOrganizations
-                                .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+                                .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.IsEnabled == true && uo.IsEnabled == true);
 
                 if (userOrg != null)
                 {
@@ -392,7 +392,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
                 var currentPrimary = dc.UserOrganizations
-                                       .FirstOrDefault(uo => uo.UserId == userId && uo.IsPrimary == true);
+                                       .FirstOrDefault(uo => uo.UserId == userId && uo.IsPrimary == true && uo.IsEnabled == true && uo.IsEnabled == true);
                 if (currentPrimary != null)
                 {
                     currentPrimary.IsPrimary = false;
