@@ -183,7 +183,7 @@
             <ul class="mailbox-list" runat="server" id="ulAdmin" visible="false">
                 <%--<li><b>Team Management </b></li>--%>
                 <li><b>
-                    <asp:HyperLink runat="server" ID="hypTeamManagement" CssClass="inviteButton"><i class="fa fa-users text-success"></i> Team Management
+                    <asp:HyperLink runat="server" ID="hypTeamManagement"><i class="fa fa-users text-success"></i> Team Management
                     </asp:HyperLink></b>
                 </li>
             </ul>
