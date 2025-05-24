@@ -34,8 +34,8 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
         using (var dc = new CrowdReliefDBDataContext())
         {
             var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
-                       var userOrg = dc.UserOrganizations
-            .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+            var userOrg = dc.UserOrganizations
+ .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
             bool isOwner = userOrg != null && userOrg.IsOwner;
             if (profile == null || userOrg == null)
             {
@@ -45,10 +45,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             bool showTeamLogo = userOrg.ShowTeamLogo ?? false;
             var teamAdministratorRole = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
             Guid teamAdministratorRoleId = teamAdministratorRole.RoleId;
-            ////var teamOwnerRole = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Owner");
-            //Guid teamOwnerRoleID = teamOwnerRole.RoleId;
-            bool makeTeamAdministrator = dc.aspnet_UsersInRoles.Any(r => r.UserId == userId && r.RoleId == teamAdministratorRoleId);
-            //bool makeTeamOwner = dc.aspnet_UsersInRoles.Any(r => r.UserId == userId && r.RoleId == teamAdministratorRoleId);
+            bool makeTeamAdministrator = userOrg.IsTeamAdministrator == true;
 
             string vettingStatus = "";
             if (profile.VettingActive == true)

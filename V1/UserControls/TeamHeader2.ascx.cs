@@ -223,7 +223,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                               "<a href=''id='btnSendRequest' data-userid='" + teamowner + "' data-senderid='" + currentUserId + "'>Send Connection Request</a>" +
                             "</p>";
                 }
-                if (connectionHtml != "")
+                if (connectionHtml != "" && statushtml == "")
                 {
                     cardHtml = "<div class='card'>" +
        "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
