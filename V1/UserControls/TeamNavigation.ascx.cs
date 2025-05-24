@@ -156,11 +156,27 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                                          where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
                                          && uo.OrganizationId == new Guid(organizationId)
                                          select o).Take(1).SingleOrDefault();
-
-            var userCheck = (from uo in dc.UserOrganizations
-                             where uo.UserId == userId
-                             && uo.OrganizationId == new Guid(organizationId)
-                             select uo).Take(1).SingleOrDefault();
+            bool isTeamAdministratorExists = dc.UserOrganizations
+          .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true);
+            if (userOrganizationOwner != null)
+            {
+                if (userId == userOrganizationOwner.OwnerId)
+                {
+                    hypTeamManagement.Visible = true;
+                    hypTeamManagement.Attributes["data-toggle"] = "tooltip";
+                    hypTeamManagement.Attributes["title"] = "View this team's TeamManagement";
+                }
+            }
+            else if(isTeamAdministratorExists == true)
+            {
+                hypTeamManagement.Visible = true;
+                hypTeamManagement.Attributes["data-toggle"] = "tooltip";
+                hypTeamManagement.Attributes["title"] = "View this team's TeamManagement";
+            }
+                var userCheck = (from uo in dc.UserOrganizations
+                                 where uo.UserId == userId
+                                 && uo.OrganizationId == new Guid(organizationId)
+                                 select uo).Take(1).SingleOrDefault();
 
             if (userCheck != null)
             {
