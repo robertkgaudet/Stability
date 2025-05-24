@@ -34,8 +34,8 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
         using (var dc = new CrowdReliefDBDataContext())
         {
             var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
-            var userOrg = dc.UserOrganizations
- .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+            var userOrg = dc.UserOrganizations 
+ .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.IsEnabled==true);
             bool isOwner = userOrg != null && userOrg.IsOwner;
             if (profile == null || userOrg == null)
             {
@@ -114,7 +114,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                 }
 
                 var userOrg = dc.UserOrganizations
-     .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+     .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.IsEnabled==true);
 
                 var role = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
 

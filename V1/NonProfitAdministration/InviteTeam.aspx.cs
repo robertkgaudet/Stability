@@ -82,7 +82,7 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
                 //Get the team name and creator name to send in the email.
                 var organizationInfo = (from p in dc.Profiles
                                         join o in dc.UserOrganizations on p.UserId equals o.UserId
-                                        where p.UserId == userId
+                                        where p.UserId == userId && o.IsEnabled == true
                                         select new { organizationName = o.Organization.Name, p.Firstname, senderName = p.Firstname + " " + p.Lastname }).FirstOrDefault();
 
                 string senderName				= organizationInfo.senderName;

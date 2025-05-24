@@ -50,8 +50,8 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 			var orgUser = (from o in dc.Organizations
 						   join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-						   where uo.UserId == new Guid(_userId)
-						   orderby o.CreatedOn descending
+						   where uo.UserId == new Guid(_userId) && uo.IsEnabled == true
+                           orderby o.CreatedOn descending
 						   select o).Take(1).SingleOrDefault();
 
 			if (orgUser != null)

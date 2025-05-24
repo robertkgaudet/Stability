@@ -233,7 +233,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             var orgUser = from o in dc.Organizations
                           join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                          where uo.UserId == userId
+                          where uo.UserId == userId && uo.IsEnabled == true
                           orderby o.CreatedOn descending
                           select o;
 
@@ -294,7 +294,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             var userOrganizations = from uo in dc.UserOrganizations
                                     join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                    where uo.UserId == userId
+                                    where uo.UserId == userId && uo.IsEnabled == true
                                     select new { o.Name, o.OrganizationId };
 
             if (userOrganizations.Count() > 0)
@@ -666,7 +666,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         var userGroups = (from g in dc.UserOrganizations
                           join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
-                          where g.UserId == userId
+                          where g.UserId == userId && g.IsEnabled == true
                           orderby g.IsPrimary descending, o.Name
                           select new
                           {

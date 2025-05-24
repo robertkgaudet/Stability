@@ -35,7 +35,7 @@ public partial class V1_Profile_EditNonProfits : BaseOrganizationWebForm
             Guid userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
 
             var userOrganizations = (from uo in dc.UserOrganizations
-                                     where uo.UserId == userId
+                                     where uo.UserId == userId && uo.IsEnabled == true
                                      select uo).ToList();
 
             foreach (var uo in userOrganizations)
