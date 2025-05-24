@@ -34,8 +34,8 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
         using (var dc = new CrowdReliefDBDataContext())
         {
             var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
-                       var userOrg = dc.UserOrganizations
-            .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+            var userOrg = dc.UserOrganizations
+ .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
             if (profile == null || userOrg == null)
             {
                 throw new InvalidOperationException("User profile or organization not found.");
@@ -44,7 +44,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             bool showTeamLogo = userOrg.ShowTeamLogo ?? false;
             var teamAdministratorRole = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
             Guid teamAdministratorRoleId = teamAdministratorRole.RoleId;
-            bool makeTeamAdministrator = dc.aspnet_UsersInRoles.Any(r => r.UserId == userId && r.RoleId == teamAdministratorRoleId);
+            bool makeTeamAdministrator = userOrg.IsTeamAdministrator == true;
             string vettingStatus = "";
             if (profile.VettingActive == true)
             {

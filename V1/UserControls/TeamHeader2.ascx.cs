@@ -454,7 +454,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                                  "<a href=''id='btnSendRequest' data-userid='" + userId + "' data-senderid='" + currentUserId + "'>Send Connection Request</a>" +
                                "</p>";
                     }
-                    if (connectionHtml1 != "")
+                    if (connectionHtml1 != "" && statushtml1 == "")
                     {
                         allTeamAdminCards +=
             "<div class='card'>" +
