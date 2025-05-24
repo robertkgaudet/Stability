@@ -9,8 +9,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <style>
         .response-tools {
-/*            margin-bottom: 40px;*/
-                padding: 15px;
+            /*            margin-bottom: 40px;*/
+            padding: 15px;
         }
 
             .response-tools h2 {
@@ -21,11 +21,11 @@
             }
 
         .icon-row {
-                margin-top: 20px;
-               display: flex;
-    gap: 70px;
-    flex-wrap: wrap;
-    padding: 10px;
+            margin-top: 20px;
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+            padding: 6px;
         }
 
         .icon-item {
@@ -38,105 +38,140 @@
             .icon-item i {
                 margin-right: 8px;
             }
+
+        .tool-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: #007bff;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+        }
+
+            .tool-link:hover {
+                text-decoration: underline;
+                color: #0056b3;
+            }
+
+        .card-header {
+            background-color: #f8f9fa;
+            font-size: 1rem;
+        }
+
+        .card-body {
+            margin: 5px;
+            padding: 5px;
+        }
+
+        .align-items-start {
+            margin-top: 20px;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+        }
     </style>
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
 
     <div class="content animate-panel" data-child="hpanel" data-effect="fadeInDown">
-        <div class="response-tools">
-            <h4><u>Administrative Tools</u></h4>
-            <div class="icon-row">
-                <div class="icon-item">
-                    <i class="fa fa-users text-success"></i><span>
-                        <asp:HyperLink runat="server" ID="hypInviteTeam" CssClass="inviteButton"> Invite Team Members
-                        </asp:HyperLink></span>
+        <div class="container-fluid response-tools-section">
+            <!-- Admin Tools -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4><u>Administrative Tools</u></h4>
                 </div>
-                <div class="icon-item">
-                    <i class="fa fa-tachometer text-primary"></i><span>
-                        <asp:HyperLink runat="server" ID="hypDonationDashboard" CssClass="donationDashboard">  Donations Dashboard
-                        </asp:HyperLink></span>
+                <div class="card-body row gy-3">
+                    <div class="col-md-4 d-flex align-items-start gap-2">
+                        <i class="fa fa-users text-success"></i>
+                        <asp:HyperLink runat="server" ID="hypInviteTeam" CssClass="text-decoration-none">Invite Team Members</asp:HyperLink>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-start gap-2">
+                        <i class="fa fa-tachometer text-primary"></i>
+                        <asp:HyperLink runat="server" ID="hypDonationDashboard">Donations Dashboard</asp:HyperLink>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-start gap-2">
+                        <i class="fa fa-indent"></i>
+                        <asp:HyperLink runat="server" ID="hypInvitedMembers">Invited Members</asp:HyperLink>
+                    </div>
                 </div>
-                <div class="icon-item"><i class="fa fa-indent"></i><span>
-                    <asp:HyperLink runat="server" ID="hypInvitedMembers"> Invited Members</asp:HyperLink></span></div>
+            </div>
 
+            <!-- Image Manager -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4><u>Image Manager</u></h4>
+                </div>
+                <div class="card-body row gy-3">
+                    <div class="col-md-4 d-flex align-items-start gap-2">
+                        <i class="fa fa-upload text-primary"></i>
+                        <asp:HyperLink runat="server" ID="hypSquareLogoUpload">Upload Team Logo</asp:HyperLink>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-start gap-2">
+                        <i class="fa fa-upload text-primary"></i>
+                        <asp:HyperLink runat="server" ID="hypLogoUpload">Upload Website Logo</asp:HyperLink>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-start gap-2">
+                        <i class="fa fa-image text-primary"></i>
+                        <asp:HyperLink runat="server" ID="hypCoverImageUpload">Upload Cover Image</asp:HyperLink>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-start gap-2">
+                        <i class="fa fa-camera text-primary"></i>
+                        <asp:HyperLink runat="server" ID="hypManagePhotos">Manage Photos</asp:HyperLink>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messaging -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4><u>Message All Team Members</u></h4>
+                </div>
+                <div class="card-body row gy-3">
+                    <div class="col-md-4 d-flex align-items-start gap-2">
+                        <i class="fa fa-envelope"></i>
+                        <asp:HyperLink runat="server" ID="hypMail" Visible="true">Email Team Members</asp:HyperLink>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-start gap-2">
+                        <i class="fa fa-file-text text-warning"></i>
+                        <asp:HyperLink runat="server" ID="hypSms" Visible="true">Text Team Members</asp:HyperLink>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Others -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4><u>Others</u></h4>
+                </div>
+                <div class="card-body row gy-3">
+                    <div class="col-md-3 d-flex align-items-start gap-2">
+                        <i class="fa fa-clipboard text-danger"></i>
+                        <asp:HyperLink runat="server" ID="hypTickets">Tickets</asp:HyperLink>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-start gap-2">
+                        <i class="fa fa-file-text text-warning"></i>
+                        <asp:HyperLink runat="server" ID="hypReports">Reports</asp:HyperLink>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-start gap-2">
+                        <i class="fa fa-cog"></i>
+                        <asp:HyperLink runat="server" ID="hypSettings">Settings</asp:HyperLink>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-start gap-2">
+                        <i class="fa fa-pencil text-warning"></i>
+                        <asp:HyperLink runat="server" ID="hypUpdateTeamInfo">Update Team Info</asp:HyperLink>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-start gap-2 mt-3">
+                        <i class="fa fa-ban text-danger"></i>
+                        <asp:LinkButton ID="btnDeactivatePage" runat="server" OnClick="btnChangePageStatus_Click">Deactivate This Team</asp:LinkButton>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="response-tools-section">
-            <div class="response-tools">
-                <h4><u>Image Manager</u></h4>
-                <div class="icon-row">
-                     <div class="icon-item">
-     <i class="fa fa-upload text-primary"></i><span>
-         <asp:HyperLink runat="server" ID="hypSquareLogoUpload" CssClass="squareLogoUploadButton">Upload Team Logo
-         </asp:HyperLink></span>
- </div>
-                      <div class="icon-item">
-      <i class="fa fa-upload text-primary"></i><span>
-          <asp:HyperLink runat="server" ID="hypLogoUpload" CssClass="squareLogoUploadButton"> Upload Website Logo
-          </asp:HyperLink></span>
-  </div>
-                    <div class="icon-item">
-                        <i class="fa fa-image text-primary"></i><span>
-                            <asp:HyperLink runat="server" ID="hypCoverImageUpload" CssClass="coverUploadButton">  Upload Cover Image
-                            </asp:HyperLink></span>
-                    </div>
-                   
-                    <div class="icon-item">
-                        <i class="fa fa-camera text-primary"></i><span>
-                            <asp:HyperLink runat="server" ID="hypManagePhotos" CssClass="managePhotosButton"> Manage Photos
-                            </asp:HyperLink></span>
-                    </div>
-                  
 
-                </div>
-            </div>
-
-            <div class="response-tools">
-                <h4><u>Message All Team Members</u></h4>
-
-                <div class="icon-row">
-                    <div class="icon-item">
-                        <i class="fa fa-envelope"></i><span>
-                            <asp:HyperLink runat="server" ID="hypMail" Visible="true">Email Team Members </asp:HyperLink>
-                        </span>
-                    </div>
-                    <div class="icon-item"><i class="fa fa-file-text text-warning"></i><span>
-                        <asp:HyperLink runat="server" ID="hypSms" Visible="true">Text Team Members</asp:HyperLink></span></div>
-
-                </div>
-            </div>
-
-            <div class="response-tools">
-                <h4><u>Administrative Tools</u></h4>
-
-                <div class="icon-row">
-                    <div class="icon-item">
-                        <i class="fa fa-clipboard text-danger"></i><span>
-                            <asp:HyperLink runat="server" ID="hypTickets"> Tickets</asp:HyperLink>
-                        </span>
-                    </div>
-                    <div class="icon-item">
-                        <i class="fa fa-file-text text-warning"></i><span>
-                            <asp:HyperLink runat="server" ID="hypReports"> Reports</asp:HyperLink>
-                        </span>
-                    </div>
-                    <div class="icon-item">
-                        <i class="fa fa-cog"></i><span>
-                            <asp:HyperLink runat="server" ID="hypSettings"> Settings</asp:HyperLink>
-                        </span>
-                    </div>
-                    <div class="icon-item">
-                        <i class="fa fa-pencil text-warning"></i><span>
-                            <asp:HyperLink runat="server" ID="hypUpdateTeamInfo" CssClass="editButton"> Update Team Information
-                            </asp:HyperLink></span>
-                    </div>
-                    <div class="icon-item">
-                        <i class="fa fa-ban text-danger"></i><span>
-                            <asp:LinkButton ID="btnDeactivatePage" runat="server" CssClass="deactivateButton" OnClick="btnChangePageStatus_Click"> De-activate This Team
-                            </asp:LinkButton></span>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>
