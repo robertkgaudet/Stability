@@ -40,7 +40,7 @@
     <div class="content animate-panel" data-child="hpanel" data-effect="fadeInDown">
         <div class="container-fluid response-tools-section">
             <!-- Admin Tools -->
-            <div class="card mb-4">
+            <div class=" mb-4">
                 <div class="card-header">
                     <h4><u>Administrative Tools</u></h4>
                 </div>
@@ -61,7 +61,7 @@
             </div>
 
             <!-- Image Manager -->
-            <div class="card mb-4">
+            <div class=" mb-4">
                 <div class="card-header">
                     <h4><u>Image Manager</u></h4>
                 </div>
@@ -86,7 +86,7 @@
             </div>
 
             <!-- Messaging -->
-            <div class="card mb-4">
+            <div class=" mb-4">
                 <div class="card-header">
                     <h4><u>Message All Team Members</u></h4>
                 </div>
@@ -103,7 +103,7 @@
             </div>
 
             <!-- Others -->
-            <div class="card mb-4">
+            <div class=" mb-4">
                 <div class="card-header">
                     <h4><u>Others</u></h4>
                 </div>
