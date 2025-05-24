@@ -8,57 +8,6 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <style>
-        .response-tools {
-            /*            margin-bottom: 40px;*/
-            padding: 15px;
-        }
-
-            .response-tools h2 {
-                font-size: 20px;
-                font-weight: bold;
-                color: #222;
-                margin-bottom: 20px;
-            }
-
-        .icon-row {
-            margin-top: 20px;
-            display: flex;
-            gap: 50px;
-            flex-wrap: wrap;
-            padding: 6px;
-        }
-
-        .icon-item {
-            display: flex;
-            align-items: center;
-            font-size: 18px;
-            color: #2563eb;
-        }
-
-            .icon-item i {
-                margin-right: 8px;
-            }
-
-        .tool-link {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 500;
-            color: #007bff;
-            text-decoration: none;
-            transition: all 0.2s ease-in-out;
-        }
-
-            .tool-link:hover {
-                text-decoration: underline;
-                color: #0056b3;
-            }
-
-        .card-header {
-            background-color: #f8f9fa;
-            font-size: 1rem;
-        }
-
         .card-body {
             margin: 5px;
             padding: 5px;
@@ -74,19 +23,17 @@
             text-decoration: none;
             transition: all 0.2s ease-in-out;
         }
-        	.col-md-4.d-flex.align-items-start.gap-2 {
-        margin-top: 10px;
+
+
+
+        .card-header {
+            height: 25px;
+            font-size: 1rem;
         }
-	.col-md-3.d-flex.align-items-start.gap-2 {
-    margin-top: 3px;
-     }
-	.card-header{
-		background-color:#fff !important;
-		height:25px;
-	}
-    u{
-	text-decoration:none;
-}
+
+        u {
+            text-decoration: none;
+        }
     </style>
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
 
@@ -178,8 +125,8 @@
                         <asp:HyperLink runat="server" ID="hypUpdateTeamInfo">Update Team Info</asp:HyperLink>
                     </div>
                     <div class="col-md-4 d-flex align-items-start gap-2 mt-3">
-                        <i class="fa fa-ban text-danger"></i>
-                        <asp:LinkButton ID="btnDeactivatePage" runat="server" OnClick="btnChangePageStatus_Click">Deactivate This Team</asp:LinkButton>
+                       <%-- <i class="fa fa-ban text-danger"></i>--%>
+                        <asp:LinkButton ID="btnDeactivatePage" runat="server" OnClick="btnChangePageStatus_Click">De-activate This Team </asp:LinkButton>
                     </div>
                 </div>
             </div>
