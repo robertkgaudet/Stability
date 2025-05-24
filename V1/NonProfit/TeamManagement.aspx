@@ -74,6 +74,19 @@
             text-decoration: none;
             transition: all 0.2s ease-in-out;
         }
+        	.col-md-4.d-flex.align-items-start.gap-2 {
+        margin-top: 10px;
+        }
+	.col-md-3.d-flex.align-items-start.gap-2 {
+    margin-top: 3px;
+     }
+	.card-header{
+		background-color:#fff !important;
+		height:25px;
+	}
+    u{
+	text-decoration:none;
+}
     </style>
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
 

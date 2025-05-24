@@ -75,27 +75,63 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
 		Master.FbURL = Request.Url.AbsoluteUri;
 
 		bool isOwner = false;
-		#endregion
-
-
-		
+        #endregion
         hypInviteTeam.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + organizationId;
+        hypInviteTeam.Attributes["data-toggle"] = "tooltip";
+        hypInviteTeam.Attributes["title"] = "Go To InviteTeam";
+
         hypDonationDashboard.NavigateUrl = "/V1/NonProfit/DonationDashboard.aspx?organizationId=" + organizationId;
+        hypDonationDashboard.Attributes["data-toggle"] = "tooltip";
+        hypDonationDashboard.Attributes["title"] = "Go To DonationDashboard";
+
         hypInvitedMembers.NavigateUrl = "/V1/NonProfit/InvitedMembers.aspx?organizationId=" + organizationId;
+        hypInvitedMembers.Attributes["data-toggle"] = "tooltip";
+        hypInvitedMembers.Attributes["title"] = "Go To InvitedMembers";
+
         hypSquareLogoUpload.NavigateUrl = "/V1/NonProfit/SquareLogoUpload.aspx?organizationId=" + organizationId;
+        hypSquareLogoUpload.Attributes["data-toggle"] = "tooltip";
+        hypSquareLogoUpload.Attributes["title"] = "Go To SquareLogoUpload";
+
         hypLogoUpload.NavigateUrl = "/V1/NonProfit/LogoUpload.aspx?organizationId=" + organizationId;
+        hypLogoUpload.Attributes["data-toggle"] = "tooltip";
+        hypLogoUpload.Attributes["title"] = "Go To LogoUpload";
+
         hypCoverImageUpload.NavigateUrl = "/V1/NonProfitAdministration/CoverImage1600x600.aspx?organizationId=" + organizationId;
+        hypCoverImageUpload.Attributes["data-toggle"] = "tooltip";
+        hypCoverImageUpload.Attributes["title"] = "Go To CoverImage1600x600";
+
         hypManagePhotos.NavigateUrl = "/V1/NonProfitAdministration/ManagePhotos.aspx?organizationId=" + organizationId;
+        hypManagePhotos.Attributes["data-toggle"] = "tooltip";
+        hypManagePhotos.Attributes["title"] = "Go To ManagePhotos";
+
         hypMail.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&type=email";
+        hypMail.Attributes["data-toggle"] = "tooltip";
+        hypMail.Attributes["title"] = "Go To People (Email)";
+
         hypSms.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&type=sms";
+        hypSms.Attributes["data-toggle"] = "tooltip";
+        hypSms.Attributes["title"] = "Go To People (SMS)";
+
         hypTickets.NavigateUrl = "/V1/NonProfitAdministration/Tickets.aspx?organizationId=" + organizationId;
+        hypTickets.Attributes["data-toggle"] = "tooltip";
+        hypTickets.Attributes["title"] = "Go To Tickets";
+
         hypReports.NavigateUrl = "/V1/NonProfitAdministration/Reports.aspx?organizationId=" + organizationId;
+        hypReports.Attributes["data-toggle"] = "tooltip";
+        hypReports.Attributes["title"] = "Go To Reports";
+
         hypSettings.NavigateUrl = "/V1/NonProfitAdministration/Settings.aspx?organizationId=" + organizationId;
+        hypSettings.Attributes["data-toggle"] = "tooltip";
+        hypSettings.Attributes["title"] = "Go To Settings";
+
         hypUpdateTeamInfo.NavigateUrl = "/V1/NonProfit/NonProfitNew.aspx?userActionModal=false&organizationId=" + organizationId;
+        hypUpdateTeamInfo.Attributes["data-toggle"] = "tooltip";
+        hypUpdateTeamInfo.Attributes["title"] = "Go To NonProfitNew";
+
 
     }
 
-	protected void btnChangePageStatus_Click(object sender, EventArgs e)
+    protected void btnChangePageStatus_Click(object sender, EventArgs e)
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
