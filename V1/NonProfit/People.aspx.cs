@@ -32,6 +32,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     public string skillId = string.Empty;
     public static Guid pevUserId = Guid.Empty;
     public static Guid newUserId = Guid.Empty;
+    public static Guid RemoveTeamMemberId = Guid.Empty;
     public string resourceId = string.Empty;
     public bool userIsOwner = false;
     public bool hideTeamList = false;
@@ -388,10 +389,42 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             {
                 userOrg.IsEnabled = false;
                 dc.SubmitChanges();
+                RemoveTeamMemberId = selectedUser;
+                SendRemoveTeamMemberEmail(RemoveTeamMemberId,new Guid(organizationId));
             }
         }
          return "Team member remove successfully.";
     }
+    public static void SendRemoveTeamMemberEmail(Guid RemoveTeamMemberId ,Guid organizationId)
+    {
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            string orgName = dc.Organizations.Where(o => o.OrganizationId == organizationId).Select(o => o.Name).FirstOrDefault();
+            var username = dc.Profiles.Where(p => p.UserId == RemoveTeamMemberId).FirstOrDefault();
+            string useremail = dc.aspnet_Memberships.Where(am => am.UserId == RemoveTeamMemberId).Select(am => am.Email).FirstOrDefault();
+             ListDictionary ldEmailBodyReplacements = new ListDictionary
+            {
+               { "##OrganizationName##", orgName },
+               { "##RemovedMemberFirstName##", username.Firstname },
+               { "##RemovedMemberLastName##", username.Lastname },
+               { "##RemovedMemberEmail##", useremail }
+            };
+            string error = string.Empty;
+            Tools.SendEmail(
+                "You have been removed from the team " + orgName,
+                "This is to inform you that you have been removed from the team " + orgName +
+                ". You no longer have access to team resources or participation privileges.",
+                ldEmailBodyReplacements,
+                useremail,
+                "Team Membership Removal",
+                string.Empty,
+                string.Empty,
+                "~/EmailTemplates/TeamMemberRemove.html",
+                out error
+            );
+        }
+    }
+
     public static void SendTeamOwnerChangeEmail(Guid pevUserId, Guid newUserId, Guid organizationId)
     {
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
