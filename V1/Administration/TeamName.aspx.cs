@@ -71,9 +71,10 @@ public partial class V1_Administration_TeamName : BaseWebForm
      FeatureTypeEnum.About,
      "Created Team ",
      "A new team has been successfully created for the organization.",
-     userOrganization.OrganizationId,
+     userId,
      true,
-     userOrganization.OrganizationId.ToString()
+     userOrganization.OrganizationId.ToString(),
+     Guid.Empty
 
 );
 

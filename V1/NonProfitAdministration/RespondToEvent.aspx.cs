@@ -232,9 +232,9 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
    FeatureTypeEnum.Deployments,
    "deployment created msg ",
    "Deployment has been successfully created for the organization.",
-      organizationEvent.OrganizationId,
+      userId,
    true,
-   organizationEvent.OrganizationId.ToString()
+   organizationEvent.OrganizationId.ToString(),Guid.Empty
 
 );
         Response.Redirect("/V1/NonProfitAdministration/PositionsNeeded.aspx?organizationEventId=" + organizationEventId);
