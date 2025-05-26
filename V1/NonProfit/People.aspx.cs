@@ -765,7 +765,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             ddlEvent.DataTextField = "Name";
             ddlEvent.DataValueField = "EventId";
             ddlEvent.DataBind();
-            ddlEvent.Items.Insert(0, new ListItem("  Select Location ", ""));
+            ddlEvent.Items.Insert(0, new ListItem("Select Portal", ""));
 
         }
 

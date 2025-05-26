@@ -1156,7 +1156,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3" style="margin-left: -13px;">
                                     <div class="form-group margin ">
-                                        <b class="text-line">Location :</b>
+                                        <b class="text-line">Portal:</b>
                                         <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
                                     </div>
                                 </div>

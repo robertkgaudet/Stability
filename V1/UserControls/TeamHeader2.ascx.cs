@@ -203,7 +203,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     {
                         if (UserUser.Status == "Connected")
                         {
-                            statushtml = "Connection Connected";
+                            statushtml = "Friends";
                         }
                         else if (UserUser.Status == "Pending")
                         {
@@ -435,7 +435,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                         {
                             if (UserUser.Status == "Connected")
                             {
-                                statushtml1 = "Connection Connected";
+                                statushtml1 = "Friends";
                             }
                             else if (UserUser.Status == "Pending")
                             {
