@@ -440,6 +440,9 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertUserOrganization(UserOrganization instance);
   partial void UpdateUserOrganization(UserOrganization instance);
   partial void DeleteUserOrganization(UserOrganization instance);
+  partial void InsertReceivedRequest(ReceivedRequest instance);
+  partial void UpdateReceivedRequest(ReceivedRequest instance);
+  partial void DeleteReceivedRequest(ReceivedRequest instance);
     #endregion
     public CrowdReliefDBDataContext() :
 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
@@ -1563,6 +1566,14 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 		get
 		{
 			return this.GetTable<UserOrganization>();
+		}
+	}
+	
+	public System.Data.Linq.Table<ReceivedRequest> ReceivedRequests
+	{
+		get
+		{
+			return this.GetTable<ReceivedRequest>();
 		}
 	}
 	
@@ -49615,6 +49626,164 @@ public partial class UserOrganization : INotifyPropertyChanging, INotifyProperty
 					this._OrganizationId = default(System.Guid);
 				}
 				this.SendPropertyChanged("Organization");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ReceivedRequests")]
+public partial class ReceivedRequest : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _Id;
+	
+	private System.Guid _SenderId;
+	
+	private System.Nullable<System.Guid> _ReceiverId;
+	
+	private System.Nullable<System.DateTime> _RequestDate;
+	
+	private int _Status;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(System.Guid value);
+    partial void OnIdChanged();
+    partial void OnSenderIdChanging(System.Guid value);
+    partial void OnSenderIdChanged();
+    partial void OnReceiverIdChanging(System.Nullable<System.Guid> value);
+    partial void OnReceiverIdChanged();
+    partial void OnRequestDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnRequestDateChanged();
+    partial void OnStatusChanging(int value);
+    partial void OnStatusChanged();
+    #endregion
+	
+	public ReceivedRequest()
+	{
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid Id
+	{
+		get
+		{
+			return this._Id;
+		}
+		set
+		{
+			if ((this._Id != value))
+			{
+				this.OnIdChanging(value);
+				this.SendPropertyChanging();
+				this._Id = value;
+				this.SendPropertyChanged("Id");
+				this.OnIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SenderId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid SenderId
+	{
+		get
+		{
+			return this._SenderId;
+		}
+		set
+		{
+			if ((this._SenderId != value))
+			{
+				this.OnSenderIdChanging(value);
+				this.SendPropertyChanging();
+				this._SenderId = value;
+				this.SendPropertyChanged("SenderId");
+				this.OnSenderIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceiverId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> ReceiverId
+	{
+		get
+		{
+			return this._ReceiverId;
+		}
+		set
+		{
+			if ((this._ReceiverId != value))
+			{
+				this.OnReceiverIdChanging(value);
+				this.SendPropertyChanging();
+				this._ReceiverId = value;
+				this.SendPropertyChanged("ReceiverId");
+				this.OnReceiverIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestDate", DbType="DateTime")]
+	public System.Nullable<System.DateTime> RequestDate
+	{
+		get
+		{
+			return this._RequestDate;
+		}
+		set
+		{
+			if ((this._RequestDate != value))
+			{
+				this.OnRequestDateChanging(value);
+				this.SendPropertyChanging();
+				this._RequestDate = value;
+				this.SendPropertyChanged("RequestDate");
+				this.OnRequestDateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="Int NOT NULL")]
+	public int Status
+	{
+		get
+		{
+			return this._Status;
+		}
+		set
+		{
+			if ((this._Status != value))
+			{
+				this.OnStatusChanging(value);
+				this.SendPropertyChanging();
+				this._Status = value;
+				this.SendPropertyChanged("Status");
+				this.OnStatusChanged();
 			}
 		}
 	}
