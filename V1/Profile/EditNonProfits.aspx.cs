@@ -73,6 +73,7 @@ public partial class V1_Profile_EditNonProfits : BaseOrganizationWebForm
 		userOrganization.OrganizationId = new Guid(organizationId);
 		userOrganization.UserId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
 		userOrganization.UserOrganizationId = Guid.NewGuid();
+		userOrganization.IsEnabled = true;
 		dc.UserOrganizations.InsertOnSubmit(userOrganization);
 		dc.SubmitChanges();
 
