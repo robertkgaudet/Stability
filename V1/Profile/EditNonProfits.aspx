@@ -27,7 +27,7 @@
 						<div class="panel-body">
 							<div class="form-group">
 								<div class="pull-right">
-									<asp:LinkButton id="btnSubmit" CausesValidation="false" runat="server" OnClick="btnSubmit_Cancel" CssClass="btn btn-default" Text="Cancel" />
+									<asp:LinkButton id="btnSubmit" CausesValidation="false" runat="server" CssClass="btn btn-default" Text="Cancel" />
 									<asp:Button id="btnCancel" runat="server" OnClick="btnSubmit_Click" CssClass="btn btn-primary" Text="Save Changes" />
 								</div>
 							</div>

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI.WebControls;
 
 public partial class V1_MasterPages_ReusableNotification : System.Web.UI.Page
@@ -37,6 +38,7 @@ public partial class V1_MasterPages_ReusableNotification : System.Web.UI.Page
         var dc = new CrowdReliefDBDataContext();
         var notificationList = (from n in dc.Notifications
                                 join f in dc.FeatureTypes on n.FeatureTypeId equals f.FeatureTypeId
+                                where n.RecipientUserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
                                 orderby n.CreatedOn descending
                                 select new
                                 {
@@ -51,7 +53,8 @@ public partial class V1_MasterPages_ReusableNotification : System.Web.UI.Page
                                     n.SenderUserId,
                                     n.RecipientUserId,
                                     n.FeatureTypeId,
-                                    n.PostToStream
+                                    n.PostToStream,
+                                    n.OrganizationId    
                                 })
                         .Skip((page - 1) * itemsPerPage)
                         .Take(itemsPerPage)

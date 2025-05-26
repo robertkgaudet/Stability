@@ -1,4 +1,5 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="TeamNavigation.ascx.cs" Inherits="V1_UserControls_TeamNavigation" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="TeamNavigation.ascx.cs"
+    Inherits="V1_UserControls_TeamNavigation" %>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -123,7 +124,8 @@
     <div class="panel-body">
         <div id="desktopNavigation" class="m-b-lg">
             <div id="divTeamConfiguration" runat="server" class="alert alert-info text-center deployment">
-                <h5 class="v1"><i class="fa fa-user pe-2x"></i><b>Launch Deployment Director Training</b></h5>
+                <h5 class="v1"><i class="fa fa-user pe-2x"></i><b>Launch Deployment Director Training</b>
+                </h5>
                 Team, Website, and Deployment Management
             </div>
         </div>
@@ -184,6 +186,10 @@
                 <%--<li><b>Team Management </b></li>--%>
                 <li><b>
                     <asp:HyperLink runat="server" ID="hypTeamManagement" Visible="false"><i class="fa fa-users text-success"></i> Team Management
+                    </asp:HyperLink></b>
+                </li>
+                <li><b>
+                    <asp:HyperLink runat="server" ID="hypRequest" Visible="false"><i class="fa fa-user-plus"></i> Show the Team Request
                     </asp:HyperLink></b>
                 </li>
             </ul>

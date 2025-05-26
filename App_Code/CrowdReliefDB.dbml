@@ -1834,34 +1834,6 @@
       <Association Name="Post_PostTaggedUser" Member="Post" ThisKey="PostId" OtherKey="PostId" Type="Post" IsForeignKey="true" />
     </Type>
   </Table>
-  <Table Name="dbo.FeatureType" Member="FeatureTypes">
-    <Type Name="FeatureType">
-      <Column Name="FeatureTypeId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="FeatureName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
-      <Column Name="RedirectURL" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
-      <Column Name="IncludeInStream" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="Counter" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DisplayText" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
-      <Association Name="FeatureType_Notification" Member="Notifications" ThisKey="FeatureTypeId" OtherKey="FeatureTypeId" Type="Notification" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Notification" Member="Notifications">
-    <Type Name="Notification">
-      <Column Name="NotificationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="Title" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
-      <Column Name="Description" Type="System.String" DbType="NVarChar(1000) NOT NULL" CanBeNull="false" />
-      <Column Name="RedirectURLParameters" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
-      <Column Name="NotificationType" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="CreatedBy" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="IsRead" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="SenderUserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="RecipientUserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="FeatureTypeId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="PostToStream" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
-      <Association Name="FeatureType_Notification" Member="FeatureType" ThisKey="FeatureTypeId" OtherKey="FeatureTypeId" Type="FeatureType" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.ProfilePhoto" Member="ProfilePhotos">
     <Type Name="ProfilePhoto">
       <Column Name="ProfilePhotoId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -2131,6 +2103,45 @@
       <Column Name="IsEnabled" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Association Name="aspnet_User_UserOrganization" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="Organization_UserOrganization" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.FeatureType" Member="FeatureTypes">
+    <Type Name="FeatureType">
+      <Column Name="FeatureTypeId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FeatureName" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="RedirectURL" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="IncludeInStream" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Counter" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DisplayText" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="FeatureType_Notification" Member="Notifications" ThisKey="FeatureTypeId" OtherKey="FeatureTypeId" Type="Notification" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ReceivedRequests" Member="ReceivedRequests">
+    <Type Name="ReceivedRequest">
+      <Column Name="Id" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="SenderId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="ReceiverId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="RequestDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Status" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Notification" Member="Notifications">
+    <Type Name="Notification">
+      <Column Name="NotificationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="Title" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="NVarChar(1000) NOT NULL" CanBeNull="false" />
+      <Column Name="RedirectURLParameters" Type="System.String" DbType="NVarChar(500)" CanBeNull="true" />
+      <Column Name="NotificationType" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedBy" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IsRead" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="SenderUserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="RecipientUserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="FeatureTypeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="PostToStream" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Association Name="FeatureType_Notification" Member="FeatureType" ThisKey="FeatureTypeId" OtherKey="FeatureTypeId" Type="FeatureType" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisasterForCleanupMap" Method="GetGeoJsonByDisasterForCleanupMap">

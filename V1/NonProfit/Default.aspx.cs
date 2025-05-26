@@ -1,8 +1,11 @@
-﻿using System;
+﻿using CrowdRelief;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data.Linq;
 using System.EnterpriseServices.Internal;
 using System.IdentityModel.Metadata;
+using System.IdentityModel.Protocols.WSTrust;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -115,7 +118,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             {
                 //	_coverImage = causePhotoFolder + organization.CoverImage;
             }
-            
+
             ucTeamHeader.CoverImage = _coverImage;
             ucTeamHeader.TeamDescription = organization.Description;
             ucTeamHeader._teamTitle = organization.Name;
@@ -148,10 +151,10 @@ public partial class V1_NonProfit_Default : BaseWebForm
         if (User.Identity.IsAuthenticated == true)
         {
             var userOrganizationOwners = (from uo in dc.UserOrganizations
-                                         join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
-                                         && uo.OrganizationId == new Guid(organizationId)
-                                         select o).Take(1).SingleOrDefault();
+                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
+                                          where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
+                                          && uo.OrganizationId == new Guid(organizationId)
+                                          select o).Take(1).SingleOrDefault();
 
             if (userOrganizationOwners != null)
             {
@@ -165,9 +168,9 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
         if (isOwner || User.IsInRole("Team Administrator"))
         {
-                lbCreateChapter.Visible = true;
-                createChapterLink = "/V1/NonProfit/NonProfitNew.aspx?parentOrganizationId=" + organizationId;
-            
+            lbCreateChapter.Visible = true;
+            createChapterLink = "/V1/NonProfit/NonProfitNew.aspx?parentOrganizationId=" + organizationId;
+
         }
 
         ////////////////////////
@@ -191,12 +194,21 @@ public partial class V1_NonProfit_Default : BaseWebForm
         lbprimary.Visible = false;
         if (User.Identity.IsAuthenticated)
         {
-           
+
             //If the user is logged in and not in a nonprofit already then send to choose a nonprofit.
             var userOrganization = from uo in dc.UserOrganizations
                                    where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
                                    && uo.OrganizationId == new Guid(organizationId)
                                    select uo;
+            ReceivedRequest request = dc.ReceivedRequests
+            .FirstOrDefault(rr => rr.SenderId == userId && rr.ReceiverId == new Guid(organizationId));
+
+            int? status = null;
+
+            if (request != null)
+            {
+                status = request.Status;
+            }
             var userOrganizationOwner = (from uo in dc.UserOrganizations
                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
                                          where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true && uo.IsEnabled == true
@@ -204,23 +216,53 @@ public partial class V1_NonProfit_Default : BaseWebForm
                                          select o).Take(1).SingleOrDefault();
             var userOrg = dc.UserOrganizations
                                  .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
-            if (userOrganization.Count() == 0)
+            if (status != null)
             {
-                volunteerLink = "/V1/Profile/EditNonProfits.aspx?organizationId=" + organizationId;
+                if (userOrganization.Count() == 0 && status == 0)
+                {
+                    btnActiveVolunteer.Text = "Request Pending";
+                    btnActiveVolunteer.Attributes["data-toggle"] = "tooltip";
+                    btnActiveVolunteer.Attributes["title"] = "Your request is complete. You joined the team";
+                    btnActiveVolunteer.Visible = true;
+                    lbVolunteer.Visible = false;
+                }
+                else if (userOrg != null && userOrg.IsPrimary == true && status == 1)
+                {
+                    lbleave.Visible = true;
+                    lbVolunteer.Visible = false;
+                    lbprimary.Visible = false;
+                }
+                else if (status == 1)
+                {
+                    lbVolunteer.Visible = false;
+                    lbleave.Visible = true;
+                    lbprimary.Visible = true;
+                }
+                else if (status == 2)
+                {
+                    btnActiveVolunteer.Text = "Request Rejected";
+                    btnActiveVolunteer.Attributes["data-toggle"] = "tooltip";
+                    btnActiveVolunteer.Attributes["title"] = "Your request was rejected by the team administrators.";
+                    btnActiveVolunteer.Visible = true;
+                    lbVolunteer.Visible = false;
+                }
             }
-            else if(userOrg.IsPrimary==true)
+            else if (userOrg != null)
             {
-               
-                lbleave.Visible = true;
-                lbVolunteer.Visible = false;
-                lbprimary.Visible = false;
-              
-            }
-            else
-            {
-                lbVolunteer.Visible = false;
-                lbleave.Visible = true;
-                lbprimary.Visible = true;
+                if (userOrg.IsPrimary == true)
+                {
+
+                    lbleave.Visible = true;
+                    lbVolunteer.Visible = false;
+                    lbprimary.Visible = false;
+
+                }
+                else
+                {
+                    lbVolunteer.Visible = false;
+                    lbleave.Visible = true;
+                    lbprimary.Visible = true;
+                }
             }
             if (userOrganizationOwner != null && userOrg != null)
             {
@@ -235,9 +277,9 @@ public partial class V1_NonProfit_Default : BaseWebForm
         {
             volunteerLink = "/Register/" + organizationId;
         }
-       
-       
-        
+
+
+
         lblPointOfContactPerson.Text = organization.PointOfContactName;
         if (!String.IsNullOrEmpty(organization.PointOfContactPhoneNumber))
         {
@@ -365,7 +407,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
                 var userOrg = dc.UserOrganizations
-                                .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.IsEnabled == true && uo.IsEnabled == true);
+                                .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.IsEnabled == true);
 
                 if (userOrg != null)
                 {
@@ -403,11 +445,107 @@ public partial class V1_NonProfit_Default : BaseWebForm
                 if (newPrimary != null)
                 {
                     newPrimary.IsPrimary = true;
-                    dc.SubmitChanges(); 
+                    dc.SubmitChanges();
                 }
             }
         }
-         Response.Redirect(Request.RawUrl);
+        Response.Redirect(Request.RawUrl);
+    }
+    protected void jointheteam_Click(object sender, EventArgs e)
+    {
+        string organizationId = Request.QueryString["organizationId"];
+
+        if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(organizationId))
+        {
+            Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
+            Guid orgId = new Guid(organizationId);
+
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                ReceivedRequest request = new ReceivedRequest
+                {
+                    Id = Guid.NewGuid(),
+                    SenderId = userId,
+                    ReceiverId = orgId,
+                    Status = (int)RequestStatus.Pending,
+                    RequestDate = DateTime.Now,
+                    IsActive = true
+                };
+
+                dc.ReceivedRequests.InsertOnSubmit(request);
+                dc.SubmitChanges();
+                AddNotificationsAndSendEmail(null, EventArgs.Empty);
+            }
+        }
+        Response.Redirect(Request.RawUrl);
+    }
+    protected void AddNotificationsAndSendEmail(object sender, EventArgs e)
+    {
+        string organizationId = Request.QueryString["organizationId"];
+
+        if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(organizationId))
+        {
+            Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
+            Guid orgId = new Guid(organizationId);
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                var adminOwners = dc.UserOrganizations
+               .Where(uo =>
+                uo.OrganizationId == orgId &&
+               uo.IsEnabled == true &&
+            (uo.IsTeamAdministrator == true || uo.IsOwner == true)
+            )
+          .Select(uo => uo.UserId)
+          .ToList();
+
+                string orgName = dc.Organizations
+                  .Where(o => o.OrganizationId == orgId)
+                  .Select(o => o.Name)
+                  .FirstOrDefault();
+                string userName = dc.Profiles
+                  .Where(p => p.UserId == userId)
+                  .Select(p => p.Firstname + " " + p.Lastname)
+                  .FirstOrDefault();
+                string message = userName + " has requested to join your team " + orgName + ".";
+                foreach (var adminUserId in adminOwners)
+                {
+                    var userEmail = (from m in dc.aspnet_Memberships
+                                     where m.UserId == adminUserId
+                                     select m.Email).FirstOrDefault();
+                    BaseWebForm.AddNotifications(
+                        NotificationType.Like,
+                        FeatureTypeEnum.TeamRequest,
+                        "Team Join Request",
+                         message,
+                        adminUserId,
+                        true,
+                        organizationId,
+                        orgId
+                    );
+                    ListDictionary ldEmailBodyReplacements = new ListDictionary
+                {
+                    { "##UserName##", userName },
+                    { "##OrganizationName##", orgName },
+                    { "##OrganizationId##", organizationId.ToString() },
+             
+                  };
+                    string error = string.Empty;
+                    Tools.SendEmail(
+                        userEmail,                                    
+                        "New Team Join Request",                      
+                        ldEmailBodyReplacements,                      
+                        userEmail,                     
+                        "Stability Team Alert",                        
+                        string.Empty,                                  
+                        string.Empty,                                 
+                        "~/EmailTemplates/TeamJoinRequest.html",       
+                        out error
+                    );
+
+                }
+
+            }
+        }
     }
     private void BindChapterOrganizations(string parentOrganizationId)
     {
