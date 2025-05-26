@@ -284,9 +284,13 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 
                 int teamAdministratorCount = 1;
                 var teamAdministratoUserId = (from uo in dc.UserOrganizations
+                                              join p in dc.Profiles on uo.UserId equals p.UserId
                                               where uo.OrganizationId == new Guid(organizationId)
-                                                    && uo.IsTeamAdministrator == true && uo.IsEnabled == true
+                                                    && uo.IsTeamAdministrator == true
+                                                    && uo.IsEnabled == true
+                                              orderby p.Firstname + " " + p.Lastname
                                               select uo.UserId).ToList();
+
                 string allTeamAdminCards = "";
                 string connectionHtml1 = "";
 
