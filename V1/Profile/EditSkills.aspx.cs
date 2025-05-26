@@ -12,34 +12,21 @@ public partial class V1_Profile_Skills : BaseOrganizationWebForm
 	{
 		if(!IsPostBack)
 		{
-            
-            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-			var events = from c in dc.Skills
-									orderby c.Name
-									select new {name = " - " + c.Name, c.SkillId };
-			
-			chkBoxListSkills.DataSource = events;
-			chkBoxListSkills.DataBind();
+			var skills = from c in dc.Skills
+						 orderby c.Name
+						 select new { Name = c.Name, c.SkillId };
+
+			rptSkills.DataSource = skills;
+			rptSkills.DataBind();
 
 			var userSkills = from us in dc.UserSkills
-							where us.UserId == userId
-							select us;
-			
-			//Preselect the orgs for this user
-			if(userSkills.Count() > 0 )
-			{
-				foreach(var userEvent in userSkills)
-				{
-					for (int i = 0; i < chkBoxListSkills.Items.Count; i++)
-					{
-						if(userEvent.SkillId.ToString() == chkBoxListSkills.Items[i].Value)
-						{
-							chkBoxListSkills.Items[i].Selected = true;
-						}
-					}
-				}
-			}
+							 where us.UserId == userId
+							 select us.SkillId;
+
+			// Output user skill IDs as comma-separated string for JS
+			hfSelectedSkills.Value = string.Join(",", userSkills.Select(id => id.ToString().ToLowerInvariant()));
 		}
 	}
 
@@ -54,46 +41,40 @@ public partial class V1_Profile_Skills : BaseOrganizationWebForm
         divMessage.Visible = true;
 		lblMessage.Text = "Your skills have been updated.";
 
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-		foreach (ListItem item in chkBoxListSkills.Items)
-		{
-			if (item.Selected)
-			{
-				var userCheck = from p in dc.UserSkills
-								where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-								&& p.SkillId == new Guid(item.Value)
-								select p;
+		var selectedSkills = hfSelectedSkills.Value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+												   .Select(Guid.Parse)
+												   .ToList();
 
-				if (userCheck.Count() == 0)
-				{
-					UserSkill userSkill = new UserSkill();
-					userSkill.SkillId = new Guid(item.Value);
-					userSkill.UserId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
-					userSkill.UserSkillId = Guid.NewGuid();
-					dc.UserSkills.InsertOnSubmit(userSkill);
-					dc.SubmitChanges();
-				}
-			}
-			else
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		var userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+
+		// Get current user skills
+		var currentSkills = dc.UserSkills.Where(us => us.UserId == userId).ToList();
+
+		// Add new skills
+		foreach (var skillId in selectedSkills)
+		{
+			if (!currentSkills.Any(us => us.SkillId == skillId))
 			{
-				//If item is selected then unselect it.
-				var userChecks = from p in dc.UserSkills
-								where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-								&& p.SkillId == new Guid(item.Value)
-								select p;
-				
-				//Delete any checked records
-				if (userChecks.Count() > 0)
+				dc.UserSkills.InsertOnSubmit(new UserSkill
 				{
-					//Item is selected.
-					foreach(var userCheck in userChecks)
-					{
-						dc.UserSkills.DeleteOnSubmit(userCheck);
-						dc.SubmitChanges();
-					}
-				}
+					UserSkillId = Guid.NewGuid(),
+					UserId = userId,
+					SkillId = skillId
+				});
 			}
 		}
+
+		// Remove unselected skills
+		foreach (var userSkill in currentSkills)
+		{
+			if (!selectedSkills.Contains(userSkill.SkillId))
+			{
+				dc.UserSkills.DeleteOnSubmit(userSkill);
+			}
+		}
+
+		dc.SubmitChanges();
 		if (skillParam != null)
 		{
             Response.Redirect("/V1/Profile/EditResources.aspx?Resources=false");

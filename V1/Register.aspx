@@ -407,7 +407,7 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="form-group col-lg-12 line-s" runat="server" id="divChooseNonprofit">
-                                        <label>Find Your Group</label>
+                                        <label>Find Your Team</label>
                                         <br />
                                         <small>Leave empty to create your own.</small>
                                         <div id="div2" class="dropdown m-b-md" runat="server">
