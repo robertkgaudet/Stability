@@ -127,7 +127,7 @@
                         <asp:HyperLink runat="server" ID="hypUpdateTeamInfo">Update Team Info</asp:HyperLink>
                     </div>
                     <div class="col-md-4 d-flex align-items-start gap-2 mt-3">
-                       <%-- <i class="fa fa-ban text-danger"></i>--%>
+                        <i class="fa fa-ban text-danger"></i>
                         <asp:LinkButton ID="btnDeactivatePage" runat="server" OnClick="btnChangePageStatus_Click">De-activate This Team </asp:LinkButton>
                     </div>
                 </div>

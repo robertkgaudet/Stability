@@ -147,12 +147,12 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
         {
 
             //	btnDeactivatePage.Text = " <div class='wrimagecard-topimage_header' style='background-color:  rgba(51, 105, 232, 0.1)'> <center><i class='fa fa-ban' style='color:#3369e8'> </i></center> </div><div class='wrimagecard-topimage_title'> <h4> De-activate This Team   <div class='pull-right badge' id='WrGridSystem'></div></h4> </div>   ";
-            btnDeactivatePage.Text = " <i class='fa fa-ban text-danger'></i> <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'> De-activate This Team</asp:LinkButton>  ";
+            btnDeactivatePage.Text = " <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'> De-activate This Team</asp:LinkButton>  ";
 
             if (organization.IsActive == true)
             {
                 updateActiveStatus = false;
-                btnDeactivatePage.Text = " <i class='fa fa-ban text-danger'></i> <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'>Re-activate This Team </asp:LinkButton>  ";
+                btnDeactivatePage.Text = " <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'>Re-activate This Team </asp:LinkButton>  ";
 
             }
            
