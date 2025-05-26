@@ -434,12 +434,12 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertUserOrganization(UserOrganization instance);
   partial void UpdateUserOrganization(UserOrganization instance);
   partial void DeleteUserOrganization(UserOrganization instance);
-  partial void InsertReceivedRequest(ReceivedRequest instance);
-  partial void UpdateReceivedRequest(ReceivedRequest instance);
-  partial void DeleteReceivedRequest(ReceivedRequest instance);
   partial void InsertFeatureType(FeatureType instance);
   partial void UpdateFeatureType(FeatureType instance);
   partial void DeleteFeatureType(FeatureType instance);
+  partial void InsertReceivedRequest(ReceivedRequest instance);
+  partial void UpdateReceivedRequest(ReceivedRequest instance);
+  partial void DeleteReceivedRequest(ReceivedRequest instance);
   partial void InsertNotification(Notification instance);
   partial void UpdateNotification(Notification instance);
   partial void DeleteNotification(Notification instance);
@@ -1553,19 +1553,19 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 		}
 	}
 	
-	public System.Data.Linq.Table<ReceivedRequest> ReceivedRequests
-	{
-		get
-		{
-			return this.GetTable<ReceivedRequest>();
-		}
-	}
-	
 	public System.Data.Linq.Table<FeatureType> FeatureTypes
 	{
 		get
 		{
 			return this.GetTable<FeatureType>();
+		}
+	}
+	
+	public System.Data.Linq.Table<ReceivedRequest> ReceivedRequests
+	{
+		get
+		{
+			return this.GetTable<ReceivedRequest>();
 		}
 	}
 	
@@ -49074,164 +49074,6 @@ public partial class UserOrganization : INotifyPropertyChanging, INotifyProperty
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ReceivedRequests")]
-public partial class ReceivedRequest : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _Id;
-	
-	private System.Guid _SenderId;
-	
-	private System.Nullable<System.Guid> _ReceiverId;
-	
-	private System.Nullable<System.DateTime> _RequestDate;
-	
-	private int _Status;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(System.Guid value);
-    partial void OnIdChanged();
-    partial void OnSenderIdChanging(System.Guid value);
-    partial void OnSenderIdChanged();
-    partial void OnReceiverIdChanging(System.Nullable<System.Guid> value);
-    partial void OnReceiverIdChanged();
-    partial void OnRequestDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnRequestDateChanged();
-    partial void OnStatusChanging(int value);
-    partial void OnStatusChanged();
-    #endregion
-	
-	public ReceivedRequest()
-	{
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid Id
-	{
-		get
-		{
-			return this._Id;
-		}
-		set
-		{
-			if ((this._Id != value))
-			{
-				this.OnIdChanging(value);
-				this.SendPropertyChanging();
-				this._Id = value;
-				this.SendPropertyChanged("Id");
-				this.OnIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SenderId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid SenderId
-	{
-		get
-		{
-			return this._SenderId;
-		}
-		set
-		{
-			if ((this._SenderId != value))
-			{
-				this.OnSenderIdChanging(value);
-				this.SendPropertyChanging();
-				this._SenderId = value;
-				this.SendPropertyChanged("SenderId");
-				this.OnSenderIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceiverId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> ReceiverId
-	{
-		get
-		{
-			return this._ReceiverId;
-		}
-		set
-		{
-			if ((this._ReceiverId != value))
-			{
-				this.OnReceiverIdChanging(value);
-				this.SendPropertyChanging();
-				this._ReceiverId = value;
-				this.SendPropertyChanged("ReceiverId");
-				this.OnReceiverIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestDate", DbType="DateTime")]
-	public System.Nullable<System.DateTime> RequestDate
-	{
-		get
-		{
-			return this._RequestDate;
-		}
-		set
-		{
-			if ((this._RequestDate != value))
-			{
-				this.OnRequestDateChanging(value);
-				this.SendPropertyChanging();
-				this._RequestDate = value;
-				this.SendPropertyChanged("RequestDate");
-				this.OnRequestDateChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="Int NOT NULL")]
-	public int Status
-	{
-		get
-		{
-			return this._Status;
-		}
-		set
-		{
-			if ((this._Status != value))
-			{
-				this.OnStatusChanging(value);
-				this.SendPropertyChanging();
-				this._Status = value;
-				this.SendPropertyChanged("Status");
-				this.OnStatusChanged();
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-}
-
 [global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.FeatureType")]
 public partial class FeatureType : INotifyPropertyChanging, INotifyPropertyChanged
 {
@@ -49442,6 +49284,188 @@ public partial class FeatureType : INotifyPropertyChanging, INotifyPropertyChang
 	}
 }
 
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ReceivedRequests")]
+public partial class ReceivedRequest : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _Id;
+	
+	private System.Guid _SenderId;
+	
+	private System.Nullable<System.Guid> _ReceiverId;
+	
+	private System.Nullable<System.DateTime> _RequestDate;
+	
+	private int _Status;
+	
+	private bool _IsActive;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(System.Guid value);
+    partial void OnIdChanged();
+    partial void OnSenderIdChanging(System.Guid value);
+    partial void OnSenderIdChanged();
+    partial void OnReceiverIdChanging(System.Nullable<System.Guid> value);
+    partial void OnReceiverIdChanged();
+    partial void OnRequestDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnRequestDateChanged();
+    partial void OnStatusChanging(int value);
+    partial void OnStatusChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    #endregion
+	
+	public ReceivedRequest()
+	{
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid Id
+	{
+		get
+		{
+			return this._Id;
+		}
+		set
+		{
+			if ((this._Id != value))
+			{
+				this.OnIdChanging(value);
+				this.SendPropertyChanging();
+				this._Id = value;
+				this.SendPropertyChanged("Id");
+				this.OnIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SenderId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid SenderId
+	{
+		get
+		{
+			return this._SenderId;
+		}
+		set
+		{
+			if ((this._SenderId != value))
+			{
+				this.OnSenderIdChanging(value);
+				this.SendPropertyChanging();
+				this._SenderId = value;
+				this.SendPropertyChanged("SenderId");
+				this.OnSenderIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceiverId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> ReceiverId
+	{
+		get
+		{
+			return this._ReceiverId;
+		}
+		set
+		{
+			if ((this._ReceiverId != value))
+			{
+				this.OnReceiverIdChanging(value);
+				this.SendPropertyChanging();
+				this._ReceiverId = value;
+				this.SendPropertyChanged("ReceiverId");
+				this.OnReceiverIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestDate", DbType="DateTime")]
+	public System.Nullable<System.DateTime> RequestDate
+	{
+		get
+		{
+			return this._RequestDate;
+		}
+		set
+		{
+			if ((this._RequestDate != value))
+			{
+				this.OnRequestDateChanging(value);
+				this.SendPropertyChanging();
+				this._RequestDate = value;
+				this.SendPropertyChanged("RequestDate");
+				this.OnRequestDateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="Int NOT NULL")]
+	public int Status
+	{
+		get
+		{
+			return this._Status;
+		}
+		set
+		{
+			if ((this._Status != value))
+			{
+				this.OnStatusChanging(value);
+				this.SendPropertyChanging();
+				this._Status = value;
+				this.SendPropertyChanged("Status");
+				this.OnStatusChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
+	public bool IsActive
+	{
+		get
+		{
+			return this._IsActive;
+		}
+		set
+		{
+			if ((this._IsActive != value))
+			{
+				this.OnIsActiveChanging(value);
+				this.SendPropertyChanging();
+				this._IsActive = value;
+				this.SendPropertyChanged("IsActive");
+				this.OnIsActiveChanged();
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
 [global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Notification")]
 public partial class Notification : INotifyPropertyChanging, INotifyPropertyChanged
 {
@@ -49471,6 +49495,8 @@ public partial class Notification : INotifyPropertyChanging, INotifyPropertyChan
 	private System.Nullable<int> _FeatureTypeId;
 	
 	private System.Nullable<bool> _PostToStream;
+	
+	private System.Nullable<System.Guid> _OrganizationId;
 	
 	private EntityRef<FeatureType> _FeatureType;
 	
@@ -49502,6 +49528,8 @@ public partial class Notification : INotifyPropertyChanging, INotifyPropertyChan
     partial void OnFeatureTypeIdChanged();
     partial void OnPostToStreamChanging(System.Nullable<bool> value);
     partial void OnPostToStreamChanged();
+    partial void OnOrganizationIdChanging(System.Nullable<System.Guid> value);
+    partial void OnOrganizationIdChanged();
     #endregion
 	
 	public Notification()
@@ -49750,6 +49778,26 @@ public partial class Notification : INotifyPropertyChanging, INotifyPropertyChan
 				this._PostToStream = value;
 				this.SendPropertyChanged("PostToStream");
 				this.OnPostToStreamChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
 			}
 		}
 	}

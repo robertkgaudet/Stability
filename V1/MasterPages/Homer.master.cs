@@ -124,7 +124,10 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         //Calculating the notificationCount
         using (var dc = new CrowdReliefDBDataContext())
         {
-            int unreadCount = dc.Notifications.Count(n => !n.IsRead);
+            Guid currentUserId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+
+            int unreadCount = dc.Notifications
+                .Count(n => !n.IsRead && n.RecipientUserId == currentUserId);
             notificationCounting = unreadCount.ToString();
             notificationCounts.Text = unreadCount > 0 ? unreadCount.ToString() : string.Empty;
         }

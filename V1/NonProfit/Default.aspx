@@ -47,12 +47,6 @@
                 window.location.href = '/V1/NonProfit/DonationDashboard.aspx?organizationId=<%=organizationId%>';
                 return false;
             });
-
-            $('.volunteerButton').click(function () {
-                window.location.href = '<%=volunteerLink%>';
-                return false;
-            });
-
             $('.createChapterButton').click(function () {
                 window.location.href = '<%=createChapterLink%>';
                 return false;
@@ -173,7 +167,8 @@
     <div class="row">
         <div class="col-xs-12">
             <asp:LinkButton ID="lbCreateChapter" runat="server" CssClass="btn btn-success btn-large createChapterButton pull-right m-l-md" Text="Create Chapter" Visible="false"></asp:LinkButton>
-            <asp:LinkButton ID="lbVolunteer" runat="server" CssClass="btn btn-success btn-large volunteerButton pull-right m-l-md" Text="Join This Team" Visible="false"></asp:LinkButton>
+            <asp:LinkButton ID="lbVolunteer" runat="server" OnClick="jointheteam_Click" CssClass="btn btn-success btn-large volunteerButton pull-right m-l-md" Text="Join This Team" Visible="false"></asp:LinkButton>
+            <asp:Button ID="btnActiveVolunteer" runat="server" CssClass="btn btn-light btn-large pull-right m-l-md" Visible="false" />
             <asp:LinkButton ID="lbleave" runat="server" Text="Leave This Team" CssClass="btn btn-danger btn-large pull-right m-l-md"
                 OnClick="lbleave_Click" OnClientClick="return confirmLeave();" CausesValidation="false" Visible="true"></asp:LinkButton>
             <asp:LinkButton ID="lbprimary" runat="server" Text="Set Primary Team" CssClass="btn btn-success btn-large pull-right m-l-md"

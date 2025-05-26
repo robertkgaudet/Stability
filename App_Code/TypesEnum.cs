@@ -24,7 +24,8 @@ public enum FeatureTypeEnum
     StatesAndCounties,
     CommunityLinks,
     CaseManagement,
-    Administration
+    Administration,
+    TeamRequest
 }
 
 public enum NotificationType

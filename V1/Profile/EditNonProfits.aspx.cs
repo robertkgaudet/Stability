@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Security;
+using System.Web.Services;
 
 public partial class V1_Profile_EditNonProfits : BaseOrganizationWebForm
 {
@@ -74,25 +75,11 @@ public partial class V1_Profile_EditNonProfits : BaseOrganizationWebForm
 		userOrganization.UserId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
 		userOrganization.UserOrganizationId = Guid.NewGuid();
 		dc.UserOrganizations.InsertOnSubmit(userOrganization);
+		userOrganization.IsEnabled = true;
 		dc.SubmitChanges();
 
 		Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + organizationId);
 	}
 
-	protected void btnSubmit_Click(object sender, EventArgs e)
-	{
-		string userId = Membership.GetUser().ProviderUserKey.ToString();
-		string organizationId = string.Empty;
-
-		if (rblOrganizations.SelectedIndex > -1)
-		{
-			ListItem selectedOrganization = rblOrganizations.SelectedItem;
-			organizationId = selectedOrganization.Value;
-			UpdateUsersNonProfit(userId, organizationId);
-		}
-		else
-		{
-			//No item selected
-		}
-	}
+  
 }
