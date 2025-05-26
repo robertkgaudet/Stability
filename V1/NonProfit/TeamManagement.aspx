@@ -9,13 +9,12 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <style>
         .card-body {
-            margin: 5px;
             padding: 5px;
         }
 
         .align-items-start {
-            margin-top: 20px;
-            font-size: 17px;
+            margin-top: 10px;
+            font-size: 15px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -34,13 +33,16 @@
         u {
             text-decoration: none;
         }
+        .card-header-container{
+            margin-top:40px;
+        }
     </style>
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
 
     <div class="content animate-panel" data-child="hpanel" data-effect="fadeInDown">
         <div class="container-fluid response-tools-section">
             <!-- Admin Tools -->
-            <div class=" mb-4">
+            <div class="card-header-container">
                 <div class="card-header">
                     <h4><u>Administrative Tools</u></h4>
                 </div>
@@ -61,7 +63,7 @@
             </div>
 
             <!-- Image Manager -->
-            <div class=" mb-4">
+            <div class="card-header-container">
                 <div class="card-header">
                     <h4><u>Image Manager</u></h4>
                 </div>
@@ -86,7 +88,7 @@
             </div>
 
             <!-- Messaging -->
-            <div class=" mb-4">
+            <div class="card-header-container">
                 <div class="card-header">
                     <h4><u>Message All Team Members</u></h4>
                 </div>
@@ -103,7 +105,7 @@
             </div>
 
             <!-- Others -->
-            <div class=" mb-4">
+            <div class="card-header-container">
                 <div class="card-header">
                     <h4><u>Others</u></h4>
                 </div>
