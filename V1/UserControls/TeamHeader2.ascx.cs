@@ -38,7 +38,12 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
         {
             string path = Request.Url.AbsolutePath.ToLower();
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-            Guid currentUserId = (Guid)Membership.GetUser().ProviderUserKey;
+            MembershipUser user = Membership.GetUser();
+            Guid currentUserId = Guid.Empty;
+            if (user != null && user.ProviderUserKey != null)
+            {
+                 currentUserId = (Guid)user.ProviderUserKey;
+            }
             bool isPrimary = dc.UserOrganizations
              .Where(uo => uo.UserId == currentUserId
               && uo.OrganizationId == new Guid(organizationId) && uo.IsEnabled == true) 
