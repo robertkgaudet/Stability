@@ -227,7 +227,16 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
             var tools = new Tools(accountSid, authToken, fromNumber);
             tools.SendSms(messageBody, teamMembers);
         }
+        BaseWebForm.AddNotifications(
+   NotificationType.DeploymentIsCreated,
+   FeatureTypeEnum.Deployments,
+   "deployment created msg ",
+   "Deployment has been successfully created for the organization.",
+      organizationEvent.OrganizationId,
+   true,
+   organizationEvent.OrganizationId.ToString()
 
+);
         Response.Redirect("/V1/NonProfitAdministration/PositionsNeeded.aspx?organizationEventId=" + organizationEventId);
     }
     protected void btnSubmit_Cancel(object sender, EventArgs e)
