@@ -56,7 +56,7 @@
         <ul class="mailbox-list">
             <li>
                 <asp:HyperLink ID="hypDeployments" CssClass="font-weight-bold" runat="server">
-                    <i class="fa fa-briefcase"></i> Find Open Positions
+                    <i class="fa fa-life-ring"></i> Find Volunteer Opportunities
                 </asp:HyperLink>
             </li>
             <li>

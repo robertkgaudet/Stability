@@ -48,7 +48,7 @@
                 </div>
                 <div class="card-body row gy-3">
                     <div class="col-md-4 d-flex align-items-start gap-2">
-                        <i class="fa fa-users text-success"></i>
+                        <i class="fa fa-user-plus text-success"></i>
                         <asp:HyperLink runat="server" ID="hypInviteTeam" CssClass="text-decoration-none">Invite Team Members</asp:HyperLink>
                     </div>
                     <div class="col-md-4 d-flex align-items-start gap-2">
