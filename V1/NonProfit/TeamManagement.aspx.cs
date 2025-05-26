@@ -65,9 +65,12 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
             Master.FbImage = _coverImage;
             Master.FbSite_name = organization.Name + " Programs on Stability";
             ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
+           
+
         }
 
-        ucTeamFooter.TeamName = organization.Name;
+        ucTeamHeader._teamTitle = organization.Name;
+        ucTeamHeader.TeamDescription = organization.Description;
         ucTeamFooter.OrganizationId = organizationId;
         ucTeamHeader.OrganizationId = organizationId;
         ucTeamHeader.TeamLogo = squareLogo;
@@ -128,7 +131,6 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
         hypUpdateTeamInfo.Attributes["data-toggle"] = "tooltip";
         hypUpdateTeamInfo.Attributes["title"] = "Go To NonProfitNew";
 
-
     }
 
     protected void btnChangePageStatus_Click(object sender, EventArgs e)
@@ -153,7 +155,7 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
                 btnDeactivatePage.Text = " <i class='fa fa-ban text-danger'></i> <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'>Re-activate This Team </asp:LinkButton>  ";
 
             }
-
+           
             organization.IsActive = updateActiveStatus;
             dc.SubmitChanges();
         }
