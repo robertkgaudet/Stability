@@ -31,5 +31,9 @@ public enum NotificationType
 {
     Like,
     Comment,
-    Share
+    Share,
+    TeamIsCreated,
+    DeploymentIsCreated,
+    UserJoins,
+    VOCreated   //Volunteer Opportunities are created
 }
