@@ -207,7 +207,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                         }
                         else if (UserUser.Status == "Pending")
                         {
-                            statushtml = " Connection Pending";
+                            statushtml = "Connection Pending";
                         }
                         else if (UserUser.Status == "Delete")
                         {
@@ -307,7 +307,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 
                     var teamAdministratorAddress = dc.Profiles
                         .Where(p => p.UserId == userId)
-                        .Select(p => p.City + "," + p.State)
+                        .Select(p => p.State + "," + p.City)
                         .FirstOrDefault();
 
                     var teamAdministratoprofilePhoto = (from p in dc.Photos

@@ -55,7 +55,7 @@
                         <i class="fa fa-indent"></i>
                         <asp:HyperLink runat="server" ID="hypInvitedMembers">Invited Members</asp:HyperLink>
                     </div>
-                    <div class="col-md-4 d-flex align-items-start gap-2">
+                    <div class="col-md-4 d-flex align-items-start gap-2" runat="server" Visible="false" id="hypDonationDashboards">
                         <i class="fa fa-tachometer text-primary"></i>
                         <asp:HyperLink runat="server" ID="hypDonationDashboard">Donations Dashboard</asp:HyperLink>
                     </div>
@@ -110,9 +110,9 @@
                     <h4><u>Others</u></h4>
                 </div>
                 <div class="card-body row gy-3">
-                    <div class="col-md-3 d-flex align-items-start gap-2">
+                    <div class="col-md-3 d-flex align-items-start gap-2" runat="server" Visible="false" id="hypSettingss">
                         <i class="fa fa-cog"></i>
-                        <asp:HyperLink runat="server" ID="hypSettings">Settings</asp:HyperLink>
+                        <asp:HyperLink runat="server"  ID="hypSettings">Settings</asp:HyperLink>
                     </div>
                     <div class="col-md-3 d-flex align-items-start gap-2">
                         <i class="fa fa-clipboard text-danger"></i>
@@ -122,13 +122,13 @@
                         <i class="fa fa-file-text text-warning"></i>
                         <asp:HyperLink runat="server" ID="hypReports">Reports</asp:HyperLink>
                     </div>
-                    <div class="col-md-3 d-flex align-items-start gap-2">
+                    <div class="col-md-3 d-flex align-items-start gap-2" runat="server" Visible="false"  id="hypUpdateTeamInfos">
                         <i class="fa fa-pencil text-warning"></i>
-                        <asp:HyperLink runat="server" ID="hypUpdateTeamInfo">Update Team Info</asp:HyperLink>
+                        <asp:HyperLink runat="server"  ID="hypUpdateTeamInfo">Update Team Info</asp:HyperLink>
                     </div>
-                    <div class="col-md-4 d-flex align-items-start gap-2 mt-3">
+                    <div class="col-md-4 d-flex align-items-start gap-2 mt-3" runat="server" Visible="false" id="btnDeactivatePages">
                         <i class="fa fa-ban text-danger"></i>
-                        <asp:LinkButton ID="btnDeactivatePage" runat="server" OnClick="btnChangePageStatus_Click">De-activate This Team </asp:LinkButton>
+                        <asp:LinkButton ID="btnDeactivatePage"  runat="server" OnClick="btnChangePageStatus_Click">De-activate This Team </asp:LinkButton>
                     </div>
                 </div>
             </div>
