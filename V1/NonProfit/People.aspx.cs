@@ -164,7 +164,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             {
                 //User is on this team.
                 isUserOnTeam = true;
-                hpanelJoin.Visible = false;
+                //hpanelJoin.Visible = false;
                 hpanelMembers.Visible = true;
                 hypInviteTeamMembers.Visible = true;
                 hypInviteTeamMembers.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + organizationId;
@@ -344,36 +344,50 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
             var organization = dc.Organizations.FirstOrDefault(o => o.OrganizationId == new Guid(orgId));
-            Guid oldOwnerId = organization.OwnerId.Value;
-            organization.OwnerId = selectedUser;
-            dc.SubmitChanges();
-            var oldUserOrg = dc.UserOrganizations
-                .FirstOrDefault(x => x.UserId == oldOwnerId && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
-
-            var newUserOrg = dc.UserOrganizations
-             .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
-            var previousOwners = dc.UserOrganizations
-           .Where(x => x.OrganizationId == organization.OrganizationId && x.IsPreviousOwner == true && x.IsEnabled == true)
-           .FirstOrDefault();
-            if (previousOwners != null)
+            Guid oldOwnerId = Guid.Empty;
+            if (organization.OwnerId !=null)
             {
-                previousOwners.IsPreviousOwner = false;
-            }
+                 oldOwnerId = organization.OwnerId.Value;
+                organization.OwnerId = selectedUser;
+                dc.SubmitChanges();
+                var oldUserOrg = dc.UserOrganizations
+                    .FirstOrDefault(x => x.UserId == oldOwnerId && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
 
-            if (oldUserOrg != null)
-            {
-                oldUserOrg.IsOwner = false;
-                oldUserOrg.IsPreviousOwner = true;
-            }
+                var newUserOrg = dc.UserOrganizations
+                 .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
+                var previousOwners = dc.UserOrganizations
+               .Where(x => x.OrganizationId == organization.OrganizationId && x.IsPreviousOwner == true && x.IsEnabled == true)
+               .FirstOrDefault();
+                if (previousOwners != null)
+                {
+                    previousOwners.IsPreviousOwner = false;
+                }
 
-            if (newUserOrg != null)
-            {
-                newUserOrg.IsOwner = true;
+                if (oldUserOrg != null)
+                {
+                    oldUserOrg.IsOwner = false;
+                    oldUserOrg.IsPreviousOwner = true;
+                }
+
+                if (newUserOrg != null)
+                {
+                    newUserOrg.IsOwner = true;
+                }
+                dc.SubmitChanges();
+                pevUserId = oldOwnerId;
+                newUserId = selectedUser;
+                SendTeamOwnerChangeEmail(pevUserId, newUserId, new Guid(organizationId));
             }
-            dc.SubmitChanges();
-            pevUserId = oldOwnerId;
-            newUserId = selectedUser;
-            SendTeamOwnerChangeEmail(pevUserId, newUserId, new Guid(organizationId));
+            else
+            {
+                organization.OwnerId = selectedUser;
+                dc.SubmitChanges();
+                var newUserOrg = dc.UserOrganizations
+                .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
+                newUserOrg.IsOwner=true;
+                dc.SubmitChanges();
+            }
+               
         }
         return "Team owner updated successfully.";
     }

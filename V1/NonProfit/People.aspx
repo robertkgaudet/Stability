@@ -407,7 +407,6 @@
                 text: "Do you want to make this user the team owner?",
                 icon: "success",
                 buttons: ["No", "Yes, make owner!"],
-                dangerMode: true
             }).then(function (willSet) {
                 if (willSet) {
                     var selectedUser = currentUserId;
@@ -1122,9 +1121,9 @@
 
                     <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers"
                         visible="false">
-                        <div class="hpanel" runat="server" id="hpanelJoin" visible="true">
+                        <%--<div class="hpanel" runat="server" id="hpanelJoin" visible="true">
                             <a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
-                        </div>
+                        </div>--%>
                         <div class="container-search">
                             <!-- Collapsible Search Filters -->
                             <div class="collapse col-sm-12" id="searchFilters">
