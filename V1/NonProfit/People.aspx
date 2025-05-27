@@ -371,12 +371,9 @@
                         $('#<%= chkManageTeamAdministrator.ClientID %>').prop('checked', response.makeTeamAdministrator);
                         $('#<%= btnremoveteam.ClientID %>').show();
                         $('#<%= btnteamOwner.ClientID %>').show();
-                        if (response.isShow === true) {
+                        if (response.isShow === true || response.isTeamowner === true) {
                             $('#<%= btnremoveteam.ClientID %>').hide();
-                        }
-                       else if (response.isTeamowner === true)
-                        {
-                            $('#<%= btnteamOwner.ClientID %>').hide();
+                            $('#<%= btnteamOwner.ClientID %>').hide();;
                         }
                         else if (response.isUserInThatRole === true) {
                             $('#<%= btnteamOwner.ClientID %>').hide();
