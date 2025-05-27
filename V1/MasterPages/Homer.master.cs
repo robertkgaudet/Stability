@@ -645,19 +645,9 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			string organizationUrl = "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
 			string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
 			string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
-			Guid ownerId = (Guid)DataBinder.Eval(dataItem.DataItem, "OwnerId");
-            string imgTeamPath = "/V1/Images/Logo-Placeholder.png";
-			string isOwner = string.Empty;
-            bool isPrimary = Convert.ToBoolean(DataBinder.Eval(dataItem.DataItem, "IsPrimary") ?? false);
-            if (ownerId != null)
-			{
-				if(ownerId == userId)
-				{
-					//User is the owner of the group.
-					isOwner = "*";
-				}
-			}
 
+            string imgTeamPath = "/V1/Images/Logo-Placeholder.png";
+            bool isPrimary = Convert.ToBoolean(DataBinder.Eval(dataItem.DataItem, "IsPrimary") ?? false);
 			if (!string.IsNullOrEmpty(organizationTeamLogo))
 			{
 				imgTeamPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
@@ -666,7 +656,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
             litPrimaryBadge.Text = isPrimary ? " <span class='badge badge-secondary' style='margin-left: 55px;margin-top:-20px;'>Primary Team</span>" : "";
             //string primaryStar = isPrimary ? " ★" : "";
             Literal lit = (Literal)e.Item.FindControl("litGroupLink");
-            lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + isOwner + "</a>";
+            lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + "</a>";
             Image imgTeam = (Image)e.Item.FindControl("imgTeam");
 			imgTeam.ImageUrl = imgTeamPath;
 		}
