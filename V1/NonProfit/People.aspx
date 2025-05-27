@@ -198,7 +198,6 @@
             justify-content: flex-end;
             padding: 0 15px 15px 0;
         }
-
     </style>
     <script>
         var recipientsName;
@@ -371,11 +370,54 @@
                         $('#<%= chkManageTeamAdministrator.ClientID %>').prop('checked', response.makeTeamAdministrator);
                         $('#<%= btnremoveteam.ClientID %>').show();
                         $('#<%= btnteamOwner.ClientID %>').show();
-                        if (response.isShow === true || response.isTeamowner === true) {
+                        $('#<%= btnremoveteam.ClientID %>')
+                            .removeClass().addClass("btn btn-danger").removeAttr("style").removeAttr("disabled title data-toggle");
+
+                       if (response.isTeamowner === true) {
                             $('#<%= btnremoveteam.ClientID %>').hide();
-                            $('#<%= btnteamOwner.ClientID %>').hide();;
+                            $('#<%= btnteamOwner.ClientID %>').hide();
                         }
-                        else if (response.isUserInThatRole === true) {
+                        if (response.isShow === true) {
+                            $('#<%= btnremoveteam.ClientID %>').hide();
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                        }
+                        if (response.iteamadmin === true) {
+                            $('#<%= btnremoveteam.ClientID %>').hide();
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                        }
+                        if (response.isteamadminowner === true) {
+                            if (response.isteamadminowner === true) {
+                                $('#<%= btnremoveteam.ClientID %>').hide();
+                                $('#<%= btnteamOwner.ClientID %>').hide();
+                            }
+                        }
+                        else {
+                            if (response.iteamadminone === true) {
+                                $('#<%= btnteamOwner.ClientID %>').hide();
+                            }
+                        }
+                        if (response.isUserhead === true) {
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                            $('#<%= btnremoveteam.ClientID %>').show();
+                            $('#<%= btnremoveteam.ClientID %>')
+                                .removeClass()
+                                .addClass('btn btn-secondary disabled')
+                                .attr({
+                                    'data-toggle': 'tooltip',
+                                    'title': 'You made a new team owner. You can remove this person later, or they are the current team owner.',
+                                    'disabled': true
+                                })
+                                .css('border', '2px solid black');
+                        }
+                    <%--    if (response.isShow === true || response.isTeamowner === true) {
+                            $('#<%= btnremoveteam.ClientID %>').hide();
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                        }
+                        if (response.teamadmin === true)
+                        {
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                        }
+                        if (response.isUserInThatRole === true) {
                             $('#<%= btnteamOwner.ClientID %>').hide();
                             $('#<%= btnremoveteam.ClientID %>')
                                 .removeClass()
@@ -386,7 +428,7 @@
                                     'disabled': true
                                 })
                                 .css('border', '2px solid black');  
-                        }
+                        }--%>
 
                         console.log("User data fetched successfully:", response);
                     } else {
