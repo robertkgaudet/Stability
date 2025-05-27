@@ -56,6 +56,7 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
                 hypSettingss.Visible = true;
                 hypUpdateTeamInfos.Visible = true;
                 btnDeactivatePages.Visible = true;
+                hiddenRequest.Visible = true;
             }
             ucTeamHeader.CoverImage = _coverImage;
 
@@ -99,6 +100,12 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
         hypInvitedMembers.NavigateUrl = "/V1/NonProfit/InvitedMembers.aspx?organizationId=" + organizationId;
         hypInvitedMembers.Attributes["data-toggle"] = "tooltip";
         hypInvitedMembers.Attributes["title"] = "Go To InvitedMembers";
+
+
+        hypRequest.NavigateUrl = "/V1/NonProfit/ReceivedRequests.aspx?organizationId=" + organizationId;
+        hypRequest.Attributes["data-toggle"] = "tooltip";
+        hypRequest.Attributes["title"] = "View this team's Request";
+
 
         hypSquareLogoUpload.NavigateUrl = "/V1/NonProfit/SquareLogoUpload.aspx?organizationId=" + organizationId;
         hypSquareLogoUpload.Attributes["data-toggle"] = "tooltip";

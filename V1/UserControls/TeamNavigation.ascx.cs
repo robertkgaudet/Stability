@@ -75,7 +75,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypResources.NavigateUrl = "/V1/NonProfit/AvailableResources.aspx?organizationId=" + organizationId;
         hypDeploymentTeam.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + organizationId;
         hypTeamManagement.NavigateUrl = "/V1/NonProfit/TeamManagement.aspx?organizationId=" + organizationId;
-        hypRequest.NavigateUrl = "/V1/NonProfit/ReceivedRequests.aspx?organizationId=" + organizationId;
+        //hypRequest.NavigateUrl = "/V1/NonProfit/ReceivedRequests.aspx?organizationId=" + organizationId;
 
         switch (PageName)
         {
@@ -171,9 +171,9 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                     hypTeamManagement.Visible = true;
                     hypTeamManagement.Attributes["data-toggle"] = "tooltip";
                     hypTeamManagement.Attributes["title"] = "View this team's TeamManagement";
-                    hypRequest.Visible = true;
-                    hypRequest.Attributes["data-toggle"] = "tooltip";
-                    hypRequest.Attributes["title"] = "View this team's Request";
+                    //hypRequest.Visible = true;
+                    //hypRequest.Attributes["data-toggle"] = "tooltip";
+                    //hypRequest.Attributes["title"] = "View this team's Request";
                 }
             }
             else if(isTeamAdministratorExists == true || isUserInThatRole==true)
@@ -181,9 +181,9 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                 hypTeamManagement.Visible = true;
                 hypTeamManagement.Attributes["data-toggle"] = "tooltip";
                 hypTeamManagement.Attributes["title"] = "View this team's TeamManagement";
-                hypRequest.Visible = true;
-                hypRequest.Attributes["data-toggle"] = "tooltip";
-                hypRequest.Attributes["title"] = "View this team's Request";
+                //hypRequest.Visible = true;
+                //hypRequest.Attributes["data-toggle"] = "tooltip";
+                //hypRequest.Attributes["title"] = "View this team's Request";
             }
                 var userCheck = (from uo in dc.UserOrganizations
                                  where uo.UserId == userId && uo.IsEnabled == true

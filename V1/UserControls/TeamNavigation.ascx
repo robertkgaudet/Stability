@@ -188,10 +188,7 @@
                     <asp:HyperLink runat="server" ID="hypTeamManagement" Visible="false"><i class="fa fa-users text-success"></i> Team Management
                     </asp:HyperLink></b>
                 </li>
-                <li><b>
-                    <asp:HyperLink runat="server" ID="hypRequest" Visible="false"><i class="fa fa-user-plus"></i> Show the Team Request
-                    </asp:HyperLink></b>
-                </li>
+               
             </ul>
 
             <hr>
