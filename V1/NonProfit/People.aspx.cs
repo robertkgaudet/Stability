@@ -14,6 +14,7 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using Twilio.TwiML.Voice;
 public partial class V1_NonProfit_People : BaseOrganizationWebForm
 {
     public string _logo;
@@ -45,7 +46,6 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         organizationId = Request.QueryString["organizationId"];
         skillId = Request.QueryString["skillId"];
         resourceId = Request.QueryString["resourceId"];
-
         ucTeamFooter.PageName = "peoplePage";
         ucTeamHeader.PageName = "Team Members";
         #region HEADER PROPERTIES
@@ -59,9 +59,13 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         {
             bool userOrganizationOwner = dc.Organizations
             .Any(o => o.OrganizationId == new Guid(organizationId) && o.OwnerId == userId);
-            if (userOrganizationOwner == true)
+            if (userOrganizationOwner == true || User.IsInRole("Administrator"))
             {
-                isOwner = true;
+                if(userOrganizationOwner ==true)
+                {
+                    isOwner = true;
+                }
+                
                 btnteamOwner.Visible = true;
             }
         }
@@ -76,15 +80,11 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         ? "1" : "0";
         bool isTeamAdministratorExists = dc.UserOrganizations
        .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.IsEnabled == true);
-        if(isTeamAdministratorExists==true || isOwner==true)
+        if (isTeamAdministratorExists == true || isOwner == true ||User.IsInRole("Administrator"))
         {
             btnremoveteam.Visible = true;
             phAdminControls.Visible = true;
             hiddenAdminRole.Value = "1";
-            if(isTeamAdministratorExists==true)
-            {
-                btnremoveteam.Style["margin-right"] = "170px";
-            }
         }
         else
         {
@@ -385,24 +385,24 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         {
             var userOrg = dc.UserOrganizations
                         .FirstOrDefault(uo => uo.OrganizationId == new Guid(orgId) && uo.UserId == selectedUser && uo.IsEnabled == true);
-            if(userOrg !=null)
+            if (userOrg != null)
             {
                 userOrg.IsEnabled = false;
                 dc.SubmitChanges();
                 RemoveTeamMemberId = selectedUser;
-                SendRemoveTeamMemberEmail(RemoveTeamMemberId,new Guid(organizationId));
+                SendRemoveTeamMemberEmail(RemoveTeamMemberId, new Guid(organizationId));
             }
         }
-         return "Team member remove successfully.";
+        return "Team member remove successfully.";
     }
-    public static void SendRemoveTeamMemberEmail(Guid RemoveTeamMemberId ,Guid organizationId)
+    public static void SendRemoveTeamMemberEmail(Guid RemoveTeamMemberId, Guid organizationId)
     {
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
             string orgName = dc.Organizations.Where(o => o.OrganizationId == organizationId).Select(o => o.Name).FirstOrDefault();
             var username = dc.Profiles.Where(p => p.UserId == RemoveTeamMemberId).FirstOrDefault();
             string useremail = dc.aspnet_Memberships.Where(am => am.UserId == RemoveTeamMemberId).Select(am => am.Email).FirstOrDefault();
-             ListDictionary ldEmailBodyReplacements = new ListDictionary
+            ListDictionary ldEmailBodyReplacements = new ListDictionary
             {
                { "##OrganizationName##", orgName },
                { "##RemovedMemberFirstName##", username.Firstname },
@@ -817,7 +817,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             bool optedSMS = txtOptedSMS.Checked;
             bool teamVerified = txtTeamVerified.Checked;
             bool stabilityVerified = txtStabilityVerified.Checked;
-
+            bool teamAdministrator = txtTeamAdministrator.Checked;
             string startDateText = Request.Form[StartDate.UniqueID];
             string endDateText = Request.Form[EndDate.UniqueID];
 
@@ -850,15 +850,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 // Execute stored procedure and return mapped results
                 dc.CommandTimeout = 300;
                 //var result = dc.ExecuteQuery<PeopleList>(
-                //   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified).ToList();
+                //   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified,
 
                 var result = dc.ExecuteQuery<PeopleList>(
-                   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14},{15},{16}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified, currentPageValue.Value, pageSize).ToList();
+                   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14},{15},{16},{17}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified, teamAdministrator, currentPageValue.Value, pageSize).ToList();
 
                 var totalCount = result.Any() ? result.First().TotalCount : 0;
 
                 // Show Filter Message if Any Filter Applied
-                divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVetted || optedSMS || teamVerified || stabilityVerified;
+                divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVetted || optedSMS || teamVerified || stabilityVerified || teamAdministrator;
                 litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
 
                 if (isUserOnTeam && !User.IsInRole("Administrator") && !userIsOwner)
@@ -891,6 +891,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         txtEmailconnect.Checked = false;
         txtTeamVerified.Checked = false;
         txtStabilityVerified.Checked = false;
+        txtTeamAdministrator.Checked = false;
         rptVolunteers.DataSource = null;
         divFilterMessage.Visible = false;
         litFilterMessage.Text = string.Empty;

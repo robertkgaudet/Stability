@@ -172,7 +172,7 @@
             margin-left: -1px; /* Removes unwanted space */
         }
 
-       
+
 
         button.btn.btn-primary {
             margin-left: 10px;
@@ -198,6 +198,7 @@
             justify-content: flex-end;
             padding: 0 15px 15px 0;
         }
+
     </style>
     <script>
         var recipientsName;
@@ -337,7 +338,9 @@
                 window.scrollTo({ top: 300, behavior: "instant" });
             });
         });
-
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
         var currentUserId = null;
         function setUserId(button) {
             ;
@@ -366,6 +369,28 @@
                         $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
                         $('#<%= chkManageShowDonateButton.ClientID %>').prop('checked', response.showTeamLogo);
                         $('#<%= chkManageTeamAdministrator.ClientID %>').prop('checked', response.makeTeamAdministrator);
+                        $('#<%= btnremoveteam.ClientID %>').show();
+                        $('#<%= btnteamOwner.ClientID %>').show();
+                        if (response.isShow === true) {
+                            $('#<%= btnremoveteam.ClientID %>').hide();
+                        }
+                       else if (response.isTeamowner === true)
+                        {
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                        }
+                        else if (response.isUserInThatRole === true) {
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                            $('#<%= btnremoveteam.ClientID %>')
+                                .removeClass()
+                                .addClass('btn btn-secondary disabled')
+                                .attr({
+                                    'data-toggle': 'tooltip',
+                                    'title': 'You made a new team owner. You can remove this person later, or they are the current team owner.',
+                                    'disabled': true
+                                })
+                                .css('border', '2px solid black');  
+                        }
+
                         console.log("User data fetched successfully:", response);
                     } else {
                         $('#loader').hide();
@@ -383,7 +408,7 @@
             swal({
                 title: 'Are you sure?',
                 text: "Do you want to make this user the team owner?",
-                icon: "warning",
+                icon: "success",
                 buttons: ["No", "Yes, make owner!"],
                 dangerMode: true
             }).then(function (willSet) {
@@ -428,7 +453,7 @@
                         dataType: "json",
                         success: function (response) {
                             debugger;
-                            $("a.Userlink[href*='" + selectedUser +"']").parents('tr').remove();
+                            $("a.Userlink[href*='" + selectedUser + "']").parents('tr').remove();
                             swal("Success", response.d, "success");
                             $('#manageMemberModal').modal('hide');
                         },
@@ -708,6 +733,7 @@
             document.getElementById('<%= txtEmailconnect.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtTeamVerified.ClientID %>').checked = false; // Set custom value here
             document.getElementById('<%= txtStabilityVerified.ClientID %>').checked = false; // Set custom value here
+            document.getElementById('<%= txtTeamAdministrator.ClientID %>').checked = false; // Set custom value here
             document.getElementById('<%= ddlEvent.ClientID %>').value = ''; // Set custom value here
             $('#hiddenEvent').val('');
             document.getElementById('<%= ddlTraining.ClientID %>').value = ''; // Set custom value here
@@ -1187,7 +1213,10 @@
                                                     <asp:CheckBox ID="txtStabilityVerified" runat="server" CssClass="form-check-input" />
                                                     <label class="form-check-label" for="<%=txtStabilityVerified.ClientID%>">Stability Verified</label>
                                                 </div>
-
+                                                <div class="form-check mb-2">
+                                                    <asp:CheckBox ID="txtTeamAdministrator" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtTeamAdministrator.ClientID%>">Team Administrator</label>
+                                                </div>
                                             </div>
 
                                             <!-- Column 2: Last 2 Checkboxes -->
@@ -1222,7 +1251,8 @@
             <div class="row">
                 <div class="custom-flex-end">
                     <button type="button" style="display: none" id="clearSkillResourceId" onclick="clearSkillResource()"
-                        class="btn btn-sm btn-info">Clear Skills/Resources</button>
+                        class="btn btn-sm btn-info">
+                        Clear Skills/Resources</button>
                 </div>
             </div>
         </div>

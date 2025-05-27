@@ -14,6 +14,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
     {
         context.Response.ContentType = "application/json";
         string action = context.Request["action"];
+
         if (action == "fetch")
         {
             FetchUserData(context);
@@ -29,13 +30,41 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
     }
     private void FetchUserData(HttpContext context)
     {
+        string username = context.User.Identity.Name;
+        Guid loginuserId = Guid.Empty;
         Guid userId = new Guid(context.Request["userId"]);
         Guid orgId = new Guid(context.Request["organizationId"]);
         using (var dc = new CrowdReliefDBDataContext())
         {
+            Guid targetRoleId = new Guid("E48E49D7-392B-4C3B-A53A-62B7B2537BBF");
+            bool isUserInThatRole = false;
+            bool isShow = false;
+            bool isTeamowner = false;
+            var user = dc.aspnet_Users.FirstOrDefault(u => u.UserName == username);
+            if (user != null)
+            {
+                loginuserId = user.UserId;
+            }
+
+            bool isTeamAdministratorExists = dc.UserOrganizations
+           .Any(uo => uo.OrganizationId == orgId && uo.UserId == loginuserId && uo.IsTeamAdministrator == true && uo.IsEnabled == true);
+            bool userOrganizationOwner = dc.Organizations
+                      .Any(o => o.OrganizationId == orgId && o.OwnerId == loginuserId);
+           bool openuserOrganizationOwner = dc.Organizations
+               .Any(o => o.OrganizationId == orgId && o.OwnerId == userId);
+            if (openuserOrganizationOwner==true)
+            {
+                isUserInThatRole = dc.aspnet_UsersInRoles
+          .Any(ur => ur.UserId == loginuserId && ur.RoleId == targetRoleId);
+            }
+            if (userOrganizationOwner == true && loginuserId == userId)
+            {
+                isTeamowner = true;
+                isShow = true;
+            }
             var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
-            var userOrg = dc.UserOrganizations 
- .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.IsEnabled==true);
+            var userOrg = dc.UserOrganizations
+            .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.IsEnabled == true);
             bool isOwner = userOrg != null && userOrg.IsOwner;
             if (profile == null || userOrg == null)
             {
@@ -46,7 +75,10 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             var teamAdministratorRole = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
             Guid teamAdministratorRoleId = teamAdministratorRole.RoleId;
             bool makeTeamAdministrator = userOrg.IsTeamAdministrator == true;
-
+            if (makeTeamAdministrator == true && isTeamAdministratorExists == true)
+            {
+                isShow = true;
+            }
             string vettingStatus = "";
             if (profile.VettingActive == true)
             {
@@ -64,7 +96,10 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                 vettingNotes = profile.VettingNotes,
                 stabilityVerified = stabilityVerified,
                 showTeamLogo = showTeamLogo,
-                makeTeamAdministrator = makeTeamAdministrator
+                makeTeamAdministrator = makeTeamAdministrator,
+                isShow = isShow,
+                isTeamowner = isTeamowner,
+                isUserInThatRole = isUserInThatRole
             };
             context.Response.Write(Newtonsoft.Json.JsonConvert.SerializeObject(response));
         }
@@ -114,7 +149,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                 }
 
                 var userOrg = dc.UserOrganizations
-     .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.IsEnabled==true);
+     .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.IsEnabled == true);
 
                 var role = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
 

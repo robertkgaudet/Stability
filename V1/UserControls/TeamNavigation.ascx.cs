@@ -153,6 +153,10 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         {
             hypJoinTeam.NavigateUrl = "/V1/Profile/EditNonProfits.aspx?organizationId=" + organizationId;
             Guid userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+            Guid targetRoleId = new Guid("E48E49D7-392B-4C3B-A53A-62B7B2537BBF");
+            bool isUserInThatRole = false;
+            isUserInThatRole = dc.aspnet_UsersInRoles
+          .Any(ur => ur.UserId == userId && ur.RoleId == targetRoleId);
             var userOrganizationOwner = (from uo in dc.UserOrganizations
                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
                                          where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
@@ -172,7 +176,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                     hypRequest.Attributes["title"] = "View this team's Request";
                 }
             }
-            else if(isTeamAdministratorExists == true)
+            else if(isTeamAdministratorExists == true || isUserInThatRole==true)
             {
                 hypTeamManagement.Visible = true;
                 hypTeamManagement.Attributes["data-toggle"] = "tooltip";

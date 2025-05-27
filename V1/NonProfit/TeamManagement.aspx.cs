@@ -48,6 +48,15 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
         string squareLogo = string.Empty;
         if (organization != null)
         {
+            bool userOrganizationOwner = dc.Organizations
+          .Any(o => o.OrganizationId == new Guid(organizationId) && o.OwnerId == userId);
+            if(userOrganizationOwner==true || User.IsInRole("Administrator"))
+            {
+                hypDonationDashboards.Visible = true;
+                hypSettingss.Visible = true;
+                hypUpdateTeamInfos.Visible = true;
+                btnDeactivatePages.Visible = true;
+            }
             ucTeamHeader.CoverImage = _coverImage;
 
             if (!String.IsNullOrEmpty(organization.LogoSquare))
