@@ -37,9 +37,13 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
         using (var dc = new CrowdReliefDBDataContext())
         {
             Guid targetRoleId = new Guid("E48E49D7-392B-4C3B-A53A-62B7B2537BBF");
+            bool isUserhead = false;
             bool isUserInThatRole = false;
             bool isShow = false;
             bool isTeamowner = false;
+            bool iteamadmin = false;
+            bool iteamadminone = false;
+            bool isteamadminowner = false;
             var user = dc.aspnet_Users.FirstOrDefault(u => u.UserName == username);
             if (user != null)
             {
@@ -48,24 +52,52 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
 
             bool isTeamAdministratorExists = dc.UserOrganizations
            .Any(uo => uo.OrganizationId == orgId && uo.UserId == loginuserId && uo.IsTeamAdministrator == true && uo.IsEnabled == true);
+
+            bool isTeamAdministrator = dc.UserOrganizations
+            .Any(uo => uo.OrganizationId == orgId && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.IsEnabled == true);
+
             bool userOrganizationOwner = dc.Organizations
                       .Any(o => o.OrganizationId == orgId && o.OwnerId == loginuserId);
-           bool openuserOrganizationOwner = dc.Organizations
-               .Any(o => o.OrganizationId == orgId && o.OwnerId == userId);
-            if (openuserOrganizationOwner==true)
+
+            bool openuserOrganizationOwner = dc.Organizations
+                .Any(o => o.OrganizationId == orgId && o.OwnerId == userId);
+
+            if (openuserOrganizationOwner == true)
             {
-                isUserInThatRole = dc.aspnet_UsersInRoles
-          .Any(ur => ur.UserId == loginuserId && ur.RoleId == targetRoleId);
+                 isUserInThatRole = dc.aspnet_UsersInRoles
+            .Any(ur => ur.UserId == loginuserId && ur.RoleId == targetRoleId);
             }
-            if (userOrganizationOwner == true && loginuserId == userId)
+
+
+            if (loginuserId == userId)
             {
-                isTeamowner = true;
                 isShow = true;
+            }
+            if (isUserInThatRole == true && openuserOrganizationOwner==true && userOrganizationOwner==false)
+            {
+                isUserhead = true;
+                if (userOrganizationOwner == true && openuserOrganizationOwner == true)
+                {
+                    isTeamowner = true;
+                }
+                if (isTeamAdministratorExists == isTeamAdministrator)
+                {
+                    iteamadmin = true;
+                }
+                if (isTeamAdministratorExists == true)
+                {
+                    iteamadminone = true;
+                }
+                if (openuserOrganizationOwner == true && isTeamAdministratorExists == true)
+                {
+                    isteamadminowner = true;
+                }
             }
             var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
             var userOrg = dc.UserOrganizations
             .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.IsEnabled == true);
             bool isOwner = userOrg != null && userOrg.IsOwner;
+
             if (profile == null || userOrg == null)
             {
                 throw new InvalidOperationException("User profile or organization not found.");
@@ -99,7 +131,10 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                 makeTeamAdministrator = makeTeamAdministrator,
                 isShow = isShow,
                 isTeamowner = isTeamowner,
-                isUserInThatRole = isUserInThatRole
+                isUserhead = isUserhead,
+                iteamadmin = iteamadmin,
+                iteamadminone = iteamadminone,
+                isteamadminowner = isteamadminowner
             };
             context.Response.Write(Newtonsoft.Json.JsonConvert.SerializeObject(response));
         }
