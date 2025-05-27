@@ -200,6 +200,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                                    where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
                                    && uo.OrganizationId == new Guid(organizationId)
                                    select uo;
+
             ReceivedRequest request = dc.ReceivedRequests
             .FirstOrDefault(rr => rr.SenderId == userId && rr.ReceiverId == new Guid(organizationId));
 

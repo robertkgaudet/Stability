@@ -52,12 +52,12 @@
                         <asp:HyperLink runat="server" ID="hypInviteTeam" CssClass="text-decoration-none">Invite Team Members</asp:HyperLink>
                     </div>
                     <div class="col-md-4 d-flex align-items-start gap-2">
-                        <i class="fa fa-tachometer text-primary"></i>
-                        <asp:HyperLink runat="server" ID="hypDonationDashboard">Donations Dashboard</asp:HyperLink>
-                    </div>
-                    <div class="col-md-4 d-flex align-items-start gap-2">
                         <i class="fa fa-indent"></i>
                         <asp:HyperLink runat="server" ID="hypInvitedMembers">Invited Members</asp:HyperLink>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-start gap-2">
+                        <i class="fa fa-tachometer text-primary"></i>
+                        <asp:HyperLink runat="server" ID="hypDonationDashboard">Donations Dashboard</asp:HyperLink>
                     </div>
                 </div>
             </div>
@@ -111,16 +111,16 @@
                 </div>
                 <div class="card-body row gy-3">
                     <div class="col-md-3 d-flex align-items-start gap-2">
+                        <i class="fa fa-cog"></i>
+                        <asp:HyperLink runat="server" ID="hypSettings">Settings</asp:HyperLink>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-start gap-2">
                         <i class="fa fa-clipboard text-danger"></i>
                         <asp:HyperLink runat="server" ID="hypTickets">Tickets</asp:HyperLink>
                     </div>
                     <div class="col-md-3 d-flex align-items-start gap-2">
                         <i class="fa fa-file-text text-warning"></i>
                         <asp:HyperLink runat="server" ID="hypReports">Reports</asp:HyperLink>
-                    </div>
-                    <div class="col-md-3 d-flex align-items-start gap-2">
-                        <i class="fa fa-cog"></i>
-                        <asp:HyperLink runat="server" ID="hypSettings">Settings</asp:HyperLink>
                     </div>
                     <div class="col-md-3 d-flex align-items-start gap-2">
                         <i class="fa fa-pencil text-warning"></i>
