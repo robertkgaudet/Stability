@@ -7,6 +7,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+ <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <style>
         .card-body {
             padding: 5px;
@@ -38,6 +39,42 @@
             margin-top: 40px;
         }
     </style>
+   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script type="text/javascript">
+    function confirmDeactivation() {
+        // Read the text content from the button
+        var btn = document.getElementById('<%= btnDeactivatePage.ClientID %>');
+        var text = btn.innerText.trim().toLowerCase();
+
+        var isReactivation = text.includes("reactivate");
+        var action = isReactivation ? "reactivate" : "deactivate";
+        var confirmText = isReactivation ? "Yes, reactivate it!" : "Yes, deactivate it!";
+        var messageText = "You are about to " + action + " this team.";
+        swal({
+            title: "Are you sure?",
+            text: messageText,
+            icon: "warning",
+            buttons: {
+                cancel: "Cancel",
+                confirm: {
+                    text: confirmText,
+                    value: true,
+                    visible: true,
+                    className: "",
+                    closeModal: true
+                }
+            },
+        }).then((willChange) => {
+            if (willChange) {
+                __doPostBack('<%= btnDeactivatePage.UniqueID %>', '');
+            }
+        });
+
+        return false;
+    }
+</script>
+
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
 
     <div class="content animate-panel" data-child="hpanel" data-effect="fadeInDown">
@@ -133,7 +170,11 @@
                     </div>
                     <div class="col-md-4 d-flex align-items-start gap-2 mt-3" runat="server" visible="false" id="btnDeactivatePages">
                         <i class="fa fa-ban text-danger"></i>
-                        <asp:LinkButton ID="btnDeactivatePage" runat="server" OnClick="btnChangePageStatus_Click">De-activate This Team </asp:LinkButton>
+                        <asp:LinkButton ID="btnDeactivatePage" runat="server" OnClick="btnChangePageStatus_Click" OnClientClick=" return confirmDeactivation() ;">De-activate This Team 
+
+                             <i class="fa fa-ban text-danger me-1"></i>
+    <span id="deactivateText"><%# btnDeactivatePage.Text %></span>
+                        </asp:LinkButton>
                     </div>
                 </div>
             </div>
