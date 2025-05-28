@@ -699,7 +699,7 @@ input#btnSearchMobile
                                     <div class="team-header">
                                    <h4>My Teams</h4>
                                     <asp:HyperLink ID="hlMyTeams" runat="server" NavigateUrl="~/V1/NonProfit/TeamList.aspx">
-                                    <h4>View all teams</h4>
+                                    <h5>View All Teams</h5>
                                       </asp:HyperLink>
                                            </div>
 			                                  	</li>					

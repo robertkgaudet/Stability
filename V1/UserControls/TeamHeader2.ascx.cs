@@ -64,7 +64,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                 .FirstOrDefault();
                 var teamownerfullname = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.Firstname + " " + p.Lastname)
                           .FirstOrDefault();
-                var teamownerAddress = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.State + ", " + p.City)
+                var teamownerAddress = dc.Profiles.Where(p => p.UserId == teamowner).Select(p => p.City + ", " + p.State)
                           .FirstOrDefault();
                 string icon = "";
                 bool stabiltyverfiy = dc.Profiles
@@ -240,9 +240,9 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                    "<span class='badgge'>" + icon + "</span>" +
                    "<span class='badgge'>" + finalTeamLogo + "</span>" +
                "</div>" +
-               "<p class='location'>" + teamownerAddress + "</p>" +
+               "<p class='location small'>" + teamownerAddress + "</p>" +
                  connectionHtml +
-               "<span class='badge badge-secondary'>Team Owner</span>" +
+               "<span class='badge badge-info'>Team Owner</span>" +
            "</div>" +
          "</div>";
                     }
@@ -256,11 +256,11 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                    "<span class='badgge'>" + icon + "</span>" +
                    "<span class='badgge'>" + finalTeamLogo + "</span>" +
                "</div>" +
-               "<p class='location'>" + teamownerAddress + "</p>" +
+			   "<p class='location small'>" + teamownerAddress + "</p>" +
                "<p class='connection'>" +
                "<strong>" + statushtml + "</strong>" +
                 "</p>" +
-               "<span class='badge badge-secondary'style='bottom:10px;'>Team Owner</span>" +
+			   "<span class='badge badge-info'style='bottom:10px;'>Team Owner</span>" +
            "</div>" +
          "</div>";
                     }
@@ -274,10 +274,10 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                   "<span class='badgge'>" + icon + "</span>" +
                   "<span class='badgge'>" + finalTeamLogo + "</span>" +
               "</div>" +
-              "<p class='location'>" + teamownerAddress + "</p>" +
+			  "<p class='location small'>" + teamownerAddress + "</p>" +
               "<p class='connection'>" +
                "</p>" +
-              "<span class='badge badge-secondary'style='bottom:10px;'>Team Owner</span>" +
+              "<span class='badge badge-info'style='bottom:10px;'>Team Owner</span>" +
           "</div>" +
            "</div>";
                     }
@@ -311,7 +311,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 
                     var teamAdministratorAddress = dc.Profiles
                         .Where(p => p.UserId == userId)
-                        .Select(p => p.State + "," + p.City)
+                        .Select(p => p.City + ", " + p.State)
                         .FirstOrDefault();
 
                     var teamAdministratoprofilePhoto = (from p in dc.Photos
@@ -477,7 +477,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                       "<span class='badgge'>" + icons + "</span>" +
                        "<span class='badgge'>" + finalTeamLogoo + "</span>" +
                  "</div>" +
-                 "<p class='location'>" + teamAdministratorAddress + "</p>" +
+				 "<p class='location small'>" + teamAdministratorAddress + "</p>" +
                  connectionHtml1 +
              "</div>" +
          "</div>";
@@ -493,10 +493,8 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
          "<span class='badgge'>" + icons + "</span>" +
           "<span class='badgge'>" + finalTeamLogoo + "</span>" +
     "</div>" +
-    "<p class='location'>" + teamAdministratorAddress + "</p>" +
-           "<p class='connection'>" +
-"<strong>" + statushtml1 + "</strong>" +
-"</p>" +
+	"<p class='location small'>" + teamAdministratorAddress + "</p>" +
+		   "<p class='connection font-trans'>" + statushtml1 + "</p>" +
 "</div>" +
 "</div>";
                     }
@@ -511,7 +509,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                                         "<span class='badgge'>" + icons + "</span>" +
                                          "<span class='badgge'>" + finalTeamLogoo + "</span>" +
                                    "</div>" +
-                                   "<p class='location'>" + teamAdministratorAddress + "</p>" +
+								   "<p class='location small'>" + teamAdministratorAddress + "</p>" +
                                           "<p class='connection'>" +
                               "</p>" +
                                "</div>" +

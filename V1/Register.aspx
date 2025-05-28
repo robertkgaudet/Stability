@@ -412,7 +412,7 @@
                     <div class="m-t" role="form">
                         <h3>Create an Account</h3>
                         Employees, churches or civic organizations can instantly help after a disaster.
-				<hr />
+						<hr />
                         <div runat="server" id="divError" visible="false">
                             <div class="alert alert-danger">
                                 <a class="alert-link" href="#">REGISTRATION ERROR!!</a>

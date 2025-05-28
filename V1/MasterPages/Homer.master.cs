@@ -653,7 +653,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 				imgTeamPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
 			}
             Literal litPrimaryBadge = (Literal)e.Item.FindControl("litPrimaryBadge");
-            litPrimaryBadge.Text = isPrimary ? " <span class='badge badge-secondary' style='margin-left: 55px;margin-top:-20px;'>Primary Team</span>" : "";
+            litPrimaryBadge.Text = isPrimary ? " <span class='badge badge-primary' style='margin-left: 55px;margin-top:-20px;'>Primary Team</span>" : "";
             //string primaryStar = isPrimary ? " ★" : "";
             Literal lit = (Literal)e.Item.FindControl("litGroupLink");
             lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + "</a>";

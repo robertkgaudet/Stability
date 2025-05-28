@@ -12,7 +12,6 @@
 				<div class="hpanel">
 					<div class="panel-body">
 						<a href="/V1/Administration/TeamName.aspx?userActionModal=false" class="btn btn-info btn-large pull-right">Create A Team</a>
-						<a href="/V1/Profile/EditNonProfits.aspx?userActionModal=false" class="btn btn-info btn-large pull-right m-r-md">Change Teams</a>
 						<h4><asp:Literal ID="litPageName" runat="server"></asp:Literal></h4>
 						<span style="font-size:14px; font-weight:normal;" class="text-muted">
 							<asp:Literal ID="litCount" runat="server"></asp:Literal>

@@ -166,10 +166,6 @@
         color: #666;
         margin: 4px 0;
     }
-    .badge {
-  background-color: #b08e4f!important;
- 
-}
 </style>
 <%--SECTION: End Header Styles--%>
 
@@ -208,7 +204,7 @@
                contentType: "application/json; charset=utf-8",
                dataType: "json",
                success: function () {
-                   $button.replaceWith("<strong class='sent-status'>Connection Pending</strong>");
+				   $button.replaceWith("<span class='sent-status font-trans'>Connection Pending</span>");
                },
                error: function () {
                    alert("Request failed.");
@@ -239,13 +235,12 @@
                                     <span style="color: darkslategrey; font-size: 20px; font-weight: 800; margin-right: 10px;">
                                         <asp:Literal ID="litTitle" runat="server"></asp:Literal>
                                     </span>
-                                    <span class="badge badge-secondary" id="isprimaryteam" runat="server" visible="false">
-                                        Primary Team</span>
+                                    <span class="badge badge-primary" id="isprimaryteam" runat="server" visible="false">Your Primary Team</span>
                                 </div>
                                 <p style="font-size: 16px;">
                                     <asp:Literal ID="litMemberDescription" runat="server"></asp:Literal>
                                 </p>
-                                <h4 id="teamAdminTitle">Team Administrator</h4>
+                                <h4 id="teamAdminTitle" class="m-t-xl">Team Administrators</h4>
 
                                 <asp:Literal ID="ltTeamAdministrators" runat="server"></asp:Literal>
                             </div>
