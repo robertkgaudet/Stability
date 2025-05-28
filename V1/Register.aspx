@@ -362,9 +362,27 @@
             margin-right: 40px;
         }
 
-        h1.loginLogo {
-            margin-right: 40px;
+        @media(min-width: 992px){
+            .max-500-width{
+                max-width: 500px;
+            }
         }
+        @media(max-width: 1200px){
+            .container,
+            .row{
+                width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+        }
+        #btn-NonProfitDropdown
+        {
+            width: 100%;
+    text-align: left;
+        }
+         #btn-NonProfitDropdown i{
+            float:right;
+         }
     </style>
 
 </asp:Content>
@@ -374,7 +392,7 @@
         <div class="col-xs-1 col-sm-2 col-md-3 col-lg-3"></div>
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-12 col-sm-10 col-md-8 col-lg-6" style="max-width: 500px;">
+                <div class="col-12 col-sm-12 col-md-8 col-lg-6">
                     <div class="middle-box text-center loginscreen animated fadeInDown">
                         <h1 class="loginLogo">
                             <div class="rotating-logo" id="rotatingLogo">
