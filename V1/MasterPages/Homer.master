@@ -288,8 +288,81 @@
                 });
             });
         </script>
+		<script>
+            $(document).ready(function () {
+                $('#<%= txtSearchHeader.ClientID %>').on('input', function () {
+                   let query = $(this).val().trim();
+                   if (query.length > 1) {
+                       $('#searchSuggestions').html(`
+                <div class='suggestion-item' data-type='TeamMembers'><strong>Team Members</strong></div>
+                <div class='suggestion-item' data-type='Teams'><strong>Teams</strong></div>
+            `).show();
+                   } else {
+                       $('#searchSuggestions').hide();
+                   }
+               });
 
+               $(document).on('click', '.suggestion-item', function () {
+                   let searchType = $(this).data('type'); 
+                   $('#<%= hdnSearchType.ClientID %>').val(searchType); 
+              $('#<%= btnSearchHeader.ClientID %>').click(); 
+               });
+               $(document).click(function (e) {
+                   if (!$(e.target).closest('.input-group').length) {
+                       $('#searchSuggestions').hide();
+                   }
+               });
+           });
+
+
+            $(document).ready(function () {
+                $('#<%= txtSearchMobile.ClientID %>').on('input', function () {
+                       let query = $(this).val().trim();
+                       if (query.length > 1) {
+                           $('#searchSuggestionss').html(`
+        <div class='suggestion-item' data-type='TeamMembers'><strong>Team Members</strong></div>
+        <div class='suggestion-item' data-type='Teams'><strong>Teams</strong></div>
+    `).show();
+                       } else {
+                           $('#searchSuggestionss').hide();
+                       }
+                   });
+
+                   $(document).on('click', '.suggestion-item', function () {
+                       let searchType = $(this).data('type');
+                       $('#<%= hymoblie.ClientID %>').val(searchType); 
+           $('#<%= btnSearchMobile.ClientID %>').click();
+       });
+                   $(document).click(function (e) {
+                       if (!$(e.target).closest('.input-group').length) {
+                           $('#searchSuggestionss').hide();
+                       }
+                   });
+               });
+
+        </script>
 		<style>
+.input-group {
+    position: relative;
+}
+.suggestion-box {
+    position: absolute;
+    background: white;
+    z-index: 1000;
+    width: 100%;
+    max-width:280px; 
+     margin-top: 35px;
+}
+
+.suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
 			#featureTypeCounter{
 				    margin-right: 17px;
 					margin-top: 20px;
@@ -574,6 +647,13 @@ div#adminFeatureSection div {
 						width: 100%;
 						z-index: 1000;
 }
+input#btnSearchHeader{
+	display:none;
+}
+input#btnSearchMobile
+ {
+	display:none;
+}
 		</style>
 
 	<asp:ContentPlaceHolder id="head" runat="server">
@@ -595,6 +675,7 @@ div#adminFeatureSection div {
         	body {
         		padding-top: 30px;
         	}
+			
         </style>
     </asp:Literal>
 		<form id="form1" runat="server" role="form">
@@ -647,6 +728,8 @@ div#adminFeatureSection div {
 									<asp:Button runat="server" ID="btnSearchHeader" CssClass="btn btn-primary2" Text="Find" OnClick="btnSearchMobile_Click" />
 								</span>
 								<asp:TextBox runat="server" ID="txtSearchHeader" placeholder="Find Connections or Teams" CssClass="form-control search-input" name="search"></asp:TextBox>
+								 <div id="searchSuggestions" class="suggestion-box"></div>
+								<asp:HiddenField ID="hdnSearchType" runat="server" />
 							</div>
 						</div>
 						
@@ -670,7 +753,10 @@ div#adminFeatureSection div {
 									<span class="input-group-btn">
 										<asp:Button runat="server" ID="btnSearchMobile" CssClass="btn btn-primary2" Text="Find" OnClick="btnSearchMobile_Click" />
 									</span>
+
 									<asp:TextBox runat="server" ID="txtSearchMobile" placeholder="Find Connections or Teams" CssClass="form-control search-input" name="search"></asp:TextBox>
+									 <div id="searchSuggestionss" class="suggestion-box"></div>
+								  <asp:HiddenField ID="hymoblie" runat="server" />
 								</div>
 							</div>
 						</div>

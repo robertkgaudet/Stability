@@ -3,10 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-
 public partial class V1_Member_PeopleSearch : BaseWebForm
 {
 	public string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
@@ -49,13 +49,12 @@ public partial class V1_Member_PeopleSearch : BaseWebForm
         ConnectionsDataList.DataSource = PeopleSearch;
         ConnectionsDataList.DataBind();
     }
-
     protected void btnSubmit_Click(object sender, EventArgs e)
 	{
 		searchTerm = txtSearchBox.Text;
 		if (!String.IsNullOrEmpty(searchTerm))
 		{
-			LoadConnections(searchTerm, 0); //0 returns all matching records
+			LoadConnections(searchTerm, 0); 
 		}
 	}
 
