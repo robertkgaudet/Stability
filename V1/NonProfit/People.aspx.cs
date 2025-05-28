@@ -415,13 +415,21 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         {
             string orgName = dc.Organizations.Where(o => o.OrganizationId == organizationId).Select(o => o.Name).FirstOrDefault();
             var username = dc.Profiles.Where(p => p.UserId == RemoveTeamMemberId).FirstOrDefault();
-            string useremail = dc.aspnet_Memberships.Where(am => am.UserId == RemoveTeamMemberId).Select(am => am.Email).FirstOrDefault();
+            var ownerId = dc.Organizations
+                  .Where(o => o.OrganizationId == organizationId)
+                  .Select(o => o.OwnerId)
+                  .FirstOrDefault();
+            var ownername = dc.Profiles.Where(p => p.UserId == ownerId).FirstOrDefault();
+            string useremail = dc.aspnet_Memberships.Where(am => am.UserId == ownerId).Select(am => am.Email).FirstOrDefault();
             ListDictionary ldEmailBodyReplacements = new ListDictionary
             {
                { "##OrganizationName##", orgName },
                { "##RemovedMemberFirstName##", username.Firstname },
                { "##RemovedMemberLastName##", username.Lastname },
-               { "##RemovedMemberEmail##", useremail }
+               { "##RemovedMemberEmail##", useremail },
+               { "##TeamOwnerFirstName##", ownername.Firstname},
+               { "##TeamOwnerLastName##", ownername.Lastname}
+
             };
             string error = string.Empty;
             Tools.SendEmail(
