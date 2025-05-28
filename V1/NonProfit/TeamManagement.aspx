@@ -43,11 +43,9 @@
 
 <script type="text/javascript">
     function confirmDeactivation() {
-        // Read the text content from the button
         var btn = document.getElementById('<%= btnDeactivatePage.ClientID %>');
         var text = btn.innerText.trim().toLowerCase();
-
-        var isReactivation = text.includes("reactivate");
+        var isReactivation = text.includes("re-activate");
         var action = isReactivation ? "reactivate" : "deactivate";
         var confirmText = isReactivation ? "Yes, reactivate it!" : "Yes, deactivate it!";
         var messageText = "You are about to " + action + " this team.";
@@ -68,6 +66,7 @@
         }).then((willChange) => {
             if (willChange) {
                 __doPostBack('<%= btnDeactivatePage.UniqueID %>', '');
+
             }
         });
 
