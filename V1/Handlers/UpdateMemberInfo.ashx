@@ -64,8 +64,8 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
 
             if (openuserOrganizationOwner == true)
             {
-                 isUserInThatRole = dc.aspnet_UsersInRoles
-            .Any(ur => ur.UserId == loginuserId && ur.RoleId == targetRoleId);
+                isUserInThatRole = dc.aspnet_UsersInRoles
+           .Any(ur => ur.UserId == loginuserId && ur.RoleId == targetRoleId);
             }
 
 
@@ -73,7 +73,11 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             {
                 isShow = true;
             }
-            if (isUserInThatRole == true && openuserOrganizationOwner==true && userOrganizationOwner==false)
+            if (openuserOrganizationOwner == true && isTeamAdministratorExists == true)
+            {
+                isteamadminowner = true;
+            }
+            if (isUserInThatRole == true && openuserOrganizationOwner == true && userOrganizationOwner == false)
             {
                 isUserhead = true;
                 if (userOrganizationOwner == true && openuserOrganizationOwner == true)
