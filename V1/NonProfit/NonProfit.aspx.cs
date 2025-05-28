@@ -499,27 +499,4 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 			//}
 		}
 	}
-
-	protected void btnChangePageStatus_Click(object sender, EventArgs e)
-	{
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-
-		bool updateActiveStatus = true;
-
-		var organization = (from o in dc.Organizations
-							where o.OrganizationId == new Guid(organizationId)
-							select o).SingleOrDefault();
-
-		btnDeactivatePage.Text = "De-activate This Team";
-		divAlertPageMessage.Visible = false;
-		if (organization.IsActive == true)
-		{
-			updateActiveStatus = false;
-			btnDeactivatePage.Text = "Re-activate This Team";
-			divAlertPageMessage.Visible = true;
-		}
-
-		organization.IsActive = updateActiveStatus;
-		dc.SubmitChanges();
-	}
 }

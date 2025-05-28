@@ -8,7 +8,8 @@ using System.Web.UI.WebControls;
 
 public partial class V1_NonProfit_TeamList : BaseWebForm
 {
-	protected void Page_Load(object sender, EventArgs e)
+    public string searchTerm = String.Empty;
+    protected void Page_Load(object sender, EventArgs e)
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
@@ -18,8 +19,8 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
 					where t.IsActive == true
 					orderby t.CreatedOn
 					select new { t.Name, t.Description, t.LogoSquare, t.OrganizationId, t.URLFriendlyName, t.CreatedOn };
-
-		rptTeams.DataSource = teams.OrderByDescending(d => d.OrganizationId == prioritizedId).ThenByDescending(o => o.CreatedOn).ToList();
+        searchTerm = Request.QueryString["searchTerm"];
+        rptTeams.DataSource = teams.OrderByDescending(d => d.OrganizationId == prioritizedId).ThenByDescending(o => o.CreatedOn).ToList();
 		rptTeams.DataBind();
 
 		Master.PageName = "Stability Teams";
