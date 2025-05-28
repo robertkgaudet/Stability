@@ -14,7 +14,7 @@
         <h5>MY ACCOUNT</h5>
         <ul class="mailbox-list">
             <li>
-                <asp:HyperLink ID="hypMyProfile" runat="server" NavigateUrl="/V1/Member/Default.aspx">
+                <asp:HyperLink ID="hypMyProfile" runat="server"  NavigateUrl="/V1/Member/Default.aspx" >
                     <i class="fa fa-user"></i> Profile
                 </asp:HyperLink>
             </li>
@@ -25,7 +25,7 @@
             </li>
             <li>
                 <asp:HyperLink ID="hypMyConnections" runat="server" NavigateUrl="/V1/Member/Connections.aspx">
-         <i class="fa fa-users"></i> My Connections
+         <i class=" fa fa-share-alt "></i> My Connections
                 </asp:HyperLink>
             </li>
             <li>

@@ -43,8 +43,16 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId)
-                            select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
+                            select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName,o.IsActive}).SingleOrDefault();
+        if(organization.IsActive==true)
+        {
+            btnDeactivatePage.Text = " <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'> De-activate This Team</asp:LinkButton>  ";
+        }
+        else
+        {
+            btnDeactivatePage.Text = " <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'>Re-activate This Team </asp:LinkButton>  ";
 
+        }
         string squareLogo = string.Empty;
         if (organization != null)
         {
@@ -151,6 +159,8 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
 
     protected void btnChangePageStatus_Click(object sender, EventArgs e)
     {
+        organizationId = Request.QueryString["organizationId"];
+     
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
         bool updateActiveStatus = true;
@@ -176,4 +186,6 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
             dc.SubmitChanges();
         }
     }
+   
+   
 }
