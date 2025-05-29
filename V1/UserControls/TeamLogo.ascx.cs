@@ -130,7 +130,7 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                         }
                         else
                         {
-                            imgTeamLogo.ImageUrl = "/V1/Images/DefaultLogo.png";
+                            imgTeamLogo.ImageUrl = "/V1/Images/Logo-Placeholder.png";
                         }
 
                         // Set hyperlink and title

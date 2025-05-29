@@ -635,32 +635,39 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         }
     }
 
-	protected void rptUserGroups_ItemDataBound(object sender, RepeaterItemEventArgs e)
-	{
-		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-		{
-			RepeaterItem dataItem = (RepeaterItem)e.Item;
+protected void rptUserGroups_ItemDataBound(object sender, RepeaterItemEventArgs e)
+{
+    if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+    {
+        RepeaterItem dataItem = (RepeaterItem)e.Item;
 
-			// Optionally, manipulate values here (e.g., URL formatting)
-			string organizationUrl = "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
-			string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
-			string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
+        string organizationUrl = "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
+        string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
+        string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
 
-            string imgTeamPath = "/V1/Images/Logo-Placeholder.png";
-            bool isPrimary = Convert.ToBoolean(DataBinder.Eval(dataItem.DataItem, "IsPrimary") ?? false);
-			if (!string.IsNullOrEmpty(organizationTeamLogo))
-			{
-				imgTeamPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
-			}
-            Literal litPrimaryBadge = (Literal)e.Item.FindControl("litPrimaryBadge");
-            litPrimaryBadge.Text = isPrimary ? " <span class='badge badge-primary' style='margin-left: 55px;margin-top:-20px;'>Primary Team</span>" : "";
-            //string primaryStar = isPrimary ? " ★" : "";
-            Literal lit = (Literal)e.Item.FindControl("litGroupLink");
-            lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + "</a>";
-            Image imgTeam = (Image)e.Item.FindControl("imgTeam");
-			imgTeam.ImageUrl = imgTeamPath;
-		}
-	}
+        string imgTeamPath = "/V1/Images/Logo-Placeholder.png";  
+
+        if (!string.IsNullOrEmpty(organizationTeamLogo))
+        {
+            string virtualPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
+            string physicalPath = Server.MapPath(virtualPath);
+
+            if (System.IO.File.Exists(physicalPath))
+            {
+                imgTeamPath = virtualPath; 
+            }
+        }
+
+        bool isPrimary = Convert.ToBoolean(DataBinder.Eval(dataItem.DataItem, "IsPrimary") ?? false);
+        Literal litPrimaryBadge = (Literal)e.Item.FindControl("litPrimaryBadge");
+        litPrimaryBadge.Text = isPrimary ? " <span class='badge badge-primary' style='margin-left: 55px;margin-top:-20px;'>Primary Team</span>" : "";
+        Literal lit = (Literal)e.Item.FindControl("litGroupLink");
+        lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + "</a>";
+        Image imgTeam = (Image)e.Item.FindControl("imgTeam");
+        imgTeam.ImageUrl = imgTeamPath;
+    }
+}
+
 
 	private void BindUserGroups()
 	{
