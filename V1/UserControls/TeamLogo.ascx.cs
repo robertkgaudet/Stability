@@ -1,6 +1,8 @@
-﻿using System.Linq;
-using System;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Web;
+using System.Web.UI;
 using Twilio.Types;
 public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
 {
@@ -111,65 +113,59 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                                     }).FirstOrDefault();
                     }
 
-                    if (orgUser != null || isprimaryorg !=null || orgUserr !=null)
+                    if (orgUser != null || isprimaryorg != null || orgUserr != null)
                     {
-                        if (isprimaryorg != null)
-                        {
-                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(isprimaryorg.LogoSquare)
-                                ? teamLogo + isprimaryorg.LogoSquare
-                                : "/V1/Images/DefaultLogo.png";
-                            string url = "/V1/NonProfit/Default.aspx?organizationId=";
-                            hypTeamLogo.NavigateUrl = url+isprimaryorg.OrganizationId;
-                            imgTeamLogo.Attributes["title"] = isprimaryorg.Name + " Verified";
-                        }
-                        else if(orgUser!=null)
-                        {
+                        // Determine which source to use
+                        dynamic source = isprimaryorg ?? orgUser ?? orgUserr;
 
-                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare)
-                                ? teamLogo + orgUser.LogoSquare
-                                : "/V1/Images/DefaultLogo.png";
-                            string url = "/V1/NonProfit/Default.aspx?organizationId=";
-                            hypTeamLogo.NavigateUrl = url + orgUser.OrganizationId;
-                            imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
+                        // Determine virtual and physical paths for logo
+                        string logoFile = source.LogoSquare;
+                        string virtualPath = !string.IsNullOrEmpty(logoFile) ? teamLogo + logoFile : null;
+                        string physicalPath = !string.IsNullOrEmpty(virtualPath) ? Server.MapPath(virtualPath) : null;
+
+                        // Apply file-exists check like profile photo logic
+                        if (!string.IsNullOrEmpty(physicalPath) && File.Exists(physicalPath))
+                        {
+                            imgTeamLogo.ImageUrl = virtualPath;
                         }
                         else
                         {
-                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUserr.LogoSquare)
-                                ? teamLogo + orgUserr.LogoSquare
-                                : "/V1/Images/DefaultLogo.png";
-                            string url = "/V1/NonProfit/Default.aspx?organizationId=";
-                            hypTeamLogo.NavigateUrl = url + orgUserr.OrganizationId;
-                            imgTeamLogo.Attributes["title"] = orgUserr.Name + " Verified";
+                            imgTeamLogo.ImageUrl = "/V1/Images/DefaultLogo.png";
                         }
+
+                        // Set hyperlink and title
+                        string url = "/V1/NonProfit/Default.aspx?organizationId=";
+                        hypTeamLogo.NavigateUrl = url + source.OrganizationId;
+                        imgTeamLogo.Attributes["title"] = source.Name + " Verified";
+
+                        // Determine whether to show/hide team logo
+                        bool showLogo = false;
 
                         if (orgUser != null)
                         {
-                            if ( orgUser.ShowTeamLogo == true)
-                            {
-                                imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
-                                hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
-                            }
+                            showLogo = orgUser.ShowTeamLogo == true;
+                        }
+                        else if (isprimaryorg != null && orgUserr != null)
+                        {
+                            showLogo = true;
+                        }
+                        else if (orgUserr != null)
+                        {
+                            showLogo = true;
+                        }
+
+                        if (showLogo)
+                        {
+                            imgTeamLogo.Style.Add(HtmlTextWriterStyle.Display, "block");
+                            hypTeamLogo.Style.Add(HtmlTextWriterStyle.Display, "block");
                         }
                         else
                         {
-                            if (isprimaryorg != null && orgUserr != null)
-                            {
-                                imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
-                                hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
-                            }
-                            else if(orgUserr !=null)
-                            {
-                                imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
-                                hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
-                            }
-                            else
-                            {
-                                hypTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "none");
-                                imgTeamLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "none");
-                            }
-
+                            imgTeamLogo.Style.Add(HtmlTextWriterStyle.Display, "none");
+                            hypTeamLogo.Style.Add(HtmlTextWriterStyle.Display, "none");
                         }
                     }
+
                     hypStabilityLogo.NavigateUrl = "/V1/Member/Default.aspx?userId=" + UserId;
                     imgStabilityBadge.ImageUrl = teamLogo + "purplebadge.png";
                     if (profile.IsDisasterReadyCertified)
