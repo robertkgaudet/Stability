@@ -19,7 +19,18 @@
             width: 100%;
             max-width: 500px;
         }
-				
+		.skip-link {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 16px;
+            color: #6c757d;
+            text-decoration: underline;
+        }
+
+        .skip-link:hover {
+            color: #5a6268;
+            text-decoration: none;
+        }
          .logo-name:hover {
             cursor: pointer;
         }
@@ -126,6 +137,8 @@
 															  AutoPostBack="true"
 															  OnSelectedIndexChanged="ddlOrganizations_SelectedIndexChanged">
 											</asp:DropDownList>
+											<br /><br />
+											<a href="/register.aspx" class="skip-link">I don't see my organization</a>
 										</asp:Panel>
                                 </div>
                             </div>
