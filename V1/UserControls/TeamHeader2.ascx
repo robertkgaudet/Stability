@@ -166,6 +166,12 @@
         color: #666;
         margin: 4px 0;
     }
+
+	.adminCardName{
+		font-size:13px;
+		color:darkslategrey;
+		font-weight:600;
+	}
 </style>
 <%--SECTION: End Header Styles--%>
 

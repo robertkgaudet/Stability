@@ -233,53 +233,53 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     if (connectionHtml != "" && statushtml == "")
                     {
                         cardHtml = "<div class='card'>" +
-           "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
-           "<div class='info'>" +
-               "<div class='name-row'>" +
-                   "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' style='color: black; font-size: 15px;'>" + teamownerfullname + "</a></h2>" +
-                   "<span class='badgge'>" + icon + "</span>" +
-                   "<span class='badgge'>" + finalTeamLogo + "</span>" +
-               "</div>" +
-               "<p class='location small'>" + teamownerAddress + "</p>" +
-                 connectionHtml +
-               "<span class='badge badge-info'>Team Owner</span>" +
-           "</div>" +
-         "</div>";
+						   "<img src='" + photourl + "' class='avatar' />" +
+						   "<div class='info'>" +
+							   "<div class='name-row'>" +
+								   "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' class='adminCardName'>" + teamownerfullname + "</a></h2>" +
+								   "<span class='badgge'>" + icon + "</span>" +
+								   "<span class='badgge'>" + finalTeamLogo + "</span>" +
+							   "</div>" +
+							   "<p class='location small'>" + teamownerAddress + "</p>" +
+								 connectionHtml +
+							   "<span class='badge badge-info'>Team Owner</span>" +
+						   "</div>" +
+						 "</div>";
                     }
                     else if (statushtml != null && teamowner != currentUserId)
                     {
                         cardHtml = "<div class='card'>" +
-           "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
-           "<div class='info'>" +
-               "<div class='name-row'>" +
-                   "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' style='color: black; font-size: 15px;'>" + teamownerfullname + "</a></h2>" +
-                   "<span class='badgge'>" + icon + "</span>" +
-                   "<span class='badgge'>" + finalTeamLogo + "</span>" +
-               "</div>" +
-			   "<p class='location small'>" + teamownerAddress + "</p>" +
-               "<p class='connection'>" +
-               "<strong>" + statushtml + "</strong>" +
-                "</p>" +
-			   "<span class='badge badge-info'style='bottom:10px;'>Team Owner</span>" +
-           "</div>" +
-         "</div>";
+							   "<img src='" + photourl + "' class='avatar' />" +
+							   "<div class='info'>" +
+								   "<div class='name-row'>" +
+									   "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' class='adminCardName'>" + teamownerfullname + "</a></h2>" +
+									   "<span class='badgge'>" + icon + "</span>" +
+									   "<span class='badgge'>" + finalTeamLogo + "</span>" +
+								   "</div>" +
+								   "<p class='location small'>" + teamownerAddress + "</p>" +
+								   "<p class='connection'>" +
+								   "<strong>" + statushtml + "</strong>" +
+									"</p>" +
+								   "<span class='badge badge-info'style='bottom:10px;'>Team Owner</span>" +
+							   "</div>" +
+							 "</div>";
                     }
                     else
                     {
                         cardHtml = "<div class='card'>" +
-          "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;' />" +
-          "<div class='info'>" +
-              "<div class='name-row'>" +
-                  "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' style='color: black; font-size: 15px;'>" + teamownerfullname + "</a></h2>" +
-                  "<span class='badgge'>" + icon + "</span>" +
-                  "<span class='badgge'>" + finalTeamLogo + "</span>" +
-              "</div>" +
-			  "<p class='location small'>" + teamownerAddress + "</p>" +
-              "<p class='connection'>" +
-               "</p>" +
-              "<span class='badge badge-info'style='bottom:10px;'>Team Owner</span>" +
-          "</div>" +
-           "</div>";
+							  "<img src='" + photourl + "' class='avatar' />" +
+							  "<div class='info'>" +
+								  "<div class='name-row'>" +
+									  "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' class='adminCardName'>" + teamownerfullname + "</a></h2>" +
+									  "<span class='badgge'>" + icon + "</span>" +
+									  "<span class='badgge'>" + finalTeamLogo + "</span>" +
+								  "</div>" +
+								  "<p class='location small'>" + teamownerAddress + "</p>" +
+								  "<p class='connection'>" +
+								   "</p>" +
+								  "<span class='badge badge-info'style='bottom:10px;'>Team Owner</span>" +
+							  "</div>" +
+							   "</div>";
                     }
                 }
                 int teamAdministratorCount = 0;
@@ -469,43 +469,43 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     if (connectionHtml1 != "" && statushtml1 == "")
                     {
                         allTeamAdminCards +=
-            "<div class='card'>" +
-             "<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
-             "<div class='info'>" +
-                 "<div class='name-row'>" +
-                     "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' style='color: black; font-size: 15px;'>" + teamAdministratorfullname + "</a></h2>" +
-                      "<span class='badgge'>" + icons + "</span>" +
-                       "<span class='badgge'>" + finalTeamLogoo + "</span>" +
-                 "</div>" +
-				 "<p class='location small'>" + teamAdministratorAddress + "</p>" +
-                 connectionHtml1 +
-             "</div>" +
-         "</div>";
+							"<div class='card'>" +
+							 "<img src='" + photoUrl + "' class='avatar' />" +
+							 "<div class='info'>" +
+								 "<div class='name-row'>" +
+									 "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' class='adminCardName'>" + teamAdministratorfullname + "</a></h2>" +
+									  "<span class='badgge'>" + icons + "</span>" +
+									   "<span class='badgge'>" + finalTeamLogoo + "</span>" +
+								 "</div>" +
+								 "<p class='location small'>" + teamAdministratorAddress + "</p>" +
+								 connectionHtml1 +
+							 "</div>" +
+						 "</div>";
                     }
                     else if (statushtml1 != null && userId != currentUserId)
                     {
                         allTeamAdminCards +=
-"<div class='card'>" +
-"<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
-"<div class='info'>" +
-    "<div class='name-row'>" +
-        "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' style='color: black; font-size: 15px;'>" + teamAdministratorfullname + "</a></h2>" +
-         "<span class='badgge'>" + icons + "</span>" +
-          "<span class='badgge'>" + finalTeamLogoo + "</span>" +
-    "</div>" +
-	"<p class='location small'>" + teamAdministratorAddress + "</p>" +
-		   "<p class='connection font-trans'>" + statushtml1 + "</p>" +
-"</div>" +
-"</div>";
+							"<div class='card'>" +
+							"<img src='" + photoUrl + "' class='avatar' />" +
+							"<div class='info'>" +
+								"<div class='name-row'>" +
+									"<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' class='adminCardName'>" + teamAdministratorfullname + "</a></h2>" +
+									 "<span class='badgge'>" + icons + "</span>" +
+									  "<span class='badgge'>" + finalTeamLogoo + "</span>" +
+								"</div>" +
+								"<p class='location small'>" + teamAdministratorAddress + "</p>" +
+									   "<p class='connection font-trans'>" + statushtml1 + "</p>" +
+							"</div>" +
+							"</div>";
                     }
                     else
                     {
                         allTeamAdminCards +=
                               "<div class='card'>" +
-                               "<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;' />" +
+                               "<img src='" + photoUrl + "' class='avatar' />" +
                                "<div class='info'>" +
                                    "<div class='name-row'>" +
-                                       "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' style='color: black; font-size: 15px;'>" + teamAdministratorfullname + "</a></h2>" +
+                                       "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' class='adminCardName'>" + teamAdministratorfullname + "</a></h2>" +
                                         "<span class='badgge'>" + icons + "</span>" +
                                          "<span class='badgge'>" + finalTeamLogoo + "</span>" +
                                    "</div>" +
