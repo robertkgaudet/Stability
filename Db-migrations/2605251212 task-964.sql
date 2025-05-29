@@ -1,7 +1,9 @@
 /*please add this*/
  ALTER TABLE[dbo].[UserOrganization]
-ADD TeamJoinStatus INT NOT NULL DEFAULT 0
+ADD Status INT NOT NULL DEFAULT 0
 
+
+EXEC sp_rename 'UserOrganization.TeamJoinStatus', 'status', 'COLUMN';
 
 UPDATE uo
 SET uo.IsOwner = 1

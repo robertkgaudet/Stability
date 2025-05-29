@@ -49330,7 +49330,7 @@ public partial class UserOrganization : INotifyPropertyChanging, INotifyProperty
 	
 	private bool _IsOwner;
 	
-	private int _TeamJoinStatus;
+	private int _status;
 	
 	private EntityRef<aspnet_User> _aspnet_User;
 	
@@ -49360,8 +49360,8 @@ public partial class UserOrganization : INotifyPropertyChanging, INotifyProperty
     partial void OnIsTeamAdministratorChanged();
     partial void OnIsOwnerChanging(bool value);
     partial void OnIsOwnerChanged();
-    partial void OnTeamJoinStatusChanging(int value);
-    partial void OnTeamJoinStatusChanged();
+    partial void OnstatusChanging(int value);
+    partial void OnstatusChanged();
     #endregion
 	
 	public UserOrganization()
@@ -49579,22 +49579,22 @@ public partial class UserOrganization : INotifyPropertyChanging, INotifyProperty
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TeamJoinStatus", DbType="Int NOT NULL")]
-	public int TeamJoinStatus
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_status", DbType="Int NOT NULL")]
+	public int status
 	{
 		get
 		{
-			return this._TeamJoinStatus;
+			return this._status;
 		}
 		set
 		{
-			if ((this._TeamJoinStatus != value))
+			if ((this._status != value))
 			{
-				this.OnTeamJoinStatusChanging(value);
+				this.OnstatusChanging(value);
 				this.SendPropertyChanging();
-				this._TeamJoinStatus = value;
-				this.SendPropertyChanged("TeamJoinStatus");
-				this.OnTeamJoinStatusChanged();
+				this._status = value;
+				this.SendPropertyChanged("status");
+				this.OnstatusChanged();
 			}
 		}
 	}
