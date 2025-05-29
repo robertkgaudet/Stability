@@ -111,7 +111,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
         BindChapterOrganizations(organizationId);
 
-        string squareLogo = string.Empty;
+        string squareLogo = "/V1/Images/Logo-Placeholder.png";
         if (organization != null)
         {
             if (organization.CoverImage != null)
@@ -123,14 +123,17 @@ public partial class V1_NonProfit_Default : BaseWebForm
             ucTeamHeader.TeamDescription = organization.Description;
             ucTeamHeader._teamTitle = organization.Name;
 
-            if (!String.IsNullOrEmpty(organization.LogoSquare))
+            if (!string.IsNullOrEmpty(organization.LogoSquare))
             {
-                squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+                string virtualPath_square = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+                string physicalPath_square = Server.MapPath(virtualPath_square);
+
+                if (System.IO.File.Exists(physicalPath_square))
+                {
+                    squareLogo = virtualPath_square;
+                }
             }
-            else
-            {
-                squareLogo = "/V1/Images/Logo-Placeholder.png";
-            }
+        
 
             Master.PageTitle = organization.Name + " Programs on Stability";
             Master.PageDescription = organization.Description;

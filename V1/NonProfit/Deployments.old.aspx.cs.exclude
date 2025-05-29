@@ -32,7 +32,7 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 		ucTeamNavigation.TeamName = organization.Name;
 
 		string logo = string.Empty;
-		string squareLogo = string.Empty;
+        string squareLogo = "/V1/Images/Logo-Placeholder.png";
 		if (!String.IsNullOrEmpty(organization.Logo))
 		{
 			logo = "/Impactoid/Images/Logos/" + organization.Logo;
@@ -42,10 +42,16 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 			//Use placeholder image.imgLogo.Visible = true;
 			logo = "/V1/Images/Logo-Placeholder.png";
 		}
-		if (!String.IsNullOrEmpty(organization.LogoSquare))
-		{
-			squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-		}
+		 if (!string.IsNullOrEmpty(organization.LogoSquare))
+    {
+        string virtualPath_square = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+        string physicalPath_square = Server.MapPath(virtualPath_square);
+
+        if (System.IO.File.Exists(physicalPath_square))
+        {
+            squareLogo = virtualPath_square;
+        }
+    }
 
 		ucTeamNavigation.TeamName = organization.Name;
 		ucTeamHeader.Logo = logo;
