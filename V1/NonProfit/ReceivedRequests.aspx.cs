@@ -48,7 +48,7 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
         {
             currentUserId = (Guid)user.ProviderUserKey;
         }
-        string squareLogo = string.Empty;
+        string squareLogo = "/V1/Images/Logo-Placeholder.png";
         if (organization != null)
         {
             Guid orgid = new Guid(organizationId);
@@ -82,15 +82,16 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
             }
             ucTeamHeader.CoverImage = _coverImage;
 
-            if (!String.IsNullOrEmpty(organization.LogoSquare))
+            if (!string.IsNullOrEmpty(organization.LogoSquare))
             {
-                squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-            }
-            else
-            {
-                squareLogo = "/V1/Images/Logo-Placeholder.png";
-            }
+                string virtualPath_square = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+                string physicalPath_square = Server.MapPath(virtualPath_square);
 
+                if (System.IO.File.Exists(physicalPath_square))
+                {
+                    squareLogo = virtualPath_square;
+                }
+            }
             Master.PageTitle = organization.Name + " Programs on Stability";
             Master.PageDescription = organization.Description;
             Master.FbDescription = organization.Description;

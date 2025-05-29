@@ -91,6 +91,7 @@
 		{
 			border-radius: 10px !important;
 			margin-bottom: 0px !important;
+
 		}
 		.calendar-month-day:hover, .calendar-month:hover{
 			cursor:pointer;
@@ -130,10 +131,15 @@
 			overflow: auto;
 			height:1000px;
 		}
-		          .badge {
-  background-color: #b08e4f!important;
- 
-}
+	    .badge {
+            background-color: #b08e4f!important;
+        }
+		.member-panel-body h3 {
+		    color: black !important;
+	    }
+		.font-normal {
+	        color: black !important;
+        }
 	</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
