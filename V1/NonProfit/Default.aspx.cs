@@ -201,8 +201,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
                                    && uo.OrganizationId == new Guid(organizationId)
                                    select uo;
 
-            ReceivedRequest request = dc.ReceivedRequests
-            .FirstOrDefault(rr => rr.SenderId == userId && rr.ReceiverId == new Guid(organizationId));
+            UserOrganization request = dc.UserOrganizations
+            .FirstOrDefault(rr => rr.UserId == userId && rr.OrganizationId == new Guid(organizationId));
 
             int? status = null;
 
@@ -225,26 +225,32 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     btnActiveVolunteer.Attributes["data-toggle"] = "tooltip";
                     btnActiveVolunteer.Attributes["title"] = "Your request is complete. You joined the team";
                     btnActiveVolunteer.Visible = true;
+                    btnActiveVolunteer.Enabled = false;
+                    btnActiveVolunteer.Style.Add("background-color", "lightgray");
+                    btnActiveVolunteer.Style.Add("color", "black");
                     lbVolunteer.Visible = false;
                 }
-                else if (userOrg != null && userOrg.IsPrimary == true && status == 1)
+                else if (userOrganization != null&&userOrg.IsPrimary == true && status == 1)
                 {
                     lbleave.Visible = true;
                     lbVolunteer.Visible = false;
                     lbprimary.Visible = false;
                 }
-                else if (status == 1)
+                else if (status == 1 && userOrganization.Count() != 0)
                 {
                     lbVolunteer.Visible = false;
                     lbleave.Visible = true;
                     lbprimary.Visible = true;
                 }
-                else if (status == 2)
+                else if (status == 2 && userOrganization.Count() == 0)
                 {
                     btnActiveVolunteer.Text = "Request Rejected";
                     btnActiveVolunteer.Attributes["data-toggle"] = "tooltip";
                     btnActiveVolunteer.Attributes["title"] = "Your request was rejected by the team administrators.";
                     btnActiveVolunteer.Visible = true;
+                    btnActiveVolunteer.Enabled = false;
+                    btnActiveVolunteer.Style.Add("background-color", "lightgray");
+                    btnActiveVolunteer.Style.Add("color", "black");
                     lbVolunteer.Visible = false;
                 }
             }
@@ -463,17 +469,22 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
-                ReceivedRequest request = new ReceivedRequest
+                UserOrganization userOrg = new UserOrganization
                 {
-                    Id = Guid.NewGuid(),
-                    SenderId = userId,
-                    ReceiverId = orgId,
-                    Status = (int)RequestStatus.Pending,
-                    RequestDate = DateTime.Now,
-                    IsActive = true
+                    UserOrganizationId = Guid.NewGuid(),       
+                    UserId = userId,
+                    OrganizationId = orgId,
+                    ShowTeamLogo = false,                     
+                    TeamVerifiedDate = DateTime.Now,                   
+                    IsPrimary = false,
+                    IsEnabled = false,
+                    IsPreviousOwner = false,
+                    IsTeamAdministrator = false,
+                    IsOwner = false,
+                    Status = (int)RequestStatus.Pending  
                 };
 
-                dc.ReceivedRequests.InsertOnSubmit(request);
+                dc.UserOrganizations.InsertOnSubmit(userOrg);
                 dc.SubmitChanges();
                 AddNotificationsAndSendEmail(null, EventArgs.Empty);
             }
