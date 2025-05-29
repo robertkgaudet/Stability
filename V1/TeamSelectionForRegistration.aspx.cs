@@ -51,7 +51,7 @@ public partial class V1_TeamSelectionForRegistration : System.Web.UI.Page
 								  where o.OrganizationId == parentOrganizationId
 								  select new { o.Name }).SingleOrDefault();
 
-				litParentTeam.Text = "Clubs under " + parentTeam.Name;
+				litParentTeam.Text = parentTeam.Name;
 
 				var orgs = from o in dc.Organizations
 						   where o.ParentOrganizationId == parentOrganizationId
@@ -68,7 +68,7 @@ public partial class V1_TeamSelectionForRegistration : System.Web.UI.Page
 				ddlOrganizations.DataValueField = "OrganizationId";
 				ddlOrganizations.DataBind();
 
-				ddlOrganizations.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Select a Club To Create Your Account--", ""));
+				ddlOrganizations.Items.Insert(0, new System.Web.UI.WebControls.ListItem("-- Select Your Club--", ""));
 
 			}
 		}

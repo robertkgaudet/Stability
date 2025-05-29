@@ -124,12 +124,16 @@
                             </div>
                         </h1>
                     <div class="m-t" role="form">
-                        <h3>
-							<asp:Literal runat="server" ID="litParentTeam"></asp:Literal>
-                        </h3>
-                        <div class="hpanel">
-                            <div class="panel-body">
-                                <div class="row">
+						<div class="hpanel">
+										<h3>
+											Select Your Rotary Club – <asp:Literal runat="server" ID="litParentTeam"></asp:Literal>
+										</h3>
+										<p>
+										Welcome! To begin your registration, please select your Rotary Club from the list below. These clubs are part of Rotary District 6840, serving communities across Southeast Louisiana and the Mississippi Gulf Coast.
+											</p>
+										<p>
+										Choosing your club will help us personalize your registration and connect you with the right local leadership. If you don’t see your club listed, you can skip this step and continue with general registration.
+										</p>
 									    <asp:Panel runat="server" CssClass="form-container">
 											<asp:DropDownList ID="ddlOrganizations"
 															  runat="server"
@@ -138,10 +142,8 @@
 															  OnSelectedIndexChanged="ddlOrganizations_SelectedIndexChanged">
 											</asp:DropDownList>
 											<br /><br />
-											<a href="/register.aspx" class="skip-link">I don't see my organization</a>
+											<a href="/register.aspx" class="skip-link">I don't see my club</a>
 										</asp:Panel>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     </div>
