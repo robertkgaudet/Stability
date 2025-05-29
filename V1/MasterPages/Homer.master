@@ -248,7 +248,8 @@
                             }
                         });
                 }
-            }
+			}
+		
         </script>
 		<script type="text/javascript">
             var baseUrl = '<%= ResolveUrl("~/") %>';
@@ -287,8 +288,81 @@
                 });
             });
         </script>
+		<script>
+            $(document).ready(function () {
+                $('#<%= txtSearchHeader.ClientID %>').on('input', function () {
+                   let query = $(this).val().trim();
+                   if (query.length > 1) {
+                       $('#searchSuggestions').html(`
+                <div class='suggestion-item' data-type='TeamMembers'><strong>Team Members</strong></div>
+                <div class='suggestion-item' data-type='Teams'><strong>Teams</strong></div>
+            `).show();
+                   } else {
+                       $('#searchSuggestions').hide();
+                   }
+               });
 
+               $(document).on('click', '.suggestion-item', function () {
+                   let searchType = $(this).data('type'); 
+                   $('#<%= hdnSearchType.ClientID %>').val(searchType); 
+              $('#<%= btnSearchHeader.ClientID %>').click(); 
+               });
+               $(document).click(function (e) {
+                   if (!$(e.target).closest('.input-group').length) {
+                       $('#searchSuggestions').hide();
+                   }
+               });
+           });
+
+
+            $(document).ready(function () {
+                $('#<%= txtSearchMobile.ClientID %>').on('input', function () {
+                       let query = $(this).val().trim();
+                       if (query.length > 1) {
+                           $('#searchSuggestionss').html(`
+        <div class='suggestion-item' data-type='TeamMembers'><strong>Team Members</strong></div>
+        <div class='suggestion-item' data-type='Teams'><strong>Teams</strong></div>
+    `).show();
+                       } else {
+                           $('#searchSuggestionss').hide();
+                       }
+                   });
+
+                   $(document).on('click', '.suggestion-item', function () {
+                       let searchType = $(this).data('type');
+                       $('#<%= hymoblie.ClientID %>').val(searchType); 
+           $('#<%= btnSearchMobile.ClientID %>').click();
+       });
+                   $(document).click(function (e) {
+                       if (!$(e.target).closest('.input-group').length) {
+                           $('#searchSuggestionss').hide();
+                       }
+                   });
+               });
+
+        </script>
 		<style>
+.input-group {
+    position: relative;
+}
+.suggestion-box {
+    position: absolute;
+    background: white;
+    z-index: 1000;
+    width: 100%;
+    max-width:280px; 
+     margin-top: 35px;
+}
+
+.suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
 			#featureTypeCounter{
 				    margin-right: 17px;
 					margin-top: 20px;
@@ -528,9 +602,28 @@
     color: #333;
     white-space: normal;
 }
-
+	.close-sidebar-btn {
+    position: absolute;
+    top: -15px;
+    right: 0px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 40px;
+}
+.tooltip{
+    background: none !important;
+}
+.team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
+}
 .narrow-mobile-dropdown li a:hover {
     background-color: #f5f5f5;
+}
+#hlMyTeams{
+	color:#337ab7;
 }
 @media (max-width: 768px) {
     .narrow-mobile-dropdown {
@@ -554,6 +647,13 @@ div#adminFeatureSection div {
 						width: 100%;
 						z-index: 1000;
 }
+input#btnSearchHeader{
+	display:none;
+}
+input#btnSearchMobile
+ {
+	display:none;
+}
 		</style>
 
 	<asp:ContentPlaceHolder id="head" runat="server">
@@ -575,6 +675,7 @@ div#adminFeatureSection div {
         	body {
         		padding-top: 30px;
         	}
+			
         </style>
     </asp:Literal>
 		<form id="form1" runat="server" role="form">
@@ -594,7 +695,14 @@ div#adminFeatureSection div {
 							</a>
 							<ul class="dropdown-menu hdropdown animated flipInX narrow-mobile-dropdown">
 								<div style="max-height: 400px; overflow-y: auto;">
-									<li><h4 class="m-l-md">My Teams</h4></li>
+	                             <li>
+                                    <div class="team-header">
+                                   <h4>My Teams</h4>
+                                    <asp:HyperLink ID="hlMyTeams" runat="server" NavigateUrl="~/V1/NonProfit/TeamList.aspx">
+                                    <h5>View All Teams</h5>
+                                      </asp:HyperLink>
+                                           </div>
+			                                  	</li>					
 									<asp:Repeater ID="rptUserGroups" runat="server" OnItemDataBound="rptUserGroups_ItemDataBound">
 										<ItemTemplate>
 											<li>
@@ -604,6 +712,7 @@ div#adminFeatureSection div {
 												<div style="display: inline-block; vertical-align: middle;">
 													<asp:Literal ID="litGroupLink" runat="server"></asp:Literal>
 												</div>
+												<asp:Literal ID="litPrimaryBadge" runat="server"></asp:Literal>
 											</li>
 										</ItemTemplate>
 									</asp:Repeater>
@@ -619,6 +728,8 @@ div#adminFeatureSection div {
 									<asp:Button runat="server" ID="btnSearchHeader" CssClass="btn btn-primary2" Text="Find" OnClick="btnSearchMobile_Click" />
 								</span>
 								<asp:TextBox runat="server" ID="txtSearchHeader" placeholder="Find Connections or Teams" CssClass="form-control search-input" name="search"></asp:TextBox>
+								 <div id="searchSuggestions" class="suggestion-box"></div>
+								<asp:HiddenField ID="hdnSearchType" runat="server" />
 							</div>
 						</div>
 						
@@ -642,7 +753,10 @@ div#adminFeatureSection div {
 									<span class="input-group-btn">
 										<asp:Button runat="server" ID="btnSearchMobile" CssClass="btn btn-primary2" Text="Find" OnClick="btnSearchMobile_Click" />
 									</span>
+
 									<asp:TextBox runat="server" ID="txtSearchMobile" placeholder="Find Connections or Teams" CssClass="form-control search-input" name="search"></asp:TextBox>
+									 <div id="searchSuggestionss" class="suggestion-box"></div>
+								  <asp:HiddenField ID="hymoblie" runat="server" />
 								</div>
 							</div>
 						</div>
@@ -709,6 +823,7 @@ div#adminFeatureSection div {
 				<!-- Navigation 1-->
 				<aside id="menu" runat="server" style="z-index:1001;">
 					<div id="navigation">
+					<button id="btnCloseSidebar" class="close-sidebar-btn" type="button">&times;</button>
 						<ul class="nav m-b" id="side-menu">
 							<div class="profile-picture m-b-xs">
 								<img class="m-b img-rounded" width="10" src="../Images/icons8-customer-64.png" runat="server" id="imgProfile" />
@@ -1187,3 +1302,8 @@ div#adminFeatureSection div {
 
 	</body>
 </html>
+<script>
+    $('#btnCloseSidebar').click(function () {
+        $("body").toggleClass("hide-sidebar");
+	});
+</script>

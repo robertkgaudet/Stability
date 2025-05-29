@@ -1554,7 +1554,7 @@
 
                         var truncatedDescription = truncateText(data.description, 28);
 
-                        postHtml += '<div class="text-container"><small class="text-muted">' + url + '</small></br>';
+                        postHtml += '<div class="text-container"><small class="text-muted"><a href="' + url + '" target="_blank">' + url + '</a></small><br>';
                         postHtml += '<b>' + data.title + '</b>';
                         postHtml += '<p>' + truncatedDescription + '</p></div>';
 

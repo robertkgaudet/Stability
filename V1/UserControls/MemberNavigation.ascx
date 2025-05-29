@@ -14,13 +14,18 @@
         <h5>MY ACCOUNT</h5>
         <ul class="mailbox-list">
             <li>
-                <asp:HyperLink ID="hypMyProfile" runat="server" NavigateUrl="/V1/Member/Default.aspx">
+                <asp:HyperLink ID="hypMyProfile" runat="server"  NavigateUrl="/V1/Member/Default.aspx" >
                     <i class="fa fa-user"></i> Profile
                 </asp:HyperLink>
             </li>
             <li>
                 <asp:HyperLink ID="hypMyTeam" runat="server">
                     <i class="fa fa-users"></i> Team
+                </asp:HyperLink>
+            </li>
+            <li>
+                <asp:HyperLink ID="hypMyConnections" runat="server" NavigateUrl="/V1/Member/Connections.aspx">
+         <i class=" fa fa-share-alt "></i> My Connections
                 </asp:HyperLink>
             </li>
             <li>
@@ -51,7 +56,7 @@
         <ul class="mailbox-list">
             <li>
                 <asp:HyperLink ID="hypDeployments" CssClass="font-weight-bold" runat="server">
-                    <i class="fa fa-briefcase"></i> Find Open Positions
+                    <i class="fa fa-life-ring"></i> Find Volunteer Opportunities
                 </asp:HyperLink>
             </li>
             <li>
@@ -71,7 +76,7 @@
             </li>
             <li>
                 <asp:HyperLink ID="hypPortals" runat="server" NavigateUrl="/V1/Profile/EditDisasters.aspx">
-                    <i class="fa fa-map-marker"></i> Portals
+                    <i class="fa fa-globe"></i> Portals
                 </asp:HyperLink>
             </li>
         </ul>

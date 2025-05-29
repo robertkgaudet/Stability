@@ -71,7 +71,7 @@
                 $("#btn-mapDropDown.ddlMapFilter").html($(this).text());
 
                 // Apply filters only for Critical view
-                initMapWithFilters(mapFilterType, null, null, null);
+                initMapWithFilters(mapFilterType, null, null);
 
                 event.preventDefault();
             });
@@ -83,28 +83,31 @@
 
 
 
-            }
-
+            };
             $(document).on('click', '#ddlLocationType.dropdown-menu li', function (event) {
                 handleFilterClick(STORAGE_KEYS.LOCATION_TYPE, '#btn-locationType.locationTypeFilter').call(this, event);
                 var selectedText = $(this).text().trim();
                 $('#btn-locationType.locationTypeFilter').html(selectedText + ' <i class="fa fa-sort-down"></i>');
-
             });
-
-            $(document).on('click', '#ddlParentType.dropdown-menu li', function (event) {
-                handleFilterClick(STORAGE_KEYS.PARENT_TYPE, '#btn-parentType.parentTypeFilter').call(this, event);
-                var selectedText = $(this).text().trim();
-                $('#btn-parentType.parentTypeFilter').html(selectedText + ' <i class="fa fa-sort-down"></i>');
-
-            });
-
             $(document).on('click', '#ddlStatus.dropdown-menu li', function (event) {
                 handleFilterClick(STORAGE_KEYS.STATUS, '#btn-status.statusFilter').call(this, event);
-                var selectedText = $(this).text().trim();
+                     var selectedText = $(this).text().trim();
                 $('#btn-status.statusFilter').html(selectedText + ' <i class="fa fa-sort-down"></i>');
-
             });
+
+             $("#btn-reset").on("click", function (e) {
+                 $('#ddlLocationType').empty();                 
+                 $('#ddlStatus').empty();
+                 $('#btn-locationType.locationTypeFilter').attr('selData','');                   
+                 $('#btn-locationType.locationTypeFilter').html('Location Types <i class="fa fa-sort-down"></i>');                   
+                 $('#btn-status.statusFilter').attr('selData', '');
+                 $('#btn-status.statusFilter').html('Status <i class="fa fa-sort-down"></i>');
+      
+                 const mapFilterType = $("#ddlMapFilter.dropdown-menu li").attr('id');                
+                 // Apply filters only for Critical view
+                 initMapWithFilters(mapFilterType, null, null);                    
+             });
+
             function handleFilterClick(storageKey, buttonSelector) {
                 ddlChange = false;
                 return function (event) {
@@ -113,25 +116,22 @@
                     $(buttonSelector).html($(this).text());
 
                     var ltId = $('#btn-locationType.locationTypeFilter').attr('selData');
-                    var pltId = $('#btn-parentType.parentTypeFilter').attr('selData');
+                   
                     var lsId = $('#btn-status.statusFilter').attr('selData');
                     // Only refresh if in Critical mode
                     if (DEFAULT_FILTER === "Critical") {
                         initMapWithFilters(
                             DEFAULT_FILTER,
                             ltId == '' ? null : ltId,
-                            pltId == '' ? null : pltId,
                             lsId == '' ? null : lsId
                         );
                     }
                     event.preventDefault();
                 };
             }
-
-            // Existing map functions remain exactly the same below this point
-            var map;
+            var map; // Existing map functions remain exactly the same below this point
             let GEOJsonPath = '<%=_mapGEOJsonPath%>';
-
+            
             function initMap(mapFilterType) {
                 // Clear non-Critical filters when switching modes
                 if (mapFilterType !== "Critical") {
@@ -142,16 +142,14 @@
                 initMapWithFilters(
                     mapFilterType,
                     null,
-                    null,
                     null
                 );
             }
 
 
-            function initMapWithFilters(mapFilterType, locationTypeId, parentTypeId, statusId) {
+            function initMapWithFilters(mapFilterType, locationTypeId, statusId) {
                 if (mapFilterType !== "Critical") {
-                    locationTypeId = null;
-                    parentTypeId = null;
+                    locationTypeId = null;                    
                     statusId = null;
                 }
 
@@ -191,8 +189,7 @@
 
                 // Only add additional parameters if in Critical mode
                 if (mapFilterType === "Critical") {
-                    if (locationTypeId) mapsURL += '&locationTypeId=' + locationTypeId;
-                    if (parentTypeId) mapsURL += '&parentTypeId=' + parentTypeId;
+                    if (locationTypeId) mapsURL += '&locationTypeId=' + locationTypeId;                    
                     if (statusId) mapsURL += '&statusId=' + statusId;
                 }
 
@@ -201,9 +198,7 @@
                     // Once the data is loaded, generate the list
                     const listContainer = document.getElementById('list');
                     var locationTypeDdl = '';
-                    var locationTypeIds = [];
-                    var parentLocationTypeDdl = '';
-                    var parentLocationTypeIds = [];
+                    var locationTypeIds = [];                    
                     var statusDdl = '';
                     var statusIds = [];
                     //Create the list 
@@ -229,19 +224,12 @@
                             if (phoneNumber) contact += '</br><strong>Phone:</strong> ' + phoneNumber;
                             contact += '</p>';
                         }
-                        const pltId = feature.getProperty('LocationParentTypeId') || '';
-                        const pltName = feature.getProperty('LocationType') || '';
+                        
                         const ltId = feature.getProperty('LocationTypeId') || '';
-                        const ltName = feature.getProperty('LocationTypeName') || '';
+                        const ltName = feature.getProperty('LocationType') || '';
                         const lsName = feature.getProperty('Status') || 'All';
                         const lsId = feature.getProperty('LocationStatusId') || 'null';
-                        if (pltId != '' && pltName != '') {
-                            if (!parentLocationTypeIds.includes(pltId)) {
-                                parentLocationTypeIds.push(pltId);
-                                parentLocationTypeDdl += "<li id='" + pltId + "'><a href='#'>" + pltName + "</a></li>";
-                            }
-
-                        }
+                        
                         if (ltId != '' && ltName != '') {
                             if (!locationTypeIds.includes(ltId)) {
                                 locationTypeIds.push(ltId);
@@ -275,9 +263,7 @@
                             map.setZoom(15);
                         });
                     });
-                    if (ddlChange) {
-                        $('#ddlParentType').empty();
-                        $('#ddlParentType').append(parentLocationTypeDdl);
+                    if (ddlChange) {                       
 
                         $('#ddlLocationType').empty();
                         $('#ddlLocationType').append(locationTypeDdl);
@@ -409,7 +395,7 @@
                 } else {
                     $(".additional-filter").hide();
                 }
-            });
+            });           
         });
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=<%=mapApiKey%>"></script>
@@ -588,15 +574,7 @@
     <div class="row form-group no-gutter">
         <div class="col-xs-12">
             <div class="filter-container">
-                <div class="filter-dropdown map-filter-dropdown">
-                    <button id="btn-mapDropDown" class="btn btn-outline btn-default ddlMapFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Modify Map Filter <i class="fa fa-sort-down"></i></button>
-                    <ul id="ddlMapFilter" class="dropdown-menu text-center dropdown-map-filter">
-                        <li id="All" selected="True"><a href="#">All Locations</a></li>
-                        <li id="Community"><a href="#">Stability.org Deployments</a></li>
-                        <li id="Critical"><a href="#">Critical Facilities</a></li>
-                        <%=liCases%>
-                    </ul>
-                </div>
+
                 <div class="filter-dropdown">
                     <button id="btn-dropdown" class="btn btn-outline btn-default disasterEvent dropdown-toggle dropdown-volunteer"
                         type="button" data-toggle="dropdown">
@@ -606,18 +584,16 @@
                         <%=disasterDropDown%>
                     </ul>
                 </div>
-
-                <!-- New Parent Type Filter -->
-                <div class="filter-dropdown additional-filter">
-                    <button id="btn-parentType" seldata="" class="btn btn-outline btn-default parentTypeFilter dropdown-toggle
-                        dropdown-map-filter"
-                        type="button" data-toggle="dropdown">
-                        Parent Types <i class="fa fa-sort-down"></i>
-                    </button>
-                    <ul id="ddlParentType" class="dropdown-menu text-center dropdown-map-filter">
+                <div class="filter-dropdown map-filter-dropdown">
+                    <button id="btn-mapDropDown" class="btn btn-outline btn-default ddlMapFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Modify Map Filter <i class="fa fa-sort-down"></i></button>
+                    <ul id="ddlMapFilter" class="dropdown-menu text-center dropdown-map-filter">
+                        <li id="All" selected="True"><a href="#">All Locations</a></li>
+                        <li id="Community"><a href="#">Stability.org Deployments</a></li>
+                        <li id="Critical"><a href="#">Critical Facilities</a></li>
+                        <%=liCases%>
                     </ul>
                 </div>
-
+                                
                 <!-- New Location Type Filter -->
                 <div class="filter-dropdown additional-filter">
                     <button id="btn-locationType" seldata="" class="btn btn-outline btn-default locationTypeFilter dropdown-toggle dropdown-map-filter" type="button" data-toggle="dropdown">Location Types <i class="fa fa-sort-down"></i></button>
@@ -633,6 +609,11 @@
                     </ul>
                 </div>
 
+                <div class="filter-dropdown">
+                    <button id="btn-reset" class="btn btn-outline btn-default" type="button" >
+                        <i class="fa fa-refresh" aria-hidden="true"></i> Reset
+                    </button>                    
+                </div>
 
                 <div class="deployment-section">
 

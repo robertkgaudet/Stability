@@ -124,9 +124,20 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         //Calculating the notificationCount
         using (var dc = new CrowdReliefDBDataContext())
         {
-            int unreadCount = dc.Notifications.Count(n => !n.IsRead);
-            notificationCounting = unreadCount.ToString();
-            notificationCounts.Text = unreadCount > 0 ? unreadCount.ToString() : string.Empty;
+            MembershipUser user = Membership.GetUser();
+
+            if (user != null && user.ProviderUserKey != null)
+            {
+                Guid currentUserId = new Guid(user.ProviderUserKey.ToString());
+                int unreadCount = dc.Notifications
+                    .Count(n => !n.IsRead && n.RecipientUserId == currentUserId);
+                notificationCounting = unreadCount.ToString();
+                notificationCounts.Text = unreadCount > 0 ? unreadCount.ToString() : string.Empty;
+            }
+            else
+            {
+                int unreadCount = 0;
+            }
         }
 
 
@@ -149,6 +160,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
             if (HttpContext.Current.User.IsInRole("Administrator"))
             {
+                menu.Style["margin-top"] = "60px";
                 adminFeatureSection.Visible = true;
 				adminHeaderStyle = "{position: fixed; top: 65px; left: 0;width: 100%;z-index: 9999; background-color: #5e2e91; height: 58px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}";
 
@@ -232,7 +244,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             var orgUser = from o in dc.Organizations
                           join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                          where uo.UserId == userId
+                          where uo.UserId == userId && uo.IsEnabled == true
                           orderby o.CreatedOn descending
                           select o;
 
@@ -293,7 +305,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             var userOrganizations = from uo in dc.UserOrganizations
                                     join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                    where uo.UserId == userId
+                                    where uo.UserId == userId && uo.IsEnabled == true
                                     select new { o.Name, o.OrganizationId };
 
             if (userOrganizations.Count() > 0)
@@ -422,6 +434,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                 litDiasterLabel.Visible = false;
                 divNoPortalGuidance.Visible = true;
             }
+            string virtualPath;
             //List nonprofits a user volunteers for.
             var profileImage = (from ph in dc.ProfilePhotos
                                 join p in dc.Photos on ph.PhotoId equals p.PhotoId
@@ -431,9 +444,19 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             if (profileImage != null)
             {
-                //Get the users profile image
-                imgProfile.Src = profilePhotoFolder + profileImage.FilenameCropped;
+                virtualPath = profilePhotoFolder + profileImage.FilenameCropped;
+                string physicalPath = Server.MapPath(virtualPath);
+
+                if (!File.Exists(physicalPath))
+                {
+                    virtualPath = "~/V1/Images/icons8-customer-64.png";
+                }
             }
+            else
+            {
+                virtualPath = "~/V1/Images/icons8-customer-64.png";
+            }
+            imgProfile.Src = virtualPath;
 
             //         string[] userRoles = Roles.GetRolesForUser(HttpContext.Current.User.Identity.Name);
 
@@ -622,30 +645,19 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			string organizationUrl = "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
 			string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
 			string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
-			Guid ownerId = (Guid)DataBinder.Eval(dataItem.DataItem, "OwnerId");
-			string imgTeamPath = "/V1/Images/Logo-Placeholder.png";
-			string isOwner = string.Empty;
-			
-			if(ownerId != null)
-			{
-				if(ownerId == userId)
-				{
-					//User is the owner of the group.
-					isOwner = "*";
-				}
-			}
 
+            string imgTeamPath = "/V1/Images/Logo-Placeholder.png";
+            bool isPrimary = Convert.ToBoolean(DataBinder.Eval(dataItem.DataItem, "IsPrimary") ?? false);
 			if (!string.IsNullOrEmpty(organizationTeamLogo))
 			{
 				imgTeamPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
 			}
-
-			// Optional: set values manually to controls inside the template if you prefer
-			// e.g., if using Literal controls instead of Eval()
-
-			Literal lit = (Literal)e.Item.FindControl("litGroupLink");
-			lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + isOwner + "</a>";
-			Image imgTeam = (Image)e.Item.FindControl("imgTeam");
+            Literal litPrimaryBadge = (Literal)e.Item.FindControl("litPrimaryBadge");
+            litPrimaryBadge.Text = isPrimary ? " <span class='badge badge-primary' style='margin-left: 55px;margin-top:-20px;'>Primary Team</span>" : "";
+            //string primaryStar = isPrimary ? " ★" : "";
+            Literal lit = (Literal)e.Item.FindControl("litGroupLink");
+            lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + "</a>";
+            Image imgTeam = (Image)e.Item.FindControl("imgTeam");
 			imgTeam.ImageUrl = imgTeamPath;
 		}
 	}
@@ -653,19 +665,20 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 	private void BindUserGroups()
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-		var userGroups = (from g in dc.UserOrganizations
-						  join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
-						  where g.UserId == userId
-						  orderby o.Name
-						  select new
-						  {
-							  OrganizationName = o.Name,
-							  OrganizationId = o.OrganizationId,
-							  imgTeam = o.LogoSquare,
-							  OwnerId = o.OwnerId
-						  }).ToList();
+        var userGroups = (from g in dc.UserOrganizations
+                          join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
+                          where g.UserId == userId && g.IsEnabled == true
+                          orderby g.IsPrimary descending, o.Name
+                          select new
+                          {
+                              OrganizationName = o.Name,
+                              OrganizationId = o.OrganizationId,
+                              imgTeam = o.LogoSquare,
+                              OwnerId = o.OwnerId,
+                              IsPrimary = g.IsPrimary
+                          }).ToList();
 
-		rptUserGroups.DataSource = userGroups;
+        rptUserGroups.DataSource = userGroups;
 		rptUserGroups.DataBind();
 	}
 
@@ -838,8 +851,16 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
     protected void btnSearchMobile_Click(object sender, EventArgs e)
     {
+        string searchType = String.IsNullOrEmpty(txtSearchMobile.Text) ? hdnSearchType.Value : hymoblie.Value;
         string searchTerm = String.IsNullOrEmpty(txtSearchMobile.Text) ? txtSearchHeader.Text : txtSearchMobile.Text;
-        Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm);
+        if (searchType == "Teams")
+        {
+            Response.Redirect("/V1/NonProfit/TeamList.aspx?searchTerm=" + searchTerm);
+
+        }
+        else {
+            Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm);
+           }
     }
 
 }

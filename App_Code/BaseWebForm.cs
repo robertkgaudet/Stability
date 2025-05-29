@@ -20,7 +20,7 @@ public class BaseWebForm : System.Web.UI.Page, IRequiresSessionState
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
             var userOrganization = (from uo in dc.UserOrganizations
                                     join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                    where uo.UserId == m_userId && o.IsActive == true
+                                    where uo.UserId == m_userId && o.IsActive == true && uo.IsEnabled == true
                                     select new { o.Name, o.OrganizationId }).Take(1).SingleOrDefault();
 
             if (userOrganization != null)
@@ -95,7 +95,7 @@ public class BaseWebForm : System.Web.UI.Page, IRequiresSessionState
         return disasterDropDown;
     }
     public static bool AddNotifications(NotificationType notificationType, FeatureTypeEnum featureType, string title, string description,
-                                     Guid recipientUserId, bool postToStream, string redirectURLParameters)
+                                     Guid recipientUserId, bool postToStream, string redirectURLParameters,Guid orgId)
     {
         try
         {
@@ -115,7 +115,8 @@ public class BaseWebForm : System.Web.UI.Page, IRequiresSessionState
                         RecipientUserId = recipientUserId,
                         PostToStream = postToStream,
                         CreatedOn = DateTime.Now,
-                        RedirectURLParameters = redirectURLParameters
+                        RedirectURLParameters = redirectURLParameters,
+                        OrganizationId = orgId  
                     };
                     dc.Notifications.InsertOnSubmit(notification);
                     dc.SubmitChanges();
