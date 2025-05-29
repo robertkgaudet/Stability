@@ -53,7 +53,7 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
         {
             Guid orgid = new Guid(organizationId);
             var senderfalse = dc.UserOrganizations
-         .Where(r => r.OrganizationId == orgid && r.IsEnabled == false && r.status == 0)
+         .Where(r => r.OrganizationId == orgid && r.IsEnabled == false && r.Status == 0)
          .Select(r => r.UserId)
          .ToList();
             if (senderfalse != null)
@@ -128,7 +128,7 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
 
             if (userOrg != null)
             {
-                userOrg.status = (int)RequestStatus.Approved; // or your desired enum value
+                userOrg.Status = (int)RequestStatus.Approved; // or your desired enum value
                 userOrg.IsEnabled = true;
                 dc.SubmitChanges();
             }
@@ -154,7 +154,7 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
 
             if (userOrg != null)
             {
-                userOrg.status = (int)RequestStatus.Rejected;
+                userOrg.Status = (int)RequestStatus.Rejected;
                 dc.SubmitChanges();
             }
         }

@@ -49330,7 +49330,7 @@ public partial class UserOrganization : INotifyPropertyChanging, INotifyProperty
 	
 	private bool _IsOwner;
 	
-	private int _status;
+	private int _Status;
 	
 	private EntityRef<aspnet_User> _aspnet_User;
 	
@@ -49360,8 +49360,8 @@ public partial class UserOrganization : INotifyPropertyChanging, INotifyProperty
     partial void OnIsTeamAdministratorChanged();
     partial void OnIsOwnerChanging(bool value);
     partial void OnIsOwnerChanged();
-    partial void OnstatusChanging(int value);
-    partial void OnstatusChanged();
+    partial void OnStatusChanging(int value);
+    partial void OnStatusChanged();
     #endregion
 	
 	public UserOrganization()
@@ -49579,22 +49579,22 @@ public partial class UserOrganization : INotifyPropertyChanging, INotifyProperty
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_status", DbType="Int NOT NULL")]
-	public int status
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="Int NOT NULL")]
+	public int Status
 	{
 		get
 		{
-			return this._status;
+			return this._Status;
 		}
 		set
 		{
-			if ((this._status != value))
+			if ((this._Status != value))
 			{
-				this.OnstatusChanging(value);
+				this.OnStatusChanging(value);
 				this.SendPropertyChanging();
-				this._status = value;
-				this.SendPropertyChanged("status");
-				this.OnstatusChanged();
+				this._Status = value;
+				this.SendPropertyChanged("Status");
+				this.OnStatusChanged();
 			}
 		}
 	}

@@ -3,7 +3,7 @@
 ADD Status INT NOT NULL DEFAULT 0
 
 
-EXEC sp_rename 'UserOrganization.TeamJoinStatus', 'status', 'COLUMN';
+EXEC sp_rename 'UserOrganization.TeamJoinStatus', 'Status', 'COLUMN';
 
 UPDATE uo
 SET uo.IsOwner = 1

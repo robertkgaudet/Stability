@@ -208,7 +208,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
             if (request != null)
             {
-                status = request.status;
+                status = request.Status;
             }
             var userOrganizationOwner = (from uo in dc.UserOrganizations
                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
@@ -481,7 +481,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     IsPreviousOwner = false,
                     IsTeamAdministrator = false,
                     IsOwner = false,
-                    status = (int)RequestStatus.Pending  
+                    Status = (int)RequestStatus.Pending  
                 };
 
                 dc.UserOrganizations.InsertOnSubmit(userOrg);
