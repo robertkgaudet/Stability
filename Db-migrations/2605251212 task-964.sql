@@ -1,13 +1,9 @@
-CREATE TABLE ReceivedRequests
-(
-    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),      
-    SenderId UNIQUEIDENTIFIER NOT NULL,                    
-    ReceiverId UNIQUEIDENTIFIER NULL,                     
-    RequestDate DATETIME DEFAULT GETDATE(),
-    Status INT NOT NULL DEFAULT 0,
-    IsActive BIT NOT NULL DEFAULT 1 
-);
+/*please add this*/
+ ALTER TABLE[dbo].[UserOrganization]
+ADD Status INT NOT NULL DEFAULT 0
 
+
+EXEC sp_rename 'UserOrganization.TeamJoinStatus', 'Status', 'COLUMN';
 
 UPDATE uo
 SET uo.IsOwner = 1

@@ -53,7 +53,7 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
             btnDeactivatePage.Text = " <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'>Re-activate This Team </asp:LinkButton>  ";
 
         }
-        string squareLogo = string.Empty;
+        string squareLogo = "/V1/Images/Logo-Placeholder.png";
         if (organization != null)
         {
             bool userOrganizationOwner = dc.Organizations
@@ -68,13 +68,15 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
             }
             ucTeamHeader.CoverImage = _coverImage;
 
-            if (!String.IsNullOrEmpty(organization.LogoSquare))
+            if (!string.IsNullOrEmpty(organization.LogoSquare))
             {
-                squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-            }
-            else
-            {
-                squareLogo = "/V1/Images/Logo-Placeholder.png";
+                string virtualPath_square = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+                string physicalPath_square = Server.MapPath(virtualPath_square);
+
+                if (System.IO.File.Exists(physicalPath_square))
+                {
+                    squareLogo = virtualPath_square;
+                }
             }
 
             Master.PageTitle = organization.Name + " Programs on Stability";
