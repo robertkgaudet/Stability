@@ -42,29 +42,44 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
         var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId)
                             select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
-
+        MembershipUser user = Membership.GetUser();
+        Guid currentUserId = Guid.Empty;
+        if (user != null && user.ProviderUserKey != null)
+        {
+            currentUserId = (Guid)user.ProviderUserKey;
+        }
         string squareLogo = string.Empty;
         if (organization != null)
         {
             Guid orgid = new Guid(organizationId);
-            var senderIds = dc.ReceivedRequests
-         .Where(r => r.ReceiverId == orgid && r.IsActive==true)
-         .Select(r => r.SenderId)
+            var senderfalse = dc.UserOrganizations
+         .Where(r => r.OrganizationId == orgid && r.IsEnabled == false && r.TeamJoinStatus == 0)
+         .Select(r => r.UserId)
          .ToList();
+            if (senderfalse != null)
+            {
 
-            var matchingNotifications = dc.Notifications
-     .Where(n => n.SenderUserId.HasValue
-                 && senderIds.Contains(n.SenderUserId.Value)
-                 && n.FeatureTypeId == 27
-                 && n.OrganizationId == orgid)
-     .Select(n => new
-     {
-         SenderId = n.SenderUserId.Value,
-         Message = n.Description
-     })
-     .ToList();
-            rptRequests.DataSource = matchingNotifications;
-            rptRequests.DataBind();
+                var matchingNotificationsfalse = dc.Notifications
+    .Where(n =>
+        n.SenderUserId.HasValue &&
+        senderfalse.Contains(n.SenderUserId.Value) &&
+        n.FeatureTypeId == 27 &&
+        n.RecipientUserId == currentUserId &&
+        n.OrganizationId == orgid
+    )
+    .GroupBy(n => new { n.SenderUserId, n.Description })
+    .Select(g => g.OrderByDescending(n => n.CreatedOn).FirstOrDefault())
+    .Select(n => new
+    {
+        SenderId = n.SenderUserId.Value,
+        Message = n.Description
+    })
+    .ToList();
+                ;
+
+                rptRequests.DataSource = matchingNotificationsfalse;
+                rptRequests.DataBind();
+            }
             ucTeamHeader.CoverImage = _coverImage;
 
             if (!String.IsNullOrEmpty(organization.LogoSquare))
@@ -98,39 +113,52 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
     [WebMethod]
     public static string JoinTeam(Guid senderId, Guid organizationId)
     {
+
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+        Guid userOrgId = dc.UserOrganizations
+            .Where(rr => rr.UserId == senderId && rr.OrganizationId == organizationId)
+            .Select(rr => rr.UserOrganizationId)
+            .FirstOrDefault();
+
+        if (userOrgId != Guid.Empty)
         {
-            UserOrganization userOrganization = new UserOrganization();
-            userOrganization.OrganizationId = organizationId;
-            userOrganization.UserId = senderId;
-            userOrganization.UserOrganizationId = Guid.NewGuid();
-            dc.UserOrganizations.InsertOnSubmit(userOrganization);
-            userOrganization.IsEnabled = true;
-            var request = dc.ReceivedRequests.FirstOrDefault(r =>
-           r.SenderId == senderId && r.ReceiverId == organizationId);
-            request.Status = (int)RequestStatus.Approved;
-           request.IsActive = false;
-            dc.SubmitChanges();
+            UserOrganization userOrg = dc.UserOrganizations
+                .FirstOrDefault(u => u.UserOrganizationId == userOrgId);
+
+            if (userOrg != null)
+            {
+                userOrg.TeamJoinStatus = (int)RequestStatus.Approved; // or your desired enum value
+                userOrg.IsEnabled = true;
+                dc.SubmitChanges();
+            }
         }
 
         return "User successfully added to the team.";
-        
+
     }
     [WebMethod]
     public static string RejectRequest(Guid senderId, Guid organizationId)
     {
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-        var request = dc.ReceivedRequests.FirstOrDefault(r =>
-            r.SenderId == senderId && r.ReceiverId == organizationId);
+        Guid userOrgId = dc.UserOrganizations
+            .Where(rr => rr.UserId == senderId && rr.OrganizationId == organizationId)
+            .Select(rr => rr.UserOrganizationId)
+            .FirstOrDefault();
 
-        if (request != null)
+        if (userOrgId != Guid.Empty)
         {
-            request.Status = (int)RequestStatus.Rejected;
-            request.IsActive = false;
-            dc.SubmitChanges();
-            return "Request has been rejected.";
+            UserOrganization userOrg = dc.UserOrganizations
+                .FirstOrDefault(u => u.UserOrganizationId == userOrgId);
+
+            if (userOrg != null)
+            {
+                userOrg.TeamJoinStatus = (int)RequestStatus.Rejected;
+                dc.SubmitChanges();
+            }
         }
+
 
         return "Request not found.";
     }
