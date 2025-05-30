@@ -257,7 +257,7 @@ public partial class V1_Event : BaseOrganizationWebForm
 				//Is this user associated with a team?
 				var userOrganization = (from uo in dc.UserOrganizations
 										join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-									   where uo.UserId == userId && uo.IsEnabled == true
+									   where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
                                         select new { uo.OrganizationId, o.Name }).Take(1).SingleOrDefault();
 
 				if(userOrganization != null)
