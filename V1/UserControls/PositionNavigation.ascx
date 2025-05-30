@@ -52,7 +52,7 @@
 
 
 
-            <span class="pull-right"> <i class="fa fa-arrow-circle-o-up"></i> <b><a href="/SignUp/<%=_urlFriendlyName%>" target="_blank" <%=_viewPositionsActive%>>View Open Positions</a></b></span>
+            <span class="pull-right"> <i class="fa fa-arrow-circle-o-up"></i> <b><a href="/SignUp/<%=_urlFriendlyName%>"  <%=_viewPositionsActive%>>View Open Positions</a></b></span>
             <%--<a href="/V1/NonProfitAdministration/EventMessages.aspx?organizationEventId=<%=_organizationEventId%>" <%=_messagesActive%>>Message</a>
             <a href="/V1/NonProfitAdministration/EventReports.aspx?organizationEventId=<%=_organizationEventId%>" <%=_reportsActive%>>Reports</a>
             <a href="/V1/NonProfitAdministration/EventInvitations.aspx?organizationEventId=<%=_organizationEventId%>" <%=_invitesActive%>>Invite</a>
