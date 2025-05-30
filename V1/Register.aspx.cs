@@ -118,11 +118,11 @@ public partial class V1_Register : System.Web.UI.Page
 				userOrganization.OrganizationId = new Guid(organizationId);
 				userOrganization.UserId = new Guid(newUser.ProviderUserKey.ToString());
 				userOrganization.IsPrimary = true;
-				userOrganization.IsEnabled = true;
-				userOrganization.IsOwner = false;
+                userOrganization.IsOwner = false;
 				userOrganization.IsPreviousOwner = false;
 				userOrganization.IsTeamAdministrator = false;
-				dc.UserOrganizations.InsertOnSubmit(userOrganization);
+                userOrganization.Status = (int)RequestStatus.Pending;
+                dc.UserOrganizations.InsertOnSubmit(userOrganization);
 				dc.SubmitChanges();
 				urlRedirect = "/V1/Profile/EditSkills.aspx?skill=false";
 			}

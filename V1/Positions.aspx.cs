@@ -38,8 +38,8 @@ public partial class V1_Positions : BaseWebForm
 		if (!IsPostBack)
 		{
 			BindPositionsGrid(deploymentName);
-			litLink.Text = "<i class=\"fa fa-copy\"></i> Copy A Sharable Link";
-			litLink.Attributes.Add("onclick", "copyToClipboard('https://www.stability.org/signup/" + deploymentName + "')");
+			//litLink.Text = "<i class=\"fa fa-copy\"></i> Copy A Sharable Link";
+			//litLink.Attributes.Add("onclick", "copyToClipboard('https://www.stability.org/signup/" + deploymentName + "')");
 		}
 		this.Master.CoverImageFile = "/profilecover.png";
 
@@ -114,7 +114,7 @@ public partial class V1_Positions : BaseWebForm
 
 				rptPositionDate.DataSource = organizationEventPositionDate;
 				rptPositionDate.DataBind();
-				hypBack.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + organizationEventPositionDate.Take(1).SingleOrDefault().OrganizationId;
+				//hypBack.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + organizationEventPositionDate.Take(1).SingleOrDefault().OrganizationId;
 
 				if (organizationEventPositionDate.Count() > 0)
 				{ 

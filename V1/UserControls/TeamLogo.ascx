@@ -1,8 +1,8 @@
 ﻿<%@ control language="C#" autoeventwireup="true" codefile="TeamLogo.ascx.cs" inherits="V1_UserControls_TeamLogo" %>
 <style>
     .stability-badge {
-        width: 12px;
-        height: 12px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
         vertical-align: middle;
         margin-right: 0px;
@@ -37,11 +37,11 @@
         gap: 2px; /* adjust spacing between links as needed */
     }
 
-        .link-group a img {
-            height: 20px; /* adjust height to match the text line nicely */
-            width: auto;
-            vertical-align: middle;
-        }
+    .link-group a img {
+        height: 17px; /* adjust height to match the text line nicely */
+        width: auto;
+        vertical-align: middle;
+    }
 </style>
 <div class="link-group">
     <asp:HyperLink ID="hypName" runat="server" CssClass="Userlink" Visible="false">

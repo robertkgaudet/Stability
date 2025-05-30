@@ -31,6 +31,7 @@
             $("body").tooltip({ selector: '[data-toggle=tooltip]' });
         });
     </script>
+
     <style>
         .hpanel {
             margin-bottom: 5px !important;
@@ -135,13 +136,16 @@
                                     <div class="hpanel">
                                         <div class="panel-body member-panel-body">
                                             <div class="clearfix">
-                                                <img class="img-circle img-small pull-left m-r-md" src="<%=profilePhotoFolder%><%# string.IsNullOrEmpty(Eval("ProfileImage") as string) ? "profilepicture.png" : Eval("ProfileImage")%>" />
+                                                <img class="img-circle img-small pull-left m-r-md" src="<%=profilePhotoFolder%><%# string.IsNullOrEmpty(Eval("ProfileImage") as string) ? "icons8-customer-64.png" : Eval("ProfileImage")%>" />
                                                 <div class="media-body">
                                                     <p style="font-size: 16px;">
-                                                        <asp:Literal ID="litPassedVetting" runat="server"></asp:Literal>
-                                                        <strong><uc1:TeamLogo runat="server" ID="ucTeamLogo" UserId='<%# Eval("UserId") %>' PageName="people" /></strong>
+                                                        <strong>
+															<uc1:TeamLogo runat="server" ID="ucTeamLogo" UserId='<%# Eval("UserId") %>' PageName="people" />
+															<asp:Literal ID="litPassedVetting" runat="server"></asp:Literal>
+                                                        </strong>
                                                         <div class="text-muted"><%# Eval("CityState") %></div>
                                                         <div class="text-muted"><%# Eval("TeamName") %>  <%# Eval("ProfileTitle") %></div>
+                                                        
                                                         <button data-id="<%#Eval("UserId")%>" data-action="remove" onclick="UpdateConnection(this); return false;" class="btn btn-default pull-right add-button" <%=_hideConnectionButton%>>Add Connection</button>
                                                     </p>
                                                 </div>

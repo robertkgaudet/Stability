@@ -79,7 +79,7 @@ public partial class V1_UserControls_DeploymentList : System.Web.UI.UserControl
 						var teamMemberDates = (from uo in dc.UserOrganizations
 											   join oe in dc.OrganizationEvents on uo.OrganizationId equals oe.OrganizationId
 											   join uad in dc.UserAvailableDates on uo.UserId equals uad.UserId
-											   where oe.OrganizationId == organizationId && uo.IsEnabled == true
+											   where oe.OrganizationId == organizationId && uo.Status== (int)RequestStatus.Approved
                                                && uad.DateAvailable == date
 											   && oe.OrganizationEventId == deployment.OrganizationEventId
 											   select uo).Count();
@@ -182,7 +182,7 @@ public partial class V1_UserControls_DeploymentList : System.Web.UI.UserControl
 						var teamMemberDates = (from uo in dc.UserOrganizations
 											  join oe in dc.OrganizationEvents on uo.OrganizationId equals oe.OrganizationId
 											  join uad in dc.UserAvailableDates on uo.UserId equals uad.UserId
-											  where oe.OrganizationId == organizationId && uo.IsEnabled == true
+											  where oe.OrganizationId == organizationId && uo.Status== (int)RequestStatus.Approved
                                               && uad.DateAvailable == date
 											  && oe.OrganizationEventId == deployment.OrganizationEventId
 											   select uo).Count();

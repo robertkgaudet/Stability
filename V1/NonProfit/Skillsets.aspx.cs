@@ -37,8 +37,8 @@ public partial class V1_NonProfit_Skillsets : BaseWebForm
 							where o.OrganizationId == new Guid(organizationId)
 							select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
 
-		string squareLogo = string.Empty;
-		if (organization != null)
+        string squareLogo = "/V1/Images/Logo-Placeholder.png";
+        if (organization != null)
 		{
 			if (organization.CoverImage != null)
 			{
@@ -49,16 +49,18 @@ public partial class V1_NonProfit_Skillsets : BaseWebForm
 			ucTeamHeader.TeamDescription = organization.Description;
 			ucTeamHeader._teamTitle = organization.Name;
 
-			if (!String.IsNullOrEmpty(organization.LogoSquare))
-			{
-				squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-			}
-			else
-			{
-				squareLogo = "/V1/Images/Logo-Placeholder.png";
-			}
+            if (!string.IsNullOrEmpty(organization.LogoSquare))
+            {
+                string virtualPath_square = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+                string physicalPath_square = Server.MapPath(virtualPath_square);
 
-			Master.PageTitle = organization.Name + " Programs on Stability";
+                if (System.IO.File.Exists(physicalPath_square))
+                {
+                    squareLogo = virtualPath_square;
+                }
+            }
+
+            Master.PageTitle = organization.Name + " Programs on Stability";
 			Master.PageDescription = organization.Description;
 			Master.FbDescription = organization.Description;
 			Master.FbImage = _coverImage;
@@ -85,7 +87,7 @@ public partial class V1_NonProfit_Skillsets : BaseWebForm
 		{
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
+										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved
                                          && uo.OrganizationId == new Guid(organizationId)
 										 select o).Take(1).SingleOrDefault();
 
@@ -108,7 +110,7 @@ public partial class V1_NonProfit_Skillsets : BaseWebForm
 		var skills = (from us in dc.UserSkills
 					  join s in dc.Skills on us.SkillId equals s.SkillId
 					  join uo in dc.UserOrganizations on us.UserId equals uo.UserId
-					  where uo.OrganizationId == new Guid(organizationId) && uo.IsEnabled == true
+					  where uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved
                       orderby s.Name
 					  group s by s.Name + "|" + s.SkillId into resourceGroup
 					  select new { Name = resourceGroup.Key, ResourceCount = resourceGroup.Count() }).Distinct();

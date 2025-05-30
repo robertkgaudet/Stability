@@ -28,8 +28,9 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
 		if (User.Identity.IsAuthenticated )
 		{ 
 			ucMemberNavigation.UserId = userId.ToString();
+			hrefCreateTeam.Visible = true;
 		}
-		litPageName.Text = "Non-Profits, Groups and Teams";
+		litPageName.Text = "Stability Disaster Relief Teams";
 
 		string team = Request.QueryString["team"];
 		if(!String.IsNullOrEmpty(team))

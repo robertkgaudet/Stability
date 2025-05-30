@@ -42,40 +42,56 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
         var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId)
                             select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
-
-        string squareLogo = string.Empty;
+        MembershipUser user = Membership.GetUser();
+        Guid currentUserId = Guid.Empty;
+        if (user != null && user.ProviderUserKey != null)
+        {
+            currentUserId = (Guid)user.ProviderUserKey;
+        }
+        string squareLogo = "/V1/Images/Logo-Placeholder.png";
         if (organization != null)
         {
             Guid orgid = new Guid(organizationId);
-            var senderIds = dc.ReceivedRequests
-         .Where(r => r.ReceiverId == orgid && r.IsActive==true)
-         .Select(r => r.SenderId)
+            var senderfalse = dc.UserOrganizations
+         .Where(r => r.OrganizationId == orgid && r.Status== (int)RequestStatus.Pending)
+         .Select(r => r.UserId)
          .ToList();
+            if (senderfalse != null)
+            {
 
-            var matchingNotifications = dc.Notifications
-     .Where(n => n.SenderUserId.HasValue
-                 && senderIds.Contains(n.SenderUserId.Value)
-                 && n.FeatureTypeId == 27
-                 && n.OrganizationId == orgid)
-     .Select(n => new
-     {
-         SenderId = n.SenderUserId.Value,
-         Message = n.Description
-     })
-     .ToList();
-            rptRequests.DataSource = matchingNotifications;
-            rptRequests.DataBind();
+                var matchingNotificationsfalse = dc.Notifications
+    .Where(n =>
+        n.SenderUserId.HasValue &&
+        senderfalse.Contains(n.SenderUserId.Value) &&
+        n.FeatureTypeId == 27 &&
+        n.RecipientUserId == currentUserId &&
+        n.OrganizationId == orgid
+    )
+    .GroupBy(n => new { n.SenderUserId, n.Description })
+    .Select(g => g.OrderByDescending(n => n.CreatedOn).FirstOrDefault())
+    .Select(n => new
+    {
+        SenderId = n.SenderUserId.Value,
+        Message = n.Description
+    })
+    .ToList();
+                ;
+
+                rptRequests.DataSource = matchingNotificationsfalse;
+                rptRequests.DataBind();
+            }
             ucTeamHeader.CoverImage = _coverImage;
 
-            if (!String.IsNullOrEmpty(organization.LogoSquare))
+            if (!string.IsNullOrEmpty(organization.LogoSquare))
             {
-                squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-            }
-            else
-            {
-                squareLogo = "/V1/Images/Logo-Placeholder.png";
-            }
+                string virtualPath_square = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+                string physicalPath_square = Server.MapPath(virtualPath_square);
 
+                if (System.IO.File.Exists(physicalPath_square))
+                {
+                    squareLogo = virtualPath_square;
+                }
+            }
             Master.PageTitle = organization.Name + " Programs on Stability";
             Master.PageDescription = organization.Description;
             Master.FbDescription = organization.Description;
@@ -98,43 +114,133 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
     [WebMethod]
     public static string JoinTeam(Guid senderId, Guid organizationId)
     {
+
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+        var userOrgData = dc.UserOrganizations
+    .Where(rr => rr.UserId == senderId && rr.OrganizationId == organizationId)
+    .Select(rr => new { rr.UserOrganizationId, rr.Status })
+    .FirstOrDefault();
+
+        if (userOrgData !=null)
         {
-            UserOrganization userOrganization = new UserOrganization();
-            userOrganization.OrganizationId = organizationId;
-            userOrganization.UserId = senderId;
-            userOrganization.UserOrganizationId = Guid.NewGuid();
-            dc.UserOrganizations.InsertOnSubmit(userOrganization);
-            userOrganization.IsEnabled = true;
-            var request = dc.ReceivedRequests.FirstOrDefault(r =>
-           r.SenderId == senderId && r.ReceiverId == organizationId);
-            request.Status = (int)RequestStatus.Approved;
-           request.IsActive = false;
-            dc.SubmitChanges();
+            UserOrganization userOrg = dc.UserOrganizations
+                .FirstOrDefault(u => u.UserOrganizationId == userOrgData.UserOrganizationId);
+            UserOrganizationHistory userHistory = dc.UserOrganizationHistories
+          .FirstOrDefault(uh => uh.UserOrganizationId == userOrgData.UserOrganizationId);
+            if (userOrg != null)
+            {
+                int previousStatus = userOrgData.Status;
+                if (userHistory != null)
+                {
+                    userHistory.PreviousStatus = previousStatus;
+                    userHistory.StatusChangedOn = DateTime.Now;
+                }
+                userOrg.Status = (int)RequestStatus.Approved; 
+                dc.SubmitChanges();
+            }
         }
 
         return "User successfully added to the team.";
-        
+
     }
     [WebMethod]
     public static string RejectRequest(Guid senderId, Guid organizationId)
     {
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-        var request = dc.ReceivedRequests.FirstOrDefault(r =>
-            r.SenderId == senderId && r.ReceiverId == organizationId);
+        var userOrgData = dc.UserOrganizations
+    .Where(rr => rr.UserId == senderId && rr.OrganizationId == organizationId)
+    .Select(rr => new { rr.UserOrganizationId, rr.Status })
+    .FirstOrDefault();
 
-        if (request != null)
+        if (userOrgData != null)
         {
-            request.Status = (int)RequestStatus.Rejected;
-            request.IsActive = false;
-            dc.SubmitChanges();
-            return "Request has been rejected.";
+            UserOrganization userOrg = dc.UserOrganizations
+                .FirstOrDefault(u => u.UserOrganizationId == userOrgData.UserOrganizationId);
+            UserOrganizationHistory userHistory = dc.UserOrganizationHistories
+          .FirstOrDefault(uh => uh.UserOrganizationId == userOrgData.UserOrganizationId);
+            if (userOrg != null)
+            {
+                int previousStatus = userOrgData.Status;
+                if (userHistory != null)
+                {
+                    userHistory.PreviousStatus = previousStatus;
+                    userHistory.StatusChangedOn = DateTime.Now;
+                }
+                userOrg.Status = (int)RequestStatus.RemovedByAdmin;
+                dc.SubmitChanges();
+            }
         }
+
 
         return "Request not found.";
     }
+    [WebMethod]
+    public static string BlockUser(Guid senderId, Guid organizationId)
+    {
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
+      var userOrgData = dc.UserOrganizations
+  .Where(rr => rr.UserId == senderId && rr.OrganizationId == organizationId)
+  .Select(rr => new { rr.UserOrganizationId, rr.Status })
+  .FirstOrDefault();
+
+      if (userOrgData !=null)
+      {
+          UserOrganization userOrg = dc.UserOrganizations
+              .FirstOrDefault(u => u.UserOrganizationId == userOrgData.UserOrganizationId);
+          UserOrganizationHistory userHistory = dc.UserOrganizationHistories
+        .FirstOrDefault(uh => uh.UserOrganizationId == userOrgData.UserOrganizationId);
+          if (userOrg != null)
+          {
+              int previousStatus = userOrgData.Status;
+              if (userHistory != null)
+              {
+                  userHistory.PreviousStatus = previousStatus;
+                  userHistory.StatusChangedOn = DateTime.Now;
+              }
+              userOrg.Status = (int)RequestStatus.Blocked; 
+              dc.SubmitChanges();
+          }
+      }
+
+
+        return "Request not found.";
+    }
+    [WebMethod]
+    public static string DenyRequest(Guid senderId, Guid organizationId,DateTime reapplyDate)
+    {
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+        var userOrgData = dc.UserOrganizations
+    .Where(rr => rr.UserId == senderId && rr.OrganizationId == organizationId)
+    .Select(rr => new { rr.UserOrganizationId, rr.Status })
+    .FirstOrDefault();
+
+        if (userOrgData != null)
+        {
+            UserOrganization userOrg = dc.UserOrganizations
+                .FirstOrDefault(u => u.UserOrganizationId == userOrgData.UserOrganizationId);
+            UserOrganizationHistory userHistory = dc.UserOrganizationHistories
+          .FirstOrDefault(uh => uh.UserOrganizationId == userOrgData.UserOrganizationId);
+            if (userOrg != null)
+            {
+                int previousStatus = userOrgData.Status;
+                if (userHistory != null)
+                {
+                    userHistory.PreviousStatus = previousStatus;
+                    userHistory.StatusChangedOn = DateTime.Now;
+                    userHistory.DateToReApply = reapplyDate;
+                }
+                userOrg.Status = (int)RequestStatus.Denied;
+                dc.SubmitChanges();
+            }
+        }
+
+
+        return "Request not found.";
+    }
 }
 
 #endregion

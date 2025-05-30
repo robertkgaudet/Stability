@@ -46,7 +46,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
             }
             bool isPrimary = dc.UserOrganizations
              .Where(uo => uo.UserId == currentUserId
-              && uo.OrganizationId == new Guid(organizationId) && uo.IsEnabled == true) 
+              && uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved) 
               .Select(uo => uo.IsPrimary ?? false)
               .FirstOrDefault();
 
@@ -83,7 +83,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 
                 var isprimaryorg = (from o in dc.Organizations
                                     join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                    where uo.UserId == teamowner && uo.IsPrimary == true && uo.IsEnabled == true
+                                    where uo.UserId == teamowner && uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved
                                     select new
                                     {
                                         o.LogoSquare,
@@ -108,7 +108,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                 if (Guid.TryParse(organizationId, out orgId))
                 {
                     var userOrg = dc.UserOrganizations
-                                    .FirstOrDefault(uo => uo.UserId == currentUserId && uo.OrganizationId == orgId && uo.IsEnabled == true);
+                                    .FirstOrDefault(uo => uo.UserId == currentUserId && uo.OrganizationId == orgId && uo.Status== (int)RequestStatus.Approved);
 
                     if (userOrg != null)
                     {
@@ -139,7 +139,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                 {
                     var orgUserr = (from o in dc.Organizations
                                     join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                    where uo.UserId == currentUserId && uo.ShowTeamLogo == true && uo.IsEnabled == true
+                                    where uo.UserId == currentUserId && uo.ShowTeamLogo == true && uo.Status== (int)RequestStatus.Approved
                                     orderby o.CreatedOn descending
                                     select new
                                     {
@@ -233,53 +233,53 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     if (connectionHtml != "" && statushtml == "")
                     {
                         cardHtml = "<div class='card'>" +
-           "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
-           "<div class='info'>" +
-               "<div class='name-row'>" +
-                   "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' style='color: black; font-size: 15px;'>" + teamownerfullname + "</a></h2>" +
-                   "<span class='badgge'>" + icon + "</span>" +
-                   "<span class='badgge'>" + finalTeamLogo + "</span>" +
-               "</div>" +
-               "<p class='location small'>" + teamownerAddress + "</p>" +
-                 connectionHtml +
-               "<span class='badge badge-info'>Team Owner</span>" +
-           "</div>" +
-         "</div>";
+						   "<img src='" + photourl + "' class='avatar' />" +
+						   "<div class='info'>" +
+							   "<div class='name-row'>" +
+								   "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' class='adminCardName'>" + teamownerfullname + "</a></h2>" +
+								   "<span class='badgge'>" + icon + "</span>" +
+								   "<span class='badgge'>" + finalTeamLogo + "</span>" +
+							   "</div>" +
+							   "<p class='location small'>" + teamownerAddress + "</p>" +
+								 connectionHtml +
+							   "<span class='badge badge-info'>Team Owner</span>" +
+						   "</div>" +
+						 "</div>";
                     }
                     else if (statushtml != null && teamowner != currentUserId)
                     {
                         cardHtml = "<div class='card'>" +
-           "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
-           "<div class='info'>" +
-               "<div class='name-row'>" +
-                   "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' style='color: black; font-size: 15px;'>" + teamownerfullname + "</a></h2>" +
-                   "<span class='badgge'>" + icon + "</span>" +
-                   "<span class='badgge'>" + finalTeamLogo + "</span>" +
-               "</div>" +
-			   "<p class='location small'>" + teamownerAddress + "</p>" +
-               "<p class='connection'>" +
-               "<strong>" + statushtml + "</strong>" +
-                "</p>" +
-			   "<span class='badge badge-info'style='bottom:10px;'>Team Owner</span>" +
-           "</div>" +
-         "</div>";
+							   "<img src='" + photourl + "' class='avatar' />" +
+							   "<div class='info'>" +
+								   "<div class='name-row'>" +
+									   "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' class='adminCardName'>" + teamownerfullname + "</a></h2>" +
+									   "<span class='badgge'>" + icon + "</span>" +
+									   "<span class='badgge'>" + finalTeamLogo + "</span>" +
+								   "</div>" +
+								   "<p class='location small'>" + teamownerAddress + "</p>" +
+								   "<p class='connection'>" +
+								   "<strong>" + statushtml + "</strong>" +
+									"</p>" +
+								   "<span class='badge badge-info'style='bottom:10px;'>Team Owner</span>" +
+							   "</div>" +
+							 "</div>";
                     }
                     else
                     {
                         cardHtml = "<div class='card'>" +
-          "<img src='" + photourl + "' class='avatar' style='width: 40px; height: 40px;' />" +
-          "<div class='info'>" +
-              "<div class='name-row'>" +
-                  "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' style='color: black; font-size: 15px;'>" + teamownerfullname + "</a></h2>" +
-                  "<span class='badgge'>" + icon + "</span>" +
-                  "<span class='badgge'>" + finalTeamLogo + "</span>" +
-              "</div>" +
-			  "<p class='location small'>" + teamownerAddress + "</p>" +
-              "<p class='connection'>" +
-               "</p>" +
-              "<span class='badge badge-info'style='bottom:10px;'>Team Owner</span>" +
-          "</div>" +
-           "</div>";
+							  "<img src='" + photourl + "' class='avatar' />" +
+							  "<div class='info'>" +
+								  "<div class='name-row'>" +
+									  "<h2><a href='/V1/Member/Default.aspx?userId=" + teamowner + "' class='adminCardName'>" + teamownerfullname + "</a></h2>" +
+									  "<span class='badgge'>" + icon + "</span>" +
+									  "<span class='badgge'>" + finalTeamLogo + "</span>" +
+								  "</div>" +
+								  "<p class='location small'>" + teamownerAddress + "</p>" +
+								  "<p class='connection'>" +
+								   "</p>" +
+								  "<span class='badge badge-info'style='bottom:10px;'>Team Owner</span>" +
+							  "</div>" +
+							   "</div>";
                     }
                 }
                 int teamAdministratorCount = 0;
@@ -291,7 +291,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                                               join p in dc.Profiles on uo.UserId equals p.UserId
                                               where uo.OrganizationId == new Guid(organizationId)
                                                     && uo.IsTeamAdministrator == true
-                                                    && uo.IsEnabled == true
+                                                    && uo.Status== (int)RequestStatus.Approved
                                               orderby p.Firstname + " " + p.Lastname
                                               select uo.UserId).ToList();
 
@@ -329,7 +329,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     }
                     var isprimaryorgg = (from o in dc.Organizations
                                          join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                         where uo.UserId == userId && uo.IsPrimary == true && uo.IsEnabled == true
+                                         where uo.UserId == userId && uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved
                                          select new
                                          {
                                              o.LogoSquare,
@@ -354,7 +354,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     if (Guid.TryParse(organizationId, out orggId))
                     {
                         var userOrg = dc.UserOrganizations
-                                        .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.IsEnabled == true);
+                                        .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.Status== (int)RequestStatus.Approved);
 
                         if (userOrg != null)
                         {
@@ -385,7 +385,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     {
                         var orgUserr = (from o in dc.Organizations
                                         join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                        where uo.UserId == userId && uo.ShowTeamLogo == true && uo.IsEnabled == true
+                                        where uo.UserId == userId && uo.ShowTeamLogo == true && uo.Status== (int)RequestStatus.Approved
                                         orderby o.CreatedOn descending
                                         select new
                                         {
@@ -469,43 +469,43 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     if (connectionHtml1 != "" && statushtml1 == "")
                     {
                         allTeamAdminCards +=
-            "<div class='card'>" +
-             "<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
-             "<div class='info'>" +
-                 "<div class='name-row'>" +
-                     "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' style='color: black; font-size: 15px;'>" + teamAdministratorfullname + "</a></h2>" +
-                      "<span class='badgge'>" + icons + "</span>" +
-                       "<span class='badgge'>" + finalTeamLogoo + "</span>" +
-                 "</div>" +
-				 "<p class='location small'>" + teamAdministratorAddress + "</p>" +
-                 connectionHtml1 +
-             "</div>" +
-         "</div>";
+							"<div class='card'>" +
+							 "<img src='" + photoUrl + "' class='avatar' />" +
+							 "<div class='info'>" +
+								 "<div class='name-row'>" +
+									 "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' class='adminCardName'>" + teamAdministratorfullname + "</a></h2>" +
+									  "<span class='badgge'>" + icons + "</span>" +
+									   "<span class='badgge'>" + finalTeamLogoo + "</span>" +
+								 "</div>" +
+								 "<p class='location small'>" + teamAdministratorAddress + "</p>" +
+								 connectionHtml1 +
+							 "</div>" +
+						 "</div>";
                     }
                     else if (statushtml1 != null && userId != currentUserId)
                     {
                         allTeamAdminCards +=
-"<div class='card'>" +
-"<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;margin-bottom:30px' />" +
-"<div class='info'>" +
-    "<div class='name-row'>" +
-        "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' style='color: black; font-size: 15px;'>" + teamAdministratorfullname + "</a></h2>" +
-         "<span class='badgge'>" + icons + "</span>" +
-          "<span class='badgge'>" + finalTeamLogoo + "</span>" +
-    "</div>" +
-	"<p class='location small'>" + teamAdministratorAddress + "</p>" +
-		   "<p class='connection font-trans'>" + statushtml1 + "</p>" +
-"</div>" +
-"</div>";
+							"<div class='card'>" +
+							"<img src='" + photoUrl + "' class='avatar' />" +
+							"<div class='info'>" +
+								"<div class='name-row'>" +
+									"<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' class='adminCardName'>" + teamAdministratorfullname + "</a></h2>" +
+									 "<span class='badgge'>" + icons + "</span>" +
+									  "<span class='badgge'>" + finalTeamLogoo + "</span>" +
+								"</div>" +
+								"<p class='location small'>" + teamAdministratorAddress + "</p>" +
+									   "<p class='connection font-trans'>" + statushtml1 + "</p>" +
+							"</div>" +
+							"</div>";
                     }
                     else
                     {
                         allTeamAdminCards +=
                               "<div class='card'>" +
-                               "<img src='" + photoUrl + "' class='avatar' style='width: 40px; height: 40px;' />" +
+                               "<img src='" + photoUrl + "' class='avatar' />" +
                                "<div class='info'>" +
                                    "<div class='name-row'>" +
-                                       "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' style='color: black; font-size: 15px;'>" + teamAdministratorfullname + "</a></h2>" +
+                                       "<h2><a href='/V1/Member/Default.aspx?userId=" + userId + "' class='adminCardName'>" + teamAdministratorfullname + "</a></h2>" +
                                         "<span class='badgge'>" + icons + "</span>" +
                                          "<span class='badgge'>" + finalTeamLogoo + "</span>" +
                                    "</div>" +

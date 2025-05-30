@@ -166,7 +166,7 @@ namespace CrowdRelief
                                CityState = profile.City + " " + profile.State,
                                TeamName = (from uo in dc.UserOrganizations
                                            join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                           where uo.UserId == profile.UserId && uo.IsEnabled == true
+                                           where uo.UserId == profile.UserId && uo.Status == 1
                                            select o.Name).Take(1).SingleOrDefault()
                            };
 

@@ -38,7 +38,7 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 		ucTeamNavigation.TeamName = organization.Name;
 
 		string logo = string.Empty;
-		string squareLogo = string.Empty;
+        string squareLogo = "/V1/Images/Logo-Placeholder.png";
 		if (!String.IsNullOrEmpty(organization.Logo))
 		{
 			logo = "/Impactoid/Images/Logos/" + organization.Logo;
@@ -48,10 +48,16 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 			//Use placeholder image.imgLogo.Visible = true;
 			logo = "/V1/Images/Logo-Placeholder.png";
 		}
-		if (!String.IsNullOrEmpty(organization.LogoSquare))
-		{
-			squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-		}
+		 if (!string.IsNullOrEmpty(organization.LogoSquare))
+    {
+        string virtualPath_square = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+        string physicalPath_square = Server.MapPath(virtualPath_square);
+
+        if (System.IO.File.Exists(physicalPath_square))
+        {
+            squareLogo = virtualPath_square;
+        }
+    }
 
 		ucTeamNavigation.TeamName = organization.Name;
 		ucTeamHeader.Logo = logo;
@@ -83,7 +89,7 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 		var query = from ur in dc.UserAvailableDates
 					join uo in dc.UserOrganizations on ur.UserId equals uo.UserId
 					where ur.DateAvailable >= startOfCurrentWeek && ur.DateAvailable <= eightWeeksLater
-					&& uo.OrganizationId == new Guid(organizationId) && uo.IsEnabled==true
+					&& uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved
 					group ur by new
 					{
 						WeekStart = ur.DateAvailable.AddDays(-(int)ur.DateAvailable.DayOfWeek)
@@ -127,7 +133,7 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 		var events = (from uad in dc.UserAvailableDates
 					 join uo in dc.UserOrganizations on uad.UserId equals uo.UserId
 					 join p in dc.Profiles on uo.UserId equals p.UserId
-					 where uo.OrganizationId == new Guid(organizationId) && uo.IsEnabled==true
+					 where uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved
 					 select new { uad, p }).ToList();
 
 		var eventAvail = events.Select(e => new { title = e.p.Firstname + " " + e.p.Lastname, start = e.uad.DateAvailable.ToString("yyyy-MM-ddTHH:mm:ss"), allDay = "true", url = "/V1/Profile/AvailableDates.aspx?userId=" + e.p.UserId }).ToList();

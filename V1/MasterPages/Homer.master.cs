@@ -140,14 +140,27 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
             }
         }
 
+		divFeed.Visible = false;
+		divProfile.Visible = false;
+		divTeam.Visible = false;
+		divSearch.Visible = false;
+		divMessages.Visible = false;
 
 
-        if (HttpContext.Current.User.Identity.IsAuthenticated)
+		if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
             bool hasTeam = false;
             bool hasDeployment = false;
             bool hasPortal = false;
-            userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+
+
+			divFeed.Visible = true;
+			divProfile.Visible = true;
+			divTeam.Visible = true;
+			divSearch.Visible = true;
+			divMessages.Visible = true;
+
+			userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
             string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
             divSettings.Visible = true;
             divLogin.Visible = false;
@@ -160,10 +173,9 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
             if (HttpContext.Current.User.IsInRole("Administrator"))
             {
-                menu.Style["margin-top"] = "60px";
-                adminFeatureSection.Visible = true;
-				adminHeaderStyle = "{position: fixed; top: 65px; left: 0;width: 100%;z-index: 9999; background-color: #5e2e91; height: 58px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}";
-
+                //menu.Style["margin-top"] = "60px";
+                adminFeatureSection.Visible = false;
+				//adminHeaderStyle = "{position: fixed; top: 65px; left: 0;width: 100%;z-index: 9999; background-color: #5e2e91; height: 58px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}";
 
 				string FeatureTypeRedirectUrl = HttpContext.Current.Request.Url.AbsolutePath;
 
@@ -244,7 +256,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             var orgUser = from o in dc.Organizations
                           join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                          where uo.UserId == userId && uo.IsEnabled == true
+                          where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
                           orderby o.CreatedOn descending
                           select o;
 
@@ -305,7 +317,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             var userOrganizations = from uo in dc.UserOrganizations
                                     join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                    where uo.UserId == userId && uo.IsEnabled == true
+                                    where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
                                     select new { o.Name, o.OrganizationId };
 
             if (userOrganizations.Count() > 0)
@@ -635,39 +647,46 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         }
     }
 
-	protected void rptUserGroups_ItemDataBound(object sender, RepeaterItemEventArgs e)
-	{
-		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-		{
-			RepeaterItem dataItem = (RepeaterItem)e.Item;
+protected void rptUserGroups_ItemDataBound(object sender, RepeaterItemEventArgs e)
+{
+    if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+    {
+        RepeaterItem dataItem = (RepeaterItem)e.Item;
 
-			// Optionally, manipulate values here (e.g., URL formatting)
-			string organizationUrl = "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
-			string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
-			string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
+        string organizationUrl = "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
+        string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
+        string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
 
-            string imgTeamPath = "/V1/Images/Logo-Placeholder.png";
-            bool isPrimary = Convert.ToBoolean(DataBinder.Eval(dataItem.DataItem, "IsPrimary") ?? false);
-			if (!string.IsNullOrEmpty(organizationTeamLogo))
-			{
-				imgTeamPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
-			}
-            Literal litPrimaryBadge = (Literal)e.Item.FindControl("litPrimaryBadge");
-            litPrimaryBadge.Text = isPrimary ? " <span class='badge badge-primary' style='margin-left: 55px;margin-top:-20px;'>Primary Team</span>" : "";
-            //string primaryStar = isPrimary ? " ★" : "";
-            Literal lit = (Literal)e.Item.FindControl("litGroupLink");
-            lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + "</a>";
-            Image imgTeam = (Image)e.Item.FindControl("imgTeam");
-			imgTeam.ImageUrl = imgTeamPath;
-		}
-	}
+        string imgTeamPath = "/V1/Images/Logo-Placeholder.png";  
+
+        if (!string.IsNullOrEmpty(organizationTeamLogo))
+        {
+            string virtualPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
+            string physicalPath = Server.MapPath(virtualPath);
+
+            if (System.IO.File.Exists(physicalPath))
+            {
+                imgTeamPath = virtualPath; 
+            }
+        }
+
+        bool isPrimary = Convert.ToBoolean(DataBinder.Eval(dataItem.DataItem, "IsPrimary") ?? false);
+        Literal litPrimaryBadge = (Literal)e.Item.FindControl("litPrimaryBadge");
+        litPrimaryBadge.Text = isPrimary ? " <span class='badge badge-primary' style='margin-left: 55px;margin-top:-20px;'>Primary Team</span>" : "";
+        Literal lit = (Literal)e.Item.FindControl("litGroupLink");
+        lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + "</a>";
+        Image imgTeam = (Image)e.Item.FindControl("imgTeam");
+        imgTeam.ImageUrl = imgTeamPath;
+    }
+}
+
 
 	private void BindUserGroups()
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         var userGroups = (from g in dc.UserOrganizations
                           join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
-                          where g.UserId == userId && g.IsEnabled == true
+                          where g.UserId == userId && g.Status == 1
                           orderby g.IsPrimary descending, o.Name
                           select new
                           {

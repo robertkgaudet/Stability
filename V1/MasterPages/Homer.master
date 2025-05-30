@@ -462,19 +462,20 @@
 			}
 		</style>
         <style>
-			.skin-option {
-					position: fixed;
-					text-align: center;
-					right: -1px;
-					padding: 10px;
-					font-size:12px;
-					top: 5px;
-					text-transform: uppercase;	
-					background-color: #ffffff;
-					box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.05), 10px 5px 7px 3px rgba(0, 0, 0, .1);
-					border-radius: 4px 0 0 4px;
-					z-index: 100000;
-				}
+			.skin-option 
+			{
+				position: fixed;
+				text-align: center;
+				right: -1px;
+				padding: 10px;
+				font-size:12px;
+				top: 5px;
+				text-transform: uppercase;	
+				background-color: #ffffff;
+				box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.05), 10px 5px 7px 3px rgba(0, 0, 0, .1);
+				border-radius: 4px 0 0 4px;
+				z-index: 100000;
+			}
 			.pe-7s-mail, .pe-7s-config, .pe-7s-keypad
 			{
 				color:white;
@@ -488,7 +489,8 @@
 			.text-success{color:#63CB31;}
 			.text-website{color:#5E2E91;}
 
-			.divMasterCover {
+			.divMasterCover 
+			{
 				width: 100%;
 				height: 100vh; /* Full viewport height */
 				background-image: url('<%=_masterCoverImage%>'); /* Path to your image */
@@ -502,7 +504,8 @@
 				background-color:#ccc;
 			}
 
-			.mobileFooter {
+			.mobileFooter 
+			{
 			  position: fixed;
 			  bottom: -20px;
 			  width: 100%;
@@ -513,8 +516,10 @@
 			  /* Additional styling for the footer */
 			}
 
-			@media only screen and (min-width: 768px) {
-			  .mobileFooter {
+			@media only screen and (min-width: 768px) 
+			{
+			  .mobileFooter 
+			  {
 				display: none;
 			  }
 			}
@@ -548,115 +553,135 @@
 				padding:9px 0px !important;
 				margin:8px 8px 8px 0px !important;
 			}
-           .desktop-logo {
+           .desktop-logo 
+		   {
                 display: inline-block;
             }
-           .mobile-logo {
+           .mobile-logo 
+		   {
                 display: none;
             }
-           @media (max-width: 767px) {
-                  .desktop-logo {
-                 display: none;
-              }
-	    	.mobile-logo {
-            display: inline-block;
-            }
-           }
+           @media (max-width: 767px) 
+		   {
+				.desktop-logo 
+				{
+					display: none;
+				}
+				.mobile-logo 
+				{
+					display: inline-block;
+				}
+			}
 
-		   .header-link.dropdown .dropdown-menu {
+		   .header-link.dropdown .dropdown-menu 
+		   {
 				background-color: #fff;
 				color: #333;
 				min-width: 180px;
 			}
 
-			.header-link.dropdown .dropdown-menu li a {
+			.header-link.dropdown .dropdown-menu li a 
+			{
 				padding: 10px 15px;
 				display: block;
 				color: #333;
 			}
 
-			.header-link.dropdown .dropdown-menu li a:hover {
+			.header-link.dropdown .dropdown-menu li a:hover
+			{
 				background-color: #f5f5f5;
 			}
 
-.narrow-mobile-dropdown {
-    width: 90vw;
-    max-width: 325px; /* typical max mobile viewport width */
-    min-width: 275px;
-	margin-left: -120px;
-    left: 0 !important;
-    padding: 10px;
-    box-sizing: border-box;
-    border-radius: 6px;
-}
+			.narrow-mobile-dropdown 
+			{
+				width: 90vw;
+				max-width: 325px; /* typical max mobile viewport width */
+				min-width: 275px;
+				margin-left: -120px;
+				left: 0 !important;
+				padding: 10px;
+				box-sizing: border-box;
+				border-radius: 6px;
+			}
 
-.narrow-mobile-dropdown .scrollable-menu {
-    max-height: 200px;
-    overflow-y: auto;
-}
+			.narrow-mobile-dropdown .scrollable-menu 
+			{
+				max-height: 200px;
+				overflow-y: auto;
+			}
 
-.narrow-mobile-dropdown li a {
-    display: block;
-    text-align: left;
-    padding: 10px;
-    color: #333;
-    white-space: normal;
-}
-	.close-sidebar-btn {
-    position: absolute;
-    top: -15px;
-    right: 0px;
-    cursor: pointer;
-    border: none;
-    background: none;
-    font-size: 40px;
-}
-.tooltip{
-    background: none !important;
-}
-.team-header {
-  display: flex;
-  justify-content: space-between;
-  align-items:center;
-}
-.narrow-mobile-dropdown li a:hover {
-    background-color: #f5f5f5;
-}
-#hlMyTeams{
-	color:#337ab7;
-}
-@media (max-width: 768px) {
-    .narrow-mobile-dropdown {
-		width: 90vw;
-		max-width: 325px; /* typical max mobile viewport width */
-		min-width: 275px;
-    }
-}
-div#adminFeatureSection {
-						margin-bottom: 30px;
-}
-div#adminFeatureSection div {
-    background-color: lightgray;
-						height:65px;
-						padding:10px;
-						text-align: left;
-						color: dimgray;
-						position: fixed;
-						top: 0;
-						left: 0;
-						width: 100%;
-						z-index: 1000;
-}
-input#btnSearchHeader{
-	display:none;
-}
-input#btnSearchMobile
- {
-	display:none;
-}
+			.narrow-mobile-dropdown li a 
+			{
+				display: block;
+				text-align: left;
+				padding: 10px;
+				color: #333;
+				white-space: normal;
+			}
+			.close-sidebar-btn 
+			{
+				position: absolute;
+				top: -15px;
+				right: 0px;
+				cursor: pointer;
+				border: none;
+				background: none;
+				font-size: 40px;
+			}
+			.tooltip{
+				background: none !important;
+			}
+			.team-header 
+			{
+				display: flex;
+				justify-content: space-between;
+				align-items:center;
+			}
+			.narrow-mobile-dropdown li a:hover 
+			{
+				background-color: #f5f5f5;
+			}
+			#hlMyTeams
+			{
+				color:#337ab7;
+			}
+			@media (max-width: 768px) 
+			{
+				.narrow-mobile-dropdown 
+				{
+					width: 90vw;
+					max-width: 325px; /* typical max mobile viewport width */
+					min-width: 275px;
+				}
+			}
+			div#adminFeatureSection 
+			{
+				margin-bottom: 30px;
+			}
+			div#adminFeatureSection div 
+			{
+				background-color: lightgray;
+				height:65px;
+				padding:10px;
+				text-align: left;
+				color: dimgray;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				z-index: 1000;
+			}
+			input#btnSearchHeader
+			{
+				display:none;
+			}
+			input#btnSearchMobile
+			{
+				display:none;
+			}
 		</style>
 
-	<asp:ContentPlaceHolder id="head" runat="server">
+		<asp:ContentPlaceHolder id="head" runat="server">
 		</asp:ContentPlaceHolder>
 	</head>
 	<%=bodyTag%>
@@ -667,17 +692,17 @@ input#btnSearchMobile
 				<%=FeatureTypeCounterTitle %>  
 				<asp:Label ID="FeatureTypeCounterNumber" runat="server"></asp:Label>
 			</div>
+			<asp:Literal ID="bodyStyle" runat="server" Visible="false">
+				<style>
+        			body 
+					{
+        				padding-top: 0px;
+        			}
+				</style>
+			</asp:Literal>
 		</asp:Panel>
-				<div class="navbar-right"></div>
- <!-- Add a Literal control to dynamically include the style block -->
-    <asp:Literal ID="bodyStyle" runat="server" Visible="false">
-        <style>
-        	body {
-        		padding-top: 30px;
-        	}
-			
-        </style>
-    </asp:Literal>
+		<div class="navbar-right"></div>
+		<!-- Add a Literal control to dynamically include the style block -->
 		<form id="form1" runat="server" role="form">
 			<div>
 				<div id="header" runat="server">
@@ -685,24 +710,22 @@ input#btnSearchMobile
 						<asp:Image ID="imgLogo" CssClass="pull-left desktop-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png" />
                         <asp:Image ID="imgresponsive" CssClass="pull-left mobile-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/mobile-logo.png" />
 	                    <div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs"></i></div>					
-                        <div class="header-link text-white"data-toggle="tooltip"title="Civic Feed" onclick="window.location.href='/feed';">
-							<i class="fa fa-home fa-2x m-t-xs"></i>
-						</div>
-						<div class="header-link load-map text-white" data-toggle="tooltip"title="My profile" onclick="window.location.href='/V1/Member/Default.aspx';"><i class="fa fa-user fa-2x m-t-xs"></i></div>
-						<div class="header-link dropdown text-white" data-toggle="tooltip"title=" My team">
+                        <div class="header-link text-white" runat="server" id="divFeed" data-toggle="tooltip" title="Civic Feed" onclick="window.location.href='/feed';"><i class="fa fa-home fa-2x m-t-xs"></i></div>
+						<div class="header-link load-map text-white" runat="server" id="divProfile" data-toggle="tooltip" title="My Profile" onclick="window.location.href='/V1/Member/Default.aspx';"><i class="fa fa-user fa-2x m-t-xs"></i></div>
+						<div class="header-link dropdown text-white" runat="server" id="divTeam" data-toggle="tooltip" title="My Team">
 							<a class="dropdown-toggle text-white" href="#" data-toggle="dropdown" aria-expanded="false">
 								<i class="fa fa-users fa-2x m-t-xs text-white"></i>
 							</a>
 							<ul class="dropdown-menu hdropdown animated flipInX narrow-mobile-dropdown">
 								<div style="max-height: 400px; overflow-y: auto;">
-	                             <li>
-                                    <div class="team-header">
-                                   <h4>My Teams</h4>
-                                    <asp:HyperLink ID="hlMyTeams" runat="server" NavigateUrl="~/V1/NonProfit/TeamList.aspx">
-                                    <h5>View All Teams</h5>
-                                      </asp:HyperLink>
-                                           </div>
-			                                  	</li>					
+									<li>
+										<div class="team-header">
+											<h4>My Teams</h4>
+											<asp:HyperLink ID="hlMyTeams" runat="server" NavigateUrl="~/V1/NonProfit/TeamList.aspx">
+												<h5>View All Teams</h5>
+											</asp:HyperLink>
+										</div>
+									</li>					
 									<asp:Repeater ID="rptUserGroups" runat="server" OnItemDataBound="rptUserGroups_ItemDataBound">
 										<ItemTemplate>
 											<li>
@@ -722,7 +745,7 @@ input#btnSearchMobile
 
 						<div class="header-link load-map text-white" data-toggle="tooltip"title="Portal map" onclick="window.location.href='/MapZone';"><i class="fa fa-map fa-2x m-t-xs"></i></div>
 
-						<div role="search" class="navbar-form-custom">
+						<div role="search" class="navbar-form-custom" runat="server" id="divSearch">
 							<div class="input-group">
 								<span class="input-group-btn">
 									<asp:Button runat="server" ID="btnSearchHeader" CssClass="btn btn-primary2" Text="Find" OnClick="btnSearchMobile_Click" />
@@ -739,9 +762,6 @@ input#btnSearchMobile
 							</button>
 							<div class="collapse mobile-navbar" id="mobile-collapse-profile">
 								<ul class="nav navbar-nav no-borders">
-									<li><asp:HyperLink ID="HyperLink4" runat="server" Text="Create A Team" NavigateUrl="/V1/NonProfit/NonProfitNew.aspx"></asp:HyperLink></li>
-									<li><asp:HyperLink ID="HyperLink1" runat="server" Text="Search People" NavigateUrl="/V1/Member/PeopleSearch.aspx"></asp:HyperLink></li>
-									<li><asp:HyperLink ID="HyperLink3" runat="server" Text="My Profile" NavigateUrl="/V1/Member/Default.aspx"></asp:HyperLink></li>
 									<li><asp:HyperLink ID="HyperLink6" runat="server" Text="Sign Out" NavigateUrl="/V1/SignOut.aspx"></asp:HyperLink></li>
 								</ul>
 							</div>
@@ -761,17 +781,8 @@ input#btnSearchMobile
 							</div>
 						</div>
 
-						<div class="navbar-right">
-							<%--<ul class="nav navbar-nav no-borders removeStyle">
-								<li id="featureTypeCounter">
-								<%=FeatureTypeCounterTitle %> <asp:label ID="FeatureTypeCounterNumber" runat="server" ></asp:label>
-
-								</li>
-								
-							</ul>--%>
+						<div class="navbar-right" runat="server" id="divMessages">
 							<ul class="nav navbar-nav no-borders removeStyle">
-								
-
 								<li class="dropdown" id="notificationDropdown">
 									<a class="dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
 										<i class="fa fa-bell"></i>
@@ -810,9 +821,6 @@ input#btnSearchMobile
 										<i class="fa fa-chevron-down m-t-n-xs" style="color:white;"></i>
 									</a>
 									<ul class="dropdown-menu hdropdown notification animated flipInX">
-										<li><asp:HyperLink ID="HyperLink5" runat="server" Text="Create A Team" NavigateUrl="/V1/NonProfit/NonProfitNew.aspx"></asp:HyperLink></li>
-										<li><asp:HyperLink ID="HyperLink2" runat="server" Text="Search People" NavigateUrl="~/V1/Member/PeopleSearch.aspx"></asp:HyperLink></li>
-										<li><asp:HyperLink ID="hypProfile" runat="server" Text="My Profile" NavigateUrl="~/V1/Member/Default.aspx"></asp:HyperLink></li>
 										<li><asp:HyperLink ID="hypSignOut" runat="server" Text="Sign Out" NavigateUrl="~/V1/SignOut.aspx"></asp:HyperLink></li>
 									</ul>
 								</li>
