@@ -489,8 +489,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
         }
         Response.Redirect(Request.RawUrl);
     }
-
-
     protected void lbprimary_Click(object sender, EventArgs e)
     {
         string organizationId = Request.QueryString["organizationId"];
@@ -522,9 +520,16 @@ public partial class V1_NonProfit_Default : BaseWebForm
     }
     protected void jointheteam_Click(object sender, EventArgs e)
     {
+        if (!User.Identity.IsAuthenticated)
+        {
+            
+            string returnUrl = Server.UrlEncode(Request.RawUrl);
+            Response.Redirect("~/SignIn.aspx?ReturnUrl=" + returnUrl);
+            return;
+        }
         string organizationId = Request.QueryString["organizationId"];
 
-        if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(organizationId))
+        if (!string.IsNullOrEmpty(organizationId))
         {
             Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
             Guid orgId = new Guid(organizationId);
