@@ -203,7 +203,7 @@ public partial class V1_Profile_Profile : BaseOrganizationWebForm
                 LoadPosts(_profileUserId);
 
                 // Load checkbox states from the database
-                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == _profileUserId && uo.IsEnabled == true);
+                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == _profileUserId && uo.Status== (int)RequestStatus.Approved);
                 if (userOrg != null)
                 {
                     chkShowDonateButton.Checked = userOrg.ShowTeamLogo ?? false; 
@@ -440,7 +440,7 @@ public partial class V1_Profile_Profile : BaseOrganizationWebForm
 
 		var nonProfits = from us in dc.UserOrganizations
 						 join s in dc.Organizations on us.OrganizationId equals s.OrganizationId
-						 where us.UserId == userId && us.IsEnabled == true
+						 where us.UserId == userId && us.Status == 1
                          orderby s.Name
 						 select s;
 

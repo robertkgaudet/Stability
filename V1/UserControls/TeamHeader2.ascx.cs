@@ -46,7 +46,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
             }
             bool isPrimary = dc.UserOrganizations
              .Where(uo => uo.UserId == currentUserId
-              && uo.OrganizationId == new Guid(organizationId) && uo.IsEnabled == true) 
+              && uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved) 
               .Select(uo => uo.IsPrimary ?? false)
               .FirstOrDefault();
 
@@ -83,7 +83,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 
                 var isprimaryorg = (from o in dc.Organizations
                                     join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                    where uo.UserId == teamowner && uo.IsPrimary == true && uo.IsEnabled == true
+                                    where uo.UserId == teamowner && uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved
                                     select new
                                     {
                                         o.LogoSquare,
@@ -95,36 +95,20 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                 if (isprimaryorg != null)
                 {
                     string primarytitle = isprimaryorg.Name + " Verified";
-
-                    // Resolve image path
-                    string logoFilename = isprimaryorg.LogoSquare;
-                    string virtualPath = !string.IsNullOrEmpty(logoFilename)
-                        ? "/Impactoid/Images/Logos/" + logoFilename
-                        : null;
-
-                    string physicalPath = !string.IsNullOrEmpty(virtualPath)
-                        ? Server.MapPath(virtualPath)
-                        : null;
-
-                    // Determine actual image URL
-                    string imageUrl = (!string.IsNullOrEmpty(physicalPath) && File.Exists(physicalPath))
-                        ? virtualPath
-                        : "/V1/Images/Logo-Placeholder.png";
-
-                    // Construct the HTML with the correct image URL
                     teamlogo = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + isprimaryorg.OrganizationId + "'>" +
-                               "<img src='" + imageUrl + "' " +
-                               "style='width: 20px; height: 20px; margin-left:-2px;' " +
-                               "data-toggle='tooltip' title='" + primarytitle + "' />" +
+                               "<img src='" +
+                               (!string.IsNullOrEmpty(isprimaryorg.LogoSquare)
+                                   ? "/Impactoid/Images/Logos/" + isprimaryorg.LogoSquare
+                                   : "/V1/Images/DefaultLogo.png") +
+                               "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle + "' />" +
                                "</a>";
                 }
-
 
                 Guid orgId;
                 if (Guid.TryParse(organizationId, out orgId))
                 {
                     var userOrg = dc.UserOrganizations
-                                    .FirstOrDefault(uo => uo.UserId == currentUserId && uo.OrganizationId == orgId && uo.IsEnabled == true);
+                                    .FirstOrDefault(uo => uo.UserId == currentUserId && uo.OrganizationId == orgId && uo.Status== (int)RequestStatus.Approved);
 
                     if (userOrg != null)
                     {
@@ -141,37 +125,21 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                         if (orgUser != null && orgUser.ShowTeamLogo == true)
                         {
                             string primarytitle1 = orgUser.Name + " Verified";
-
-                            // Determine logo filename and virtual path
-                            string logoFilename = orgUser.LogoSquare;
-                            string virtualPath = !string.IsNullOrEmpty(logoFilename)
-                                ? "/Impactoid/Images/Logos/" + logoFilename
-                                : null;
-
-                            string physicalPath = !string.IsNullOrEmpty(virtualPath)
-                                ? Server.MapPath(virtualPath)
-                                : null;
-
-                            // Final image URL based on whether the file exists
-                            string imageUrl = (!string.IsNullOrEmpty(physicalPath) && File.Exists(physicalPath))
-                                ? virtualPath
-                                : "/V1/Images/Logo-Placeholder.png";
-
-                            // Build the HTML output
                             teamlogo1 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId + "'>" +
-                                        "<img src='" + imageUrl + "' " +
-                                        "style='width: 20px; height: 20px; margin-left:-2px;' " +
-                                        "data-toggle='tooltip' title='" + primarytitle1 + "' />" +
+                                        "<img src='" +
+                                        (!string.IsNullOrEmpty(orgUser.LogoSquare)
+                                            ? "/Impactoid/Images/Logos/" + orgUser.LogoSquare
+                                            : "/V1/Images/DefaultLogo.png") +
+                                        "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle1 + "' />" +
                                         "</a>";
                         }
-
                     }
                 }
                 else
                 {
                     var orgUserr = (from o in dc.Organizations
                                     join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                    where uo.UserId == currentUserId && uo.ShowTeamLogo == true && uo.IsEnabled == true
+                                    where uo.UserId == currentUserId && uo.ShowTeamLogo == true && uo.Status== (int)RequestStatus.Approved
                                     orderby o.CreatedOn descending
                                     select new
                                     {
@@ -180,33 +148,18 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                                         o.Name,
                                         uo.ShowTeamLogo,
                                     }).FirstOrDefault();
+
                     if (orgUserr != null && orgUserr.ShowTeamLogo == true)
                     {
                         string primarytitle2 = orgUserr.Name + " Verified";
-
-                        // Get the logo filename and build virtual and physical paths
-                        string logoFilename = orgUserr.LogoSquare;
-                        string virtualPath = !string.IsNullOrEmpty(logoFilename)
-                            ? "/Impactoid/Images/Logos/" + logoFilename
-                            : null;
-
-                        string physicalPath = !string.IsNullOrEmpty(virtualPath)
-                            ? Server.MapPath(virtualPath)
-                            : null;
-
-                        // Check if file exists, fallback to default
-                        string imageUrl = (!string.IsNullOrEmpty(physicalPath) && File.Exists(physicalPath))
-                            ? virtualPath
-                            : "/V1/Images/Logo-Placeholder.png";
-
-                        // Build the HTML output
                         teamlogo2 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + orgUserr.OrganizationId + "'>" +
-                                    "<img src='" + imageUrl + "' " +
-                                    "style='width: 20px; height: 20px; margin-left:-2px;' " +
-                                    "data-toggle='tooltip' title='" + primarytitle2 + "' />" +
+                                    "<img src='" +
+                                    (!string.IsNullOrEmpty(orgUserr.LogoSquare)
+                                        ? "/Impactoid/Images/Logos/" + orgUserr.LogoSquare
+                                        : "/V1/Images/DefaultLogo.png") +
+                                    "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle2 + "' />" +
                                     "</a>";
                     }
-
                 }
 
                 string finalTeamLogo = !string.IsNullOrEmpty(teamlogo) ? teamlogo :
@@ -338,7 +291,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                                               join p in dc.Profiles on uo.UserId equals p.UserId
                                               where uo.OrganizationId == new Guid(organizationId)
                                                     && uo.IsTeamAdministrator == true
-                                                    && uo.IsEnabled == true
+                                                    && uo.Status== (int)RequestStatus.Approved
                                               orderby p.Firstname + " " + p.Lastname
                                               select uo.UserId).ToList();
 
@@ -376,7 +329,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     }
                     var isprimaryorgg = (from o in dc.Organizations
                                          join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                         where uo.UserId == userId && uo.IsPrimary == true && uo.IsEnabled == true
+                                         where uo.UserId == userId && uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved
                                          select new
                                          {
                                              o.LogoSquare,
@@ -385,38 +338,23 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                                              uo.ShowTeamLogo,
                                          }).FirstOrDefault();
 
-                    if (isprimaryorgg != null && isprimaryorgg.ShowTeamLogo == true)
+                    if (isprimaryorgg != null)
                     {
-                        string primarytitle2 = isprimaryorgg.Name + " Verified";
-
-                        // Get the logo filename and build virtual and physical paths
-                        string logoFilename = isprimaryorgg.LogoSquare;
-                        string logovirtualPath = !string.IsNullOrEmpty(logoFilename)
-                            ? "/Impactoid/Images/Logos/" + logoFilename
-                            : null;
-
-                        string physicalPath = !string.IsNullOrEmpty(logovirtualPath)
-                            ? Server.MapPath(logovirtualPath)
-                            : null;
-
-                        // Check if file exists, fallback to default
-                        string imageUrl = (!string.IsNullOrEmpty(physicalPath) && File.Exists(physicalPath))
-                            ? logovirtualPath
-                            : "/V1/Images/Logo-Placeholder.png";
-
-                        // Build the HTML output
+                        string primarytitle = isprimaryorgg.Name + " Verified";
                         teamlogoo = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + isprimaryorgg.OrganizationId + "'>" +
-                                    "<img src='" + imageUrl + "' " +
-                                    "style='width: 20px; height: 20px; margin-left:-2px;' " +
-                                    "data-toggle='tooltip' title='" + primarytitle2 + "' />" +
-                                    "</a>";
+                                   "<img src='" +
+                                   (!string.IsNullOrEmpty(isprimaryorgg.LogoSquare)
+                                       ? "/Impactoid/Images/Logos/" + isprimaryorgg.LogoSquare
+                                       : "/V1/Images/DefaultLogo.png") +
+                                   "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle + "' />" +
+                                   "</a>";
                     }
 
                     Guid orggId;
                     if (Guid.TryParse(organizationId, out orggId))
                     {
                         var userOrg = dc.UserOrganizations
-                                        .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.IsEnabled == true);
+                                        .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.Status== (int)RequestStatus.Approved);
 
                         if (userOrg != null)
                         {
@@ -432,28 +370,13 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 
                             if (orgUser != null && orgUser.ShowTeamLogo == true)
                             {
-                                string orgUser2 = orgUser.Name + " Verified";
-
-                                // Get the logo filename and build virtual and physical paths
-                                string logoFilename = orgUser.LogoSquare;
-                                string logovirtualPath = !string.IsNullOrEmpty(logoFilename)
-                                    ? "/Impactoid/Images/Logos/" + logoFilename
-                                    : null;
-
-                                string physicalPath = !string.IsNullOrEmpty(logovirtualPath)
-                                    ? Server.MapPath(logovirtualPath)
-                                    : null;
-
-                                // Check if file exists, fallback to default
-                                string imageUrl = (!string.IsNullOrEmpty(physicalPath) && File.Exists(physicalPath))
-                                    ? logovirtualPath
-                                    : "/V1/Images/Logo-Placeholder.png";
-
-                                // Build the HTML output
+                                string primarytitle1 = orgUser.Name + " Verified";
                                 teamlogoo1 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId + "'>" +
-                                            "<img src='" + imageUrl + "' " +
-                                            "style='width: 20px; height: 20px; margin-left:-2px;' " +
-                                            "data-toggle='tooltip' title='" + orgUser2 + "' />" +
+                                            "<img src='" +
+                                            (!string.IsNullOrEmpty(orgUser.LogoSquare)
+                                                ? "/Impactoid/Images/Logos/" + orgUser.LogoSquare
+                                                : "/V1/Images/DefaultLogo.png") +
+                                            "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle1 + "' />" +
                                             "</a>";
                             }
                         }
@@ -462,7 +385,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     {
                         var orgUserr = (from o in dc.Organizations
                                         join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                        where uo.UserId == userId && uo.ShowTeamLogo == true && uo.IsEnabled == true
+                                        where uo.UserId == userId && uo.ShowTeamLogo == true && uo.Status== (int)RequestStatus.Approved
                                         orderby o.CreatedOn descending
                                         select new
                                         {
@@ -471,30 +394,16 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                                             o.Name,
                                             uo.ShowTeamLogo,
                                         }).FirstOrDefault();
-                        if (isprimaryorgg != null && isprimaryorgg.ShowTeamLogo == true)
+
+                        if (orgUserr != null && orgUserr.ShowTeamLogo == true)
                         {
-                            string primarytitle2 = isprimaryorgg.Name + " Verified";
-
-                            // Get the logo filename and build virtual and physical paths
-                            string logoFilename = isprimaryorgg.LogoSquare;
-                            string logovirtualPath = !string.IsNullOrEmpty(logoFilename)
-                                ? "/Impactoid/Images/Logos/" + logoFilename
-                                : null;
-
-                            string physicalPath = !string.IsNullOrEmpty(logovirtualPath)
-                                ? Server.MapPath(logovirtualPath)
-                                : null;
-
-                            // Check if file exists, fallback to default
-                            string imageUrl = (!string.IsNullOrEmpty(physicalPath) && File.Exists(physicalPath))
-                                ? logovirtualPath
-                                : "/V1/Images/Logo-Placeholder.png";
-
-                            // Build the HTML output
-                            teamlogoo2 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + isprimaryorgg.OrganizationId + "'>" +
-                                        "<img src='" + imageUrl + "' " +
-                                        "style='width: 20px; height: 20px; margin-left:-2px;' " +
-                                        "data-toggle='tooltip' title='" + primarytitle2 + "' />" +
+                            string primarytitle2 = orgUserr.Name + " Verified";
+                            teamlogoo2 = "<a href='/V1/NonProfit/Default.aspx?organizationId=" + orgUserr.OrganizationId + "'>" +
+                                        "<img src='" +
+                                        (!string.IsNullOrEmpty(orgUserr.LogoSquare)
+                                            ? "/Impactoid/Images/Logos/" + orgUserr.LogoSquare
+                                            : "/V1/Images/DefaultLogo.png") +
+                                        "' style='width: 20px; height: 20px; margin-left:-2px;' data-toggle='tooltip' title='" + primarytitle2 + "' />" +
                                         "</a>";
                         }
                     }

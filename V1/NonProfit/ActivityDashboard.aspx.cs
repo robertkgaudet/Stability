@@ -91,7 +91,7 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 		{
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
+										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved
                                          && uo.OrganizationId == new Guid(organizationId)
 										 select o).Take(1).SingleOrDefault();
 
@@ -138,7 +138,7 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 		lblHours.Text = string.Format(culture, "{0:N0}", totalVolunteerHours);
 
 		var totalVolunteers = (from org in dc.UserOrganizations
-							   where org.OrganizationId == new Guid(organizationId) && org.IsEnabled == true
+							   where org.OrganizationId == new Guid(organizationId) && org.Status == 1
                                select org).Distinct().Count();
 
 		lblTeamCount.Text = totalVolunteers.ToString();
@@ -176,7 +176,7 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 		var query = from ur in dc.UserAvailableDates
 					join uo in dc.UserOrganizations on ur.UserId equals uo.UserId
 					where ur.DateAvailable >= startOfCurrentWeek && ur.DateAvailable <= eightWeeksLater
-					&& uo.OrganizationId == new Guid(organizationId) && uo.IsEnabled == true
+					&& uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved
                     group ur by new
 					{
 						WeekStart = ur.DateAvailable.AddDays(-(int)ur.DateAvailable.DayOfWeek)

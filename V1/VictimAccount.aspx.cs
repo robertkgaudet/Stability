@@ -102,7 +102,9 @@ public partial class V1_VictimAccount : BaseWebForm
 				userOrganization.UserOrganizationId = Guid.NewGuid();
 				userOrganization.OrganizationId = new Guid(organizationId);
 				userOrganization.UserId = new Guid(newUser.ProviderUserKey.ToString());
-				dc.UserOrganizations.InsertOnSubmit(userOrganization);
+				userOrganization.Status = (int)RequestStatus.Pending;
+
+                dc.UserOrganizations.InsertOnSubmit(userOrganization);
 				dc.SubmitChanges();
 			}
 

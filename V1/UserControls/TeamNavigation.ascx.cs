@@ -159,11 +159,11 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
           .Any(ur => ur.UserId == userId && ur.RoleId == targetRoleId);
             var userOrganizationOwner = (from uo in dc.UserOrganizations
                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
+                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved
                                          && uo.OrganizationId == new Guid(organizationId)
                                          select o).Take(1).SingleOrDefault();
             bool isTeamAdministratorExists = dc.UserOrganizations
-          .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.IsEnabled == true);
+          .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.Status== (int)RequestStatus.Approved);
             if (userOrganizationOwner != null)
             {
                 if (userId == userOrganizationOwner.OwnerId)
@@ -186,7 +186,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                 //hypRequest.Attributes["title"] = "View this team's Request";
             }
                 var userCheck = (from uo in dc.UserOrganizations
-                                 where uo.UserId == userId && uo.IsEnabled == true
+                                 where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
                                  && uo.OrganizationId == new Guid(organizationId)
                                  select uo).Take(1).SingleOrDefault();
 
@@ -212,7 +212,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
             {
                 //Is user on this team?
                 var userOrganization = (from uo in dc.UserOrganizations
-                                        where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
+                                        where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved
                                         && uo.OrganizationId == new Guid(organizationId)
                                         select uo).Take(1).SingleOrDefault();
 

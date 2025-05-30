@@ -377,7 +377,7 @@ public partial class CaseManagment_Case : BaseOrganizationWebForm
 
 		var nonProfits = from us in dc.UserOrganizations
 					 join s in dc.Organizations on us.OrganizationId equals s.OrganizationId
-					 where us.UserId == userId && us.IsEnabled == true
+					 where us.UserId == userId && us.Status == 1
                          orderby s.Name
 					 select s;
 

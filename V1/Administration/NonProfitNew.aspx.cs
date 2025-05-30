@@ -187,7 +187,8 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 			userOrganization.OrganizationId = organization.OrganizationId;
 			userOrganization.UserId = userId;
 			userOrganization.IsPrimary = true;
-			dc.UserOrganizations.InsertOnSubmit(userOrganization);
+            userOrganization.Status = (int)RequestStatus.Pending;
+            dc.UserOrganizations.InsertOnSubmit(userOrganization);
 			dc.SubmitChanges();
 
 			Response.Redirect("/V1/NonProfitAdministration/InviteTeam.aspx?userActionModal=false&organizationId=" + organization.OrganizationId);

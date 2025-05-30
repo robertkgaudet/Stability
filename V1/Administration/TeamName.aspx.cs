@@ -37,6 +37,8 @@ public partial class V1_Administration_TeamName : BaseWebForm
         userOrganization.OrganizationId = organization.OrganizationId;
         userOrganization.UserId = userId;
         userOrganization.IsPrimary = true;
+        userOrganization.Status = (int)RequestStatus.Pending;
+
         dc.UserOrganizations.InsertOnSubmit(userOrganization);
         dc.SubmitChanges();
 
