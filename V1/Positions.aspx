@@ -52,6 +52,9 @@
 .panel-body.member-panel-body {
     display: none;
 }
+i{
+	color:#fff !important
+}
 	</style>
 	<script>
 

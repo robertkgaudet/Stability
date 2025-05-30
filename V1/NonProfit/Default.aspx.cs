@@ -247,7 +247,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             DateTime currentRequestTime = DateTime.Now;
             if (status != null)
             {
-                if (status == 0)
+                if (status == (int)RequestStatus.Pending)
                 {
                     btnActiveVolunteer.Text = "Request Pending";
                     btnActiveVolunteer.Attributes["data-toggle"] = "tooltip";
@@ -258,7 +258,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     btnActiveVolunteer.Style.Add("color", "black");
                     lbVolunteer.Visible = false;
                 }
-                else if (status == 4  && userHistory.DateToReApply >= currentRequestTime)
+                else if (status == (int)RequestStatus.Denied && userHistory.DateToReApply >= currentRequestTime)
                 {
                     btnActiveVolunteer.Text = "Request Denied";
                     btnActiveVolunteer.Attributes["data-toggle"] = "tooltip";
@@ -269,7 +269,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     btnActiveVolunteer.Style.Add("color", "black");
                     lbVolunteer.Visible = false;
                 }
-                else if (status == 5)
+                else if (status == (int)RequestStatus.Blocked)
                 {
                     btnActiveVolunteer.Text = "Blocked";
                     btnActiveVolunteer.Attributes["data-toggle"] = "tooltip";
@@ -280,13 +280,17 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     btnActiveVolunteer.Style.Add("color", "black");
                     lbVolunteer.Visible = false;
                 }
-                else if (userOrg.IsPrimary == true && status == 1)
+                else if(status== (int)RequestStatus.RemovedByUser)
+                {
+                    lbVolunteer.Visible=true;
+                }
+                else if (userOrg.IsPrimary == true && status == (int)RequestStatus.Approved)
                 {
                     lbleave.Visible = true;
                     lbVolunteer.Visible = false;
                     lbprimary.Visible = false;
                 }
-                else if (status == 1)
+                else if (status == (int)RequestStatus.Approved)
                 {
                     lbVolunteer.Visible = false;
                     lbleave.Visible = true;
@@ -522,51 +526,81 @@ public partial class V1_NonProfit_Default : BaseWebForm
     {
         if (!User.Identity.IsAuthenticated)
         {
-            
+
             string returnUrl = Server.UrlEncode(Request.RawUrl);
             Response.Redirect("~/SignIn.aspx?ReturnUrl=" + returnUrl);
             return;
         }
-        string organizationId = Request.QueryString["organizationId"];
-
-        if (!string.IsNullOrEmpty(organizationId))
+        else
         {
-            Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
-            Guid orgId = new Guid(organizationId);
+            string organizationId = Request.QueryString["organizationId"];
 
-            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            if (!string.IsNullOrEmpty(organizationId))
             {
-                UserOrganization userOrg = new UserOrganization
+                Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
+                Guid orgId = new Guid(organizationId);
+                UserOrganizationHistory userHistory = null;
+
+
+                using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
                 {
-                    UserOrganizationId = Guid.NewGuid(),
-                    UserId = userId,
-                    OrganizationId = orgId,
-                    ShowTeamLogo = false,
-                    TeamVerifiedDate = DateTime.Now,
-                    IsPrimary = false,
-                    IsPreviousOwner = false,
-                    IsTeamAdministrator = false,
-                    IsOwner = false,
-                    Status = (int)RequestStatus.Pending
-                };
 
-                dc.UserOrganizations.InsertOnSubmit(userOrg);
 
-                UserOrganizationHistory history = new UserOrganizationHistory
-                {
-                    UserOrganizationHistoryId = Guid.NewGuid(),
-                    UserOrganizationId = userOrg.UserOrganizationId,
-                    UserId = userId,
-                    PreviousStatus = (int)RequestStatus.Pending, 
-                    StatusChangedOn = DateTime.Now,
-                    DateToReApply = null
-                };
+                    var userOrg = dc.UserOrganizations
+                                .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
+                    int? previousStatus = null;
 
-                dc.UserOrganizationHistories.InsertOnSubmit(history);
+                    if (userOrg == null)
+                    {
+                        userOrg = new UserOrganization
+                        {
+                            UserOrganizationId = Guid.NewGuid(),
+                            UserId = userId,
+                            OrganizationId = orgId,
+                            ShowTeamLogo = false,
+                            TeamVerifiedDate = DateTime.Now,
+                            IsPrimary = false,
+                            IsPreviousOwner = false,
+                            IsTeamAdministrator = false,
+                            IsOwner = false,
+                            Status = (int)RequestStatus.Pending
+                        };
 
-                dc.SubmitChanges();
+                        dc.UserOrganizations.InsertOnSubmit(userOrg);
+                    }
+                    else
+                    {
+                        previousStatus = userOrg.Status;
+                        userOrg.Status = (int)RequestStatus.Pending;
+                        userHistory = dc.UserOrganizationHistories
+                                  .FirstOrDefault(uh => uh.UserOrganizationId == userOrg.UserOrganizationId);
+                    }
 
-                AddNotificationsAndSendEmail(null, EventArgs.Empty);
+
+                    if (userHistory == null)
+                    {
+                        UserOrganizationHistory history = new UserOrganizationHistory
+                        {
+                            UserOrganizationHistoryId = Guid.NewGuid(),
+                            UserOrganizationId = userOrg.UserOrganizationId,
+                            UserId = userId,
+                            PreviousStatus = (int)RequestStatus.Pending,
+                            StatusChangedOn = DateTime.Now,
+                            DateToReApply = null
+                        };
+
+                        dc.UserOrganizationHistories.InsertOnSubmit(history);
+                    }
+                    else
+                    {
+                        userHistory.PreviousStatus = previousStatus ?? 0;
+                        userHistory.StatusChangedOn = DateTime.Now;
+
+                    }
+                    dc.SubmitChanges();
+
+                    AddNotificationsAndSendEmail(null, EventArgs.Empty);
+                }
             }
         }
         Response.Redirect(Request.RawUrl);
