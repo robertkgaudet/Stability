@@ -42,9 +42,9 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		imgMemberProfilePhoto.ImageUrl	= profilePhotoFolder + _memberProfileImageFilename;
 		litMemberDescription.Text		= _memberDescription;
 		litTitle.Text					= !String.IsNullOrEmpty(_memberTitle) ? _memberTitle + "<br />" : string.Empty;
-		litLocation.Text				= _memberLocation;
+		litLocation.Text				= "Lives In " + _memberLocation;
 		litDeploymentCount.Text			= _deploymentCount;
-		hypConnections.Text				= _connectionCount + " Connections";
+		hypConnections.Text				= _connectionCount.ToString();
 		hypConnections.NavigateUrl		= "/V1/Member/Connections.aspx?userId=" + UserId;
         linkCamera.NavigateUrl= "/V1/Profile/ProfilePhotoUpload.aspx?userId=" + UserId;
         if (_badgeVettingStatus == "fa-approved-color")

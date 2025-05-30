@@ -155,48 +155,46 @@
 			<div class="row memberDetail">
                 <div class="col-xs-12 col-lg-8">
 					<div style="margin-top:10px; width:100%;">
-					<span style="color:darkslategrey; font-size:20px; font-weight:800; margin-right:10px;">		
-                    <uc1:TeamLogo  runat="server" ID="ucTeamLogo" />
-					</span>		
-				<i class="fa fa-id-badge pe-2x <%=_badgeVettingStatus%> float-right <%=faIdBadgeClick%>" data-toggle="tooltip" data-placement="top" title="Activate Vetted ID Badge"></i>
-					<i class="fa fa-shield pe-2x <%=_badgeCertificationStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Earn Training Certifications To Activate"></i>
-					<i class="fa fa-certificate pe-2x <%=_badgeDeployedStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Deploy Once To Activate"></i>
-					<i class="fa fa-check-circle pe-2x <%=_badgeHoursRecordedStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Record 8 Hours of Volunteer Time To Activate"></i>
-					<i class="fa fa-star pe-2x <%=_badgeTOPStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Record 100 Hours of Volunteer Time or 5 Or More Deployments to Activate"></i>
-					<i class="fa fa-ban text-danger pe-2x float-right" runat="server" id="idKwest" visible="false" data-toggle="tooltip" data-placement="top" title="Work in Progress"></i>
+						<div style="color:darkslategrey; font-size:20px; font-weight:600; margin-right:10px;">
+							<uc1:TeamLogo  runat="server" ID="ucTeamLogo" />
+							<div style="color:#C0C0C0; font-size:15px; position: relative; top:-5x; font-weight:500; ">
+								<asp:Literal ID="litTitle" runat="server"></asp:Literal>
+								<asp:Literal ID="litLocation" runat="server"></asp:Literal>
+							</div>
+						</div>
 					</div>
 					<div style="clear: both;"></div>
-					<asp:Literal ID="litTitle" runat="server"></asp:Literal>
 					<p style="font-size:16px;">
 						<asp:Literal ID="litMemberDescription" runat="server"></asp:Literal>
 					</p>
-					<div class="m-t-sm">
-						<p style="color:#C0C0C0;"><asp:Literal ID="litLocation" runat="server"></asp:Literal></p>
+					
+					<div class="hpanel">
+						<div class="panel-body member-panel-body">
+							<div class="row">
+								<div class="col-xs-4 border-right"><div class="contact-stat" data-toggle="tooltip" data-placement="top" title="This number shows how many positions this user has volunteered to fill."><span>TOTAL NUMBER OF POSITIONS FILLED</span> <strong><asp:Literal ID="litDeploymentCount" runat="server"></asp:Literal></strong></div></div>
+								<div class="col-xs-4 border-right" data-toggle="tooltip" data-placement="top" title="Shows this members ranking on their chosen primary team."><div class="contact-stat"><span>PRIMARY TEAM RANK</span> <strong>#298</strong></div></div>
+								<div class="col-xs-4 border-right"><div class="contact-stat" data-toggle="tooltip" data-placement="top" title="Shows this members ranking across the entire Stability platform."><span>OVERALL STABILITY PLATFORM RANK</span> <strong>#820</strong></div></div>
+								<div class="col-xs-4 border-right"><div class="contact-stat" data-toggle="tooltip" data-placement="top" title="Your time helps your community to offset federal government payments, this is the total value of this members contributed hours."><span>VALUE OF HOURS CONTRIBUTED</span> <strong>$6,219.00</strong></div></div>
+								<div class="col-xs-4 border-right"><div class="contact-stat" data-toggle="tooltip" data-placement="top" title="Shows the total number of hours this user has volunteered for positions on Stability."><span>TOTAL NUMBER OF HOURS CONTRIBUTED</span> <strong>200</strong></div></div>
+								<div class="col-xs-4 border-right"><div class="contact-stat" data-toggle="tooltip" data-placement="top" title="We're only as strong as our network of support, this shows the members total connections on Stability."><span>TOTAL STABILITY NETWORK CONNECTIONS</span> <strong><asp:HyperLink CssClass="nowrap" ID="hypConnections" Font-Bold="true" runat="server" Text="325 Connections"></asp:HyperLink></strong></div></div>
+							</div>
+						</div>
 					</div>
-
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <div class="project-label nowrap">Team Rank</div>
-                            <small>4</small>
-                        </div>
-                        <div class="col-xs-4">
-                            <div class="project-label nowrap">Deployed</div>
-                            <small><asp:Literal ID="litDeploymentCount" runat="server"></asp:Literal> Times</small>
-                        </div>
-                        <div class="col-xs-4">
-                            <div class="project-label nowrap">Network</div>
-                            <small>
-								<asp:HyperLink CssClass="nowrap" ID="hypConnections" Font-Bold="true" runat="server" Text="325 Connections"></asp:HyperLink>
-                            </small>
-                        </div>
-                    </div>
                 </div>
                 <div class="col-xs-12 col-lg-4 project-info">
                     <div class="project-value" style="margin-top:20px;">
 						<asp:HyperLink ID="hypTeam" Font-Bold="true" runat="server"></asp:HyperLink>
+						<p style="top:10px; position:relative;">
+							<i class="fa fa-id-badge pe-2x <%=_badgeVettingStatus%> float-right <%=faIdBadgeClick%>" data-toggle="tooltip" data-placement="top" title="Activate Vetted ID Badge"></i>
+							<i class="fa fa-shield pe-2x <%=_badgeCertificationStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Earn Training Certifications To Activate"></i>
+							<i class="fa fa-certificate pe-2x <%=_badgeDeployedStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Deploy Once To Activate"></i>
+							<i class="fa fa-check-circle pe-2x <%=_badgeHoursRecordedStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Record 8 Hours of Volunteer Time To Activate"></i>
+							<i class="fa fa-star pe-2x <%=_badgeTOPStatus%> float-right" data-toggle="tooltip" data-placement="top" title="Record 100 Hours of Volunteer Time or 5 Or More Deployments to Activate"></i>
+							<i class="fa fa-ban text-danger pe-2x float-right" runat="server" id="idKwest" visible="false" data-toggle="tooltip" data-placement="top" title="Work in Progress"></i>
+						</p>
 						<asp:Literal ID="litTeamBreak" runat="server"></asp:Literal>
-						<small>VALUE OF HOURS CONTRIBUTED</small>
-                        <h2 style="margin-top:0px;"><span class="text-success">$0.00</span></h2>
+						<small>Team Rank</small>
+                        <h2 style="margin-top:0px;"><span class="text-success">4</span></h2>
                     </div>
 					<asp:LinkButton runat="server" ID="btnFriend" ClientIDMode="Static">Request Connection</asp:LinkButton>
                 </div>
