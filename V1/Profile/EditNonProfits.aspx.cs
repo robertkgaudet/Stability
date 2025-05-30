@@ -36,7 +36,7 @@ public partial class V1_Profile_EditNonProfits : BaseOrganizationWebForm
             Guid userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
 
             var userOrganizations = (from uo in dc.UserOrganizations
-                                     where uo.UserId == userId && uo.IsEnabled == true
+                                     where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
                                      select uo).ToList();
 
             foreach (var uo in userOrganizations)
@@ -75,8 +75,9 @@ public partial class V1_Profile_EditNonProfits : BaseOrganizationWebForm
 		userOrganization.UserId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
 		userOrganization.UserOrganizationId = Guid.NewGuid();
 		dc.UserOrganizations.InsertOnSubmit(userOrganization);
-		userOrganization.IsEnabled = true;
-		dc.SubmitChanges();
+        userOrganization.Status = (int)RequestStatus.Pending;
+
+        dc.SubmitChanges();
 
 		Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + organizationId);
 	}

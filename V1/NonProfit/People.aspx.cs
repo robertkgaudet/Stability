@@ -79,7 +79,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         || isOwner)
         ? "1" : "0";
         bool isTeamAdministratorExists = dc.UserOrganizations
-       .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.IsEnabled == true);
+       .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.Status== (int)RequestStatus.Approved);
         if (isTeamAdministratorExists == true || isOwner == true ||User.IsInRole("Administrator"))
         {
             btnremoveteam.Visible = true;
@@ -155,7 +155,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             //Is logged in user on this team?
 
             var userCheck = (from uo in dc.UserOrganizations
-                             where uo.UserId == userId && uo.IsEnabled == true
+                             where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
                              && uo.OrganizationId == new Guid(organizationId)
                              select uo).Take(1).SingleOrDefault();
 
@@ -352,12 +352,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 organization.OwnerId = selectedUser;
                 dc.SubmitChanges();
                 var oldUserOrg = dc.UserOrganizations
-                    .FirstOrDefault(x => x.UserId == oldOwnerId && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
+                    .FirstOrDefault(x => x.UserId == oldOwnerId && x.OrganizationId == organization.OrganizationId && x.Status == 1);
 
                 var newUserOrg = dc.UserOrganizations
-                 .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
+                 .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.Status == 1);
                 var previousOwners = dc.UserOrganizations
-               .Where(x => x.OrganizationId == organization.OrganizationId && x.IsPreviousOwner == true && x.IsEnabled == true)
+               .Where(x => x.OrganizationId == organization.OrganizationId && x.IsPreviousOwner == true && x.Status == 1)
                .FirstOrDefault();
                 if (previousOwners != null)
                 {
@@ -384,7 +384,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 organization.OwnerId = selectedUser;
                 dc.SubmitChanges();
                 var newUserOrg = dc.UserOrganizations
-                .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
+                .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.Status == 1);
                 newUserOrg.IsOwner=true;
                 dc.SubmitChanges();
             }
@@ -399,11 +399,38 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
             var userOrg = dc.UserOrganizations
-                        .FirstOrDefault(uo => uo.OrganizationId == new Guid(orgId) && uo.UserId == selectedUser && uo.IsEnabled == true);
+                        .FirstOrDefault(uo => uo.OrganizationId == new Guid(orgId) && uo.UserId == selectedUser);
+            var userHistory = dc.UserOrganizationHistories
+        .FirstOrDefault(uh => uh.UserOrganizationId == userOrg.UserOrganizationId);
             if (userOrg != null)
             {
-                userOrg.IsEnabled = false;
-                dc.SubmitChanges();
+                if (userOrg != null)
+                {
+                    int previousStatus = userOrg.Status;
+                    if(userHistory !=null)
+                    {
+                       
+                            userHistory.PreviousStatus = previousStatus;
+                            userHistory.StatusChangedOn = DateTime.Now;
+                       
+                    }
+                    else
+                    {
+                        UserOrganizationHistory history = new UserOrganizationHistory
+                        {
+                            UserOrganizationHistoryId = Guid.NewGuid(),
+                            UserOrganizationId = userOrg.UserOrganizationId,
+                            UserId = selectedUser,
+                            PreviousStatus = previousStatus,
+                            StatusChangedOn = DateTime.Now,
+                            DateToReApply = null
+                        };
+                    }
+                   
+
+                    userOrg.Status = (int)RequestStatus.RemovedByAdmin;
+                    dc.SubmitChanges();
+                }
                 RemoveTeamMemberId = selectedUser;
                 SendRemoveTeamMemberEmail(RemoveTeamMemberId, new Guid(organizationId));
             }

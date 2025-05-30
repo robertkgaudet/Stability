@@ -287,7 +287,8 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 			UserOrganization userOrganization = new UserOrganization();
 			userOrganization.UserOrganizationId = Guid.NewGuid();
 			userOrganization.OrganizationId = organization.OrganizationId;
-			userOrganization.UserId = userId;
+            userOrganization.Status = (int)RequestStatus.Pending;
+            userOrganization.UserId = userId;
 
 			//FALSE FOR NOW,
 			//NEED TO ADD A CHECKBOX THAT ALLOWS

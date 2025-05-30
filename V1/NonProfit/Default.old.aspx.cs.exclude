@@ -93,7 +93,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 		{
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled==true
+										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved
 										 && uo.OrganizationId == new Guid(organizationId)
 										 select o).Take(1).SingleOrDefault();
 
@@ -107,7 +107,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
 			//If the user is logged in and not in a nonprofit already then send to choose a nonprofit.
 			var userOrganization = from uo in dc.UserOrganizations
-								   where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled==true
+								   where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved
 								   && uo.OrganizationId == new Guid(organizationId)
 								   select uo;
 

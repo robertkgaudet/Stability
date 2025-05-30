@@ -73,7 +73,7 @@ public partial class V1_Profile_AvailableDates : BaseWebForm
 		var userOrganization = (from uo in dc.UserOrganizations
 								join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
 								join p in dc.Profiles on uo.UserId equals p.UserId
-								where uo.UserId == new Guid(calendarUserId) && uo.IsEnabled == true
+								where uo.UserId == new Guid(calendarUserId) && uo.Status== (int)RequestStatus.Approved
                                 select new { TeamName = o.Name, o.OrganizationId, fullName = p.Firstname + " " + p.Lastname }).Take(1).SingleOrDefault(); ;
 
 		if (userOrganization == null)

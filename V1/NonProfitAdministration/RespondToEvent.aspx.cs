@@ -218,7 +218,7 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
                                on a.UserId equals b.UserId
                                join c in dc.Profiles
                                on a.UserId equals c.UserId
-                               where a.OrganizationId == new Guid(organizationId) && c.ReceiveSMSNotifications == true && a.IsEnabled == true
+                               where a.OrganizationId == new Guid(organizationId) && c.ReceiveSMSNotifications == true && a.Status == 1
                                select c.PhoneNumber).ToArray();
 
             string messageBody = "Dear Member, We are excited to inform you that a new deployment named " + campaignName + " has been created into your organization.";

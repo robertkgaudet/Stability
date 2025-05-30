@@ -53,7 +53,7 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
         {
             Guid orgid = new Guid(organizationId);
             var senderfalse = dc.UserOrganizations
-         .Where(r => r.OrganizationId == orgid && r.IsEnabled == false && r.Status == 0)
+         .Where(r => r.OrganizationId == orgid && r.Status== (int)RequestStatus.Pending)
          .Select(r => r.UserId)
          .ToList();
             if (senderfalse != null)
@@ -117,20 +117,26 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
 
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-        Guid userOrgId = dc.UserOrganizations
-            .Where(rr => rr.UserId == senderId && rr.OrganizationId == organizationId)
-            .Select(rr => rr.UserOrganizationId)
-            .FirstOrDefault();
+        var userOrgData = dc.UserOrganizations
+    .Where(rr => rr.UserId == senderId && rr.OrganizationId == organizationId)
+    .Select(rr => new { rr.UserOrganizationId, rr.Status })
+    .FirstOrDefault();
 
-        if (userOrgId != Guid.Empty)
+        if (userOrgData !=null)
         {
             UserOrganization userOrg = dc.UserOrganizations
-                .FirstOrDefault(u => u.UserOrganizationId == userOrgId);
-
+                .FirstOrDefault(u => u.UserOrganizationId == userOrgData.UserOrganizationId);
+            UserOrganizationHistory userHistory = dc.UserOrganizationHistories
+          .FirstOrDefault(uh => uh.UserOrganizationId == userOrgData.UserOrganizationId);
             if (userOrg != null)
             {
-                userOrg.Status = (int)RequestStatus.Approved; // or your desired enum value
-                userOrg.IsEnabled = true;
+                int previousStatus = userOrgData.Status;
+                if (userHistory != null)
+                {
+                    userHistory.PreviousStatus = previousStatus;
+                    userHistory.StatusChangedOn = DateTime.Now;
+                }
+                userOrg.Status = (int)RequestStatus.Approved; 
                 dc.SubmitChanges();
             }
         }
@@ -143,19 +149,26 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
     {
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-        Guid userOrgId = dc.UserOrganizations
-            .Where(rr => rr.UserId == senderId && rr.OrganizationId == organizationId)
-            .Select(rr => rr.UserOrganizationId)
-            .FirstOrDefault();
+        var userOrgData = dc.UserOrganizations
+    .Where(rr => rr.UserId == senderId && rr.OrganizationId == organizationId)
+    .Select(rr => new { rr.UserOrganizationId, rr.Status })
+    .FirstOrDefault();
 
-        if (userOrgId != Guid.Empty)
+        if (userOrgData != null)
         {
             UserOrganization userOrg = dc.UserOrganizations
-                .FirstOrDefault(u => u.UserOrganizationId == userOrgId);
-
+                .FirstOrDefault(u => u.UserOrganizationId == userOrgData.UserOrganizationId);
+            UserOrganizationHistory userHistory = dc.UserOrganizationHistories
+          .FirstOrDefault(uh => uh.UserOrganizationId == userOrgData.UserOrganizationId);
             if (userOrg != null)
             {
-                userOrg.Status = (int)RequestStatus.Rejected;
+                int previousStatus = userOrgData.Status;
+                if (userHistory != null)
+                {
+                    userHistory.PreviousStatus = previousStatus;
+                    userHistory.StatusChangedOn = DateTime.Now;
+                }
+                userOrg.Status = (int)RequestStatus.RemovedByAdmin;
                 dc.SubmitChanges();
             }
         }
@@ -163,7 +176,71 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
 
         return "Request not found.";
     }
+    [WebMethod]
+    public static string BlockUser(Guid senderId, Guid organizationId)
+    {
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
+      var userOrgData = dc.UserOrganizations
+  .Where(rr => rr.UserId == senderId && rr.OrganizationId == organizationId)
+  .Select(rr => new { rr.UserOrganizationId, rr.Status })
+  .FirstOrDefault();
+
+      if (userOrgData !=null)
+      {
+          UserOrganization userOrg = dc.UserOrganizations
+              .FirstOrDefault(u => u.UserOrganizationId == userOrgData.UserOrganizationId);
+          UserOrganizationHistory userHistory = dc.UserOrganizationHistories
+        .FirstOrDefault(uh => uh.UserOrganizationId == userOrgData.UserOrganizationId);
+          if (userOrg != null)
+          {
+              int previousStatus = userOrgData.Status;
+              if (userHistory != null)
+              {
+                  userHistory.PreviousStatus = previousStatus;
+                  userHistory.StatusChangedOn = DateTime.Now;
+              }
+              userOrg.Status = (int)RequestStatus.Blocked; 
+              dc.SubmitChanges();
+          }
+      }
+
+
+        return "Request not found.";
+    }
+    [WebMethod]
+    public static string DenyRequest(Guid senderId, Guid organizationId,DateTime reapplyDate)
+    {
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+        var userOrgData = dc.UserOrganizations
+    .Where(rr => rr.UserId == senderId && rr.OrganizationId == organizationId)
+    .Select(rr => new { rr.UserOrganizationId, rr.Status })
+    .FirstOrDefault();
+
+        if (userOrgData != null)
+        {
+            UserOrganization userOrg = dc.UserOrganizations
+                .FirstOrDefault(u => u.UserOrganizationId == userOrgData.UserOrganizationId);
+            UserOrganizationHistory userHistory = dc.UserOrganizationHistories
+          .FirstOrDefault(uh => uh.UserOrganizationId == userOrgData.UserOrganizationId);
+            if (userOrg != null)
+            {
+                int previousStatus = userOrgData.Status;
+                if (userHistory != null)
+                {
+                    userHistory.PreviousStatus = previousStatus;
+                    userHistory.StatusChangedOn = DateTime.Now;
+                    userHistory.DateToReApply = reapplyDate;
+                }
+                userOrg.Status = (int)RequestStatus.Denied;
+                dc.SubmitChanges();
+            }
+        }
+
+
+        return "Request not found.";
+    }
 }
 
 #endregion
