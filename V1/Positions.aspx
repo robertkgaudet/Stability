@@ -49,6 +49,9 @@
 {
 	height:600px;
 }
+.panel-body.member-panel-body {
+    display: none;
+}
 	</style>
 	<script>
 
