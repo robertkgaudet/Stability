@@ -446,8 +446,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
         }
         Response.Redirect(Request.RawUrl);
     }
-
-
     protected void lbprimary_Click(object sender, EventArgs e)
     {
         string organizationId = Request.QueryString["organizationId"];
@@ -479,10 +477,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
     }
     protected void jointheteam_Click(object sender, EventArgs e)
     {
-        string currentUrl = Request.Url.AbsolutePath.ToLower();
-        bool isOnTargetPage = currentUrl.Contains("/v1/nonprofit/default.aspx");
-
-       
         if (!User.Identity.IsAuthenticated)
         {
             
@@ -490,8 +484,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
             Response.Redirect("~/SignIn.aspx?ReturnUrl=" + returnUrl);
             return;
         }
-
-       
         string organizationId = Request.QueryString["organizationId"];
 
         if (!string.IsNullOrEmpty(organizationId))
@@ -501,7 +493,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
-                // Check if user already joined
+              
                 bool alreadyJoined = dc.UserOrganizations.Any(uo =>
                     uo.UserId == userId && uo.OrganizationId == orgId);
 
@@ -528,13 +520,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
                 }
             }
         }
-
-       
         Response.Redirect(Request.RawUrl);
     }
-
-
-
     protected void AddNotificationsAndSendEmail(object sender, EventArgs e)
     {
         string organizationId = Request.QueryString["organizationId"];
