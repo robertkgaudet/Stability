@@ -156,8 +156,8 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
 
                         if (showLogo)
                         {
-                            imgTeamLogo.Style.Add(HtmlTextWriterStyle.Display, "block");
-                            hypTeamLogo.Style.Add(HtmlTextWriterStyle.Display, "block");
+                            imgTeamLogo.Style.Add(HtmlTextWriterStyle.Display, "inline-flex");
+                            hypTeamLogo.Style.Add(HtmlTextWriterStyle.Display, "inline-flex");
                         }
                         else
                         {
@@ -170,8 +170,8 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                     imgStabilityBadge.ImageUrl = teamLogo + "purplebadge.png";
                     if (profile.IsDisasterReadyCertified)
                     {
-                        imgStabilityBadge.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
-                        hypStabilityLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "block");
+                        imgStabilityBadge.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "inline-flex");
+                        hypStabilityLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "inline-flex");
                     }
                     else
                     {

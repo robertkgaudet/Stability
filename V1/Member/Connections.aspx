@@ -109,7 +109,7 @@
 									<div class="hpanel">
 										<div class="panel-body member-panel-body">
 											<p style="font-size:16px;">
-												<img class="img-circle img-small" src="<%=profilePhotoFolder%><%# string.IsNullOrEmpty(Eval("ProfileImage") as string) ? "profilepicture.png" : Eval("ProfileImage")%>" />
+												<img class="img-circle img-small" src="<%=profilePhotoFolder%><%# string.IsNullOrEmpty(Eval("ProfileImage") as string) ? "icons8-customer-64.png" : Eval("ProfileImage")%>" />
 												<strong><a href="/V1/Member/Default.aspx?userid=<%# Eval("UserId") %>"><%# Eval("Fullname") %></a></strong>
 												<div <%=hideFriendControls%> class="block">
 													<button data-id="<%#Eval("UserId")%>" data-action="remove" onclick="UpdateConnection(this); return false;" class="btn btn-default pull-right remove-button" <%=hideDeleteButton%>>Remove</button>

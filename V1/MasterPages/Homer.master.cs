@@ -140,14 +140,27 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
             }
         }
 
+		divFeed.Visible = false;
+		divProfile.Visible = false;
+		divTeam.Visible = false;
+		divSearch.Visible = false;
+		divMessages.Visible = false;
 
 
-        if (HttpContext.Current.User.Identity.IsAuthenticated)
+		if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
             bool hasTeam = false;
             bool hasDeployment = false;
             bool hasPortal = false;
-            userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+
+
+			divFeed.Visible = true;
+			divProfile.Visible = true;
+			divTeam.Visible = true;
+			divSearch.Visible = true;
+			divMessages.Visible = true;
+
+			userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
             string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
             divSettings.Visible = true;
             divLogin.Visible = false;
@@ -160,10 +173,9 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
             if (HttpContext.Current.User.IsInRole("Administrator"))
             {
-                menu.Style["margin-top"] = "60px";
-                adminFeatureSection.Visible = true;
-				adminHeaderStyle = "{position: fixed; top: 65px; left: 0;width: 100%;z-index: 9999; background-color: #5e2e91; height: 58px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}";
-
+                //menu.Style["margin-top"] = "60px";
+                adminFeatureSection.Visible = false;
+				//adminHeaderStyle = "{position: fixed; top: 65px; left: 0;width: 100%;z-index: 9999; background-color: #5e2e91; height: 58px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}";
 
 				string FeatureTypeRedirectUrl = HttpContext.Current.Request.Url.AbsolutePath;
 

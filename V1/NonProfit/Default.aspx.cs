@@ -23,8 +23,9 @@ public partial class V1_NonProfit_Default : BaseWebForm
     public string _organizationId;
     public string _nonProfitDropDown;
     public string _coverImage;
-    public string organizationId = string.Empty;
-    public string volunteerLink = string.Empty;
+    public string urlFriendlyName = string.Empty;
+	public string organizationId = string.Empty;
+	public string volunteerLink = string.Empty;
     public string donateLink = string.Empty;
     public string impactoidLink = string.Empty;
     public string activityPageLink = string.Empty;
@@ -37,16 +38,32 @@ public partial class V1_NonProfit_Default : BaseWebForm
         ucTeamFooter.PageName = "teamPage";
         ucTeamHeader.PageName = "Team Page";
 
-        #region HEADER PROPERTIES
-        ////////////////////////
-        //BEGIN HEADER PROPERTIES
-        ////////////////////////
+		#region HEADER PROPERTIES
+		////////////////////////
+		//BEGIN HEADER PROPERTIES
+		////////////////////////
 
-        organizationId = Request.QueryString["organizationId"];
+		urlFriendlyName = Request.QueryString["urlFriendlyName"];
+		organizationId = Request.QueryString["organizationId"];
         string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
         _coverImage = causePhotoFolder + "businesscoverimage.png";
 
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+		if(!String.IsNullOrEmpty(urlFriendlyName))
+		{
+			//Get and set the org id.
+			var organizationIdCheck = (from o in dc.Organizations
+								where o.URLFriendlyName == urlFriendlyName
+								select new { o.OrganizationId }).SingleOrDefault();
+
+			if (organizationIdCheck.OrganizationId != Guid.Empty)
+			{
+				organizationId = organizationIdCheck.OrganizationId.ToString();
+				// You can now use organizationId safely
+			}
+		}
+
         if (String.IsNullOrEmpty(organizationId))
         {
             if (!User.Identity.IsAuthenticated)
@@ -204,8 +221,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                                    && uo.OrganizationId == new Guid(organizationId)
                                    select uo;
 
-            UserOrganization request = dc.UserOrganizations
-            .FirstOrDefault(rr => rr.UserId == userId && rr.OrganizationId == new Guid(organizationId));
+            UserOrganization request = dc.UserOrganizations.FirstOrDefault(rr => rr.UserId == userId && rr.OrganizationId == new Guid(organizationId));
 
             int? status = null;
 
