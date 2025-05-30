@@ -117,14 +117,18 @@ public partial class V1_Register : System.Web.UI.Page
 				userOrganization.UserOrganizationId = Guid.NewGuid();
 				userOrganization.OrganizationId = new Guid(organizationId);
 				userOrganization.UserId = new Guid(newUser.ProviderUserKey.ToString());
+				userOrganization.IsPrimary = true;
+				userOrganization.IsEnabled = true;
+				userOrganization.IsOwner = false;
+				userOrganization.IsPreviousOwner = false;
+				userOrganization.IsTeamAdministrator = false;
 				dc.UserOrganizations.InsertOnSubmit(userOrganization);
 				dc.SubmitChanges();
-				urlRedirect = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
+				urlRedirect = "/V1/Profile/EditSkills.aspx?skill=false";
 			}
 			else
 			{
-				//Send to the team list page and ask that they choose a team.
-				urlRedirect = "/V1/NonProfit/TeamList.aspx?team=false";
+                urlRedirect = "/V1/NonProfit/TeamList.aspx?team=false"; 
 			}
 			if (Request.QueryString["transactionId"] != null)
 			{

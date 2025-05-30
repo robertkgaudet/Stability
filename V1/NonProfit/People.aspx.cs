@@ -7,12 +7,14 @@ using System.Configuration;
 using System.Globalization;
 using System.IdentityModel.Metadata;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Web;
 using System.Web.Security;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using Twilio.TwiML.Voice;
 public partial class V1_NonProfit_People : BaseOrganizationWebForm
 {
     public string _logo;
@@ -23,12 +25,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     public string _organizationId;
     public string _nonProfitDropDown;
     public string _coverImage;
-    public string organizationId = string.Empty;
+    public static string organizationId = string.Empty;
     public string signedInUserFullName = string.Empty;
     public bool isUserOnTeam = false;
     public Guid organizationOwnerId = Guid.Empty;
     public string teamName = string.Empty;
     public string skillId = string.Empty;
+    public static Guid pevUserId = Guid.Empty;
+    public static Guid newUserId = Guid.Empty;
+    public static Guid RemoveTeamMemberId = Guid.Empty;
     public string resourceId = string.Empty;
     public bool userIsOwner = false;
     public bool hideTeamList = false;
@@ -41,7 +46,6 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         organizationId = Request.QueryString["organizationId"];
         skillId = Request.QueryString["skillId"];
         resourceId = Request.QueryString["resourceId"];
-
         ucTeamFooter.PageName = "peoplePage";
         ucTeamHeader.PageName = "Team Members";
         #region HEADER PROPERTIES
@@ -53,17 +57,16 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         if (User.Identity.IsAuthenticated == true)
         {
-            var userOrganizationOwner = (from uo in dc.UserOrganizations
-                                         join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-                                         && uo.OrganizationId == new Guid(organizationId)
-                                         select o).Take(1).SingleOrDefault();
-            if (userOrganizationOwner != null)
+            bool userOrganizationOwner = dc.Organizations
+            .Any(o => o.OrganizationId == new Guid(organizationId) && o.OwnerId == userId);
+            if (userOrganizationOwner == true || User.IsInRole("Administrator"))
             {
-                if ((userOrganizationOwner.OwnerId != userId))
+                if(userOrganizationOwner ==true)
                 {
                     isOwner = true;
                 }
+                
+                btnteamOwner.Visible = true;
             }
         }
         var organization = (from o in dc.Organizations
@@ -75,10 +78,25 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         || (organization != null && organization.EnableTeamMemberVerification == true)
         || isOwner)
         ? "1" : "0";
-
-        bool showAdminControls = User.IsInRole("Administrator") || (isUserOnTeam && User.IsInRole("Team Administrator")) || isOwner;
-        divShowTeamVerifiedFeatures.Style["display"] = showAdminControls ? "block" : "none";
-        hiddenAdminRole.Value = showAdminControls ? "1" : "0";
+        bool isTeamAdministratorExists = dc.UserOrganizations
+       .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.IsEnabled == true);
+        if (isTeamAdministratorExists == true || isOwner == true ||User.IsInRole("Administrator"))
+        {
+            btnremoveteam.Visible = true;
+            phAdminControls.Visible = true;
+            hiddenAdminRole.Value = "1";
+        }
+        else
+        {
+            phAdminControls.Visible = false;
+            hiddenAdminRole.Value = "0";
+            btnremoveteam.Visible = false;
+        }
+        if (organization.EnableTeamMemberVerification == false)
+        {
+            chkManageShowDonatelabel.Visible = false;
+            chkManageShowDonateButton.Visible = false;
+        }
         hiddenShowTeamLogo.Value = chkManageShowDonateButton.Visible ? "1" : "0";
         hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true || isOwner ? "1" : "0";
         string squareLogo = string.Empty;
@@ -136,18 +154,17 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             //Is logged in user on this team?
 
             var userCheck = (from uo in dc.UserOrganizations
-                             where uo.UserId == userId
+                             where uo.UserId == userId && uo.IsEnabled == true
                              && uo.OrganizationId == new Guid(organizationId)
                              select uo).Take(1).SingleOrDefault();
 
             Profile profile = GetUserProfileByUserId(userId);
             signedInUserFullName = profile.Firstname + " " + profile.Lastname;
-
             if (userCheck != null)
             {
                 //User is on this team.
                 isUserOnTeam = true;
-                hpanelJoin.Visible = false;
+                //hpanelJoin.Visible = false;
                 hpanelMembers.Visible = true;
                 hypInviteTeamMembers.Visible = true;
                 hypInviteTeamMembers.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + organizationId;
@@ -320,7 +337,161 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         return "Emails sent successfully!";
 
     }
+    [WebMethod]
+    public static string MakeTeamOwner(Guid selectedUser)
+    {
+        string orgId = organizationId;
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            var organization = dc.Organizations.FirstOrDefault(o => o.OrganizationId == new Guid(orgId));
+            Guid oldOwnerId = Guid.Empty;
+            if (organization.OwnerId !=null)
+            {
+                 oldOwnerId = organization.OwnerId.Value;
+                organization.OwnerId = selectedUser;
+                dc.SubmitChanges();
+                var oldUserOrg = dc.UserOrganizations
+                    .FirstOrDefault(x => x.UserId == oldOwnerId && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
 
+                var newUserOrg = dc.UserOrganizations
+                 .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
+                var previousOwners = dc.UserOrganizations
+               .Where(x => x.OrganizationId == organization.OrganizationId && x.IsPreviousOwner == true && x.IsEnabled == true)
+               .FirstOrDefault();
+                if (previousOwners != null)
+                {
+                    previousOwners.IsPreviousOwner = false;
+                }
+
+                if (oldUserOrg != null)
+                {
+                    oldUserOrg.IsOwner = false;
+                    oldUserOrg.IsPreviousOwner = true;
+                }
+
+                if (newUserOrg != null)
+                {
+                    newUserOrg.IsOwner = true;
+                }
+                dc.SubmitChanges();
+                pevUserId = oldOwnerId;
+                newUserId = selectedUser;
+                SendTeamOwnerChangeEmail(pevUserId, newUserId, new Guid(organizationId));
+            }
+            else
+            {
+                organization.OwnerId = selectedUser;
+                dc.SubmitChanges();
+                var newUserOrg = dc.UserOrganizations
+                .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.IsEnabled == true);
+                newUserOrg.IsOwner=true;
+                dc.SubmitChanges();
+            }
+               
+        }
+        return "Team owner updated successfully.";
+    }
+    [WebMethod]
+    public static string RemoveTeamMember(Guid selectedUser)
+    {
+        string orgId = organizationId;
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            var userOrg = dc.UserOrganizations
+                        .FirstOrDefault(uo => uo.OrganizationId == new Guid(orgId) && uo.UserId == selectedUser && uo.IsEnabled == true);
+            if (userOrg != null)
+            {
+                userOrg.IsEnabled = false;
+                dc.SubmitChanges();
+                RemoveTeamMemberId = selectedUser;
+                SendRemoveTeamMemberEmail(RemoveTeamMemberId, new Guid(organizationId));
+            }
+        }
+        return "Team member remove successfully.";
+    }
+    public static void SendRemoveTeamMemberEmail(Guid RemoveTeamMemberId, Guid organizationId)
+    {
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            string orgName = dc.Organizations.Where(o => o.OrganizationId == organizationId).Select(o => o.Name).FirstOrDefault();
+            var username = dc.Profiles.Where(p => p.UserId == RemoveTeamMemberId).FirstOrDefault();
+            var ownerId = dc.Organizations
+                  .Where(o => o.OrganizationId == organizationId)
+                  .Select(o => o.OwnerId)
+                  .FirstOrDefault();
+            var ownername = dc.Profiles.Where(p => p.UserId == ownerId).FirstOrDefault();
+            string useremail = dc.aspnet_Memberships.Where(am => am.UserId == ownerId).Select(am => am.Email).FirstOrDefault();
+            ListDictionary ldEmailBodyReplacements = new ListDictionary
+            {
+               { "##OrganizationName##", orgName },
+               { "##RemovedMemberFirstName##", username.Firstname },
+               { "##RemovedMemberLastName##", username.Lastname },
+               { "##RemovedMemberEmail##", useremail },
+               { "##TeamOwnerFirstName##", ownername.Firstname},
+               { "##TeamOwnerLastName##", ownername.Lastname}
+
+            };
+            string error = string.Empty;
+            Tools.SendEmail(
+                "You have been removed from the team " + orgName,
+                "This is to inform you that you have been removed from the team " + orgName +
+                ". You no longer have access to team resources or participation privileges.",
+                ldEmailBodyReplacements,
+                useremail,
+                "Team Membership Removal",
+                string.Empty,
+                string.Empty,
+                "~/EmailTemplates/TeamMemberRemove.html",
+                out error
+            );
+        }
+    }
+
+    public static void SendTeamOwnerChangeEmail(Guid pevUserId, Guid newUserId, Guid organizationId)
+    {
+        using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+        {
+            string orgName = dc.Organizations.Where(o => o.OrganizationId == organizationId).Select(o => o.Name).FirstOrDefault();
+            var oldusername = dc.Profiles.Where(p => p.UserId == pevUserId).FirstOrDefault();
+            var newusername = dc.Profiles.Where(p => p.UserId == newUserId).FirstOrDefault();
+            string oldemail = dc.aspnet_Memberships.Where(am => am.UserId == pevUserId).Select(am => am.Email).FirstOrDefault();
+            string newemail = dc.aspnet_Memberships.Where(am => am.UserId == newUserId).Select(am => am.Email).FirstOrDefault();
+            ListDictionary ldEmailBodyReplacements = new ListDictionary
+            {
+                {"##OrganizationName##",orgName },
+                {"##OldOwnerFirstName##",oldusername.Firstname},
+                {"##OldOwnerLastName##",oldusername.Lastname},
+                {"##NewOwnerFirstName##",newusername.Firstname},
+                {"##NewOwnerLastName##",newusername.Lastname},
+                {"##NewOwnerEmail##",newemail}
+            };
+            string error = string.Empty;
+            // Send email to old owner
+            Tools.SendEmail(
+                           "Team Owner Change for " + orgName,
+                           "You have been removed as the team owner of " + orgName,
+                           ldEmailBodyReplacements,
+                           oldemail,
+                           "Team Ownership Change",
+                           string.Empty,
+                           string.Empty,
+                           "~/EmailTemplates/TeamOwnerChanged.html",
+                           out error
+                       );
+            // Send email to new owner
+            Tools.SendEmail(
+                "Team Owner Change for " + orgName,
+                "You are now the team owner of " + orgName,
+                ldEmailBodyReplacements,
+                newemail,
+                "Team Ownership Change",
+                "", "",
+                "~/EmailTemplates/TeamOwnerChanged.html",
+                out error
+            );
+        }
+
+    }
     protected void rptVolunteers_ItemDataBound(object sender, RepeaterItemEventArgs e)
     {
         if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -563,12 +734,18 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
     {
         using (var dc = new CrowdReliefDBDataContext())
         {
-            var skills = dc.Skills.Select(s => new { s.SkillId, s.Name }).ToList();
+            var skills = dc.Skills
+                .OrderBy(s => s.Name)
+                .Select(s => new { s.SkillId, s.Name })
+                .ToList();
             ddlSkills.DataTextField = "Name";
             ddlSkills.DataValueField = "SkillId";
             ddlSkills.DataSource = skills;
             ddlSkills.DataBind();
-            var resources = dc.Resources.Select(r => new { r.ResourceId, r.Name }).ToList();
+            var resources = dc.Resources
+                              .OrderBy(r => r.Name)
+                              .Select(r => new { r.ResourceId, r.Name })
+                              .ToList();
             ddlResources.DataTextField = "Name";
             ddlResources.DataValueField = "ResourceId";
             ddlResources.DataSource = resources;
@@ -599,16 +776,18 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         {
             var events = (from ev in dc.Events
                           where ev.IsActive == true
+                          orderby ev.Name
                           select new
                           {
                               ev.EventId,
                               ev.Name
                           }).ToList();
+
             ddlEvent.DataSource = events;
             ddlEvent.DataTextField = "Name";
             ddlEvent.DataValueField = "EventId";
             ddlEvent.DataBind();
-            ddlEvent.Items.Insert(0, new ListItem("  Select Location ", ""));
+            ddlEvent.Items.Insert(0, new ListItem("Select Portal", ""));
 
         }
 
@@ -656,12 +835,11 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             }
 
             bool emailConnected = txtEmailconnect.Checked;
-            bool isVerified = txtIsVerified.Checked;
             bool isVetted = txtIsVetted.Checked;
             bool optedSMS = txtOptedSMS.Checked;
             bool teamVerified = txtTeamVerified.Checked;
             bool stabilityVerified = txtStabilityVerified.Checked;
-
+            bool teamAdministrator = txtTeamAdministrator.Checked;
             string startDateText = Request.Form[StartDate.UniqueID];
             string endDateText = Request.Form[EndDate.UniqueID];
 
@@ -694,15 +872,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 // Execute stored procedure and return mapped results
                 dc.CommandTimeout = 300;
                 //var result = dc.ExecuteQuery<PeopleList>(
-                //   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified).ToList();
+                //   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified,
 
                 var result = dc.ExecuteQuery<PeopleList>(
-                   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14},{15},{16}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified, currentPageValue.Value, pageSize).ToList();
+                   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14},{15},{16},{17}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified, teamAdministrator, currentPageValue.Value, pageSize).ToList();
 
                 var totalCount = result.Any() ? result.First().TotalCount : 0;
 
                 // Show Filter Message if Any Filter Applied
-                divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVerified || isVetted || optedSMS || teamVerified || stabilityVerified;
+                divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVetted || optedSMS || teamVerified || stabilityVerified || teamAdministrator;
                 litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
 
                 if (isUserOnTeam && !User.IsInRole("Administrator") && !userIsOwner)
@@ -733,9 +911,9 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         txtIsVetted.Checked = false;
         txtOptedSMS.Checked = false;
         txtEmailconnect.Checked = false;
-        txtIsVerified.Checked = false;
         txtTeamVerified.Checked = false;
         txtStabilityVerified.Checked = false;
+        txtTeamAdministrator.Checked = false;
         rptVolunteers.DataSource = null;
         divFilterMessage.Visible = false;
         litFilterMessage.Text = string.Empty;

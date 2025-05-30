@@ -3,7 +3,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
     <link rel="stylesheet" href="/Homer/vendor/sweetalert/lib/sweet-alert.css" />
-	<script src="/Homer/vendor/iCheck/icheck.min.js"></script>
+	<script src="/Homer/vendor/iCheck/icheck.min.js"></script>
+
 	<script type="text/javascript">
 	$(document).ready(function(){
 		$('input[type="checkbox"]').each(function () {
@@ -26,8 +27,8 @@
 						<div class="panel-body">
 							<div class="form-group">
 								<div class="pull-right">
-									<asp:LinkButton id="btnSubmit" CausesValidation="false" runat="server" OnClick="btnSubmit_Cancel" CssClass="btn btn-default" Text="Cancel" />
-									<asp:Button id="btnCancel" runat="server" OnClick="btnSubmit_Click" CssClass="btn btn-primary" Text="Save Changes" />
+									<asp:LinkButton id="btnSubmit" CausesValidation="false" runat="server" CssClass="btn btn-default" Text="Cancel" />
+									
 								</div>
 							</div>
 							<h2 class="font-light m-b-xs">
@@ -58,7 +59,7 @@
 						</div>
 						<div class="panel-body p-lg">
                             <div class="radio radio-success">
-							    <asp:RadioButtonList ID="rblOrganizations" runat="server" DataTextField="Name" DataValueField="OrganizationId"></asp:RadioButtonList>
+							    <asp:CheckBoxList ID="rblOrganizations" runat="server" DataTextField="Name" DataValueField="OrganizationId"></asp:CheckBoxList>
 							 </div>
 						</div>
 						<div class="panel-footer">

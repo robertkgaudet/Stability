@@ -24,6 +24,11 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
         hypMyTeam.Attributes["data-toggle"] = "tooltip";
         hypMyTeam.Attributes["title"] = "Go to your team's page";
 
+
+        hypMyConnections.Attributes["data-toggle"] = "tooltip";
+        hypMyConnections.Attributes["title"] = "Go to My Connections";
+
+
         hypCalendar.Attributes["data-toggle"] = "tooltip";
         hypCalendar.Attributes["title"] = "Select the dates you are available to volunteer";
 
@@ -42,11 +47,12 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
 		divMemberNavigation.Visible = false;
 		if (!String.IsNullOrEmpty(_userId))
 		{
-			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            string path = Request.Url.AbsolutePath.ToLower();
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 			var orgUser = (from o in dc.Organizations
 						   join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-						   where uo.UserId == new Guid(_userId)
-						   orderby o.CreatedOn descending
+						   where uo.UserId == new Guid(_userId) && uo.IsEnabled == true
+                           orderby o.CreatedOn descending
 						   select o).Take(1).SingleOrDefault();
 
 			if (orgUser != null)
@@ -60,8 +66,17 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
 				hypMyTeam.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId.ToString();
 			}
 			divMemberNavigation.Visible = true;
-			hypMyProfile.Visible = true;
-		}
+            if (!path.Contains("/v1/member/default.aspx"))
+            {
+                hypMyProfile.Visible = true;
+
+            }
+            else
+            {
+                hypMyProfile.Visible = false;
+
+            }
+        }
 	}
 
 	public string UserId

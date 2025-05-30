@@ -73,8 +73,8 @@ public partial class V1_NonProfit_TeamRole : BaseWebForm
 					   select o).Take(1).SingleOrDefault();
 
 		var isTeamMember = (from uo in dc.UserOrganizations
-					   where uo.UserId == userId && uo.OrganizationId == new Guid(organizationId)
-					   select uo).Take(1).SingleOrDefault();
+					   where uo.UserId == userId && uo.OrganizationId == new Guid(organizationId) && uo.IsEnabled == true
+                            select uo).Take(1).SingleOrDefault();
 
 		if (User.IsInRole("Administrator") || isOwner != null || (isTeamMember != null && User.IsInRole("EOC-VettingTeam")))
 		{

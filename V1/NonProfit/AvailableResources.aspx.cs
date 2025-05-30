@@ -86,8 +86,8 @@ public partial class V1_NonProfit_AvailableResources : BaseWebForm
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
 										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-										 && uo.OrganizationId == new Guid(organizationId)
-										 select o).Take(1).SingleOrDefault();
+										 && uo.OrganizationId == new Guid(organizationId) && uo.IsEnabled == true
+                                         select o).Take(1).SingleOrDefault();
 
 			if (userOrganizationOwner != null)
 			{
@@ -114,8 +114,8 @@ public partial class V1_NonProfit_AvailableResources : BaseWebForm
 		var resources = (from us in dc.UserResources
 						 join s in dc.Resources on us.ResourceId equals s.ResourceId
 						 join uo in dc.UserOrganizations on us.UserId equals uo.UserId
-						 where uo.OrganizationId == new Guid(organizationId)
-						 orderby s.Type, s.Name
+						 where uo.OrganizationId == new Guid(organizationId) && uo.IsEnabled == true
+                         orderby s.Type, s.Name
 						 group s by s.Name + "|" + s.ResourceId + "| (" + s.Type + ")" into resourceGroup
 						 select new { Name = resourceGroup.Key, ResourceCount = resourceGroup.Count() }).Distinct();
 

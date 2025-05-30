@@ -94,8 +94,8 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 			{
 				//If the user is logged in and not in a nonprofit already then send to choose a nonprofit.
 				var userOrganization = from uo in dc.UserOrganizations
-										where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-										&& uo.OrganizationId == new Guid(organizationId)
+										where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
+                                        && uo.OrganizationId == new Guid(organizationId)
 										select uo;
 
 				if (userOrganization.Count() == 0)
@@ -269,8 +269,8 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 						 join p in dc.Profiles on uo.UserId equals p.UserId
 						 join net in dc.aspnet_Memberships on p.UserId equals net.UserId
 						 join u in dc.aspnet_Users on p.UserId equals u.UserId
-						 where uo.OrganizationId == new Guid(organizationId)
-						 && p.PassedVetting == true
+						 where uo.OrganizationId == new Guid(organizationId) && uo.IsEnabled == true
+                         && p.PassedVetting == true
 						 && net.IsApproved == true
 						 && net.LastLoginDate > DateTime.Now.AddDays(-30)
 						 orderby net.LastLoginDate descending
@@ -284,8 +284,8 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 		{ 
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 									join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-									where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-									&& uo.OrganizationId == new Guid(organizationId)
+									where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
+                                    && uo.OrganizationId == new Guid(organizationId)
 									select o).Take(1).SingleOrDefault();
 
 			if (userOrganizationOwner != null)
@@ -498,28 +498,5 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 			//    hypMakeOwner.Visible = true;
 			//}
 		}
-	}
-
-	protected void btnChangePageStatus_Click(object sender, EventArgs e)
-	{
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-
-		bool updateActiveStatus = true;
-
-		var organization = (from o in dc.Organizations
-							where o.OrganizationId == new Guid(organizationId)
-							select o).SingleOrDefault();
-
-		btnDeactivatePage.Text = "De-activate This Team";
-		divAlertPageMessage.Visible = false;
-		if (organization.IsActive == true)
-		{
-			updateActiveStatus = false;
-			btnDeactivatePage.Text = "Re-activate This Team";
-			divAlertPageMessage.Visible = true;
-		}
-
-		organization.IsActive = updateActiveStatus;
-		dc.SubmitChanges();
 	}
 }

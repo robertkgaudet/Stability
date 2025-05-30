@@ -70,26 +70,12 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypActivity.NavigateUrl = "/V1/NonProfit/ActivityDashboard.aspx?organizationId=" + organizationId;
         hypTeamCalendar.NavigateUrl = "/V1/NonProfit/TeamAvailabilityCalendar.aspx?organizationId=" + organizationId;
         hypPeople.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId;
-        hypInvitedMembers.NavigateUrl = "/V1/NonProfit/InvitedMembers.aspx?organizationId=" + organizationId;
-        hypSettings.NavigateUrl = "/V1/NonProfitAdministration/Settings.aspx?organizationId=" + organizationId;
         hypSupport.NavigateUrl = "/V1/NonProfit/Support.aspx?organizationId=" + organizationId;
-        hypTickets.NavigateUrl = "/V1/NonProfitAdministration/Tickets.aspx?organizationId=" + organizationId;
-        hypReports.NavigateUrl = "/V1/NonProfitAdministration/Reports.aspx?organizationId=" + organizationId;
-        hypMail.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&type=email";
-        hypSms.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId + "&type=sms";
-        //hypWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + organizationId;
         hypSkillsets.NavigateUrl = "/V1/NonProfit/Skillsets.aspx?organizationId=" + organizationId;
         hypResources.NavigateUrl = "/V1/NonProfit/AvailableResources.aspx?organizationId=" + organizationId;
         hypDeploymentTeam.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + organizationId;
-
-        hypInviteTeam.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + organizationId;
-        hypDonationDashboard.NavigateUrl = "/V1/NonProfit/DonationDashboard.aspx?organizationId=" + organizationId;
-        hypLogoUpload.NavigateUrl = "/V1/NonProfit/LogoUpload.aspx?organizationId=" + organizationId;
-        hypSquareLogoUpload.NavigateUrl = "/V1/NonProfit/SquareLogoUpload.aspx?organizationId=" + organizationId;
-        hypCoverImageUpload.NavigateUrl = "/V1/NonProfitAdministration/CoverImage1600x600.aspx?organizationId=" + organizationId;
-        hypManagePhotos.NavigateUrl = "/V1/NonProfitAdministration/ManagePhotos.aspx?organizationId=" + organizationId;
-        hypUpdateTeamInfo.NavigateUrl = "/V1/NonProfit/NonProfitNew.aspx?userActionModal=false&organizationId=" + organizationId;
-        //litTeamName.Text = _teamName;
+        hypTeamManagement.NavigateUrl = "/V1/NonProfit/TeamManagement.aspx?organizationId=" + organizationId;
+        //hypRequest.NavigateUrl = "/V1/NonProfit/ReceivedRequests.aspx?organizationId=" + organizationId;
 
         switch (PageName)
         {
@@ -155,28 +141,54 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         bool hidTeamList = organization.HideTeamList != null ? (bool)organization.HideTeamList : false;
         bool respondToTickets = false;
         hypGetHelp.Visible = false;
-        hypTickets.Visible = false;
+        //hypTickets.Visible = false;
         respondToTickets = organization.RespondToTickets != null ? (bool)organization.RespondToTickets : false;
         if (respondToTickets)
         {
             hypGetHelp.Visible = true;
-            hypTickets.Visible = true;
+            //hypTickets.Visible = true;
         }
 
         if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
             hypJoinTeam.NavigateUrl = "/V1/Profile/EditNonProfits.aspx?organizationId=" + organizationId;
             Guid userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+            Guid targetRoleId = new Guid("E48E49D7-392B-4C3B-A53A-62B7B2537BBF");
+            bool isUserInThatRole = false;
+            isUserInThatRole = dc.aspnet_UsersInRoles
+          .Any(ur => ur.UserId == userId && ur.RoleId == targetRoleId);
             var userOrganizationOwner = (from uo in dc.UserOrganizations
                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
                                          && uo.OrganizationId == new Guid(organizationId)
                                          select o).Take(1).SingleOrDefault();
-
-            var userCheck = (from uo in dc.UserOrganizations
-                             where uo.UserId == userId
-                             && uo.OrganizationId == new Guid(organizationId)
-                             select uo).Take(1).SingleOrDefault();
+            bool isTeamAdministratorExists = dc.UserOrganizations
+          .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.IsEnabled == true);
+            if (userOrganizationOwner != null)
+            {
+                if (userId == userOrganizationOwner.OwnerId)
+                {
+                    hypTeamManagement.Visible = true;
+                    hypTeamManagement.Attributes["data-toggle"] = "tooltip";
+                    hypTeamManagement.Attributes["title"] = "View this team's TeamManagement";
+                    //hypRequest.Visible = true;
+                    //hypRequest.Attributes["data-toggle"] = "tooltip";
+                    //hypRequest.Attributes["title"] = "View this team's Request";
+                }
+            }
+            else if(isTeamAdministratorExists == true || isUserInThatRole==true)
+            {
+                hypTeamManagement.Visible = true;
+                hypTeamManagement.Attributes["data-toggle"] = "tooltip";
+                hypTeamManagement.Attributes["title"] = "View this team's TeamManagement";
+                //hypRequest.Visible = true;
+                //hypRequest.Attributes["data-toggle"] = "tooltip";
+                //hypRequest.Attributes["title"] = "View this team's Request";
+            }
+                var userCheck = (from uo in dc.UserOrganizations
+                                 where uo.UserId == userId && uo.IsEnabled == true
+                                 && uo.OrganizationId == new Guid(organizationId)
+                                 select uo).Take(1).SingleOrDefault();
 
             if (userCheck != null)
             {
@@ -200,7 +212,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
             {
                 //Is user on this team?
                 var userOrganization = (from uo in dc.UserOrganizations
-                                        where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+                                        where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.IsEnabled == true
                                         && uo.OrganizationId == new Guid(organizationId)
                                         select uo).Take(1).SingleOrDefault();
 
@@ -229,17 +241,17 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                     hrAdmin.Visible = true;
                     divDeployment.Visible = true;
                 }
-                if (HttpContext.Current.User.IsInRole("Administrator"))
-                {
-                    btnDeactivatePage.Visible = true;
-                    btnDeactivatePage.Text = organization.IsActive != true
-                        ? "<i class='fa fa-ban text-danger'></i> Re-activate This Team"
-                        : "<i class='fa fa-ban text-danger'></i> De-activate This Team";
-                }
-                else
-                {
-                    btnDeactivatePage.Visible = false;
-                }
+                //if (HttpContext.Current.User.IsInRole("Administrator"))
+                //{
+                //    //btnDeactivatePage.Visible = true;
+                //    //btnDeactivatePage.Text = organization.IsActive != true
+                //        //? "<i class='fa fa-ban text-danger'></i> Re-activate This Team"
+                //        //: "<i class='fa fa-ban text-danger'></i> De-activate This Team";
+                //}
+                //else
+                //{
+                //    btnDeactivatePage.Visible = false;
+                //}
             }
         }
         else
@@ -258,21 +270,21 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                             where o.OrganizationId == new Guid(organizationId)
                             select o).SingleOrDefault();
 
-        if (organization != null)
-        {
+        //if (organization != null)
+        //{
 
-            btnDeactivatePage.Text = "<i class='fa fa-ban text-danger'></i> De-activate This Team";
+        //    btnDeactivatePage.Text = "<i class='fa fa-ban text-danger'></i> De-activate This Team";
 
-            if (organization.IsActive == true)
-            {
-                updateActiveStatus = false;
+        //    if (organization.IsActive == true)
+        //    {
+        //        updateActiveStatus = false;
 
-                btnDeactivatePage.Text = "<i class='fa fa-ban text-danger'></i> Re-activate This Team";
-            }
+        //        btnDeactivatePage.Text = "<i class='fa fa-ban text-danger'></i> Re-activate This Team";
+        //    }
 
-            organization.IsActive = updateActiveStatus;
-            dc.SubmitChanges();
-        }
+        //    organization.IsActive = updateActiveStatus;
+        //    dc.SubmitChanges();
+        //}
     }
     public string TeamName
     {

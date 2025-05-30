@@ -86,7 +86,8 @@ public partial class V1_Member_Default : BaseWebForm
 			{
 				if (Roles.IsUserInRole(profile.a.UserName, "Administrator"))
 				{
-					ucMemberHeader.BadgeVettingStatus = "fa-approved-color";
+                    
+                    ucMemberHeader.BadgeVettingStatus = "fa-approved-color";
 					ucMemberHeader.BadgeCertificationStatus = "fa-approved-color";
 					ucMemberHeader.BadgeDeployedStatus = "fa-approved-color";
 					ucMemberHeader.BadgeHoursRecordedStatus = "fa-approved-color";
@@ -150,7 +151,10 @@ public partial class V1_Member_Default : BaseWebForm
 				if(UserUser != null)
 				{
 					if (UserUser.Status == "Connected")
-					{ ucMemberHeader.FriendStatus = Tools.FriendStatus.Connected; }
+					{
+						ucMemberHeader.FriendStatus = Tools.FriendStatus.Connected;
+					
+					}
 					else if (UserUser.Status == "Pending")
 					{ ucMemberHeader.FriendStatus = Tools.FriendStatus.Pending; }
 					else if (UserUser.Status == "Delete")
@@ -171,7 +175,7 @@ public partial class V1_Member_Default : BaseWebForm
             //Get team information
             var orgUser = (from o in dc.Organizations
                            join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                           where uo.UserId == new Guid(pageUserId)
+                           where uo.UserId == new Guid(pageUserId) && uo.IsEnabled == true
                            orderby o.CreatedOn descending
                            select new
                            {
@@ -363,7 +367,7 @@ public partial class V1_Member_Default : BaseWebForm
 			result = "error";
 		}
 
-		return result;
+			return result;
 	}
 
 	public static void SendConnectionEmail(string SenderName, string receiverUserId, string recipientsEmail, string recipientsName)

@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8">
+	<title>Team Join Request Notification</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #F4F4F4;
+			padding: 20px;
+			color: #333;
+		}
+
+		.email-container {
+			background: #ffffff;
+			border: 1px solid #dcdcdc;
+			border-radius: 8px;
+			padding: 30px;
+			max-width: 600px;
+			margin: 0 auto;
+		}
+
+		.header {
+			background-color: #393F4F;
+			padding: 15px;
+			text-align: left;
+		}
+
+			.header img {
+				height: 40px;
+			}
+
+		h2 {
+			color: #393F4F;
+		}
+
+		a.button {
+			display: inline-block;
+			padding: 10px 18px;
+			background-color: #007bff;
+			color: #fff;
+			border-radius: 5px;
+			text-decoration: none;
+			margin-top: 20px;
+		}
+
+			a.button:hover {
+				background-color: #0056b3;
+			}
+	</style>
+</head>
+<body>
+	<div class="email-container">
+		<!-- Header -->
+		<div class="header">
+			<a href="http://www.Stability.org" target="_blank">
+				<img src="http://www.Stability.org/V1/Images/logo-w-c.png" alt="Stability Logo">
+			</a>
+		</div>
+
+		<!-- Email Content -->
+		<h2>Team Join Request</h2>
+
+		<p>Dear Admin,</p>
+
+		<p><strong>##UserName##</strong> has requested to join your team <strong>##OrganizationName##</strong>.</p>
+
+		<p>You can review and respond to this request by clicking the button below:</p>
+
+		<a class="button" href="stability.org//V1/NonProfit/ReceivedRequests.aspx?organizationId=##Organization##" target="_blank">Review Request</a>
+
+		<p>
+			If you have any questions, please contact support at
+			<a href="mailto:Support@Impactoid.com">Support@Impactoid.com</a>.
+		</p>
+
+		<p>Sincerely,<br><strong>##OrganizationName##</strong></p>
+	</div>
+</body>
+</html>

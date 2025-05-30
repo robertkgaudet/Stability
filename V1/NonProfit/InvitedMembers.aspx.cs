@@ -1,7 +1,7 @@
 ﻿using CrowdRelief;
 using GoogleMapsAPI.Places;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Tls;
+//using Org.BouncyCastle.Crypto;
+//using Org.BouncyCastle.Tls;
 using Stripe;
 using System;
 using System.Collections.Generic;
@@ -81,7 +81,7 @@ public partial class V1_NonProfit_InvitedMembers : BaseOrganizationWebForm
             {
                 var organizationInfo = (from p in dc.Profiles
                                         join o in dc.UserOrganizations on p.UserId equals o.UserId
-                                        where o.OrganizationId == inviteMember.OrganizationId
+                                        where o.OrganizationId == inviteMember.OrganizationId && o.IsEnabled == true
                                         select new { organizationName = o.Organization.Name, p.Firstname, senderName = p.Firstname + " " + p.Lastname }).FirstOrDefault();
 
                 string senderName = organizationInfo.senderName;

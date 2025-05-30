@@ -115,7 +115,7 @@ public partial class V1_Login : System.Web.UI.Page
                 //If not, send to the team page.
                 CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
                 var organizationUser = from ou in dc.UserOrganizations
-                                       where ou.UserId == new Guid(user.ProviderUserKey.ToString())
+                                       where ou.UserId == new Guid(user.ProviderUserKey.ToString()) && ou.IsEnabled == true
                                        select ou;
 
                 if (organizationUser == null)

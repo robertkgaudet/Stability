@@ -159,7 +159,7 @@ public partial class V1_MasterPages_SurvivorSurvey : System.Web.UI.MasterPage
             
             var userOrganizations = from uo in dc.UserOrganizations
                                     join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                    where uo.UserId == userId
+                                    where uo.UserId == userId && uo.IsEnabled == true
                                     select new { o.Name, o.OrganizationId };
             
             if (userOrganizations.Count() > 0)

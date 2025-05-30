@@ -1,10 +1,11 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="DeploymentListCard.ascx.cs" Inherits="V1_UserControls_DeploymentListCard" %>
 
 	<style type="text/css">
-			.grid-item								{width:300px; }
-			.panel-body.deploymentPanel				{background-color:#E8D3FE; color:#5E2E91; height:350px; border-top-right-radius:10px; border-top-left-radius:10px;}
-			.panel-body.deploymentPanel:hover		{cursor:pointer; background-color:#5E2E91; color:white;}
-			.panel-footer							{ border-bottom-right-radius:10px; border-bottom-left-radius:10px;}
+			.grid-item								{width:250px; }
+			.panel-body.deploymentPanel				{background-color:#f8f8f8; color:#808080; height:180px;}
+			.panel-body.deploymentPanel:hover		{cursor:pointer; background-color:#56a5d9; color:white;}
+			.panel-footer							{ background-color:#f8f8f8 !important; border-bottom-right-radius:10px; border-bottom-left-radius:10px;}
+			.hbuilt									{ background-color:#f8f8f8 !important; color:white !important; border-top-right-radius:10px !important; border-top-left-radius:10px !important;}
 			
 	</style>
 	<div class="grid">

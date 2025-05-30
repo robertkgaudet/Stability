@@ -401,12 +401,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertPostTaggedUser(PostTaggedUser instance);
   partial void UpdatePostTaggedUser(PostTaggedUser instance);
   partial void DeletePostTaggedUser(PostTaggedUser instance);
-  partial void InsertFeatureType(FeatureType instance);
-  partial void UpdateFeatureType(FeatureType instance);
-  partial void DeleteFeatureType(FeatureType instance);
-  partial void InsertNotification(Notification instance);
-  partial void UpdateNotification(Notification instance);
-  partial void DeleteNotification(Notification instance);
   partial void InsertProfilePhoto(ProfilePhoto instance);
   partial void UpdateProfilePhoto(ProfilePhoto instance);
   partial void DeleteProfilePhoto(ProfilePhoto instance);
@@ -422,9 +416,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertOrganization(Organization instance);
   partial void UpdateOrganization(Organization instance);
   partial void DeleteOrganization(Organization instance);
-  partial void InsertUserOrganization(UserOrganization instance);
-  partial void UpdateUserOrganization(UserOrganization instance);
-  partial void DeleteUserOrganization(UserOrganization instance);
   partial void InsertCity(City instance);
   partial void UpdateCity(City instance);
   partial void DeleteCity(City instance);
@@ -440,6 +431,18 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertEmailTemplate(EmailTemplate instance);
   partial void UpdateEmailTemplate(EmailTemplate instance);
   partial void DeleteEmailTemplate(EmailTemplate instance);
+  partial void InsertUserOrganization(UserOrganization instance);
+  partial void UpdateUserOrganization(UserOrganization instance);
+  partial void DeleteUserOrganization(UserOrganization instance);
+  partial void InsertFeatureType(FeatureType instance);
+  partial void UpdateFeatureType(FeatureType instance);
+  partial void DeleteFeatureType(FeatureType instance);
+  partial void InsertReceivedRequest(ReceivedRequest instance);
+  partial void UpdateReceivedRequest(ReceivedRequest instance);
+  partial void DeleteReceivedRequest(ReceivedRequest instance);
+  partial void InsertNotification(Notification instance);
+  partial void UpdateNotification(Notification instance);
+  partial void DeleteNotification(Notification instance);
     #endregion
     public CrowdReliefDBDataContext() :
 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
@@ -1462,22 +1465,6 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 		}
 	}
 	
-	public System.Data.Linq.Table<FeatureType> FeatureTypes
-	{
-		get
-		{
-			return this.GetTable<FeatureType>();
-		}
-	}
-	
-	public System.Data.Linq.Table<Notification> Notifications
-	{
-		get
-		{
-			return this.GetTable<Notification>();
-		}
-	}
-	
 	public System.Data.Linq.Table<ProfilePhoto> ProfilePhotos
 	{
 		get
@@ -1515,14 +1502,6 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 		get
 		{
 			return this.GetTable<Organization>();
-		}
-	}
-	
-	public System.Data.Linq.Table<UserOrganization> UserOrganizations
-	{
-		get
-		{
-			return this.GetTable<UserOrganization>();
 		}
 	}
 	
@@ -1566,6 +1545,38 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 		}
 	}
 	
+	public System.Data.Linq.Table<UserOrganization> UserOrganizations
+	{
+		get
+		{
+			return this.GetTable<UserOrganization>();
+		}
+	}
+	
+	public System.Data.Linq.Table<FeatureType> FeatureTypes
+	{
+		get
+		{
+			return this.GetTable<FeatureType>();
+		}
+	}
+	
+	public System.Data.Linq.Table<ReceivedRequest> ReceivedRequests
+	{
+		get
+		{
+			return this.GetTable<ReceivedRequest>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Notification> Notifications
+	{
+		get
+		{
+			return this.GetTable<Notification>();
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetGeoJsonByDisasterForCleanupMap")]
 	public ISingleResult<GetGeoJsonByDisasterForCleanupMapResult> GetGeoJsonByDisasterForCleanupMap([global::System.Data.Linq.Mapping.ParameterAttribute(DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId)
 	{
@@ -1602,16 +1613,16 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 	}
 	
 	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.MapStabilityLocations")]
-	public ISingleResult<MapStabilityLocationsResult> MapStabilityLocations([global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Status", DbType="UniqueIdentifier")] System.Nullable<System.Guid> status, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LocationTypeId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationTypeId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LocationParentTypeId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationParentTypeId)
+	public ISingleResult<MapStabilityLocationsResult> MapStabilityLocations([global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="Status", DbType="UniqueIdentifier")] System.Nullable<System.Guid> status, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LocationTypeId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationTypeId)
 	{
-		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId, status, locationTypeId, locationParentTypeId);
+		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId, status, locationTypeId);
 		return ((ISingleResult<MapStabilityLocationsResult>)(result.ReturnValue));
 	}
 	
 	[global::System.Data.Linq.Mapping.FunctionAttribute(Name="dbo.GetGeoJsonByDisaster")]
-	public ISingleResult<GetGeoJsonByDisasterResult> GetGeoJsonByDisaster([global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LocationTypeId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationTypeId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="ParentTypeId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> parentTypeId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="StatusId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> statusId)
+	public ISingleResult<GetGeoJsonByDisasterResult> GetGeoJsonByDisaster([global::System.Data.Linq.Mapping.ParameterAttribute(Name="EventId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> eventId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="LocationTypeId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> locationTypeId, [global::System.Data.Linq.Mapping.ParameterAttribute(Name="StatusId", DbType="UniqueIdentifier")] System.Nullable<System.Guid> statusId)
 	{
-		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId, locationTypeId, parentTypeId, statusId);
+		IExecuteResult result = this.ExecuteMethodCall(this, ((MethodInfo)(MethodInfo.GetCurrentMethod())), eventId, locationTypeId, statusId);
 		return ((ISingleResult<GetGeoJsonByDisasterResult>)(result.ReturnValue));
 	}
 }
@@ -2771,13 +2782,13 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private EntitySet<Organization> _Organizations1;
 	
-	private EntitySet<UserOrganization> _UserOrganizations;
-	
 	private EntitySet<Profile> _Profiles;
 	
 	private EntitySet<UserOrganizationInvite> _UserOrganizationInvites;
 	
 	private EntitySet<UserOrganizationInvite> _UserOrganizationInvites1;
+	
+	private EntitySet<UserOrganization> _UserOrganizations;
 	
 	private EntityRef<StreamDonation> _Donation;
 	
@@ -2864,10 +2875,10 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		this._Posts = new EntitySet<Post>(new Action<Post>(this.attach_Posts), new Action<Post>(this.detach_Posts));
 		this._Organizations = new EntitySet<Organization>(new Action<Organization>(this.attach_Organizations), new Action<Organization>(this.detach_Organizations));
 		this._Organizations1 = new EntitySet<Organization>(new Action<Organization>(this.attach_Organizations1), new Action<Organization>(this.detach_Organizations1));
-		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
 		this._Profiles = new EntitySet<Profile>(new Action<Profile>(this.attach_Profiles), new Action<Profile>(this.detach_Profiles));
 		this._UserOrganizationInvites = new EntitySet<UserOrganizationInvite>(new Action<UserOrganizationInvite>(this.attach_UserOrganizationInvites), new Action<UserOrganizationInvite>(this.detach_UserOrganizationInvites));
 		this._UserOrganizationInvites1 = new EntitySet<UserOrganizationInvite>(new Action<UserOrganizationInvite>(this.attach_UserOrganizationInvites1), new Action<UserOrganizationInvite>(this.detach_UserOrganizationInvites1));
+		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
 		this._Donation = default(EntityRef<StreamDonation>);
 		this._UserDonation = default(EntityRef<UserDonation>);
 		this._UserDonation1 = default(EntityRef<UserDonation>);
@@ -3776,19 +3787,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserOrganization", Storage="_UserOrganizations", ThisKey="UserId", OtherKey="UserId")]
-	public EntitySet<UserOrganization> UserOrganizations
-	{
-		get
-		{
-			return this._UserOrganizations;
-		}
-		set
-		{
-			this._UserOrganizations.Assign(value);
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Profile", Storage="_Profiles", ThisKey="UserId", OtherKey="UserId")]
 	public EntitySet<Profile> Profiles
 	{
@@ -3825,6 +3823,19 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		set
 		{
 			this._UserOrganizationInvites1.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserOrganization", Storage="_UserOrganizations", ThisKey="UserId", OtherKey="UserId")]
+	public EntitySet<UserOrganization> UserOrganizations
+	{
+		get
+		{
+			return this._UserOrganizations;
+		}
+		set
+		{
+			this._UserOrganizations.Assign(value);
 		}
 	}
 	
@@ -4622,18 +4633,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		entity.aspnet_User1 = null;
 	}
 	
-	private void attach_UserOrganizations(UserOrganization entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = this;
-	}
-	
-	private void detach_UserOrganizations(UserOrganization entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = null;
-	}
-	
 	private void attach_Profiles(Profile entity)
 	{
 		this.SendPropertyChanging();
@@ -4668,6 +4667,18 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	{
 		this.SendPropertyChanging();
 		entity.aspnet_User1 = null;
+	}
+	
+	private void attach_UserOrganizations(UserOrganization entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_UserOrganizations(UserOrganization entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
 	}
 }
 
@@ -42824,583 +42835,6 @@ public partial class PostTaggedUser : INotifyPropertyChanging, INotifyPropertyCh
 	}
 }
 
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.FeatureType")]
-public partial class FeatureType : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _FeatureTypeId;
-	
-	private string _FeatureName;
-	
-	private string _RedirectURL;
-	
-	private bool _IncludeInStream;
-	
-	private System.Nullable<int> _Counter;
-	
-	private string _DisplayText;
-	
-	private EntitySet<Notification> _Notifications;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnFeatureTypeIdChanging(System.Guid value);
-    partial void OnFeatureTypeIdChanged();
-    partial void OnFeatureNameChanging(string value);
-    partial void OnFeatureNameChanged();
-    partial void OnRedirectURLChanging(string value);
-    partial void OnRedirectURLChanged();
-    partial void OnIncludeInStreamChanging(bool value);
-    partial void OnIncludeInStreamChanged();
-    partial void OnCounterChanging(System.Nullable<int> value);
-    partial void OnCounterChanged();
-    partial void OnDisplayTextChanging(string value);
-    partial void OnDisplayTextChanged();
-    #endregion
-	
-	public FeatureType()
-	{
-		this._Notifications = new EntitySet<Notification>(new Action<Notification>(this.attach_Notifications), new Action<Notification>(this.detach_Notifications));
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FeatureTypeId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid FeatureTypeId
-	{
-		get
-		{
-			return this._FeatureTypeId;
-		}
-		set
-		{
-			if ((this._FeatureTypeId != value))
-			{
-				this.OnFeatureTypeIdChanging(value);
-				this.SendPropertyChanging();
-				this._FeatureTypeId = value;
-				this.SendPropertyChanged("FeatureTypeId");
-				this.OnFeatureTypeIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FeatureName", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
-	public string FeatureName
-	{
-		get
-		{
-			return this._FeatureName;
-		}
-		set
-		{
-			if ((this._FeatureName != value))
-			{
-				this.OnFeatureNameChanging(value);
-				this.SendPropertyChanging();
-				this._FeatureName = value;
-				this.SendPropertyChanged("FeatureName");
-				this.OnFeatureNameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RedirectURL", DbType="NVarChar(500) NOT NULL", CanBeNull=false)]
-	public string RedirectURL
-	{
-		get
-		{
-			return this._RedirectURL;
-		}
-		set
-		{
-			if ((this._RedirectURL != value))
-			{
-				this.OnRedirectURLChanging(value);
-				this.SendPropertyChanging();
-				this._RedirectURL = value;
-				this.SendPropertyChanged("RedirectURL");
-				this.OnRedirectURLChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IncludeInStream", DbType="Bit NOT NULL")]
-	public bool IncludeInStream
-	{
-		get
-		{
-			return this._IncludeInStream;
-		}
-		set
-		{
-			if ((this._IncludeInStream != value))
-			{
-				this.OnIncludeInStreamChanging(value);
-				this.SendPropertyChanging();
-				this._IncludeInStream = value;
-				this.SendPropertyChanged("IncludeInStream");
-				this.OnIncludeInStreamChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Counter", DbType="Int")]
-	public System.Nullable<int> Counter
-	{
-		get
-		{
-			return this._Counter;
-		}
-		set
-		{
-			if ((this._Counter != value))
-			{
-				this.OnCounterChanging(value);
-				this.SendPropertyChanging();
-				this._Counter = value;
-				this.SendPropertyChanged("Counter");
-				this.OnCounterChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayText", DbType="NVarChar(50)")]
-	public string DisplayText
-	{
-		get
-		{
-			return this._DisplayText;
-		}
-		set
-		{
-			if ((this._DisplayText != value))
-			{
-				this.OnDisplayTextChanging(value);
-				this.SendPropertyChanging();
-				this._DisplayText = value;
-				this.SendPropertyChanged("DisplayText");
-				this.OnDisplayTextChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FeatureType_Notification", Storage="_Notifications", ThisKey="FeatureTypeId", OtherKey="FeatureTypeId")]
-	public EntitySet<Notification> Notifications
-	{
-		get
-		{
-			return this._Notifications;
-		}
-		set
-		{
-			this._Notifications.Assign(value);
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-	
-	private void attach_Notifications(Notification entity)
-	{
-		this.SendPropertyChanging();
-		entity.FeatureType = this;
-	}
-	
-	private void detach_Notifications(Notification entity)
-	{
-		this.SendPropertyChanging();
-		entity.FeatureType = null;
-	}
-}
-
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Notification")]
-public partial class Notification : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _NotificationId;
-	
-	private string _Title;
-	
-	private string _Description;
-	
-	private string _RedirectURLParameters;
-	
-	private int _NotificationType;
-	
-	private System.DateTime _CreatedOn;
-	
-	private int _CreatedBy;
-	
-	private bool _IsRead;
-	
-	private System.Nullable<System.Guid> _SenderUserId;
-	
-	private System.Nullable<System.Guid> _RecipientUserId;
-	
-	private System.Nullable<System.Guid> _FeatureTypeId;
-	
-	private System.Nullable<bool> _PostToStream;
-	
-	private EntityRef<FeatureType> _FeatureType;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnNotificationIdChanging(System.Guid value);
-    partial void OnNotificationIdChanged();
-    partial void OnTitleChanging(string value);
-    partial void OnTitleChanged();
-    partial void OnDescriptionChanging(string value);
-    partial void OnDescriptionChanged();
-    partial void OnRedirectURLParametersChanging(string value);
-    partial void OnRedirectURLParametersChanged();
-    partial void OnNotificationTypeChanging(int value);
-    partial void OnNotificationTypeChanged();
-    partial void OnCreatedOnChanging(System.DateTime value);
-    partial void OnCreatedOnChanged();
-    partial void OnCreatedByChanging(int value);
-    partial void OnCreatedByChanged();
-    partial void OnIsReadChanging(bool value);
-    partial void OnIsReadChanged();
-    partial void OnSenderUserIdChanging(System.Nullable<System.Guid> value);
-    partial void OnSenderUserIdChanged();
-    partial void OnRecipientUserIdChanging(System.Nullable<System.Guid> value);
-    partial void OnRecipientUserIdChanged();
-    partial void OnFeatureTypeIdChanging(System.Nullable<System.Guid> value);
-    partial void OnFeatureTypeIdChanged();
-    partial void OnPostToStreamChanging(System.Nullable<bool> value);
-    partial void OnPostToStreamChanged();
-    #endregion
-	
-	public Notification()
-	{
-		this._FeatureType = default(EntityRef<FeatureType>);
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NotificationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid NotificationId
-	{
-		get
-		{
-			return this._NotificationId;
-		}
-		set
-		{
-			if ((this._NotificationId != value))
-			{
-				this.OnNotificationIdChanging(value);
-				this.SendPropertyChanging();
-				this._NotificationId = value;
-				this.SendPropertyChanged("NotificationId");
-				this.OnNotificationIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Title", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
-	public string Title
-	{
-		get
-		{
-			return this._Title;
-		}
-		set
-		{
-			if ((this._Title != value))
-			{
-				this.OnTitleChanging(value);
-				this.SendPropertyChanging();
-				this._Title = value;
-				this.SendPropertyChanged("Title");
-				this.OnTitleChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="NVarChar(1000) NOT NULL", CanBeNull=false)]
-	public string Description
-	{
-		get
-		{
-			return this._Description;
-		}
-		set
-		{
-			if ((this._Description != value))
-			{
-				this.OnDescriptionChanging(value);
-				this.SendPropertyChanging();
-				this._Description = value;
-				this.SendPropertyChanged("Description");
-				this.OnDescriptionChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RedirectURLParameters", DbType="NVarChar(500)")]
-	public string RedirectURLParameters
-	{
-		get
-		{
-			return this._RedirectURLParameters;
-		}
-		set
-		{
-			if ((this._RedirectURLParameters != value))
-			{
-				this.OnRedirectURLParametersChanging(value);
-				this.SendPropertyChanging();
-				this._RedirectURLParameters = value;
-				this.SendPropertyChanged("RedirectURLParameters");
-				this.OnRedirectURLParametersChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NotificationType", DbType="Int NOT NULL")]
-	public int NotificationType
-	{
-		get
-		{
-			return this._NotificationType;
-		}
-		set
-		{
-			if ((this._NotificationType != value))
-			{
-				this.OnNotificationTypeChanging(value);
-				this.SendPropertyChanging();
-				this._NotificationType = value;
-				this.SendPropertyChanged("NotificationType");
-				this.OnNotificationTypeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
-	public System.DateTime CreatedOn
-	{
-		get
-		{
-			return this._CreatedOn;
-		}
-		set
-		{
-			if ((this._CreatedOn != value))
-			{
-				this.OnCreatedOnChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedOn = value;
-				this.SendPropertyChanged("CreatedOn");
-				this.OnCreatedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="Int NOT NULL")]
-	public int CreatedBy
-	{
-		get
-		{
-			return this._CreatedBy;
-		}
-		set
-		{
-			if ((this._CreatedBy != value))
-			{
-				this.OnCreatedByChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedBy = value;
-				this.SendPropertyChanged("CreatedBy");
-				this.OnCreatedByChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsRead", DbType="Bit NOT NULL")]
-	public bool IsRead
-	{
-		get
-		{
-			return this._IsRead;
-		}
-		set
-		{
-			if ((this._IsRead != value))
-			{
-				this.OnIsReadChanging(value);
-				this.SendPropertyChanging();
-				this._IsRead = value;
-				this.SendPropertyChanged("IsRead");
-				this.OnIsReadChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SenderUserId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> SenderUserId
-	{
-		get
-		{
-			return this._SenderUserId;
-		}
-		set
-		{
-			if ((this._SenderUserId != value))
-			{
-				this.OnSenderUserIdChanging(value);
-				this.SendPropertyChanging();
-				this._SenderUserId = value;
-				this.SendPropertyChanged("SenderUserId");
-				this.OnSenderUserIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RecipientUserId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> RecipientUserId
-	{
-		get
-		{
-			return this._RecipientUserId;
-		}
-		set
-		{
-			if ((this._RecipientUserId != value))
-			{
-				this.OnRecipientUserIdChanging(value);
-				this.SendPropertyChanging();
-				this._RecipientUserId = value;
-				this.SendPropertyChanged("RecipientUserId");
-				this.OnRecipientUserIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FeatureTypeId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> FeatureTypeId
-	{
-		get
-		{
-			return this._FeatureTypeId;
-		}
-		set
-		{
-			if ((this._FeatureTypeId != value))
-			{
-				if (this._FeatureType.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnFeatureTypeIdChanging(value);
-				this.SendPropertyChanging();
-				this._FeatureTypeId = value;
-				this.SendPropertyChanged("FeatureTypeId");
-				this.OnFeatureTypeIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostToStream", DbType="Bit")]
-	public System.Nullable<bool> PostToStream
-	{
-		get
-		{
-			return this._PostToStream;
-		}
-		set
-		{
-			if ((this._PostToStream != value))
-			{
-				this.OnPostToStreamChanging(value);
-				this.SendPropertyChanging();
-				this._PostToStream = value;
-				this.SendPropertyChanged("PostToStream");
-				this.OnPostToStreamChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FeatureType_Notification", Storage="_FeatureType", ThisKey="FeatureTypeId", OtherKey="FeatureTypeId", IsForeignKey=true)]
-	public FeatureType FeatureType
-	{
-		get
-		{
-			return this._FeatureType.Entity;
-		}
-		set
-		{
-			FeatureType previousValue = this._FeatureType.Entity;
-			if (((previousValue != value) 
-						|| (this._FeatureType.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._FeatureType.Entity = null;
-					previousValue.Notifications.Remove(this);
-				}
-				this._FeatureType.Entity = value;
-				if ((value != null))
-				{
-					value.Notifications.Add(this);
-					this._FeatureTypeId = value.FeatureTypeId;
-				}
-				else
-				{
-					this._FeatureTypeId = default(Nullable<System.Guid>);
-				}
-				this.SendPropertyChanged("FeatureType");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-}
-
 [global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ProfilePhoto")]
 public partial class ProfilePhoto : INotifyPropertyChanging, INotifyPropertyChanged
 {
@@ -45313,11 +44747,11 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 	
 	private EntitySet<PaymentConfiguration> _PaymentConfigurations;
 	
-	private EntitySet<UserOrganization> _UserOrganizations;
-	
 	private EntitySet<UserOrganizationInvite> _UserOrganizationInvites;
 	
 	private EntitySet<EmailTemplate> _EmailTemplates;
+	
+	private EntitySet<UserOrganization> _UserOrganizations;
 	
 	private EntityRef<aspnet_User> _aspnet_User;
 	
@@ -45436,9 +44870,9 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		this._OrganizationEvents = new EntitySet<OrganizationEvent>(new Action<OrganizationEvent>(this.attach_OrganizationEvents), new Action<OrganizationEvent>(this.detach_OrganizationEvents));
 		this._Positions = new EntitySet<Position>(new Action<Position>(this.attach_Positions), new Action<Position>(this.detach_Positions));
 		this._PaymentConfigurations = new EntitySet<PaymentConfiguration>(new Action<PaymentConfiguration>(this.attach_PaymentConfigurations), new Action<PaymentConfiguration>(this.detach_PaymentConfigurations));
-		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
 		this._UserOrganizationInvites = new EntitySet<UserOrganizationInvite>(new Action<UserOrganizationInvite>(this.attach_UserOrganizationInvites), new Action<UserOrganizationInvite>(this.detach_UserOrganizationInvites));
 		this._EmailTemplates = new EntitySet<EmailTemplate>(new Action<EmailTemplate>(this.attach_EmailTemplates), new Action<EmailTemplate>(this.detach_EmailTemplates));
+		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
 		this._aspnet_User = default(EntityRef<aspnet_User>);
 		this._aspnet_User1 = default(EntityRef<aspnet_User>);
 		OnCreated();
@@ -46517,19 +45951,6 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganization", Storage="_UserOrganizations", ThisKey="OrganizationId", OtherKey="OrganizationId")]
-	public EntitySet<UserOrganization> UserOrganizations
-	{
-		get
-		{
-			return this._UserOrganizations;
-		}
-		set
-		{
-			this._UserOrganizations.Assign(value);
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganizationInvite", Storage="_UserOrganizationInvites", ThisKey="OrganizationId", OtherKey="OrganizationId")]
 	public EntitySet<UserOrganizationInvite> UserOrganizationInvites
 	{
@@ -46553,6 +45974,19 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		set
 		{
 			this._EmailTemplates.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganization", Storage="_UserOrganizations", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<UserOrganization> UserOrganizations
+	{
+		get
+		{
+			return this._UserOrganizations;
+		}
+		set
+		{
+			this._UserOrganizations.Assign(value);
 		}
 	}
 	
@@ -46704,18 +46138,6 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		entity.Organization = null;
 	}
 	
-	private void attach_UserOrganizations(UserOrganization entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = this;
-	}
-	
-	private void detach_UserOrganizations(UserOrganization entity)
-	{
-		this.SendPropertyChanging();
-		entity.Organization = null;
-	}
-	
 	private void attach_UserOrganizationInvites(UserOrganizationInvite entity)
 	{
 		this.SendPropertyChanging();
@@ -46739,269 +46161,17 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		this.SendPropertyChanging();
 		entity.Organization = null;
 	}
-}
-
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.UserOrganization")]
-public partial class UserOrganization : INotifyPropertyChanging, INotifyPropertyChanged
-{
 	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _UserOrganizationId;
-	
-	private System.Guid _UserId;
-	
-	private System.Guid _OrganizationId;
-	
-	private System.Nullable<bool> _IsPrimary;
-	
-	private System.Nullable<bool> _ShowTeamLogo;
-	
-	private System.Nullable<System.DateTime> _TeamVerifiedDate;
-	
-	private EntityRef<aspnet_User> _aspnet_User;
-	
-	private EntityRef<Organization> _Organization;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnUserOrganizationIdChanging(System.Guid value);
-    partial void OnUserOrganizationIdChanged();
-    partial void OnUserIdChanging(System.Guid value);
-    partial void OnUserIdChanged();
-    partial void OnOrganizationIdChanging(System.Guid value);
-    partial void OnOrganizationIdChanged();
-    partial void OnIsPrimaryChanging(System.Nullable<bool> value);
-    partial void OnIsPrimaryChanged();
-    partial void OnShowTeamLogoChanging(System.Nullable<bool> value);
-    partial void OnShowTeamLogoChanged();
-    partial void OnTeamVerifiedDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnTeamVerifiedDateChanged();
-    #endregion
-	
-	public UserOrganization()
+	private void attach_UserOrganizations(UserOrganization entity)
 	{
-		this._aspnet_User = default(EntityRef<aspnet_User>);
-		this._Organization = default(EntityRef<Organization>);
-		OnCreated();
+		this.SendPropertyChanging();
+		entity.Organization = this;
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserOrganizationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid UserOrganizationId
+	private void detach_UserOrganizations(UserOrganization entity)
 	{
-		get
-		{
-			return this._UserOrganizationId;
-		}
-		set
-		{
-			if ((this._UserOrganizationId != value))
-			{
-				this.OnUserOrganizationIdChanging(value);
-				this.SendPropertyChanging();
-				this._UserOrganizationId = value;
-				this.SendPropertyChanged("UserOrganizationId");
-				this.OnUserOrganizationIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid UserId
-	{
-		get
-		{
-			return this._UserId;
-		}
-		set
-		{
-			if ((this._UserId != value))
-			{
-				if (this._aspnet_User.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnUserIdChanging(value);
-				this.SendPropertyChanging();
-				this._UserId = value;
-				this.SendPropertyChanged("UserId");
-				this.OnUserIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid OrganizationId
-	{
-		get
-		{
-			return this._OrganizationId;
-		}
-		set
-		{
-			if ((this._OrganizationId != value))
-			{
-				if (this._Organization.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnOrganizationIdChanging(value);
-				this.SendPropertyChanging();
-				this._OrganizationId = value;
-				this.SendPropertyChanged("OrganizationId");
-				this.OnOrganizationIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsPrimary", DbType="Bit")]
-	public System.Nullable<bool> IsPrimary
-	{
-		get
-		{
-			return this._IsPrimary;
-		}
-		set
-		{
-			if ((this._IsPrimary != value))
-			{
-				this.OnIsPrimaryChanging(value);
-				this.SendPropertyChanging();
-				this._IsPrimary = value;
-				this.SendPropertyChanged("IsPrimary");
-				this.OnIsPrimaryChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowTeamLogo", DbType="Bit")]
-	public System.Nullable<bool> ShowTeamLogo
-	{
-		get
-		{
-			return this._ShowTeamLogo;
-		}
-		set
-		{
-			if ((this._ShowTeamLogo != value))
-			{
-				this.OnShowTeamLogoChanging(value);
-				this.SendPropertyChanging();
-				this._ShowTeamLogo = value;
-				this.SendPropertyChanged("ShowTeamLogo");
-				this.OnShowTeamLogoChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TeamVerifiedDate", DbType="DateTime")]
-	public System.Nullable<System.DateTime> TeamVerifiedDate
-	{
-		get
-		{
-			return this._TeamVerifiedDate;
-		}
-		set
-		{
-			if ((this._TeamVerifiedDate != value))
-			{
-				this.OnTeamVerifiedDateChanging(value);
-				this.SendPropertyChanging();
-				this._TeamVerifiedDate = value;
-				this.SendPropertyChanged("TeamVerifiedDate");
-				this.OnTeamVerifiedDateChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserOrganization", Storage="_aspnet_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
-	public aspnet_User aspnet_User
-	{
-		get
-		{
-			return this._aspnet_User.Entity;
-		}
-		set
-		{
-			aspnet_User previousValue = this._aspnet_User.Entity;
-			if (((previousValue != value) 
-						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._aspnet_User.Entity = null;
-					previousValue.UserOrganizations.Remove(this);
-				}
-				this._aspnet_User.Entity = value;
-				if ((value != null))
-				{
-					value.UserOrganizations.Add(this);
-					this._UserId = value.UserId;
-				}
-				else
-				{
-					this._UserId = default(System.Guid);
-				}
-				this.SendPropertyChanged("aspnet_User");
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganization", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
-	public Organization Organization
-	{
-		get
-		{
-			return this._Organization.Entity;
-		}
-		set
-		{
-			Organization previousValue = this._Organization.Entity;
-			if (((previousValue != value) 
-						|| (this._Organization.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Organization.Entity = null;
-					previousValue.UserOrganizations.Remove(this);
-				}
-				this._Organization.Entity = value;
-				if ((value != null))
-				{
-					value.UserOrganizations.Add(this);
-					this._OrganizationId = value.OrganizationId;
-				}
-				else
-				{
-					this._OrganizationId = default(System.Guid);
-				}
-				this.SendPropertyChanged("Organization");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
+		this.SendPropertyChanging();
+		entity.Organization = null;
 	}
 }
 
@@ -49519,6 +48689,1149 @@ public partial class EmailTemplate : INotifyPropertyChanging, INotifyPropertyCha
 					this._OrganizationId = default(Nullable<System.Guid>);
 				}
 				this.SendPropertyChanged("Organization");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.UserOrganization")]
+public partial class UserOrganization : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _UserOrganizationId;
+	
+	private System.Guid _UserId;
+	
+	private System.Guid _OrganizationId;
+	
+	private System.Nullable<bool> _IsPrimary;
+	
+	private System.Nullable<bool> _ShowTeamLogo;
+	
+	private System.Nullable<System.DateTime> _TeamVerifiedDate;
+	
+	private bool _IsPreviousOwner;
+	
+	private bool _IsOwner;
+	
+	private System.Nullable<bool> _IsTeamAdministrator;
+	
+	private bool _IsEnabled;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+	private EntityRef<Organization> _Organization;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnUserOrganizationIdChanging(System.Guid value);
+    partial void OnUserOrganizationIdChanged();
+    partial void OnUserIdChanging(System.Guid value);
+    partial void OnUserIdChanged();
+    partial void OnOrganizationIdChanging(System.Guid value);
+    partial void OnOrganizationIdChanged();
+    partial void OnIsPrimaryChanging(System.Nullable<bool> value);
+    partial void OnIsPrimaryChanged();
+    partial void OnShowTeamLogoChanging(System.Nullable<bool> value);
+    partial void OnShowTeamLogoChanged();
+    partial void OnTeamVerifiedDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnTeamVerifiedDateChanged();
+    partial void OnIsPreviousOwnerChanging(bool value);
+    partial void OnIsPreviousOwnerChanged();
+    partial void OnIsOwnerChanging(bool value);
+    partial void OnIsOwnerChanged();
+    partial void OnIsTeamAdministratorChanging(System.Nullable<bool> value);
+    partial void OnIsTeamAdministratorChanged();
+    partial void OnIsEnabledChanging(bool value);
+    partial void OnIsEnabledChanged();
+    #endregion
+	
+	public UserOrganization()
+	{
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		this._Organization = default(EntityRef<Organization>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserOrganizationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid UserOrganizationId
+	{
+		get
+		{
+			return this._UserOrganizationId;
+		}
+		set
+		{
+			if ((this._UserOrganizationId != value))
+			{
+				this.OnUserOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserOrganizationId = value;
+				this.SendPropertyChanged("UserOrganizationId");
+				this.OnUserOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				if (this._Organization.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsPrimary", DbType="Bit")]
+	public System.Nullable<bool> IsPrimary
+	{
+		get
+		{
+			return this._IsPrimary;
+		}
+		set
+		{
+			if ((this._IsPrimary != value))
+			{
+				this.OnIsPrimaryChanging(value);
+				this.SendPropertyChanging();
+				this._IsPrimary = value;
+				this.SendPropertyChanged("IsPrimary");
+				this.OnIsPrimaryChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowTeamLogo", DbType="Bit")]
+	public System.Nullable<bool> ShowTeamLogo
+	{
+		get
+		{
+			return this._ShowTeamLogo;
+		}
+		set
+		{
+			if ((this._ShowTeamLogo != value))
+			{
+				this.OnShowTeamLogoChanging(value);
+				this.SendPropertyChanging();
+				this._ShowTeamLogo = value;
+				this.SendPropertyChanged("ShowTeamLogo");
+				this.OnShowTeamLogoChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TeamVerifiedDate", DbType="DateTime")]
+	public System.Nullable<System.DateTime> TeamVerifiedDate
+	{
+		get
+		{
+			return this._TeamVerifiedDate;
+		}
+		set
+		{
+			if ((this._TeamVerifiedDate != value))
+			{
+				this.OnTeamVerifiedDateChanging(value);
+				this.SendPropertyChanging();
+				this._TeamVerifiedDate = value;
+				this.SendPropertyChanged("TeamVerifiedDate");
+				this.OnTeamVerifiedDateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsPreviousOwner", DbType="Bit NOT NULL")]
+	public bool IsPreviousOwner
+	{
+		get
+		{
+			return this._IsPreviousOwner;
+		}
+		set
+		{
+			if ((this._IsPreviousOwner != value))
+			{
+				this.OnIsPreviousOwnerChanging(value);
+				this.SendPropertyChanging();
+				this._IsPreviousOwner = value;
+				this.SendPropertyChanged("IsPreviousOwner");
+				this.OnIsPreviousOwnerChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsOwner", DbType="Bit NOT NULL")]
+	public bool IsOwner
+	{
+		get
+		{
+			return this._IsOwner;
+		}
+		set
+		{
+			if ((this._IsOwner != value))
+			{
+				this.OnIsOwnerChanging(value);
+				this.SendPropertyChanging();
+				this._IsOwner = value;
+				this.SendPropertyChanged("IsOwner");
+				this.OnIsOwnerChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsTeamAdministrator", DbType="Bit")]
+	public System.Nullable<bool> IsTeamAdministrator
+	{
+		get
+		{
+			return this._IsTeamAdministrator;
+		}
+		set
+		{
+			if ((this._IsTeamAdministrator != value))
+			{
+				this.OnIsTeamAdministratorChanging(value);
+				this.SendPropertyChanging();
+				this._IsTeamAdministrator = value;
+				this.SendPropertyChanged("IsTeamAdministrator");
+				this.OnIsTeamAdministratorChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsEnabled", DbType="Bit NOT NULL")]
+	public bool IsEnabled
+	{
+		get
+		{
+			return this._IsEnabled;
+		}
+		set
+		{
+			if ((this._IsEnabled != value))
+			{
+				this.OnIsEnabledChanging(value);
+				this.SendPropertyChanging();
+				this._IsEnabled = value;
+				this.SendPropertyChanged("IsEnabled");
+				this.OnIsEnabledChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_UserOrganization", Storage="_aspnet_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.UserOrganizations.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.UserOrganizations.Add(this);
+					this._UserId = value.UserId;
+				}
+				else
+				{
+					this._UserId = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_UserOrganization", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
+	public Organization Organization
+	{
+		get
+		{
+			return this._Organization.Entity;
+		}
+		set
+		{
+			Organization previousValue = this._Organization.Entity;
+			if (((previousValue != value) 
+						|| (this._Organization.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Organization.Entity = null;
+					previousValue.UserOrganizations.Remove(this);
+				}
+				this._Organization.Entity = value;
+				if ((value != null))
+				{
+					value.UserOrganizations.Add(this);
+					this._OrganizationId = value.OrganizationId;
+				}
+				else
+				{
+					this._OrganizationId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Organization");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.FeatureType")]
+public partial class FeatureType : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _FeatureTypeId;
+	
+	private string _FeatureName;
+	
+	private string _RedirectURL;
+	
+	private bool _IncludeInStream;
+	
+	private System.Nullable<int> _Counter;
+	
+	private string _DisplayText;
+	
+	private EntitySet<Notification> _Notifications;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnFeatureTypeIdChanging(int value);
+    partial void OnFeatureTypeIdChanged();
+    partial void OnFeatureNameChanging(string value);
+    partial void OnFeatureNameChanged();
+    partial void OnRedirectURLChanging(string value);
+    partial void OnRedirectURLChanged();
+    partial void OnIncludeInStreamChanging(bool value);
+    partial void OnIncludeInStreamChanged();
+    partial void OnCounterChanging(System.Nullable<int> value);
+    partial void OnCounterChanged();
+    partial void OnDisplayTextChanging(string value);
+    partial void OnDisplayTextChanged();
+    #endregion
+	
+	public FeatureType()
+	{
+		this._Notifications = new EntitySet<Notification>(new Action<Notification>(this.attach_Notifications), new Action<Notification>(this.detach_Notifications));
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FeatureTypeId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	public int FeatureTypeId
+	{
+		get
+		{
+			return this._FeatureTypeId;
+		}
+		set
+		{
+			if ((this._FeatureTypeId != value))
+			{
+				this.OnFeatureTypeIdChanging(value);
+				this.SendPropertyChanging();
+				this._FeatureTypeId = value;
+				this.SendPropertyChanged("FeatureTypeId");
+				this.OnFeatureTypeIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FeatureName", DbType="NVarChar(100) NOT NULL", CanBeNull=false)]
+	public string FeatureName
+	{
+		get
+		{
+			return this._FeatureName;
+		}
+		set
+		{
+			if ((this._FeatureName != value))
+			{
+				this.OnFeatureNameChanging(value);
+				this.SendPropertyChanging();
+				this._FeatureName = value;
+				this.SendPropertyChanged("FeatureName");
+				this.OnFeatureNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RedirectURL", DbType="NVarChar(500) NOT NULL", CanBeNull=false)]
+	public string RedirectURL
+	{
+		get
+		{
+			return this._RedirectURL;
+		}
+		set
+		{
+			if ((this._RedirectURL != value))
+			{
+				this.OnRedirectURLChanging(value);
+				this.SendPropertyChanging();
+				this._RedirectURL = value;
+				this.SendPropertyChanged("RedirectURL");
+				this.OnRedirectURLChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IncludeInStream", DbType="Bit NOT NULL")]
+	public bool IncludeInStream
+	{
+		get
+		{
+			return this._IncludeInStream;
+		}
+		set
+		{
+			if ((this._IncludeInStream != value))
+			{
+				this.OnIncludeInStreamChanging(value);
+				this.SendPropertyChanging();
+				this._IncludeInStream = value;
+				this.SendPropertyChanged("IncludeInStream");
+				this.OnIncludeInStreamChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Counter", DbType="Int")]
+	public System.Nullable<int> Counter
+	{
+		get
+		{
+			return this._Counter;
+		}
+		set
+		{
+			if ((this._Counter != value))
+			{
+				this.OnCounterChanging(value);
+				this.SendPropertyChanging();
+				this._Counter = value;
+				this.SendPropertyChanged("Counter");
+				this.OnCounterChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayText", DbType="NVarChar(50)")]
+	public string DisplayText
+	{
+		get
+		{
+			return this._DisplayText;
+		}
+		set
+		{
+			if ((this._DisplayText != value))
+			{
+				this.OnDisplayTextChanging(value);
+				this.SendPropertyChanging();
+				this._DisplayText = value;
+				this.SendPropertyChanged("DisplayText");
+				this.OnDisplayTextChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FeatureType_Notification", Storage="_Notifications", ThisKey="FeatureTypeId", OtherKey="FeatureTypeId")]
+	public EntitySet<Notification> Notifications
+	{
+		get
+		{
+			return this._Notifications;
+		}
+		set
+		{
+			this._Notifications.Assign(value);
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_Notifications(Notification entity)
+	{
+		this.SendPropertyChanging();
+		entity.FeatureType = this;
+	}
+	
+	private void detach_Notifications(Notification entity)
+	{
+		this.SendPropertyChanging();
+		entity.FeatureType = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ReceivedRequests")]
+public partial class ReceivedRequest : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _Id;
+	
+	private System.Guid _SenderId;
+	
+	private System.Nullable<System.Guid> _ReceiverId;
+	
+	private System.Nullable<System.DateTime> _RequestDate;
+	
+	private int _Status;
+	
+	private bool _IsActive;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(System.Guid value);
+    partial void OnIdChanged();
+    partial void OnSenderIdChanging(System.Guid value);
+    partial void OnSenderIdChanged();
+    partial void OnReceiverIdChanging(System.Nullable<System.Guid> value);
+    partial void OnReceiverIdChanged();
+    partial void OnRequestDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnRequestDateChanged();
+    partial void OnStatusChanging(int value);
+    partial void OnStatusChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    #endregion
+	
+	public ReceivedRequest()
+	{
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid Id
+	{
+		get
+		{
+			return this._Id;
+		}
+		set
+		{
+			if ((this._Id != value))
+			{
+				this.OnIdChanging(value);
+				this.SendPropertyChanging();
+				this._Id = value;
+				this.SendPropertyChanged("Id");
+				this.OnIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SenderId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid SenderId
+	{
+		get
+		{
+			return this._SenderId;
+		}
+		set
+		{
+			if ((this._SenderId != value))
+			{
+				this.OnSenderIdChanging(value);
+				this.SendPropertyChanging();
+				this._SenderId = value;
+				this.SendPropertyChanged("SenderId");
+				this.OnSenderIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReceiverId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> ReceiverId
+	{
+		get
+		{
+			return this._ReceiverId;
+		}
+		set
+		{
+			if ((this._ReceiverId != value))
+			{
+				this.OnReceiverIdChanging(value);
+				this.SendPropertyChanging();
+				this._ReceiverId = value;
+				this.SendPropertyChanged("ReceiverId");
+				this.OnReceiverIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RequestDate", DbType="DateTime")]
+	public System.Nullable<System.DateTime> RequestDate
+	{
+		get
+		{
+			return this._RequestDate;
+		}
+		set
+		{
+			if ((this._RequestDate != value))
+			{
+				this.OnRequestDateChanging(value);
+				this.SendPropertyChanging();
+				this._RequestDate = value;
+				this.SendPropertyChanged("RequestDate");
+				this.OnRequestDateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Status", DbType="Int NOT NULL")]
+	public int Status
+	{
+		get
+		{
+			return this._Status;
+		}
+		set
+		{
+			if ((this._Status != value))
+			{
+				this.OnStatusChanging(value);
+				this.SendPropertyChanging();
+				this._Status = value;
+				this.SendPropertyChanged("Status");
+				this.OnStatusChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
+	public bool IsActive
+	{
+		get
+		{
+			return this._IsActive;
+		}
+		set
+		{
+			if ((this._IsActive != value))
+			{
+				this.OnIsActiveChanging(value);
+				this.SendPropertyChanging();
+				this._IsActive = value;
+				this.SendPropertyChanged("IsActive");
+				this.OnIsActiveChanged();
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Notification")]
+public partial class Notification : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _NotificationId;
+	
+	private string _Title;
+	
+	private string _Description;
+	
+	private string _RedirectURLParameters;
+	
+	private int _NotificationType;
+	
+	private System.DateTime _CreatedOn;
+	
+	private int _CreatedBy;
+	
+	private bool _IsRead;
+	
+	private System.Nullable<System.Guid> _SenderUserId;
+	
+	private System.Nullable<System.Guid> _RecipientUserId;
+	
+	private System.Nullable<int> _FeatureTypeId;
+	
+	private System.Nullable<bool> _PostToStream;
+	
+	private System.Nullable<System.Guid> _OrganizationId;
+	
+	private EntityRef<FeatureType> _FeatureType;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnNotificationIdChanging(System.Guid value);
+    partial void OnNotificationIdChanged();
+    partial void OnTitleChanging(string value);
+    partial void OnTitleChanged();
+    partial void OnDescriptionChanging(string value);
+    partial void OnDescriptionChanged();
+    partial void OnRedirectURLParametersChanging(string value);
+    partial void OnRedirectURLParametersChanged();
+    partial void OnNotificationTypeChanging(int value);
+    partial void OnNotificationTypeChanged();
+    partial void OnCreatedOnChanging(System.DateTime value);
+    partial void OnCreatedOnChanged();
+    partial void OnCreatedByChanging(int value);
+    partial void OnCreatedByChanged();
+    partial void OnIsReadChanging(bool value);
+    partial void OnIsReadChanged();
+    partial void OnSenderUserIdChanging(System.Nullable<System.Guid> value);
+    partial void OnSenderUserIdChanged();
+    partial void OnRecipientUserIdChanging(System.Nullable<System.Guid> value);
+    partial void OnRecipientUserIdChanged();
+    partial void OnFeatureTypeIdChanging(System.Nullable<int> value);
+    partial void OnFeatureTypeIdChanged();
+    partial void OnPostToStreamChanging(System.Nullable<bool> value);
+    partial void OnPostToStreamChanged();
+    partial void OnOrganizationIdChanging(System.Nullable<System.Guid> value);
+    partial void OnOrganizationIdChanged();
+    #endregion
+	
+	public Notification()
+	{
+		this._FeatureType = default(EntityRef<FeatureType>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NotificationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid NotificationId
+	{
+		get
+		{
+			return this._NotificationId;
+		}
+		set
+		{
+			if ((this._NotificationId != value))
+			{
+				this.OnNotificationIdChanging(value);
+				this.SendPropertyChanging();
+				this._NotificationId = value;
+				this.SendPropertyChanged("NotificationId");
+				this.OnNotificationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Title", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+	public string Title
+	{
+		get
+		{
+			return this._Title;
+		}
+		set
+		{
+			if ((this._Title != value))
+			{
+				this.OnTitleChanging(value);
+				this.SendPropertyChanging();
+				this._Title = value;
+				this.SendPropertyChanged("Title");
+				this.OnTitleChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Description", DbType="NVarChar(1000) NOT NULL", CanBeNull=false)]
+	public string Description
+	{
+		get
+		{
+			return this._Description;
+		}
+		set
+		{
+			if ((this._Description != value))
+			{
+				this.OnDescriptionChanging(value);
+				this.SendPropertyChanging();
+				this._Description = value;
+				this.SendPropertyChanged("Description");
+				this.OnDescriptionChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RedirectURLParameters", DbType="NVarChar(500)")]
+	public string RedirectURLParameters
+	{
+		get
+		{
+			return this._RedirectURLParameters;
+		}
+		set
+		{
+			if ((this._RedirectURLParameters != value))
+			{
+				this.OnRedirectURLParametersChanging(value);
+				this.SendPropertyChanging();
+				this._RedirectURLParameters = value;
+				this.SendPropertyChanged("RedirectURLParameters");
+				this.OnRedirectURLParametersChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NotificationType", DbType="Int NOT NULL")]
+	public int NotificationType
+	{
+		get
+		{
+			return this._NotificationType;
+		}
+		set
+		{
+			if ((this._NotificationType != value))
+			{
+				this.OnNotificationTypeChanging(value);
+				this.SendPropertyChanging();
+				this._NotificationType = value;
+				this.SendPropertyChanged("NotificationType");
+				this.OnNotificationTypeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="Int NOT NULL")]
+	public int CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsRead", DbType="Bit NOT NULL")]
+	public bool IsRead
+	{
+		get
+		{
+			return this._IsRead;
+		}
+		set
+		{
+			if ((this._IsRead != value))
+			{
+				this.OnIsReadChanging(value);
+				this.SendPropertyChanging();
+				this._IsRead = value;
+				this.SendPropertyChanged("IsRead");
+				this.OnIsReadChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SenderUserId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> SenderUserId
+	{
+		get
+		{
+			return this._SenderUserId;
+		}
+		set
+		{
+			if ((this._SenderUserId != value))
+			{
+				this.OnSenderUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._SenderUserId = value;
+				this.SendPropertyChanged("SenderUserId");
+				this.OnSenderUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RecipientUserId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> RecipientUserId
+	{
+		get
+		{
+			return this._RecipientUserId;
+		}
+		set
+		{
+			if ((this._RecipientUserId != value))
+			{
+				this.OnRecipientUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._RecipientUserId = value;
+				this.SendPropertyChanged("RecipientUserId");
+				this.OnRecipientUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FeatureTypeId", DbType="Int")]
+	public System.Nullable<int> FeatureTypeId
+	{
+		get
+		{
+			return this._FeatureTypeId;
+		}
+		set
+		{
+			if ((this._FeatureTypeId != value))
+			{
+				if (this._FeatureType.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnFeatureTypeIdChanging(value);
+				this.SendPropertyChanging();
+				this._FeatureTypeId = value;
+				this.SendPropertyChanged("FeatureTypeId");
+				this.OnFeatureTypeIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostToStream", DbType="Bit")]
+	public System.Nullable<bool> PostToStream
+	{
+		get
+		{
+			return this._PostToStream;
+		}
+		set
+		{
+			if ((this._PostToStream != value))
+			{
+				this.OnPostToStreamChanging(value);
+				this.SendPropertyChanging();
+				this._PostToStream = value;
+				this.SendPropertyChanged("PostToStream");
+				this.OnPostToStreamChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="FeatureType_Notification", Storage="_FeatureType", ThisKey="FeatureTypeId", OtherKey="FeatureTypeId", IsForeignKey=true)]
+	public FeatureType FeatureType
+	{
+		get
+		{
+			return this._FeatureType.Entity;
+		}
+		set
+		{
+			FeatureType previousValue = this._FeatureType.Entity;
+			if (((previousValue != value) 
+						|| (this._FeatureType.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._FeatureType.Entity = null;
+					previousValue.Notifications.Remove(this);
+				}
+				this._FeatureType.Entity = value;
+				if ((value != null))
+				{
+					value.Notifications.Add(this);
+					this._FeatureTypeId = value.FeatureTypeId;
+				}
+				else
+				{
+					this._FeatureTypeId = default(Nullable<int>);
+				}
+				this.SendPropertyChanged("FeatureType");
 			}
 		}
 	}
