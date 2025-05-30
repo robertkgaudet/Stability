@@ -251,7 +251,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                 {
                     btnActiveVolunteer.Text = "Request Pending";
                     btnActiveVolunteer.Attributes["data-toggle"] = "tooltip";
-                    btnActiveVolunteer.Attributes["title"] = "Your request is complete. You joined the team";
+                    btnActiveVolunteer.Attributes["title"] = "Your request is pending for approval";
                     btnActiveVolunteer.Visible = true;
                     btnActiveVolunteer.Enabled = false;
                     btnActiveVolunteer.Style.Add("background-color", "lightgray");
@@ -262,13 +262,14 @@ public partial class V1_NonProfit_Default : BaseWebForm
                 {
                     btnActiveVolunteer.Text = "Request Denied";
                     btnActiveVolunteer.Attributes["data-toggle"] = "tooltip";
-                    btnActiveVolunteer.Attributes["title"] = "Your request was denied. You can now reapply since the reapply date has passed.";
+                    btnActiveVolunteer.Attributes["title"] = string.Format("Your request was denied. You can reapply after {0:dd MMM yyyy}.", userHistory.DateToReApply);
                     btnActiveVolunteer.Visible = true;
                     btnActiveVolunteer.Enabled = false;
                     btnActiveVolunteer.Style.Add("background-color", "lightgray");
                     btnActiveVolunteer.Style.Add("color", "black");
                     lbVolunteer.Visible = false;
                 }
+
                 else if (status == (int)RequestStatus.Blocked)
                 {
                     btnActiveVolunteer.Text = "Blocked";
