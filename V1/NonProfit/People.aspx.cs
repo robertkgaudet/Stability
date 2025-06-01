@@ -97,6 +97,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             chkManageShowDonatelabel.Visible = false;
             chkManageShowDonateButton.Visible = false;
         }
+
         hiddenShowTeamLogo.Value = chkManageShowDonateButton.Visible ? "1" : "0";
         hiddenManageShowDonateButtonn.Value = organization.EnableTeamMemberVerification == true || isOwner ? "1" : "0";
         string squareLogo = "/V1/Images/Logo-Placeholder.png";
@@ -104,7 +105,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         {
             if (organization.CoverImage != null)
             {
-                //	_coverImage = causePhotoFolder + organization.CoverImage;
+                _coverImage = causePhotoFolder + organization.CoverImage;
             }
 
             ucTeamHeader.CoverImage = _coverImage;

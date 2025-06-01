@@ -115,12 +115,14 @@ public partial class V1_Register : System.Web.UI.Page
 				//user is already associated with a team, go ahead and send them to that team.
 				UserOrganization userOrganization = new UserOrganization();
 				userOrganization.UserOrganizationId = Guid.NewGuid();
-				userOrganization.OrganizationId = new Guid(organizationId);
 				userOrganization.UserId = new Guid(newUser.ProviderUserKey.ToString());
+				userOrganization.OrganizationId = new Guid(organizationId);
+				userOrganization.ShowTeamLogo = false;
+				userOrganization.TeamVerifiedDate = null;
 				userOrganization.IsPrimary = true;
-                userOrganization.IsOwner = false;
 				userOrganization.IsPreviousOwner = false;
 				userOrganization.IsTeamAdministrator = false;
+				userOrganization.IsOwner = false;
                 userOrganization.Status = (int)RequestStatus.Pending;
                 dc.UserOrganizations.InsertOnSubmit(userOrganization);
 				dc.SubmitChanges();

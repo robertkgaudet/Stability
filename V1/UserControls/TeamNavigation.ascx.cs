@@ -38,7 +38,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypPeople.Attributes["title"] = "View members of this team";
 
         hypTeamRoles.Attributes["data-toggle"] = "tooltip";
-        hypTeamRoles.Attributes["title"] = "Enter disaster-relief training portal";
+        hypTeamRoles.Attributes["title"] = "Enter your training portal";
 
         hypDeploymentTeam.Attributes["data-toggle"] = "tooltip";
         hypDeploymentTeam.Attributes["title"] = "Search this team's open positions";
@@ -47,7 +47,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypSkillsets.Attributes["title"] = "View this team's skillsets";
 
         hypResources.Attributes["data-toggle"] = "tooltip";
-        hypResources.Attributes["title"] = "View this team's resources";
+        hypResources.Attributes["title"] = "View this team's equipment";
 
         hypStream.Attributes["data-toggle"] = "tooltip";
         hypStream.Attributes["title"] = "View this team's posts";
@@ -61,8 +61,19 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         hypTeamCalendar.Attributes["data-toggle"] = "tooltip";
         hypTeamCalendar.Attributes["title"] = "View this team's calendar";
 
-        //organizationId = Request.QueryString["organizationId"];
-        hypStream.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + organizationId;
+		hypTeamName.Attributes["data-toggle"] = "tooltip";
+		hypTeamName.Attributes["title"] = "View details about this team";
+
+		hypActivity.Attributes["data-toggle"] = "tooltip";
+		hypActivity.Attributes["title"] = "View this teams overall impact";
+
+
+		hypSupport.Attributes["data-toggle"] = "tooltip";
+		hypSupport.Attributes["title"] = "Having problems? Request help here.";
+		
+
+		//organizationId = Request.QueryString["organizationId"];
+		hypStream.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + organizationId;
         hypTeamRoles.NavigateUrl = "/V1/NonProfit/TeamRoles.aspx?organizationId=" + organizationId;
         hypPrograms.NavigateUrl = "/V1/NonProfit/Programs.aspx?organizationId=" + organizationId;
         hypDeployments.NavigateUrl = "/V1/NonProfit/Deployments.aspx?organizationId=" + organizationId;

@@ -85,11 +85,16 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
             Master.FbImage = _coverImage;
             Master.FbSite_name = organization.Name + " Programs on Stability";
             ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
-           
-
         }
 
-        ucTeamHeader._teamTitle = organization.Name;
+		if (organization.CoverImage != null)
+		{
+			//Let's the user change the cover image.
+			_coverImage = causePhotoFolder + organization.CoverImage;
+		}
+
+		ucTeamHeader.CoverImage = _coverImage;
+		ucTeamHeader._teamTitle = organization.Name;
         ucTeamHeader.TeamDescription = organization.Description;
         ucTeamFooter.OrganizationId = organizationId;
         ucTeamHeader.OrganizationId = organizationId;

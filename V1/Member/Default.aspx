@@ -10,6 +10,12 @@
 		function updateCalendar() {
 			window.location.href = "/V1/Profile/AvailableDates.aspx?userActionModal=false";
 		}
+		function updateSkillsets() {
+			window.location.href = "/V1/Profile/EditSkills.aspx?userActionModal=false";
+		}
+		function updateEquipment() {
+			window.location.href = "/V1/Profile/EditResources.aspx?userActionModal=false";
+		}
 
 		$(document).ready(function ()
 		{
@@ -76,7 +82,7 @@
 				}, 100);
 			});
 		});
-</script>
+	</script>
 	<style>
 		.hpanel
 		{
@@ -113,7 +119,7 @@
 			font-size:12px;
 		}
 		.calendar-date-of-month{
-			font-size:22px;
+			font-size:17px;
 			font-weight:bold;
 			color:#63CB31;
 		}
@@ -141,7 +147,25 @@
 	        color: black !important;
         }
 	</style>
+	<style>
+		.skill-pill {
+			display: inline-block;
+			margin: 2px 4px;
+			padding: 4px 10px;
+			border: 1px solid #ccc;
+			border-radius: 15px;
+			background-color: transparent;
+			color: #555;
+			font-size: 13px;
+			transition: all 0.2s ease-in-out;
+		}
 
+		.skill-pill:hover {
+			border-color: #5bc0de;
+			color: #5bc0de;
+			cursor: pointer;
+		}
+	</style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 	<div class="container" style="padding-bottom:100px !important;">
@@ -152,6 +176,67 @@
 					<uc1:MemberHeader runat="server" ID="ucMemberHeader" />
 				</div>
 				<div class="hpanel">
+					<div class="panel-body alert <%=availabilityStyle%> member-panel-body">
+						<h3>When You’re Ready to Help
+							<small style="font-size:15px;">
+								<br />
+								These are the dates this user has marked as available to serve. A team members availability is more than a calendar entry — it’s a signal to your community that you’re ready to step in when it matters most.
+							</small>
+						</h3>
+						<asp:Literal ID="litDatesAvailable" runat="server"></asp:Literal>
+						<div class="panel panel-default" id="divNoDates" runat="server" visible="false">
+						  <div class="panel-body text-center">
+							<p class="lead text-muted">
+							  This member hasn’t marked any dates as available to serve just yet.
+							</p>
+							<p>
+							  Every moment of availability matters — even one day can make a difference during a response.
+							</p>
+							<p>
+							  <em>If this is your profile</em>, consider adding the days you’re open to help.
+							  It’s a small step that makes coordinated, community-powered support possible.
+							</p>
+							<button id="btnUpdateCal" runat="server" onclick="updateCalendar(); return false;" class="btn btn-info btn-sm mt-2">
+							  <i class="fa fa-calendar-plus-o"></i> Update Your Availability
+							</button>
+						  </div>
+						</div>
+						<button Class="btn btn-default btn-outline pull-right m-t-lg" onclick="updateCalendar(); return false;" runat="server" id="btnUpdateCalendar" ClientIDMode="static" Visible="false"><b>Need to Make A Change?</b><br />Update your availability. <i class='fa fa-long-arrow-right'></i></button>
+						
+					</div>
+				</div>
+				<div class="hpanel">
+					<div class="panel-body alert <%=availabilityStyle%> member-panel-body">
+						<h3>Skills & Equipment
+							<small style="font-size:15px;">
+								<br />
+								This is more than a list — it’s a lifeline. This members skills and equipment represent real-world capacity to show up for neighbors in need. From tech support to tree clearing, food trucks to flatbeds, every item and ability listed here helps extend the reach of your community’s care and resilience.
+								<br />
+								<b>Think of this as your outreach toolkit</b> — ready to activate whenever a response is needed.
+							</small>
+
+						</h3>
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-md-6 mb-3">
+									<div class="text-wrap">
+									<h5 class="text-primary">Skillsets</h5>
+									<asp:Literal ID="litSkills" runat="server"></asp:Literal>
+									<button Class="btn btn-default btn-outline pull-right m-t-lg" onclick="updateSkillsets(); return false;" runat="server" id="btnUpdateSkills" ClientIDMode="static" Visible="false"><b>Aquire New Skills?</b><br />Update your skillsets. <i class='fa fa-long-arrow-right'></i></button>
+									</div>
+								</div>
+								<div class="col-md-6 mb-3">
+									<div class="text-wrap">
+									<h5 class="text-primary">Equipment</h5>
+									<asp:Literal ID="litResources" runat="server"></asp:Literal>
+									<button Class="btn btn-default btn-outline pull-right m-t-lg" onclick="updateEquipment(); return false;" runat="server" id="btnUpdateEquipment" ClientIDMode="static" Visible="false"><b>Equipment Changes?</b><br />Update your equipment. <i class='fa fa-long-arrow-right'></i></button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="hpanel collapsed">
 					<div class="panel-heading hbuilt member-panel-body">
 						<div class="panel-tools">
 							<a class="showhide"><i class="fa fa-chevron-up"></i></a>
@@ -183,38 +268,6 @@
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="hpanel collapsed">
-					<div class="panel-heading hbuilt member-panel-body">
-						<div class="panel-tools">
-							<a class="showhide"><i class="fa fa-chevron-up"></i></a>
-						</div>
-						<h3>Calendar</h3>
-						<span class="font-normal"> The dates available to help.</span>
-					</div>
-					<div class="panel-body alert <%=availabilityStyle%> member-panel-body">
-						<asp:Literal ID="litDatesAvailable" runat="server"></asp:Literal>
-						<div>
-							<button Class="btn btn-success pull-right m-t-lg" onclick="updateCalendar(); return false;" runat="server" id="btnUpdateCalendar" ClientIDMode="static" Visible="false"><b>Update My Calendar</b><br />Add dates you want to volunteer to your calendar. <i class='fa fa-long-arrow-right'></i></button>
-						</div>
-					</div>
-				</div>
-				<div class="hpanel collapsed">
-					<div class="panel-heading hbuilt member-panel-body">
-						<div class="panel-tools">
-							<a class="showhide"><i class="fa fa-chevron-up"></i></a>
-						</div>
-						<h3>Skills & Resources</h3>
-					</div>
-					<div class="panel-body member-panel-body">
-						<p style="font-size:16px;">
-							<asp:Literal ID="litSkills" runat="server"></asp:Literal>
-						</p>
-						<hr />
-						<p style="font-size:16px;">
-							<asp:Literal ID="litResources" runat="server"></asp:Literal>
-						</p>
 					</div>
 				</div>
 			</div>

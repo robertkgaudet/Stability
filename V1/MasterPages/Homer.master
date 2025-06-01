@@ -679,6 +679,30 @@
 			{
 				display:none;
 			}
+			/* Change tooltip text and background color */
+			.tooltip .tooltip-inner {
+			  background-color: #5E2E91; /* background */
+			  color: #fff;               /* text color */
+			  font-size: 15px;           /* text size */
+			  padding: 8px 12px;         /* spacing */
+			  border-radius: 10px;        /* optional rounded corners */
+			}
+
+			/* Change the arrow color (caret/pointer) */
+			.tooltip.bs-tooltip-top .arrow::before,
+			.tooltip.bs-tooltip-bottom .arrow::before,
+			.tooltip.bs-tooltip-left .arrow::before,
+			.tooltip.bs-tooltip-right .arrow::before {
+			  border-color: #5E2E91 !important;
+			  background-color: #5E2E91; /* background */
+			}
+
+			/* Optional: adjust arrow size */
+			.tooltip .arrow::before {
+			  width: 1rem;
+			  height: 1rem;
+			}
+
 		</style>
 
 		<asp:ContentPlaceHolder id="head" runat="server">

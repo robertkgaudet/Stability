@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.PeerToPeer;
 using System.Runtime.Remoting.Contexts;
 using System.ServiceModel.Activities;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Security;
@@ -220,9 +221,18 @@ public partial class V1_Member_Default : BaseWebForm
 							 where us.UserId == new Guid(pageUserId)
 							 select s.Name;  // Assuming you want to select the 'SkillName' field
 
-			// Create a single comma-separated list of the skill names
-			litSkills.Text = "<b>Skills: </b>" + string.Join(" • ", userSkills.ToList());
 
+			var pillHtml = new StringBuilder();
+
+			foreach (var skill in userSkills)
+			{
+				pillHtml.AppendFormat(
+					"<span class='skill-pill'>{0}</span> ",
+					System.Web.HttpUtility.HtmlEncode(skill)
+				);
+			}
+
+			litSkills.Text = pillHtml.ToString();
 
 			//SKILLS AND RESOURCES CODE
 			var userResources = from ur in dc.UserResources
@@ -231,10 +241,15 @@ public partial class V1_Member_Default : BaseWebForm
 							 where ur.UserId == new Guid(pageUserId)
 								select r.Name;  // Assuming you want to select the 'SkillName' field
 
-			// Create a single comma-separated list of the skill names
-			litResources.Text = "<b>Resources: </b>" + string.Join(" • ", userResources.ToList());
-
-
+			pillHtml.Clear();
+			foreach (var equipmentItem in userResources)
+			{
+				pillHtml.AppendFormat(
+					"<span class='skill-pill'>{0}</span> ",
+					System.Web.HttpUtility.HtmlEncode(equipmentItem)
+				);
+			}
+			litResources.Text = pillHtml.ToString();
 
 
 
@@ -247,7 +262,7 @@ public partial class V1_Member_Default : BaseWebForm
 			var userAvailability = dc.UserAvailableDates
 				.Where(uad => uad.DateAvailable >= today && uad.DateAvailable <= twoWeeksFromNow && uad.UserId == new Guid(pageUserId))
 				.OrderBy(uad => uad.DateAvailable)
-				.Take(9)
+				.Take(7)
 				.Select(uad => new
 				{
 					uad.UserAvailableDateId,
@@ -261,7 +276,8 @@ public partial class V1_Member_Default : BaseWebForm
 				})
 				.ToList();
 
-			litDatesAvailable.Text = "Member has no dates available.";
+			litDatesAvailable.Text = string.Empty;
+
 			string datesAvailable = string.Empty;
 			bool availableTodayCheck = false;
 			availabilityStyle = "alert-warning";
@@ -271,25 +287,40 @@ public partial class V1_Member_Default : BaseWebForm
 				string availableToday = string.Empty;
 				if(DateTime.Today == availability.DateAvailable && !availableTodayCheck)
 				{
-					availableToday = "<div class=\"col-xs-4 col-lg-2 text-center\"><button class=\"btn btn-success font-small\" type=\"button\"><i class=\"fa fa-calendar\"></i> </br>TODAY</button></div>";
+					availableToday = "<div class=\"col-xs-4 col-lg-2 text-center\"><button class=\"btn btn-success font-small\" type=\"button\"><i class=\"fa fa-calendar\"></i> </br>AVAILABLE<br/>TODAY</button></div>";
 				}
 				else if(!availableTodayCheck)
 				{
 					availableToday = "<div class=\"col-xs-5 col-lg-3 text-center\"><button class=\"btn btn-warning2 font-small\" type=\"button\"><i class=\"fa fa-ban\"></i> </br>NOT TODAY</button></div>";
 				}
-				datesAvailable += availableToday + "<div class=\"col-xs-2 col-lg-1 text-center calendar\"><div class=\"calendar-month-day\">" + availability.DayOfWeek + " " + availability.MonthAbbreviation + "</br><span class=\"calendar-date-of-month\">" + availability.DayOfMonth + "</span></div><div class=\"calendar-year\">" + availability.Year +  "</div></div>";
+				datesAvailable += availableToday + "<div class=\"col-xs-2 col-lg-1 text-center calendar\"><div class=\"calendar-month-day\">" + availability.DayOfWeek + "</br><span class=\"calendar-date-of-month\">" + availability.MonthAbbreviation  + " " + availability.DayOfMonth + "</span></div><div class=\"calendar-year\">" + availability.Year +  "</div></div>";
 				availableTodayCheck = true;
 				availableToday = string.Empty;
 			}
 
 			if(isSignedInUser)
-			{ 
+			{
+				btnUpdateCal.Visible = true;
 				btnUpdateCalendar.Visible = true;
+				btnUpdateSkills.Visible = true;
+				btnUpdateEquipment.Visible = true;
 			}
 			if(!String.IsNullOrEmpty(datesAvailable))
 			{
 				availabilityStyle = "alert-success";
 				litDatesAvailable.Text = "<div class=\"row no-gutter\">" + datesAvailable + "</div>";
+			}
+			else
+			{
+				//No dates...
+				btnUpdateCalendar.Visible = false;
+				divNoDates.Visible = true;
+			}
+			if(!isSignedInUser)
+			{
+				//Hide update buttons from non-signed in users
+				btnUpdateCalendar.Visible = false;
+				btnUpdateCal.Visible = false;
 			}
 			//CALENDAR CODE
 		}

@@ -143,42 +143,42 @@
                 <hr runat="server" id="hr2"></hr>
                 <ul class="mailbox-list" runat="server" id="ul1">
                     <li><b>Team Resources</b></li>
+					<li <%=_programsPageActive%>>
+						<asp:HyperLink runat="server" ID="hypPrograms"><i class="fa fa-superpowers"></i> Programs</asp:HyperLink>
+					</li>
                     <li <%=_peoplePageActive%>>
                         <asp:HyperLink runat="server" ID="hypPeople"><i class="fa fa-sitemap"></i> Team Members</asp:HyperLink>
                     </li>
                     <li <%=_teamRolesActive%>>
                         <asp:HyperLink runat="server" ID="hypTeamRoles"><i class="fa fa-graduation-cap"></i> Training</asp:HyperLink>
                     </li>
-                    <li <%=_deploymentTeamActive%>>
-                        <asp:HyperLink runat="server" ID="hypDeploymentTeam"><i class="fa fa-life-ring"></i> Find Volunteer Opportunities</asp:HyperLink>
-                    </li>
                     <li <%=_skillsPageActive%>>
-                        <asp:HyperLink runat="server" ID="hypSkillsets"><i class="fa fa-hand-pointer-o"></i> Skillsets</asp:HyperLink>
+                        <asp:HyperLink runat="server" ID="hypSkillsets"><i class="fa fa-user-md"></i> Skillsets</asp:HyperLink>
                     </li>
                     <li <%=_resourcesPageActive%>>
-                        <asp:HyperLink runat="server" ID="hypResources"><i class="fa fa-truck"></i> Resources</asp:HyperLink>
+                        <asp:HyperLink runat="server" ID="hypResources"><i class="fa fa-truck"></i> Equipment</asp:HyperLink>
                     </li>
+					<li <%=_teamPageActive%>>
+						<asp:HyperLink runat="server" ID="hypTeamName"><i class="fa fa-th-large"></i> About</asp:HyperLink>
+					</li>
 
                 </ul>
                 <hr runat="server" id="hrAdmin" visible="false"></hr>
                 <li><b>Response Tools</b></li>
-                <li <%=_streamActive%>>
-                    <asp:HyperLink runat="server" ID="hypStream"><i class="fa fa-home"></i> Posts</asp:HyperLink>
-                </li>
+                    <li <%=_deploymentTeamActive%>>
+                        <asp:HyperLink runat="server" ID="hypDeploymentTeam"><i class="fa fa-life-ring font-bold"></i> Volunteer Opportunities</asp:HyperLink>
+                    </li>
                 <li <%=_deploymentPageActive%>>
                     <asp:HyperLink runat="server" ID="hypDeployments"><i class="fa fa-street-view"></i> Deployments</asp:HyperLink>
-                </li>
-                <li <%=_programsPageActive%>>
-                    <asp:HyperLink runat="server" ID="hypPrograms"><i class="fa fa-superpowers"></i> Programs</asp:HyperLink>
-                </li>
-                <li <%=_teamCalendarActive%>>
-                    <asp:HyperLink runat="server" ID="hypTeamCalendar"><i class="fa fa-calendar"></i> Calendar</asp:HyperLink>
                 </li>
                 <li <%=_activityPageActive%>>
                     <asp:HyperLink runat="server" ID="hypActivity"><i class="fa fa-rocket"></i> Impact Dashboard</asp:HyperLink>
                 </li>
-                <li <%=_teamPageActive%>>
-                    <asp:HyperLink runat="server" ID="hypTeamName"><i class="fa fa-th-large"></i> About</asp:HyperLink>
+                <li <%=_streamActive%>>
+                    <asp:HyperLink runat="server" ID="hypStream"><i class="fa fa-home"></i> Posts</asp:HyperLink>
+                </li>
+                <li <%=_teamCalendarActive%>>
+                    <asp:HyperLink runat="server" ID="hypTeamCalendar"><i class="fa fa-calendar"></i> Calendar</asp:HyperLink>
                 </li>
             </ul>
             <hr runat="server" id="hr1"></hr>

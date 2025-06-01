@@ -89,6 +89,9 @@
 	.team-logo{
      margin-bottom: 4px !important;
 	}
+	.contact-stat:hover
+	{cursor:pointer;}
+
 </style>
 <script>
 	$(document).ready(function () {
@@ -171,12 +174,12 @@
 					<div class="hpanel">
 						<div class="panel-body member-panel-body">
 							<div class="row">
-								<div class="col-xs-4 border-right"><div class="contact-stat" data-toggle="tooltip" data-placement="top" title="This number shows how many positions this user has volunteered to fill."><span>TOTAL NUMBER OF POSITIONS FILLED</span> <strong><asp:Literal ID="litDeploymentCount" runat="server"></asp:Literal></strong></div></div>
-								<div class="col-xs-4 border-right" data-toggle="tooltip" data-placement="top" title="Shows this members ranking on their chosen primary team."><div class="contact-stat"><span>PRIMARY TEAM RANK</span> <strong>#298</strong></div></div>
-								<div class="col-xs-4 border-right"><div class="contact-stat" data-toggle="tooltip" data-placement="top" title="Shows this members ranking across the entire Stability platform."><span>OVERALL STABILITY PLATFORM RANK</span> <strong>#820</strong></div></div>
-								<div class="col-xs-4 border-right"><div class="contact-stat" data-toggle="tooltip" data-placement="top" title="Your time helps your community to offset federal government payments, this is the total value of this members contributed hours."><span>VALUE OF HOURS CONTRIBUTED</span> <strong>$6,219.00</strong></div></div>
-								<div class="col-xs-4 border-right"><div class="contact-stat" data-toggle="tooltip" data-placement="top" title="Shows the total number of hours this user has volunteered for positions on Stability."><span>TOTAL NUMBER OF HOURS CONTRIBUTED</span> <strong>200</strong></div></div>
-								<div class="col-xs-4 border-right"><div class="contact-stat" data-toggle="tooltip" data-placement="top" title="We're only as strong as our network of support, this shows the members total connections on Stability."><span>TOTAL STABILITY NETWORK CONNECTIONS</span> <strong><asp:HyperLink CssClass="nowrap" ID="hypConnections" Font-Bold="true" runat="server" Text="325 Connections"></asp:HyperLink></strong></div></div>
+								<div class="col-xs-4 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="This number shows how many positions this user has volunteered to fill."><span>TOTAL NUMBER OF POSITIONS FILLED</span> <strong><asp:Literal ID="litDeploymentCount" runat="server"></asp:Literal></strong></div></div>
+								<div class="col-xs-4 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Shows members ranking on their primary team, record your hours and volunteer more to increase your rank."><span>PRIMARY TEAM RANK</span> <strong>#298</strong></div></div>
+								<div class="col-xs-4 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Shows members ranking across the entire Stability platform, record your hours and volunteer more to increase your rank."><span>OVERALL STABILITY PLATFORM RANK</span> <strong>#820</strong></div></div>
+								<div class="col-xs-4 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Your time helps your community to offset federal government payments, this is the total value of this members contributed hours."><span>VALUE OF HOURS CONTRIBUTED</span> <strong>$6,219.00</strong></div></div>
+								<div class="col-xs-4 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Shows the total number of hours this user has volunteered for positions on Stability."><span>TOTAL NUMBER OF HOURS CONTRIBUTED</span> <strong>200</strong></div></div>
+								<div class="col-xs-4 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="We're only as strong as our network of support, this shows the members total connections on Stability."><span>TOTAL STABILITY NETWORK CONNECTIONS</span> <strong><asp:HyperLink CssClass="nowrap" ID="hypConnections" Font-Bold="true" runat="server" Text="325 Connections"></asp:HyperLink></strong></div></div>
 							</div>
 						</div>
 					</div>

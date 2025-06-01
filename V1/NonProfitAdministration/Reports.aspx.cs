@@ -42,7 +42,7 @@ public partial class V1_NonProfit_Reports : BaseWebForm
 		{
 			if (organization.CoverImage != null)
 			{
-			//	_coverImage = causePhotoFolder + organization.CoverImage;
+				_coverImage = causePhotoFolder + organization.CoverImage;
 			}
 
 			ucTeamHeader.CoverImage = _coverImage;

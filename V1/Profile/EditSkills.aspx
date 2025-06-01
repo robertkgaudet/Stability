@@ -10,9 +10,9 @@
         .skill-btn.active,
         .skill-btn.active:focus,
         .skill-btn.active:hover {
-            background-color: #1ab394;
+            background-color: #5E2E91;
             color: #fff;
-            border-color: #1ab394;
+            border-color: #E9D3FE;
         }
     </style>
     <script type="text/javascript">
@@ -49,6 +49,9 @@
 							<h2 class="font-light m-b-xs">
 								Choose Your Skills
 							</h2>
+							<b>Tell us how you can help when your community needs it most.</b>
+							<br />
+							Choose from a list of practical skills—like cooking, medical support, logistics, or tech—so we can match your strengths with real needs during a disaster. Whether you're a trained professional or a willing neighbor, every skill matters.
 							<div class="form-group">
 								<div class="pull-right">
 									<asp:LinkButton id="btnSubmit" CausesValidation="false" runat="server" OnClick="btnSubmit_Cancel" CssClass="btn btn-default" Text="Cancel" />

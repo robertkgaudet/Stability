@@ -11,9 +11,9 @@
         .resource-btn.active,
         .resource-btn.active:focus,
         .resource-btn.active:hover {
-            background-color: #1ab394;
+            background-color: #5E2E91;
             color: #fff;
-            border-color: #1ab394;
+            border-color: #E9D3FE;
         }
     </style>
     <script type="text/javascript">
@@ -50,6 +50,8 @@
                         <h2 class="font-light m-b-xs">
                             Choose The Types of Resources You Can Contribute
                         </h2>
+						<b>Let us know what resources or equipment you can share in times of need.</b><br />
+						From generators and trucks to extra food or supplies, these items can make a big difference when disaster strikes. Select what you’re able to provide so your community can respond faster and more effectively.
                         <div class="form-group">
                             <div class="pull-right">
                                 <asp:LinkButton id="btnSubmit" CausesValidation="false" runat="server" OnClick="btnSubmit_Cancel" CssClass="btn btn-default" Text="Cancel" />

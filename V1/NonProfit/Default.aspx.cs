@@ -45,6 +45,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
 		urlFriendlyName = Request.QueryString["urlFriendlyName"];
 		organizationId = Request.QueryString["organizationId"];
+
         string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
         _coverImage = causePhotoFolder + "businesscoverimage.png";
 
@@ -64,30 +65,33 @@ public partial class V1_NonProfit_Default : BaseWebForm
 			}
 		}
 
-        if (String.IsNullOrEmpty(organizationId))
-        {
-            if (!User.Identity.IsAuthenticated)
-            {
-                //Have the user signin
-                Response.Redirect("/SignIn");
-            }
-            else
-            {
-                //Get this users team, no team? Send them to pick a team.
-                var userOrganization = (from uo in dc.UserOrganizations
-                                        where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
-                                        select new { uo.OrganizationId }).Take(1).SingleOrDefault();
+		ucTeamHeader.OrganizationId = organizationId;
+		
+		//REMOVE
+        //if (String.IsNullOrEmpty(organizationId))
+        //{
+        //    if (!User.Identity.IsAuthenticated)
+        //    {
+        //        //Have the user signin
+        //        Response.Redirect("/SignIn");
+        //    }
+        //    else
+        //    {
+        //        //Get this users team, no team? Send them to pick a team.
+        //        var userOrganization = (from uo in dc.UserOrganizations
+        //                                where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
+        //                                select new { uo.OrganizationId }).Take(1).SingleOrDefault();
 
-                if (userOrganization == null)
-                {
-                    Response.Redirect("/V1/NonProfit/TeamList.aspx?team=false");
-                }
-                else
-                {
-                    organizationId = userOrganization.OrganizationId.ToString();
-                }
-            }
-        }
+        //        if (userOrganization == null)
+        //        {
+        //            Response.Redirect("/V1/NonProfit/TeamList.aspx?team=false");
+        //        }
+        //        else
+        //        {
+        //            organizationId = userOrganization.OrganizationId.ToString();
+        //        }
+        //    }
+        //}
 
         var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId) && o.IsActive == true
@@ -133,7 +137,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
         {
             if (organization.CoverImage != null)
             {
-                //	_coverImage = causePhotoFolder + organization.CoverImage;
+				//Let's the user change the cover image.
+                _coverImage = causePhotoFolder + organization.CoverImage;
             }
 
             ucTeamHeader.CoverImage = _coverImage;

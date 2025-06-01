@@ -80,7 +80,7 @@ public partial class V1_TeamSelectionForRegistration : System.Web.UI.Page
 		string selectedId = ddlOrganizations.SelectedValue;
 		if (!string.IsNullOrEmpty(selectedId))
 		{
-			Response.Redirect("/register.aspx?organizationId=" + selectedId);
+			Response.Redirect("/V1/Register.aspx?organizationId=" + selectedId);
 		}
 	}
 }
