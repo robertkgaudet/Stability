@@ -66,13 +66,16 @@
         $('#<%=divWebsite.ClientID%>').click(function () {
             window.location.href = '/Impactoid/CommunityPage.aspx?organizationId=<%=organizationId%>';
             return false;
-        });
+		});
+
         $('#<%=divDeployment.ClientID%>').click(function () {
             window.location.href = '/V1/NonProfitAdministration/RespondToEvent.aspx?organizationId=<%=organizationId%>';
             return false;
-        });
-        $('#<%=donatenow.ClientID%>').click(function () {
-            window.location.href = '/V1/NonProfit/Donation.aspx?organizationId=<%=organizationId%>';
+		});
+
+		$('#<%=donatenow.ClientID%>').click(function () {
+
+			window.location.href = '<%=donationLink%>'
             return false;
         });
     });
@@ -129,8 +132,7 @@
                 Team, Website, and Deployment Management
             </div>
         </div>
-		<div id="donatenow" runat="server" class="alert alert-success text-center deployment m-t-n-md"
-			visible="true">
+		<div id="donatenow" runat="server" class="alert alert-success text-center deployment m-t-n-md" visible="true">
 			<h5 class="v1"><i class="fa fa-heart pe-2x"></i><b>Donate To This Team</b></h5>
 		</div>
 		<br />

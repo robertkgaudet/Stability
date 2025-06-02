@@ -56,7 +56,7 @@
         <ul class="mailbox-list">
             <li>
                 <asp:HyperLink ID="hypDeployments" CssClass="font-weight-bold" runat="server">
-                    <i class="fa fa-life-ring"></i> Find Volunteer Opportunities
+                    <i class="fa fa-life-ring"></i> Volunteer Opportunities
                 </asp:HyperLink>
             </li>
             <li>
@@ -70,7 +70,7 @@
                 </asp:HyperLink>
             </li>
             <li>
-                <asp:HyperLink ID="hypDeployment" runat="server" NavigateUrl="/V1/Profile/EditNonProfitCauses.aspx">
+                <asp:HyperLink ID="hypDeployment" runat="server" NavigateUrl="/V1/Deployments.aspx">
                     <i class="fa fa-street-view"></i> Deployments
                 </asp:HyperLink>
             </li>

@@ -31,8 +31,9 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
     public string organizationId;
     public string _teamMember;
     public bool isUserOnTeam = false;
+	public string donationLink = string.Empty;
 
-    protected void Page_Load(object sender, EventArgs e)
+	protected void Page_Load(object sender, EventArgs e)
     {
         hypPeople.Attributes["data-toggle"] = "tooltip";
         hypPeople.Attributes["title"] = "View members of this team";
@@ -149,6 +150,30 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                             where o.OrganizationId == new Guid(organizationId)
                             select o).SingleOrDefault();
 
+		//Set the teams donation link.
+		if (!String.IsNullOrEmpty(organization.DonationURL))
+		{
+			//The team has it's own donation link setup.
+			donationLink = organization.DonationURL;
+		}
+		else
+		{
+			//If user has setup their donation dashboard then show that link.
+
+			var donationCamapaign = (from d in dc.DonationCampaigns
+									 where d.OrganizationId == new Guid(organizationId)
+									 select d).FirstOrDefault();
+			if(donationCamapaign != null)
+			{
+				donationLink = "/V1/NonProfit/Donation.aspx?organizationId=" + organizationId;
+			}
+			else
+			{
+				//If no donation campaign hide the donate button.
+				donatenow.Visible = false;
+			}
+		}
+
         bool hidTeamList = organization.HideTeamList != null ? (bool)organization.HideTeamList : false;
         bool respondToTickets = false;
         hypGetHelp.Visible = false;
@@ -166,16 +191,20 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
             Guid userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
             Guid targetRoleId = new Guid("E48E49D7-392B-4C3B-A53A-62B7B2537BBF");
             bool isUserInThatRole = false;
+
             isUserInThatRole = dc.aspnet_UsersInRoles
-          .Any(ur => ur.UserId == userId && ur.RoleId == targetRoleId);
+			.Any(ur => ur.UserId == userId && ur.RoleId == targetRoleId);
+
             var userOrganizationOwner = (from uo in dc.UserOrganizations
                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
                                          where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved
                                          && uo.OrganizationId == new Guid(organizationId)
                                          select o).Take(1).SingleOrDefault();
+
             bool isTeamAdministratorExists = dc.UserOrganizations
-          .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.Status== (int)RequestStatus.Approved);
-            if (userOrganizationOwner != null)
+			.Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.Status== (int)RequestStatus.Approved);
+           
+			if (userOrganizationOwner != null)
             {
                 if (userId == userOrganizationOwner.OwnerId)
                 {
@@ -196,10 +225,11 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                 //hypRequest.Attributes["data-toggle"] = "tooltip";
                 //hypRequest.Attributes["title"] = "View this team's Request";
             }
-                var userCheck = (from uo in dc.UserOrganizations
-                                 where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
-                                 && uo.OrganizationId == new Guid(organizationId)
-                                 select uo).Take(1).SingleOrDefault();
+
+            var userCheck = (from uo in dc.UserOrganizations
+                                where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
+                                && uo.OrganizationId == new Guid(organizationId)
+                                select uo).Take(1).SingleOrDefault();
 
             if (userCheck != null)
             {

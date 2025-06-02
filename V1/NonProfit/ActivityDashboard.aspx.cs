@@ -22,6 +22,7 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 	public string organizationId = string.Empty;
 	public string availableDates = string.Empty;
 	public string teamCounts = string.Empty;
+	public string urlFriendlyName = string.Empty;
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		ucTeamFooter.PageName = "activityPage";
@@ -32,11 +33,25 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 		//BEGIN HEADER PROPERTIES
 		////////////////////////
 
+		urlFriendlyName = Request.QueryString["urlFriendlyName"];
 		organizationId = Request.QueryString["organizationId"];
 		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		_coverImage = causePhotoFolder + "businesscoverimage.png";
 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		if (!String.IsNullOrEmpty(urlFriendlyName))
+		{
+			//Get and set the org id.
+			var organizationIdCheck = (from o in dc.Organizations
+									   where o.URLFriendlyName == urlFriendlyName
+									   select new { o.OrganizationId }).SingleOrDefault();
+
+			if (organizationIdCheck.OrganizationId != Guid.Empty)
+			{
+				organizationId = organizationIdCheck.OrganizationId.ToString();
+				// You can now use organizationId safely
+			}
+		}
 		var organization = (from o in dc.Organizations
 							where o.OrganizationId == new Guid(organizationId)
 							select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
