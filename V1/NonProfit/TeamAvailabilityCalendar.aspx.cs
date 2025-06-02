@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.IdentityModel.Metadata;
 using System.Linq;
@@ -65,11 +66,11 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
                 }
             }
 
-            Master.PageTitle = organization.Name + " Programs on Stability";
+            Master.PageTitle = organization.Name + " Team Calendar on Stability";
 			Master.PageDescription = organization.Description;
 			Master.FbDescription = organization.Description;
 			Master.FbImage = _coverImage;
-			Master.FbSite_name = organization.Name + " Programs on Stability";
+			Master.FbSite_name = organization.Name + " Team Calendar on Stability";
 			ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
 		}
 
@@ -167,8 +168,10 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 		var events = (from uad in dc.UserAvailableDates
 					  join uo in dc.UserOrganizations on uad.UserId equals uo.UserId
 					  join p in dc.Profiles on uo.UserId equals p.UserId
-					  where uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved
-                      select new { uad, p }).ToList();
+					  where uo.OrganizationId == new Guid(organizationId) 
+					  && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+					  && uad.DateAvailable >= DateTime.Now
+					  select new { uad, p }).ToList();
 
 		var eventAvail = events.Select(e => new { title = e.p.Firstname + " " + e.p.Lastname, start = e.uad.DateAvailable.ToString("yyyy-MM-ddTHH:mm:ss"), allDay = "true", url = "/V1/Profile/AvailableDates.aspx?userId=" + e.p.UserId }).ToList();
 

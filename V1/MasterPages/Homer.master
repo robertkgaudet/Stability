@@ -294,30 +294,24 @@
                    let query = $(this).val().trim();
                    if (query.length > 1) {
                        $('#searchSuggestions').html(`
-<div class='suggestion-item' data-type='TeamMembers'>
-  <i class="fa fa-user"></i> <strong>People</strong>
-</div>
-<div class='suggestion-item' data-type='Teams'>
-  <i class="fa fa-users"></i> <strong>Teams</strong>
-</div>
-<div class='suggestion-item' data-type='Deployments'>
-  <i class="fa fa-street-view"></i> <strong>Deployments</strong>
-</div>
-<div class='suggestion-item' data-type='Skills'>
-  <i class="fa fa-user-md"></i> <strong>Skills</strong>
-</div>
-<div class='suggestion-item' data-type='Resources'>
-  <i class="fa fa-truck"></i> <strong>Resources</strong>
-</div>
-<div class='suggestion-item' data-type='Portals'>
-  <i class="fa fa-globe"></i> <strong>Portals</strong>
-</div>
-
-
-
-
-
-            `).show();
+						<div class='suggestion-item' data-type='Teams'>
+						  <i class="fa fa-users"></i> <strong>Teams</strong>
+						</div>
+						<div class='suggestion-item' data-type='TeamMembers'>
+						  <i class="fa fa-user"></i> <strong>People</strong>
+						</div>
+						<div class='suggestion-item' data-type='Deployments'>
+						  <i class="fa fa-street-view"></i> <strong>Deployments</strong>
+						</div>
+						<div class='suggestion-item' data-type='Skills'>
+						  <i class="fa fa-user-md"></i> <strong>Skills</strong>
+						</div>
+						<div class='suggestion-item' data-type='Resources'>
+						  <i class="fa fa-truck"></i> <strong>Resources</strong>
+						</div>
+						<div class='suggestion-item' data-type='Portals'>
+						  <i class="fa fa-globe"></i> <strong>Portals</strong>
+						</div>`).show();
                    } else {
                        $('#searchSuggestions').hide();
                    }
@@ -341,29 +335,24 @@
                        let query = $(this).val().trim();
                        if (query.length > 1) {
                            $('#searchSuggestionss').html(`
-<div class='suggestion-item' data-type='TeamMembers'>
-  <i class="fa fa-user"></i> <strong>People</strong>
-</div>
-<div class='suggestion-item' data-type='Teams'>
-  <i class="fa fa-users"></i> <strong>Teams</strong>
-</div>
-<div class='suggestion-item' data-type='Deployments'>
-  <i class="fa fa-street-view"></i> <strong>Deployments</strong>
-</div>
-<div class='suggestion-item' data-type='Skills'>
-  <i class="fa fa-user-md"></i> <strong>Skills</strong>
-</div>
-<div class='suggestion-item' data-type='Resources'>
-  <i class="fa fa-truck"></i> <strong>Resources</strong>
-</div>
-<div class='suggestion-item' data-type='Portals'>
-  <i class="fa fa-globe"></i> <strong>Portals</strong>
-</div>
-
-
-
-
-    `).show();
+							<div class='suggestion-item' data-type='Teams'>
+							  <i class="fa fa-users"></i> <strong>Teams</strong>
+							</div>
+							<div class='suggestion-item' data-type='TeamMembers'>
+							  <i class="fa fa-user"></i> <strong>People</strong>
+							</div>
+							<div class='suggestion-item' data-type='Deployments'>
+							  <i class="fa fa-street-view"></i> <strong>Deployments</strong>
+							</div>
+							<div class='suggestion-item' data-type='Skills'>
+							  <i class="fa fa-user-md"></i> <strong>Skills</strong>
+							</div>
+							<div class='suggestion-item' data-type='Resources'>
+							  <i class="fa fa-truck"></i> <strong>Resources</strong>
+							</div>
+							<div class='suggestion-item' data-type='Portals'>
+							  <i class="fa fa-globe"></i> <strong>Portals</strong>
+							</div>`).show();
                        } else {
                            $('#searchSuggestionss').hide();
                        }
@@ -372,8 +361,9 @@
                    $(document).on('click', '.suggestion-item', function () {
                        let searchType = $(this).data('type');
                        $('#<%= hymoblie.ClientID %>').val(searchType); 
-           $('#<%= btnSearchMobile.ClientID %>').click();
-       });
+						$('#<%= btnSearchMobile.ClientID %>').click();
+					});
+
                    $(document).click(function (e) {
                        if (!$(e.target).closest('.input-group').length) {
                            $('#searchSuggestionss').hide();
