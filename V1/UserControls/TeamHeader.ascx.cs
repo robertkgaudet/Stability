@@ -41,7 +41,7 @@ public partial class V1_UserControls_TeamHeader : System.Web.UI.UserControl
 		hypTeamWebsite.Text = " Open Team Website";
 		hypWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + _organizationId;
 		_coverImage = causePhotoFolder + "/coverplaceholder.png";
-		if (organization.CoverImage != null)
+		if (!string.IsNullOrEmpty(organization.CoverImage ))
 		{ 
 			_coverImage = causePhotoFolder + organization.CoverImage;
 		}

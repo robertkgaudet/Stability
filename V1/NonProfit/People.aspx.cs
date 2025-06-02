@@ -103,7 +103,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         string squareLogo = "/V1/Images/Logo-Placeholder.png";
         if (organization != null)
         {
-            if (organization.CoverImage != null)
+            if (!string.IsNullOrEmpty(organization.CoverImage ))
             {
                 _coverImage = causePhotoFolder + organization.CoverImage;
             }
@@ -173,7 +173,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             }
 
             teamName = organization.Name;
-            organizationOwnerId = organization.OwnerId != null ? (Guid)organization.OwnerId : Guid.Empty;
+            organizationOwnerId = !string.IsNullOrEmpty(organization.OwnerId.ToString()) ? (Guid)organization.OwnerId : Guid.Empty;
             userIsOwner = organization.OwnerId == userId ? true : false;
 
 

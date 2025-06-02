@@ -119,7 +119,7 @@ public partial class Login : System.Web.UI.Page
 
 				if (profile != null)
 				{
-					if (profile.DefaultEventId != null)
+					if (!string.IsNullOrEmpty(profile.DefaultEventId.ToString()))
 					{
 						var disasterEvent = (from d in dc.Events
 											 where d.EventId == profile.DefaultEventId
@@ -139,9 +139,9 @@ public partial class Login : System.Web.UI.Page
 
 				if (profile != null)
 				{
-					if (profile.DefaultEventId != null)
-					{
-						var disasterEvent = (from d in dc.Events
+                    if (!string.IsNullOrEmpty(profile.DefaultEventId.ToString()))
+                    {
+                        var disasterEvent = (from d in dc.Events
 											 where d.EventId == profile.DefaultEventId
 											 select new { d.URLFriendlyName }
 										).Take(1).SingleOrDefault();

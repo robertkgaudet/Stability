@@ -77,7 +77,7 @@ public partial class V1_Administration_NewDisaster : BaseOrganizationWebForm
 				}
 			}
 
-			if (disasterEvent.EventTypeId != null)
+			if (!string.IsNullOrEmpty(disasterEvent.EventTypeId.ToString()))
 			{
 				var eventType = (from et in dc.EventTypes
 								 where et.EventTypeId == disasterEvent.EventTypeId

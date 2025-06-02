@@ -169,7 +169,7 @@ public partial class S1_HelperProfile : BaseOrganizationWebForm
 
 
 
-		if(profile.VolunteerApplicationDate != null)
+		if(!string.IsNullOrEmpty(profile.VolunteerApplicationDate .ToString()))
 		{
 			litVolunteerApplicationCompletedOn.Text = "Volunteer application completed " + GetElapsedTime(Convert.ToDateTime(profile.VolunteerApplicationDate)) + "</p>";
 		}
@@ -209,11 +209,11 @@ public partial class S1_HelperProfile : BaseOrganizationWebForm
 			Profile vettingUsersProfile = GetUserProfileByUserId(vettingProfileUserId);
 
 			DateTime vettingUpdatedOn = new DateTime();
-			if(profile.DateVettingCompleted != null)
+			if(!string.IsNullOrEmpty(profile.DateVettingCompleted.ToString()))
 			{
 				vettingUpdatedOn = (DateTime)profile.DateVettingCompleted;
 			}
-			else if(profile.DateVettingStarted != null)
+			else if(!string.IsNullOrEmpty(profile.DateVettingStarted.ToString()))
 			{
 				vettingUpdatedOn = (DateTime)profile.DateVettingStarted;
 			}

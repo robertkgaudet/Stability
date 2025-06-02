@@ -236,7 +236,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                               "<a href=''id='btnSendRequest' data-userid='" + teamownerUserId + "' data-senderid='" + currentUserId + "'>Send Connection Request</a>" +
                             "</p>";
                 }
-                if (teamownerUserId != null)
+                if (!string.IsNullOrEmpty(teamownerUserId.ToString() ))
                 {
 					string title = !string.IsNullOrEmpty(teamOwner.Title) ? "<i>" + teamOwner.Title + "</i><br>" : "";
 

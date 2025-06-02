@@ -60,8 +60,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         divLogin.Visible = true;
         divSettings.Visible = false;
         litVolunteerPending.Text = " Volunteer";
-        litVolunteerIcon.Text = "<i class=\"fa fa-heart\"></i>";
-		
+        litVolunteerIcon.Text = "<i class=\"fa fa-heart\"></i>";		
         PlaceHolder PlaceHolderContent = (PlaceHolder)FindControl("PlaceHolderContent");
 
         if (PlaceHolderContent != null)
@@ -241,7 +240,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             string roleType = string.Empty;
             bool hasDefaultDisaster = false;
-            if (profile != null && profile.p.DefaultEventId != null)
+            if (profile != null && !string.IsNullOrEmpty(profile.p.DefaultEventId.ToString()))
             {
                 //Get the default disaster
                 var disasterEvent = (from d in dc.Events

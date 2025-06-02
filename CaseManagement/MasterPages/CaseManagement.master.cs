@@ -105,7 +105,7 @@ public partial class CaseManagement_MasterPage : System.Web.UI.MasterPage
 						   select new { p }).SingleOrDefault();
 
 			string roleType = string.Empty;
-			if (profile != null && profile.p.DefaultEventId != null)
+			if (profile != null && !string.IsNullOrEmpty(profile.p.DefaultEventId.ToString()))
 			{
 				//Get the disaster
 				var disasterEvent = (from d in dc.Events

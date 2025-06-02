@@ -79,7 +79,7 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 				txtYearFounded.Value = organization.YearFounded;
 				txtURLFriendlyName.Value = organization.URLFriendlyName;
 
-				if (organization.ParentOrganizationId != null)
+				if (!string.IsNullOrEmpty(organization.ParentOrganizationId.ToString()))
 				{
 					//HAS A PARENT ORGANIZATION
 					//LOAD PARENT ORGANIZATION INTO DROP DOWN IF THERE IS ONE.
@@ -130,7 +130,7 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 
 		}
 
-		if (parentOrganizationId != null)
+		if (!string.IsNullOrEmpty(parentOrganizationId))
 		{
 			//Get the parent.
 			var nonProfitParent = (from o in dc.Organizations

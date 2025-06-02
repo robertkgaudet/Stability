@@ -170,7 +170,7 @@ namespace CrowdRelief
                                            select o.Name).Take(1).SingleOrDefault()
                            };
 
-            if (searchTerm != null)
+            if (!string.IsNullOrEmpty(searchTerm))
             {
                 string lowerSearch = searchTerm.ToLower();
 

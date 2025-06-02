@@ -87,7 +87,7 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
             ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
         }
 
-		if (organization.CoverImage != null)
+		if (!string.IsNullOrEmpty(organization.CoverImage))
 		{
 			//Let's the user change the cover image.
 			_coverImage = causePhotoFolder + organization.CoverImage;

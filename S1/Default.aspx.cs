@@ -183,7 +183,7 @@ public partial class S1_Default : BaseOrganizationWebForm
 				survivorInfo = " <a href=\"\\sp\\" +  articleUser.ProfileNumber + "\\" + articleUser.Firstname + "-" + articleUser.Lastname + "\">" + articleUser.Firstname + " " + articleUser.Lastname + "</a>";
 			}
 
-			if(story.a.CategoryId != null && new Guid(disasterSurvivorStoryCategoryId) == story.a.CategoryId)
+			if(!string.IsNullOrEmpty(story.a.CategoryId.ToString()) && new Guid(disasterSurvivorStoryCategoryId) == story.a.CategoryId)
 			{
 
 				if(articleUser != null && story.u.ProfileNumber == articleUser.ProfileNumber)
@@ -198,7 +198,7 @@ public partial class S1_Default : BaseOrganizationWebForm
 					containerHeaderText = "<small>This story was created by disaster volunteer <span class=\"font-bold\">" + articleAuthorName + " about " + survivorInfo + " who recently suffered loss in a disaster.</span> </small>" +  Environment.NewLine;
 				}
 			}
-			else if(story.a.CategoryId != null && new Guid(disasterHelperStoryCategoryId) == story.a.CategoryId)
+			else if(!string.IsNullOrEmpty(story.a.CategoryId.ToString()) && new Guid(disasterHelperStoryCategoryId) == story.a.CategoryId)
 			{
 				survivorInfo = " <a href=\"\\hp\\" +  articleUser.ProfileNumber + "\\" + articleUser.Firstname + "-" + articleUser.Lastname + "\">" + articleUser.Firstname + " " + articleUser.Lastname + "</a>";
 				//HELPER STORY
