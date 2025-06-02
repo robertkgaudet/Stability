@@ -45,7 +45,11 @@
 		padding-left: 1px;  /* Reduced gutter padding */
 		padding-right: 1px;
 	}
-
+	@media (min-width: 1200px) {
+    .col-lg-9 {
+        width: 100%;
+    }
+}
 </style>
 
 <script>
