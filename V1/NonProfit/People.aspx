@@ -200,6 +200,39 @@
             justify-content: flex-end;
             padding: 0 15px 15px 0;
         }
+
+.custom-footer {
+    display: flex;
+    flex-wrap: nowrap; 
+    justify-content: center;
+/*    gap: 10px;*/
+    padding: 1rem;
+}
+
+.custom-footer .btn {
+    min-width: 160px;
+}
+
+@media (max-width: 991px) {
+    .custom-footer {
+        flex-wrap: wrap;
+    }
+
+    .custom-footer .btn {
+        flex: 1 1 45%; 
+        margin:6px
+
+    }
+}
+
+
+@media (max-width: 576px) {
+    .custom-footer .btn {
+        flex: 1 1 100%;
+        margin:6px
+    }
+}
+
     </style>
     <script>
         var recipientsName;
@@ -1483,17 +1516,21 @@
                         placeholder="Enter Vetting Notes"></asp:TextBox>
                 </div>
 
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-primary" runat="server" id="btnteamOwner" visible="false"
-                        onclick="btnMakeTeamOwner();">
-                        Make Team Owner</button>
-                    <button type="button" class="btn btn-danger" runat="server" id="btnremoveteam" visible="false"
-                        onclick="btnMakeTeamRemove();">
-                        Remove Team Member</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
-                        Save Changes</button>
-                </div>
+<div class="modal-footer custom-footer">
+    <button type="button" class="btn btn-primary" runat="server" id="btnteamOwner" visible="false"
+        onclick="btnMakeTeamOwner();">Make Team Owner</button>
+    <button type="button" class="btn btn-danger" runat="server" id="btnremoveteam" visible="false"
+        onclick="btnMakeTeamRemove();">Remove Team Member</button>
+    <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">Save Changes</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+</div>
+
+
+
+
+
+
             </div>
         </div>
     </div>
