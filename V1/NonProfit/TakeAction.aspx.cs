@@ -160,7 +160,7 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 		//decimal volunteerRate = organizationEvent.oe.VolunteerHourlyRate != null ? Convert.ToDecimal(organizationEvent.oe.VolunteerHourlyRate) : 0;
 
 		var totalVolunteers = (from org in dc.UserOrganizations
-							   where org.OrganizationId == new Guid(organizationId) && org.Status == 1
+							   where org.OrganizationId == new Guid(organizationId) && org.Status== (int)RequestStatus.Approved
                                select org).Distinct().Count();
 
 		lblTeamCount.Text = totalVolunteers.ToString();

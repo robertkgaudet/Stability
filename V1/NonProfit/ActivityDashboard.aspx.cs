@@ -138,7 +138,7 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 		lblHours.Text = string.Format(culture, "{0:N0}", totalVolunteerHours);
 
 		var totalVolunteers = (from org in dc.UserOrganizations
-							   where org.OrganizationId == new Guid(organizationId) && org.Status == 1
+							   where org.OrganizationId == new Guid(organizationId) && org.Status== (int)RequestStatus.Approved
                                select org).Distinct().Count();
 
 		lblTeamCount.Text = totalVolunteers.ToString();

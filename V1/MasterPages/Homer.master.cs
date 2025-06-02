@@ -686,7 +686,7 @@ protected void rptUserGroups_ItemDataBound(object sender, RepeaterItemEventArgs 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         var userGroups = (from g in dc.UserOrganizations
                           join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
-                          where g.UserId == userId && g.Status == 1
+                          where g.UserId == userId && g.Status== (int)RequestStatus.Approved
                           orderby g.IsPrimary descending, o.Name
                           select new
                           {
