@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Stripe;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Metadata;
 using System.Linq;
@@ -43,7 +44,8 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId)
-                            select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName,o.IsActive}).SingleOrDefault();
+                            select new { o.Name, o.LogoSquare, o.Description, o.DonationURL, o.Logo, o.CoverImage, o.URLFriendlyName,o.IsActive}).SingleOrDefault();
+
         if(organization.IsActive==true)
         {
             btnDeactivatePage.Text = " <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'> De-activate This Team</asp:LinkButton>  ";
@@ -85,13 +87,14 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
             Master.FbImage = _coverImage;
             Master.FbSite_name = organization.Name + " Programs on Stability";
             ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
-        }
 
-		if (!string.IsNullOrEmpty(organization.CoverImage))
-		{
-			//Let's the user change the cover image.
-			_coverImage = causePhotoFolder + organization.CoverImage;
-		}
+			if (!string.IsNullOrEmpty(organization.CoverImage))
+			{
+				//Let's the user change the cover image.
+				_coverImage = causePhotoFolder + organization.CoverImage;
+			}
+
+        }
 
 		ucTeamHeader.CoverImage = _coverImage;
 		ucTeamHeader._teamTitle = organization.Name;
