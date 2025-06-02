@@ -40,7 +40,7 @@ public partial class V1_NonProfit_Reports : BaseWebForm
         string squareLogo = "/V1/Images/Logo-Placeholder.png";
         if (organization != null)
 		{
-			if (organization.CoverImage != null)
+			if (!string.IsNullOrEmpty(organization.CoverImage))
 			{
 				_coverImage = causePhotoFolder + organization.CoverImage;
 			}

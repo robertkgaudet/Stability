@@ -135,7 +135,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
         string squareLogo = "/V1/Images/Logo-Placeholder.png";
         if (organization != null)
         {
-            if (organization.CoverImage != null)
+            if (!string.IsNullOrEmpty(organization.CoverImage))
             {
 				//Let's the user change the cover image.
                 _coverImage = causePhotoFolder + organization.CoverImage;

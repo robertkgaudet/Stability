@@ -59,7 +59,7 @@ public partial class V1_Notifications : System.Web.UI.Page
                 if (photoIds != null && photoIds.Count > 1)
                 {
                     var SinglePhotoId = photoIds[0];
-                    var photoFilename = SinglePhotoId != null ? dc.Photos.Where(x => x.PhotoId == SinglePhotoId).Select(x => x.Filename).ToList() : new List<string>();
+                    var photoFilename = !string.IsNullOrEmpty(SinglePhotoId.ToString() ) ? dc.Photos.Where(x => x.PhotoId == SinglePhotoId).Select(x => x.Filename).ToList() : new List<string>();
                     var newPhoto = photoFilename[0];
                     var image = string.IsNullOrEmpty(newPhoto) ? "https://www.w3schools.com/w3images/avatar2.png" : newPhoto;
 

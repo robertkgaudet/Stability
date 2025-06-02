@@ -93,7 +93,7 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 			{
 				Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32");
 			}
-			organizationOwnerId = organization.OwnerId != null ? (Guid)organization.OwnerId : Guid.Empty;
+			organizationOwnerId = !string.IsNullOrEmpty(organization.OwnerId.ToString() ) ? (Guid)organization.OwnerId : Guid.Empty;
 			userIsOwner = organization.OwnerId == userId ? true : false;
 			string contactInfo = string.Empty;
 			if(User.IsInRole("Administrator") || organization.OwnerId == userId)

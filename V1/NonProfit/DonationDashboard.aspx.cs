@@ -51,22 +51,22 @@ public partial class V1_NonProfit_DonationDashboard : System.Web.UI.Page
                 var startOfMonth = new DateTime(today.Year, today.Month, 1);
                 var startOfYear = new DateTime(today.Year, 1, 1);
                 // Calculate the total amount donated today
-                var todayAmount = dc.Donations.Where(d => d.CreatedAt.Date == today && d.TransactionId != null && d.TransactionId != "" && d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded))
+                var todayAmount = dc.Donations.Where(d => d.CreatedAt.Date == today && !string.IsNullOrEmpty(d.TransactionId)  && d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded))
                                            .Select(x => x.Amount).ToList();
                 todayCount = todayAmount.Sum();
 
-                var thisWeekAmount = dc.Donations.Where(d => d.CreatedAt.Date >= startOfWeek && d.TransactionId != null && d.TransactionId != "" && d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded))
+                var thisWeekAmount = dc.Donations.Where(d => d.CreatedAt.Date >= startOfWeek && !string.IsNullOrEmpty(d.TransactionId )  && d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded))
                                                .Select(x => x.Amount).ToList();
                 thisWeekCount = thisWeekAmount.Sum();
 
 
 
-                var thisMonthAmount = dc.Donations.Where(d => d.CreatedAt.Date >= startOfMonth && d.TransactionId != null && d.TransactionId != "" && d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded))
+                var thisMonthAmount = dc.Donations.Where(d => d.CreatedAt.Date >= startOfMonth && !string.IsNullOrEmpty(d.TransactionId ) && d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded))
                                                .Select(x => x.Amount).ToList();
                 thisMonthCount = thisMonthAmount.Sum();
 
 
-                var thisYearAmount = dc.Donations.Where(d => d.CreatedAt.Date >= startOfYear && d.TransactionId != null && d.TransactionId != "" && d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded))
+                var thisYearAmount = dc.Donations.Where(d => d.CreatedAt.Date >= startOfYear && !string.IsNullOrEmpty(d.TransactionId)  && d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded))
                                               .Select(x => x.Amount).ToList();
                 thisYearCount = thisYearAmount.Sum();
 
@@ -114,7 +114,7 @@ public partial class V1_NonProfit_DonationDashboard : System.Web.UI.Page
 
                 var donationsData = (from d in dc.DonationCampaigns
                                      join de in dc.Donations
-                                         .Where(d => d.TransactionId != null && d.TransactionId != "" &&
+                                         .Where(d => !string.IsNullOrEmpty(d.TransactionId) &&
                                                      d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded))
                                          on d.DonationCampaignId equals de.DonationCampaignId into donationsGroup
                                      from de in donationsGroup.DefaultIfEmpty()

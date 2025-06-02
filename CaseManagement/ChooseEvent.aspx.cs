@@ -60,7 +60,7 @@ public partial class CaseManagement_ChooseEvent : BaseOrganizationWebForm
 			//	icon = disaster.Icon.Replace("COLOR", "btn-" + color + " btn-outline");
 			//}
 
-			if(disaster.Color != null)
+			if(!string.IsNullOrEmpty(disaster.Color))
 			{
 				headerColor = "h" + CrowdRelief.Tools.GetColor(disaster.Color);
 			}
