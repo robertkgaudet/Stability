@@ -19,7 +19,6 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
 					where t.IsActive == true
 					orderby t.CreatedOn
 					select new { t.Name, t.Description, t.LogoSquare, t.OrganizationId, t.URLFriendlyName, t.CreatedOn };
-        searchTerm = Request.QueryString["searchTerm"];
         rptTeams.DataSource = teams.OrderByDescending(d => d.OrganizationId == prioritizedId).ThenByDescending(o => o.CreatedOn).ToList();
 		rptTeams.DataBind();
 

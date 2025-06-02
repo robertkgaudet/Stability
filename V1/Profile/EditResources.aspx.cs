@@ -14,9 +14,22 @@ public partial class V1_Profile_Resources : BaseOrganizationWebForm
         {
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-            var resources = from c in dc.Resources
+            string searchTerm = Request.QueryString["searchTerm"];
+            IQueryable<dynamic> resources;
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                resources = from c in dc.Resources
+                            where c.Name.Contains(searchTerm) || c.Type.Contains(searchTerm)
                             orderby c.Name, c.Type
-							select new { Name = c.Name + " (" + c.Type + ")", c.ResourceId };
+                            select new { Name = c.Name + " (" + c.Type + ")", c.ResourceId };
+            }
+            else
+            {
+                resources = from c in dc.Resources
+                            orderby c.Name, c.Type
+                            select new { Name = c.Name + " (" + c.Type + ")", c.ResourceId };
+            }
 
             rptResources.DataSource = resources;
             rptResources.DataBind();
@@ -29,6 +42,7 @@ public partial class V1_Profile_Resources : BaseOrganizationWebForm
             hfSelectedResources.Value = string.Join(",", userResources.Select(id => id.ToString().ToLowerInvariant()));
         }
     }
+
 
     protected void btnSubmit_Cancel(object sender, EventArgs e)
     {

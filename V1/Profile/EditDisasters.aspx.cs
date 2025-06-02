@@ -8,43 +8,51 @@ using System.Web.Security;
 
 public partial class V1_Profile_EditDisasters : BaseOrganizationWebForm
 {
-	protected void Page_Load(object sender, EventArgs e)
-	{
-		if(!IsPostBack)
-		{
-			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            string searchTerm = Request.QueryString["searchTerm"];
 
-			var events =	from c in dc.Events
-							where c.IsDisaster == true
-							&& c.IsActive == true
-							orderby c.BeginDate descending
-							select new {name = " - " + c.Name, c.EventId };
-			
-			chkBoxListDisasters.DataSource = events;
-			chkBoxListDisasters.DataBind();
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-			var userEvents = from ue in dc.UserEvents
-								   where ue.UserId == userId
-								   select ue;
-			
-			//Preselect the orgs for this user
-			if(userEvents.Count() > 0 )
-			{
-				foreach(var userEvent in userEvents)
-				{
-					for (int i = 0; i < chkBoxListDisasters.Items.Count; i++)
-					{
-						if(userEvent.EventId.ToString() == chkBoxListDisasters.Items[i].Value)
-						{
-							chkBoxListDisasters.Items[i].Selected = true;
-						}
-					}
-				}
-			}
-		}
-	}
+            var eventsQuery = from c in dc.Events
+                              where c.IsDisaster == true && c.IsActive == true
+                              orderby c.BeginDate descending
+                              select new { name = " - " + c.Name, c.EventId };
 
-	protected void btnSubmit_Cancel(object sender, EventArgs e)
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                eventsQuery = eventsQuery
+                    .Where(ev => ev.name.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            chkBoxListDisasters.DataSource = eventsQuery;
+            chkBoxListDisasters.DataBind();
+
+            var userEvents = from ue in dc.UserEvents
+                             where ue.UserId == userId
+                             select ue;
+
+            if (userEvents.Any())
+            {
+                foreach (var userEvent in userEvents)
+                {
+                    for (int i = 0; i < chkBoxListDisasters.Items.Count; i++)
+                    {
+                        if (userEvent.EventId.ToString() == chkBoxListDisasters.Items[i].Value)
+                        {
+                            chkBoxListDisasters.Items[i].Selected = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+    protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
 		Response.Redirect("/V1/Member/Default.aspx");
 	}

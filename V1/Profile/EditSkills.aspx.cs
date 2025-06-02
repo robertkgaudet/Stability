@@ -9,29 +9,43 @@ using System.Web.UI.WebControls;
 
 public partial class V1_Profile_Skills : BaseOrganizationWebForm
 {
-	protected void Page_Load(object sender, EventArgs e)
-	{
-		if(!IsPostBack)
-		{
-			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-			var skills = from c in dc.Skills
-						 orderby c.Name
-						 select new { Name = c.Name, c.SkillId };
+            string searchTerm = Request.QueryString["searchTerm"];
 
-			rptSkills.DataSource = skills;
-			rptSkills.DataBind();
+            IQueryable<dynamic> skills;
 
-			var userSkills = from us in dc.UserSkills
-							 where us.UserId == userId
-							 select us.SkillId;
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                skills = from c in dc.Skills
+                         where c.Name.Contains(searchTerm) 
+                         orderby c.Name
+                         select new { Name = c.Name, c.SkillId };
+            }
+            else
+            {
+                skills = from c in dc.Skills
+                         orderby c.Name
+                         select new { Name = c.Name, c.SkillId };
+            }
 
-			// Output user skill IDs as comma-separated string for JS
-			hfSelectedSkills.Value = string.Join(",", userSkills.Select(id => id.ToString().ToLowerInvariant()));
-		}
-	}
+            rptSkills.DataSource = skills;
+            rptSkills.DataBind();
 
-	protected void btnSubmit_Cancel(object sender, EventArgs e)
+            var userSkills = from us in dc.UserSkills
+                             where us.UserId == userId
+                             select us.SkillId;
+
+            hfSelectedSkills.Value = string.Join(",", userSkills.Select(id => id.ToString().ToLowerInvariant()));
+        }
+    }
+
+
+    protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
 		Response.Redirect("/V1/Member/Default.aspx");
 	}
