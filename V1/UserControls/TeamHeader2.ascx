@@ -238,10 +238,16 @@
                         <div class="row memberDetail">
                             <div class="col-xs-12 col-lg-12">
                                 <div style="margin-top: 10px; width: 100%; display: flex; align-items: center;">
-                                    <span style="color: darkslategrey; font-size: 20px; font-weight: 800; margin-right: 10px;">
-                                        <asp:Literal ID="litTitle" runat="server"></asp:Literal>
-                                    </span>
-                                    <span class="badge badge-primary" id="isprimaryteam" runat="server" visible="false">Your Primary Team</span>
+									<div class="row">
+										<div class="col-lg-9">
+											<span style="color: darkslategrey; font-size: 20px; font-weight: 800; margin-right: 10px;">
+												<asp:Literal ID="litTitle" runat="server"></asp:Literal>
+											</span>
+										</div>
+										<div class="col-lg-3">
+											<span class="badge badge-primary" id="isprimaryteam" runat="server" visible="false">Your Primary Team</span>
+										</div>
+									</div>
                                 </div>
                                 <p style="font-size: 16px;">
                                     <asp:Literal ID="litMemberDescription" runat="server"></asp:Literal>

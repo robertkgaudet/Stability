@@ -712,7 +712,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 								  OwnerId = o.OwnerId,
 								  IsPrimary = g.IsPrimary,
 								  TeamStatus = g.Status
-							  }).ToList();
+							  }).Distinct().ToList();
 
 			rptUserGroups.DataSource = userGroups;
 			rptUserGroups.DataBind();
