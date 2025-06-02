@@ -33,7 +33,9 @@
             padding: 0;
             list-style: none;
         }
-        
+        .user-name {
+    color: #337ab7 !important;
+}
         .friendItem {
             padding: 10px;
             border: 1px solid #ccc;
