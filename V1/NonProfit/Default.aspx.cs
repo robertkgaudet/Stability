@@ -639,7 +639,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                   .Where(p => p.UserId == userId)
                   .Select(p => p.Firstname + " " + p.Lastname)
                   .FirstOrDefault();
-                string message = userName + " has requested to join your team " + orgName + ".";
+                string message = "<a href='/V1/Member/Default.aspx?userId=" + userId + "'>" + userName + "</a> has requested to join your team " + orgName + ".";
                 foreach (var adminUserId in adminOwners)
                 {
                     var userEmail = (from m in dc.aspnet_Memberships
