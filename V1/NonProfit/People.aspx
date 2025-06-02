@@ -176,10 +176,6 @@
 
 
 
-        button.btn.btn-primary {
-            margin-left: 10px;
-        }
-        /*  <----- -------------/>*/
         .custom-spinner {
             width: 40px;
             height: 40px;
@@ -205,17 +201,15 @@
     display: flex;
     flex-wrap: nowrap; 
     justify-content: center;
-/*    gap: 10px;*/
-    padding: 1rem;
+    gap: 10px;
+    padding: 3rem;
 }
 
-.custom-footer .btn {
-    min-width: 160px;
-}
 
 @media (max-width: 991px) {
     .custom-footer {
         flex-wrap: wrap;
+            gap: 0px;
     }
 
     .custom-footer .btn {
@@ -231,6 +225,9 @@
         flex: 1 1 100%;
         margin:6px
     }
+     .custom-footer {
+         gap: 0px;
+ }
 }
 
     </style>
