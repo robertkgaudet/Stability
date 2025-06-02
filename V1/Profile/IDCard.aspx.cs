@@ -13,9 +13,9 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
 	{
 		string volunteerStatus = VolunteerStatus.GetVolunteerStatus(userId).Value;
 
-		if(String.IsNullOrEmpty(volunteerStatus) || volunteerStatus != VolunteerStatus.VettingComplete_Passed.Value)
+		if (String.IsNullOrEmpty(volunteerStatus) || volunteerStatus != VolunteerStatus.VettingComplete_Passed.Value)
 		{
-			Response.Write("Unable to print ID Card. Please call the vetting team at 318-572-3161.");
+			Response.Write("Unable to print ID Card. Please email support@stability.org.");
 			Response.End();
 		}
 		this.Master.HideFooter = true;
@@ -43,7 +43,7 @@ public partial class V1_Profile_IDCard : BaseOrganizationWebForm
             var profile = (from p in dc.Profiles
                            where p.UserId == userId
                            select p).SingleOrDefault();
-            litNumber.Text = "Volunteer #" + profile.ProfileNumber + "";
+            litNumber.Text = "Volunteer #<br /><span class='h4 font-bold'>" + profile.ProfileNumber + "</span>";
             if (!String.IsNullOrEmpty(profile.City))
             {
                 locationDD = "" + profile.City + ", " + profile.State + "";

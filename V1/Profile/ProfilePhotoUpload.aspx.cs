@@ -11,6 +11,12 @@ public partial class V1_Profile_ProfilePhotoUpload : BaseOrganizationWebForm
 {
 	protected void Page_Load(object sender, EventArgs e)
 	{
+		string register = Request.QueryString["register"];
+
+		if (!String.IsNullOrEmpty(register))
+		{
+			hypSkipProfilePhoto.Visible = true;
+		}
 	}
 	
 	protected void btnUpdate_Click(object sender, EventArgs e)

@@ -1,13 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.Security;
+﻿using Microsoft.SqlServer.Server;
+using System;
 using System.Activities.Expressions;
-using System.Web.Caching;
-using System.Web.Services;
-using System.Text;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Web;
+using System.Web.Caching;
+using System.Web.Security;
+using System.Web.Services;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class MasterPages_Homer : System.Web.UI.MasterPage
@@ -96,9 +97,13 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         }
         if (_hideHeader)
         {
-            fixedHeader = string.Empty;
+			divSearch.Visible = false;
+			divMessages.Visible = false;
+			fixedHeader = string.Empty;
             header.Visible = false;
-        }
+			mobileMenu.Visible = false;
+
+		}
         if (_hideFooter)
         {
             fixedFooter = string.Empty;
@@ -157,7 +162,9 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			divFeed.Visible = true;
 			divProfile.Visible = true;
 			divTeam.Visible = true;
-			divSearch.Visible = true;
+			if(!_hideHeader)
+			divSearch.Visible =  true;
+			if(!_hideHeader)
 			divMessages.Visible = true;
 
 			userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
@@ -647,239 +654,250 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         }
     }
 
-protected void rptUserGroups_ItemDataBound(object sender, RepeaterItemEventArgs e)
-{
-    if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-    {
-        RepeaterItem dataItem = (RepeaterItem)e.Item;
-
-        string organizationUrl = "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
-        string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
-        string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
-
-        string imgTeamPath = "/V1/Images/Logo-Placeholder.png";  
-
-        if (!string.IsNullOrEmpty(organizationTeamLogo))
-        {
-            string virtualPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
-            string physicalPath = Server.MapPath(virtualPath);
-
-            if (System.IO.File.Exists(physicalPath))
-            {
-                imgTeamPath = virtualPath; 
-            }
-        }
-
-        bool isPrimary = Convert.ToBoolean(DataBinder.Eval(dataItem.DataItem, "IsPrimary") ?? false);
-        Literal litPrimaryBadge = (Literal)e.Item.FindControl("litPrimaryBadge");
-        litPrimaryBadge.Text = isPrimary ? " <span class='badge badge-primary' style='margin-left: 55px;margin-top:-20px;'>Primary Team</span>" : "";
-        Literal lit = (Literal)e.Item.FindControl("litGroupLink");
-        lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + "</a>";
-        Image imgTeam = (Image)e.Item.FindControl("imgTeam");
-        imgTeam.ImageUrl = imgTeamPath;
-    }
-}
-
-
-	private void BindUserGroups()
+	protected void rptUserGroups_ItemDataBound(object sender, RepeaterItemEventArgs e)
 	{
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-        var userGroups = (from g in dc.UserOrganizations
-                          join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
-                          where g.UserId == userId && g.Status == 1
-                          orderby g.IsPrimary descending, o.Name
-                          select new
-                          {
-                              OrganizationName = o.Name,
-                              OrganizationId = o.OrganizationId,
-                              imgTeam = o.LogoSquare,
-                              OwnerId = o.OwnerId,
-                              IsPrimary = g.IsPrimary
-                          }).ToList();
+		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+		{
+			RepeaterItem dataItem = (RepeaterItem)e.Item;
 
-        rptUserGroups.DataSource = userGroups;
-		rptUserGroups.DataBind();
+			string UrlFriendlyTeamName = (string)DataBinder.Eval(dataItem.DataItem, "UrlFriendlyTeamName");
+			int TeamStatus = (int)DataBinder.Eval(dataItem.DataItem, "TeamStatus");
+			string organizationUrl = !String.IsNullOrEmpty(UrlFriendlyTeamName) ? "/Team/" + UrlFriendlyTeamName : "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
+
+			string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
+			string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
+
+			string imgTeamPath = "/V1/Images/Logo-Placeholder.png";  
+
+			if (!string.IsNullOrEmpty(organizationTeamLogo))
+			{
+				string virtualPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
+				string physicalPath = Server.MapPath(virtualPath);
+
+				if (System.IO.File.Exists(physicalPath))
+				{
+					imgTeamPath = virtualPath; 
+				}
+			}
+
+			string teamLabel = " <span class='badge badge-primary' style='margin-left: 55px; margin-top:-20px;'>Primary Team</span>";
+			if(TeamStatus == 0)
+			{
+				teamLabel = " <span class='badge badge-default' style='margin-left: 55px; margin-top:-20px;'>Pending Approval</span>";
+			}
+
+			bool isPrimary = Convert.ToBoolean(DataBinder.Eval(dataItem.DataItem, "IsPrimary") ?? false);
+			Literal litPrimaryBadge = (Literal)e.Item.FindControl("litPrimaryBadge");
+			litPrimaryBadge.Text = isPrimary ? teamLabel : "";
+			Literal lit = (Literal)e.Item.FindControl("litGroupLink");
+			lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + "</a>";
+			Image imgTeam = (Image)e.Item.FindControl("imgTeam");
+			imgTeam.ImageUrl = imgTeamPath;
+		}
 	}
 
-	private bool CheckResources(Guid userId)
-    {
-        bool hasResources = false;
-        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-        var resourcesCheck = (from us in dc.UserResources
-                              where us.UserId == userId
-                              select us).Count();
+		private void BindUserGroups()
+		{
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			var userGroups = (from g in dc.UserOrganizations
+							  join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
+							  where g.UserId == userId && (g.Status == 0 || g.Status == 1)
+							  orderby g.IsPrimary descending, o.Name
+							  select new
+							  {
+								  OrganizationName = o.Name,
+								  UrlFriendlyTeamName = o.URLFriendlyName,
+								  OrganizationId = o.OrganizationId,
+								  imgTeam = o.LogoSquare,
+								  OwnerId = o.OwnerId,
+								  IsPrimary = g.IsPrimary,
+								  TeamStatus = g.Status
+							  }).ToList();
 
-        if (resourcesCheck > 0)
-        {
-            hasResources = true;
-        }
+			rptUserGroups.DataSource = userGroups;
+			rptUserGroups.DataBind();
+		}
 
-        return hasResources;
-    }
-    private bool CheckSkills(Guid userId)
-    {
-        bool hasSkills = false;
-        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		private bool CheckResources(Guid userId)
+		{
+			bool hasResources = false;
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-        var skillCheck = (from us in dc.UserSkills
-                          where us.UserId == userId
-                          select us).Count();
+			var resourcesCheck = (from us in dc.UserResources
+								  where us.UserId == userId
+								  select us).Count();
 
-        if (skillCheck > 0)
-        {
-            hasSkills = true;
-        }
+			if (resourcesCheck > 0)
+			{
+				hasResources = true;
+			}
 
-        return hasSkills;
-    }
+			return hasResources;
+		}
+		private bool CheckSkills(Guid userId)
+		{
+			bool hasSkills = false;
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-    public bool HideMasterCover
-    {
-        get
-        {
-            return _hideMasterCover;
-        }
-        set
-        {
-            _hideMasterCover = value;
-        }
-    }
-    public bool HideMenu
-    {
-        get
-        {
-            return _hideMenu;
-        }
-        set
-        {
-            _hideMenu = value;
-        }
-    }
-    public bool HideFooter
-    {
-        get
-        {
-            return _hideFooter;
-        }
-        set
-        {
-            _hideFooter = value;
-        }
-    }
-    public bool HideHeader
-    {
-        get
-        {
-            return _hideHeader;
-        }
-        set
-        {
-            _hideHeader = value;
-        }
-    }
+			var skillCheck = (from us in dc.UserSkills
+							  where us.UserId == userId
+							  select us).Count();
 
-    public string PageTitle
-    {
-        get
-        {
-            return _pageTitle;
-        }
-        set
-        {
-            _pageTitle = value;
-        }
-    }
-    public string PageDescription
-    {
-        get
-        {
-            return _pageDescription;
-        }
-        set
-        {
-            _pageDescription = value;
-        }
-    }
-    public string FbImage
-    {
-        get
-        {
-            return _fbImage;
-        }
-        set
-        {
-            _fbImage = value;
-        }
-    }
-    public string FbURL
-    {
-        get
-        {
-            return _fbURL;
-        }
-        set
-        {
-            _fbURL = value;
-        }
-    }
-    public string FbImageType
-    {
-        get
-        {
-            return _fbImageType;
-        }
-        set
-        {
-            _fbImageType = value;
-        }
-    }
-    public string FbSite_name
-    {
-        get
-        {
-            return _fbSite_name;
-        }
-        set
-        {
-            _fbSite_name = value;
-        }
-    }
-    public string showUserActionModal
-    {
-        get
-        {
-            return _showUserActionModal;
-        }
-        set
-        {
-            _showUserActionModal = value;
-        }
-    }
-    public string FbDescription
-    {
-        get
-        {
-            return _fbDescription;
-        }
-        set
-        {
-            _fbDescription = value;
-        }
-    }
+			if (skillCheck > 0)
+			{
+				hasSkills = true;
+			}
 
-    protected void btnSearchMobile_Click(object sender, EventArgs e)
-    {
-        string searchType = String.IsNullOrEmpty(txtSearchMobile.Text) ? hdnSearchType.Value : hymoblie.Value;
-        string searchTerm = String.IsNullOrEmpty(txtSearchMobile.Text) ? txtSearchHeader.Text : txtSearchMobile.Text;
-        if (searchType == "Teams")
-        {
-            Response.Redirect("/V1/NonProfit/TeamList.aspx?searchTerm=" + searchTerm);
+			return hasSkills;
+		}
 
-        }
-        else {
-            Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm);
-           }
-    }
+		public bool HideMasterCover
+		{
+			get
+			{
+				return _hideMasterCover;
+			}
+			set
+			{
+				_hideMasterCover = value;
+			}
+		}
+		public bool HideMenu
+		{
+			get
+			{
+				return _hideMenu;
+			}
+			set
+			{
+				_hideMenu = value;
+			}
+		}
+		public bool HideFooter
+		{
+			get
+			{
+				return _hideFooter;
+			}
+			set
+			{
+				_hideFooter = value;
+			}
+		}
+		public bool HideHeader
+		{
+			get
+			{
+				return _hideHeader;
+			}
+			set
+			{
+				_hideHeader = value;
+			}
+		}
 
-}
+		public string PageTitle
+		{
+			get
+			{
+				return _pageTitle;
+			}
+			set
+			{
+				_pageTitle = value;
+			}
+		}
+		public string PageDescription
+		{
+			get
+			{
+				return _pageDescription;
+			}
+			set
+			{
+				_pageDescription = value;
+			}
+		}
+		public string FbImage
+		{
+			get
+			{
+				return _fbImage;
+			}
+			set
+			{
+				_fbImage = value;
+			}
+		}
+		public string FbURL
+		{
+			get
+			{
+				return _fbURL;
+			}
+			set
+			{
+				_fbURL = value;
+			}
+		}
+		public string FbImageType
+		{
+			get
+			{
+				return _fbImageType;
+			}
+			set
+			{
+				_fbImageType = value;
+			}
+		}
+		public string FbSite_name
+		{
+			get
+			{
+				return _fbSite_name;
+			}
+			set
+			{
+				_fbSite_name = value;
+			}
+		}
+		public string showUserActionModal
+		{
+			get
+			{
+				return _showUserActionModal;
+			}
+			set
+			{
+				_showUserActionModal = value;
+			}
+		}
+		public string FbDescription
+		{
+			get
+			{
+				return _fbDescription;
+			}
+			set
+			{
+				_fbDescription = value;
+			}
+		}
+
+		protected void btnSearchMobile_Click(object sender, EventArgs e)
+		{
+			string searchType = String.IsNullOrEmpty(txtSearchMobile.Text) ? hdnSearchType.Value : hymoblie.Value;
+			string searchTerm = String.IsNullOrEmpty(txtSearchMobile.Text) ? txtSearchHeader.Text : txtSearchMobile.Text;
+			if (searchType == "Teams")
+			{
+				Response.Redirect("/V1/NonProfit/TeamList.aspx?searchTerm=" + searchTerm);
+
+			}
+			else {
+				Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm);
+			   }
+		}
+
+	}

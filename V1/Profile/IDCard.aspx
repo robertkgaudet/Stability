@@ -158,33 +158,41 @@
         </div>
         <div class="id-card-body">
             <div class="id-card-photo">
-                <asp:Image runat="server" ID="imgProfile" AlternateText="Volunteer Photo" />
+                <asp:Image runat="server" ID="imgProfile" CssClass="m-t-n-md" AlternateText="Volunteer Photo" />
             </div>
             <div class="id-card-info">
                 <div class="id-card-name">
                     <uc1:TeamLogo ID="ucTeamLogo" runat="server" />
                 </div>
-                <div class="id-card-detail">
-                     <%=locationDD %>
-                </div>
-                <div class="id-card-detail">
-                      <asp:Literal ID="litNumber" runat="server"></asp:Literal>
-                </div>
-                <div class="id-card-detail">
-                    Print Date:
-                    <asp:Literal ID="litPrintDate" runat="server"></asp:Literal><br />
-                    <asp:Label ID="lblStabilityVerifiedDate" runat="server" Text="Stability Verified Date:"
-                        Visible="false"></asp:Label>
-                    <asp:Literal ID="litStabilityVerifiedDate" runat="server"></asp:Literal><br />
+				<div class="row">
 
-                    <asp:Label ID="lblTeamVerifiedDate" runat="server" Text="Team Verified Date:" Visible="false"></asp:Label>
-                    <asp:Literal ID="litTeamVerifiedDate" runat="server"></asp:Literal>
-                </div>
+					  <!-- Details Column -->
+					  <div class="col-xs-7">
+						<div class="id-card-detail">
+						  <%= locationDD %>
+						</div>
+						<div class="id-card-detail">
+						  
+						  <asp:Label ID="lblStabilityVerifiedDate" runat="server" Text="Stability Verified Date:" Visible="false"></asp:Label>
+						  <asp:Literal ID="litStabilityVerifiedDate" runat="server"></asp:Literal><br />
+
+						  <asp:Label ID="lblTeamVerifiedDate" runat="server" Text="Team Verified Date:" Visible="false"></asp:Label>
+						  <asp:Literal ID="litTeamVerifiedDate" runat="server"></asp:Literal>
+						</div>
+					  </div>
+					  <!-- QR Code Column -->
+					  <div class="col-xs-5 text-center m-t-n-sm">
+						<img src="../V1/Images/StabilityMemberVerifyQRCode.png" alt="QR Code" style="max-width: 100%;" />
+						<div class="id-card-detail">
+						  <asp:Literal ID="litNumber" runat="server"></asp:Literal>
+						</div>
+					  </div>
+					</div>
             </div>
         </div>
         <!-- Footer -->
         <div class="id-card-footer">
-        <i class="fa fa-user-circle icon" ></i>VOLUNTEER
+        <i class="fa fa-user-circle icon" ></i>SCAN QR TO VERIFY VOLUNTEER | ID Printed: <asp:Literal ID="litPrintDate" runat="server"></asp:Literal><br />
        </div>
     </div>
 </asp:Content>

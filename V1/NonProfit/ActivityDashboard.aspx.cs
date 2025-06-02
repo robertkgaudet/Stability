@@ -25,7 +25,7 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		ucTeamFooter.PageName = "activityPage";
-		ucTeamHeader.PageName = "Impact Dashboard";
+		ucTeamHeader.PageName = "Activity Dashboard";
 
 		#region HEADER PROPERTIES
 		////////////////////////

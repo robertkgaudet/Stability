@@ -36,9 +36,10 @@ public partial class V1_Profile_Resources : BaseOrganizationWebForm
     }
 
     protected void btnSubmit_Click(object sender, EventArgs e)
-    {
-        divMessage.Visible = true;
-        lblMessage.Text = "Your resources have been updated.";
+	{
+		string register = Request.QueryString["register"];
+		divMessage.Visible = true;
+        lblMessage.Text = "Your equipment has been updated.";
 
         // Read selected resource IDs from the hidden field
         var selectedResources = hfSelectedResources.Value
@@ -76,7 +77,14 @@ public partial class V1_Profile_Resources : BaseOrganizationWebForm
         }
 
         dc.SubmitChanges();
+		if (!String.IsNullOrEmpty(register))
+		{
+			Response.Redirect("/V1/Profile/AvailableDates.aspx?register=true");
+		}
+		else
+		{
+			Response.Redirect("/V1/Member/Default.aspx");
+		}
 
-        Response.Redirect("/V1/Member/Default.aspx");
     }
 }

@@ -14,16 +14,142 @@
 			});
 		});	
 </script>
+
+
+  <style>
+
+    .container {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .weekdays {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      margin-right: 8px;
+      font-size: 10px;
+      height: 40px; /* 7 days * 14px + gaps */
+    }
+
+    .weekdays div:nth-child(even) {
+      visibility: hidden;
+    }
+
+    .chart-container {
+      overflow-x: auto;
+    }
+
+    .months {
+      display: flow;
+      margin-bottom: 4px;
+      margin-left: 42px;
+      font-size: 10px;
+    }
+
+    .months span {
+      flex: 1;
+      min-width: 10px;
+      text-align: left;
+      margin-left: 4.3px;
+    }
+
+    .chart {
+      display: grid;
+      grid-template-columns: repeat(53, 5px);
+      grid-template-rows: repeat(7, 9px);
+      gap: 3px;
+    }
+
+    .day {
+      width: 5px;
+      height: 9px;
+      background-color: #ebedf0;
+      border-radius: 2px;
+      transition: background-color 0.2s;
+    }
+
+    .level-1 { background-color: #c6e48b; }
+    .level-2 { background-color: #7bc96f; }
+    .level-3 { background-color: #239a3b; }
+    .level-4 { background-color: #196127; }
+
+    @media (max-width: 400px) {
+
+      .months {
+        font-size: 10px;
+      }
+
+      .weekdays {
+        font-size: 10px;
+      }
+    }
+  </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 	
 				<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
 					
+				  <h2>Team Members Availability</h2>
 
+				  <div class="months" id="months"></div>
 
+				  <div class="container">
+					<div class="weekdays">
+					  <div>Mon</div>
+					  <div>Tue</div>
+					  <div>Wed</div>
+					  <div>Thu</div>
+					  <div>Fri</div>
+					  <div>Sat</div>
+					</div>
+					<div class="chart-container">
+					  <div class="chart" id="activity-chart"></div>
+					</div>
+				  </div>
 
+				  <script>
+					  const chart = document.getElementById('activity-chart');
+					  const months = document.getElementById('months');
+					  const weeks = 53;
+					  const days = 7;
+					  const today = new Date();
+					  const yearStart = new Date(today.getFullYear(), 0, 1);
 
+					  // Fill chart with dummy data
+					  for (let w = 0; w < weeks; w++) {
+						  for (let d = 0; d < days; d++) {
+							  const day = document.createElement('div');
+							  day.classList.add('day');
 
+							  // Random level for demonstration
+							  const level = Math.floor(Math.random() * 5);
+							  if (level > 0) day.classList.add(`level-${level}`);
+
+							  chart.appendChild(day);
+						  }
+					  }
+
+					  // Add month labels (approximate)
+					  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+					  for (let i = 0; i < weeks; i++) {
+
+						  //Loop through weeks
+						  const weekStart = new Date(yearStart);
+						  weekStart.setDate(yearStart.getDate() + i * 7);
+						  const month = weekStart.getMonth();
+						  const label = document.createElement('span');
+
+						  // Only label the first week of a new month
+						  if (i === 0 || weekStart.getDate() <= 7) {
+							  label.textContent = monthNames[month];
+						  } else {
+							  label.textContent = '';
+						  }
+
+						  months.appendChild(label);
+					  }
+				  </script>
 
 
 						<div class="m-t-md">

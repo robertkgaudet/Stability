@@ -126,7 +126,7 @@ public partial class V1_Register : System.Web.UI.Page
                 userOrganization.Status = (int)RequestStatus.Pending;
                 dc.UserOrganizations.InsertOnSubmit(userOrganization);
 				dc.SubmitChanges();
-				urlRedirect = "/V1/Profile/EditSkills.aspx?skill=false";
+				urlRedirect = "/V1/Profile/EditSkills.aspx?register=true";
 			}
 			else
 			{

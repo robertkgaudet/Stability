@@ -129,6 +129,11 @@
                 Team, Website, and Deployment Management
             </div>
         </div>
+		<div id="donatenow" runat="server" class="alert alert-success text-center deployment m-t-n-md"
+			visible="true">
+			<h5 class="v1"><i class="fa fa-heart pe-2x"></i><b>Donate To This Team</b></h5>
+		</div>
+		<br />
         <asp:HyperLink runat="server" ID="hypGetHelp" CssClass="btn btn-danger btn-block"><i class='fa fa-check'></i> Get Help From This Team</asp:HyperLink>
         <button class="btn panelNav btn-block"
             type="button"
@@ -143,6 +148,9 @@
                 <hr runat="server" id="hr2"></hr>
                 <ul class="mailbox-list" runat="server" id="ul1">
                     <li><b>Team Resources</b></li>
+					<li <%=_activityPageActive%>>
+						<asp:HyperLink runat="server" ID="hypActivity"><i class="fa fa-rocket"></i> Activity Dashboard</asp:HyperLink>
+					</li>
 					<li <%=_programsPageActive%>>
 						<asp:HyperLink runat="server" ID="hypPrograms"><i class="fa fa-superpowers"></i> Programs</asp:HyperLink>
 					</li>
@@ -170,9 +178,6 @@
                     </li>
                 <li <%=_deploymentPageActive%>>
                     <asp:HyperLink runat="server" ID="hypDeployments"><i class="fa fa-street-view"></i> Deployments</asp:HyperLink>
-                </li>
-                <li <%=_activityPageActive%>>
-                    <asp:HyperLink runat="server" ID="hypActivity"><i class="fa fa-rocket"></i> Impact Dashboard</asp:HyperLink>
                 </li>
                 <li <%=_streamActive%>>
                     <asp:HyperLink runat="server" ID="hypStream"><i class="fa fa-home"></i> Posts</asp:HyperLink>
@@ -204,10 +209,6 @@
 <div id="desktopNavigation">
     <div id="divWebsite" runat="server" class="alert alert-info text-center website m-b-xs">
         <h5 class="v1"><i class="fa fa-globe pe-2x"></i><b>Team Member Website</b></h5>
-    </div>
-    <div id="donatenow" runat="server" class="alert alert-success text-center deployment m-b-xs"
-        visible="true">
-        <h5 class="v1"><i class="fa fa-globe pe-2x"></i><b>Donate Now</b></h5>
     </div>
     <div id="divDeployment" runat="server" class="alert alert-success text-center deployment m-b-xs"
         visible="false">

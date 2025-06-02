@@ -223,6 +223,10 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                         }
                     }
                 }
+
+
+
+
                 string photourl = VirtualPathUtility.ToAbsolute(virtualPathh);
                 string connectionHtml = "";
                 string cardHtml = "";
@@ -294,12 +298,13 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                      teamAdministratorCount = 1;
                 }
                 var teamAdministratoUserId = (from uo in dc.UserOrganizations
-                                              join p in dc.Profiles on uo.UserId equals p.UserId
-                                              where uo.OrganizationId == new Guid(_organizationId)
-                                                    && uo.IsTeamAdministrator == true
+												  join p in dc.Profiles on uo.UserId equals p.UserId
+												  join u in dc.aspnet_Memberships on p.UserId equals u.UserId
+													where uo.OrganizationId == new Guid(_organizationId)
+													&& uo.IsTeamAdministrator == true
                                                     && uo.Status== (int)RequestStatus.Approved
-                                              orderby p.Firstname + " " + p.Lastname
-                                              select uo.UserId).ToList();
+                                              orderby u.CreateDate ascending
+											  select uo.UserId).ToList();
 
                 string allTeamAdminCards = "";
                 string connectionHtml1 = "";

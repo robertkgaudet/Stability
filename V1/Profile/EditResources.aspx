@@ -48,7 +48,7 @@
                 <div class="hpanel">
                     <div class="panel-body">
                         <h2 class="font-light m-b-xs">
-                            Choose The Types of Resources You Can Contribute
+                            Choose The Types of Equipment You Can Contribute
                         </h2>
 						<b>Let us know what resources or equipment you can share in times of need.</b><br />
 						From generators and trucks to extra food or supplies, these items can make a big difference when disaster strikes. Select what you’re able to provide so your community can respond faster and more effectively.
@@ -68,7 +68,7 @@
             <div class="col-lg-12 container">
                 <div class="hpanel form-horizontal">
                     <div class="panel-heading hbuilt">
-                        Choose The Types of Resources You Can Contribute
+                        Choose The Types of Equipment You Can Contribute
                     </div>
                     <div runat="server" id="divMessage" class="alert alert-success" visible="false">
                         <i class="fa fa-bolt"></i>

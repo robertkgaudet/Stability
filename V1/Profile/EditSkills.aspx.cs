@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Web.Security;
 
 public partial class V1_Profile_Skills : BaseOrganizationWebForm
 {
@@ -37,7 +38,7 @@ public partial class V1_Profile_Skills : BaseOrganizationWebForm
 
 	protected void btnSubmit_Click(object sender, EventArgs e)
 	{
-        string skillParam = Request.QueryString["skill"];
+        string register = Request.QueryString["register"];
         divMessage.Visible = true;
 		lblMessage.Text = "Your skills have been updated.";
 
@@ -75,9 +76,9 @@ public partial class V1_Profile_Skills : BaseOrganizationWebForm
 		}
 
 		dc.SubmitChanges();
-		if (skillParam != null)
+		if (!String.IsNullOrEmpty(register))
 		{
-            Response.Redirect("/V1/Profile/EditResources.aspx?Resources=false");
+            Response.Redirect("/V1/Profile/EditResources.aspx?register=true");
         }
 		else
 		{

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Metadata;
@@ -172,6 +173,14 @@ public partial class V1_Profile_AvailableDates : BaseWebForm
 		string datesAvailableJSON = JsonConvert.SerializeObject(datesAvailable);
 		hiddenAvailableDates.Value = datesAvailableJSON;
 
-		Response.Redirect("/V1/Member/");
+		string register = Request.QueryString["register"];
+		if (!String.IsNullOrEmpty(register))
+		{
+			Response.Redirect("/V1/Profile/ProfilePhotoUpload.aspx?userId=" + userId + "&register=true");
+		}
+		else
+		{
+			Response.Redirect("/V1/Member/Default.aspx");
+		}
 	}
 }
