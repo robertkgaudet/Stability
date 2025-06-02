@@ -168,7 +168,7 @@ public partial class V1_Profile_Volunteer : BaseOrganizationWebForm
 					if (item.Selected)
 					{
 						var userCheck = from p in dc.UserOrganizations
-										where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && p.Status == 1
+										where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && p.Status== (int)RequestStatus.Approved
                                         && p.OrganizationId == new Guid(item.Value)
 										select p;
 

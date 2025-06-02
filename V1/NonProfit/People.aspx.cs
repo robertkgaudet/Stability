@@ -353,12 +353,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 organization.OwnerId = selectedUser;
                 dc.SubmitChanges();
                 var oldUserOrg = dc.UserOrganizations
-                    .FirstOrDefault(x => x.UserId == oldOwnerId && x.OrganizationId == organization.OrganizationId && x.Status == 1);
+                    .FirstOrDefault(x => x.UserId == oldOwnerId && x.OrganizationId == organization.OrganizationId && x.Status== (int)RequestStatus.Approved);
 
                 var newUserOrg = dc.UserOrganizations
-                 .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.Status == 1);
+                 .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.Status== (int)RequestStatus.Approved);
                 var previousOwners = dc.UserOrganizations
-               .Where(x => x.OrganizationId == organization.OrganizationId && x.IsPreviousOwner == true && x.Status == 1)
+               .Where(x => x.OrganizationId == organization.OrganizationId && x.IsPreviousOwner == true && x.Status== (int)RequestStatus.Approved)
                .FirstOrDefault();
                 if (previousOwners != null)
                 {
@@ -385,7 +385,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 organization.OwnerId = selectedUser;
                 dc.SubmitChanges();
                 var newUserOrg = dc.UserOrganizations
-                .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.Status == 1);
+                .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.Status== (int)RequestStatus.Approved);
                 newUserOrg.IsOwner=true;
                 dc.SubmitChanges();
             }

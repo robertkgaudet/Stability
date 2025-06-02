@@ -143,7 +143,7 @@ public partial class V1_Administration_Delete_DeleteUser : System.Web.UI.Page
 			}
 
 			var userOrganizations = from uir in dc.UserOrganizations
-									 where uir.UserId == new Guid(userId) && uir.Status == 1
+									 where uir.UserId == new Guid(userId) && uir.Status== (int)RequestStatus.Approved
                                     select uir;
 
 			//Delete the users roles
