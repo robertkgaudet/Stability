@@ -40,7 +40,11 @@
             padding: 10px;
 			background-color:red !important;
         }
-		
+			@media (min-width: 1200px) {
+    .col-lg-9 {
+        width: 100%;
+    }
+}
 .map
 {
 	height:600px;
