@@ -8,7 +8,6 @@ using System.Web.UI.WebControls;
 
 public partial class V1_NonProfit_TeamList : BaseWebForm
 {
-    public string searchTerm = String.Empty;
     protected void Page_Load(object sender, EventArgs e)
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();

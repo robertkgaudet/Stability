@@ -41,9 +41,11 @@
             width: 94%;
             margin-left: 19px;
         }
-        .suggestion-box{
-            margin-top:251px !important;
+
+        .suggestion-box {
+            margin-top: 251px !important;
         }
+
         #ContentPlaceHolder1_txtMessage {
             width: 94% !important;
             margin-left: 19px;
@@ -197,37 +199,53 @@
             padding: 0 15px 15px 0;
         }
 
-.custom-footer {
+        .custom-footer {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            gap: 10px;
+          
+        }
+
+.btn-row {
     display: flex;
-    flex-wrap: nowrap; 
+    justify-content: center; 
+    align-items: center;    
+    gap: 15px;               
+    margin-top: 15px;
+        margin-right: 33px;
+    flex-wrap: wrap;         
+}
+
+.btn-row .btn {
+    min-width: 180px;
+    height: 45px;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 3rem;
+    font-weight: 500;
 }
-
-
-@media (max-width: 991px) {
-    .custom-footer {
-        flex-wrap: wrap;
-            gap: 0px;
-    }
-
-    .custom-footer .btn {
-        flex: 1 1 45%; 
-        margin:6px
-
-    }
-}
-
-
 @media (max-width: 576px) {
-    .custom-footer .btn {
-        flex: 1 1 100%;
-        margin:6px
+    .btn-row {
+        flex-direction: column;
     }
-     .custom-footer {
-         gap: 0px;
- }
+    .modal-footer{
+        flex-direction: column;
+    justify-content: center;
+    display:flex;
+     align-items: center;
+    }
+}
+.btn-row.modal-footer.custom-footer.btn-group-responsive {
+    margin-right: 0px;
+}
+.modal-footer .btn {
+    margin-left: 0 !important; 
+     margin-bottom: 0 !important;
+}
+.btn-row.modal-footer.custom-footer.btn-group-responsive
+ {
+    padding-bottom: 10px;
 }
 
     </style>
@@ -405,9 +423,9 @@
                         $('#<%= btnremoveteam.ClientID %>')
                             .removeClass().addClass("btn btn-danger").removeAttr("style").removeAttr("disabled title data-toggle");
 
-                       if (response.isTeamowner === true) {
+                        if (response.isTeamowner === true) {
                             $('#<%= btnremoveteam.ClientID %>').hide();
-                            $('#<%= btnteamOwner.ClientID %>').hide();
+                           $('#<%= btnteamOwner.ClientID %>').hide();
                         }
                         if (response.isShow === true) {
                             $('#<%= btnremoveteam.ClientID %>').hide();
@@ -1507,21 +1525,32 @@
                 </div>
 
                 <!-- Vetting Notes Textarea -->
-                <div class="form-group">
-                    <label for="txtManageVettingNotes">Vetting Notes:</label>
-                    <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
-                        placeholder="Enter Vetting Notes"></asp:TextBox>
-                </div>
+       <div class="form-group">
+    <label for="txtManageVettingNotes">Vetting Notes:</label>
+    <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
+        placeholder="Enter Vetting Notes"></asp:TextBox>
 
-<div class="modal-footer custom-footer">
-    <button type="button" class="btn btn-primary" runat="server" id="btnteamOwner" visible="false"
-        onclick="btnMakeTeamOwner();">Make Team Owner</button>
-    <button type="button" class="btn btn-danger" runat="server" id="btnremoveteam" visible="false"
-        onclick="btnMakeTeamRemove();">Remove Team Member</button>
-    <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">Save Changes</button>
-    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
+           <div class="btn-row">
+        <button type="button" class="btn btn-primary" runat="server" id="btnteamOwner" visible="false"
+            onclick="btnMakeTeamOwner();">
+            Make Team Owner
+        </button>
+        <button type="button" class="btn btn-danger" runat="server" id="btnremoveteam" visible="false"
+            onclick="btnMakeTeamRemove();">
+            Remove Team Member
+        </button>
+    </div>
 </div>
+
+<div class=" btn-row modal-footer custom-footer btn-group-responsive">
+    <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
+        Save Changes
+    </button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
+
+
 
 
 
