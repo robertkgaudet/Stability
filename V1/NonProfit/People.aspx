@@ -206,35 +206,28 @@
             gap: 10px;
           
         }
-
 .btn-row {
     display: flex;
-    justify-content: center; 
+    justify-content: right; 
     align-items: center;    
     gap: 15px;               
     margin-top: 15px;
-        margin-right: 33px;
-    flex-wrap: wrap;         
+     margin-right: 4px;
 }
 
 .btn-row .btn {
-    min-width: 180px;
+    min-width: 160px;
     height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 500;
+    margin-right:9px;
 }
-@media (max-width: 576px) {
-    .btn-row {
-        flex-direction: column;
-    }
-    .modal-footer{
-        flex-direction: column;
-    justify-content: center;
-    display:flex;
-     align-items: center;
-    }
+.fotterr .btn {
+    min-width: 160px;
+    height: 45px;
+    
 }
 .btn-row.modal-footer.custom-footer.btn-group-responsive {
     margin-right: 0px;
@@ -246,6 +239,23 @@
 .btn-row.modal-footer.custom-footer.btn-group-responsive
  {
     padding-bottom: 10px;
+}
+.fotterr {
+    justify-content: right;
+    display: flex;
+    align-items: center;
+    margin-left: 3px;
+    gap: 15px;
+}
+@media screen and (max-width: 600px) {
+  .fotterr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 10px;
+    margin-left: 0; 
+  }
 }
 
     </style>
@@ -1542,21 +1552,14 @@
         </button>
     </div>
 </div>
-
-<div class=" btn-row modal-footer custom-footer btn-group-responsive">
+   <div class="modal-footer">
+    <div class="fotterr">
     <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
         Save Changes
     </button>
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-</div>
-
-
-
-
-
-
-
-
+        </div>
+       </div>
             </div>
         </div>
     </div>
