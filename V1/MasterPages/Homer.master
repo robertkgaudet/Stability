@@ -132,10 +132,10 @@
                     checkTaskType = false;
                 }
 
-                $('#<%=imgLogo.ClientID%>').click(function () {
+            <%-- $('#<%=imgLogo.ClientID%>').click(function () {
                     window.location.href = '/V1/NonProfit/Default.aspx';
                     return false;
-                });
+                });--%>
 
                 $('#<%=imgProfile.ClientID%>').click(function () {
                     window.location.href = <%=profileURL%>;
@@ -773,7 +773,7 @@
 			<div>
 				<div id="header" runat="server">
 					<nav role="navigation">
-						<asp:Image ID="imgLogo" CssClass="pull-left desktop-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png" />
+						<asp:ImageButton  ID="imgLogo" CssClass="pull-left desktop-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png"   OnClick="imgLogo_Click"/>
                         <asp:Image ID="imgresponsive" CssClass="pull-left mobile-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/mobile-logo.png" />
 	                    <div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs text-white"></i></div>					
                         <div class="header-link text-white" runat="server" id="divFeed" data-toggle="tooltip" title="Civic Feed" onclick="window.location.href='/feed';"><i class="fa fa-home fa-2x m-t-xs text-white"></i></div>

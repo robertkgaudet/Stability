@@ -751,7 +751,33 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			return hasSkills;
 		}
 
-		public bool HideMasterCover
+
+    protected void imgLogo_Click(object sender, ImageClickEventArgs e)
+    {
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        var userGroups = (from g in dc.UserOrganizations
+                          join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
+                          where g.UserId == userId 
+                          orderby g.IsPrimary descending, o.Name
+                          select new
+                          {
+                              OrganizationId = o.OrganizationId,
+                              IsPrimary = g.IsPrimary,
+                              TeamStatus = g.Status
+                          }).Distinct().ToList();
+        //userGroups= userGroups.FirstOrDefault(x => x.IsPrimary == true);
+        var primaryGroup = userGroups.FirstOrDefault(x => x.IsPrimary==true);
+        if (primaryGroup == null)
+        {
+            primaryGroup = userGroups.FirstOrDefault();
+            Response.Redirect("~/Default.aspx?organizationId=" + primaryGroup.OrganizationId);
+
+        }
+        Response.Redirect("~/Default.aspx?organizationId="+ primaryGroup.OrganizationId);
+       // Response.Redirect("~/Default.aspx?organizationId=" + HttpUtility.UrlEncode(userGroups.OrganizationId.ToString()));
+
+    }
+    public bool HideMasterCover
 		{
 			get
 			{
