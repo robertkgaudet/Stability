@@ -61,9 +61,7 @@
             -webkit-transform: scale(1.5); /* For older versions of WebKit browsers */
             -moz-transform: scale(1.5); /* For older versions of Firefox */
         }
-		 i{
-     color:white !important;
- }
+
 	</style>
 	<script>
 		var userId = '<%=_userId%>';

@@ -48,9 +48,7 @@
           #txtsms{
                  min-height: min-content
           }
-          i{
-              color:white !important;
-          }
+       
 
     </style>
     <script type="text/javascript">
