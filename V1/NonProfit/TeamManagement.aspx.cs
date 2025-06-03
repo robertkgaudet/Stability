@@ -48,11 +48,11 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
 
         if(organization.IsActive==true)
         {
-            btnDeactivatePage.Text = " <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'> De-activate This Team</asp:LinkButton>  ";
+            btnDeactivatePage.Text = "De-activate This Team ";
         }
         else
         {
-            btnDeactivatePage.Text = " <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'>Re-activate This Team </asp:LinkButton>  ";
+            btnDeactivatePage.Text = "Re-activate This Team  ";
 
         }
         string squareLogo = "/V1/Images/Logo-Placeholder.png";
@@ -182,19 +182,19 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
         if (organization != null)
         {
 
-            //	btnDeactivatePage.Text = " <div class='wrimagecard-topimage_header' style='background-color:  rgba(51, 105, 232, 0.1)'> <center><i class='fa fa-ban' style='color:#3369e8'> </i></center> </div><div class='wrimagecard-topimage_title'> <h4> De-activate This Team   <div class='pull-right badge' id='WrGridSystem'></div></h4> </div>   ";
-            btnDeactivatePage.Text = " <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'> De-activate This Team</asp:LinkButton>  ";
+               btnDeactivatePage.Text = "De-activate This Team  ";
 
             if (organization.IsActive == true)
             {
                 updateActiveStatus = false;
-                btnDeactivatePage.Text = " <asp:LinkButton ID='btnDeactivatePage' runat='server' OnClick='btnChangePageStatus_Click'>Re-activate This Team </asp:LinkButton>  ";
+                btnDeactivatePage.Text = " Re-activate This Team ";
 
             }
            
             organization.IsActive = updateActiveStatus;
             dc.SubmitChanges();
         }
+        Response.Redirect(Request.RawUrl);
     }
    
    

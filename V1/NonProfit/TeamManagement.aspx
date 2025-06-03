@@ -169,7 +169,7 @@
                     </div>
                     <div class="col-md-4 d-flex align-items-start gap-2 mt-3" runat="server" visible="false" id="btnDeactivatePages">
                         <i class="fa fa-ban text-danger"></i>
-                        <asp:LinkButton ID="btnDeactivatePage" runat="server" OnClick="btnChangePageStatus_Click" OnClientClick=" return confirmDeactivation() ;">De-activate This Team 
+                        <asp:LinkButton ID="btnDeactivatePage" runat="server" OnClick="btnChangePageStatus_Click" OnClientClick=" return confirmDeactivation() ;"> 
 
                              <i class="fa fa-ban text-danger me-1"></i>
     <span id="deactivateText"><%# btnDeactivatePage.Text %></span>
