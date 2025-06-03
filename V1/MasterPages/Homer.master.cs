@@ -757,7 +757,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         var userGroups = (from g in dc.UserOrganizations
                           join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
-                          where g.UserId == userId 
+                          where g.UserId == userId && (g.Status == (int)RequestStatus.Approved)
                           orderby g.IsPrimary descending, o.Name
                           select new
                           {
@@ -765,17 +765,19 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                               IsPrimary = g.IsPrimary,
                               TeamStatus = g.Status
                           }).Distinct().ToList();
-        //userGroups= userGroups.FirstOrDefault(x => x.IsPrimary == true);
+        if (userGroups.Count()==0)
+        {
+            Response.Redirect("/V1/Login.aspx");
+        }
         var primaryGroup = userGroups.FirstOrDefault(x => x.IsPrimary==true);
         if (primaryGroup == null)
         {
             primaryGroup = userGroups.FirstOrDefault();
-            Response.Redirect("~/Default.aspx?organizationId=" + primaryGroup.OrganizationId);
+            Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + primaryGroup.OrganizationId);
 
         }
-        Response.Redirect("~/Default.aspx?organizationId="+ primaryGroup.OrganizationId);
-       // Response.Redirect("~/Default.aspx?organizationId=" + HttpUtility.UrlEncode(userGroups.OrganizationId.ToString()));
-
+        Response.Redirect("/V1/NonProfit/Default.aspx?organizationId="+ primaryGroup.OrganizationId);
+        
     }
     public bool HideMasterCover
 		{
