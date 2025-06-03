@@ -659,9 +659,9 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 		{
 			RepeaterItem dataItem = (RepeaterItem)e.Item;
 
-			//string UrlFriendlyTeamName = (string)DataBinder.Eval(dataItem.DataItem, "UrlFriendlyTeamName");
-			int TeamStatus = (int)DataBinder.Eval(dataItem.DataItem, "TeamStatus");
-			string organizationUrl = /*!String.IsNullOrEmpty(UrlFriendlyTeamName) ? "/Team/" + UrlFriendlyTeamName :*/ "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
+            string UrlFriendlyTeamName = (string)DataBinder.Eval(dataItem.DataItem, "UrlFriendlyTeamName");
+            int TeamStatus = (int)DataBinder.Eval(dataItem.DataItem, "TeamStatus");
+			string organizationUrl = !String.IsNullOrEmpty(UrlFriendlyTeamName) ? "/Team/" + UrlFriendlyTeamName : "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
 
 			string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
 			string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
