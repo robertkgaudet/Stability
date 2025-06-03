@@ -61,7 +61,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
 			if (organizationIdCheck.OrganizationId != Guid.Empty)
 			{
 				organizationId = organizationIdCheck.OrganizationId.ToString();
-				// You can now use organizationId safely
 			}
 		}
 
@@ -454,17 +453,27 @@ public partial class V1_NonProfit_Default : BaseWebForm
     }
     protected void lbleave_Click(object sender, EventArgs e)
     {
-        organizationId = Request.QueryString["organizationId"];
-
-        if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(organizationId))
+        string organizationId = Request.QueryString["organizationId"];
+        urlFriendlyName = Request.QueryString["urlFriendlyName"];
+        if (User.Identity.IsAuthenticated)
         {
             Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
-            Guid orgId = new Guid(organizationId);
 
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
+                if (!String.IsNullOrEmpty(urlFriendlyName) && organizationId==null)
+                {
+                    var organizationIdCheck = (from o in dc.Organizations
+                                               where o.URLFriendlyName == urlFriendlyName
+                                               select new { o.OrganizationId }).SingleOrDefault();
+
+                    if (organizationIdCheck.OrganizationId != Guid.Empty)
+                    {
+                        organizationId = organizationIdCheck.OrganizationId.ToString();
+                    }
+                }
                 var userOrg = dc.UserOrganizations
-                                .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+                                .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
                 var userHistory = dc.UserOrganizationHistories
                   .FirstOrDefault(uh => uh.UserOrganizationId == userOrg.UserOrganizationId);
 
@@ -502,14 +511,25 @@ public partial class V1_NonProfit_Default : BaseWebForm
     protected void lbprimary_Click(object sender, EventArgs e)
     {
         string organizationId = Request.QueryString["organizationId"];
+        urlFriendlyName = Request.QueryString["urlFriendlyName"];
 
-        if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(organizationId))
+        if (User.Identity.IsAuthenticated)
         {
             Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
-            Guid orgId = new Guid(organizationId);
 
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
+                if (!String.IsNullOrEmpty(urlFriendlyName) && organizationId==null)
+                {
+                    var organizationIdCheck = (from o in dc.Organizations
+                                               where o.URLFriendlyName == urlFriendlyName
+                                               select new { o.OrganizationId }).SingleOrDefault();
+
+                    if (organizationIdCheck.OrganizationId != Guid.Empty)
+                    {
+                        organizationId = organizationIdCheck.OrganizationId.ToString();
+                    }
+                }
                 var currentPrimary = dc.UserOrganizations
                                        .FirstOrDefault(uo => uo.UserId == userId && uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved && uo.Status== (int)RequestStatus.Approved);
                 if (currentPrimary != null)
@@ -518,7 +538,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                 }
 
                 var newPrimary = dc.UserOrganizations
-                                   .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId);
+                                   .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
                 if (newPrimary != null)
                 {
                     newPrimary.IsPrimary = true;
@@ -540,18 +560,28 @@ public partial class V1_NonProfit_Default : BaseWebForm
         else
         {
             string organizationId = Request.QueryString["organizationId"];
+            urlFriendlyName = Request.QueryString["urlFriendlyName"];
 
-            if (!string.IsNullOrEmpty(organizationId))
+            if (!string.IsNullOrEmpty(organizationId) || urlFriendlyName!=null)
             {
                 Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
-                Guid orgId = new Guid(organizationId);
                 UserOrganizationHistory userHistory = null;
 
 
                 using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
                 {
 
+                    if (!String.IsNullOrEmpty(urlFriendlyName) && organizationId == null)
+                    {
+                        var organizationIdCheck = (from o in dc.Organizations
+                                                   where o.URLFriendlyName == urlFriendlyName
+                                                   select new { o.OrganizationId }).SingleOrDefault();
 
+                        if (organizationIdCheck.OrganizationId != Guid.Empty)
+                        {
+                            organizationId = organizationIdCheck.OrganizationId.ToString();
+                        }
+                    }
                     var userOrg = dc.UserOrganizations
                                 .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
                     int? previousStatus = null;
@@ -562,7 +592,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                         {
                             UserOrganizationId = Guid.NewGuid(),
                             UserId = userId,
-                            OrganizationId = orgId,
+                            OrganizationId = new Guid(organizationId),
                             ShowTeamLogo = false,
                             TeamVerifiedDate = DateTime.Now,
                             IsPrimary = false,
@@ -615,16 +645,27 @@ public partial class V1_NonProfit_Default : BaseWebForm
     protected void AddNotificationsAndSendEmail(object sender, EventArgs e)
     {
         string organizationId = Request.QueryString["organizationId"];
+        urlFriendlyName = Request.QueryString["urlFriendlyName"];
 
-        if (User.Identity.IsAuthenticated && !string.IsNullOrEmpty(organizationId))
+        if (User.Identity.IsAuthenticated)
         {
             Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
-            Guid orgId = new Guid(organizationId);
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
+                if (!String.IsNullOrEmpty(urlFriendlyName) && organizationId == null)
+                {
+                    var organizationIdCheck = (from o in dc.Organizations
+                                               where o.URLFriendlyName == urlFriendlyName
+                                               select new { o.OrganizationId }).SingleOrDefault();
+
+                    if (organizationIdCheck.OrganizationId != Guid.Empty)
+                    {
+                        organizationId = organizationIdCheck.OrganizationId.ToString();
+                    }
+                }
                 var adminOwners = dc.UserOrganizations
                .Where(uo =>
-                uo.OrganizationId == orgId &&
+                uo.OrganizationId == new Guid(organizationId) &&
                uo.Status== (int)RequestStatus.Approved &&
             (uo.IsTeamAdministrator == true || uo.IsOwner == true)
             )
@@ -632,7 +673,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
           .ToList();
 
                 string orgName = dc.Organizations
-                  .Where(o => o.OrganizationId == orgId)
+                  .Where(o => o.OrganizationId == new Guid(organizationId))
                   .Select(o => o.Name)
                   .FirstOrDefault();
                 string userName = dc.Profiles
@@ -653,7 +694,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                         adminUserId,
                         true,
                         organizationId,
-                        orgId
+                        new Guid(organizationId)
                     );
                     ListDictionary ldEmailBodyReplacements = new ListDictionary
                 {
