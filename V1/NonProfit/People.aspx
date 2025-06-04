@@ -45,7 +45,12 @@
         .suggestion-box {
             margin-top: 251px !important;
         }
-
+        .alert {
+    padding: 15px;
+    margin-bottom: 20px !important;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
         #ContentPlaceHolder1_txtMessage {
             width: 94% !important;
             margin-left: 19px;

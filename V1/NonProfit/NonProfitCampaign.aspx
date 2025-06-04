@@ -43,7 +43,6 @@
 }
           .btn {
     margin: 0 5px;          
-    float: right;           
 }
           #txtsms{
                  min-height: min-content
