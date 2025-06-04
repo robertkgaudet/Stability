@@ -127,7 +127,7 @@
 			</div>
 			<div class="hpanel hgreen">
 				<div class="panel-body">
-					<img class="m-b" src="../Images/icons8-customer-64.png" runat="server" id="imgProfile" />
+					<img class="m-b" src="../Images/icons8-customer-64.png" runat="server" width="100" id="imgProfile" />
 					<button id="btnAddProfileImage" class="btnProfilePhoto btn btn-info" runat="server"	>Upload Profile Image</button>
 					<h3>
 						<asp:Literal ID="litName" runat="server"></asp:Literal>

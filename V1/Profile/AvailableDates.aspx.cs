@@ -30,12 +30,6 @@ public partial class V1_Profile_AvailableDates : BaseWebForm
 		Master.FbImageType = "image/png";
 		Master.FbURL = Request.Url.AbsoluteUri;
 
-
-
-
-
-
-
 		calendarUserId = Request.QueryString["userId"];
 
 		if(!String.IsNullOrEmpty(calendarUserId))
@@ -70,35 +64,12 @@ public partial class V1_Profile_AvailableDates : BaseWebForm
 				hiddenAvailableDates.Value = datesAvailableJSON;
 			}
 		}
-
-		var userOrganization = (from uo in dc.UserOrganizations
-								join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-								join p in dc.Profiles on uo.UserId equals p.UserId
-								where uo.UserId == new Guid(calendarUserId) && uo.Status== (int)RequestStatus.Approved
-                                select new { TeamName = o.Name, o.OrganizationId, fullName = p.Firstname + " " + p.Lastname }).Take(1).SingleOrDefault(); ;
-
-		if (userOrganization == null)
-		{
-			hypBreadcrumbTeamName.Text = "Find A Team";
-			hypBreadcrumbTeamName.NavigateUrl = "/V1/Profile/EditNonProfits.aspx";
-
-		}
-		else
-		{
-			hypBreadcrumbTeamName.Text = userOrganization.TeamName;
-			hypBreadcrumbTeamName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + userOrganization.OrganizationId;
-
-			hypBreadcrumbTeamCalendar.Text			= "Team Calendar";
-			hypBreadcrumbTeamCalendar.NavigateUrl	= "/V1/NonProfit/TeamAvailabilityCalendar.aspx?organizationId=" + userOrganization.OrganizationId;
-
-			litTeamMemberName.Text = userOrganization.fullName + "'s Calendar";
-		}
 	}
+
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
 		Response.Redirect("/V1/Member/");
 	}
-
 
 	protected void btnSubmit_Click(object sender, EventArgs e)
 	{

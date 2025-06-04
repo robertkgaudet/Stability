@@ -239,53 +239,32 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                            select new { p }).SingleOrDefault();
 
             string roleType = string.Empty;
-            bool hasDefaultDisaster = false;
-            if (profile != null && !string.IsNullOrEmpty(profile.p.DefaultEventId.ToString()))
-            {
-                //Get the default disaster
-                var disasterEvent = (from d in dc.Events
-                                     where d.EventId == profile.p.DefaultEventId
-                                     select new { d.Name, d.URLFriendlyName }).SingleOrDefault();
 
-                if (disasterEvent != null)
-                {
-                    hasDefaultDisaster = true;
-                    communityUpdated = "yellowgreen";
-                    //Put the default disaster at the top.
-                    //hypMDefaultDisaster.Text = "<b>" + disasterEvent.Name + "</b>";
-                    //hypMDefaultDisaster.NavigateUrl = "/Disaster/" + disasterEvent.URLFriendlyName;
-                    //hypDefaultDisaster.Text = "<b>" + disasterEvent.Name + "</b>";
-                    //hypDefaultDisaster.NavigateUrl = "/Disaster/" + disasterEvent.URLFriendlyName;
-                    litDefaultDisaster.Text = "<li><strong><a href='/Disaster/" + disasterEvent.URLFriendlyName + "'>" + disasterEvent.Name + "</a> (Default Portal)</strong></li>";
-                }
-            }
+			var orgUser = (from o in dc.Organizations
+						  join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+						  where uo.UserId == userId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                          orderby uo.IsPrimary, o.CreatedOn descending
+                          select new { o.Name, o.OrganizationId }).Take(1).SingleOrDefault();
 
-            var orgUser = from o in dc.Organizations
-                          join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                          where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
-                          orderby o.CreatedOn descending
-                          select o;
-
-            if (orgUser.Count() > 0)
+            if (orgUser != null)
             {
                 hasTeam = true;
-                _organizationId = orgUser.Take(1).SingleOrDefault().OrganizationId.ToString();
+                _organizationId = orgUser.OrganizationId.ToString();
                 linkDeployment.HRef = "/V1/NonProfit/Deployments.aspx?organizationId=" + _organizationId;
                 teamUpdated = "yellowgreen";
-                hypActionPage.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
+                hypActionPage.NavigateUrl = "/V1/NonProfit/ActivityDashboard.aspx?organizationId=" + _organizationId;
+
                 //Person is owner of a non-profit.
                 litNonProfitName.Visible = true;
-                hypNonProfit.Text = orgUser.Take(1).SingleOrDefault().Name;
-                hypNonProfit.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
-                //hypMyTeam.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
-                //hypMMyTeam.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
-                liDeployment.Attributes.Add("data-url", "/V1/NonProfitAdministration/RespondToEvent.aspx?userActionModal=false&organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId);
+                hypNonProfit.Text = orgUser.Name;
+                hypNonProfit.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + _organizationId;
 
-                hypInviteTeamMembers.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
+
+				hypInviteTeamMembers.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + _organizationId;
 
                 var myDisasterCampaigns = from uoe in dc.UserOrganizationEvents
                                           join oe in dc.OrganizationEvents on uoe.OrganizationEventId equals oe.OrganizationEventId
-                                          where oe.OrganizationId == orgUser.Take(1).SingleOrDefault().OrganizationId && uoe.UserId == userId
+                                          where oe.OrganizationId == orgUser.OrganizationId && uoe.UserId == userId
                                           select new { oe };
 
                 liMyCampaigns.Visible = false;
@@ -316,7 +295,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                 string myDisasterList = string.Empty;
                 foreach (var orgOrgUser in orgOrgUsers)
                 {
-                    myDisasterList += "<li><a href=\"/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId + "\">" + orgUser.Take(1).SingleOrDefault().Name + "</a></li>";
+                    myDisasterList += "<li><a href=\"/V1/NonProfit/Default.aspx?organizationId=" + _organizationId + "\">" + orgUser.Name + "</a></li>";
                 }
                 litMyCampaigns.Text = myDisasterList;
             }
@@ -376,8 +355,6 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                 _noCause = "true";
                 divNoDeploymentGuidance.Visible = true;
                 litMyCausesslabel.Visible = false;
-
-
             }
             else
             {
@@ -422,36 +399,6 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                 }
             }
 
-            var disasters = from ev in dc.Events
-                            join ue in dc.UserEvents on ev.EventId equals ue.EventId
-                            where ue.UserId == userId
-                            orderby ev.BeginDate
-                            select new { ev.EventId, ev.Name, ev.URLFriendlyName, ev.BeginDate };
-
-            if (disasters.Count() > 0)
-            {
-                hasPortal = true;
-                string myDisasterList = string.Empty;
-                foreach (var disaster in disasters.Distinct().OrderByDescending(d => d.BeginDate))
-                {
-                    myDisasterList += "<li><a href=\"/Disaster/" + disaster.URLFriendlyName + "\">" + disaster.Name + "</a></li>";
-                }
-                communityUpdated = "yellowgreen";
-                litMyDisasters.Text = myDisasterList;
-                if (!hasDefaultDisaster)
-                {
-                    //hypMDefaultDisaster.Text = "<b>" + disasters.Take(1).SingleOrDefault().Name + "</b>";
-                    //hypMDefaultDisaster.NavigateUrl = "/Disaster/" + disasters.Take(1).SingleOrDefault().URLFriendlyName;
-                    //hypDefaultDisaster.Text = "<b>" + disasters.Take(1).SingleOrDefault().Name + "</b>";
-                    //hypDefaultDisaster.NavigateUrl = "/Disaster/" + disasters.Take(1).SingleOrDefault().URLFriendlyName;
-                    litDefaultDisaster.Text = "<li><strong><a href='/Disaster/" + disasters.Take(1).SingleOrDefault().URLFriendlyName + "'>" + disasters.Take(1).SingleOrDefault().Name + "</a> (Default Portal)</strong></li>";
-                }
-            }
-            else
-            {
-                litDiasterLabel.Visible = false;
-                divNoPortalGuidance.Visible = true;
-            }
             string virtualPath;
             //List nonprofits a user volunteers for.
             var profileImage = (from ph in dc.ProfilePhotos
@@ -617,12 +564,12 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                     // On subsequent loads, set the session value to false
                     Session["FirstLoad"] = false;
                 }
-
-
-
-
-            }
-            if (CheckSkills(userId))
+			}
+			
+				// Uncomment to force showing the user action modal.
+			 //_showUserActionModal = "$(\"#divUserActionModal\").modal('show')";
+            
+			if (CheckSkills(userId))
             {
                 skillsUpdated = "yellowgreen";
             }

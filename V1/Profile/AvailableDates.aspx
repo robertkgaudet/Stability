@@ -179,21 +179,6 @@
 				<div class="normalheader animate-panel" data-child="hpanel" data-effect="fadeInDown">
 					<div class="hpanel">
 						<div class="panel-body">
-							<div id="hbreadcrumb" class="pull-right">
-								<ol class="hbreadcrumb breadcrumb">
-									<li>
-										<asp:HyperLink ID="hypBreadcrumbTeamName" runat="server"></asp:HyperLink>
-									</li>
-									<li>
-										<asp:HyperLink ID="hypBreadcrumbTeamCalendar" runat="server"></asp:HyperLink>
-									</li>
-									<li class="active">
-										<span>
-											<asp:Literal ID="litTeamMemberName" runat="server"></asp:Literal>
-										</span>
-									</li>
-								</ol>
-							</div>
 							<h2 class="font-light m-b-xs">
 								Choose Dates to Volunteer
 							</h2>

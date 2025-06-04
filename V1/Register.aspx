@@ -425,11 +425,11 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="form-group col-lg-12 line-s" runat="server" id="divChooseNonprofit">
-                                        <label>Find Your Team</label>
+                                        <label>Find Your Team, Club or Group</label>
                                         <br />
                                         <small>Leave empty to create your own.</small>
                                         <div id="div2" class="dropdown m-b-md" runat="server">
-                                            <button id="btn-NonProfitDropdown" class="btn btn-outline btn-default nonProfit dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Select A Team (Optional) <i class="fa fa-sort-down"></i></button>
+                                            <button id="btn-NonProfitDropdown" class="btn btn-outline btn-default nonProfit dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Select A Team, Club or Group (Optional) <i class="fa fa-sort-down"></i></button>
                                             <ul id="nonProfit" class="dropdown-menu text-center dropdown-volunteer required">
                                                 <%=nonProfitDropDown%>
                                             </ul>
@@ -548,8 +548,10 @@
                                         <asp:TextBox type="password" ID="txtPassword" runat="server" CssClass="form-control" required="" placeholder="Password"></asp:TextBox>
                                     </div>
                                     <div class="form-group col-lg-12" style="display: flex; align-items: center;">
-                                        <asp:CheckBox ID="chkMessageOptIn" runat="server" Text="" />
-                                        <label for="chkMessageOptIn" style="margin-left: 10px;">Receive SMS Messages For Volunteer Opportunities and Deployments</label>
+										<div class="icheckbox_square-green">
+											<asp:CheckBox CssClass="i-checks m-r-md" Checked="true" ID="chkMessageOptIn" runat="server" />
+										</div>
+										<span class="m-l-sm"> Opt to receive SMS messages for new volunteer opportunities</span>
                                     </div>
                                 </div>
                                 <div class="text-center center-block justify-content-center">

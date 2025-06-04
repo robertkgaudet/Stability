@@ -38,9 +38,22 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
         hypResources.Attributes["data-toggle"] = "tooltip";
         hypResources.Attributes["title"] = "Choose the types of resources you can contribute";
 
-        hypIDCard.Attributes["data-toggle"] = "tooltip";
-        hypIDCard.Attributes["title"] = "Get your printable ID card";
-        hypMyTeam.Visible = false;
+		hypDeployments.Attributes["data-toggle"] = "tooltip";
+		hypDeployments.Attributes["title"] = "Find volunteer opportunities";
+
+		hypConnections.Attributes["data-toggle"] = "tooltip";
+		hypConnections.Attributes["title"] = "Connect with other users";
+
+		hypPositions.Attributes["data-toggle"] = "tooltip";
+		hypPositions.Attributes["title"] = "View my volunteer schedule";
+
+		hypIDCard.Attributes["data-toggle"] = "tooltip";
+		hypIDCard.Attributes["title"] = "Get your printable ID card";
+
+		hypSignOut.Attributes["data-toggle"] = "tooltip";
+		hypSignOut.Attributes["title"] = "Click here to sign out of your account";
+
+		hypMyTeam.Visible = false;
 		hypDeployments.Visible = false;
 		hypMyProfile.Visible = false;
 		hypPositions.Visible = false;
