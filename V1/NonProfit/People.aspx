@@ -215,13 +215,13 @@
     display: flex;
     justify-content: right; 
     align-items: center;    
-    gap: 15px;               
-    margin-top: 15px;
+    gap: 13px;               
+    margin-top: 13px;
      margin-right: 4px;
 }
 
 .btn-row .btn {
-    min-width: 160px;
+    min-width: 170px;
     height: 45px;
     display: flex;
     align-items: center;
@@ -229,8 +229,9 @@
     font-weight: 500;
     margin-right:9px;
 }
+
 .fotterr .btn {
-    min-width: 160px;
+    min-width: 167px;
     height: 45px;
     
 }
@@ -249,15 +250,15 @@
     justify-content: right;
     display: flex;
     align-items: center;
-    margin-left: 3px;
-    gap: 15px;
+    margin-right:-13px;
+    gap: 25px;
 }
 @media screen and (max-width: 600px) {
   .fotterr {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 20px;
     padding: 10px;
     margin-left: 0; 
   }
