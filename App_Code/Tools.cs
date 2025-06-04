@@ -143,6 +143,10 @@ namespace CrowdRelief
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
             // All DB Users
+
+            var result = dc.ExecuteQuery<FriendInfo>(
+    "EXEC usp_HomerSearch {0}, {1}", "profile", searchTerm
+).ToList();
             var profiles = from profile in dc.Profiles
                            join a in dc.aspnet_Memberships on profile.UserId equals a.UserId
                            where
