@@ -16,15 +16,15 @@ public partial class V1_Profile_EditDisasters : BaseOrganizationWebForm
 
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-            var eventsQuery = from c in dc.Events
-                              where c.IsDisaster == true && c.IsActive == true
-                              orderby c.BeginDate descending
-                              select new { name = " - " + c.Name, c.EventId };
-
+            var eventsQuery = dc.ExecuteQuery<SearchResponse.PortalResult>(
+    "EXEC SearchFillter {0}, {1}",
+    "Portals",
+    string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm
+    );
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 eventsQuery = eventsQuery
-                    .Where(ev => ev.name.ToLower().Contains(searchTerm.ToLower()));
+                    .Where(ev => ev.Name.ToLower().Contains(searchTerm.ToLower()));
             }
 
             chkBoxListDisasters.DataSource = eventsQuery;

@@ -12,49 +12,19 @@ public partial class V1_Deployments : BaseWebForm
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 		Guid prioritizedId = new Guid("79305f85-3816-46a8-911f-0d7e3e227c32");
+        string searchTerm = Request.QueryString["searchTerm"];
 
-		// First, get the most recent event for the prioritized organization
-		var mostRecentPrioritizedEvent = (from oe in dc.OrganizationEvents
-										  join o in dc.Organizations on oe.OrganizationId equals o.OrganizationId
-										  where oe.IsActive == true && o.OrganizationId == prioritizedId
-										  orderby oe.CreatedOn descending
-										  select new
-										  {
-											  oe.CampaignName,
-											  oe.BeginDate,
-											  oe.EndDate,
-											  o.Name,
-											  oe.MissionPurpose,
-											  o.OrganizationId,
-											  oe.OrganizationEventId,
-											  o.Logo,
-											  oe.CreatedOn
-										  }).FirstOrDefault();
+        // First, get the most recent event for the prioritized organization
 
-		// Get all other events including the ones for the prioritized organization (without special ordering for them)
-		var otherEvents = from oe in dc.OrganizationEvents
-						  join o in dc.Organizations on oe.OrganizationId equals o.OrganizationId
-						  where oe.IsActive == true && (o.OrganizationId != prioritizedId || oe.CreatedOn != mostRecentPrioritizedEvent.CreatedOn)
-						  select new
-						  {
-							  oe.CampaignName,
-							  oe.BeginDate,
-							  oe.EndDate,
-							  o.Name,
-							  oe.MissionPurpose,
-							  o.OrganizationId,
-							  oe.OrganizationEventId,
-							  o.Logo,
-							  oe.CreatedOn
-						  };
 
-		// Combine the most recent prioritized event with the rest of the events
-		var combinedEvents = new List<object>();
-		if (mostRecentPrioritizedEvent != null)
-		{
-			combinedEvents.Add(mostRecentPrioritizedEvent);
-		}
-		combinedEvents.AddRange(otherEvents.OrderByDescending(o => o.CreatedOn).ToList());
+        var otherEvents = dc.ExecuteQuery<SearchResponse.OrganizationEventResult>(
+"EXEC SearchFillter {0}, {1}",
+"Deployments",
+string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm);
+
+        var combinedEvents = new List<object>();
+
+		combinedEvents.AddRange(otherEvents.ToList());
 
 		// Bind the combined list to the repeater
 		rptDeployments.DataSource = combinedEvents;
@@ -176,4 +146,5 @@ public partial class V1_Deployments : BaseWebForm
 			//lblDescription.Text = description;
 		}
 	}
+ 
 }

@@ -13,12 +13,13 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 		Guid prioritizedId = new Guid("79305f85-3816-46a8-911f-0d7e3e227c32");
+        string searchTerm = Request.QueryString["searchTerm"];
 
-		var teams = from t in dc.Organizations
-					where t.IsActive == true
-					orderby t.CreatedOn
-					select new { t.Name, t.Description, t.LogoSquare, t.OrganizationId, t.URLFriendlyName, t.CreatedOn };
-        rptTeams.DataSource = teams.OrderByDescending(d => d.OrganizationId == prioritizedId).ThenByDescending(o => o.CreatedOn).ToList();
+        var teams = dc.ExecuteQuery<SearchResponse.TeamResult>(
+"EXEC SearchFillter {0}, {1}",
+"Teams",
+string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm
+).ToList();
 		rptTeams.DataBind();
 
 		Master.PageName = "Stability Teams";

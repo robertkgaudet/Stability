@@ -7,6 +7,7 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.Expressions;
 public partial class V1_Member_PeopleSearch : BaseWebForm
 {
 	public string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
@@ -21,14 +22,14 @@ public partial class V1_Member_PeopleSearch : BaseWebForm
 			if (!IsPostBack)
 			{
 				searchTerm = Request.QueryString["searchTerm"];
+              var  searchType = Request.QueryString["searchType"];
 				if (!String.IsNullOrEmpty(searchTerm))
 				{
-					txtSearchBox.Text = searchTerm;
-					LoadConnections(searchTerm, 0);
+					LoadConnections(searchTerm, 0, searchType);
 				}
 				else
 				{
-					LoadConnections(searchTerm, 50);
+					LoadConnections(searchTerm, 50, searchType);
 				}
 				ucMemberNavigation.UserId = userId.ToString();
 			}
@@ -39,13 +40,12 @@ public partial class V1_Member_PeopleSearch : BaseWebForm
 		}
 	}
 
-    public void LoadConnections(string searchTerm, int recordCount)
+    public void LoadConnections(string searchTerm, int recordCount,string searchType=null)
     {
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
         _hideConnectionButton = "style='display:none;'";
-        //MY ACCEPTED CONNECTIONS
-        List<Tools.FriendInfo> PeopleSearch = Tools.PeopleSearch(searchTerm, recordCount);
+        List<Tools.FriendInfo> PeopleSearch = Tools.PeopleSearch(searchTerm, recordCount, searchType);
         ConnectionsDataList.DataSource = PeopleSearch;
         ConnectionsDataList.DataBind();
     }
