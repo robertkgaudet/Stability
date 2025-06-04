@@ -93,6 +93,52 @@
 	{cursor:pointer;}
 
 </style>
+<style>
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+}
+
+.tooltip-trigger {
+    cursor: pointer;
+    font-size: 18px;
+    padding: 4px;
+    color: #0078D4;
+    font-weight: bold;
+    border: none;
+    background: none;
+}
+
+.tooltip-box {
+    display: none;
+    position: absolute;
+    bottom: 125%; /* place above the icon */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #5E2E91;
+    color: #fff;
+    padding: 10px 12px;
+    border-radius: 6px;
+    white-space: pre-line;
+    width: 250px;
+    font-size: 15px;
+    z-index: 100;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
+	text-align: left;
+}
+
+.tooltip-box::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+</style>
 <script>
 	$(document).ready(function () {
 
@@ -156,7 +202,7 @@
 				</div>
             </div>
 			<div class="row memberDetail">
-                <div class="col-xs-12 col-lg-8">
+                <div class="col-xs-12 col-md-8">
 					<div style="margin-top:10px; width:100%;">
 						<div style="color:darkslategrey; font-size:20px; font-weight:600; margin-right:10px;">
 							<uc1:TeamLogo  runat="server" ID="ucTeamLogo" />
@@ -170,21 +216,8 @@
 					<p style="font-size:16px;">
 						<asp:Literal ID="litMemberDescription" runat="server"></asp:Literal>
 					</p>
-					
-					<div class="hpanel">
-						<div class="panel-body member-panel-body">
-							<div class="row">
-								<div class="col-xs-4 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="This number shows how many positions this user has volunteered to fill."><span>TOTAL NUMBER OF POSITIONS FILLED</span> <strong><asp:Literal ID="litDeploymentCount" runat="server"></asp:Literal></strong></div></div>
-								<div class="col-xs-4 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Shows members ranking on their primary team, record your hours and volunteer more to increase your rank."><span>PRIMARY TEAM RANK</span> <strong>#298</strong></div></div>
-								<div class="col-xs-4 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Shows members ranking across the entire Stability platform, record your hours and volunteer more to increase your rank."><span>OVERALL STABILITY PLATFORM RANK</span> <strong>#820</strong></div></div>
-								<div class="col-xs-4 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Your time helps your community to offset federal government payments, this is the total value of this members contributed hours."><span>VALUE OF HOURS CONTRIBUTED</span> <strong>$6,219.00</strong></div></div>
-								<div class="col-xs-4 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Shows the total number of hours this user has volunteered for positions on Stability."><span>TOTAL NUMBER OF HOURS CONTRIBUTED</span> <strong>200</strong></div></div>
-								<div class="col-xs-4 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="We're only as strong as our network of support, this shows the members total connections on Stability."><span>TOTAL STABILITY NETWORK CONNECTIONS</span> <strong><asp:HyperLink CssClass="nowrap" ID="hypConnections" Font-Bold="true" runat="server" Text="325 Connections"></asp:HyperLink></strong></div></div>
-							</div>
-						</div>
-					</div>
-                </div>
-                <div class="col-xs-12 col-lg-4 project-info">
+				</div>
+                <div class="col-xs-12 col-md-4">
                     <div class="project-value" style="margin-top:20px;">
 						<asp:HyperLink ID="hypTeam" Font-Bold="true" runat="server"></asp:HyperLink>
 						<p style="top:10px; position:relative;">
@@ -196,11 +229,71 @@
 							<i class="fa fa-ban text-danger pe-2x float-right" runat="server" id="idKwest" visible="false" data-toggle="tooltip" data-placement="top" title="Work in Progress"></i>
 						</p>
 						<asp:Literal ID="litTeamBreak" runat="server"></asp:Literal>
-						<small>Team Rank</small>
-                        <h2 style="margin-top:0px;"><span class="text-success">4</span></h2>
                     </div>
 					<asp:LinkButton runat="server" ID="btnFriend" ClientIDMode="Static">Request Connection</asp:LinkButton>
+                </div>
+			</div>
+			<div class="row memberDetail">
+                <div class="col-xs-12 project-info">
+					<div class="hpanel">
+						<div class="panel-heading">
+							Your rank reflects your impact and activity across the Stability network.
+							<small>
+								<div class="tooltip-wrapper" title="<%= Server.HtmlEncode(rankTooltip) %>">
+									<span class="tooltip-trigger" onclick="toggleTooltip()"><i class="pe-7s-info"></i></span>
+									<div id="customTooltip" class="tooltip-box">
+										<%= Server.HtmlEncode(rankTooltip) %>
+									</div>
+								</div>
+							</small>
+						</div>
+						<div class="panel-body member-panel-body">
+							<div class="row">
+								<div class="col-xs-3 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Members ranking on their primary team."><span>PRIMARY TEAM RANK</span> <strong><asp:Literal ID="litTeamRank" runat="server"></asp:Literal></strong></div></div>
+								<div class="col-xs-3 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="This is how many positions this user has filled."><span>TOTAL VOLUNTEER POSITIONS</span> <strong><asp:Literal ID="litVolunteerPositions" runat="server"></asp:Literal></strong></div></div>
+								<div class="col-xs-3 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Total times user deployed."><span>DEPLOYMENT PARTICIPATION</span> <strong><asp:Literal ID="litDeploymentCount" runat="server"></asp:Literal></strong></div></div>
+								<div class="col-xs-3 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Total value of hours."><span>VALUE OF HOURS CONTRIBUTED</span> <strong><asp:Literal ID="litTotalValueOfHours" runat="server"></asp:Literal></strong></div></div>
+								<div class="col-xs-3 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Total hours volunteered."><span>TOTAL HOURS</span> <strong><asp:Literal ID="litTotalHours" runat="server"></asp:Literal></strong></div></div>
+								<div class="col-xs-3 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Members total connections."><span>STABILITY NETWORK CONNECTIONS</span> <strong><asp:HyperLink CssClass="nowrap" ID="hypConnections" Font-Bold="true" runat="server"></asp:HyperLink></strong></div></div>
+								<div class="col-xs-3 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Shows impact of skill entries."><span>SKILL SCORE</span> <strong><asp:HyperLink NavigateUrl="/V1/Profile/EditSkills.aspx" ID="litSkillScore" runat="server"></asp:HyperLink></strong> <br /><small> <asp:Literal ID="litSkillCount" runat="server"></asp:Literal> </small> </div></div>
+								<div class="col-xs-3 border-right"><div class="contact-stat custom-tooltip" data-toggle="tooltip" data-placement="top" title="Shows impact of equipment entries."><span>EQUIPMENT SCORE</span> <strong><asp:HyperLink NavigateUrl="/V1/Profile/EditResources.aspx" ID="litEquipmentScore" Font-Bold="true" runat="server"></asp:HyperLink></strong><br /><small> <asp:Literal ID="litEquipmentCount" runat="server"></asp:Literal> </small> </div></div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 text-center nowrap">
+									<h4>
+										<asp:Literal ID="litUserRank" runat="server"></asp:Literal>
+										<br />
+										<small>Rank is recalculated every 5 minutes.</small>
+									</h4>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-6 text-center font-bold nowrap" style="display: flex; flex-direction: column;">
+									<asp:HyperLink ID="hypPreviousRank" runat="server" CssClass="nowrap"></asp:HyperLink>
+								</div>
+								<div class="col-xs-6 text-center font-bold nowrap" style="display: flex; flex-direction: column;">
+									<asp:HyperLink ID="hypNextRank" runat="server" CssClass="nowrap"></asp:HyperLink>
+								</div>
+							</div>
+						</div>
+					</div>
                 </div>
             </div>
 		</div>
 	</div>
+<script>
+	function toggleTooltip() {
+		var tip = document.getElementById("customTooltip");
+		tip.style.display = (tip.style.display === "block") ? "none" : "block";
+	}
+
+	// Optional: click outside to close
+	document.addEventListener("click", function (event) {
+		var tip = document.getElementById("customTooltip");
+		var trigger = document.querySelector(".tooltip-trigger");
+
+		if (!tip.contains(event.target) && !trigger.contains(event.target)) {
+			tip.style.display = "none";
+		}
+	});
+</script>

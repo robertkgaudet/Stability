@@ -12,14 +12,14 @@
         <div class="col-xs-12">
             <div class="hpanel">
                 <div class="panel-body">
-                    <a href="/V1/Administration/TeamName.aspx?userActionModal=false" runat="server" id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right">Create A Team</a>
+                    <a href="/V1/Administration/TeamName.aspx?userActionModal=false" runat="server" id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right">Create A Team, Club or Group</a>
                     <h4><asp:Literal ID="litPageName" runat="server"></asp:Literal></h4>
                     <span id="rowCountWrapper" style="font-size: 14px; font-weight: normal;" class="text-muted">
                         <asp:Literal ID="litCount" runat="server"></asp:Literal>
                     </span>
                     <input type="text" class="form-control input-sm m-b-md" id="filter" placeholder="Search Teams">
                     <div class="alert alert-success" id="divJoinTeamMessage" runat="server" visible="false">
-                        <h4><i class="fa fa-users"></i>Choose A Team or Create Your Own</h4>
+                        <h4><i class="fa fa-users"></i>Choose A Team, Club or Group or Create Your Own</h4>
                     </div>
                     <table id="tblTeams" class="footable table toggle-arrow-tiny table-hover table-bordered table-striped" data-page-size="500">
                         <tbody>

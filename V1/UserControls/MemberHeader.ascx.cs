@@ -31,7 +31,8 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 	public string _badgeTOPStatus = "fa-pending-color";
 	public string faIdBadgeClick = string.Empty;
     public string _teamLogo = string.Empty;
-    protected void Page_Load(object sender, EventArgs e)
+	public string rankTooltip { get; set; }
+	protected void Page_Load(object sender, EventArgs e)
 	{
 		//string causePhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		string profilePhotoFolder		= System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
@@ -95,6 +96,39 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 			btnFriend.CssClass = "btn btn-primary pull-left m-t-sm";
 			btnFriend.Attributes.Add("disabled", "disabled");
 			btnFriend.ID = ".btnDisabled";
+		}
+
+		//Get the users rank information.
+		Stability.UserRank userRank = Stability.UserRank.Load(new Guid(_userId), null);
+		if (userRank != null)
+		{
+			litUserRank.Text = userRank.GetRankSummary();
+			rankTooltip = userRank.GetRankTooltip();
+			litTeamRank.Text = userRank.RankPosition.ToString();
+			litTotalHours.Text = userRank.VolunteerHours.ToString();
+			litVolunteerPositions.Text = userRank.ClaimedPositionsCount.ToString();
+			litSkillScore.Text = userRank.SkillsScore.ToString();
+			litEquipmentScore.Text = userRank.ResourcesScore.ToString();
+			litSkillCount.Text = "Skills, " + userRank.SkillsCount.ToString();
+			litEquipmentCount.Text = "Equipment, " + userRank.ResourcesCount.ToString();
+			litTotalValueOfHours.Text = userRank.GetVolunteerValue();
+
+			var neighbors = userRank.GetNeighborRanks();
+
+			if (neighbors.AboveUserId.HasValue)
+			{
+				hypPreviousRank.NavigateUrl = "/V1/Member/Default.aspx?userId=" + neighbors.AboveUserId.Value;
+				hypPreviousRank.Text = neighbors.AboveNameWithRank;
+			}
+			if (neighbors.BelowUserId.HasValue)
+			{
+				hypNextRank.NavigateUrl = "/V1/Member/Default.aspx?userId=" + neighbors.BelowUserId.Value;
+				hypNextRank.Text = neighbors.BelowNameWithRank;
+			}
+		}
+		else
+		{
+			rankTooltip = "No ranking available yet. Start volunteering to get ranked!";
 		}
 	}
 
