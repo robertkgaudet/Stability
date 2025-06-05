@@ -213,7 +213,7 @@
         }
 .btn-row {
     display: flex;
-    justify-content: right; 
+    justify-content: center; 
     align-items: center;    
     gap: 13px;               
     margin-top: 13px;
@@ -247,10 +247,10 @@
     padding-bottom: 10px;
 }
 .fotterr {
-    justify-content: right;
+    justify-content: center;
     display: flex;
     align-items: center;
-    margin-right:-13px;
+    margin-right:-22px;
     gap: 25px;
 }
 @media screen and (max-width: 600px) {

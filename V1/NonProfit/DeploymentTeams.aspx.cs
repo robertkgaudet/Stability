@@ -19,11 +19,11 @@ public partial class V1_NonProfit_DeploymentTeams : BaseWebForm
 		organizationId = Request.QueryString["organizationId"];
         string searchTerm = Request.QueryString["searchTerm"];
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-        var deploymentTeams = new List<VolunteerOpportunityInfo>();
+        var deploymentTeams = new List<SearchResponse.VolunteerOpportunityInfo>();
         if (!string.IsNullOrEmpty(searchTerm))
         {
 
-             deploymentTeams = dc.ExecuteQuery<VolunteerOpportunityInfo>(
+             deploymentTeams = dc.ExecuteQuery<SearchResponse.VolunteerOpportunityInfo>(
     "EXEC SearchFillter {0}, {1}",
     "VolunteerOpportunities",
     string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm).ToList();
