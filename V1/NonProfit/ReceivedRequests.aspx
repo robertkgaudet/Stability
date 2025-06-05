@@ -162,22 +162,22 @@
             <asp:Repeater ID="rptRequests" runat="server">
                 <ItemTemplate>
                     <tr>
-                        <td><%# Eval("Message") %></td>
+                        <td><%# Eval("ProfileName") %></td>
                         <td style="text-align: center;">
                             <button type="button" class="btn btn-success"
-                                onclick="confirmJoinTeam('<%# Eval("SenderId") %>', '<%= organizationId %>')">
+                                onclick="confirmJoinTeam('<%# Eval("UserId") %>', '<%= _organizationId %>')">
                                 Accept
                             </button>
                             <button type="button" class="btn btn-danger"
-                                onclick="confirmReject('<%# Eval("SenderId") %>', '<%= organizationId %>')">
+                                onclick="confirmReject('<%# Eval("UserId") %>', '<%= _organizationId %>')">
                                 Reject
                             </button>
                             <button type="button" class="btn btn-warning"
-                                onclick="confirmBlock('<%# Eval("SenderId") %>', '<%= organizationId %>')">
+                                onclick="confirmBlock('<%# Eval("UserId") %>', '<%= _organizationId %>')">
                                 Block
                             </button>
                             <button type="button" class="btn btn-secondary"
-                                onclick="confirmDeny('<%# Eval("SenderId") %>', '<%= organizationId %>')">
+                                onclick="confirmDeny('<%# Eval("UserId") %>', '<%= _organizationId %>')">
                                 Deny
                             </button>
                         </td>

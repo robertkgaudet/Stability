@@ -145,7 +145,7 @@
                                     <tr>
                                         <td><%# Eval("EmailAddress") %></td>
                                         <td><%# Eval("Status") %></td>
-                                        <td><%# Eval("CreatedOn", "{0:dd-MM-yyyy}") %></td>
+                                        <td><%# Eval("CreatedOn", "{0:M/d/yyyy}") %></td>
 
                                         <td>
                                             <button class="btn btn-primary ResendInvite" data-id='<%# Eval("UserOrganizationInviteId") %>'>Resend Invite</button>

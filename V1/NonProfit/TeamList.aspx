@@ -12,9 +12,10 @@
         <div class="col-xs-12">
             <div class="hpanel">
                 <div class="panel-body">
-                    <a href="/V1/Administration/TeamName.aspx?userActionModal=false" runat="server" id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right">Create A Team, Club or Group</a>
-                    <h4><asp:Literal ID="litPageName" runat="server"></asp:Literal></h4>
-                    <span id="rowCountWrapper" style="font-size: 14px; font-weight: normal;" class="text-muted">
+					<h4><asp:Literal ID="litPageName" runat="server"></asp:Literal></h4>
+                    <br />
+					<a href="/V1/NonProfit/NonProfitNew.aspx" runat="server" id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right">Create A Team, Club or Group</a>
+					<span id="rowCountWrapper" style="font-size: 14px	; font-weight: normal;" class="text-muted">
                         <asp:Literal ID="litCount" runat="server"></asp:Literal>
                     </span>
                     <input type="text" class="form-control input-sm m-b-md" id="filter" placeholder="Search Teams">
@@ -28,7 +29,7 @@
                                     <tr>
                                         <td>
                                             <div style="height: 50px;">
-                                                <asp:Image ID="imgLogo" CssClass="m-r-md" runat="server" />
+                                                <asp:Image ID="imgLogo" CssClass="m-r-md pull-left" runat="server" />
                                                 <asp:HyperLink ID="hypTeamName" Font-Bold="true" runat="server"></asp:HyperLink>
                                                 <asp:Label ID="lblDescription" runat="server"></asp:Label>
                                             </div>

@@ -19,68 +19,70 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
     public string _organizationId;
     public string _nonProfitDropDown;
     public string _coverImage;
-    public string organizationId = string.Empty;
     public string jsonEvents = string.Empty;
     public string availableDates = string.Empty;
     public string teamCounts = string.Empty;
     public string programId = string.Empty;
 
-
-    protected void Page_Load(object sender, EventArgs e)
+	protected void Page_Load(object sender, EventArgs e)
     {
         ucTeamFooter.PageName = "teamRolesPage";
         ucTeamHeader.PageName = "";
 
-        #region HEADER PROPERTIES
-        organizationId = Request.QueryString["organizationId"];
+		#region HEADER PROPERTIES
+		_organizationId = Request.QueryString["organizationId"];
         programId = Request.QueryString["programId"];
 
         string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
         _coverImage = causePhotoFolder + "businesscoverimage.png";
+		ucTeamHeader.CoverImage = _coverImage;
 
-        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         var organization = (from o in dc.Organizations
-                            where o.OrganizationId == new Guid(organizationId)
+                            where o.OrganizationId == new Guid(_organizationId)
                             select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
+
         MembershipUser user = Membership.GetUser();
         Guid currentUserId = Guid.Empty;
         if (user != null && user.ProviderUserKey != null)
         {
             currentUserId = (Guid)user.ProviderUserKey;
         }
+
         string squareLogo = "/V1/Images/Logo-Placeholder.png";
         if (organization != null)
         {
-            Guid orgid = new Guid(organizationId);
-            var senderfalse = dc.UserOrganizations
-         .Where(r => r.OrganizationId == orgid && r.Status== (int)RequestStatus.Pending)
-         .Select(r => r.UserId)
-         .ToList();
-            if (senderfalse != null)
-            {
 
-                var matchingNotificationsfalse = dc.Notifications
-    .Where(n =>
-        n.SenderUserId.HasValue &&
-        senderfalse.Contains(n.SenderUserId.Value) &&
-        n.FeatureTypeId == 27 &&
-        n.RecipientUserId == currentUserId &&
-        n.OrganizationId == orgid
-    )
-    .GroupBy(n => new { n.SenderUserId, n.Description })
-    .Select(g => g.OrderByDescending(n => n.CreatedOn).FirstOrDefault())
-    .Select(n => new
-    {
-        SenderId = n.SenderUserId.Value,
-        Message = n.Description
-    })
-    .ToList();
-                ;
+			var pendingTeamMembers = (from ud in dc.UserOrganizations
+									  join p in dc.Profiles on ud.UserId equals p.UserId
+									  where ud.OrganizationId == new Guid(_organizationId) && ud.Status == (int)RequestStatus.Pending
+									  select new {ud.UserId, ud.OrganizationId, ProfileName = p.Firstname + " " + p.Lastname }).ToList();
 
-                rptRequests.DataSource = matchingNotificationsfalse;
+			if (pendingTeamMembers != null)
+			{
+				//Guid? userId = pendingTeamMembers.FirstOrDefault()?.UserId;
+
+				//var matchingNotificationsfalse = dc.Notifications
+				//.Where(n =>
+				//	n.SenderUserId.HasValue &&
+				//	pendingTeamMembers.Contains(n.SenderUserId.Value) &&
+				//	n.FeatureTypeId == 27 &&
+				//	n.RecipientUserId == currentUserId &&
+				//	n.OrganizationId == organizationId
+				//)
+				//.GroupBy(n => new { n.SenderUserId, n.Description })
+				//.Select(g => g.OrderByDescending(n => n.CreatedOn).FirstOrDefault())
+				//.Select(n => new
+				//{
+				//	SenderId = n.SenderUserId.Value,
+				//	ProfileName = n.Description
+				//})
+				//.ToList();
+    //            ;
+
+                rptRequests.DataSource = pendingTeamMembers;
                 rptRequests.DataBind();
             }
-            ucTeamHeader.CoverImage = _coverImage;
 
             if (!string.IsNullOrEmpty(organization.LogoSquare))
             {
@@ -92,20 +94,19 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
                     squareLogo = virtualPath_square;
                 }
             }
+
             Master.PageTitle = organization.Name + " Programs on Stability";
             Master.PageDescription = organization.Description;
             Master.FbDescription = organization.Description;
             Master.FbImage = _coverImage;
             Master.FbSite_name = organization.Name + " Programs on Stability";
             ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
-
-
         }
 
         ucTeamHeader._teamTitle = organization.Name;
         ucTeamHeader.TeamDescription = organization.Description;
-        ucTeamFooter.OrganizationId = organizationId;
-        ucTeamHeader.OrganizationId = organizationId;
+        ucTeamFooter.OrganizationId = _organizationId;
+        ucTeamHeader.OrganizationId = _organizationId;
         ucTeamHeader.TeamLogo = squareLogo;
         Master.FbImageType = "image/jpg";
         Master.FbURL = Request.Url.AbsoluteUri;

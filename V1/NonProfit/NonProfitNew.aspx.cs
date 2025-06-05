@@ -287,6 +287,11 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 			UserOrganization userOrganization = new UserOrganization();
 			userOrganization.UserOrganizationId = Guid.NewGuid();
 			userOrganization.OrganizationId = organization.OrganizationId;
+			userOrganization.ShowTeamLogo = true;
+			userOrganization.IsOwner = true;
+			userOrganization.IsTeamAdministrator = false;
+			userOrganization.IsPreviousOwner = false;
+			userOrganization.TeamVerifiedDate = DateTime.Now;
             userOrganization.Status = (int)RequestStatus.Pending;
             userOrganization.UserId = userId;
 

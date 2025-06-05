@@ -39,7 +39,7 @@ public partial class V1_NonProfit_InvitedMembers : BaseOrganizationWebForm
         {
             var invitedMembers = (from i in dc.UserOrganizationInvites
                                   where   i.InvitationCancelled==false
-                                  orderby i.CreatedOn ascending
+                                  orderby i.CreatedOn descending
                                   select new
                                   {
                                       i.EmailAddress,

@@ -21,14 +21,14 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
         rptTeams.DataSource = teams.OrderByDescending(d => d.OrganizationId == prioritizedId).ThenByDescending(o => o.CreatedOn).ToList();
 		rptTeams.DataBind();
 
-		Master.PageName = "Search Stability Teams, Cluba and Groups";
+		Master.PageName = "Search Stability Teams, Clubs and Groups";
 		litCount.Text = teams.Count().ToString() + " Teams";
 		if (User.Identity.IsAuthenticated )
 		{ 
 			ucMemberNavigation.UserId = userId.ToString();
 			hrefCreateTeam.Visible = true;
 		}
-		litPageName.Text = "Search Stability Teams, Cluba and Groups";
+		litPageName.Text = "Search Stability Teams, Clubs and Groups";
 
 		string team = Request.QueryString["team"];
 		if(!String.IsNullOrEmpty(team))

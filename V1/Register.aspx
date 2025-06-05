@@ -421,158 +421,154 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="hpanel">
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="form-group col-lg-12 line-s" runat="server" id="divChooseNonprofit">
-                                        <label>Find Your Team, Club or Group</label>
-                                        <br />
-                                        <small>Leave empty to create your own.</small>
-                                        <div id="div2" class="dropdown m-b-md" runat="server">
-                                            <button id="btn-NonProfitDropdown" class="btn btn-outline btn-default nonProfit dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Select A Team, Club or Group (Optional) <i class="fa fa-sort-down"></i></button>
-                                            <ul id="nonProfit" class="dropdown-menu text-center dropdown-volunteer required">
-                                                <%=nonProfitDropDown%>
-                                            </ul>
-                                        </div>
-                                        <input type="hidden" id="hidOrganizationId" runat="server" />
-                                    </div>
-                                    <div class="form-group col-lg-12">
-                                        <label>First Name  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                        <asp:TextBox ID="txtFirstName" runat="server" CssClass="form-control" required="" placeholder="First Name"></asp:TextBox>
-                                    </div>
-                                    <div class="form-group col-lg-12">
-                                        <label>Last Name  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                        <asp:TextBox ID="txtLastName" runat="server" CssClass="form-control" required="" placeholder="Last Name"></asp:TextBox>
-                                    </div>
-                                    <div class="form-group col-lg-12">
-                                        <label>Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                        <asp:TextBox ID="txtAddress" runat="server" onblur="CheckAddressValues('address', this)" CssClass="form-control" required="" placeholder="Address"></asp:TextBox>
-                                    </div>
-                                    <div class="form-group col-lg-12">
-                                        <label>City  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                        <asp:TextBox ID="txtCity" runat="server" onblur="CheckAddressValues('city', this)" CssClass="form-control" required="" placeholder="City"></asp:TextBox>
-                                    </div>
-                                    <div class="form-group col-lg-12">
-                                        <label for="ddlState">State <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                        <div class="dropdown-wrapper">
-                                            <select id="ddlState" runat="server" class="custom-dropdown" onblur="CheckAddressValues('state', this)">
-                                                <option value="">Select a state</option>
-                                                <option value="AL">Alabama</option>
-                                                <option value="AK">Alaska</option>
-                                                <option value="AZ">Arizona</option>
-                                                <option value="AR">Arkansas</option>
-                                                <option value="CA">California</option>
-                                                <option value="CO">Colorado</option>
-                                                <option value="CT">Connecticut</option>
-                                                <option value="DE">Delaware</option>
-                                                <option value="FL">Florida</option>
-                                                <option value="GA">Georgia</option>
-                                                <option value="HI">Hawaii</option>
-                                                <option value="ID">Idaho</option>
-                                                <option value="IL">Illinois</option>
-                                                <option value="IN">Indiana</option>
-                                                <option value="IA">Iowa</option>
-                                                <option value="KS">Kansas</option>
-                                                <option value="KY">Kentucky</option>
-                                                <option value="LA">Louisiana</option>
-                                                <option value="ME">Maine</option>
-                                                <option value="MD">Maryland</option>
-                                                <option value="MA">Massachusetts</option>
-                                                <option value="MI">Michigan</option>
-                                                <option value="MN">Minnesota</option>
-                                                <option value="MS">Mississippi</option>
-                                                <option value="MO">Missouri</option>
-                                                <option value="MT">Montana</option>
-                                                <option value="NE">Nebraska</option>
-                                                <option value="NV">Nevada</option>
-                                                <option value="NH">New Hampshire</option>
-                                                <option value="NJ">New Jersey</option>
-                                                <option value="NM">New Mexico</option>
-                                                <option value="NY">New York</option>
-                                                <option value="NC">North Carolina</option>
-                                                <option value="ND">North Dakota</option>
-                                                <option value="OH">Ohio</option>
-                                                <option value="OK">Oklahoma</option>
-                                                <option value="OR">Oregon</option>
-                                                <option value="PA">Pennsylvania</option>
-                                                <option value="RI">Rhode Island</option>
-                                                <option value="SC">South Carolina</option>
-                                                <option value="SD">South Dakota</option>
-                                                <option value="TN">Tennessee</option>
-                                                <option value="TX">Texas</option>
-                                                <option value="UT">Utah</option>
-                                                <option value="VT">Vermont</option>
-                                                <option value="VA">Virginia</option>
-                                                <option value="WA">Washington</option>
-                                                <option value="WV">West Virginia</option>
-                                                <option value="WI">Wisconsin</option>
-                                                <option value="WY">Wyoming</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-lg-12">
-                                        <label>Zip Code  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                        <asp:TextBox ID="txtZipCode" runat="server" CssClass="form-control" onblur="CheckAddressValues('zip', this)" required="" placeholder="Zip Code"></asp:TextBox>
-                                    </div>
-
-                                    <div id="divAddressMessage" class="form-group col-lg-12">
-                                        <div id="divMapMessage" class="alert m-b-lg p-sm">
-                                            <i id="iFontAwesome" class="fa"></i>
-                                            <asp:Label runat="server" ID="lblAddressMessage"></asp:Label>
-                                            <asp:HiddenField ID="hidAddressData" runat="server"></asp:HiddenField>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-lg-12">
-                                        <label>Email Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                        <asp:TextBox type="email" ID="txtEmail" runat="server" onblur="CheckDuplicate('Email', this)" CssClass="form-control" required="" placeholder="Email"></asp:TextBox>
-                                        <span class="error-message error-message-email">This email address already exists. Do you want to <a href="/SignIn">Sign In</a>?</span>
-                                        <span class="response-message response-message-email">
-                                            <i class="fa fa-check" aria-hidden="true"></i>
-                                        </span>
-                                    </div>
-                                    <div class="form-group col-lg-12">
-                                        <label>Phone Number  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                        <asp:TextBox ID="txtPhoneNumber" onkeypress="return isNumberKey(event)" MaxLength="10" TextMode="Phone" runat="server" CssClass="form-control" required="" placeholder="Phone Number"></asp:TextBox>
-                                    </div>
-                                    <div class="form-group col-lg-12">
-                                        <label>Username  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                        <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" onblur="CheckDuplicate('Username', this)" required="" placeholder="Username"></asp:TextBox>
-                                        <span class="error-message error-message-username">This user is already in use.</span>
-                                        <span class="response-message response-message-username">
-                                            <i class="fa fa-check" aria-hidden="true"></i>
-                                        </span>
-                                    </div>
-                                    <div class="form-group col-lg-12">
-                                        <label>Password  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                        <asp:TextBox type="password" ID="txtPassword" runat="server" CssClass="form-control" required="" placeholder="Password"></asp:TextBox>
-                                    </div>
-                                    <div class="form-group col-lg-12" style="display: flex; align-items: center;">
-										<div class="icheckbox_square-green">
-											<asp:CheckBox CssClass="i-checks m-r-md" Checked="true" ID="chkMessageOptIn" runat="server" />
-										</div>
-										<span class="m-l-sm"> Opt to receive SMS messages for new volunteer opportunities</span>
-                                    </div>
+                        <div class="row">
+                            <div class="form-group col-lg-12 line-s" runat="server" id="divChooseNonprofit">
+                                <label>Find Your Team, Club or Group</label>
+                                <br />
+                                <small>Leave empty to create your own.</small>
+                                <div id="div2" class="dropdown m-b-md" runat="server">
+                                    <button id="btn-NonProfitDropdown" class="btn btn-outline btn-default nonProfit dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Select A Team, Club or Group (Optional) <i class="fa fa-sort-down"></i></button>
+                                    <ul id="nonProfit" class="dropdown-menu text-center dropdown-volunteer required">
+                                        <%=nonProfitDropDown%>
+                                    </ul>
                                 </div>
-                                <div class="text-center center-block justify-content-center">
-                                    <div class="row">
-                                        <div class="col-sm-2"></div>
-                                        <div class="col-sm-8">
-                                            <asp:Button CssClass="btn btn-success btn-block w-lg" runat="server" ID="btnSubmit" OnClick="btnSubmit_Click" Text="Create My Account" OnClientClick="return showSpinner();" />
-                                            <button
-                                                id="btnLoading"
-                                                type="button"
-                                                class="btn btn-success btn-block m-b"
-                                                disabled
-                                                style="display: none;">
-                                                <img src="/V1/Images/logo-icon-70x70-white-transparent.png" alt="Loading..." style="width: 24px; height: 24px; animation: spin 1s linear infinite;" />
-                                            </button>
-                                            <div class="text-muted text-center m-t-lg"><small>Already have an account?</small></div>
-                                            <a class="btn btn-sm btn-block btn-info w-lg" href="/SignIn">Sign In</a>
-                                        </div>
-                                        <div class="col-sm-2"></div>
-                                    </div>
+                                <input type="hidden" id="hidOrganizationId" runat="server" />
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label>First Name  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox ID="txtFirstName" runat="server" CssClass="form-control" required="" placeholder="First Name"></asp:TextBox>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label>Last Name  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox ID="txtLastName" runat="server" CssClass="form-control" required="" placeholder="Last Name"></asp:TextBox>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label>Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox ID="txtAddress" runat="server" onblur="CheckAddressValues('address', this)" CssClass="form-control" required="" placeholder="Address"></asp:TextBox>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label>City  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox ID="txtCity" runat="server" onblur="CheckAddressValues('city', this)" CssClass="form-control" required="" placeholder="City"></asp:TextBox>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label for="ddlState">State <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <div class="dropdown-wrapper">
+                                    <select id="ddlState" runat="server" class="custom-dropdown" onblur="CheckAddressValues('state', this)">
+                                        <option value="">Select a state</option>
+                                        <option value="AL">Alabama</option>
+                                        <option value="AK">Alaska</option>
+                                        <option value="AZ">Arizona</option>
+                                        <option value="AR">Arkansas</option>
+                                        <option value="CA">California</option>
+                                        <option value="CO">Colorado</option>
+                                        <option value="CT">Connecticut</option>
+                                        <option value="DE">Delaware</option>
+                                        <option value="FL">Florida</option>
+                                        <option value="GA">Georgia</option>
+                                        <option value="HI">Hawaii</option>
+                                        <option value="ID">Idaho</option>
+                                        <option value="IL">Illinois</option>
+                                        <option value="IN">Indiana</option>
+                                        <option value="IA">Iowa</option>
+                                        <option value="KS">Kansas</option>
+                                        <option value="KY">Kentucky</option>
+                                        <option value="LA">Louisiana</option>
+                                        <option value="ME">Maine</option>
+                                        <option value="MD">Maryland</option>
+                                        <option value="MA">Massachusetts</option>
+                                        <option value="MI">Michigan</option>
+                                        <option value="MN">Minnesota</option>
+                                        <option value="MS">Mississippi</option>
+                                        <option value="MO">Missouri</option>
+                                        <option value="MT">Montana</option>
+                                        <option value="NE">Nebraska</option>
+                                        <option value="NV">Nevada</option>
+                                        <option value="NH">New Hampshire</option>
+                                        <option value="NJ">New Jersey</option>
+                                        <option value="NM">New Mexico</option>
+                                        <option value="NY">New York</option>
+                                        <option value="NC">North Carolina</option>
+                                        <option value="ND">North Dakota</option>
+                                        <option value="OH">Ohio</option>
+                                        <option value="OK">Oklahoma</option>
+                                        <option value="OR">Oregon</option>
+                                        <option value="PA">Pennsylvania</option>
+                                        <option value="RI">Rhode Island</option>
+                                        <option value="SC">South Carolina</option>
+                                        <option value="SD">South Dakota</option>
+                                        <option value="TN">Tennessee</option>
+                                        <option value="TX">Texas</option>
+                                        <option value="UT">Utah</option>
+                                        <option value="VT">Vermont</option>
+                                        <option value="VA">Virginia</option>
+                                        <option value="WA">Washington</option>
+                                        <option value="WV">West Virginia</option>
+                                        <option value="WI">Wisconsin</option>
+                                        <option value="WY">Wyoming</option>
+                                    </select>
                                 </div>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label>Zip Code  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox ID="txtZipCode" runat="server" CssClass="form-control" onblur="CheckAddressValues('zip', this)" required="" placeholder="Zip Code"></asp:TextBox>
+                            </div>
+
+                            <div id="divAddressMessage" class="form-group col-lg-12">
+                                <div id="divMapMessage" class="alert m-b-lg p-sm">
+                                    <i id="iFontAwesome" class="fa"></i>
+                                    <asp:Label runat="server" ID="lblAddressMessage"></asp:Label>
+                                    <asp:HiddenField ID="hidAddressData" runat="server"></asp:HiddenField>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-12">
+                                <label>Email Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox type="email" ID="txtEmail" runat="server" onblur="CheckDuplicate('Email', this)" CssClass="form-control" required="" placeholder="Email"></asp:TextBox>
+                                <span class="error-message error-message-email">This email address already exists. Do you want to <a href="/SignIn">Sign In</a>?</span>
+                                <span class="response-message response-message-email">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label>Phone Number  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox ID="txtPhoneNumber" onkeypress="return isNumberKey(event)" MaxLength="10" TextMode="Phone" runat="server" CssClass="form-control" required="" placeholder="Phone Number"></asp:TextBox>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label>Username  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" onblur="CheckDuplicate('Username', this)" required="" placeholder="Username"></asp:TextBox>
+                                <span class="error-message error-message-username">This user is already in use.</span>
+                                <span class="response-message response-message-username">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label>Password  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox type="password" ID="txtPassword" runat="server" CssClass="form-control" required="" placeholder="Password"></asp:TextBox>
+                            </div>
+                            <div class="form-group col-lg-12" style="display: flex; align-items: center;">
+								<div class="icheckbox_square-green">
+									<asp:CheckBox CssClass="i-checks m-r-md" Checked="true" ID="chkMessageOptIn" runat="server" />
+								</div>
+								<span class="m-l-sm"> Opt to receive SMS messages for new volunteer opportunities</span>
+                            </div>
+                        </div>
+                        <div class="text-center center-block justify-content-center">
+                            <div class="row">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-8">
+                                    <asp:Button CssClass="btn btn-success btn-block w-lg" runat="server" ID="btnSubmit" OnClick="btnSubmit_Click" Text="Create My Account" OnClientClick="return showSpinner();" />
+                                    <button
+                                        id="btnLoading"
+                                        type="button"
+                                        class="btn btn-success btn-block m-b"
+                                        disabled
+                                        style="display: none;">
+                                        <img src="/V1/Images/logo-icon-70x70-white-transparent.png" alt="Loading..." style="width: 24px; height: 24px; animation: spin 1s linear infinite;" />
+                                    </button>
+                                    <div class="text-muted text-center m-t-lg"><small>Already have an account?</small></div>
+                                    <a class="btn btn-sm btn-block btn-info w-lg" href="/SignIn">Sign In</a>
+                                </div>
+                                <div class="col-sm-2"></div>
                             </div>
                         </div>
                     </div>

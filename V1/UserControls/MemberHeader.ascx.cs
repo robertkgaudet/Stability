@@ -98,32 +98,39 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 			btnFriend.ID = ".btnDisabled";
 		}
 
-		//Get the users rank information.
-		Stability.UserRank userRank = Stability.UserRank.Load(new Guid(_userId), null);
-		if (userRank != null)
-		{
-			litUserRank.Text = userRank.GetRankSummary();
-			rankTooltip = userRank.GetRankTooltip();
-			litTeamRank.Text = userRank.RankPosition.ToString();
-			litTotalHours.Text = userRank.VolunteerHours.ToString();
-			litVolunteerPositions.Text = userRank.ClaimedPositionsCount.ToString();
-			litSkillScore.Text = userRank.SkillsScore.ToString();
-			litEquipmentScore.Text = userRank.ResourcesScore.ToString();
-			litSkillCount.Text = "Skills, " + userRank.SkillsCount.ToString();
-			litEquipmentCount.Text = "Equipment, " + userRank.ResourcesCount.ToString();
-			litTotalValueOfHours.Text = userRank.GetVolunteerValue();
-
-			var neighbors = userRank.GetNeighborRanks();
-
-			if (neighbors.AboveUserId.HasValue)
+		if(!String.IsNullOrEmpty(_userId))
+		{ 
+			//Get the users rank information.
+			Stability.UserRank userRank = Stability.UserRank.Load(new Guid(_userId), null);
+			if (userRank != null)
 			{
-				hypPreviousRank.NavigateUrl = "/V1/Member/Default.aspx?userId=" + neighbors.AboveUserId.Value;
-				hypPreviousRank.Text = neighbors.AboveNameWithRank;
+				litUserRank.Text = userRank.GetRankSummary();
+				rankTooltip = userRank.GetRankTooltip();
+				litTeamRank.Text = userRank.RankPosition.ToString();
+				litTotalHours.Text = userRank.VolunteerHours.ToString();
+				litVolunteerPositions.Text = userRank.ClaimedPositionsCount.ToString();
+				litSkillScore.Text = userRank.SkillsScore.ToString();
+				litEquipmentScore.Text = userRank.ResourcesScore.ToString();
+				litSkillCount.Text = "Skills, " + userRank.SkillsCount.ToString();
+				litEquipmentCount.Text = "Equipment, " + userRank.ResourcesCount.ToString();
+				litTotalValueOfHours.Text = userRank.GetVolunteerValue();
+
+				var neighbors = userRank.GetNeighborRanks();
+
+				if (neighbors.AboveUserId.HasValue)
+				{
+					hypPreviousRank.NavigateUrl = "/V1/Member/Default.aspx?userId=" + neighbors.AboveUserId.Value;
+					hypPreviousRank.Text = neighbors.AboveNameWithRank;
+				}
+				if (neighbors.BelowUserId.HasValue)
+				{
+					hypNextRank.NavigateUrl = "/V1/Member/Default.aspx?userId=" + neighbors.BelowUserId.Value;
+					hypNextRank.Text = neighbors.BelowNameWithRank;
+				}
 			}
-			if (neighbors.BelowUserId.HasValue)
+			else
 			{
-				hypNextRank.NavigateUrl = "/V1/Member/Default.aspx?userId=" + neighbors.BelowUserId.Value;
-				hypNextRank.Text = neighbors.BelowNameWithRank;
+				rankTooltip = "No ranking available yet. Start volunteering to get ranked!";
 			}
 		}
 		else
