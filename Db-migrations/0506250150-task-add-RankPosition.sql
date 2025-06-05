@@ -1,4 +1,3 @@
-USE [DB_8013_development]
 GO
 /****** Object:  StoredProcedure [dbo].[GetPeopleList]    Script Date: 6/5/2025 12:09:43 PM ******/
 SET ANSI_NULLS ON
