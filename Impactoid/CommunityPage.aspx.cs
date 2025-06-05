@@ -156,7 +156,7 @@ public partial class Impactoid_CommunityPage : System.Web.UI.Page
 				   join uo in dc.UserOrganizations on p.UserId equals uo.UserId
 				   where uo.OrganizationId == new Guid(organizationId)
 				   &&
-				   p.ShowOnWebsite == true && uo.Status== (int)RequestStatus.Approved
+				   p.ShowOnWebsite == true && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                    select new { fullname = p.Firstname + " " + p.Lastname, p.Title, p.UserId };
 
 

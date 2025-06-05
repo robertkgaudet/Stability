@@ -87,7 +87,7 @@ public partial class V1_NonProfit_Skillsets : BaseWebForm
 		{
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved
+										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                                          && uo.OrganizationId == new Guid(organizationId)
 										 select o).Take(1).SingleOrDefault();
 
@@ -110,7 +110,7 @@ public partial class V1_NonProfit_Skillsets : BaseWebForm
 		var skills = (from us in dc.UserSkills
 					  join s in dc.Skills on us.SkillId equals s.SkillId
 					  join uo in dc.UserOrganizations on us.UserId equals uo.UserId
-					  where uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved
+					  where uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                       orderby s.Name
 					  group s by s.Name + "|" + s.SkillId into resourceGroup
 					  select new { Name = resourceGroup.Key, ResourceCount = resourceGroup.Count() }).Distinct();

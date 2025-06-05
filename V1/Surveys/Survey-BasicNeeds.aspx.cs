@@ -28,7 +28,7 @@ public partial class S1_Profile_Survey_BasicNeeds : System.Web.UI.Page
 
 				var organization = from uo in dc.UserOrganizations
 								   join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-								   where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
+								   where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                                    select o;
 
 				if (organization.Count() > 0)

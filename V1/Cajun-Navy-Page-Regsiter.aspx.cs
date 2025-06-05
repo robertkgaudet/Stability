@@ -28,7 +28,7 @@ public partial class V1_Cajun_Navy_Page_Register : BaseWebForm
 			//note, user might have more than org... 
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-										 where o.OwnerId == userId && uo.Status== (int)RequestStatus.Approved
+										 where o.OwnerId == userId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                                          orderby o.CreatedOn descending
 										 select new { uo.OrganizationId }).Take(1).SingleOrDefault();
 

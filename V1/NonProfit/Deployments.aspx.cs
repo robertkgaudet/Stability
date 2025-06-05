@@ -88,7 +88,7 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
 										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-										 && uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved
+										 && uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                                          select o).Take(1).SingleOrDefault();
 
 			if (userOrganizationOwner != null)

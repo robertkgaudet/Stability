@@ -106,8 +106,8 @@ public class BaseOrganizationWebForm : System.Web.UI.Page, IRequiresSessionState
 										join p in dc.Profiles on uo.UserId equals p.UserId
 										join m in dc.aspnet_Memberships on uo.UserId equals m.UserId
 										join u in dc.aspnet_Users on uo.UserId equals u.UserId
-										where uo.UserId == m_userId && uo.Status== (int)RequestStatus.Approved
-										&& uo.IsPrimary == true
+										where uo.UserId == m_userId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+                                        && uo.IsPrimary == true
 										orderby o.CreatedOn descending
 										select new { o.Name, o.OrganizationId, o.Logo, p.Firstname, p.Lastname, p.Photo, fullname = (p.Firstname + " " + p.Lastname), p.PhoneNumber, m.Email, u.UserName }).Take(1).SingleOrDefault();
 			

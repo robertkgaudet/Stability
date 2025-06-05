@@ -70,7 +70,7 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                     dynamic orgUserr = null;
                     var isprimaryorg = (from o in dc.Organizations
                                         join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                        where uo.UserId == UserId && uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved
+                                        where uo.UserId == UserId && uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                                         select new
                                         {
                                             o.LogoSquare,
@@ -82,7 +82,7 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                      if (Guid.TryParse(organizationId, out orgId))
                     {
                         var userOrg = dc.UserOrganizations
-                            .FirstOrDefault(uo => uo.UserId == UserId && uo.OrganizationId == orgId && uo.Status== (int)RequestStatus.Approved);
+                            .FirstOrDefault(uo => uo.UserId == UserId && uo.OrganizationId == orgId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending);
 
                         if (userOrg != null)
                         {
@@ -102,7 +102,7 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
                     {
                         orgUserr = (from o in dc.Organizations
                                     join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                    where uo.UserId == UserId && uo.ShowTeamLogo == true && uo.Status== (int)RequestStatus.Approved
+                                    where uo.UserId == UserId && uo.ShowTeamLogo == true && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                                     orderby o.CreatedOn descending
                                     select new
                                     {

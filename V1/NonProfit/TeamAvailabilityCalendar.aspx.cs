@@ -93,7 +93,7 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 		{
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved
+										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                                          && uo.OrganizationId == new Guid(organizationId)
 										 select o).Take(1).SingleOrDefault();
 
@@ -124,7 +124,7 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 			var query = from ur in dc.UserAvailableDates
 						join uo in dc.UserOrganizations on ur.UserId equals uo.UserId
 						where ur.DateAvailable >= startOfCurrentWeek && ur.DateAvailable <= eightWeeksLater
-						&& uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved
+						&& uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                         group ur by new
 						{
 							WeekStart = ur.DateAvailable.AddDays(-(int)ur.DateAvailable.DayOfWeek)

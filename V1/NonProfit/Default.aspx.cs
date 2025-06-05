@@ -65,8 +65,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
 		}
 
 		ucTeamHeader.OrganizationId = organizationId;
-		
-		//REMOVE
+
+        //REMOVE
         //if (String.IsNullOrEmpty(organizationId))
         //{
         //    if (!User.Identity.IsAuthenticated)
@@ -78,7 +78,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
         //    {
         //        //Get this users team, no team? Send them to pick a team.
         //        var userOrganization = (from uo in dc.UserOrganizations
-        //                                where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
+        //                                where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved&& uo.Status == (int)RequestStatus.Pending
         //                                select new { uo.OrganizationId }).Take(1).SingleOrDefault();
 
         //        if (userOrganization == null)
@@ -222,8 +222,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
             //If the user is logged in and not in a nonprofit already then send to choose a nonprofit.
             var userOrganization = from uo in dc.UserOrganizations
                                    where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-                                   && uo.OrganizationId == new Guid(organizationId)&& uo.Status== (int)RequestStatus.Approved
-            select uo;
+                                   && uo.OrganizationId == new Guid(organizationId)&& uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+                                   select uo;
 
 
             UserOrganization request = dc.UserOrganizations.FirstOrDefault(rr => rr.UserId == userId && rr.OrganizationId == new Guid(organizationId));
@@ -236,7 +236,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             }
             var userOrganizationOwner = (from uo in dc.UserOrganizations
                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved
+                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                                          && uo.OrganizationId == new Guid(organizationId)
                                          select o).Take(1).SingleOrDefault();
             var userOrg = dc.UserOrganizations
@@ -531,7 +531,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     }
                 }
                 var currentPrimary = dc.UserOrganizations
-                                       .FirstOrDefault(uo => uo.UserId == userId && uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved && uo.Status== (int)RequestStatus.Approved);
+                                       .FirstOrDefault(uo => uo.UserId == userId && uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved && uo.Status== (int)RequestStatus.Pending);
                 if (currentPrimary != null)
                 {
                     currentPrimary.IsPrimary = false;
@@ -666,7 +666,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                 var adminOwners = dc.UserOrganizations
                .Where(uo =>
                 uo.OrganizationId == new Guid(organizationId) &&
-               uo.Status== (int)RequestStatus.Approved &&
+               uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending &&
             (uo.IsTeamAdministrator == true || uo.IsOwner == true)
             )
           .Select(uo => uo.UserId)

@@ -176,7 +176,7 @@ public partial class V1_Member_Default : BaseWebForm
             //Get team information
             var orgUser = (from o in dc.Organizations
                            join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                           where uo.UserId == new Guid(pageUserId) && uo.Status== (int)RequestStatus.Approved
+                           where uo.UserId == new Guid(pageUserId) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                            orderby o.CreatedOn descending
                            select new
                            {
