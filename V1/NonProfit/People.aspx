@@ -45,12 +45,14 @@
         .suggestion-box {
             margin-top: 251px !important;
         }
+
         .alert {
-    padding: 15px;
-    margin-bottom: 20px !important;
-    border: 1px solid transparent;
-    border-radius: 4px;
-}
+            padding: 15px;
+            margin-bottom: 20px !important;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
         #ContentPlaceHolder1_txtMessage {
             width: 94% !important;
             margin-left: 19px;
@@ -209,61 +211,78 @@
             flex-wrap: nowrap;
             justify-content: center;
             gap: 10px;
-          
         }
-.btn-row {
-    display: flex;
-    justify-content: center; 
-    align-items: center;    
-    gap: 13px;               
-    margin-top: 13px;
-     margin-right: 4px;
-}
 
-.btn-row .btn {
-    min-width: 170px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 500;
-    margin-right:9px;
-}
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 13px;
+            margin-top: 13px;
+            margin-right: 4px;
+        }
 
-.fotterr .btn {
-    min-width: 167px;
-    height: 45px;
-    
-}
-.btn-row.modal-footer.custom-footer.btn-group-responsive {
-    margin-right: 0px;
-}
-.modal-footer .btn {
-    margin-left: 0 !important; 
-     margin-bottom: 0 !important;
-}
-.btn-row.modal-footer.custom-footer.btn-group-responsive
- {
-    padding-bottom: 10px;
-}
-.fotterr {
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    margin-right:-22px;
-    gap: 25px;
-}
-@media screen and (max-width: 600px) {
-  .fotterr {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    padding: 10px;
-    margin-left: 0; 
-  }
-}
+            .btn-row .btn {
+                min-width: 170px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 500;
+                margin-right: 9px;
+            }
 
+        .fotterr .btn {
+            min-width: 167px;
+            height: 45px;
+        }
+
+        .btn-row.modal-footer.custom-footer.btn-group-responsive {
+            margin-right: 0px;
+        }
+
+        .modal-footer .btn {
+            margin-left: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .btn-row.modal-footer.custom-footer.btn-group-responsive {
+            padding-bottom: 10px;
+        }
+
+        .fotterr {
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            margin-right: -22px;
+            gap: 25px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .fotterr {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 20px;
+                padding: 10px;
+                margin-left: 0;
+            }
+        }
+       .badge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+     background-color: #337ab7; 
+    border-radius: 10px;
+    margin-left: auto;
+}
     </style>
     <script>
         var recipientsName;
@@ -441,7 +460,7 @@
 
                         if (response.isTeamowner === true) {
                             $('#<%= btnremoveteam.ClientID %>').hide();
-                           $('#<%= btnteamOwner.ClientID %>').hide();
+                            $('#<%= btnteamOwner.ClientID %>').hide();
                         }
                         if (response.isShow === true) {
                             $('#<%= btnremoveteam.ClientID %>').hide();
@@ -1383,19 +1402,16 @@
                                     <td style="background-color: white;">
                                         <div class="hpanel">
                                             <div class="panel-body">
-
-
                                                 <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: normal;">
-
                                                     <input type="checkbox" runat="server" class="select-user" style="margin-top: -2px;"
                                                         data-userid='<%# Eval("UserID") %>' visible='<%# (Request.QueryString["type"] == "email" || Request.QueryString["type"] == "sms") %>' />
 
                                                     &nbsp;&nbsp;                              
 
                                                 <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
-
-
+                                                     <span class="badge ms-2" id="rankBadge" runat="server" visible="false"></span>
                                                 </h5>
+
                                                 <p>
                                                     <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
                                                     <asp:Literal ID="litDescription" runat="server"></asp:Literal>
@@ -1541,31 +1557,31 @@
                 </div>
 
                 <!-- Vetting Notes Textarea -->
-       <div class="form-group">
-    <label for="txtManageVettingNotes">Vetting Notes:</label>
-    <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
-        placeholder="Enter Vetting Notes"></asp:TextBox>
+                <div class="form-group">
+                    <label for="txtManageVettingNotes">Vetting Notes:</label>
+                    <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
+                        placeholder="Enter Vetting Notes"></asp:TextBox>
 
 
-           <div class="btn-row">
-        <button type="button" class="btn btn-primary" runat="server" id="btnteamOwner" visible="false"
-            onclick="btnMakeTeamOwner();">
-            Make Team Owner
-        </button>
-        <button type="button" class="btn btn-danger" runat="server" id="btnremoveteam" visible="false"
-            onclick="btnMakeTeamRemove();">
-            Remove Team Member
-        </button>
-    </div>
-</div>
-   <div class="modal-footer">
-    <div class="fotterr">
-    <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
-        Save Changes
-    </button>
-    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-       </div>
+                    <div class="btn-row">
+                        <button type="button" class="btn btn-primary" runat="server" id="btnteamOwner" visible="false"
+                            onclick="btnMakeTeamOwner();">
+                            Make Team Owner
+                        </button>
+                        <button type="button" class="btn btn-danger" runat="server" id="btnremoveteam" visible="false"
+                            onclick="btnMakeTeamRemove();">
+                            Remove Team Member
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="fotterr">
+                        <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
+                            Save Changes
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -61,11 +61,11 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             .Any(o => o.OrganizationId == new Guid(organizationId) && o.OwnerId == userId);
             if (userOrganizationOwner == true || User.IsInRole("Administrator"))
             {
-                if(userOrganizationOwner ==true)
+                if (userOrganizationOwner == true)
                 {
                     isOwner = true;
                 }
-                
+
                 btnteamOwner.Visible = true;
             }
         }
@@ -79,8 +79,8 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         || isOwner)
         ? "1" : "0";
         bool isTeamAdministratorExists = dc.UserOrganizations
-       .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.Status== (int)RequestStatus.Approved);
-        if (isTeamAdministratorExists == true || isOwner == true ||User.IsInRole("Administrator"))
+       .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.Status == (int)RequestStatus.Approved);
+        if (isTeamAdministratorExists == true || isOwner == true || User.IsInRole("Administrator"))
         {
             btnremoveteam.Visible = true;
             phAdminControls.Visible = true;
@@ -103,7 +103,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         string squareLogo = "/V1/Images/Logo-Placeholder.png";
         if (organization != null)
         {
-            if (!string.IsNullOrEmpty(organization.CoverImage ))
+            if (!string.IsNullOrEmpty(organization.CoverImage))
             {
                 _coverImage = causePhotoFolder + organization.CoverImage;
             }
@@ -156,7 +156,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             //Is logged in user on this team?
 
             var userCheck = (from uo in dc.UserOrganizations
-                             where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
+                             where uo.UserId == userId && uo.Status == (int)RequestStatus.Approved
                              && uo.OrganizationId == new Guid(organizationId)
                              select uo).Take(1).SingleOrDefault();
 
@@ -347,18 +347,18 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         {
             var organization = dc.Organizations.FirstOrDefault(o => o.OrganizationId == new Guid(orgId));
             Guid oldOwnerId = Guid.Empty;
-            if (organization.OwnerId !=null)
+            if (organization.OwnerId != null)
             {
-                 oldOwnerId = organization.OwnerId.Value;
+                oldOwnerId = organization.OwnerId.Value;
                 organization.OwnerId = selectedUser;
                 dc.SubmitChanges();
                 var oldUserOrg = dc.UserOrganizations
-                    .FirstOrDefault(x => x.UserId == oldOwnerId && x.OrganizationId == organization.OrganizationId && x.Status== (int)RequestStatus.Approved);
+                    .FirstOrDefault(x => x.UserId == oldOwnerId && x.OrganizationId == organization.OrganizationId && x.Status == (int)RequestStatus.Approved);
 
                 var newUserOrg = dc.UserOrganizations
-                 .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.Status== (int)RequestStatus.Approved);
+                 .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.Status == (int)RequestStatus.Approved);
                 var previousOwners = dc.UserOrganizations
-               .Where(x => x.OrganizationId == organization.OrganizationId && x.IsPreviousOwner == true && x.Status== (int)RequestStatus.Approved)
+               .Where(x => x.OrganizationId == organization.OrganizationId && x.IsPreviousOwner == true && x.Status == (int)RequestStatus.Approved)
                .FirstOrDefault();
                 if (previousOwners != null)
                 {
@@ -385,11 +385,11 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 organization.OwnerId = selectedUser;
                 dc.SubmitChanges();
                 var newUserOrg = dc.UserOrganizations
-                .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.Status== (int)RequestStatus.Approved);
-                newUserOrg.IsOwner=true;
+                .FirstOrDefault(x => x.UserId == selectedUser && x.OrganizationId == organization.OrganizationId && x.Status == (int)RequestStatus.Approved);
+                newUserOrg.IsOwner = true;
                 dc.SubmitChanges();
             }
-               
+
         }
         return "Team owner updated successfully.";
     }
@@ -408,12 +408,12 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 if (userOrg != null)
                 {
                     int previousStatus = userOrg.Status;
-                    if(userHistory !=null)
+                    if (userHistory != null)
                     {
-                       
-                            userHistory.PreviousStatus = previousStatus;
-                            userHistory.StatusChangedOn = DateTime.Now;
-                       
+
+                        userHistory.PreviousStatus = previousStatus;
+                        userHistory.StatusChangedOn = DateTime.Now;
+
                     }
                     else
                     {
@@ -427,7 +427,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                             DateToReApply = null
                         };
                     }
-                   
+
 
                     userOrg.Status = (int)RequestStatus.RemovedByAdmin;
                     dc.SubmitChanges();
@@ -543,6 +543,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             bool receiveSMSNotifications = DataBinder.Eval(dataItem.DataItem, "ReceiveSMSNotifications") != DBNull.Value &&
                                     (bool)DataBinder.Eval(dataItem.DataItem, "ReceiveSMSNotifications");
 
+            object rankObj = DataBinder.Eval(dataItem.DataItem, "RankPosition");
             if (ucTeamLogo != null)
             {
                 ucTeamLogo.UserId = userId;
@@ -558,6 +559,16 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             Literal litVettingInfo = (Literal)e.Item.FindControl("litVettingInfo");
             Literal litActiveDate = (Literal)e.Item.FindControl("litActiveDate");
             RadioButtonList rblManageUserStatus = (RadioButtonList)e.Item.FindControl("rblManageUserStatus");
+            HtmlGenericControl rankBadge = (HtmlGenericControl)e.Item.FindControl("rankBadge");
+            if (rankObj == DBNull.Value || rankObj == null)
+            {
+                rankBadge.Visible = false;
+            }
+            else
+            {
+                rankBadge.InnerText = "RankPosition: " + rankObj.ToString();
+                rankBadge.Visible = true;
+            }
             if (User.IsInRole("Administrator") || userIsOwner || User.IsInRole("Team Administrator"))
             {
                 bool? vettingComplete = (bool?)DataBinder.Eval(dataItem.DataItem, "VettingComplete");
@@ -569,6 +580,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 DateTime? lastActivityDate = (DateTime?)DataBinder.Eval(dataItem.DataItem, "LastLoginDate");
                 divFooter.Visible = true;
                 btnContact.Visible = true;
+
                 if (btnContact.Visible || btnManage.Visible)
                 {
                     h5Container.Style["display"] = "flex";
@@ -974,9 +986,8 @@ internal class PeopleList
     public bool? IsApproved { get; set; }
     public bool? ReceiveSMSNotifications { get; set; }
     public int TotalCount { get; set; }
-
-
-    public PeopleList(string firstname, DateTime createDate, string description, string loweredEmail, string phoneNumber, string lastname, Guid userId, DateTime? dateVettingCompleted, DateTime? dateVettingStarted, string vettingNotes, bool? vettingActive, bool? vettingComplete, bool? passedVetting, string title, string zelloName, DateTime lastLoginDate, DateTime lastActivityDate, bool? isApproved, bool? receiveSMSNotifications)
+    public int? RankPosition { get; set; }
+    public PeopleList(string firstname, DateTime createDate, string description, string loweredEmail, string phoneNumber, string lastname, Guid userId, DateTime? dateVettingCompleted, DateTime? dateVettingStarted, string vettingNotes, bool? vettingActive, bool? vettingComplete, bool? passedVetting, string title, string zelloName, DateTime lastLoginDate, DateTime lastActivityDate, bool? isApproved, bool? receiveSMSNotifications, int? rankPosition)
     {
         Firstname = firstname;
         CreateDate = createDate;
@@ -997,6 +1008,7 @@ internal class PeopleList
         LastActivityDate = lastActivityDate;
         IsApproved = isApproved;
         ReceiveSMSNotifications = receiveSMSNotifications;
+        RankPosition = rankPosition;
     }
 
     public PeopleList()
@@ -1025,7 +1037,8 @@ internal class PeopleList
                 LastActivityDate == other.LastActivityDate &&
                 IsApproved == other.IsApproved &&
                 // Compare new fields
-                ReceiveSMSNotifications == other.ReceiveSMSNotifications;
+                ReceiveSMSNotifications == other.ReceiveSMSNotifications &&
+                RankPosition == other.RankPosition;
     }
 
 
@@ -1050,7 +1063,7 @@ internal class PeopleList
         hashCode = hashCode * -1521134295 + LastActivityDate.GetHashCode();
         hashCode = hashCode * -1521134295 + IsApproved.GetHashCode();
         hashCode = hashCode * -1521134295 + ReceiveSMSNotifications.GetHashCode();
-
+        hashCode = hashCode * -1521134295 + RankPosition.GetHashCode();
         return hashCode;
     }
 }
