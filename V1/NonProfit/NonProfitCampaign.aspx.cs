@@ -278,7 +278,7 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
 
         //Is user on this team?
         var userOrganization = from uo in dc.UserOrganizations
-                               where uo.UserId == userId && uo.OrganizationId == organizationId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+                               where uo.UserId == userId && uo.OrganizationId == organizationId && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                select uo;
 
         if (userOrganization != null)

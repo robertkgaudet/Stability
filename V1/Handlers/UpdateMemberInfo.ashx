@@ -51,10 +51,10 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             }
 
             bool isTeamAdministratorExists = dc.UserOrganizations
-           .Any(uo => uo.OrganizationId == orgId && uo.UserId == loginuserId && uo.IsTeamAdministrator == true && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending);
+           .Any(uo => uo.OrganizationId == orgId && uo.UserId == loginuserId && uo.IsTeamAdministrator == true && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending));
 
             bool isTeamAdministrator = dc.UserOrganizations
-            .Any(uo => uo.OrganizationId == orgId && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending);
+            .Any(uo => uo.OrganizationId == orgId && uo.UserId == userId && uo.IsTeamAdministrator == true && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending));
 
             bool userOrganizationOwner = dc.Organizations
                       .Any(o => o.OrganizationId == orgId && o.OwnerId == loginuserId);
@@ -99,7 +99,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
             }
             var profile = dc.Profiles.SingleOrDefault(p => p.UserId == userId);
             var userOrg = dc.UserOrganizations
-            .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.Status== (int)RequestStatus.Approved&& uo.Status == (int)RequestStatus.Pending);
+            .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending));
             bool isOwner = userOrg != null && userOrg.IsOwner;
 
             if (profile == null || userOrg == null)
@@ -188,7 +188,7 @@ public class UpdateMemberInfo : IHttpHandler, IReadOnlySessionState
                 }
 
                 var userOrg = dc.UserOrganizations
-     .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending);
+     .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending));
 
                 var role = dc.aspnet_Roles.FirstOrDefault(r => r.RoleName == "Team Administrator");
 

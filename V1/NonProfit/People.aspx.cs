@@ -72,14 +72,15 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
         var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId)
                             select new { o.Name, o.LogoSquare, o.HideTeamList, o.OwnerId, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName, o.EnableTeamMemberVerification }).SingleOrDefault();
-        hiddenManageShowDonateButtonn.Value =
+        
+		hiddenManageShowDonateButtonn.Value =
         (User.IsInRole("Administrator")
         || (isUserOnTeam && User.IsInRole("Team Administrator"))
         || (organization != null && organization.EnableTeamMemberVerification == true)
         || isOwner)
         ? "1" : "0";
         bool isTeamAdministratorExists = dc.UserOrganizations
-       .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending);
+       .Any(uo => uo.OrganizationId == new Guid(organizationId) && uo.UserId == userId && uo.IsTeamAdministrator == true && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending));
         if (isTeamAdministratorExists == true || isOwner == true ||User.IsInRole("Administrator"))
         {
             btnremoveteam.Visible = true;
@@ -156,7 +157,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             //Is logged in user on this team?
 
             var userCheck = (from uo in dc.UserOrganizations
-                             where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+                             where uo.UserId == userId && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                              && uo.OrganizationId == new Guid(organizationId)
                              select uo).Take(1).SingleOrDefault();
 

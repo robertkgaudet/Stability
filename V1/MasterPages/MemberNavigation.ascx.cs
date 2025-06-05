@@ -20,7 +20,7 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
 			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 			var orgUser = (from o in dc.Organizations
 						   join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-						   where uo.UserId == new Guid(_userId) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+						   where uo.UserId == new Guid(_userId) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                            orderby o.CreatedOn descending
 						   select o).Take(1).SingleOrDefault();
 

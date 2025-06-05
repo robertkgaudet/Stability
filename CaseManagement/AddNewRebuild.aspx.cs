@@ -24,7 +24,7 @@ public partial class Account_Organization_AddNewRebuild : BaseOrganizationWebFor
 			
 		//If user is not associated with an organization hide the organization selector.
 		var userOrganizationCheck = from uo in dc.UserOrganizations
-									where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+									where uo.UserId == userId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                     select uo;
 		
 		divNonProfitForm.Visible = false;

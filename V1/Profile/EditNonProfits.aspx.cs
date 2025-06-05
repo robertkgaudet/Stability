@@ -36,7 +36,7 @@ public partial class V1_Profile_EditNonProfits : BaseOrganizationWebForm
             Guid userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
 
             var userOrganizations = (from uo in dc.UserOrganizations
-                                     where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+                                     where uo.UserId == userId && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                      select uo).ToList();
 
             foreach (var uo in userOrganizations)

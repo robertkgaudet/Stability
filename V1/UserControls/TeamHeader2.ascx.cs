@@ -45,7 +45,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
             }
 			
 			bool isPrimary = dc.UserOrganizations
-							.Where(uo => uo.UserId == currentUserId && uo.OrganizationId == new Guid(_organizationId) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending) 
+							.Where(uo => uo.UserId == currentUserId && uo.OrganizationId == new Guid(_organizationId) && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)) 
 							.Select(uo => uo.IsPrimary ?? false).FirstOrDefault();
 
             if (isPrimary == true)
@@ -87,7 +87,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 
                 var isprimaryorg = (from o in dc.Organizations
                                     join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                    where uo.UserId == teamownerUserId && uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+                                    where uo.UserId == teamownerUserId && uo.IsPrimary == true && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                     select new
                                     {
                                         o.LogoSquare,
@@ -112,7 +112,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                 if (Guid.TryParse(_organizationId, out orgId))
                 {
                     var userOrg = dc.UserOrganizations
-                                    .FirstOrDefault(uo => uo.UserId == currentUserId && uo.OrganizationId == orgId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending);
+                                    .FirstOrDefault(uo => uo.UserId == currentUserId && uo.OrganizationId == orgId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending));
 
                     if (userOrg != null)
                     {
@@ -143,7 +143,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                 {
                     var orgUserr = (from o in dc.Organizations
                                     join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                    where uo.UserId == currentUserId && uo.ShowTeamLogo == true && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+                                    where uo.UserId == currentUserId && uo.ShowTeamLogo == true && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                     orderby o.CreatedOn descending
                                     select new
                                     {
@@ -302,7 +302,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 												  join u in dc.aspnet_Memberships on p.UserId equals u.UserId
 													where uo.OrganizationId == new Guid(_organizationId)
 													&& uo.IsTeamAdministrator == true
-                                                    && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+                                                    && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                               orderby u.CreateDate ascending
 											  select uo.UserId).ToList();
 
@@ -353,7 +353,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
 
                     var isprimaryorgg = (from o in dc.Organizations
                                          join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                         where uo.UserId == userId && uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+                                         where uo.UserId == userId && uo.IsPrimary == true && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                          select new
                                          {
                                              o.LogoSquare,
@@ -378,7 +378,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     if (Guid.TryParse(_organizationId, out orggId))
                     {
                         var userOrg = dc.UserOrganizations
-                                        .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending);
+                                        .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == orgId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending));
 
                         if (userOrg != null)
                         {
@@ -409,7 +409,7 @@ public partial class V1_UserControls_TeamHeader2 : System.Web.UI.UserControl
                     {
                         var orgUserr = (from o in dc.Organizations
                                         join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                        where uo.UserId == userId && uo.ShowTeamLogo == true && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+                                        where uo.UserId == userId && uo.ShowTeamLogo == true && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                         orderby o.CreatedOn descending
                                         select new
                                         {

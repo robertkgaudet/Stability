@@ -176,8 +176,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
         {
             var userOrganizationOwners = (from uo in dc.UserOrganizations
                                           join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                          where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status == (int)RequestStatus.Approved
-                                          && uo.OrganizationId == new Guid(organizationId)
+                                          where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+										  && uo.OrganizationId == new Guid(organizationId)
                                           select o).Take(1).SingleOrDefault();
 
             if (userOrganizationOwners != null)
@@ -222,7 +222,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             //If the user is logged in and not in a nonprofit already then send to choose a nonprofit.
             var userOrganization = from uo in dc.UserOrganizations
                                    where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-                                   && uo.OrganizationId == new Guid(organizationId)&& uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+                                   && uo.OrganizationId == new Guid(organizationId)&& (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                    select uo;
 
 
@@ -236,7 +236,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             }
             var userOrganizationOwner = (from uo in dc.UserOrganizations
                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                          && uo.OrganizationId == new Guid(organizationId)
                                          select o).Take(1).SingleOrDefault();
             var userOrg = dc.UserOrganizations
@@ -289,7 +289,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                 {
                     lbVolunteer.Visible=true;
                 }
-                else if (userOrg.IsPrimary == true && status == (int)RequestStatus.Approved)
+                else if (userOrg.IsPrimary == true && (status == (int)RequestStatus.Approved || status == (int)RequestStatus.Pending))
                 {
                     lbleave.Visible = true;
                     lbVolunteer.Visible = false;
@@ -531,7 +531,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     }
                 }
                 var currentPrimary = dc.UserOrganizations
-                                       .FirstOrDefault(uo => uo.UserId == userId && uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved && uo.Status== (int)RequestStatus.Pending);
+                                       .FirstOrDefault(uo => uo.UserId == userId && uo.IsPrimary == true && (uo.Status== (int)RequestStatus.Approved || uo.Status== (int)RequestStatus.Pending));
                 if (currentPrimary != null)
                 {
                     currentPrimary.IsPrimary = false;
@@ -666,7 +666,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                 var adminOwners = dc.UserOrganizations
                .Where(uo =>
                 uo.OrganizationId == new Guid(organizationId) &&
-               uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending &&
+               (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending) &&
             (uo.IsTeamAdministrator == true || uo.IsOwner == true)
             )
           .Select(uo => uo.UserId)

@@ -94,7 +94,7 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 			{
 				//If the user is logged in and not in a nonprofit already then send to choose a nonprofit.
 				var userOrganization = from uo in dc.UserOrganizations
-										where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+										where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                         && uo.OrganizationId == new Guid(organizationId)
 										select uo;
 
@@ -269,7 +269,7 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 						 join p in dc.Profiles on uo.UserId equals p.UserId
 						 join net in dc.aspnet_Memberships on p.UserId equals net.UserId
 						 join u in dc.aspnet_Users on p.UserId equals u.UserId
-						 where uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+						 where uo.OrganizationId == new Guid(organizationId) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                          && p.PassedVetting == true
 						 && net.IsApproved == true
 						 && net.LastLoginDate > DateTime.Now.AddDays(-30)
@@ -284,7 +284,7 @@ public partial class V1_NonProfit_NonProfit : BaseOrganizationWebForm
 		{ 
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 									join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-									where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+									where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                     && uo.OrganizationId == new Guid(organizationId)
 									select o).Take(1).SingleOrDefault();
 

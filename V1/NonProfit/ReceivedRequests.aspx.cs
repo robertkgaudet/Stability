@@ -145,7 +145,32 @@ public partial class V1_NonProfit_ReceivedRequests : BaseWebForm
         return "User successfully added to the team.";
 
     }
-    [WebMethod]
+
+	protected void rptRequests_ItemDataBound(object sender, RepeaterItemEventArgs e)
+	{
+		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+		{
+			// Get the data item
+			var data = e.Item.DataItem;
+
+			// Assuming the data item has UserId (Guid) and Firstname (string)
+			Guid userId = (Guid)DataBinder.Eval(data, "UserId");
+			string profileName = (string)DataBinder.Eval(data, "ProfileName");
+
+			// Find the HyperLink control
+			HyperLink hypUser = (HyperLink)e.Item.FindControl("hypUser");
+
+			if (hypUser != null)
+			{
+				hypUser.Text = profileName;
+				hypUser.NavigateUrl = "/V1/Member/Default.aspx?userId=" + userId;
+			}
+		}
+	}
+
+
+
+	[WebMethod]
     public static string RejectRequest(Guid senderId, Guid organizationId)
     {
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();

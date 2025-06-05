@@ -159,10 +159,13 @@
             </tr>
         </thead>
         <tbody>
-            <asp:Repeater ID="rptRequests" runat="server">
+            <asp:Repeater ID="rptRequests" runat="server" OnItemDataBound="rptRequests_ItemDataBound">
                 <ItemTemplate>
                     <tr>
-                        <td><%# Eval("ProfileName") %></td>
+                        <td>
+							<%# Eval("ProfileName") %>
+							<asp:HyperLink ID="hypUser" runat="server"></asp:HyperLink>
+                        </td>
                         <td style="text-align: center;">
                             <button type="button" class="btn btn-success"
                                 onclick="confirmJoinTeam('<%# Eval("UserId") %>', '<%= _organizationId %>')">

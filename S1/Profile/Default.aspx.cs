@@ -380,7 +380,7 @@ public partial class S1_Profile_Default : BaseOrganizationWebForm
 
 		var nonProfits = from uo in dc.UserOrganizations
 					 join s in dc.Organizations on uo.OrganizationId equals s.OrganizationId
-					 where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
+					 where uo.UserId == userId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                          orderby s.Name
 					 select s;
 

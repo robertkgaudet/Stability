@@ -180,9 +180,11 @@
 					<div class="hpanel">
 						<div class="panel-body">
 							<h2 class="font-light m-b-xs">
-								Choose Dates to Volunteer
+								Let Us Know When You’re Able to Help
 							</h2>
-                            <small>Choose as many dates as you would like.</small>
+                            <small>
+									These are the dates this user has marked as available to serve. A team members availability is more than a calendar entry — it’s a signal to your community that you’re ready to step in when it matters most.
+							</small>
 						</div>
 					</div>
 				</div>
