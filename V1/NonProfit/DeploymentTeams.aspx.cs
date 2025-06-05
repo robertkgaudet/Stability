@@ -17,45 +17,76 @@ public partial class V1_NonProfit_DeploymentTeams : BaseWebForm
 		ucMemberNavigation.UserId = userId.ToString();
 		litPageName.Text = "Find Open Positions";
 		organizationId = Request.QueryString["organizationId"];
+        string searchTerm = Request.QueryString["searchTerm"];
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        var deploymentTeams = new List<SearchResponse.VolunteerOpportunityInfo>();
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
 
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-		var deploymentTeams = (from oep in dc.OrganizationEventPositions
-					 join oe in dc.OrganizationEvents on oep.OrganizationEventId equals oe.OrganizationEventId
-					 join p in dc.Positions on oep.PositionId equals p.PositionId
-					 join county in dc.Counties on oe.StagingCountyId equals county.CountyId
-					 join city in dc.Cities on county.Code equals city.Code
-					 where oe.IsActive == true
-					 && oe.OrganizationId == new Guid(organizationId)
-					 && oep.DeploymentDate >= DateTime.Now
-					 select new
-					 {
-						 oe.OrganizationEventId,
-						 CampaignName = oe.CampaignName,
-						 oep.DeploymentDate,
-						 oe.URLFriendlyCampaignName,
-						 County = county.Name,
-						 State = county.State,
-						 City = city.City1,
-						 EarliestDeploymentDate = (from innerOep in dc.OrganizationEventPositions
-												   where innerOep.OrganizationEventId == oe.OrganizationEventId
-												   select innerOep.DeploymentDate).Min(),
-						 LatestDeploymentDate = (from innerOep in dc.OrganizationEventPositions
-												 where innerOep.OrganizationEventId == oe.OrganizationEventId
-												 select innerOep.DeploymentDate).Max(),
-						 PositionCount = (from innerOep in dc.OrganizationEventPositions
-										  where innerOep.OrganizationEventId == oe.OrganizationEventId
-										  select innerOep.PositionId).Distinct().Count(),
-						 RowNum = (from innerOep in dc.OrganizationEventPositions
-								   where innerOep.OrganizationEventId == oe.OrganizationEventId
-								   orderby innerOep.DeploymentDate ascending
-								   select innerOep.DeploymentDate).FirstOrDefault()
-					 }).ToList()
-					 .GroupBy(x => x.OrganizationEventId)
-					 .Select(g => g.OrderBy(x => x.RowNum).First())
-					 .OrderByDescending(x => x.DeploymentDate);
+             deploymentTeams = dc.ExecuteQuery<SearchResponse.VolunteerOpportunityInfo>(
+    "EXEC SearchFillter {0}, {1}",
+    "VolunteerOpportunities",
+    string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm).ToList();
+        }
+        else
+        {
 
+            var groupedResult = (from oep in dc.OrganizationEventPositions
+                                 join oe in dc.OrganizationEvents on oep.OrganizationEventId equals oe.OrganizationEventId
+                                 join p in dc.Positions on oep.PositionId equals p.PositionId
+                                 join county in dc.Counties on oe.StagingCountyId equals county.CountyId
+                                 join city in dc.Cities on county.Code equals city.Code
+                                 where oe.IsActive == true
+                                     && oe.OrganizationId == new Guid(organizationId)
+                                     && oep.DeploymentDate >= DateTime.Now
+                                 select new
+                                 {
+                                     oe.OrganizationEventId,
+                                     CampaignName = oe.CampaignName,
+                                     DeploymentDate = oep.DeploymentDate,
+                                     oe.URLFriendlyCampaignName,
+                                     County = county.Name,
+                                     State = county.State,
+                                     City = city.City1,
+                                     EarliestDeploymentDate = (from innerOep in dc.OrganizationEventPositions
+                                                               where innerOep.OrganizationEventId == oe.OrganizationEventId
+                                                               select innerOep.DeploymentDate).Min(),
+                                     LatestDeploymentDate = (from innerOep in dc.OrganizationEventPositions
+                                                             where innerOep.OrganizationEventId == oe.OrganizationEventId
+                                                             select innerOep.DeploymentDate).Max(),
+                                     PositionCount = (from innerOep in dc.OrganizationEventPositions
+                                                      where innerOep.OrganizationEventId == oe.OrganizationEventId
+                                                      select innerOep.PositionId).Distinct().Count(),
+                                     RowNum = (from innerOep in dc.OrganizationEventPositions
+                                               where innerOep.OrganizationEventId == oe.OrganizationEventId
+                                               orderby innerOep.DeploymentDate ascending
+                                               select innerOep.DeploymentDate).FirstOrDefault()
+                                 })
+                        .ToList()
+                        .GroupBy(x => x.OrganizationEventId)
+                        .Select(g => g.OrderBy(x => x.RowNum).First())
+                        .OrderByDescending(x => x.DeploymentDate)
+                        .Select(x => new SearchResponse.VolunteerOpportunityInfo
+                        {
+                            OrganizationEventId = x.OrganizationEventId,
+                            CampaignName = x.CampaignName,
+                            DeploymentDate = x.DeploymentDate ?? DateTime.MinValue,
+                            URLFriendlyCampaignName = x.URLFriendlyCampaignName,
+                            County = x.County,
+                            State = x.State,
+                            City = x.City,
+                            EarliestDeploymentDate = x.EarliestDeploymentDate ?? DateTime.MinValue,
+                            LatestDeploymentDate = x.LatestDeploymentDate ?? DateTime.MinValue,
+                            PositionCount = x.PositionCount,
+                            RowNum = x.RowNum
+                        })
+                        .ToList();
 
-		rptDeploymentTeams.DataSource = deploymentTeams.ToList();
+            deploymentTeams = groupedResult;
+
+        }
+
+        rptDeploymentTeams.DataSource = deploymentTeams.ToList();
 		rptDeploymentTeams.DataBind();
 
 		ucMemberNavigation.UserId = userId.ToString();

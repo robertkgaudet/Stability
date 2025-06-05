@@ -290,6 +290,13 @@
             }
 
             function updateStreamPost(pageNumber) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const searchTerm = urlParams.get('searchTerm');
+
+                if (searchTerm && searchTerm.trim() !== "") {
+                    // Stop execution if searchTerm is present
+                    return;
+                }
                 //sending commentId will cause a delete.
                 $.ajax(
                     {

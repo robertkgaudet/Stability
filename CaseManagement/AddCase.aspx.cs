@@ -239,7 +239,7 @@ public partial class CaseManagement_AddCase : System.Web.UI.Page
 			//Join on userUser and userEvent
 
 			var UserOrganization = (from uo in dc.UserOrganizations
-								   where uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved &&
+								   where uo.IsPrimary == true && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending &&
 
                                    uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
 								   select uo).Take(1).SingleOrDefault();

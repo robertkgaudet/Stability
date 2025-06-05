@@ -203,7 +203,7 @@ public partial class V1_Profile_Profile : BaseOrganizationWebForm
                 LoadPosts(_profileUserId);
 
                 // Load checkbox states from the database
-                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == _profileUserId && uo.Status== (int)RequestStatus.Approved);
+                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == _profileUserId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending);
                 if (userOrg != null)
                 {
                     chkShowDonateButton.Checked = userOrg.ShowTeamLogo ?? false; 

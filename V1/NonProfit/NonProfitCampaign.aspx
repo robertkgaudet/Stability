@@ -26,7 +26,9 @@
     font-weight: 600;
     margin: 0;
 }
-
+i.fa.fa-clock-o.fa-2x {
+    color: white;
+}
 .radio-option {
     font-size: 1.5rem;
     display: ruby-text;
@@ -43,7 +45,6 @@
 }
           .btn {
     margin: 0 5px;          
-    float: right;           
 }
           #txtsms{
                  min-height: min-content

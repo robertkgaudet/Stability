@@ -32,7 +32,7 @@ public partial class V1_NonProfitAdministration_VolunteerList : BaseOrganization
 						 join p in dc.Profiles on uo.UserId equals p.UserId
 						 join net in dc.aspnet_Memberships on p.UserId equals net.UserId
 						 join u in dc.aspnet_Users on p.UserId equals u.UserId
-						 where uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved
+						 where uo.OrganizationId == new Guid(organizationId) && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                          && net.IsApproved == true
 						 orderby net.LastLoginDate descending
 						 select new { p.Firstname, net.CreateDate, net.LoweredEmail, p.Lastname, p.UserId, p.PassedVetting, p.Title, p.ZelloName, LastLoginDate = u.LastActivityDate };

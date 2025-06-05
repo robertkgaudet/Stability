@@ -302,7 +302,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             var userOrganizations = from uo in dc.UserOrganizations
                                     join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                    where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved
+                                    where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved && uo.Status == (int)RequestStatus.Pending
                                     select new { o.Name, o.OrganizationId };
 
             if (userOrganizations.Count() > 0)
@@ -876,20 +876,28 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
       
         else if (searchType == "Skills")
         {
-            Response.Redirect("/V1/Profile/EditSkills.aspx?searchTerm=" + searchTerm);
+            Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm + "&searchType=" + searchType);
         }
 
         else if (searchType == "Resources")
         {
-            Response.Redirect("/V1/Profile/EditResources.aspx?searchTerm=" + searchTerm);
+            Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm + "&searchType=" + searchType);
         }
         else if (searchType == "Portals")
         {
             Response.Redirect("/V1/Profile/EditDisasters.aspx?searchTerm=" + searchTerm);
         }
+        else if (searchType == "VolunteerOpportunities")
+        {
+            Response.Redirect("/V1/NonProfit/DeploymentTeams.aspx?searchTerm=" + searchTerm);
+        }
+        else if (searchType == "Posts")
+        {
+            Response.Redirect("/V1/Stream.aspx?searchTerm=" + searchTerm);
+        }
         else
         {
-            Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm);
+            Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm+"&searchType="+ searchType);
         }
 		}
 

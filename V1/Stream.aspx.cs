@@ -25,11 +25,17 @@ public partial class V1_Stream : BaseOrganizationWebForm
 	public string eventId = HttpContext.Current.Request.QueryString["eventId"];
 	public string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
 	protected void Page_Load(object sender, EventArgs e)
-	{
-		if (!this.IsPostBack)
+    {
+		string searchTerm = null;
+
+        if (!this.IsPostBack)
 		{
-			BindDropdownForPostBack();
-			postField.Visible = false;
+             searchTerm = Request.QueryString["searchTerm"];
+			if(searchTerm==null)
+            {
+                BindDropdownForPostBack();
+            }
+            postField.Visible = false;
 			lblPostMessage.Text = "Sign in to post";
 			if (User.Identity.IsAuthenticated)
 			{
@@ -58,11 +64,11 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			this.Master.FbSite_name = "Stability Activity Feed";
 			this.Master.HideMasterCover = true;
 		}
-		else
-		{
-		}
 		LoadPosts();
-		BindDropdown();
+		if (searchTerm == null && !this.IsPostBack)
+		{
+			BindDropdown();
+		}
 	}
 	public void BindDropdown()
 	{
@@ -312,27 +318,11 @@ public partial class V1_Stream : BaseOrganizationWebForm
 		int streamPostPageSize = int.Parse(ConfigurationManager.AppSettings["streamPostPageSize"].ToString()) + 10;
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-		var posts = (from p in dc.Posts
-					 join pr in dc.Profiles on p.CreatedBy equals pr.UserId
-					 join us in dc.aspnet_Memberships on p.CreatedBy equals us.UserId
-					 where p.IsVisible == true 
-					 orderby p.CreatedOn descending
-					 select new
-					 {
-						 p.CreatedBy,
-						 p.PostId,
-						 p.PostTypeId,
-						 p.URLImage,
-						 p.URLTitle,
-						 p.URLDescription,
-						 p.SharedURL,
-						 p.CreatedOn,
-						 p.Message,
-						 pr.UserId,
-						 EventId = p.EventId ?? new Guid(),
-						 fullname = pr.Firstname + " " + pr.Lastname
-					 });
-		rptPosts.DataSource = posts;
+
+        string searchTerm = Request.QueryString["searchTerm"];
+        var posts = dc.ExecuteQuery<SearchResponse.PostInfo>(
+"EXEC SearchFillter {0}, {1}","Posts",string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm).ToList();
+        rptPosts.DataSource = posts;
 		rptPosts.DataBind();
 	}
 	protected void Button1_Click(object sender, EventArgs e)
@@ -1283,4 +1273,6 @@ public partial class V1_Stream : BaseOrganizationWebForm
 			return users;
 		}
 	}
+ 
+
 }
