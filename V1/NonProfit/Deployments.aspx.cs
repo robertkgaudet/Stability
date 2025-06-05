@@ -110,7 +110,10 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 		{ 
 			hypCreateCause.Visible = true;
 			hypCreateCause.NavigateUrl = "/V1/NonProfitAdministration/RespondToEvent.aspx?organizationId=" + organizationId;
-		}
+            hypAddNewPosition.Visible = true;
+            hypAddNewPosition.NavigateUrl = "/V1/NonProfit/NoDeployment.aspx?organizationEventId=58C2CFA1-14B7-480D-A62D-37F82F8E4FC7";
+            hypAddNewPosition.Style["margin-left"] = "125px";
+        }
 		ucDeploymentListCard.OrganizationId = new Guid(organizationId);
 		ucDeploymentListCard.IsActive = true;
 

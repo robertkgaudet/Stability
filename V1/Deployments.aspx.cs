@@ -13,13 +13,9 @@ public partial class V1_Deployments : BaseWebForm
 
 		Guid prioritizedId = new Guid("79305f85-3816-46a8-911f-0d7e3e227c32");
         string searchTerm = Request.QueryString["searchTerm"];
-
-        // First, get the most recent event for the prioritized organization
-
-
         var otherEvents = dc.ExecuteQuery<SearchResponse.OrganizationEventResult>(
-"EXEC SearchFillter {0}, {1}",
-"Deployments",
+         "EXEC SearchFillter {0}, {1}",
+         "Deployments",
 string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm);
 
         var combinedEvents = new List<object>();
