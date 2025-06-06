@@ -14,7 +14,7 @@
                 <div class="panel-body">
 					<h4><asp:Literal ID="litPageName" runat="server"></asp:Literal></h4>
                     <br />
-					<a href="/V1/NonProfit/NonProfitNew.aspx" runat="server" id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right">Create A Team, Club or Group</a>
+					<a href="/V1/NonProfit/NonProfitNew.aspx" runat="server" id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right" style="margin-bottom:10px;">Create A Team, Club or Group</a>
 					<span id="rowCountWrapper" style="font-size: 14px	; font-weight: normal;" class="text-muted">
                         <asp:Literal ID="litCount" runat="server"></asp:Literal>
                     </span>
