@@ -97,8 +97,6 @@
       <Association Name="aspnet_User_UserUser" Member="UserUsers" ThisKey="UserId" OtherKey="AcceptingUserId" Type="UserUser" />
       <Association Name="aspnet_User_UserOrganizationEventPosition" Member="UserOrganizationEventPositions" ThisKey="UserId" OtherKey="UserId" Type="UserOrganizationEventPosition" />
       <Association Name="aspnet_User_OrganizationEventPositionDate" Member="OrganizationEventPositionDates" ThisKey="UserId" OtherKey="CreatedBy" Type="OrganizationEventPositionDate" />
-      <Association Name="aspnet_User_OrganizationEventPosition" Member="OrganizationEventPositions" ThisKey="UserId" OtherKey="CreatedBy" Type="OrganizationEventPosition" />
-      <Association Name="aspnet_User_OrganizationEventPosition1" Member="OrganizationEventPositions1" ThisKey="UserId" OtherKey="UpdatedBy" Type="OrganizationEventPosition" />
       <Association Name="aspnet_User_Event" Member="Events" ThisKey="UserId" OtherKey="CreatedBy" Type="Event" />
       <Association Name="aspnet_User_TicketProperty" Member="TicketProperties" ThisKey="UserId" OtherKey="UserId" Type="TicketProperty" />
       <Association Name="aspnet_User_TicketProperty1" Member="TicketProperties1" ThisKey="UserId" OtherKey="CreatedBy" Type="TicketProperty" />
@@ -118,6 +116,8 @@
       <Association Name="aspnet_User_UserOrganizationHistory" Member="UserOrganizationHistories" ThisKey="UserId" OtherKey="UserId" Type="UserOrganizationHistory" />
       <Association Name="aspnet_User_UserOrganization" Member="UserOrganizations" ThisKey="UserId" OtherKey="UserId" Type="UserOrganization" />
       <Association Name="aspnet_User_OrganizationUserRanking" Member="OrganizationUserRankings" ThisKey="UserId" OtherKey="UserId" Type="OrganizationUserRanking" />
+      <Association Name="aspnet_User_OrganizationEventPosition" Member="OrganizationEventPositions" ThisKey="UserId" OtherKey="CreatedBy" Type="OrganizationEventPosition" />
+      <Association Name="aspnet_User_OrganizationEventPosition1" Member="OrganizationEventPositions1" ThisKey="UserId" OtherKey="UpdatedBy" Type="OrganizationEventPosition" />
       <Association Name="StreamDonation_aspnet_User" Member="StreamDonation" Storage="_Donation" ThisKey="UserId" OtherKey="UserId" Type="StreamDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User" Member="UserDonation" ThisKey="UserId" OtherKey="DonorId" Type="UserDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User1" Member="UserDonation1" ThisKey="UserId" OtherKey="RecipientId" Type="UserDonation" IsForeignKey="true" />
@@ -1347,9 +1347,9 @@
       <Column Name="[Order]" Member="Order" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="Program_OrganizationProgram" Member="OrganizationPrograms" ThisKey="ProgramId" OtherKey="ProgramId" Type="OrganizationProgram" />
       <Association Name="Program_OrganizationEventProgram" Member="OrganizationEventPrograms" ThisKey="ProgramId" OtherKey="ProgramId" Type="OrganizationEventProgram" />
-      <Association Name="Program_OrganizationEventPosition" Member="OrganizationEventPositions" ThisKey="ProgramId" OtherKey="ProgramId" Type="OrganizationEventPosition" />
       <Association Name="Program_ProgramPosition" Member="ProgramPositions" ThisKey="ProgramId" OtherKey="ProgramId" Type="ProgramPosition" />
       <Association Name="Program_ProgramVideoLink" Member="ProgramVideoLinks" ThisKey="ProgramId" OtherKey="ProgramId" Type="ProgramVideoLink" />
+      <Association Name="Program_OrganizationEventPosition" Member="OrganizationEventPositions" ThisKey="ProgramId" OtherKey="ProgramId" Type="OrganizationEventPosition" />
     </Type>
   </Table>
   <Table Name="dbo.OrganizationEventProgram" Member="OrganizationEventPrograms">
@@ -1453,32 +1453,6 @@
       <Association Name="OrganizationEventPositionDate_UserOrganizationEventPosition" Member="UserOrganizationEventPositions" ThisKey="OrganizationEventPositionDateId" OtherKey="OrganizationEventPositionDateId" Type="UserOrganizationEventPosition" />
       <Association Name="aspnet_User_OrganizationEventPositionDate" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="OrganizationEvent_OrganizationEventPositionDate" Member="OrganizationEvent" ThisKey="OrganizationEventId" OtherKey="OrganizationEventId" Type="OrganizationEvent" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.OrganizationEventPosition" Member="OrganizationEventPositions">
-    <Type Name="OrganizationEventPosition">
-      <Column Name="OrganizationEventPositionId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="OrganizationEventId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="DeploymentDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="ProgramId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Column Name="PositionId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="NumberNeeded" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ArrivalTime" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="DepartureTime" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
-      <Column Name="HasDate" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="IsRemote" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
-      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
-      <Association Name="OrganizationEventPosition_UserOrganizationEventPosition" Member="UserOrganizationEventPositions" ThisKey="OrganizationEventPositionId" OtherKey="OrganizationEventPositionId" Type="UserOrganizationEventPosition" />
-      <Association Name="OrganizationEventPosition_UserOrganizationEventPosition1" Member="UserOrganizationEventPositions1" ThisKey="OrganizationEventPositionId" OtherKey="OrganizationEventPositionId" Type="UserOrganizationEventPosition" />
-      <Association Name="aspnet_User_OrganizationEventPosition" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
-      <Association Name="aspnet_User_OrganizationEventPosition1" Member="aspnet_User1" ThisKey="UpdatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
-      <Association Name="Program_OrganizationEventPosition" Member="Program" ThisKey="ProgramId" OtherKey="ProgramId" Type="Program" IsForeignKey="true" />
-      <Association Name="OrganizationEvent_OrganizationEventPosition" Member="OrganizationEvent" ThisKey="OrganizationEventId" OtherKey="OrganizationEventId" Type="OrganizationEvent" IsForeignKey="true" />
-      <Association Name="Position_OrganizationEventPosition" Member="Position" ThisKey="PositionId" OtherKey="PositionId" Type="Position" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.OrganizationEvent" Member="OrganizationEvents">
@@ -1715,9 +1689,9 @@
       <Column Name="SupervisorPositionId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Association Name="Position_OrganizationEventPosition" Member="OrganizationEventPositions" ThisKey="PositionId" OtherKey="PositionId" Type="OrganizationEventPosition" />
       <Association Name="Position_Position" Member="Position2" ThisKey="PositionId" OtherKey="PositionId" Type="Position" Cardinality="One" />
       <Association Name="Position_ProgramPosition" Member="ProgramPositions" ThisKey="PositionId" OtherKey="PositionId" Type="ProgramPosition" />
+      <Association Name="Position_OrganizationEventPosition" Member="OrganizationEventPositions" ThisKey="PositionId" OtherKey="PositionId" Type="OrganizationEventPosition" />
       <Association Name="Position_Position" Member="Position1" ThisKey="PositionId" OtherKey="PositionId" Type="Position" IsForeignKey="true" />
       <Association Name="Organization_Position" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
     </Type>
@@ -2204,6 +2178,33 @@
       <Column Name="ModifiedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="ModifiedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Association Name="Organization_OrganizationRankingConfig" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OrganizationEventPosition" Member="OrganizationEventPositions">
+    <Type Name="OrganizationEventPosition">
+      <Column Name="OrganizationEventPositionId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="OrganizationEventId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="DeploymentDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ProgramId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="PositionId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="NumberNeeded" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ArrivalTime" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="DepartureTime" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="HasDate" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsRemote" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="AddressId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Association Name="OrganizationEventPosition_UserOrganizationEventPosition" Member="UserOrganizationEventPositions" ThisKey="OrganizationEventPositionId" OtherKey="OrganizationEventPositionId" Type="UserOrganizationEventPosition" />
+      <Association Name="OrganizationEventPosition_UserOrganizationEventPosition1" Member="UserOrganizationEventPositions1" ThisKey="OrganizationEventPositionId" OtherKey="OrganizationEventPositionId" Type="UserOrganizationEventPosition" />
+      <Association Name="aspnet_User_OrganizationEventPosition" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+      <Association Name="aspnet_User_OrganizationEventPosition1" Member="aspnet_User1" ThisKey="UpdatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+      <Association Name="OrganizationEvent_OrganizationEventPosition" Member="OrganizationEvent" ThisKey="OrganizationEventId" OtherKey="OrganizationEventId" Type="OrganizationEvent" IsForeignKey="true" />
+      <Association Name="Position_OrganizationEventPosition" Member="Position" ThisKey="PositionId" OtherKey="PositionId" Type="Position" IsForeignKey="true" />
+      <Association Name="Program_OrganizationEventPosition" Member="Program" ThisKey="ProgramId" OtherKey="ProgramId" Type="Program" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisasterForCleanupMap" Method="GetGeoJsonByDisasterForCleanupMap">

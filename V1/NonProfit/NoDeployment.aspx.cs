@@ -188,7 +188,7 @@ public partial class V1_NonProfit_NonProfitCampaign : BaseOrganizationWebForm
             hypAddCase.Visible = true;
             ucPostionNavigation1.IsTeamOwner = true;
             editCampaignLink = "/V1/NonProfitAdministration/EditNonProfitCampaign.aspx?OrganizationEventId=" + organizationEvent.oe.OrganizationEventId;
-            editPositionsLink = "/V1/NonProfitAdministration/PositionsNeeded.aspx?OrganizationEventId=" + organizationEvent.oe.OrganizationEventId;
+            editPositionsLink = "/V1/NonProfitAdministration/PositionsNeeded1.aspx?OrganizationEventId=" + organizationEvent.oe.OrganizationEventId;
         }
 
         if (!String.IsNullOrEmpty(organizationEvent.oe.BlogURL))

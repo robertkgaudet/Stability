@@ -44,7 +44,7 @@
 	</style>
 	<div class="child-master-header">
 		<div class="postions-navigation-menu">
-            <a href="/V1/NonProfitAdministration/PositionsNeeded.aspx?organizationEventId=<%=_organizationEventId%>" <%=_positionsActive%>>Add New Positions</a>
+            <a href="/V1/NonProfitAdministration/PositionsNeeded1.aspx?organizationEventId=<%=_organizationEventId%>" <%=_positionsActive%>>Add New Positions</a>
 			<a href="/V1/NonProfitAdministration/Participants.aspx?organizationEventId=<%=_organizationEventId%>" <%=_participantsActive%>>View Participant List</a>
 	        <a href="javascript:void(0);" onclick="openInviteModal()">Invite Team Members</a>
             <span class="pull-right"> <i class="fa fa-arrow-circle-o-up"></i> <b><a href="/SignUp/<%=_urlFriendlyName%>"  <%=_viewPositionsActive%>>View Open Positions</a></b></span>

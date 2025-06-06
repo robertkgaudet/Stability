@@ -350,9 +350,6 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertOrganizationEventPositionDate(OrganizationEventPositionDate instance);
   partial void UpdateOrganizationEventPositionDate(OrganizationEventPositionDate instance);
   partial void DeleteOrganizationEventPositionDate(OrganizationEventPositionDate instance);
-  partial void InsertOrganizationEventPosition(OrganizationEventPosition instance);
-  partial void UpdateOrganizationEventPosition(OrganizationEventPosition instance);
-  partial void DeleteOrganizationEventPosition(OrganizationEventPosition instance);
   partial void InsertOrganizationEvent(OrganizationEvent instance);
   partial void UpdateOrganizationEvent(OrganizationEvent instance);
   partial void DeleteOrganizationEvent(OrganizationEvent instance);
@@ -449,14 +446,16 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertOrganizationRankingConfig(OrganizationRankingConfig instance);
   partial void UpdateOrganizationRankingConfig(OrganizationRankingConfig instance);
   partial void DeleteOrganizationRankingConfig(OrganizationRankingConfig instance);
-	#endregion
+  partial void InsertOrganizationEventPosition(OrganizationEventPosition instance);
+  partial void UpdateOrganizationEventPosition(OrganizationEventPosition instance);
+  partial void DeleteOrganizationEventPosition(OrganizationEventPosition instance);
+  #endregion	
 	public CrowdReliefDBDataContext() :
 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
 	{
 		OnCreated();
-	}
-
-	public CrowdReliefDBDataContext(string connection) : 
+}
+public CrowdReliefDBDataContext(string connection) : 
 			base(connection, mappingSource)
 	{
 		OnCreated();
@@ -1336,14 +1335,6 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 		}
 	}
 	
-	public System.Data.Linq.Table<OrganizationEventPosition> OrganizationEventPositions
-	{
-		get
-		{
-			return this.GetTable<OrganizationEventPosition>();
-		}
-	}
-	
 	public System.Data.Linq.Table<OrganizationEvent> OrganizationEvents
 	{
 		get
@@ -1597,6 +1588,14 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 		get
 		{
 			return this.GetTable<OrganizationRankingConfig>();
+		}
+	}
+	
+	public System.Data.Linq.Table<OrganizationEventPosition> OrganizationEventPositions
+	{
+		get
+		{
+			return this.GetTable<OrganizationEventPosition>();
 		}
 	}
 	
@@ -2775,10 +2774,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private EntitySet<OrganizationEventPositionDate> _OrganizationEventPositionDates;
 	
-	private EntitySet<OrganizationEventPosition> _OrganizationEventPositions;
-	
-	private EntitySet<OrganizationEventPosition> _OrganizationEventPositions1;
-	
 	private EntitySet<Event> _Events;
 	
 	private EntitySet<TicketProperty> _TicketProperties;
@@ -2816,6 +2811,10 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	private EntitySet<UserOrganization> _UserOrganizations;
 	
 	private EntitySet<OrganizationUserRanking> _OrganizationUserRankings;
+	
+	private EntitySet<OrganizationEventPosition> _OrganizationEventPositions;
+	
+	private EntitySet<OrganizationEventPosition> _OrganizationEventPositions1;
 	
 	private EntityRef<StreamDonation> _Donation;
 	
@@ -2887,8 +2886,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		this._UserUsers = new EntitySet<UserUser>(new Action<UserUser>(this.attach_UserUsers), new Action<UserUser>(this.detach_UserUsers));
 		this._UserOrganizationEventPositions = new EntitySet<UserOrganizationEventPosition>(new Action<UserOrganizationEventPosition>(this.attach_UserOrganizationEventPositions), new Action<UserOrganizationEventPosition>(this.detach_UserOrganizationEventPositions));
 		this._OrganizationEventPositionDates = new EntitySet<OrganizationEventPositionDate>(new Action<OrganizationEventPositionDate>(this.attach_OrganizationEventPositionDates), new Action<OrganizationEventPositionDate>(this.detach_OrganizationEventPositionDates));
-		this._OrganizationEventPositions = new EntitySet<OrganizationEventPosition>(new Action<OrganizationEventPosition>(this.attach_OrganizationEventPositions), new Action<OrganizationEventPosition>(this.detach_OrganizationEventPositions));
-		this._OrganizationEventPositions1 = new EntitySet<OrganizationEventPosition>(new Action<OrganizationEventPosition>(this.attach_OrganizationEventPositions1), new Action<OrganizationEventPosition>(this.detach_OrganizationEventPositions1));
 		this._Events = new EntitySet<Event>(new Action<Event>(this.attach_Events), new Action<Event>(this.detach_Events));
 		this._TicketProperties = new EntitySet<TicketProperty>(new Action<TicketProperty>(this.attach_TicketProperties), new Action<TicketProperty>(this.detach_TicketProperties));
 		this._TicketProperties1 = new EntitySet<TicketProperty>(new Action<TicketProperty>(this.attach_TicketProperties1), new Action<TicketProperty>(this.detach_TicketProperties1));
@@ -2908,6 +2905,8 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		this._UserOrganizationHistories = new EntitySet<UserOrganizationHistory>(new Action<UserOrganizationHistory>(this.attach_UserOrganizationHistories), new Action<UserOrganizationHistory>(this.detach_UserOrganizationHistories));
 		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
 		this._OrganizationUserRankings = new EntitySet<OrganizationUserRanking>(new Action<OrganizationUserRanking>(this.attach_OrganizationUserRankings), new Action<OrganizationUserRanking>(this.detach_OrganizationUserRankings));
+		this._OrganizationEventPositions = new EntitySet<OrganizationEventPosition>(new Action<OrganizationEventPosition>(this.attach_OrganizationEventPositions), new Action<OrganizationEventPosition>(this.detach_OrganizationEventPositions));
+		this._OrganizationEventPositions1 = new EntitySet<OrganizationEventPosition>(new Action<OrganizationEventPosition>(this.attach_OrganizationEventPositions1), new Action<OrganizationEventPosition>(this.detach_OrganizationEventPositions1));
 		this._Donation = default(EntityRef<StreamDonation>);
 		this._UserDonation = default(EntityRef<UserDonation>);
 		this._UserDonation1 = default(EntityRef<UserDonation>);
@@ -3621,32 +3620,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_OrganizationEventPosition", Storage="_OrganizationEventPositions", ThisKey="UserId", OtherKey="CreatedBy")]
-	public EntitySet<OrganizationEventPosition> OrganizationEventPositions
-	{
-		get
-		{
-			return this._OrganizationEventPositions;
-		}
-		set
-		{
-			this._OrganizationEventPositions.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_OrganizationEventPosition1", Storage="_OrganizationEventPositions1", ThisKey="UserId", OtherKey="UpdatedBy")]
-	public EntitySet<OrganizationEventPosition> OrganizationEventPositions1
-	{
-		get
-		{
-			return this._OrganizationEventPositions1;
-		}
-		set
-		{
-			this._OrganizationEventPositions1.Assign(value);
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Event", Storage="_Events", ThisKey="UserId", OtherKey="CreatedBy")]
 	public EntitySet<Event> Events
 	{
@@ -3891,6 +3864,32 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		set
 		{
 			this._OrganizationUserRankings.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_OrganizationEventPosition", Storage="_OrganizationEventPositions", ThisKey="UserId", OtherKey="CreatedBy")]
+	public EntitySet<OrganizationEventPosition> OrganizationEventPositions
+	{
+		get
+		{
+			return this._OrganizationEventPositions;
+		}
+		set
+		{
+			this._OrganizationEventPositions.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_OrganizationEventPosition1", Storage="_OrganizationEventPositions1", ThisKey="UserId", OtherKey="UpdatedBy")]
+	public EntitySet<OrganizationEventPosition> OrganizationEventPositions1
+	{
+		get
+		{
+			return this._OrganizationEventPositions1;
+		}
+		set
+		{
+			this._OrganizationEventPositions1.Assign(value);
 		}
 	}
 	
@@ -4508,30 +4507,6 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		entity.aspnet_User = null;
 	}
 	
-	private void attach_OrganizationEventPositions(OrganizationEventPosition entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = this;
-	}
-	
-	private void detach_OrganizationEventPositions(OrganizationEventPosition entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User = null;
-	}
-	
-	private void attach_OrganizationEventPositions1(OrganizationEventPosition entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User1 = this;
-	}
-	
-	private void detach_OrganizationEventPositions1(OrganizationEventPosition entity)
-	{
-		this.SendPropertyChanging();
-		entity.aspnet_User1 = null;
-	}
-	
 	private void attach_Events(Event entity)
 	{
 		this.SendPropertyChanging();
@@ -4758,6 +4733,30 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	{
 		this.SendPropertyChanging();
 		entity.aspnet_User = null;
+	}
+	
+	private void attach_OrganizationEventPositions(OrganizationEventPosition entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_OrganizationEventPositions(OrganizationEventPosition entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_OrganizationEventPositions1(OrganizationEventPosition entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User1 = this;
+	}
+	
+	private void detach_OrganizationEventPositions1(OrganizationEventPosition entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User1 = null;
 	}
 }
 
@@ -31534,11 +31533,11 @@ public partial class Program : INotifyPropertyChanging, INotifyPropertyChanged
 	
 	private EntitySet<OrganizationEventProgram> _OrganizationEventPrograms;
 	
-	private EntitySet<OrganizationEventPosition> _OrganizationEventPositions;
-	
 	private EntitySet<ProgramPosition> _ProgramPositions;
 	
 	private EntitySet<ProgramVideoLink> _ProgramVideoLinks;
+	
+	private EntitySet<OrganizationEventPosition> _OrganizationEventPositions;
 	
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -31566,9 +31565,9 @@ public partial class Program : INotifyPropertyChanging, INotifyPropertyChanged
 	{
 		this._OrganizationPrograms = new EntitySet<OrganizationProgram>(new Action<OrganizationProgram>(this.attach_OrganizationPrograms), new Action<OrganizationProgram>(this.detach_OrganizationPrograms));
 		this._OrganizationEventPrograms = new EntitySet<OrganizationEventProgram>(new Action<OrganizationEventProgram>(this.attach_OrganizationEventPrograms), new Action<OrganizationEventProgram>(this.detach_OrganizationEventPrograms));
-		this._OrganizationEventPositions = new EntitySet<OrganizationEventPosition>(new Action<OrganizationEventPosition>(this.attach_OrganizationEventPositions), new Action<OrganizationEventPosition>(this.detach_OrganizationEventPositions));
 		this._ProgramPositions = new EntitySet<ProgramPosition>(new Action<ProgramPosition>(this.attach_ProgramPositions), new Action<ProgramPosition>(this.detach_ProgramPositions));
 		this._ProgramVideoLinks = new EntitySet<ProgramVideoLink>(new Action<ProgramVideoLink>(this.attach_ProgramVideoLinks), new Action<ProgramVideoLink>(this.detach_ProgramVideoLinks));
+		this._OrganizationEventPositions = new EntitySet<OrganizationEventPosition>(new Action<OrganizationEventPosition>(this.attach_OrganizationEventPositions), new Action<OrganizationEventPosition>(this.detach_OrganizationEventPositions));
 		OnCreated();
 	}
 	
@@ -31758,19 +31757,6 @@ public partial class Program : INotifyPropertyChanging, INotifyPropertyChanged
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Program_OrganizationEventPosition", Storage="_OrganizationEventPositions", ThisKey="ProgramId", OtherKey="ProgramId")]
-	public EntitySet<OrganizationEventPosition> OrganizationEventPositions
-	{
-		get
-		{
-			return this._OrganizationEventPositions;
-		}
-		set
-		{
-			this._OrganizationEventPositions.Assign(value);
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Program_ProgramPosition", Storage="_ProgramPositions", ThisKey="ProgramId", OtherKey="ProgramId")]
 	public EntitySet<ProgramPosition> ProgramPositions
 	{
@@ -31794,6 +31780,19 @@ public partial class Program : INotifyPropertyChanging, INotifyPropertyChanged
 		set
 		{
 			this._ProgramVideoLinks.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Program_OrganizationEventPosition", Storage="_OrganizationEventPositions", ThisKey="ProgramId", OtherKey="ProgramId")]
+	public EntitySet<OrganizationEventPosition> OrganizationEventPositions
+	{
+		get
+		{
+			return this._OrganizationEventPositions;
+		}
+		set
+		{
+			this._OrganizationEventPositions.Assign(value);
 		}
 	}
 	
@@ -31841,18 +31840,6 @@ public partial class Program : INotifyPropertyChanging, INotifyPropertyChanged
 		entity.Program = null;
 	}
 	
-	private void attach_OrganizationEventPositions(OrganizationEventPosition entity)
-	{
-		this.SendPropertyChanging();
-		entity.Program = this;
-	}
-	
-	private void detach_OrganizationEventPositions(OrganizationEventPosition entity)
-	{
-		this.SendPropertyChanging();
-		entity.Program = null;
-	}
-	
 	private void attach_ProgramPositions(ProgramPosition entity)
 	{
 		this.SendPropertyChanging();
@@ -31872,6 +31859,18 @@ public partial class Program : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 	
 	private void detach_ProgramVideoLinks(ProgramVideoLink entity)
+	{
+		this.SendPropertyChanging();
+		entity.Program = null;
+	}
+	
+	private void attach_OrganizationEventPositions(OrganizationEventPosition entity)
+	{
+		this.SendPropertyChanging();
+		entity.Program = this;
+	}
+	
+	private void detach_OrganizationEventPositions(OrganizationEventPosition entity)
 	{
 		this.SendPropertyChanging();
 		entity.Program = null;
@@ -34017,665 +34016,6 @@ public partial class OrganizationEventPositionDate : INotifyPropertyChanging, IN
 	{
 		this.SendPropertyChanging();
 		entity.OrganizationEventPositionDate = null;
-	}
-}
-
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.OrganizationEventPosition")]
-public partial class OrganizationEventPosition : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private System.Guid _OrganizationEventPositionId;
-	
-	private System.Guid _OrganizationEventId;
-	
-	private System.Nullable<System.DateTime> _DeploymentDate;
-	
-	private System.Nullable<System.Guid> _ProgramId;
-	
-	private System.Guid _PositionId;
-	
-	private int _NumberNeeded;
-	
-	private System.Nullable<System.TimeSpan> _ArrivalTime;
-	
-	private System.Nullable<System.TimeSpan> _DepartureTime;
-	
-	private bool _HasDate;
-	
-	private bool _IsRemote;
-	
-	private bool _IsDeleted;
-	
-	private System.DateTime _CreatedOn;
-	
-	private System.Nullable<System.DateTime> _UpdatedOn;
-	
-	private System.Guid _CreatedBy;
-	
-	private System.Nullable<System.Guid> _UpdatedBy;
-	
-	private EntitySet<UserOrganizationEventPosition> _UserOrganizationEventPositions;
-	
-	private EntitySet<UserOrganizationEventPosition> _UserOrganizationEventPositions1;
-	
-	private EntityRef<aspnet_User> _aspnet_User;
-	
-	private EntityRef<aspnet_User> _aspnet_User1;
-	
-	private EntityRef<Program> _Program;
-	
-	private EntityRef<OrganizationEvent> _OrganizationEvent;
-	
-	private EntityRef<Position> _Position;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnOrganizationEventPositionIdChanging(System.Guid value);
-    partial void OnOrganizationEventPositionIdChanged();
-    partial void OnOrganizationEventIdChanging(System.Guid value);
-    partial void OnOrganizationEventIdChanged();
-    partial void OnDeploymentDateChanging(System.Nullable<System.DateTime> value);
-    partial void OnDeploymentDateChanged();
-    partial void OnProgramIdChanging(System.Nullable<System.Guid> value);
-    partial void OnProgramIdChanged();
-    partial void OnPositionIdChanging(System.Guid value);
-    partial void OnPositionIdChanged();
-    partial void OnNumberNeededChanging(int value);
-    partial void OnNumberNeededChanged();
-    partial void OnArrivalTimeChanging(System.Nullable<System.TimeSpan> value);
-    partial void OnArrivalTimeChanged();
-    partial void OnDepartureTimeChanging(System.Nullable<System.TimeSpan> value);
-    partial void OnDepartureTimeChanged();
-    partial void OnHasDateChanging(bool value);
-    partial void OnHasDateChanged();
-    partial void OnIsRemoteChanging(bool value);
-    partial void OnIsRemoteChanged();
-    partial void OnIsDeletedChanging(bool value);
-    partial void OnIsDeletedChanged();
-    partial void OnCreatedOnChanging(System.DateTime value);
-    partial void OnCreatedOnChanged();
-    partial void OnUpdatedOnChanging(System.Nullable<System.DateTime> value);
-    partial void OnUpdatedOnChanged();
-    partial void OnCreatedByChanging(System.Guid value);
-    partial void OnCreatedByChanged();
-    partial void OnUpdatedByChanging(System.Nullable<System.Guid> value);
-    partial void OnUpdatedByChanged();
-    #endregion
-	
-	public OrganizationEventPosition()
-	{
-		this._UserOrganizationEventPositions = new EntitySet<UserOrganizationEventPosition>(new Action<UserOrganizationEventPosition>(this.attach_UserOrganizationEventPositions), new Action<UserOrganizationEventPosition>(this.detach_UserOrganizationEventPositions));
-		this._UserOrganizationEventPositions1 = new EntitySet<UserOrganizationEventPosition>(new Action<UserOrganizationEventPosition>(this.attach_UserOrganizationEventPositions1), new Action<UserOrganizationEventPosition>(this.detach_UserOrganizationEventPositions1));
-		this._aspnet_User = default(EntityRef<aspnet_User>);
-		this._aspnet_User1 = default(EntityRef<aspnet_User>);
-		this._Program = default(EntityRef<Program>);
-		this._OrganizationEvent = default(EntityRef<OrganizationEvent>);
-		this._Position = default(EntityRef<Position>);
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationEventPositionId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
-	public System.Guid OrganizationEventPositionId
-	{
-		get
-		{
-			return this._OrganizationEventPositionId;
-		}
-		set
-		{
-			if ((this._OrganizationEventPositionId != value))
-			{
-				this.OnOrganizationEventPositionIdChanging(value);
-				this.SendPropertyChanging();
-				this._OrganizationEventPositionId = value;
-				this.SendPropertyChanged("OrganizationEventPositionId");
-				this.OnOrganizationEventPositionIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationEventId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid OrganizationEventId
-	{
-		get
-		{
-			return this._OrganizationEventId;
-		}
-		set
-		{
-			if ((this._OrganizationEventId != value))
-			{
-				if (this._OrganizationEvent.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnOrganizationEventIdChanging(value);
-				this.SendPropertyChanging();
-				this._OrganizationEventId = value;
-				this.SendPropertyChanged("OrganizationEventId");
-				this.OnOrganizationEventIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DeploymentDate", DbType="DateTime")]
-	public System.Nullable<System.DateTime> DeploymentDate
-	{
-		get
-		{
-			return this._DeploymentDate;
-		}
-		set
-		{
-			if ((this._DeploymentDate != value))
-			{
-				this.OnDeploymentDateChanging(value);
-				this.SendPropertyChanging();
-				this._DeploymentDate = value;
-				this.SendPropertyChanged("DeploymentDate");
-				this.OnDeploymentDateChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProgramId", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> ProgramId
-	{
-		get
-		{
-			return this._ProgramId;
-		}
-		set
-		{
-			if ((this._ProgramId != value))
-			{
-				if (this._Program.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnProgramIdChanging(value);
-				this.SendPropertyChanging();
-				this._ProgramId = value;
-				this.SendPropertyChanged("ProgramId");
-				this.OnProgramIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PositionId", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid PositionId
-	{
-		get
-		{
-			return this._PositionId;
-		}
-		set
-		{
-			if ((this._PositionId != value))
-			{
-				if (this._Position.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnPositionIdChanging(value);
-				this.SendPropertyChanging();
-				this._PositionId = value;
-				this.SendPropertyChanged("PositionId");
-				this.OnPositionIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberNeeded", DbType="Int NOT NULL")]
-	public int NumberNeeded
-	{
-		get
-		{
-			return this._NumberNeeded;
-		}
-		set
-		{
-			if ((this._NumberNeeded != value))
-			{
-				this.OnNumberNeededChanging(value);
-				this.SendPropertyChanging();
-				this._NumberNeeded = value;
-				this.SendPropertyChanged("NumberNeeded");
-				this.OnNumberNeededChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ArrivalTime", DbType="Time")]
-	public System.Nullable<System.TimeSpan> ArrivalTime
-	{
-		get
-		{
-			return this._ArrivalTime;
-		}
-		set
-		{
-			if ((this._ArrivalTime != value))
-			{
-				this.OnArrivalTimeChanging(value);
-				this.SendPropertyChanging();
-				this._ArrivalTime = value;
-				this.SendPropertyChanged("ArrivalTime");
-				this.OnArrivalTimeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DepartureTime", DbType="Time")]
-	public System.Nullable<System.TimeSpan> DepartureTime
-	{
-		get
-		{
-			return this._DepartureTime;
-		}
-		set
-		{
-			if ((this._DepartureTime != value))
-			{
-				this.OnDepartureTimeChanging(value);
-				this.SendPropertyChanging();
-				this._DepartureTime = value;
-				this.SendPropertyChanged("DepartureTime");
-				this.OnDepartureTimeChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HasDate", DbType="Bit NOT NULL")]
-	public bool HasDate
-	{
-		get
-		{
-			return this._HasDate;
-		}
-		set
-		{
-			if ((this._HasDate != value))
-			{
-				this.OnHasDateChanging(value);
-				this.SendPropertyChanging();
-				this._HasDate = value;
-				this.SendPropertyChanged("HasDate");
-				this.OnHasDateChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsRemote", DbType="Bit NOT NULL")]
-	public bool IsRemote
-	{
-		get
-		{
-			return this._IsRemote;
-		}
-		set
-		{
-			if ((this._IsRemote != value))
-			{
-				this.OnIsRemoteChanging(value);
-				this.SendPropertyChanging();
-				this._IsRemote = value;
-				this.SendPropertyChanged("IsRemote");
-				this.OnIsRemoteChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDeleted", DbType="Bit NOT NULL")]
-	public bool IsDeleted
-	{
-		get
-		{
-			return this._IsDeleted;
-		}
-		set
-		{
-			if ((this._IsDeleted != value))
-			{
-				this.OnIsDeletedChanging(value);
-				this.SendPropertyChanging();
-				this._IsDeleted = value;
-				this.SendPropertyChanged("IsDeleted");
-				this.OnIsDeletedChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
-	public System.DateTime CreatedOn
-	{
-		get
-		{
-			return this._CreatedOn;
-		}
-		set
-		{
-			if ((this._CreatedOn != value))
-			{
-				this.OnCreatedOnChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedOn = value;
-				this.SendPropertyChanged("CreatedOn");
-				this.OnCreatedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedOn", DbType="DateTime")]
-	public System.Nullable<System.DateTime> UpdatedOn
-	{
-		get
-		{
-			return this._UpdatedOn;
-		}
-		set
-		{
-			if ((this._UpdatedOn != value))
-			{
-				this.OnUpdatedOnChanging(value);
-				this.SendPropertyChanging();
-				this._UpdatedOn = value;
-				this.SendPropertyChanged("UpdatedOn");
-				this.OnUpdatedOnChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier NOT NULL")]
-	public System.Guid CreatedBy
-	{
-		get
-		{
-			return this._CreatedBy;
-		}
-		set
-		{
-			if ((this._CreatedBy != value))
-			{
-				if (this._aspnet_User.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnCreatedByChanging(value);
-				this.SendPropertyChanging();
-				this._CreatedBy = value;
-				this.SendPropertyChanged("CreatedBy");
-				this.OnCreatedByChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedBy", DbType="UniqueIdentifier")]
-	public System.Nullable<System.Guid> UpdatedBy
-	{
-		get
-		{
-			return this._UpdatedBy;
-		}
-		set
-		{
-			if ((this._UpdatedBy != value))
-			{
-				if (this._aspnet_User1.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnUpdatedByChanging(value);
-				this.SendPropertyChanging();
-				this._UpdatedBy = value;
-				this.SendPropertyChanged("UpdatedBy");
-				this.OnUpdatedByChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="OrganizationEventPosition_UserOrganizationEventPosition", Storage="_UserOrganizationEventPositions", ThisKey="OrganizationEventPositionId", OtherKey="OrganizationEventPositionId")]
-	public EntitySet<UserOrganizationEventPosition> UserOrganizationEventPositions
-	{
-		get
-		{
-			return this._UserOrganizationEventPositions;
-		}
-		set
-		{
-			this._UserOrganizationEventPositions.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="OrganizationEventPosition_UserOrganizationEventPosition1", Storage="_UserOrganizationEventPositions1", ThisKey="OrganizationEventPositionId", OtherKey="OrganizationEventPositionId")]
-	public EntitySet<UserOrganizationEventPosition> UserOrganizationEventPositions1
-	{
-		get
-		{
-			return this._UserOrganizationEventPositions1;
-		}
-		set
-		{
-			this._UserOrganizationEventPositions1.Assign(value);
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_OrganizationEventPosition", Storage="_aspnet_User", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
-	public aspnet_User aspnet_User
-	{
-		get
-		{
-			return this._aspnet_User.Entity;
-		}
-		set
-		{
-			aspnet_User previousValue = this._aspnet_User.Entity;
-			if (((previousValue != value) 
-						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._aspnet_User.Entity = null;
-					previousValue.OrganizationEventPositions.Remove(this);
-				}
-				this._aspnet_User.Entity = value;
-				if ((value != null))
-				{
-					value.OrganizationEventPositions.Add(this);
-					this._CreatedBy = value.UserId;
-				}
-				else
-				{
-					this._CreatedBy = default(System.Guid);
-				}
-				this.SendPropertyChanged("aspnet_User");
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_OrganizationEventPosition1", Storage="_aspnet_User1", ThisKey="UpdatedBy", OtherKey="UserId", IsForeignKey=true)]
-	public aspnet_User aspnet_User1
-	{
-		get
-		{
-			return this._aspnet_User1.Entity;
-		}
-		set
-		{
-			aspnet_User previousValue = this._aspnet_User1.Entity;
-			if (((previousValue != value) 
-						|| (this._aspnet_User1.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._aspnet_User1.Entity = null;
-					previousValue.OrganizationEventPositions1.Remove(this);
-				}
-				this._aspnet_User1.Entity = value;
-				if ((value != null))
-				{
-					value.OrganizationEventPositions1.Add(this);
-					this._UpdatedBy = value.UserId;
-				}
-				else
-				{
-					this._UpdatedBy = default(Nullable<System.Guid>);
-				}
-				this.SendPropertyChanged("aspnet_User1");
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Program_OrganizationEventPosition", Storage="_Program", ThisKey="ProgramId", OtherKey="ProgramId", IsForeignKey=true)]
-	public Program Program
-	{
-		get
-		{
-			return this._Program.Entity;
-		}
-		set
-		{
-			Program previousValue = this._Program.Entity;
-			if (((previousValue != value) 
-						|| (this._Program.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Program.Entity = null;
-					previousValue.OrganizationEventPositions.Remove(this);
-				}
-				this._Program.Entity = value;
-				if ((value != null))
-				{
-					value.OrganizationEventPositions.Add(this);
-					this._ProgramId = value.ProgramId;
-				}
-				else
-				{
-					this._ProgramId = default(Nullable<System.Guid>);
-				}
-				this.SendPropertyChanged("Program");
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="OrganizationEvent_OrganizationEventPosition", Storage="_OrganizationEvent", ThisKey="OrganizationEventId", OtherKey="OrganizationEventId", IsForeignKey=true)]
-	public OrganizationEvent OrganizationEvent
-	{
-		get
-		{
-			return this._OrganizationEvent.Entity;
-		}
-		set
-		{
-			OrganizationEvent previousValue = this._OrganizationEvent.Entity;
-			if (((previousValue != value) 
-						|| (this._OrganizationEvent.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._OrganizationEvent.Entity = null;
-					previousValue.OrganizationEventPositions.Remove(this);
-				}
-				this._OrganizationEvent.Entity = value;
-				if ((value != null))
-				{
-					value.OrganizationEventPositions.Add(this);
-					this._OrganizationEventId = value.OrganizationEventId;
-				}
-				else
-				{
-					this._OrganizationEventId = default(System.Guid);
-				}
-				this.SendPropertyChanged("OrganizationEvent");
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Position_OrganizationEventPosition", Storage="_Position", ThisKey="PositionId", OtherKey="PositionId", IsForeignKey=true)]
-	public Position Position
-	{
-		get
-		{
-			return this._Position.Entity;
-		}
-		set
-		{
-			Position previousValue = this._Position.Entity;
-			if (((previousValue != value) 
-						|| (this._Position.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._Position.Entity = null;
-					previousValue.OrganizationEventPositions.Remove(this);
-				}
-				this._Position.Entity = value;
-				if ((value != null))
-				{
-					value.OrganizationEventPositions.Add(this);
-					this._PositionId = value.PositionId;
-				}
-				else
-				{
-					this._PositionId = default(System.Guid);
-				}
-				this.SendPropertyChanged("Position");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-	
-	private void attach_UserOrganizationEventPositions(UserOrganizationEventPosition entity)
-	{
-		this.SendPropertyChanging();
-		entity.OrganizationEventPosition = this;
-	}
-	
-	private void detach_UserOrganizationEventPositions(UserOrganizationEventPosition entity)
-	{
-		this.SendPropertyChanging();
-		entity.OrganizationEventPosition = null;
-	}
-	
-	private void attach_UserOrganizationEventPositions1(UserOrganizationEventPosition entity)
-	{
-		this.SendPropertyChanging();
-		entity.OrganizationEventPosition1 = this;
-	}
-	
-	private void detach_UserOrganizationEventPositions1(UserOrganizationEventPosition entity)
-	{
-		this.SendPropertyChanging();
-		entity.OrganizationEventPosition1 = null;
 	}
 }
 
@@ -39826,11 +39166,11 @@ public partial class Position : INotifyPropertyChanging, INotifyPropertyChanged
 	
 	private System.DateTime _CreatedOn;
 	
-	private EntitySet<OrganizationEventPosition> _OrganizationEventPositions;
-	
 	private EntityRef<Position> _Position2;
 	
 	private EntitySet<ProgramPosition> _ProgramPositions;
+	
+	private EntitySet<OrganizationEventPosition> _OrganizationEventPositions;
 	
 	private EntityRef<Position> _Position1;
 	
@@ -39882,9 +39222,9 @@ public partial class Position : INotifyPropertyChanging, INotifyPropertyChanged
 	
 	public Position()
 	{
-		this._OrganizationEventPositions = new EntitySet<OrganizationEventPosition>(new Action<OrganizationEventPosition>(this.attach_OrganizationEventPositions), new Action<OrganizationEventPosition>(this.detach_OrganizationEventPositions));
 		this._Position2 = default(EntityRef<Position>);
 		this._ProgramPositions = new EntitySet<ProgramPosition>(new Action<ProgramPosition>(this.attach_ProgramPositions), new Action<ProgramPosition>(this.detach_ProgramPositions));
+		this._OrganizationEventPositions = new EntitySet<OrganizationEventPosition>(new Action<OrganizationEventPosition>(this.attach_OrganizationEventPositions), new Action<OrganizationEventPosition>(this.detach_OrganizationEventPositions));
 		this._Position1 = default(EntityRef<Position>);
 		this._Organization = default(EntityRef<Organization>);
 		OnCreated();
@@ -40278,19 +39618,6 @@ public partial class Position : INotifyPropertyChanging, INotifyPropertyChanged
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Position_OrganizationEventPosition", Storage="_OrganizationEventPositions", ThisKey="PositionId", OtherKey="PositionId")]
-	public EntitySet<OrganizationEventPosition> OrganizationEventPositions
-	{
-		get
-		{
-			return this._OrganizationEventPositions;
-		}
-		set
-		{
-			this._OrganizationEventPositions.Assign(value);
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Position_Position", Storage="_Position2", ThisKey="PositionId", OtherKey="PositionId", IsUnique=true, IsForeignKey=false)]
 	public Position Position2
 	{
@@ -40330,6 +39657,19 @@ public partial class Position : INotifyPropertyChanging, INotifyPropertyChanged
 		set
 		{
 			this._ProgramPositions.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Position_OrganizationEventPosition", Storage="_OrganizationEventPositions", ThisKey="PositionId", OtherKey="PositionId")]
+	public EntitySet<OrganizationEventPosition> OrganizationEventPositions
+	{
+		get
+		{
+			return this._OrganizationEventPositions;
+		}
+		set
+		{
+			this._OrganizationEventPositions.Assign(value);
 		}
 	}
 	
@@ -40421,18 +39761,6 @@ public partial class Position : INotifyPropertyChanging, INotifyPropertyChanged
 		}
 	}
 	
-	private void attach_OrganizationEventPositions(OrganizationEventPosition entity)
-	{
-		this.SendPropertyChanging();
-		entity.Position = this;
-	}
-	
-	private void detach_OrganizationEventPositions(OrganizationEventPosition entity)
-	{
-		this.SendPropertyChanging();
-		entity.Position = null;
-	}
-	
 	private void attach_ProgramPositions(ProgramPosition entity)
 	{
 		this.SendPropertyChanging();
@@ -40440,6 +39768,18 @@ public partial class Position : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 	
 	private void detach_ProgramPositions(ProgramPosition entity)
+	{
+		this.SendPropertyChanging();
+		entity.Position = null;
+	}
+	
+	private void attach_OrganizationEventPositions(OrganizationEventPosition entity)
+	{
+		this.SendPropertyChanging();
+		entity.Position = this;
+	}
+	
+	private void detach_OrganizationEventPositions(OrganizationEventPosition entity)
 	{
 		this.SendPropertyChanging();
 		entity.Position = null;
@@ -51354,6 +50694,689 @@ public partial class OrganizationRankingConfig : INotifyPropertyChanging, INotif
 		{
 			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.OrganizationEventPosition")]
+public partial class OrganizationEventPosition : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _OrganizationEventPositionId;
+	
+	private System.Guid _OrganizationEventId;
+	
+	private System.Nullable<System.DateTime> _DeploymentDate;
+	
+	private System.Nullable<System.Guid> _ProgramId;
+	
+	private System.Guid _PositionId;
+	
+	private int _NumberNeeded;
+	
+	private System.Nullable<System.TimeSpan> _ArrivalTime;
+	
+	private System.Nullable<System.TimeSpan> _DepartureTime;
+	
+	private bool _HasDate;
+	
+	private bool _IsRemote;
+	
+	private bool _IsDeleted;
+	
+	private System.DateTime _CreatedOn;
+	
+	private System.Nullable<System.DateTime> _UpdatedOn;
+	
+	private System.Guid _CreatedBy;
+	
+	private System.Nullable<System.Guid> _UpdatedBy;
+	
+	private System.Nullable<System.Guid> _AddressId;
+	
+	private EntitySet<UserOrganizationEventPosition> _UserOrganizationEventPositions;
+	
+	private EntitySet<UserOrganizationEventPosition> _UserOrganizationEventPositions1;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+	private EntityRef<aspnet_User> _aspnet_User1;
+	
+	private EntityRef<OrganizationEvent> _OrganizationEvent;
+	
+	private EntityRef<Position> _Position;
+	
+	private EntityRef<Program> _Program;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnOrganizationEventPositionIdChanging(System.Guid value);
+    partial void OnOrganizationEventPositionIdChanged();
+    partial void OnOrganizationEventIdChanging(System.Guid value);
+    partial void OnOrganizationEventIdChanged();
+    partial void OnDeploymentDateChanging(System.Nullable<System.DateTime> value);
+    partial void OnDeploymentDateChanged();
+    partial void OnProgramIdChanging(System.Nullable<System.Guid> value);
+    partial void OnProgramIdChanged();
+    partial void OnPositionIdChanging(System.Guid value);
+    partial void OnPositionIdChanged();
+    partial void OnNumberNeededChanging(int value);
+    partial void OnNumberNeededChanged();
+    partial void OnArrivalTimeChanging(System.Nullable<System.TimeSpan> value);
+    partial void OnArrivalTimeChanged();
+    partial void OnDepartureTimeChanging(System.Nullable<System.TimeSpan> value);
+    partial void OnDepartureTimeChanged();
+    partial void OnHasDateChanging(bool value);
+    partial void OnHasDateChanged();
+    partial void OnIsRemoteChanging(bool value);
+    partial void OnIsRemoteChanged();
+    partial void OnIsDeletedChanging(bool value);
+    partial void OnIsDeletedChanged();
+    partial void OnCreatedOnChanging(System.DateTime value);
+    partial void OnCreatedOnChanged();
+    partial void OnUpdatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnUpdatedOnChanged();
+    partial void OnCreatedByChanging(System.Guid value);
+    partial void OnCreatedByChanged();
+    partial void OnUpdatedByChanging(System.Nullable<System.Guid> value);
+    partial void OnUpdatedByChanged();
+    partial void OnAddressIdChanging(System.Nullable<System.Guid> value);
+    partial void OnAddressIdChanged();
+    #endregion
+	
+	public OrganizationEventPosition()
+	{
+		this._UserOrganizationEventPositions = new EntitySet<UserOrganizationEventPosition>(new Action<UserOrganizationEventPosition>(this.attach_UserOrganizationEventPositions), new Action<UserOrganizationEventPosition>(this.detach_UserOrganizationEventPositions));
+		this._UserOrganizationEventPositions1 = new EntitySet<UserOrganizationEventPosition>(new Action<UserOrganizationEventPosition>(this.attach_UserOrganizationEventPositions1), new Action<UserOrganizationEventPosition>(this.detach_UserOrganizationEventPositions1));
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		this._aspnet_User1 = default(EntityRef<aspnet_User>);
+		this._OrganizationEvent = default(EntityRef<OrganizationEvent>);
+		this._Position = default(EntityRef<Position>);
+		this._Program = default(EntityRef<Program>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationEventPositionId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid OrganizationEventPositionId
+	{
+		get
+		{
+			return this._OrganizationEventPositionId;
+		}
+		set
+		{
+			if ((this._OrganizationEventPositionId != value))
+			{
+				this.OnOrganizationEventPositionIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationEventPositionId = value;
+				this.SendPropertyChanged("OrganizationEventPositionId");
+				this.OnOrganizationEventPositionIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationEventId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid OrganizationEventId
+	{
+		get
+		{
+			return this._OrganizationEventId;
+		}
+		set
+		{
+			if ((this._OrganizationEventId != value))
+			{
+				if (this._OrganizationEvent.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnOrganizationEventIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationEventId = value;
+				this.SendPropertyChanged("OrganizationEventId");
+				this.OnOrganizationEventIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DeploymentDate", DbType="DateTime")]
+	public System.Nullable<System.DateTime> DeploymentDate
+	{
+		get
+		{
+			return this._DeploymentDate;
+		}
+		set
+		{
+			if ((this._DeploymentDate != value))
+			{
+				this.OnDeploymentDateChanging(value);
+				this.SendPropertyChanging();
+				this._DeploymentDate = value;
+				this.SendPropertyChanged("DeploymentDate");
+				this.OnDeploymentDateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProgramId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> ProgramId
+	{
+		get
+		{
+			return this._ProgramId;
+		}
+		set
+		{
+			if ((this._ProgramId != value))
+			{
+				if (this._Program.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnProgramIdChanging(value);
+				this.SendPropertyChanging();
+				this._ProgramId = value;
+				this.SendPropertyChanged("ProgramId");
+				this.OnProgramIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PositionId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid PositionId
+	{
+		get
+		{
+			return this._PositionId;
+		}
+		set
+		{
+			if ((this._PositionId != value))
+			{
+				if (this._Position.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnPositionIdChanging(value);
+				this.SendPropertyChanging();
+				this._PositionId = value;
+				this.SendPropertyChanged("PositionId");
+				this.OnPositionIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberNeeded", DbType="Int NOT NULL")]
+	public int NumberNeeded
+	{
+		get
+		{
+			return this._NumberNeeded;
+		}
+		set
+		{
+			if ((this._NumberNeeded != value))
+			{
+				this.OnNumberNeededChanging(value);
+				this.SendPropertyChanging();
+				this._NumberNeeded = value;
+				this.SendPropertyChanged("NumberNeeded");
+				this.OnNumberNeededChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ArrivalTime", DbType="Time")]
+	public System.Nullable<System.TimeSpan> ArrivalTime
+	{
+		get
+		{
+			return this._ArrivalTime;
+		}
+		set
+		{
+			if ((this._ArrivalTime != value))
+			{
+				this.OnArrivalTimeChanging(value);
+				this.SendPropertyChanging();
+				this._ArrivalTime = value;
+				this.SendPropertyChanged("ArrivalTime");
+				this.OnArrivalTimeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DepartureTime", DbType="Time")]
+	public System.Nullable<System.TimeSpan> DepartureTime
+	{
+		get
+		{
+			return this._DepartureTime;
+		}
+		set
+		{
+			if ((this._DepartureTime != value))
+			{
+				this.OnDepartureTimeChanging(value);
+				this.SendPropertyChanging();
+				this._DepartureTime = value;
+				this.SendPropertyChanged("DepartureTime");
+				this.OnDepartureTimeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HasDate", DbType="Bit NOT NULL")]
+	public bool HasDate
+	{
+		get
+		{
+			return this._HasDate;
+		}
+		set
+		{
+			if ((this._HasDate != value))
+			{
+				this.OnHasDateChanging(value);
+				this.SendPropertyChanging();
+				this._HasDate = value;
+				this.SendPropertyChanged("HasDate");
+				this.OnHasDateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsRemote", DbType="Bit NOT NULL")]
+	public bool IsRemote
+	{
+		get
+		{
+			return this._IsRemote;
+		}
+		set
+		{
+			if ((this._IsRemote != value))
+			{
+				this.OnIsRemoteChanging(value);
+				this.SendPropertyChanging();
+				this._IsRemote = value;
+				this.SendPropertyChanged("IsRemote");
+				this.OnIsRemoteChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDeleted", DbType="Bit NOT NULL")]
+	public bool IsDeleted
+	{
+		get
+		{
+			return this._IsDeleted;
+		}
+		set
+		{
+			if ((this._IsDeleted != value))
+			{
+				this.OnIsDeletedChanging(value);
+				this.SendPropertyChanging();
+				this._IsDeleted = value;
+				this.SendPropertyChanged("IsDeleted");
+				this.OnIsDeletedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> UpdatedOn
+	{
+		get
+		{
+			return this._UpdatedOn;
+		}
+		set
+		{
+			if ((this._UpdatedOn != value))
+			{
+				this.OnUpdatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedOn = value;
+				this.SendPropertyChanged("UpdatedOn");
+				this.OnUpdatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedBy", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> UpdatedBy
+	{
+		get
+		{
+			return this._UpdatedBy;
+		}
+		set
+		{
+			if ((this._UpdatedBy != value))
+			{
+				if (this._aspnet_User1.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUpdatedByChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedBy = value;
+				this.SendPropertyChanged("UpdatedBy");
+				this.OnUpdatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddressId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> AddressId
+	{
+		get
+		{
+			return this._AddressId;
+		}
+		set
+		{
+			if ((this._AddressId != value))
+			{
+				this.OnAddressIdChanging(value);
+				this.SendPropertyChanging();
+				this._AddressId = value;
+				this.SendPropertyChanged("AddressId");
+				this.OnAddressIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="OrganizationEventPosition_UserOrganizationEventPosition", Storage="_UserOrganizationEventPositions", ThisKey="OrganizationEventPositionId", OtherKey="OrganizationEventPositionId")]
+	public EntitySet<UserOrganizationEventPosition> UserOrganizationEventPositions
+	{
+		get
+		{
+			return this._UserOrganizationEventPositions;
+		}
+		set
+		{
+			this._UserOrganizationEventPositions.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="OrganizationEventPosition_UserOrganizationEventPosition1", Storage="_UserOrganizationEventPositions1", ThisKey="OrganizationEventPositionId", OtherKey="OrganizationEventPositionId")]
+	public EntitySet<UserOrganizationEventPosition> UserOrganizationEventPositions1
+	{
+		get
+		{
+			return this._UserOrganizationEventPositions1;
+		}
+		set
+		{
+			this._UserOrganizationEventPositions1.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_OrganizationEventPosition", Storage="_aspnet_User", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.OrganizationEventPositions.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.OrganizationEventPositions.Add(this);
+					this._CreatedBy = value.UserId;
+				}
+				else
+				{
+					this._CreatedBy = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_OrganizationEventPosition1", Storage="_aspnet_User1", ThisKey="UpdatedBy", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User1
+	{
+		get
+		{
+			return this._aspnet_User1.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User1.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User1.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User1.Entity = null;
+					previousValue.OrganizationEventPositions1.Remove(this);
+				}
+				this._aspnet_User1.Entity = value;
+				if ((value != null))
+				{
+					value.OrganizationEventPositions1.Add(this);
+					this._UpdatedBy = value.UserId;
+				}
+				else
+				{
+					this._UpdatedBy = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("aspnet_User1");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="OrganizationEvent_OrganizationEventPosition", Storage="_OrganizationEvent", ThisKey="OrganizationEventId", OtherKey="OrganizationEventId", IsForeignKey=true)]
+	public OrganizationEvent OrganizationEvent
+	{
+		get
+		{
+			return this._OrganizationEvent.Entity;
+		}
+		set
+		{
+			OrganizationEvent previousValue = this._OrganizationEvent.Entity;
+			if (((previousValue != value) 
+						|| (this._OrganizationEvent.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._OrganizationEvent.Entity = null;
+					previousValue.OrganizationEventPositions.Remove(this);
+				}
+				this._OrganizationEvent.Entity = value;
+				if ((value != null))
+				{
+					value.OrganizationEventPositions.Add(this);
+					this._OrganizationEventId = value.OrganizationEventId;
+				}
+				else
+				{
+					this._OrganizationEventId = default(System.Guid);
+				}
+				this.SendPropertyChanged("OrganizationEvent");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Position_OrganizationEventPosition", Storage="_Position", ThisKey="PositionId", OtherKey="PositionId", IsForeignKey=true)]
+	public Position Position
+	{
+		get
+		{
+			return this._Position.Entity;
+		}
+		set
+		{
+			Position previousValue = this._Position.Entity;
+			if (((previousValue != value) 
+						|| (this._Position.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Position.Entity = null;
+					previousValue.OrganizationEventPositions.Remove(this);
+				}
+				this._Position.Entity = value;
+				if ((value != null))
+				{
+					value.OrganizationEventPositions.Add(this);
+					this._PositionId = value.PositionId;
+				}
+				else
+				{
+					this._PositionId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Position");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Program_OrganizationEventPosition", Storage="_Program", ThisKey="ProgramId", OtherKey="ProgramId", IsForeignKey=true)]
+	public Program Program
+	{
+		get
+		{
+			return this._Program.Entity;
+		}
+		set
+		{
+			Program previousValue = this._Program.Entity;
+			if (((previousValue != value) 
+						|| (this._Program.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Program.Entity = null;
+					previousValue.OrganizationEventPositions.Remove(this);
+				}
+				this._Program.Entity = value;
+				if ((value != null))
+				{
+					value.OrganizationEventPositions.Add(this);
+					this._ProgramId = value.ProgramId;
+				}
+				else
+				{
+					this._ProgramId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("Program");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_UserOrganizationEventPositions(UserOrganizationEventPosition entity)
+	{
+		this.SendPropertyChanging();
+		entity.OrganizationEventPosition = this;
+	}
+	
+	private void detach_UserOrganizationEventPositions(UserOrganizationEventPosition entity)
+	{
+		this.SendPropertyChanging();
+		entity.OrganizationEventPosition = null;
+	}
+	
+	private void attach_UserOrganizationEventPositions1(UserOrganizationEventPosition entity)
+	{
+		this.SendPropertyChanging();
+		entity.OrganizationEventPosition1 = this;
+	}
+	
+	private void detach_UserOrganizationEventPositions1(UserOrganizationEventPosition entity)
+	{
+		this.SendPropertyChanging();
+		entity.OrganizationEventPosition1 = null;
 	}
 }
 
