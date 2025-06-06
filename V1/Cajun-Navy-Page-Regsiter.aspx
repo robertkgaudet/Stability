@@ -144,6 +144,7 @@
                                         <option value="WV">West Virginia</option>
                                         <option value="WI">Wisconsin</option>
                                         <option value="WY">Wyoming</option>
+                                        <option value="DC">D.C.</option>
                                     </select>
 								</div>
 								<div class="form-group col-lg-12">
