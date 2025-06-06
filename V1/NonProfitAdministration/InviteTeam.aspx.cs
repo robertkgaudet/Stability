@@ -120,7 +120,7 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 	protected void btnSkip_Click(object sender, EventArgs e)
 	{
         string organizationId = Request.QueryString["OrganizationId"];
-        Response.Redirect("/V1/NonProfit/Default.aspx?OrganizationId=" + organizationId);
+        Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + organizationId);
     }
     //protected void SendEmailInvitations(string emailAddress, Guid OrganizationId, Guid UserOrganizationInviteId, string SenderName, string TeamName, string FirstName)
     //{
