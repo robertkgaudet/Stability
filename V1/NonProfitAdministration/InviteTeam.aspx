@@ -6,12 +6,12 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
-     <div class="text-center m-b-md" id="wizardControl">
+<%--     <div class="text-center m-b-md" id="wizardControl">
         <a class="btn btn-default">Step 1 - Create Team</a>
         <a class="btn btn-purple activeTab">Step 2 - Invite Members</a>
         <a class="btn btn-default">Step 3 - Add Deployment</a>
         <a class="btn btn-default">Step 3 - Launch Website</a>
-    </div>
+    </div>--%>
     <div class="row">
         <div class="col-lg-12">
             <div class="hpanel">
@@ -28,6 +28,7 @@
                     <asp:DropDownList ID="ddlEmailAddresses" runat="server" CssClass="js-source-states-2"></asp:DropDownList>
                     <asp:HiddenField ID="hidEmailAddresses" runat="server" />
                     <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-primary m-t-lg" Text="Invite Team Members" OnClick="btnSubmit_Click" />
+                    <asp:Button ID="btnskip" runat="server" CssClass="btn btn-secondary m-t-lg" Text="Skip for now" OnClick="btnSkip_Click" />
                 </div>
             </div>
         </div>

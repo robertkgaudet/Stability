@@ -117,40 +117,44 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 			Response.Redirect("/V1/NonProfit/Default.aspx?OrganizationId=" + organizationId);
 		}
 	}
+	protected void btnSkip_Click(object sender, EventArgs e)
+	{
+        string organizationId = Request.QueryString["OrganizationId"];
+        Response.Redirect("/V1/NonProfit/Default.aspx?OrganizationId=" + organizationId);
+    }
+    //protected void SendEmailInvitations(string emailAddress, Guid OrganizationId, Guid UserOrganizationInviteId, string SenderName, string TeamName, string FirstName)
+    //{
+    //	//Make sure and update the email sent information.
+    //	try
+    //	{
+    //		string emailFrom = ConfigurationManager.AppSettings["emailFrom"].ToString();
+    //		string emailFromDisplayName = ConfigurationManager.AppSettings["emailFromDisplayName"].ToString();
 
-	//protected void SendEmailInvitations(string emailAddress, Guid OrganizationId, Guid UserOrganizationInviteId, string SenderName, string TeamName, string FirstName)
-	//{
-	//	//Make sure and update the email sent information.
-	//	try
-	//	{
-	//		string emailFrom = ConfigurationManager.AppSettings["emailFrom"].ToString();
-	//		string emailFromDisplayName = ConfigurationManager.AppSettings["emailFromDisplayName"].ToString();
+    //		ListDictionary ldEmailBodyReplacements = new ListDictionary();
+    //		ldEmailBodyReplacements.Add("<% SenderName %>", SenderName);
+    //		ldEmailBodyReplacements.Add("<% TeamName %>", TeamName);
+    //		ldEmailBodyReplacements.Add("<% FirstName %>", FirstName); 
+    //		ldEmailBodyReplacements.Add("<% UserOrganizationInviteId %>", UserOrganizationInviteId.ToString());
 
-	//		ListDictionary ldEmailBodyReplacements = new ListDictionary();
-	//		ldEmailBodyReplacements.Add("<% SenderName %>", SenderName);
-	//		ldEmailBodyReplacements.Add("<% TeamName %>", TeamName);
-	//		ldEmailBodyReplacements.Add("<% FirstName %>", FirstName); 
-	//		ldEmailBodyReplacements.Add("<% UserOrganizationInviteId %>", UserOrganizationInviteId.ToString());
+    //		MailAddress fromAddress = new MailAddress(emailFrom, emailFromDisplayName);
 
-	//		MailAddress fromAddress = new MailAddress(emailFrom, emailFromDisplayName);
+    //		MailDefinition mailDefinition = new MailDefinition();
 
-	//		MailDefinition mailDefinition = new MailDefinition();
+    //		mailDefinition.BodyFileName = HttpContext.Current.Server.MapPath("~\\EmailTemplates\\MemberInvitation.html");
+    //		mailDefinition.Subject = SenderName + " Has Invited You To Join His Impactoid Disaster Relief Team";
+    //		mailDefinition.IsBodyHtml = true;
 
-	//		mailDefinition.BodyFileName = HttpContext.Current.Server.MapPath("~\\EmailTemplates\\MemberInvitation.html");
-	//		mailDefinition.Subject = SenderName + " Has Invited You To Join His Impactoid Disaster Relief Team";
-	//		mailDefinition.IsBodyHtml = true;
+    //		MailMessage newUserMailMessage = mailDefinition.CreateMailMessage(emailAddress, ldEmailBodyReplacements, this);
 
-	//		MailMessage newUserMailMessage = mailDefinition.CreateMailMessage(emailAddress, ldEmailBodyReplacements, this);
+    //		MailAddress bcc = new MailAddress("robgaudet@gocajunnavy.org");
+    //		newUserMailMessage.Bcc.Add(bcc);
 
-	//		MailAddress bcc = new MailAddress("robgaudet@gocajunnavy.org");
-	//		newUserMailMessage.Bcc.Add(bcc);
+    //		SmtpClient smtp = new SmtpClient();
+    //		//smtp.EnableSsl = true;
+    //		smtp.Send(newUserMailMessage);
+    //	}
+    //	catch (Exception ex)
+    //	{ }
 
-	//		SmtpClient smtp = new SmtpClient();
-	//		//smtp.EnableSsl = true;
-	//		smtp.Send(newUserMailMessage);
-	//	}
-	//	catch (Exception ex)
-	//	{ }
-
-	//}
+    //}
 }
