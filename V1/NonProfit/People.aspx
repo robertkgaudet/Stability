@@ -232,7 +232,7 @@
                 margin-right: 9px;
             }
 
-        .fotterr .btn {
+        .fotter .btn {
             min-width: 167px;
             height: 45px;
         }
@@ -250,16 +250,15 @@
             padding-bottom: 10px;
         }
 
-        .fotterr {
-            justify-content: center;
+        .fotter {
+            justify-content: right;
             display: flex;
             align-items: center;
-            margin-right: -22px;
             gap: 25px;
         }
 
         @media screen and (max-width: 600px) {
-            .fotterr {
+            .fotter {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -1575,7 +1574,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <div class="fotterr">
+                    <div class="fotter">
                         <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
                             Save Changes
                         </button>
