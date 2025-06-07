@@ -22,6 +22,11 @@
         gtag('config', 'UA-96039646-1');
 
     </script>
+	<style>
+		.organizationlogo{
+			margin-top:-10px;
+		}
+	</style>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
@@ -132,7 +137,7 @@
                                                     <span class="icon-bar"></span>
                                                 </button>
                                                 <a class="navbar-brand" href="CommunityPage.aspx?organizationId=<%=organizationId%>">
-                                                    <asp:Image ID="imgLogo" runat="server" />
+                                                    <asp:Image ID="imgLogo" CssClass="organizationlogo" runat="server" />
                                                     <h3>
                                                         <asp:Literal ID="litLogo" runat="server"></asp:Literal></h3>
                                                 </a>

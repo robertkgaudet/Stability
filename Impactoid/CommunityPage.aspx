@@ -173,7 +173,7 @@
                     <div class="single-slide home3-overly">
                         <asp:Image ID="imgSlider" runat="server" />
                         <div class="slide-txt">
-                            <h2><i>DEPLOYMENT:</i> <asp:Literal ID="litCauseName" runat="server"></asp:Literal> </h2>
+                            <h2><asp:Literal ID="litCauseName" runat="server"></asp:Literal> </h2>
                             <p>
                                 <asp:Literal ID="litCauseDescription" runat="server"></asp:Literal>
                             </p>
