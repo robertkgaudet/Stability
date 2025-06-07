@@ -24,6 +24,7 @@ public static class States
 	  new State("KS", "Kansas"),
 	  new State("KY", "Kentucky"),
 	  new State("LA", "Louisiana"),
+	  new State("DC", "District of Columbia"),
 	  new State("ME", "Maine"),
 	  new State("MD", "Maryland"),
 	  new State("MA", "Massachusetts"),
@@ -56,7 +57,6 @@ public static class States
 	  new State("WV", "West Virginia"),
 	  new State("WI", "Wisconsin"),
 	  new State("WY", "Wyoming"),
-      new State("DC", "D.C."),
       //canada
       new State("AB", "Alberta"),
 	  new State("BC", "British Columbia"),
