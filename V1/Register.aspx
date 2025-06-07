@@ -464,6 +464,7 @@
                                         <option value="CT">Connecticut</option>
                                         <option value="DC">D.C. (District of Columbia)</option>
                                         <option value="DE">Delaware</option>
+                                         <option value="DC">D.C.</option>
                                         <option value="FL">Florida</option>
                                         <option value="GA">Georgia</option>
                                         <option value="HI">Hawaii</option>
