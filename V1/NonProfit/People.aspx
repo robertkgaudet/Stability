@@ -1558,28 +1558,28 @@
                 <!-- Vetting Notes Textarea -->
                 <div class="form-group">
                     <label for="txtManageVettingNotes">Vetting Notes:</label>
-                    <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
-                        placeholder="Enter Vetting Notes"></asp:TextBox>
+                    <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control" placeholder="Enter Vetting Notes"></asp:TextBox>
 
-
-                    <div class="btn-row">
-                        <button type="button" class="btn btn-primary" runat="server" id="btnteamOwner" visible="false"
-                            onclick="btnMakeTeamOwner();">
-                            Make Team Owner
-                        </button>
-                        <button type="button" class="btn btn-danger" runat="server" id="btnremoveteam" visible="false"
-                            onclick="btnMakeTeamRemove();">
-                            Remove Team Member
-                        </button>
-                    </div>
                 </div>
                 <div class="modal-footer">
-                    <div class="fotter">
-                        <button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
-                            Save Changes
-                        </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
+					<div class="row">
+						<div class="col-sm-8">
+							<button type="button" class="btn btn-success" runat="server" id="btnteamOwner" visible="false" onclick="btnMakeTeamOwner();">
+								Make Team Owner
+							</button>
+							<button type="button" class="btn btn-danger" runat="server" id="btnremoveteam" visible="false" onclick="btnMakeTeamRemove();">
+								Remove Team Member
+							</button>
+						</div>
+						<div class="col-sm-4">
+							<button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
+								Save Changes
+							</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">
+								Close
+							</button>
+						</div>
+					</div>
                 </div>
             </div>
         </div>

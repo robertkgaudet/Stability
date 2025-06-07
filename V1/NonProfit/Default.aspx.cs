@@ -64,35 +64,48 @@ public partial class V1_NonProfit_Default : BaseWebForm
 			}
 		}
 
+
+
 		ucTeamHeader.OrganizationId = organizationId;
 
-        //REMOVE
-        //if (String.IsNullOrEmpty(organizationId))
-        //{
-        //    if (!User.Identity.IsAuthenticated)
-        //    {
-        //        //Have the user signin
-        //        Response.Redirect("/SignIn");
-        //    }
-        //    else
-        //    {
-        //        //Get this users team, no team? Send them to pick a team.
-        //        var userOrganization = (from uo in dc.UserOrganizations
-        //                                where uo.UserId == userId && uo.Status== (int)RequestStatus.Approved&& uo.Status == (int)RequestStatus.Pending
-        //                                select new { uo.OrganizationId }).Take(1).SingleOrDefault();
+		//REMOVE
+		if (String.IsNullOrEmpty(organizationId))
+		{
+			if (!User.Identity.IsAuthenticated)
+			{
+				//Have the user signin
+				Response.Redirect("/SignIn");
+			}
+			else
+			{
+				//Get this users team, no team? Send them to pick a team.
+				var userPrimaryOrganization = (from uo in dc.UserOrganizations
+										where uo.UserId == userId && uo.IsPrimary == true
+										select new { uo.OrganizationId }).Take(1).SingleOrDefault();
 
-        //        if (userOrganization == null)
-        //        {
-        //            Response.Redirect("/V1/NonProfit/TeamList.aspx?team=false");
-        //        }
-        //        else
-        //        {
-        //            organizationId = userOrganization.OrganizationId.ToString();
-        //        }
-        //    }
-        //}
+				if (userPrimaryOrganization == null)
+				{
+					var userOrganization = (from uo in dc.UserOrganizations
+											where uo.UserId == userId
+											select new { uo.OrganizationId }).Take(1).SingleOrDefault();
 
-        var organization = (from o in dc.Organizations
+					if(userOrganization == null)
+					{
+						Response.Redirect("/V1/NonProfit/TeamList.aspx?team=false");
+					}
+					else
+					{
+						organizationId = userOrganization.OrganizationId.ToString();
+					}
+				}
+				else
+				{
+					organizationId = userPrimaryOrganization.OrganizationId.ToString();
+				}
+			}
+		}
+
+		var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId) && o.IsActive == true
                             select new
                             {

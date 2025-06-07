@@ -60,7 +60,7 @@ public partial class V1_Logo_LogoPhotoCrop : BaseOrganizationWebForm
             using (var dc = new CrowdReliefDBDataContext())
             {
                 // Get the current user's organization
-                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending));
+                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
                 if (userOrg != null)
                 {
                     var organization = dc.Organizations.FirstOrDefault(o => o.OrganizationId == userOrg.OrganizationId);
