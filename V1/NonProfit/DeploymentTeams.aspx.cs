@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iTextSharp.text;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Contexts;
@@ -11,87 +12,43 @@ using System.Web.UI.WebControls;
 public partial class V1_NonProfit_DeploymentTeams : BaseWebForm
 {
 	public string organizationId = string.Empty;
-	protected void Page_Load(object sender, EventArgs e)
-	{
-
-		ucMemberNavigation.UserId = userId.ToString();
-		litPageName.Text = "Find Open Positions";
-		organizationId = Request.QueryString["organizationId"];
-        string searchTerm = Request.QueryString["searchTerm"];
-        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-        var deploymentTeams = new List<VolunteerOpportunityInfo>();
-        if (!string.IsNullOrEmpty(searchTerm))
+    private int pageSize = 50;
+    private int pageNumber = 1;
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
         {
+            ucMemberNavigation.UserId = userId.ToString();
+            litPageName.Text = "Find Open Positions";
+            organizationId = Request.QueryString["organizationId"];
+            string searchTerm = Request.QueryString["searchTerm"];
+            currentPageValue.Value = currentPageValue.Value == "" ? "1" : currentPageValue.Value;
 
-             deploymentTeams = dc.ExecuteQuery<VolunteerOpportunityInfo>(
-    "EXEC SearchFillter {0}, {1}",
-    "VolunteerOpportunities",
-    string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm).ToList();
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            var deploymentTeams = new List<SearchResponse.VolunteerOpportunityInfo>();
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                deploymentTeams = dc.ExecuteQuery<SearchResponse.VolunteerOpportunityInfo>(
+                "EXEC SearchFillter {0}, {1},{2},{3}",
+                "VolunteerOpportunities",
+                string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm, pageNumber, pageSize).ToList();
+            }
+            else
+            {
+                deploymentTeams = dc.ExecuteQuery<SearchResponse.VolunteerOpportunityInfo>(
+                "EXEC SearchOpenPositions {0}, {1},{2},{3}",
+                "VolunteerOpportunities",
+              string.IsNullOrWhiteSpace(organizationId) ? "" : organizationId, pageNumber, pageSize).ToList();
+            }
+            var totalCount = deploymentTeams.Any() ? deploymentTeams.First().TotalCount : 0;
+            totalPageValue.Value = Convert.ToString(Math.Ceiling((double)totalCount / 50));
+            rptDeploymentTeams.DataSource = deploymentTeams.ToList();
+            rptDeploymentTeams.DataBind();
+            hpanelMembers.Visible = true;
+            ucMemberNavigation.UserId = userId.ToString();
         }
-        else
-        {
-
-            var groupedResult = (from oep in dc.OrganizationEventPositions
-                                 join oe in dc.OrganizationEvents on oep.OrganizationEventId equals oe.OrganizationEventId
-                                 join p in dc.Positions on oep.PositionId equals p.PositionId
-                                 join county in dc.Counties on oe.StagingCountyId equals county.CountyId
-                                 join city in dc.Cities on county.Code equals city.Code
-                                 where oe.IsActive == true
-                                     && oe.OrganizationId == new Guid(organizationId)
-                                     && oep.DeploymentDate >= DateTime.Now
-                                 select new
-                                 {
-                                     oe.OrganizationEventId,
-                                     CampaignName = oe.CampaignName,
-                                     DeploymentDate = oep.DeploymentDate,
-                                     oe.URLFriendlyCampaignName,
-                                     County = county.Name,
-                                     State = county.State,
-                                     City = city.City1,
-                                     EarliestDeploymentDate = (from innerOep in dc.OrganizationEventPositions
-                                                               where innerOep.OrganizationEventId == oe.OrganizationEventId
-                                                               select innerOep.DeploymentDate).Min(),
-                                     LatestDeploymentDate = (from innerOep in dc.OrganizationEventPositions
-                                                             where innerOep.OrganizationEventId == oe.OrganizationEventId
-                                                             select innerOep.DeploymentDate).Max(),
-                                     PositionCount = (from innerOep in dc.OrganizationEventPositions
-                                                      where innerOep.OrganizationEventId == oe.OrganizationEventId
-                                                      select innerOep.PositionId).Distinct().Count(),
-                                     RowNum = (from innerOep in dc.OrganizationEventPositions
-                                               where innerOep.OrganizationEventId == oe.OrganizationEventId
-                                               orderby innerOep.DeploymentDate ascending
-                                               select innerOep.DeploymentDate).FirstOrDefault()
-                                 })
-                        .ToList()
-                        .GroupBy(x => x.OrganizationEventId)
-                        .Select(g => g.OrderBy(x => x.RowNum).First())
-                        .OrderByDescending(x => x.DeploymentDate)
-                        .Select(x => new SearchResponse.VolunteerOpportunityInfo
-                        {
-                            OrganizationEventId = x.OrganizationEventId,
-                            CampaignName = x.CampaignName,
-                            DeploymentDate = x.DeploymentDate ?? DateTime.MinValue,
-                            URLFriendlyCampaignName = x.URLFriendlyCampaignName,
-                            County = x.County,
-                            State = x.State,
-                            City = x.City,
-                            EarliestDeploymentDate = x.EarliestDeploymentDate ?? DateTime.MinValue,
-                            LatestDeploymentDate = x.LatestDeploymentDate ?? DateTime.MinValue,
-                            PositionCount = x.PositionCount,
-                            RowNum = x.RowNum
-                        })
-                        .ToList();
-
-            deploymentTeams = groupedResult;
-
-        }
-
-        rptDeploymentTeams.DataSource = deploymentTeams.ToList();
-		rptDeploymentTeams.DataBind();
-
-		ucMemberNavigation.UserId = userId.ToString();
-	}
-
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "OpenCollapse", "$('#searchFilters').collapse('show');", true);
+    }
 	protected void rptDeploymentTeams_ItemDataBound(object sender, RepeaterItemEventArgs e)
 	{
 		//Get the positions.
@@ -125,4 +82,59 @@ public partial class V1_NonProfit_DeploymentTeams : BaseWebForm
 			lblPositionCount.Text = positionCount.ToString();
 		}
 	}
+
+    protected void SearchButton_Click(object sender, EventArgs e)
+    {
+      
+
+        string positionTerm = position.Text.Trim().ToLower();
+        string locationTerm = location.Text.Trim().ToLower();
+        string teamTerm = team.Text.Trim().ToLower();
+        DateTime? startDateParam = null;
+        DateTime parsedStartDate;
+        if (!string.IsNullOrWhiteSpace(StartDate.Text) && DateTime.TryParse(StartDate.Text, out parsedStartDate))
+        {
+            startDateParam = parsedStartDate;
+        }
+        DateTime? endDateParam = null;
+        DateTime parsedEndDate;
+        if (!string.IsNullOrWhiteSpace(EndDate.Text) && DateTime.TryParse(EndDate.Text, out parsedEndDate))
+        {
+            endDateParam = parsedEndDate;
+        }
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        string startDateValue = startDateParam.HasValue ? startDateParam.Value.ToString("yyyy-MM-dd") : "";
+        string endDateValue = endDateParam.HasValue ? endDateParam.Value.ToString("yyyy-MM-dd") : "";
+
+        var deploymentTeams = dc.ExecuteQuery<SearchResponse.VolunteerOpportunityInfo>(
+            "EXEC SearchOpenPositions {0}, {1}, {2}, {3}, {4}, {5}, {6}",
+            locationTerm,
+            string.IsNullOrWhiteSpace(teamTerm) ? "" : teamTerm,
+            startDateValue,   
+            endDateValue,
+            positionTerm,
+            currentPageValue.Value,
+            pageSize
+        ).ToList();
+
+        var totalCount = deploymentTeams.Any() ? deploymentTeams.First().TotalCount : 0;
+        totalPageValue.Value = Convert.ToString(Math.Ceiling((double)totalCount / 50));
+
+        hpanelMembers.Visible = false;
+
+        if (deploymentTeams.Count == 0)
+        {
+            rptDeploymentTeams.DataSource = null;
+        }
+        else
+        {
+            rptDeploymentTeams.DataSource = deploymentTeams;
+        }
+        currentPageValue.Value = currentPageValue.Value == "" ? "1" : currentPageValue.Value;
+
+        rptDeploymentTeams.DataBind();
+        hpanelMembers.Visible = true;
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "updatePagination", "updatePagination();", true);
+    }
+
 }
