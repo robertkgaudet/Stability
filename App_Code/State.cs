@@ -57,7 +57,6 @@ public static class States
 	  new State("WV", "West Virginia"),
 	  new State("WI", "Wisconsin"),
 	  new State("WY", "Wyoming"),
-     ,
       //canada
       new State("AB", "Alberta"),
 	  new State("BC", "British Columbia"),
