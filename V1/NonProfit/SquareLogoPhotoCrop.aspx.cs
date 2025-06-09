@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Web.UI.WebControls;
-using System.IO;
-using System.Web.Security;
 using System.Drawing;
-using System.Drawing.Imaging;
-using SD = System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IdentityModel.Metadata;
+using System.IO;
 using System.Linq;
+using System.Web.Security;
+using System.Web.UI.WebControls;
 using System.Xml;
+using SD = System.Drawing;
 
 public partial class V1_SquareLogo_SquareLogoPhotoCrop : BaseOrganizationWebForm
 {
@@ -71,7 +72,7 @@ public partial class V1_SquareLogo_SquareLogoPhotoCrop : BaseOrganizationWebForm
                 var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending));
                 if (userOrg != null)
                 {
-                    var organization = dc.Organizations.FirstOrDefault(o => o.OrganizationId == userOrg.OrganizationId);
+					var organization = dc.Organizations.FirstOrDefault(o => o.OrganizationId == userOrg.OrganizationId);
                     if (organization != null)
                     {
                         organization.LogoSquare = imageNameCropped;
@@ -81,7 +82,7 @@ public partial class V1_SquareLogo_SquareLogoPhotoCrop : BaseOrganizationWebForm
             }
 
             // Redirect after successful save
-            Response.Redirect("/V1/NonProfit/Default.aspx", false);
+            Response.Redirect("/V1/NonProfit/ActivityDashboard.aspx?organizationId=" +  organizationId, false);
             Context.ApplicationInstance.CompleteRequest();
         }
         catch (Exception ex)

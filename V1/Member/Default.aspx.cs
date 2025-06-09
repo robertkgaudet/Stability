@@ -173,6 +173,9 @@ public partial class V1_Member_Default : BaseWebForm
 			//Count number of connections.
 			ucMemberHeader.ConnectionCount = Tools.MyConnections(new Guid(pageUserId), 0).Count();
 
+			//Response.Write(pageUserId);
+			//Response.End();
+
             //Get team information
             var orgUser = (from o in dc.Organizations
                            join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
@@ -185,6 +188,7 @@ public partial class V1_Member_Default : BaseWebForm
                                o.LogoSquare,
                                uo.ShowTeamLogo  // Include the ShowTeamLogo field
                            }).Take(1).SingleOrDefault();
+
             if (orgUser != null)
             {
                 //ucMemberNavigation.OrganizationId = orgUser.OrganizationId.ToString();

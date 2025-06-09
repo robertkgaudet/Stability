@@ -106,7 +106,7 @@ public partial class V1_NonProfit_Deployments : BaseWebForm
 		///
 		#endregion
 
-		if(isOwner) 
+		if(isOwner || User.IsInRole("Administrator")) 
 		{ 
 			hypCreateCause.Visible = true;
 			hypCreateCause.NavigateUrl = "/V1/NonProfitAdministration/RespondToEvent.aspx?organizationId=" + organizationId;
