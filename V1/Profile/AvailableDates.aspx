@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="AvailableDates.aspx.cs" Inherits="V1_Profile_AvailableDates" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
+<%@ Register Src="~/V1/UserControls/SpinningLogo.ascx" TagPrefix="uc1" TagName="SpinningLogo" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 
 	<link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
@@ -180,6 +181,7 @@
 					<div class="hpanel">
 						<div class="panel-body">
 							<h2 class="font-light m-b-xs">
+								<uc1:SpinningLogo ID="ucTeamHeader" runat="server" LogoSizeCssClass="logo-30" />
 								Let Us Know When You’re Able to Help
 							</h2>
                             <small>

@@ -17,15 +17,14 @@ public partial class Administration_VolunteerList : BaseOrganizationWebForm
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-		var profiles =	from s in dc.Profiles
+		var profiles =	(from s in dc.Profiles
 						join m in dc.aspnet_Memberships on s.UserId equals m.UserId
 						join ur in dc.aspnet_UsersInRoles on m.UserId equals ur.UserId
 						join r in dc.aspnet_Roles on ur.RoleId equals r.RoleId
 						where r.RoleName == "Volunteer" || r.RoleName == "Helper"
-						orderby m.CreateDate descending
-						select new { s.Firstname, s.Lastname, s.ProfileNumber, s.Address, s.City, m.Email, s.Description, s.State, s.Zip, s.PhoneNumber, s.ProfileId, s.UserId, m.CreateDate };
+						select new { s.Firstname, s.Lastname, s.ProfileNumber, s.Address, s.City, m.Email, s.Description, s.State, s.Zip, s.PhoneNumber, s.ProfileId, s.UserId, m.CreateDate }).ToList();
 
-		dlVolunteers.DataSource = profiles.Take(1000).Distinct();
+		dlVolunteers.DataSource = profiles.OrderByDescending(o => o.CreateDate).Take(1000).Distinct();
 		dlVolunteers.DataBind();
 	}
 
@@ -79,6 +78,7 @@ public partial class Administration_VolunteerList : BaseOrganizationWebForm
 			Label lblVolunteerReviewStatus				= (Label)e.Item.FindControl("lblVolunteerReviewStatus");
 			Label lblLocation							= (Label)e.Item.FindControl("lblLocation");
 			Label lblVolunteerSkills					= (Label)e.Item.FindControl("lblVolunteerSkills");
+			Label lblTeamName							= (Label)e.Item.FindControl("lblTeamName");
 
 			//Total count of items and total cost.
 			String firstname							= (String)DataBinder.Eval(dataItem.DataItem, "firstname");
@@ -109,6 +109,16 @@ public partial class Administration_VolunteerList : BaseOrganizationWebForm
 			var profile = (from p in dc.Profiles
 						  where p.UserId == userId
 						  select p).SingleOrDefault();
+
+			var userOrganization = (from uo in dc.UserOrganizations
+									join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
+									where uo.UserId == userId
+									select new { o.Name }).Take(1).SingleOrDefault();
+
+			if(userOrganization != null)
+			{
+				lblTeamName.Text = userOrganization.Name;
+			}
 
 			string volunteerStatus = VolunteerStatus.GetVolunteerStatus(userId).Value;
 

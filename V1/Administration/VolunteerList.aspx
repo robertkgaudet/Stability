@@ -41,7 +41,7 @@
 									<tr>
 										<th data-toggle="true">Name</th>
 										<th>Location</th>
-										<th>Phone</th>
+										<th>Team</th>
 										<th>Email</th>
 										<th>Applied</th>
 										<th>Status</th>
@@ -56,6 +56,7 @@
 											<tr>
 												<td><asp:HyperLink ID="hypFullName" runat="server"></asp:HyperLink></td>
 												<td><asp:Label ID="lblLocation" runat="server"></asp:Label></td>
+												<td><asp:Label ID="lblTeamName" runat="server"></asp:Label></td>
 												<td><asp:Label ID="lblPhonenumber" runat="server"></asp:Label></td>
 												<td><asp:Label ID="lblEmail" runat="server"></asp:Label></td>
 												<td><asp:Label ID="litVolunteerApplicationCompletedOn" runat="server"></asp:Label></td>
