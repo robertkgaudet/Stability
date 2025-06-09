@@ -18,7 +18,7 @@ public partial class V1_Deployments : BaseWebForm
 
 
         var otherEvents = dc.ExecuteQuery<SearchResponse.OrganizationEventResult>(
-"EXEC SearchFillter {0}, {1}",
+"EXEC NavSearchFilter {0}, {1}",
 "Deployments",
 string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm);
 

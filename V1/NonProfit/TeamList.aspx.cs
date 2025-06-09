@@ -16,11 +16,12 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
         string searchTerm = Request.QueryString["searchTerm"];
 
         var teams = dc.ExecuteQuery<SearchResponse.TeamResult>(
-"EXEC SearchFillter {0}, {1}",
+"EXEC NavSearchFilter {0}, {1}",
 "Teams",
 string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm
 ).ToList();
-		rptTeams.DataBind();
+        rptTeams.DataSource = teams.OrderByDescending(d => d.OrganizationId == prioritizedId).ThenByDescending(o => o.CreatedOn).ToList();
+        rptTeams.DataBind();
 
 		Master.PageName = "Stability Teams";
 		litCount.Text = teams.Count().ToString() + " Teams";

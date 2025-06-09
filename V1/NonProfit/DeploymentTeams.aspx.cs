@@ -29,16 +29,16 @@ public partial class V1_NonProfit_DeploymentTeams : BaseWebForm
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 deploymentTeams = dc.ExecuteQuery<SearchResponse.VolunteerOpportunityInfo>(
-                "EXEC SearchFillter {0}, {1},{2},{3}",
+                "EXEC NavSearchFilter {0}, {1},{2},{3}",
                 "VolunteerOpportunities",
                 string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm, pageNumber, pageSize).ToList();
             }
             else
             {
                 deploymentTeams = dc.ExecuteQuery<SearchResponse.VolunteerOpportunityInfo>(
-                "EXEC SearchOpenPositions {0}, {1},{2},{3}",
-                "VolunteerOpportunities",
-              string.IsNullOrWhiteSpace(organizationId) ? "" : organizationId, pageNumber, pageSize).ToList();
+                 "EXEC SearchDeploymentTeam {0}, {1},{2},{3}",
+                 "VolunteerOpportunities",
+                 string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm, pageNumber, pageSize).ToList();
             }
             var totalCount = deploymentTeams.Any() ? deploymentTeams.First().TotalCount : 0;
             totalPageValue.Value = Convert.ToString(Math.Ceiling((double)totalCount / 50));
@@ -107,7 +107,7 @@ public partial class V1_NonProfit_DeploymentTeams : BaseWebForm
         string endDateValue = endDateParam.HasValue ? endDateParam.Value.ToString("yyyy-MM-dd") : "";
 
         var deploymentTeams = dc.ExecuteQuery<SearchResponse.VolunteerOpportunityInfo>(
-            "EXEC SearchOpenPositions {0}, {1}, {2}, {3}, {4}, {5}, {6}",
+            "EXEC SearchDeploymentTeam {0}, {1}, {2}, {3}, {4}, {5}, {6}",
             locationTerm,
             string.IsNullOrWhiteSpace(teamTerm) ? "" : teamTerm,
             startDateValue,   

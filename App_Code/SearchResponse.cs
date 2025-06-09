@@ -57,7 +57,8 @@ public static class SearchResponse
         public DateTime EarliestDeploymentDate { get; set; }
         public DateTime LatestDeploymentDate { get; set; }
         public int PositionCount { get; set; }
-        public DateTime? RowNum { get; set; } // Nullable in case no deployment date exists
+        public DateTime? RowNum { get; set; } 
+        public int? TotalCount { get; set; }
     }
 
 }

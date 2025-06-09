@@ -147,7 +147,7 @@ namespace CrowdRelief
 
 
             var profiles = dc.ExecuteQuery<FriendInfo>(
-    "EXEC SearchFillter {0}, {1}", string.IsNullOrWhiteSpace(searchType) ? "" : searchType, string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm
+    "EXEC NavSearchFilter {0}, {1}", string.IsNullOrWhiteSpace(searchType) ? "" : searchType, string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm
 ).ToList();
 
 
