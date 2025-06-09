@@ -1,10 +1,11 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/1-Column-Narrow.master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="V1_Login" %>
-
 <%@ MasterType VirtualPath="~/V1/MasterPages/1-Column-Narrow.master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+    <script>
         $(document).ready(function () {
             $(".loginLogo").click(function () {
                 document.location.href = "/default.aspx";
@@ -19,15 +20,14 @@
             width: 300px;
         }
 
-            .loginLogo:hover {
-                cursor: pointer;
-            }
-    </style>
-    <style>
+        .loginLogo:hover {
+            cursor: pointer;
+        }
+
         .rotating-logo:hover .spin-label {
             color: #5a2ca0;
         }
-        /* Base logo container */
+
         .rotating-logo {
             margin: 10px auto;
             width: 100px;
@@ -36,29 +36,16 @@
             margin-right: 135px;
         }
 
-
-        /* Already defined keyframes */
         @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         @keyframes spin-reverse {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(-360deg);
-            }
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
         }
 
-        /* Base logo */
         .rotating-logo img {
             width: 100px;
             height: auto;
@@ -66,30 +53,13 @@
             transition: all 0.3s ease-in-out;
         }
 
-        /* Behaviors */
-        .rotating-logo.fast img {
-            animation-duration: 0.8s;
-        }
+        .rotating-logo.fast img { animation-duration: 0.8s; }
+        .rotating-logo.slow img { animation-duration: 12s; }
+        .rotating-logo.reverse img { animation-name: spin-reverse; }
+        .rotating-logo.paused img { animation-play-state: paused; }
+        .rotating-logo.burst img { animation-duration: 0.4s; }
 
-        .rotating-logo.slow img {
-            animation-duration: 12s;
-        }
-
-        .rotating-logo.reverse img {
-            animation-name: spin-reverse;
-        }
-
-        .rotating-logo.paused img {
-            animation-play-state: paused;
-        }
-
-        .rotating-logo.burst img {
-            animation-duration: 0.4s;
-        }
-
-        #btnSubmit {
-            position: relative;
-        }
+        #btnSubmit { position: relative; }
 
         .error-message {
             color: #b20000;
@@ -118,25 +88,48 @@
         }
 
         @media(max-width: 1200px) {
-            .container,
-            .row {
+            .container, .row {
                 width: 100% !important;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
             }
         }
 
-        .rotating-logo {
-            margin: 0 auto !important;
-        }
+        .rotating-logo { margin: 0 auto !important; }
+        h1.loginLogo { margin: auto !important; }
 
-        h1.loginLogo {
-            margin: auto !important;
-        }
+      .btn-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 6px 5px;
+    border-radius: 4px;
+    color: #fff;
+    white-space: nowrap;
+}
+
+.btn-facebook {
+    background-color: #3b5998;
+    border: 1px solid #3b5998;
+}
+
+.btn-google {
+    background-color: #4285f4;
+    border: 1px solid #4285f4;
+margin-left: 12px;
+}
+
+.btn-social i {
+    margin-right: 6px;
+    font-size: 16px;
+}
+
     </style>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
 
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div class="row">
         <div class="col-xs-2 col-sm-4 col-lg-4"></div>
         <div class="container">
@@ -152,15 +145,14 @@
                             </h1>
                         </div>
                         <div class="m-t-sm text-center">
-                            <h4>Disaster-Ready Communities
-                            </h4>
-
+                            <h4>Disaster-Ready Communities</h4>
                             <p>
                                 Be the lifeline your community needs.
-						<asp:Label ID="lblErrorMessage" CssClass="error-message" runat="server" Visible="false"></asp:Label>
+                                <asp:Label ID="lblErrorMessage" CssClass="error-message" runat="server" Visible="false"></asp:Label>
                             </p>
                         </div>
                     </div>
+
                     <div class="m-t" role="form">
                         <div class="form-group">
                             <asp:TextBox ID="txtUsername" CssClass="form-control" runat="server" placeholder="Username" required=""></asp:TextBox>
@@ -169,77 +161,71 @@
                             <asp:TextBox ID="txtPassword" CssClass="form-control" TextMode="Password" runat="server" placeholder="Password" required=""></asp:TextBox>
                         </div>
                         <asp:Button ID="btnSubmit" runat="server" CssClass="btn btn-success btn-block m-b" Text="Sign In" OnClick="btnSubmit_Click" OnClientClick="return showSpinner();" />
-                        <button
-                            id="btnLoading"
-                            type="button"
-                            class="btn btn-success btn-block m-b"
-                            disabled
-                            style="display: none;">
+                        <button id="btnLoading" type="button" class="btn btn-success btn-block m-b" disabled style="display: none;">
                             <img src="/V1/Images/logo-icon-70x70-white-transparent.png" alt="Loading..." style="width: 24px; height: 24px; animation: spin 1s linear infinite;" />
                         </button>
+
+ <div class="text-center m-t-sm d-flex justify-content-between gap-2" style="display: flex; gap: 10px;">
+    <asp:LinkButton ID="btnFacebook" runat="server" CssClass="btn btn-social btn-facebook flex-fill" >
+        <i class="fab fa-facebook-f"></i>Sign in with Facebook
+    </asp:LinkButton>
+
+    <asp:LinkButton ID="btnGoogle" runat="server" CssClass="btn btn-social btn-google flex-fill" OnClick="btnGoogle_Click">
+        <i class="fab fa-google"></i>Sign in with Google
+    </asp:LinkButton>
+</div>
+
+
+
                         <div class="text-center">
                             <a href="/V1/PasswordReset.aspx"><small>Forgot password?</small></a>
                             <a href="/V1/GetUserName.aspx"><small style="margin-left: 5px;">Forgot username?</small></a>
                         </div>
+
                         <p class="text-muted text-center"><small>Do not have an account?</small></p>
                         <a class="btn btn-sm btn-info btn-block" href="/Register">Create an Account</a>
                     </div>
+
                     <p class="m-t-lg">
-                        <small>Stability empowers community groups to become force multipliers after natural disasters coordinating efforts between citizen run organizations and local emergency managers.</small>
+                        <small>
+                            Stability empowers community groups to become force multipliers after natural disasters coordinating efforts between citizen run organizations and local emergency managers.
+                        </small>
                     </p>
                 </div>
             </div>
         </div>
         <div class="col-xs-2 col-sm-4 col-lg-4"></div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const logo = document.getElementById('rotatingLogo');
-            const behaviors = ['fast', 'slow', 'paused', 'burst', '']; // random fun
-            let isReverse = false; // toggle tracker
+            const behaviors = ['fast', 'slow', 'paused', 'burst', ''];
+            let isReverse = false;
 
             function spinLogo(event) {
-                event.stopPropagation(); // 🚫 Prevent redirect via parent click
-
-                // Remove previous classes
+                event.stopPropagation();
                 logo.classList.remove('fast', 'slow', 'paused', 'burst', 'reverse');
-
-                // Toggle direction
                 isReverse = !isReverse;
-                if (isReverse) {
-                    logo.classList.add('reverse');
-                }
-
-                // Apply one random spin behavior
+                if (isReverse) logo.classList.add('reverse');
                 const behavior = behaviors[Math.floor(Math.random() * behaviors.length)];
-                if (behavior) {
-                    logo.classList.add(behavior);
-                }
+                if (behavior) logo.classList.add(behavior);
             }
 
-            // Trigger the spin on both events
             logo.addEventListener('click', spinLogo);
             logo.addEventListener('mouseenter', spinLogo);
         });
 
         function showSpinner() {
-            
-            if (document.getElementById('<%= txtUsername.ClientID %>').value != '' && document.getElementById('<%= txtPassword.ClientID %>').value != '') {
+            if (document.getElementById('<%= txtUsername.ClientID %>').value != '' &&
+                document.getElementById('<%= txtPassword.ClientID %>').value != '') {
                 var btn = document.getElementById('<%= btnSubmit.ClientID %>');
                 var loadingBtn = document.getElementById('btnLoading');
-
-                // Hide the real ASP.NET button
                 btn.style.display = 'none';
-
-                // Show the spinner button
                 loadingBtn.style.display = 'inline-block';
-
-                // Trigger ASP.NET postback manually
                 __doPostBack('<%= btnSubmit.UniqueID %>', '');
-
-                return false; // Prevent default postback
+                return false;
             }
         }
-
     </script>
 </asp:Content>
