@@ -14,30 +14,21 @@ public partial class V1_Member_PeopleSearch : BaseWebForm
 	public string _sendingUserId = string.Empty;
 	public string _hideConnectionButton = string.Empty;
 	string searchTerm = String.Empty;
-	protected void Page_Load(object sender, EventArgs e)
-	{
-		if (User.Identity.IsAuthenticated)
-		{
-			if (!IsPostBack)
-			{
-				searchTerm = Request.QueryString["searchTerm"];
-				if (!String.IsNullOrEmpty(searchTerm))
-				{
-					txtSearchBox.Text = searchTerm;
-					LoadConnections(searchTerm, 0);
-				}
-				else
-				{
-					LoadConnections(searchTerm, 50);
-				}
-				ucMemberNavigation.UserId = userId.ToString();
-			}
-		}
-		else
-		{
-			Response.Redirect("/SignIn");
-		}
-	}
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (User.Identity.IsAuthenticated)
+        {
+            if (!IsPostBack)
+            {
+                LoadConnections(null, 50); 
+                ucMemberNavigation.UserId = userId.ToString();
+            }
+        }
+        else
+        {
+            Response.Redirect("/SignIn");
+        }
+    }
 
     public void LoadConnections(string searchTerm, int recordCount)
     {

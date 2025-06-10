@@ -849,18 +849,13 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         }
     }
 
+
     protected void btnSearchMobile_Click(object sender, EventArgs e)
     {
         string searchType = String.IsNullOrEmpty(txtSearchMobile.Text) ? hdnSearchType.Value : hymoblie.Value;
         string searchTerm = String.IsNullOrEmpty(txtSearchMobile.Text) ? txtSearchHeader.Text : txtSearchMobile.Text;
-        if (searchType == "Teams")
-        {
-            Response.Redirect("/V1/NonProfit/TeamList.aspx?searchTerm=" + searchTerm);
 
-        }
-        else {
-            Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm);
-           }
+        Response.Redirect("/V1/FilteredResults.aspx?searchTerm=" + Server.UrlEncode(searchTerm) + "&searchType=" + Server.UrlEncode(searchType));
     }
 
 }

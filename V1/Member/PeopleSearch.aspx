@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="PeopleSearch.aspx.cs" Inherits="V1_Member_PeopleSearch" %>
+﻿ <%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="PeopleSearch.aspx.cs" Inherits="V1_Member_PeopleSearch" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
 <%@ Register Src="~/V1/UserControls/MemberNavigation.ascx" TagPrefix="uc1" TagName="MemberNavigation" %>
 <%@ Register Src="~/V1/UserControls/PeopleSearch.ascx" TagPrefix="uc1" TagName="PeopleSearch" %>

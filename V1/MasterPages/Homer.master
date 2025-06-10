@@ -294,8 +294,32 @@
                    let query = $(this).val().trim();
                    if (query.length > 1) {
                        $('#searchSuggestions').html(`
-                <div class='suggestion-item' data-type='TeamMembers'><strong>Team Members</strong></div>
-                <div class='suggestion-item' data-type='Teams'><strong>Teams</strong></div>
+   
+<div class='suggestion-item' data-type='TeamMembers'>
+  <i class="fa fa-user"></i> <strong>People</strong>
+</div>
+               						<div class='suggestion-item' data-type='Teams'>
+  <i class="fa fa-users"></i> <strong>Teams</strong>
+</div>
+<div class='suggestion-item' data-type='Deployments'>
+  <i class="fa fa-street-view"></i> <strong>Deployments</strong>
+</div>
+<div class='suggestion-item' data-type='Skills'>
+  <i class="fa fa-user-md"></i> <strong>Skills</strong>
+</div>
+<div class='suggestion-item' data-type='Resources'>
+  <i class="fa fa-truck"></i> <strong>Resources</strong>
+</div>
+<div class='suggestion-item' data-type='Portals'>
+  <i class="fa fa-globe"></i> <strong>Portals</strong>
+</div>
+<!-- ✅ New Option -->
+<div class='suggestion-item' data-type='VolunteerOpportunities'>
+  <i class="fa fa-life-ring"></i> <strong>Volunteer Opportunities</strong>
+</div>
+<div class='suggestion-item' data-type='Posts'>
+  <i class="fa fa-file-text"></i> <strong>Posts</strong>
+</div>
             `).show();
                    } else {
                        $('#searchSuggestions').hide();
@@ -320,8 +344,32 @@
                        let query = $(this).val().trim();
                        if (query.length > 1) {
                            $('#searchSuggestionss').html(`
-        <div class='suggestion-item' data-type='TeamMembers'><strong>Team Members</strong></div>
-        <div class='suggestion-item' data-type='Teams'><strong>Teams</strong></div>
+      			
+<div class='suggestion-item' data-type='TeamMembers'>
+  <i class="fa fa-user"></i> <strong>People</strong>
+</div>
+   						<div class='suggestion-item' data-type='Teams'>
+    <i class="fa fa-users"></i> <strong>Teams</strong>
+</div>
+<div class='suggestion-item' data-type='Deployments'>
+  <i class="fa fa-street-view"></i> <strong>Deployments</strong>
+</div>
+<div class='suggestion-item' data-type='Skills'>
+  <i class="fa fa-user-md"></i> <strong>Skills</strong>
+</div>
+<div class='suggestion-item' data-type='Resources'>
+  <i class="fa fa-truck"></i> <strong>Resources</strong>
+</div>
+<div class='suggestion-item' data-type='Portals'>
+  <i class="fa fa-globe"></i> <strong>Portals</strong>
+</div>
+<!-- ✅ New Option -->
+<div class='suggestion-item' data-type='VolunteerOpportunities'>
+  <i class="fa fa-life-ring"></i> <strong>Volunteer Opportunities</strong>
+</div>
+<div class='suggestion-item' data-type='Posts'>
+  <i class="fa fa-file-text"></i> <strong>Posts</strong>
+</div>
     `).show();
                        } else {
                            $('#searchSuggestionss').hide();
@@ -355,13 +403,16 @@
 }
 
 .suggestion-item {
+    border: 1px solid #ccc;
     padding: 8px 12px;
+    background-color: #fff;
     cursor: pointer;
-}
+    transition: background-color 0.2s ease;
+  }
 
-.suggestion-item:hover {
-    background-color: #f0f0f0;
-}
+  .suggestion-item:hover {
+    background-color: #f5f5f5;
+  } 
 
 			#featureTypeCounter{
 				    margin-right: 17px;
