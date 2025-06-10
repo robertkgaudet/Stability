@@ -321,7 +321,7 @@ public partial class V1_Stream : BaseOrganizationWebForm
 
         string searchTerm = Request.QueryString["searchTerm"];
         var posts = dc.ExecuteQuery<SearchResponse.PostInfo>(
-"EXEC SearchFillter {0}, {1}","Posts",string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm).ToList();
+"EXEC NavSearchFilter {0}, {1}", "Posts",string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm).ToList();
         rptPosts.DataSource = posts;
 		rptPosts.DataBind();
 	}

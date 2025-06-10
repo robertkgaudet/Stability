@@ -104,7 +104,7 @@ public partial class V1_Login : System.Web.UI.Page
         {
             urlRedirect = returnUrl;
         }
-        else
+        else                             
         {
             MembershipUser user = Membership.GetUser(txtUsername.Text);
 
@@ -113,7 +113,7 @@ public partial class V1_Login : System.Web.UI.Page
                 urlRedirect = "/V1/Member/Default.aspx";
 
                 //Does the user belong to a team yet?
-                //If not, send to the team page.
+                //If not, send to the team page.                
                 CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
                 var organizationUser = from ou in dc.UserOrganizations
                                        where ou.UserId == new Guid(user.ProviderUserKey.ToString()) && ou.Status == (int)RequestStatus.Approved
@@ -135,7 +135,7 @@ public partial class V1_Login : System.Web.UI.Page
     protected void btnGoogle_Click(object sender, EventArgs e)
     {
         string clientId = ConfigurationManager.AppSettings["GoogleClientId"];
-        string redirectUri = "http://localhost:64915/V1/ExternalLoginCallBack.aspx";
+        string redirectUri = "http://localhost:64915/V1/ExternalLoginCallBack.aspx?provider=google";
         string googleUrl = "https://accounts.google.com/o/oauth2/v2/auth" +
             "?response_type=code" +
             "&scope=email%20profile" +
@@ -145,17 +145,16 @@ public partial class V1_Login : System.Web.UI.Page
 
         Response.Redirect(googleUrl);
     }
-    //protected void btnFacebook_Click(object sender, EventArgs e)
-    //{
-    //    string fbAppId = ConfigurationManager.AppSettings["FacebookAppId"];
-    //    string redirectUri = ConfigurationManager.AppSettings["FacebookRedirectUri"];
+    protected void btnFacebook_Click(object sender, EventArgs e)
+    {
+        string fbAppId = ConfigurationManager.AppSettings["FacebookAppId"];
+        string redirectUri = ConfigurationManager.AppSettings["FacebookRedirectUri"];
+        string fbLoginUrl = "https://www.facebook.com/v17.0/dialog/oauth?" +
+            "client_id=" + fbAppId +
+            "&redirect_uri=" + HttpUtility.UrlEncode(redirectUri) +
+            "&response_type=code" +
+            "&scope=email,public_profile";
 
-    //    string fbLoginUrl = "https://www.facebook.com/v17.0/dialog/oauth?" +
-    //        "client_id=" + fbAppId +
-    //        "&redirect_uri=" + HttpUtility.UrlEncode(redirectUri) +
-    //        "&response_type=code" +
-    //        "&scope=email,public_profile";
-
-    //    Response.Redirect(fbLoginUrl);
-    //}
+        Response.Redirect(fbLoginUrl);
+    }
 }

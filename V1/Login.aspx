@@ -166,7 +166,7 @@ margin-left: 12px;
                         </button>
 
  <div class="text-center m-t-sm d-flex justify-content-between gap-2" style="display: flex; gap: 10px;">
-    <asp:LinkButton ID="btnFacebook" runat="server" CssClass="btn btn-social btn-facebook flex-fill" >
+    <asp:LinkButton ID="btnFacebook" runat="server" CssClass="btn btn-social btn-facebook flex-fill" OnClick="btnFacebook_Click" >
         <i class="fab fa-facebook-f"></i>Sign in with Facebook
     </asp:LinkButton>
 

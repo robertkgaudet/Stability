@@ -1,4 +1,4 @@
-Create PROCEDURE [dbo].[SearchFillter]
+Create PROCEDURE [dbo].[NavSearchFilter]
     @searchType NVARCHAR(50),
     @searchTerm NVARCHAR(100)
 AS

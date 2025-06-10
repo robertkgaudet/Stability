@@ -24,7 +24,7 @@ public partial class V1_NonProfit_DeploymentTeams : BaseWebForm
         {
 
              deploymentTeams = dc.ExecuteQuery<SearchResponse.VolunteerOpportunityInfo>(
-    "EXEC SearchFillter {0}, {1}",
+    "EXEC NavSearchFilter {0}, {1}",
     "VolunteerOpportunities",
     string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm).ToList();
         }

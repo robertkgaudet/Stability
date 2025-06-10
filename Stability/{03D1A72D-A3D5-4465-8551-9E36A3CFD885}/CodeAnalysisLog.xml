@@ -1,6 +1,198 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="c:\program files\microsoft visual studio\2022\community\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
 <FxCopReport Version="17.0">
+ <Targets>
+  <Target Name="C:\Users\lenovo\AppData\Local\Temp\tmpEC52.tmp.cadir\bin\App_Web_b3jyg3o2.dll">
+   <Modules>
+    <Module Name="app_web_b3jyg3o2.dll">
+     <Namespaces>
+      <Namespace Name="">
+       <Types>
+        <Type Name="S1_Profile_StoryPhotoCrop" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Crop(System.String,System.Int32,System.Int32,System.Int32,System.Int32)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2025-06-10 04:22:36Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Users\lenovo\source\repos\Stability\S1\Profile" File="StoryPhotoCrop.aspx.cs" Line="90">'S1_Profile_StoryPhotoCrop.Crop(string, int, int, int, int)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+  <Target Name="C:\Users\lenovo\AppData\Local\Temp\tmpEC52.tmp.cadir\bin\App_Web_exsxydqe.dll">
+   <Modules>
+    <Module Name="app_web_exsxydqe.dll">
+     <Namespaces>
+      <Namespace Name="">
+       <Types>
+        <Type Name="PositionAutoComplete" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2025-06-10 04:22:36Z" FixCategory="DependsOnFix">
+           <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'PositionAutoComplete' because it creates members of the following IDisposable types: 'CrowdReliefDBDataContext'. If 'PositionAutoComplete' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
+          </Message>
+         </Messages>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+  <Target Name="C:\Users\lenovo\AppData\Local\Temp\tmpEC52.tmp.cadir\bin\App_Web_fj5cbs3b.dll">
+   <Modules>
+    <Module Name="app_web_fj5cbs3b.dll">
+     <Namespaces>
+      <Namespace Name="">
+       <Types>
+        <Type Name="V1_Logo_LogoPhotoCrop" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Crop(System.String,System.Int32,System.Int32,System.Int32,System.Int32)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2025-06-10 04:22:36Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Users\lenovo\source\repos\Stability\V1\NonProfit" File="LogoPhotoCrop.aspx.cs" Line="110">'V1_Logo_LogoPhotoCrop.Crop(string, int, int, int, int)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="V1_NonProfit_NonProfitCampaign" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#SendSms(System.String,System.String)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2025-06-10 04:22:36Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Users\lenovo\source\repos\Stability\V1\NonProfit" File="NonProfitCampaign.aspx.cs" Line="502">'V1_NonProfit_NonProfitCampaign.SendSms(string, string)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+  <Target Name="C:\Users\lenovo\AppData\Local\Temp\tmpEC52.tmp.cadir\bin\App_Web_gdyk2s2b.dll">
+   <Modules>
+    <Module Name="app_web_gdyk2s2b.dll">
+     <Namespaces>
+      <Namespace Name="">
+       <Types>
+        <Type Name="V1_Profile_ProfilePhotoCrop" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Crop(System.String,System.Int32,System.Int32,System.Int32,System.Int32)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2025-06-10 04:22:36Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Users\lenovo\source\repos\Stability\V1\Profile" File="ProfilePhotoCrop.aspx.cs" Line="87">'V1_Profile_ProfilePhotoCrop.Crop(string, int, int, int, int)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+  <Target Name="C:\Users\lenovo\AppData\Local\Temp\tmpEC52.tmp.cadir\bin\App_Web_ihnyzxgc.dll">
+   <Modules>
+    <Module Name="app_web_ihnyzxgc.dll">
+     <Namespaces>
+      <Namespace Name="">
+       <Types>
+        <Type Name="V1_BusinessAdministration_BusinessPhotoCrop" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Crop(System.String,System.Int32,System.Int32,System.Int32,System.Int32)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2025-06-10 04:22:36Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Users\lenovo\source\repos\Stability\V1\BusinessAdministration" File="BusinessPhotoCrop.aspx.cs" Line="87">'V1_BusinessAdministration_BusinessPhotoCrop.Crop(string, int, int, int, int)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+  <Target Name="C:\Users\lenovo\AppData\Local\Temp\tmpEC52.tmp.cadir\bin\App_Web_jx11giti.dll">
+   <Modules>
+    <Module Name="app_web_jx11giti.dll">
+     <Namespaces>
+      <Namespace Name="">
+       <Types>
+        <Type Name="V1_SquareLogo_SquareLogoPhotoCrop" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Crop(System.String,System.Int32,System.Int32,System.Int32,System.Int32)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2025-06-10 04:22:36Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Users\lenovo\source\repos\Stability\V1\NonProfit" File="SquareLogoPhotoCrop.aspx.cs" Line="117">'V1_SquareLogo_SquareLogoPhotoCrop.Crop(string, int, int, int, int)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+  <Target Name="C:\Users\lenovo\AppData\Local\Temp\tmpEC52.tmp.cadir\bin\App_Web_lfldkyy5.dll">
+   <Modules>
+    <Module Name="app_web_lfldkyy5.dll">
+     <Namespaces>
+      <Namespace Name="">
+       <Types>
+        <Type Name="V1_Administration_Item_ItemPhotoCrop" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Crop(System.String,System.Int32,System.Int32,System.Int32,System.Int32)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200" Status="Active" Created="2025-06-10 04:22:36Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Error" Path="c:\Users\lenovo\source\repos\Stability\V1\Administration\Item" File="ItemPhotoCrop.aspx.cs" Line="87">'V1_Administration_Item_ItemPhotoCrop.Crop(string, int, int, int, int)' rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+ </Targets>
+ <Rules>
+  <Rule TypeName="RethrowToPreserveStackDetails" Category="Microsoft.Usage" CheckId="CA2200">
+   <Name>Rethrow to preserve stack details</Name>
+   <Description>Use the IL rethrow instruction to preserve original stack details when re-raising a caught exception.</Description>
+   <Resolution Name="Default">{0} rethrows a caught exception and specifies it explicitly as an argument. Use 'throw' without an argument instead, in order to preserve the stack location where the exception was initially raised.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182363.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="usagerules.dll" Version="17.0.0.0" />
+  </Rule>
+  <Rule TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001">
+   <Name>Types that own disposable fields should be disposable</Name>
+   <Description>Types that declare disposable members should also implement IDisposable. If the type does not own any unmanaged resources, do not implement a finalizer on it.</Description>
+   <Resolution Name="DependsOnFix">Implement IDisposable on {0} because it creates members of the following IDisposable types: {1}. If {0} has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182172.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalError</MessageLevel>
+   <File Name="designrules.dll" Version="17.0.0.0" />
+  </Rule>
+ </Rules>
  <Localized>
   <String Key="Category">Category</String>
   <String Key="Certainty">Certainty</String>

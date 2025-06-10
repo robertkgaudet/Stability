@@ -17,7 +17,7 @@ public partial class V1_Profile_EditDisasters : BaseOrganizationWebForm
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
             var eventsQuery = dc.ExecuteQuery<SearchResponse.PortalResult>(
-    "EXEC SearchFillter {0}, {1}",
+    "EXEC NavSearchFilter {0}, {1}",
     "Portals",
     string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm
     );
