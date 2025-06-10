@@ -58,7 +58,7 @@ public partial class V1_Login : System.Web.UI.Page
                     // FACEBOOK AUTH
                     string appId = ConfigurationManager.AppSettings["FacebookAppId"];
                     string appSecret = ConfigurationManager.AppSettings["FacebookAppSecret"];
-                    string redirectUri = "http://localhost:64915/V1/Login.aspx?provider=facebook";
+                    string redirectUri = "http://localhost:64915/V1/ExternalLoginCallBack.aspx?provider=facebook";
 
                     string tokenUrl = "https://graph.facebook.com/v19.0/oauth/access_token" +
                   "?client_id=" + appId +
@@ -92,7 +92,7 @@ public partial class V1_Login : System.Web.UI.Page
                         FormsAuthentication.SetAuthCookie(existingUserName, true);
                         var userId = (from u in dc.aspnet_Users where u.UserName == existingUserName select u.UserId).SingleOrDefault();
                         SendSignInEmail(existingUserName, userId.ToString());
-                        Response.Redirect("/feed");
+                        Response.Redirect("/feed"); 
                     }
                     else
                     {
@@ -138,7 +138,7 @@ public partial class V1_Login : System.Web.UI.Page
                             FormsAuthentication.SetAuthCookie(username, true);
                             var userId = (from u in dc.aspnet_Users where u.UserName == username select u.UserId).SingleOrDefault();
                             SendSignInEmail(username, userId.ToString());
-                            Response.Redirect("/feed");
+                            Response.Redirect("/V1/Profile/EditSkills.aspx?register=true"); 
                         }
                         else
                         {

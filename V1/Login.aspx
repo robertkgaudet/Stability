@@ -98,33 +98,53 @@
         .rotating-logo { margin: 0 auto !important; }
         h1.loginLogo { margin: auto !important; }
 
-      .btn-social {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
-    padding: 6px 5px;
-    border-radius: 4px;
-    color: #fff;
-    white-space: nowrap;
-}
+        .btn-social,
+        .btn-social:hover,
+        .btn-social:visited,
+        .btn-social:active {
+            color: #fff !important;
+            text-decoration: none;
+        }
 
-.btn-facebook {
-    background-color: #3b5998;
-    border: 1px solid #3b5998;
-}
 
-.btn-google {
-    background-color: #4285f4;
-    border: 1px solid #4285f4;
-margin-left: 12px;
-}
+            .btn-social {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 14px;
+                padding: 6px 5px;
+                border-radius: 4px;
+                color: #fff;
+                white-space: nowrap;
+                transition: background-color 0.3s ease; /* Smooth transition */
+            }
 
-.btn-social i {
-    margin-right: 6px;
-    font-size: 16px;
-}
+            .btn-facebook {
+                background-color: #3b5998;
+                border: 1px solid #3b5998;
+            }
+
+            .btn-facebook:hover {
+                background-color: #2d4373; /* Darker shade */
+                border-color: #2d4373;
+            }
+
+            .btn-google {
+                background-color: #4285f4;
+                border: 1px solid #4285f4;
+                margin-left: 12px;
+            }
+
+            .btn-google:hover {
+                background-color: #3367d6; /* Darker shade */
+                border-color: #3367d6;
+            }
+
+            .btn-social i {
+                margin-right: 6px;
+                font-size: 16px;
+            }
 
     </style>
 </asp:Content>
@@ -165,15 +185,15 @@ margin-left: 12px;
                             <img src="/V1/Images/logo-icon-70x70-white-transparent.png" alt="Loading..." style="width: 24px; height: 24px; animation: spin 1s linear infinite;" />
                         </button>
 
- <div class="text-center m-t-sm d-flex justify-content-between gap-2" style="display: flex; gap: 10px;">
-    <asp:LinkButton ID="btnFacebook" runat="server" CssClass="btn btn-social btn-facebook flex-fill" OnClick="btnFacebook_Click" >
-        <i class="fab fa-facebook-f"></i>Sign in with Facebook
-    </asp:LinkButton>
+             <div class="text-center m-t-sm d-flex justify-content-between gap-2" style="display: flex; gap: 10px;">
+                <asp:LinkButton ID="btnFacebook" runat="server" CssClass="btn btn-social btn-facebook flex-fill" OnClick="btnFacebook_Click" >
+                    <i class="fab fa-facebook-f"></i>Sign in with Facebook
+                </asp:LinkButton>
 
-    <asp:LinkButton ID="btnGoogle" runat="server" CssClass="btn btn-social btn-google flex-fill" OnClick="btnGoogle_Click">
-        <i class="fab fa-google"></i>Sign in with Google
-    </asp:LinkButton>
-</div>
+                <asp:LinkButton ID="btnGoogle" runat="server" CssClass="btn btn-social btn-google flex-fill" OnClick="btnGoogle_Click">
+                    <i class="fab fa-google"></i>Sign in with Google
+                </asp:LinkButton>
+            </div>
 
 
 
