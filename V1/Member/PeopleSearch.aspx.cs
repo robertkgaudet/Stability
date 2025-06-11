@@ -7,56 +7,56 @@ using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.Expressions;
 public partial class V1_Member_PeopleSearch : BaseWebForm
 {
-	public string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
-	public string _receiverUserId = string.Empty;
-	public string _sendingUserId = string.Empty;
-	public string _hideConnectionButton = string.Empty;
-	string searchTerm = String.Empty;
-	protected void Page_Load(object sender, EventArgs e)
-	{
-		if (User.Identity.IsAuthenticated)
-		{
-			if (!IsPostBack)
-			{
-				searchTerm = Request.QueryString["searchTerm"];
-              var  searchType = Request.QueryString["searchType"];
-				if (!String.IsNullOrEmpty(searchTerm))
-				{
-					LoadConnections(searchTerm, 0, searchType);
-				}
-				else
-				{
-					LoadConnections(searchTerm, 50, searchType);
-				}
-				ucMemberNavigation.UserId = userId.ToString();
-			}
-		}
-		else
-		{
-			Response.Redirect("/SignIn");
-		}
-	}
+    public string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
+    public string _receiverUserId = string.Empty;
+    public string _sendingUserId = string.Empty;
+    public string _hideConnectionButton = string.Empty;
+    string searchTerm = String.Empty;
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (User.Identity.IsAuthenticated)
+        {
+            if (!IsPostBack)
+            {
+                searchTerm = Request.QueryString["searchTerm"];
+                if (!String.IsNullOrEmpty(searchTerm))
+                {
+                    txtSearchBox.Text = searchTerm;
+                    LoadConnections(searchTerm, 0);
+                }
+                else
+                {
+                    LoadConnections(searchTerm, 50);
+                }
+                ucMemberNavigation.UserId = userId.ToString();
+            }
+        }
+        else
+        {
+            Response.Redirect("/SignIn");
+        }
+    }
 
-    public void LoadConnections(string searchTerm, int recordCount,string searchType=null)
+    public void LoadConnections(string searchTerm, int recordCount)
     {
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
         _hideConnectionButton = "style='display:none;'";
-        List<Tools.FriendInfo> PeopleSearch = Tools.PeopleSearch(searchTerm, recordCount, searchType);
+        //MY ACCEPTED CONNECTIONS
+        List<Tools.FriendInfo> PeopleSearch = Tools.PeopleSearch(searchTerm, recordCount);
         ConnectionsDataList.DataSource = PeopleSearch;
         ConnectionsDataList.DataBind();
     }
     protected void btnSubmit_Click(object sender, EventArgs e)
-	{
-		searchTerm = txtSearchBox.Text;
-		if (!String.IsNullOrEmpty(searchTerm))
-		{
-			LoadConnections(searchTerm, 0); 
-		}
-	}
+    {
+        searchTerm = txtSearchBox.Text;
+        if (!String.IsNullOrEmpty(searchTerm))
+        {
+            LoadConnections(searchTerm, 0);
+        }
+    }
 
     protected void ConnectionsDataList_ItemDataBound(object sender, RepeaterItemEventArgs e)
     {

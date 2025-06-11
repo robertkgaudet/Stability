@@ -16,15 +16,15 @@ public partial class V1_Profile_EditDisasters : BaseOrganizationWebForm
 
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-            var eventsQuery = dc.ExecuteQuery<SearchResponse.PortalResult>(
-    "EXEC SearchFillter {0}, {1}",
-    "Portals",
-    string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm
-    );
+            var eventsQuery = from c in dc.Events
+                              where c.IsDisaster == true && c.IsActive == true
+                              orderby c.BeginDate descending
+                              select new { name = " - " + c.Name, c.EventId };
+
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 eventsQuery = eventsQuery
-                    .Where(ev => ev.Name.ToLower().Contains(searchTerm.ToLower()));
+                    .Where(ev => ev.name.ToLower().Contains(searchTerm.ToLower()));
             }
 
             chkBoxListDisasters.DataSource = eventsQuery;
@@ -53,55 +53,55 @@ public partial class V1_Profile_EditDisasters : BaseOrganizationWebForm
 
 
     protected void btnSubmit_Cancel(object sender, EventArgs e)
-	{
-		Response.Redirect("/V1/Member/Default.aspx");
-	}
+    {
+        Response.Redirect("/V1/Member/Default.aspx");
+    }
 
-	protected void btnSubmit_Click(object sender, EventArgs e)
-	{
-		divMessage.Visible = true;
-		lblMessage.Text = "Your Community Portals have been updated.";
+    protected void btnSubmit_Click(object sender, EventArgs e)
+    {
+        divMessage.Visible = true;
+        lblMessage.Text = "Your Community Portals have been updated.";
 
-		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-		foreach (ListItem item in chkBoxListDisasters.Items)
-		{
-			if (item.Selected)
-			{
-				var userCheck = from p in dc.UserEvents
-						where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-						&& p.EventId == new Guid(item.Value)
-						select p;
+        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+        foreach (ListItem item in chkBoxListDisasters.Items)
+        {
+            if (item.Selected)
+            {
+                var userCheck = from p in dc.UserEvents
+                                where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+                                && p.EventId == new Guid(item.Value)
+                                select p;
 
-				if (userCheck.Count() == 0)
-				{ 
-					UserEvent userEvent = new UserEvent();
-					userEvent.EventId = new Guid(item.Value);
-					userEvent.UserId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
-					userEvent.UserEventId = Guid.NewGuid();
-					dc.UserEvents.InsertOnSubmit(userEvent);
-					dc.SubmitChanges();
-				}
-			}
-			else
-			{
-				//If item is selected then unselect it.
-				var userChecks = from p in dc.UserEvents
-								where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-								&& p.EventId == new Guid(item.Value)
-								select p;
-				
-				//Delete any checked records
-				if (userChecks.Count() > 0)
-				{
-					//Item is selected.
-					foreach(var userCheck in userChecks)
-					{
-						dc.UserEvents.DeleteOnSubmit(userCheck);
-						dc.SubmitChanges();
-					}
-				}
-			}
-		}
-		Response.Redirect("/V1/Member/Default.aspx");
-	}
+                if (userCheck.Count() == 0)
+                {
+                    UserEvent userEvent = new UserEvent();
+                    userEvent.EventId = new Guid(item.Value);
+                    userEvent.UserId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+                    userEvent.UserEventId = Guid.NewGuid();
+                    dc.UserEvents.InsertOnSubmit(userEvent);
+                    dc.SubmitChanges();
+                }
+            }
+            else
+            {
+                //If item is selected then unselect it.
+                var userChecks = from p in dc.UserEvents
+                                 where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+                                 && p.EventId == new Guid(item.Value)
+                                 select p;
+
+                //Delete any checked records
+                if (userChecks.Count() > 0)
+                {
+                    //Item is selected.
+                    foreach (var userCheck in userChecks)
+                    {
+                        dc.UserEvents.DeleteOnSubmit(userCheck);
+                        dc.SubmitChanges();
+                    }
+                }
+            }
+        }
+        Response.Redirect("/V1/Member/Default.aspx");
+    }
 }

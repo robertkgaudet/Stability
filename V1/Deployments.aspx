@@ -82,6 +82,7 @@
             }
 
             if (searchValue) {
+                $("#filter").val(searchValue);
                 $("#tblDeployments tbody tr").filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(searchValue.toLowerCase()) > -1);
                 });

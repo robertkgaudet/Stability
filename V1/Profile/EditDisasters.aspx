@@ -6,12 +6,12 @@
 	<script src="/Homer/vendor/iCheck/icheck.min.js"></script>
 
 	<script type="text/javascript">
-	$(document).ready(function(){
-		$('input[type="checkbox"]').each(function () {
-			$(this).addClass("i-checks");
-		});
-	});
-	</script>
+        $(document).ready(function () {
+            $('input[type="checkbox"]').each(function () {
+                $(this).addClass("i-checks");
+            });
+        });
+    </script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">

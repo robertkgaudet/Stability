@@ -12,15 +12,14 @@
         <div class="col-xs-12">
             <div class="hpanel">
                 <div class="panel-body">
-					<h4><asp:Literal ID="litPageName" runat="server"></asp:Literal></h4>
-                    <br />
-					<a href="/V1/NonProfit/NonProfitNew.aspx" runat="server" id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right">Create A Team, Club or Group</a>
-					<span id="rowCountWrapper" style="font-size: 14px	; font-weight: normal;" class="text-muted">
+                    <a href="/V1/Administration/TeamName.aspx?userActionModal=false" runat="server" id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right">Create A Team</a>
+                    <h4><asp:Literal ID="litPageName" runat="server"></asp:Literal></h4>
+                    <span id="rowCountWrapper" style="font-size: 14px; font-weight: normal;" class="text-muted">
                         <asp:Literal ID="litCount" runat="server"></asp:Literal>
                     </span>
                     <input type="text" class="form-control input-sm m-b-md" id="filter" placeholder="Search Teams">
                     <div class="alert alert-success" id="divJoinTeamMessage" runat="server" visible="false">
-                        <h4><i class="fa fa-users"></i>Choose A Team, Club or Group or Create Your Own</h4>
+                        <h4><i class="fa fa-users"></i>Choose A Team or Create Your Own</h4>
                     </div>
                     <table id="tblTeams" class="footable table toggle-arrow-tiny table-hover table-bordered table-striped" data-page-size="500">
                         <tbody>
@@ -29,7 +28,7 @@
                                     <tr>
                                         <td>
                                             <div style="height: 50px;">
-                                                <asp:Image ID="imgLogo" CssClass="m-r-md pull-left" runat="server" />
+                                                <asp:Image ID="imgLogo" CssClass="m-r-md" runat="server" />
                                                 <asp:HyperLink ID="hypTeamName" Font-Bold="true" runat="server"></asp:HyperLink>
                                                 <asp:Label ID="lblDescription" runat="server"></asp:Label>
                                             </div>
@@ -64,6 +63,7 @@
             }
 
             if (searchValue) {
+                $("#filter").val(searchValue);
                 $("#tblTeams tbody tr").filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(searchValue.toLowerCase()) > -1);
                 });

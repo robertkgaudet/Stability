@@ -41,9 +41,6 @@
                 text-decoration: none;
                cursor: pointer;
         }
-        .Userlink{
-            display:inline !important;
-        }
         .user-name:hover{
                    color: #23527c !important;
                   text-decoration: underline;
