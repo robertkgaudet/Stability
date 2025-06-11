@@ -48,8 +48,10 @@ public partial class V1_FilteredResults : System.Web.UI.Page
 
             foreach (var item in result)
             {
-                allResults.Add(item); 
+                allResults.Add(item);
             }
+            ucPeopleSearch.Visible = true;
+            ucPeopleSearch.BindData(allResults);
         }
 
     }
@@ -58,14 +60,12 @@ public partial class V1_FilteredResults : System.Web.UI.Page
     {
         switch (searchType)
         {
-            case "Posts": return "Search_Posts";
             case "TeamMembers": return "Search_Profiles";
             case "Teams": return "Search_Teams";
             case "Skills": return "Search_Skills";
             case "Resources": return "Search_Resources";
             case "Deployments": return "Search_Deployments";
             case "Portals": return "Search_Portals";
-            case "VolunteerOpportunities": return "Search_VolunteerOpportunities";
             default: return "";
         }
     }

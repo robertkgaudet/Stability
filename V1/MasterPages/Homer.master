@@ -313,13 +313,7 @@
 <div class='suggestion-item' data-type='Portals'>
   <i class="fa fa-globe"></i> <strong>Portals</strong>
 </div>
-<!-- ✅ New Option -->
-<div class='suggestion-item' data-type='VolunteerOpportunities'>
-  <i class="fa fa-life-ring"></i> <strong>Volunteer Opportunities</strong>
-</div>
-<div class='suggestion-item' data-type='Posts'>
-  <i class="fa fa-file-text"></i> <strong>Posts</strong>
-</div>
+
             `).show();
                    } else {
                        $('#searchSuggestions').hide();
@@ -363,13 +357,7 @@
 <div class='suggestion-item' data-type='Portals'>
   <i class="fa fa-globe"></i> <strong>Portals</strong>
 </div>
-<!-- ✅ New Option -->
-<div class='suggestion-item' data-type='VolunteerOpportunities'>
-  <i class="fa fa-life-ring"></i> <strong>Volunteer Opportunities</strong>
-</div>
-<div class='suggestion-item' data-type='Posts'>
-  <i class="fa fa-file-text"></i> <strong>Posts</strong>
-</div>
+
     `).show();
                        } else {
                            $('#searchSuggestionss').hide();

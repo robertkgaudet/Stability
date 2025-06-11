@@ -9,7 +9,9 @@ using System.Web.UI.WebControls;
 
 public partial class V1_UserControls_PeopleSearch : System.Web.UI.UserControl
 {
-	protected void Page_Load(object sender, EventArgs e)
-	{
-	}
+    public void BindData(IEnumerable<object> data)
+    {
+        rptPeopleSearch.DataSource = data;
+        rptPeopleSearch.DataBind();
+    }
 }
