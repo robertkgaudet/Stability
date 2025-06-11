@@ -77,7 +77,6 @@ public partial class V1_Login : System.Web.UI.Page
                     email = user.email;
                     firstName = user.first_name;
                     lastName = user.last_name;
-                    picture = user.picture.data.url;
                 }
             }
 
@@ -92,7 +91,7 @@ public partial class V1_Login : System.Web.UI.Page
                         FormsAuthentication.SetAuthCookie(existingUserName, true);
                         var userId = (from u in dc.aspnet_Users where u.UserName == existingUserName select u.UserId).SingleOrDefault();
                         SendSignInEmail(existingUserName, userId.ToString());
-                        Response.Redirect("/feed"); 
+                            Response.Redirect("/feed"); 
                     }
                     else
                     {
@@ -102,39 +101,16 @@ public partial class V1_Login : System.Web.UI.Page
 
                         if (status == MembershipCreateStatus.Success)
                         {
-                            Guid photoId = Guid.NewGuid();
-                            dc.Photos.InsertOnSubmit(new Photo
-                            {
-                                PhotoId = photoId,
-                                Filename = picture,
-                                CreatedOn = DateTime.Now,
-                                CreatedBy = new Guid(newUser.ProviderUserKey.ToString()),
-                                Hidden = false,
-                                Title = "Profile Picture",
-                                Description = "OAuth profile picture"
-                            });
-                            dc.SubmitChanges();
-
+                      
                             dc.Profiles.InsertOnSubmit(new Profile
                             {
                                 UserId = new Guid(newUser.ProviderUserKey.ToString()),
                                 ProfileId = Guid.NewGuid(),
                                 Firstname = firstName,
                                 Lastname = lastName,
-                                PhotoId = photoId
                             });
                             dc.SubmitChanges();
-
-                            dc.ProfilePhotos.InsertOnSubmit(new ProfilePhoto
-                            {
-                                ProfilePhotoId = Guid.NewGuid(),
-                                UserId = new Guid(newUser.ProviderUserKey.ToString()),
-                                PhotoId = photoId,
-                                IsCurrrent = true,
-                                CreatedOn = DateTime.Now
-                            });
-                            dc.SubmitChanges();
-
+                    
                             FormsAuthentication.SetAuthCookie(username, true);
                             var userId = (from u in dc.aspnet_Users where u.UserName == username select u.UserId).SingleOrDefault();
                             SendSignInEmail(username, userId.ToString());
