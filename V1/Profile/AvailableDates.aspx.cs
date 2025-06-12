@@ -143,9 +143,13 @@ public partial class V1_Profile_AvailableDates : BaseWebForm
 
 		string datesAvailableJSON = JsonConvert.SerializeObject(datesAvailable);
 		hiddenAvailableDates.Value = datesAvailableJSON;
-
-		string register = Request.QueryString["register"];
-		if (!String.IsNullOrEmpty(register))
+        var profilePhoto = (from ph in dc.Photos
+                            join pr in dc.ProfilePhotos on ph.PhotoId equals pr.PhotoId
+                            where pr.UserId == userId
+                            orderby ph.CreatedOn descending
+                            select new { ph.FilenameCropped }).Take(1).SingleOrDefault();
+        string register = Request.QueryString["register"];
+		if (!String.IsNullOrEmpty(register)&& profilePhoto==null)
 		{
 			Response.Redirect("/V1/Profile/ProfilePhotoUpload.aspx?userId=" + userId + "&register=true");
 		}
