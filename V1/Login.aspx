@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/1-Column-Narrow.master" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="V1_Login" %>
+
 <%@ MasterType VirtualPath="~/V1/MasterPages/1-Column-Narrow.master" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
@@ -20,9 +21,9 @@
             width: 300px;
         }
 
-        .loginLogo:hover {
-            cursor: pointer;
-        }
+            .loginLogo:hover {
+                cursor: pointer;
+            }
 
         .rotating-logo:hover .spin-label {
             color: #5a2ca0;
@@ -37,13 +38,23 @@
         }
 
         @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes spin-reverse {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(-360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(-360deg);
+            }
         }
 
         .rotating-logo img {
@@ -53,13 +64,29 @@
             transition: all 0.3s ease-in-out;
         }
 
-        .rotating-logo.fast img { animation-duration: 0.8s; }
-        .rotating-logo.slow img { animation-duration: 12s; }
-        .rotating-logo.reverse img { animation-name: spin-reverse; }
-        .rotating-logo.paused img { animation-play-state: paused; }
-        .rotating-logo.burst img { animation-duration: 0.4s; }
+        .rotating-logo.fast img {
+            animation-duration: 0.8s;
+        }
 
-        #btnSubmit { position: relative; }
+        .rotating-logo.slow img {
+            animation-duration: 12s;
+        }
+
+        .rotating-logo.reverse img {
+            animation-name: spin-reverse;
+        }
+
+        .rotating-logo.paused img {
+            animation-play-state: paused;
+        }
+
+        .rotating-logo.burst img {
+            animation-duration: 0.4s;
+        }
+
+        #btnSubmit {
+            position: relative;
+        }
 
         .error-message {
             color: #b20000;
@@ -95,8 +122,13 @@
             }
         }
 
-        .rotating-logo { margin: 0 auto !important; }
-        h1.loginLogo { margin: auto !important; }
+        .rotating-logo {
+            margin: 0 auto !important;
+        }
+
+        h1.loginLogo {
+            margin: auto !important;
+        }
 
         .btn-social,
         .btn-social:hover,
@@ -105,47 +137,58 @@
             color: #fff !important;
             text-decoration: none;
         }
+/*
+         .btn-social {
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 6px 5px;
+            border-radius: 4px;
+            color: #fff;
+            white-space: nowrap;
+            transition: background-color 0.3s ease;
+            display: flex;
+        }*/
 
-
-            .btn-social {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: bold;
-                font-size: 14px;
-                padding: 6px 5px;
-                border-radius: 4px;
-                color: #fff;
-                white-space: nowrap;
-                transition: background-color 0.3s ease; /* Smooth transition */
-            }
-
-            .btn-facebook {
-                background-color: #3b5998;
-                border: 1px solid #3b5998;
-            }
+        .btn-facebook {
+            background-color: #3b5998;
+            border: 1px solid #3b5998;
+            
+        }
 
             .btn-facebook:hover {
-                background-color: #2d4373; /* Darker shade */
+                background-color: #2d4373;
                 border-color: #2d4373;
             }
 
-            .btn-google {
-                background-color: #4285f4;
-                border: 1px solid #4285f4;
-                margin-left: 12px;
-            }
+        .btn-google {
+            background-color: #4285f4;
+            border: 1px solid #4285f4;
+           
+        }
 
             .btn-google:hover {
-                background-color: #3367d6; /* Darker shade */
+                background-color: #3367d6;
                 border-color: #3367d6;
             }
 
-            .btn-social i {
-                margin-right: 6px;
-                font-size: 16px;
+        .btn-social i {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        /* Responsive behavior */
+        @media (max-width: 1200px) {
+            .responsive-social {
+                flex-direction: column !important;
             }
 
+                .responsive-social .btn-google {
+                    margin-left: 0 !important;
+                    margin-top: 5px;
+                }
+        }
     </style>
 </asp:Content>
 
@@ -185,17 +228,15 @@
                             <img src="/V1/Images/logo-icon-70x70-white-transparent.png" alt="Loading..." style="width: 24px; height: 24px; animation: spin 1s linear infinite;" />
                         </button>
 
-             <div class="text-center m-t-sm d-flex justify-content-between gap-2" style="display: flex; gap: 10px;">
-                <asp:LinkButton ID="btnFacebook" runat="server" CssClass="btn btn-social btn-facebook flex-fill" OnClick="btnFacebook_Click" >
-                    <i class="fab fa-facebook-f"></i>Sign in with Facebook
-                </asp:LinkButton>
+                        <div class="text-center m-t-sm d-flex justify-content-between gap-1 responsive-social" style="display: flex; gap: 8px;  width: 100%">
+                            <asp:LinkButton ID="btnFacebook" runat="server" CssClass="btn btn-social btn-facebook flex-fill" OnClick="btnFacebook_Click">
+                           <i class="fab fa-facebook-f"></i>Sign in with Facebook
+                            </asp:LinkButton>
 
-                <asp:LinkButton ID="btnGoogle" runat="server" CssClass="btn btn-social btn-google flex-fill" OnClick="btnGoogle_Click">
-                    <i class="fab fa-google"></i>Sign in with Google
-                </asp:LinkButton>
-            </div>
-
-
+                            <asp:LinkButton ID="btnGoogle" runat="server" CssClass="btn btn-social btn-google flex-fill" OnClick="btnGoogle_Click">
+                            <i class="fab fa-google"></i>Sign in with Google
+                            </asp:LinkButton>
+                        </div>
 
                         <div class="text-center">
                             <a href="/V1/PasswordReset.aspx"><small>Forgot password?</small></a>
@@ -207,8 +248,7 @@
                     </div>
 
                     <p class="m-t-lg">
-                        <small>
-                            Stability empowers community groups to become force multipliers after natural disasters coordinating efforts between citizen run organizations and local emergency managers.
+                        <small>Stability empowers community groups to become force multipliers after natural disasters coordinating efforts between citizen run organizations and local emergency managers.
                         </small>
                     </p>
                 </div>
