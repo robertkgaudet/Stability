@@ -123,39 +123,67 @@ namespace CrowdRelief
             Pending
         }
 
-		public class FriendInfo
-		{
-			public string FullName { get; set; }
-			public string ProfileImage { get; set; }
-			public DateTime AcceptedOn { get; set; }
-			public Guid UserId { get; set; }
-			public bool? PassedVetting { get; set; }
-			public string ProfileDescription { get; set; }
-			public string ProfileTitle { get; set; }
-			public string CityState { get; set; }
-			public string TeamName { get; set; }
-			public DateTime CreateDate { get; set; }
-            public Guid? SkillId { get; set; }
-            public string SkillName { get; set; }   
-            public Guid? ResourceId { get; set; }
-            public string ResourceName { get; set; } 
+        public class FriendInfo
+        {
+            public string FullName { get; set; }
+            public string ProfileImage { get; set; }
+            public DateTime AcceptedOn { get; set; }
+            public Guid UserId { get; set; }
+            public bool? PassedVetting { get; set; }
+            public string ProfileDescription { get; set; }
+            public string ProfileTitle { get; set; }
+            public string CityState { get; set; }
+            public string TeamName { get; set; }
+            public DateTime CreateDate { get; set; }
         }
 
-        public static List<FriendInfo> PeopleSearch(string searchTerm, int itemCountToReturn,string searchType=null)
+        public static List<FriendInfo> PeopleSearch(string searchTerm, int itemCountToReturn)
         {
+            //Guid UserId = new Guid(userId);
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
+            // All DB Users
+            var profiles = from profile in dc.Profiles
+                           join a in dc.aspnet_Memberships on profile.UserId equals a.UserId
+                           where
+                           //profile.PassedVetting == null || profile.PassedVetting == true
+                           //&&
+                           a.IsLockedOut == false && a.IsApproved == true
+                           orderby a.CreateDate descending
+                           select new FriendInfo
+                           {
+                               UserId = profile.UserId,
+                               ProfileImage = (from p in dc.Photos
+                                               join ph in dc.ProfilePhotos on p.PhotoId equals ph.PhotoId
+                                               where ph.UserId == profile.UserId
+                                               orderby p.CreatedOn descending
+                                               select p.FilenameCropped).Take(1).SingleOrDefault(),
+                               FullName = profile.Firstname + " " + profile.Lastname,
+                               PassedVetting = profile.PassedVetting == null ? false : profile.PassedVetting,
+                               ProfileDescription = profile.Description,
+                               CreateDate = a.CreateDate,
+                               ProfileTitle = profile.Title,
+                               CityState = profile.City + " " + profile.State,
+                               TeamName = (from uo in dc.UserOrganizations
+                                           join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
+                                           where uo.UserId == profile.UserId && uo.Status == (int)RequestStatus.Approved
+                                           select o.Name).Take(1).SingleOrDefault()
+                           };
 
-            var profiles = dc.ExecuteQuery<FriendInfo>(
-    "EXEC NavSearchFilter {0}, {1}", string.IsNullOrWhiteSpace(searchType) ? "" : searchType, string.IsNullOrWhiteSpace(searchTerm) ? "" : searchTerm
-).ToList();
-
-
-            if (!string.IsNullOrEmpty(searchTerm))
+            if (searchTerm != null)
             {
                 string lowerSearch = searchTerm.ToLower();
 
-                var ordered = profiles
+                var matchedProfiles = profiles
+                    .Where(item =>
+                        item.FullName.ToLower().Contains(lowerSearch) ||
+                        item.ProfileDescription.ToLower().Contains(lowerSearch) ||
+                        item.ProfileTitle.ToLower().Contains(lowerSearch) ||
+                        item.TeamName.ToLower().Contains(lowerSearch) ||
+                        item.CityState.ToLower().Contains(lowerSearch))
+                    .ToList();
+
+                var ordered = matchedProfiles
         .Select(p =>
         {
             var fullNameParts = p.FullName.Split(' ');
@@ -193,7 +221,7 @@ namespace CrowdRelief
 
             if (itemCountToReturn > 0)
             {
-                profiles = profiles.Take(itemCountToReturn).ToList();
+                profiles = profiles.Take(itemCountToReturn);
             }
             // Bind data to DataList
             return profiles.Distinct().OrderByDescending(sort => sort.CreateDate).ToList();

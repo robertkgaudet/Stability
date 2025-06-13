@@ -165,6 +165,8 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
         hypUpdateTeamInfo.Attributes["data-toggle"] = "tooltip";
         hypUpdateTeamInfo.Attributes["title"] = "Go To NonProfitNew";
 
+		hypNewTeamMember.NavigateUrl = "/V1/NonProfit/BriefTodaysVolunteer.aspx?organizationId=" + organizationId;
+
     }
 
     protected void btnChangePageStatus_Click(object sender, EventArgs e)

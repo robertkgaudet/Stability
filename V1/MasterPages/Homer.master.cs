@@ -860,45 +860,37 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 			}
 		}
 
-		protected void btnSearchMobile_Click(object sender, EventArgs e)
-		{
-			string searchType = String.IsNullOrEmpty(txtSearchMobile.Text) ? hdnSearchType.Value : hymoblie.Value;
-			string searchTerm = String.IsNullOrEmpty(txtSearchMobile.Text) ? txtSearchHeader.Text : txtSearchMobile.Text;
-			if (searchType == "Teams")
-			{
-				Response.Redirect("/V1/NonProfit/TeamList.aspx?searchTerm=" + searchTerm);
+    protected void btnSearchMobile_Click(object sender, EventArgs e)
+    {
+        string searchType = String.IsNullOrEmpty(txtSearchMobile.Text) ? hdnSearchType.Value : hymoblie.Value;
+        string searchTerm = String.IsNullOrEmpty(txtSearchMobile.Text) ? txtSearchHeader.Text : txtSearchMobile.Text;
+        if (searchType == "Teams")
+        {
+            Response.Redirect("/V1/NonProfit/TeamList.aspx?searchTerm=" + searchTerm);
 
-			}
+        }
         else if (searchType == "Deployments")
         {
             Response.Redirect("/V1/Deployments.aspx?searchTerm=" + searchTerm);
         }
-      
+
         else if (searchType == "Skills")
         {
-            Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm + "&searchType=" + searchType);
+            Response.Redirect("/V1/Profile/EditSkills.aspx?searchTerm=" + searchTerm);
         }
 
         else if (searchType == "Resources")
         {
-            Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm + "&searchType=" + searchType);
+            Response.Redirect("/V1/Profile/EditResources.aspx?searchTerm=" + searchTerm);
         }
         else if (searchType == "Portals")
         {
             Response.Redirect("/V1/Profile/EditDisasters.aspx?searchTerm=" + searchTerm);
         }
-        else if (searchType == "VolunteerOpportunities")
-        {
-            Response.Redirect("/V1/NonProfit/DeploymentTeams.aspx?searchTerm=" + searchTerm);
-        }
-        else if (searchType == "Posts")
-        {
-            Response.Redirect("/V1/Stream.aspx?searchTerm=" + searchTerm);
-        }
         else
         {
-            Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm+"&searchType="+ searchType);
+            Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm);
         }
-		}
+    }
 
-	}
+}

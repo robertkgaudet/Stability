@@ -68,7 +68,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
 		ucTeamHeader.OrganizationId = organizationId;
 
-		//REMOVE
 		if (String.IsNullOrEmpty(organizationId))
 		{
 			if (!User.Identity.IsAuthenticated)
