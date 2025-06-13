@@ -75,7 +75,7 @@ public partial class V1_Login : System.Web.UI.Page
                 // FACEBOOK
                 string appId = ConfigurationManager.AppSettings["FacebookAppId"];
                 string appSecret = ConfigurationManager.AppSettings["FacebookAppSecret"];
-                string redirectUri = "http://localhost:64915/V1/ExternalLoginCallBack.aspx?provider=facebook";
+                string redirectUri = ConfigurationManager.AppSettings["FacebookRedirectUri"];
 
                 string tokenUrl = "https://graph.facebook.com/v19.0/oauth/access_token" +
                   "?client_id=" + appId +
