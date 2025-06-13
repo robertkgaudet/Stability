@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Homer.master.cs" Inherits="MasterPages_Homer" %>
+﻿F<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Homer.master.cs" Inherits="MasterPages_Homer" %>
 
 <!DOCTYPE html>
 <html>
@@ -837,7 +837,7 @@
 								<span class="input-group-btn">
 									<asp:Button runat="server" ID="btnSearchHeader" CssClass="btn btn-primary2" Text="Find" OnClick="btnSearchMobile_Click" />
 								</span>
-								<asp:TextBox runat="server" ID="txtSearchHeader" placeholder="Find Connections or Teams" CssClass="form-control search-input" name="search"></asp:TextBox>
+								<asp:TextBox runat="server" ID="txtSearchHeader" placeholder="Find Connections or Teams" CssClass="form-control search-input" name="search" autocomplete="off"></asp:TextBox>
 								 <div id="searchSuggestions" class="suggestion-box"></div>
 								<asp:HiddenField ID="hdnSearchType" runat="server" />
 							</div>
@@ -861,7 +861,7 @@
 										<asp:Button runat="server" ID="btnSearchMobile" CssClass="btn btn-primary2" Text="Find" OnClick="btnSearchMobile_Click" />
 									</span>
 
-									<asp:TextBox runat="server" ID="txtSearchMobile" placeholder="Find Connections or Teams" CssClass="form-control search-input" name="search"></asp:TextBox>
+									<asp:TextBox runat="server" ID="txtSearchMobile" placeholder="Find Connections or Teams" CssClass="form-control search-input" name="search" autocomplete="off"></asp:TextBox>
 									 <div id="searchSuggestionss" class="suggestion-box"></div>
 								  <asp:HiddenField ID="hymoblie" runat="server" />
 								</div>

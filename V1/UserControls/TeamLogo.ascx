@@ -45,7 +45,7 @@
 </style>
 <div class="link-group">
     <asp:HyperLink ID="hypName" runat="server" CssClass="Userlink" Visible="false">
-        <asp:Label ID="lblprofileusername" runat="server" CssClass="user-name" Visible="false"></asp:Label>
+        <asp:Label ID="lblprofileusername" runat="server" CssClass="user-name" Visible="false" Mode="PassThrough" ></asp:Label>
     </asp:HyperLink>
     <asp:HyperLink ID="hypStabilityLogo" runat="server" CssClass="Userlink" Visible="true"
         Style="display: none;">
