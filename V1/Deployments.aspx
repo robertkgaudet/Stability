@@ -6,7 +6,6 @@
     <style>
         .highlight {
             background-color: yellow;
-            font-weight: bold;
         }
     </style>
 </asp:Content>
