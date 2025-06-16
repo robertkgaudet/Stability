@@ -92,17 +92,32 @@
             }
 
             function CheckAddressValues(controlName, sender) {
-                var currentAddress = $("#<%=txtAddress.ClientID%>").val();
-                var currentCity = $("#<%=txtCity.ClientID%>").val();
-                var currentState = $("#<%=ddlState.ClientID%>").val();
-                var currentZip = $("#<%=txtZipCode.ClientID%>").val();
+                switch (controlName) {
+                    case "address":
+                        if (sender.value) {
+                            address = sender.value;
+                        }
+                        break;
+                    case "city":
+                        if (sender.value) {
+                            city = sender.value;
+                        }
+                        break;
+                    case "state":
+                        if (sender.value) {
+                            state = sender.value;
+                        }
+                        break;
+                    case "zip":
+                        if (sender.value) {
+                            zip = sender.value;
+                        }
+                        break;
+                    default:
+                    // code block
+                }
 
-                address = currentAddress;
-                city = currentCity;
-                state = currentState;
-                zip = currentZip;
-
-                if (address && city && state && zip && !lookupComplete) {
+                if ((address) && (city) && (state) && (zip) && (lookupComplete == false)) {
                     $('#divAddressMessage').show();
                     SetLatitudeLongitude(address + " " + city + ", " + state + " " + zip);
                 }
@@ -117,7 +132,10 @@
                     dataType: "html",
                     success: function (data) {
                         if (data != "") {
-                            var results = data.split("|");
+                            var results = data.split("|").map(function (item) {
+                                return item.trim();
+                            });
+
                             var isPartialMatch = results[0];
                             var duplicate = results[12];
 

@@ -139,7 +139,10 @@
                     dataType: "html",
                     success: function (data) {
                         if (data != "") {
-                            var results = data.split("|");
+                            var results = data.split("|").map(function (item) {
+                                return item.trim();
+                            });
+
                             var isPartialMatch = results[0];
                             var duplicate = results[12];
                             if ((isPartialMatch == 'False' || isPartialMatch == 'false') && (duplicate == 'False' || duplicate == 'false')) {
