@@ -17,8 +17,8 @@
         }
     </style>
     <script type="text/javascript">
-		$(document).ready(function () {
-			var selected = $('#<%= hfSelectedResources.ClientID %>').val().toLowerCase().split(',');
+        $(document).ready(function () {
+            var selected = $('#<%= hfSelectedResources.ClientID %>').val().toLowerCase().split(',');
             $('.resource-btn').each(function () {
                 var resourceId = ($(this).data('resourceid') + '').toLowerCase();
                 if (selected.indexOf(resourceId) !== -1) {
@@ -37,8 +37,8 @@
                     selected.push(($(this).data('resourceid') + '').toLowerCase());
                 });
                 $('#<%= hfSelectedResources.ClientID %>').val(selected.join(','));
-			}
-		});
+            }
+        });
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">

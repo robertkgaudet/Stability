@@ -1,8 +1,13 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/2-Column-Child.master" AutoEventWireup="true" CodeFile="Deployments.aspx.cs" Inherits="V1_Deployments" %>
-<%@ MasterType VirtualPath="~/V1/MasterPages/2-Column-Child.master"%>
+<%@ MasterType VirtualPath="~/V1/MasterPages/2-Column-Child.master" %>
 <%@ Register Src="~/V1/UserControls/MemberNavigation.ascx" TagPrefix="uc1" TagName="MemberNavigation" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
+    <style>
+        .highlight {
+            background-color: yellow;
+        }
+    </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
@@ -10,16 +15,16 @@
         <div class="col-xs-12">
             <div class="hpanel">
                 <div class="panel-body">
-                    <asp:HyperLink Text="Create A Disaster Deployment" runat="server" visible="false" id="hypAddDeployment" class="btn btn-info btn-large pull-right"></asp:HyperLink>
+                    <asp:HyperLink Text="Create A Disaster Deployment" runat="server" Visible="false" ID="hypAddDeployment" CssClass="btn btn-info btn-large pull-right"></asp:HyperLink>
                     <h4><asp:Literal ID="litPageName" runat="server"></asp:Literal></h4>
                     Find an active disaster deployment to join or <a href="/V1/Administration/TeamName.aspx?userActionModal=false">create a team</a> to start your own deployment.
                     <asp:HyperLink ID="hypMapView" runat="server" CssClass="pull-right" Text="Map View <i class='fa fa-map m-t-xs'></i>" NavigateUrl="/MapZone"></asp:HyperLink>
 
-                    <input type="text" class="form-control input-sm m-b-md" id="filter" placeholder="Search Deployments">
+                    <input type="text" class="form-control input-sm m-b-md" id="filter" placeholder="Search Deployments" />
 
                     <p>
                         <span id="rowCountWrapper" class="text-muted">
-                                                    <asp:Literal ID="litCount" runat="server"></asp:Literal>
+                            <asp:Literal ID="litCount" runat="server"></asp:Literal>
                         </span>
                     </p>
 
@@ -27,7 +32,7 @@
                         <h4><i class="fa fa-users"></i> Choose A Deployment or Create One</h4>
                     </div>
 
-                    <table id="tblDeployments" class="footable table toggle-arrow-tiny table-hover table-bordered table-striped" data-page-size="500" >
+                    <table id="tblDeployments" class="footable table toggle-arrow-tiny table-hover table-bordered table-striped" data-page-size="500">
                         <tbody>
                             <asp:Repeater ID="rptDeployments" runat="server" OnItemDataBound="rptDeployments_ItemDataBound">
                                 <ItemTemplate>
@@ -37,8 +42,8 @@
                                                 <div class="row">
                                                     <div class="col-xs-12 col-lg-6">
                                                         <asp:Image ID="imgLogo" CssClass="m-r-md" runat="server" />
-                                                        <asp:HyperLink ID="hypDeploymentName" Font-Bold="true" runat="server"></asp:HyperLink><br />
-                                                        <asp:Label ID="lblDescription" runat="server"></asp:Label>
+                                                        <asp:HyperLink ID="hypDeploymentName" runat="server" Font-Bold="true" CssClass="hypDeploymentName"></asp:HyperLink><br />
+                                                        <asp:Label ID="lblDescription" runat="server" CssClass="lblDescription"></asp:Label>
                                                     </div>
                                                     <div class="col-xs-12 col-lg-6">
                                                         <div class="pull-left text-muted">
@@ -67,8 +72,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-4 col-lg-3">
-        </div>
+        <div class="col-sm-4 col-lg-3"></div>
     </div>
 
     <script type="text/javascript">
@@ -77,24 +81,63 @@
             const searchValue = urlParams.get('searchTerm');
 
             function updateVisibleRowCount() {
-                var visibleCount = $("#tblDeployments tbody tr:visible").length;
+                const visibleCount = $("#tblDeployments tbody tr:visible").length;
                 $("#rowCountWrapper").text(visibleCount + " Deployments");
             }
 
-            if (searchValue) {
-                $("#tblDeployments tbody tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(searchValue.toLowerCase()) > -1);
+            function removeHighlights($element) {
+                $element.each(function () {
+                    const originalText = $(this).text();
+                    $(this).html(originalText);
                 });
+            }
+
+            function highlightElementText($element, keyword) {
+                if (!keyword) return;
+                const regex = new RegExp("(" + keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
+                $element.each(function () {
+                    const html = $(this).text().replace(regex, "<span class='highlight'>$1</span>");
+                    $(this).html(html);
+                });
+            }
+
+            function applyFilterAndHighlight(keyword) {
+                const lowerKeyword = keyword.toLowerCase();
+
+                $("#tblDeployments tbody tr").each(function () {
+                    const $row = $(this);
+                    const $name = $row.find(".hypDeploymentName");
+                    const $desc = $row.find(".lblDescription");
+
+                    const nameText = $name.text().toLowerCase();
+                    const descText = $desc.text().toLowerCase();
+                    const combinedText = nameText + " " + descText;
+
+                    removeHighlights($name);
+                    removeHighlights($desc);
+
+                    if (combinedText.includes(lowerKeyword)) {
+                        $row.show();
+                        highlightElementText($name, keyword);
+                        highlightElementText($desc, keyword);
+                    } else {
+                        $row.hide();
+                    }
+                });
+
                 updateVisibleRowCount();
             }
 
+            if (searchValue) {
+                $("#filter").val(searchValue);
+                applyFilterAndHighlight(searchValue);
+            }
+
             $("#filter").on("keyup", function () {
-                var value = $(this).val().toLowerCase();
-                $("#tblDeployments tbody tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-                });
-                updateVisibleRowCount();
+                const keyword = $(this).val().trim();
+                applyFilterAndHighlight(keyword);
             });
+
             updateVisibleRowCount();
         });
     </script>

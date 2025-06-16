@@ -8,6 +8,8 @@ using System.Web.Security;
 using System.IdentityModel.Metadata;
 using CrowdRelief;
 using System.Collections.Specialized;
+using System.Configuration;
+using System.Net;
 
 public partial class V1_Login : System.Web.UI.Page
 {
@@ -92,7 +94,6 @@ public partial class V1_Login : System.Web.UI.Page
 			}
 		}
 	}
-
     protected void Redirect(string username)
     {
         //SEND USER TO THEIR MOST RECENT CAUSE PAGE.
@@ -103,7 +104,7 @@ public partial class V1_Login : System.Web.UI.Page
         {
             urlRedirect = returnUrl;
         }
-        else
+        else                             
         {
             MembershipUser user = Membership.GetUser(txtUsername.Text);
 
@@ -112,7 +113,7 @@ public partial class V1_Login : System.Web.UI.Page
                 urlRedirect = "/V1/Profile/CommunityLandingPage.aspx";
 
                 //Does the user belong to a team yet?
-                //If not, send to the team page.
+                //If not, send to the team page.                
                 CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
                 var organizationUser = from ou in dc.UserOrganizations
                                        where ou.UserId == new Guid(user.ProviderUserKey.ToString()) && ou.Status == (int)RequestStatus.Approved
@@ -130,5 +131,30 @@ public partial class V1_Login : System.Web.UI.Page
         }
 
         Response.Redirect(urlRedirect);
+    }
+    protected void btnGoogle_Click(object sender, EventArgs e)
+    {
+        string clientId = ConfigurationManager.AppSettings["GoogleClientId"];
+        string redirectUri = "http://localhost:64915/V1/ExternalLoginCallBack.aspx?provider=google";
+        string googleUrl = "https://accounts.google.com/o/oauth2/v2/auth" +
+            "?response_type=code" +
+            "&scope=email%20profile" +
+            "&redirect_uri=" + HttpUtility.UrlEncode(redirectUri) +
+            "&client_id=" + clientId +
+            "&access_type=online";
+
+        Response.Redirect(googleUrl);
+    }
+    protected void btnFacebook_Click(object sender, EventArgs e)
+    {
+        string fbAppId = ConfigurationManager.AppSettings["FacebookAppId"];
+        string redirectUri = ConfigurationManager.AppSettings["FacebookRedirectUri"];
+        string fbLoginUrl = "https://www.facebook.com/v17.0/dialog/oauth?" +
+            "client_id=" + fbAppId +
+            "&redirect_uri=" + HttpUtility.UrlEncode(redirectUri) +
+            "&response_type=code" +
+            "&scope=email,public_profile";
+
+        Response.Redirect(fbLoginUrl);
     }
 }
