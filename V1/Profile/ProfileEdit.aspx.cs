@@ -51,16 +51,16 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
 
                     if (address != null)
                     {
-                        txtAddress.Value = address.Address1;
-                        txtCity.Value = address.City;
-                        txtZipCode.Value = address.Zip;
+                        txtAddress.Text = address.Address1;
+                        txtCity.Text = address.City;
+                        txtZipCode.Text = address.Zip;
                     }
                 }
                 if (address == null)
                 {
-                    txtAddress.Value = profile.Address;
-                    txtCity.Value = profile.City;
-                    txtZipCode.Value = profile.Zip;
+                    txtAddress.Text = profile.Address;
+                    txtCity.Text = profile.City;
+                    txtZipCode.Text = profile.Zip;
                 }
 
                 txtDatesAvailable.Value = profile.DatesAvailable;
@@ -83,7 +83,8 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
 
             ddlState.DataSource = statesList;
             ddlState.DataBind();
-            if (ddlState.SelectedValue == "")
+            ddlState.SelectedIndex = 0;
+            if (ddlState.SelectedIndex == 0)
             {
                 if (address != null)
                     ddlState.SelectedValue = address.State;
@@ -95,10 +96,10 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
     protected void btnSubmit_Click(object sender, EventArgs e)
     {
         string addressData = hidAddressData.Value;
-        string address = txtAddress.Value;
-        string city = txtCity.Value;
+        string address = txtAddress.Text;
+        string city = txtCity.Text;
         string state = ddlState.SelectedValue;
-        string zip = txtZipCode.Value;
+        string zip = txtZipCode.Text;
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
         MembershipUser user = Membership.GetUser();
         Guid currentUserId = Guid.Empty;
@@ -178,8 +179,8 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
                        where p.UserId == userId
                        select p).SingleOrDefault();
 
-        profile.Address = txtAddress.Value;
-        profile.City = txtCity.Value;
+        profile.Address = txtAddress.Text;
+        profile.City = txtCity.Text;
         profile.DatesAvailable = txtDatesAvailable.Value;
         profile.Description = txtVolunteerDescription.Value;
         profile.Firstname = txtFirstname.Value;
@@ -188,11 +189,53 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
         profile.PhoneNumber = txtPhonenumber.Value;
         profile.State = ddlState.SelectedValue;
         profile.ZelloName = txtZello.Value;
-        profile.Zip = txtZipCode.Value;
+        profile.Zip = txtZipCode.Text;
         profile.Title = txtTitle.Value;
         profile.ReceiveSMSNotifications = receiveSMS.Checked;
         profile.ReceiveEmailNotifications = receiveEmail.Checked;
+
+        var profileAddress = dc.ProfileAddresses.FirstOrDefault(pa => pa.ProfileId == profile.ProfileId);
+
+        if (profileAddress != null)
+        {
+            profileAddress.AddressId = addressId;
+            profileAddress.IsPrimaryResidence = true;
+            profileAddress.HomeTypeId = new Guid("C478785A-014D-4DFF-86FE-3693E6F33FAC");
+            profileAddress.HomeRelationshipOwnRentTypeId = new Guid("58526C73-5469-4B5E-81B1-831476784C56");
+            profileAddress.HasFloodInsurance = false;
+            profileAddress.HasHomeownersInsurance = false;
+            profileAddress.ShowOnAgencyMap = false;
+            profileAddress.ShowOnCleanupMap = false;
+            profileAddress.IsMultistory = false;
+            profileAddress.HasBasement = false;
+            profileAddress.HasGarage = false;
+            profileAddress.HasCarport = false;
+            profileAddress.HasCrawlspace = false;
+        }
+        else
+        {
+            ProfileAddress newProfileAddress = new ProfileAddress();
+            newProfileAddress.ProfileAddressId = Guid.NewGuid();
+            newProfileAddress.ProfileId = profile.ProfileId;
+            newProfileAddress.AddressId = addressId;
+            newProfileAddress.HomeTypeId = new Guid("C478785A-014D-4DFF-86FE-3693E6F33FAC");
+            newProfileAddress.HomeRelationshipOwnRentTypeId = new Guid("58526C73-5469-4B5E-81B1-831476784C56");
+            newProfileAddress.IsPrimaryResidence = true;
+            newProfileAddress.HasFloodInsurance = false;
+            newProfileAddress.HasHomeownersInsurance = false;
+            newProfileAddress.ShowOnAgencyMap = false;
+            newProfileAddress.ShowOnCleanupMap = false;
+            newProfileAddress.IsMultistory = false;
+            newProfileAddress.HasBasement = false;
+            newProfileAddress.HasGarage = false;
+            newProfileAddress.HasCarport = false;
+            newProfileAddress.HasCrawlspace = false;
+
+            dc.ProfileAddresses.InsertOnSubmit(newProfileAddress);
+        }
+
         dc.SubmitChanges();
+
         divMessage.Visible = true;
         Response.Redirect("/V1/Member/Default.aspx");
     }

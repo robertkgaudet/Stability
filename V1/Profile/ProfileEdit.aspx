@@ -5,6 +5,162 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <link rel="stylesheet" href="/Homer/vendor/sweetalert/lib/sweet-alert.css" />
+    <script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
+    <script src="/Homer/vendor/select2-3.5.2/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(function () {
+
+                $("#form").validate({
+                    rules: {
+                        password: {
+                            required: true,
+                            minlength: 3
+                        },
+                        url: {
+                            required: true,
+                            url: true
+                        },
+                        number: {
+                            required: true,
+                            number: true
+                        },
+                        max: {
+                            required: true,
+                            maxlength: 4
+                        }
+                    },
+                    submitHandler: function (form) {
+                        form.submit();
+                    }
+                });
+            });
+    </script>
+    <script type="text/javascript">
+            var address;
+            var city;
+            var state;
+            var zip;
+            var lookupComplete = false;
+            var IsDuplicateClear = true;
+
+            function CheckDuplicate(controlName, sender) {
+                if (sender.value) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/V1/Handlers/GetDuplicateUserDetails.ashx?control=" + controlName + "&value=" + sender.value,
+                        contentType: "text/plain; charset=utf-8",
+                        dataType: "html",
+                        success: function (data) {
+                            if (data == "Yes") {
+                                IsDuplicateClear = false;
+                                if (controlName == "Email") {
+                                    $(".error-message-email").show();
+                                    $(".response-message-email").hide();
+                                } else {
+                                    $(".error-message-username").show();
+                                    $(".response-message-username").hide();
+                                }
+                                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                            } else {
+                                IsDuplicateClear = true;
+                                if (controlName == "Email") {
+                                    $(".error-message-email").hide();
+                                    $(".response-message-email").show();
+                                } else {
+                                    $(".error-message-username").hide();
+                                    $(".response-message-username").show();
+                                }
+                                if (lookupComplete) {
+                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                }
+                            }
+                        },
+                        error: function () {
+                            if (controlName == "Email") {
+                                $(".error-message-email").text("An error occurred. Please try again.").show();
+                            } else {
+                                $(".error-message-username").text("An error occurred. Please try again.").show();
+                            }
+                            $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                        }
+                    });
+                } else {
+                    $(".error-message-username, .response-message-username, .error-message-email, .response-message-email").hide();
+                    $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                }
+            }
+
+            function CheckAddressValues(controlName, sender) {
+                var currentAddress = $("#<%=txtAddress.ClientID%>").val();
+                var currentCity = $("#<%=txtCity.ClientID%>").val();
+                var currentState = $("#<%=ddlState.ClientID%>").val();
+                var currentZip = $("#<%=txtZipCode.ClientID%>").val();
+
+                address = currentAddress;
+                city = currentCity;
+                state = currentState;
+                zip = currentZip;
+
+                if (address && city && state && zip && !lookupComplete) {
+                    $('#divAddressMessage').show();
+                    SetLatitudeLongitude(address + " " + city + ", " + state + " " + zip);
+                }
+            }
+
+
+            function SetLatitudeLongitude(address) {
+                $.ajax({
+                    type: "GET",
+                    url: "/V1/Handlers/GetGoogleAddressInfo.ashx?address=" + encodeURIComponent(address),
+                    contentType: "text/plain; charset=utf-8",
+                    dataType: "html",
+                    success: function (data) {
+                        if (data != "") {
+                            var results = data.split("|");
+                            var isPartialMatch = results[0];
+                            var duplicate = results[12];
+
+                            if ((isPartialMatch.toLowerCase() === 'false') && (duplicate.toLowerCase() === 'false')) {
+                                $("#divMapMessage").addClass("alert-success").removeClass("alert-danger");
+                                $("#iFontAwesome").removeClass("fa-warning").addClass("fa-map-marker");
+                                var successMessage = "Address Lookup Successful!";
+                                $("#<%=hidAddressData.ClientID%>").val(data);
+                                $('#<%=lblAddressMessage.ClientID%>').text(successMessage);
+                                lookupComplete = true;
+                                if (IsDuplicateClear) {
+                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                }
+                            } else if ((isPartialMatch.toLowerCase() === 'false') && (duplicate.toLowerCase() === 'false')) {
+                                $("#divMapMessage").removeClass("alert-success").addClass("alert-danger");
+                                $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
+                                $("#<%=hidAddressData.ClientID%>").val(data);
+                                lookupComplete = false;
+                                var errorMessage = "This address already exists (" + address + "). Press 'Next' to edit in the Stability Location Manager. Web Service Message: " + data;
+                                $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
+                                if (IsDuplicateClear) {
+                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                                }
+                            } else {
+                                $("#divMapMessage").removeClass("alert-success").addClass("alert-danger");
+                                $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
+                                lookupComplete = false;
+                                var errorMessage = "Please check your address. Google returned an error matching the address you provided. (" + address + ") Web Service Message: " + data;
+                                $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
+                                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                            }
+                        }
+                    },
+                    error: function (request, status, error) {
+                        $("#divMapMessage").removeClass("alert-success").addClass("alert-danger");
+                        $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
+                        lookupComplete = false;
+                        $('#<%=lblAddressMessage.ClientID%>').text("Error retrieving address information from Google. " + request.statusText + ' - ' + error + ' - ' + status);
+                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                    }
+                });
+            }
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div class="row">
@@ -43,8 +199,8 @@
                     <div class="panel-body">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">First Name <span class="text-danger" style="font-size: 2rem;
-                                line-height: 1;">*</span></label>
+                            <label class="col-sm-3 control-label">
+                                First Name <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" required runat="server" id="txtFirstname" class="form-control"
                                     placeholder="First Name">
@@ -53,8 +209,8 @@
 
                         <!-- Last Name -->
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Last Name <span class="text-danger" style="font-size: 2rem;
-                                line-height: 1;">*</span></label>
+                            <label class="col-sm-3 control-label">
+                                Last Name <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" required runat="server" id="txtLastname" class="form-control"
                                     placeholder="Last Name">
@@ -63,28 +219,28 @@
 
                         <!-- Address -->
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Address <span class="text-danger" style="font-size: 2rem;
-                                line-height: 1;">*</span></label>
+                            <label class="col-sm-3 control-label">
+                                Address <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                             <div class="col-sm-9">
-                                <input type="text" required runat="server" id="txtAddress" class="form-control" placeholder="Address"
-                                    onblur="CheckAddressValues('address', this);">
+                                <asp:TextBox ID="txtAddress" runat="server" onblur="CheckAddressValues('address', this)"
+                                    CssClass="form-control" required="" placeholder="Address"></asp:TextBox>
                             </div>
                         </div>
 
                         <!-- City -->
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">City <span class="text-danger" style="font-size: 2rem;
-                                line-height: 1;">*</span></label>
+                            <label class="col-sm-3 control-label">
+                                City <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                             <div class="col-sm-9">
-                                <input type="text" required runat="server" id="txtCity" class="form-control" placeholder="City"
-                                    onblur="CheckAddressValues('city', this);">
+                                <asp:TextBox ID="txtCity" runat="server" onblur="CheckAddressValues('city', this)"
+                                    CssClass="form-control" required="" placeholder="City"></asp:TextBox>
                             </div>
                         </div>
 
                         <!-- State -->
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">State <span class="text-danger" style="font-size: 2rem;
-                                line-height: 1;">*</span></label>
+                            <label class="col-sm-3 control-label">
+                                State <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                             <div class="col-sm-9">
                                 <asp:DropDownList ID="ddlState" runat="server" DataTextField="Text" DataValueField="Value"
                                     CssClass="form-control" required="" onchange="CheckAddressValues('state', this);">
@@ -94,11 +250,11 @@
 
                         <!-- Zip -->
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Zip <span class="text-danger" style="font-size: 2rem;
-                                line-height: 1;">*</span></label>
+                            <label class="col-sm-3 control-label">
+                                Zip <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                             <div class="col-sm-9">
-                                <input type="text" required runat="server" id="txtZipCode" class="form-control" placeholder="Zip Code"
-                                    onblur="CheckAddressValues('zip', this);">
+                                <asp:TextBox ID="txtZipCode" runat="server" CssClass="form-control" onblur="CheckAddressValues('zip', this)"
+                                    required="" placeholder="Zip Code"></asp:TextBox>
                             </div>
                         </div>
                         <div id="divAddressMessage" class="form-group col-md-12" style="display: none;">
@@ -124,8 +280,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Phone Number <span class="text-danger" style="font-size: 2rem;
-                                line-height: 1;">*</span></label>
+                            <label class="col-sm-3 control-label">
+                                Phone Number <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" maxlength="10" required runat="server" id="txtPhonenumber" class="form-control"
                                     placeholder="Phone Number" name="number">
@@ -133,8 +289,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Zello Handle <span class="text-danger" style="font-size: 2rem;
-                                line-height: 1;">*</span></label>
+                            <label class="col-sm-3 control-label">
+                                Zello Handle <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                             <div class="col-sm-9">
                                 <input type="text" runat="server" id="txtZello" class="form-control" placeholder="Zello Handle">
                             </div>
@@ -233,138 +389,4 @@
             </div>
         </div>
     </div>
-    <script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                $(function () {
-
-                    $("#form").validate({
-                        rules: {
-                            password: {
-                                required: true,
-                                minlength: 3
-                            },
-                            url: {
-                                required: true,
-                                url: true
-                            },
-                            number: {
-                                required: true,
-                                number: true
-                            },
-                            max: {
-                                required: true,
-                                maxlength: 4
-                            }
-                        },
-                        submitHandler: function (form) {
-                            form.submit();
-                        }
-                    });
-                });
-
-
-                let addressModel = {
-                    address: "",
-                    city: "",
-                    state: "",
-                    zip: ""
-                };
-
-                let lookupComplete = false;
-
-                function CheckAddressValues(controlName, sender) {
-                    if (sender && sender.value) {
-                        addressModel[controlName] = sender.value.trim();
-                    }
-
-                    const { address, city, state, zip } = addressModel;
-
-                    if (address && city && state && zip && lookupComplete === false) {
-                        $('#divAddressMessage').show();
-                        SetLatitudeLongitude(`${address} ${city}, ${state} ${zip}`);
-                    }
-                }
-
-
-                function SetLatitudeLongitude(address) {
-                    $.ajax(
-                        {
-                            type: "GET",
-                            url: "/V1/Handlers/GetGoogleAddressInfo.ashx?address=" + address,
-                            contentType: "text/plain; charset=utf-8",
-                            dataType: "html",
-                            success: function (data) {
-                                if (data != "") {
-                                    var results = data.split("|");
-                                    var isPartialMatch = results[0];
-                                    var duplicate = results[12];
-                                    if ((isPartialMatch == 'False' || isPartialMatch == 'false') && (duplicate == 'False' || duplicate == 'false')) {
-                                        var latitude = results[1];
-                                        var longitude = results[2];
-                                        var street_number = results[3];
-                                        var street = results[4];
-                                        var city = results[5];
-                                        var state = results[6];
-                                        var country = results[7];
-                                        var postal_code = results[8];
-                                        var county = results[9];
-                                        var googlePlaceId = results[10];
-                                        var formattedAddress = results[11];
-                                        var locationType = results[13];
-                                        var cityCode = results[14];
-                                        var addressId = results[15];
-
-                                        $("#divMapMessage").addClass("alert-success");
-                                        $("#divMapMessage").removeClass("alert-danger");
-                                        $("#iFontAwesome").removeClass("fa-warning");
-                                        $("#iFontAwesome").addClass("fa-map-marker");
-                                        var successMessage = "Address Lookup Successful!";
-                                        $("#<%=hidAddressData.ClientID%>").val(data);
-                                    $('#<%=lblAddressMessage.ClientID%>').text(successMessage);
-                                    lookupComplete = true;
-                                    if (IsDuplicateClear) {
-                                        $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
-                                    }
-                                }
-                                else if (duplicate == 'True' || duplicate == 'true') {
-                                    //Address already exists.
-                                    $("#divMapMessage").removeClass("alert-success");
-                                    $("#divMapMessage").addClass("alert-danger");
-                                    $("#iFontAwesome").addClass("fa-warning");
-                                    $("#iFontAwesome").removeClass("fa-map-marker");
-                                    $("#<%=hidAddressData.ClientID%>").val(data);
-                                    lookupComplete = false;
-                                    var errorMessage = " This address already exists (" + address + "). Press 'Next' to edit in the Stability Location Manager. Web Service Message: " + data;
-                                    $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
-                                        if (IsDuplicateClear) {
-                                            $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
-                                        }
-                                    }
-                                    else {
-                                        //Error getting the information
-                                        $("#divMapMessage").removeClass("alert-success");
-                                        $("#divMapMessage").addClass("alert-danger");
-                                        $("#iFontAwesome").addClass("fa-warning");
-                                        $("#iFontAwesome").removeClass("fa-map-marker");
-                                        lookupComplete = false;
-                                        var errorMessage = " Please check your address. Google returned an error matching the address you provided. (" + address + ") Web Service Message: " + data;
-                                        $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
-                                        $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
-                                    }
-                                }
-                            },
-                            error: function (request, status, error) {
-                                $("#divMapMessage").removeClass("alert-success");
-                                $("#divMapMessage").addClass("alert-danger");
-                                $("#iFontAwesome").addClass("fa-warning");
-                                $("#iFontAwesome").removeClass("fa-map-marker");
-                                lookupComplete = false;
-                                $('#<%=lblAddressMessage.ClientID%>').text(" Error retrieving address information from Google. " + request.statusText + ' - ' + error + ' - ' + status);
-                        $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
-                        }
-                    });
-            }
-        </script>
-
 </asp:Content>

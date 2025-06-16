@@ -256,7 +256,7 @@ public partial class V1_Register : System.Web.UI.Page
 			newProfileAddress.AddressId = addressId;
 			newProfileAddress.HomeTypeId = new Guid("C478785A-014D-4DFF-86FE-3693E6F33FAC");
 			newProfileAddress.HomeRelationshipOwnRentTypeId = new Guid("58526C73-5469-4B5E-81B1-831476784C56");
-			newProfileAddress.IsPrimaryResidence = false;
+			newProfileAddress.IsPrimaryResidence = true;
 			newProfileAddress.HasFloodInsurance = false;
 			newProfileAddress.HasHomeownersInsurance = false;
 			newProfileAddress.ShowOnAgencyMap = false;
