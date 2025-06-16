@@ -2,8 +2,11 @@
 
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master" %>
 
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <link rel="stylesheet" href="/Homer/vendor/sweetalert/lib/sweet-alert.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
@@ -235,5 +238,10 @@
                 });
             });
         });
+       
+    $(document).ready(function () {
+        $('#<%= txtPhonenumber.ClientID %>').mask('(000) 000-0000');
+    });
+  
     </script>
 </asp:Content>

@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
     <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote.css" />
     <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <script>
 
@@ -581,5 +583,9 @@
 
             checkUniqueName(filteredText);
         });
+
+        $(document).ready(function () {
+            $('#<%= txtPhonenumber.ClientID %>').mask('(000) 000-0000');
+            });
     </script>
 </asp:Content>

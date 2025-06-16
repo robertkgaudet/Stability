@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/Homer/vendor/select2-3.5.2/select2.css" />
     <link rel="stylesheet" href="/Homer/vendor/select2-bootstrap/select2-bootstrap.css" />
     <script src="/Homer/vendor/select2-3.5.2/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <script>
         var address;
@@ -643,5 +645,11 @@
 
             return false; // Prevent default postback
         }
+       
+            $(document).ready(function () {
+                $('#<%= txtPhoneNumber.ClientID %>').mask('(000) 000-0000');
+            });
+  
+
     </script>
 </asp:Content>

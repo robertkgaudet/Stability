@@ -4,6 +4,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 	<script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script>
 
     function isNumberKey(evt) {
@@ -56,6 +58,9 @@
         });
 
 
+        $(document).ready(function () {
+            $('#<%= txtPhoneNumber.ClientID %>').mask('(000) 000-0000');
+            });
     </script>
 </asp:Content>
 
