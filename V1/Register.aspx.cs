@@ -177,7 +177,11 @@ public partial class V1_Register : System.Web.UI.Page
 
 			#region save address 
 			var addressList = addressData.Split('|');
-			var duplicateAddress = dc.Addresses.FirstOrDefault(f => f.GooglePlaceId == addressList[10]);
+            for (int i = 0; i < addressList.Length; i++)
+            {
+                addressList[i] = addressList[i].Trim();
+            }
+            var duplicateAddress = dc.Addresses.FirstOrDefault(f => f.GooglePlaceId == addressList[10]);
 			var addressId = new Guid();
 			if (duplicateAddress == null)
 			{
