@@ -91,37 +91,19 @@
                 }
             }
 
-            function CheckAddressValues(controlName, sender) {
-                switch (controlName) {
-                    case "address":
-                        if (sender.value) {
-                            address = sender.value;
-                        }
-                        break;
-                    case "city":
-                        if (sender.value) {
-                            city = sender.value;
-                        }
-                        break;
-                    case "state":
-                        if (sender.value) {
-                            state = sender.value;
-                        }
-                        break;
-                    case "zip":
-                        if (sender.value) {
-                            zip = sender.value;
-                        }
-                        break;
-                    default:
-                    // code block
-                }
+            function CheckAddressValues() {
+                address = $("#<%=txtAddress.ClientID%>").val();
+                city = $("#<%=txtCity.ClientID%>").val();
+                state = $("#<%=ddlState.ClientID%>").val();
+                zip = $("#<%=txtZipCode.ClientID%>").val();
 
-                if ((address) && (city) && (state) && (zip) && (lookupComplete == false)) {
+                if (address || city || state || zip || !lookupComplete) {
                     $('#divAddressMessage').show();
                     SetLatitudeLongitude(address + " " + city + ", " + state + " " + zip);
                 }
             }
+
+
 
 
             function SetLatitudeLongitude(address) {
@@ -174,7 +156,7 @@
                         $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
                         lookupComplete = false;
                         $('#<%=lblAddressMessage.ClientID%>').text("Error retrieving address information from Google. " + request.statusText + ' - ' + error + ' - ' + status);
-                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                        $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
                     }
                 });
             }
