@@ -43,15 +43,6 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
-    <div style="margin-bottom:20px; padding:15px; border:1px solid #ccc; border-radius:8px; background-color:#f9f9f9;">
-        <div style="overflow:hidden;">
-            <h3>Rotary District 6840 — Your CLub Members Are Stepping Up</h3>
-            <p>
-                New volunteers are joining every day. Be part of the movement to strengthen our communities.
-                If you're a Rotary member, there's no better time to connect, serve, and lead.
-            </p>
-        </div>
-    </div>
 	<div class="row">
 		<div class="col-sm-12">
 

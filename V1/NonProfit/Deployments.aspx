@@ -22,19 +22,4 @@
 						</div>
 					</div>
 				<uc1:TeamFooter runat="server" ID="ucTeamFooter" />
-
-				<script src="/v1/Scripts/masonry.pkgd.min.js"></script>
-				<script type="text/javascript">
-					$(document).ready(function () {
-						$('.grid').each(function () {
-							// Initialize Masonry for each grid individually
-							$(this).masonry({
-								itemSelector: '.grid-item',
-								gutter: 20,
-								columnWidth: '.grid-item',
-								percentPosition: true
-							});
-						});
-					});
-				</script>
 </asp:Content>

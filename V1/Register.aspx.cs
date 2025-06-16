@@ -22,7 +22,7 @@ public partial class V1_Register : System.Web.UI.Page
 	{
 		if (User.Identity.IsAuthenticated)
 		{
-			Response.Redirect("/V1/Member/Default.aspx");
+			Response.Redirect("/V1/Profile/CommunityLandingPage.aspx");
 		}
 
 		eventId = Request.QueryString["eventId"];
@@ -54,7 +54,7 @@ public partial class V1_Register : System.Web.UI.Page
 
 	protected void Redirect()
 	{
-		string urlRedirect = "/Survivor";
+		string urlRedirect = "/V1/Profile/CommunityLandingPage.aspx";
 		if (Roles.IsUserInRole("survivor"))
 		{
 			urlRedirect = "/V1/DisasterList.aspx?userType=survivor";
@@ -350,34 +350,6 @@ public partial class V1_Register : System.Web.UI.Page
 		}
 	}
 
-	//public void LoadDisasters()
-	//{
-	//	CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-	//	var disasters = from d in dc.Events
-	//					orderby d.BeginDate descending
-	//					where d.IsActive == true
-	//					select new {d };
-
-	//	int idNumber = 0;
-	//	foreach(var disaster in disasters)
-	//	{
-	//		string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
-	//		disasterDropDown = disasterDropDown + "<li id=\"" + disaster.d.EventId + "\"><a href=\"#\">" + disaster.d.Name + " - " + disasterDate +  " Community Portal</a></li>" + Environment.NewLine;
-	//		idNumber = idNumber + 1;
-	//	}
-	//	if(!String.IsNullOrEmpty(eventId))
-	//	{
-	//		//Hide the Dropdown and show the selected disaster
-	//		var disaster = (from d in dc.Events
-	//						where d.EventId == new Guid(eventId)
-	//						orderby d.BeginDate descending
-	//						select new {d}).SingleOrDefault();
-
-	//		string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
-	//		preselectedDisasterJQuery = "$(\"#btn-dropdown.disasterEvent\").html('" + disaster.d.Name + " - " + disasterDate + "');";
-	//		hidEventId.Value = eventId;
-	//	}
-	//}
 	public string GetErrorMessage(MembershipCreateStatus status)
 	{
 		switch (status)

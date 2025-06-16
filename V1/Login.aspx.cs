@@ -15,7 +15,7 @@ public partial class V1_Login : System.Web.UI.Page
     {
         if (User.Identity.IsAuthenticated)
         {
-            Response.Redirect("~/V1/Member/Default.aspx", false);
+            Response.Redirect("/V1/Profile/CommunityLandingPage.aspx", false);
         }
     }
 
@@ -109,7 +109,7 @@ public partial class V1_Login : System.Web.UI.Page
 
             if (user != null)
             {
-                urlRedirect = "/V1/Member/Default.aspx";
+                urlRedirect = "/V1/Profile/CommunityLandingPage.aspx";
 
                 //Does the user belong to a team yet?
                 //If not, send to the team page.

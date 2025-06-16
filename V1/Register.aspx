@@ -21,14 +21,6 @@
 
             $('#divAddressMessage').hide();
             $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
-<%--		<%=preselectedDisasterJQuery%>
-
-			$("#disasterEvent.dropdown-menu li").click(function ()
-			{
-				$("#btn-dropdown.disasterEvent").html($(this).text());
-				$("#<%=hidEventId.ClientID%>").val($(this).attr('id'));
-            });--%>
-
 			<%=preselectedNonProfitJQuery%>
 
             $("#nonProfit.dropdown-menu li").click(function () {

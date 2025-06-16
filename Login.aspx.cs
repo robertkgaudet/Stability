@@ -58,7 +58,7 @@ public partial class Login : System.Web.UI.Page
 
 		
 		string roleType = "helper";
-		string urlRedirect = "/V1/DisasterList.aspx?userType=survivor";
+		string urlRedirect = "/V1/Profile/CommunityLandingPage.aspx";
 		if (returnUrl != null)
 		{
 			urlRedirect = returnUrl;

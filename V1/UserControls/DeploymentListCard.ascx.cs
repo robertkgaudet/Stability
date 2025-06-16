@@ -98,18 +98,16 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 					countyTerm = "Parish";
 				}
 
-				string logoDiv = "<div class=\"m-b-sm m-l-sm\" style=\"background-color:white; display:inline-block; padding:2px; border:solid 1px #ccc;\">" +
-									"<img id=\"imgLogo\" src=\"" + logo + "\" width=\"120px\" />" +
+				string logoDiv = "<div id=\"logoFooter\" style=\"background-color:white; display:inline-block; padding:2px; border:solid 1px #ccc;\">" +
+									"<img id=\"imgLogo\" src=\"" + logo + "\" width=\"80px\" />" +
 								"</div>";
 
-				deploymentPanel += "<div class=\"grid-item m-b-sm\" onclick=\"window.location.href='/V1/NonProfit/NonProfitCampaign.aspx?organizationEventId=" + deployment.OrganizationEventId + "';\">" + Environment.NewLine + Environment.NewLine +
-										"<div class=\"panel-heading hbuilt\">" + Environment.NewLine +
-										"</div>" + Environment.NewLine +
+				deploymentPanel += "<div class=\"grid-item m-b-lg\" onclick=\"window.location.href='/V1/NonProfit/NonProfitCampaign.aspx?organizationEventId=" + deployment.OrganizationEventId + "';\">" + Environment.NewLine + Environment.NewLine +
 										"<div class=\"hpanel\">" + Environment.NewLine +
 											"<div class=\"panel-body deploymentPanel\" style=\"position: relative;\">" + Environment.NewLine +
 												"<div class=\"row\" style=\"padding:0px 10px;\">" + Environment.NewLine +
 													"<div class=\"col\">" + Environment.NewLine +
-														"<b>" + portalName + "</b>" + Environment.NewLine +
+														"<small>" + portalName + "</small>" + Environment.NewLine +
 													"</div>" + Environment.NewLine +
 													"<div class=\"col\">" + Environment.NewLine +
 														"<div><h4 class=\"font-bold\">" + deployment.DeploymentName + "</h4>" + deployment.County + " " + countyTerm + ", " + deployment.State + "</div>" + Environment.NewLine +
@@ -117,10 +115,8 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 													"<div class=\"row\"><div class=\"col-xs-8 m-s-n5\"><small>" + dateRange + "</small></div><div class=\"col-xs-4 m-s-n5\"><small>" + deploymentLength + " Days</small></div></div>" + Environment.NewLine +
 												"</div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
-											"<div class=\"panel-footer\">" + Environment.NewLine +
-													"<div class=\"col\">" + Environment.NewLine +
+											"<div class=\"panel-footer\" style=\"text-align: center;\">" + Environment.NewLine +
 														logoDiv + Environment.NewLine +
-													"</div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
 										"</div>" + Environment.NewLine +
 									"</div>" + Environment.NewLine + Environment.NewLine;
@@ -188,18 +184,16 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 					countyTerm = "Parish";
 				}
 
-				string logoDiv = "<div class=\"m-b-sm m-l-sm\" style=\"background-color:white; display:inline-block; padding:2px; border:solid 1px #ccc;\">" +
-									"<img id=\"imgLogo\" src=\"" + logo + "\" width=\"120px\" />" +
+				string logoDiv = "<div id=\"logoFooter\" style=\"background-color:white; display:inline-block; padding:2px; border:solid 1px #ccc;\">" +
+									"<img id=\"imgLogo\" src=\"" + logo + "\" width=\"80px\" />" +
 								"</div>";
 
-				deploymentPanel += "<div class=\"grid-item m-b-sm\" onclick=\"window.location.href='/V1/NonProfit/NonProfitCampaign.aspx?organizationEventId=" + deployment.OrganizationEventId + "';\">" + Environment.NewLine + Environment.NewLine +
-										"<div class=\"panel-heading hbuilt\">" + Environment.NewLine +
-										"</div>" + Environment.NewLine +
+				deploymentPanel += "<div class=\"grid-item m-b-lg\" onclick=\"window.location.href='/V1/NonProfit/NonProfitCampaign.aspx?organizationEventId=" + deployment.OrganizationEventId + "';\">" + Environment.NewLine + Environment.NewLine +
 										"<div class=\"hpanel\">" + Environment.NewLine +
 											"<div class=\"panel-body deploymentPanel\" style=\"position: relative;\">" + Environment.NewLine +
 												"<div class=\"row\" style=\"padding:0px 10px;\">" + Environment.NewLine +
 													"<div class=\"col\">" + Environment.NewLine +
-														"<b>" + portalName + "</b>" + Environment.NewLine +
+														"<small>" + portalName + "</small>" + Environment.NewLine +
 													"</div>" + Environment.NewLine +
 													"<div class=\"col\">" + Environment.NewLine +
 														"<div><h4 class=\"font-bold\">" + deployment.DeploymentName + "</h4>" + deployment.County + " " + countyTerm + ", " + deployment.State + "</div>" + Environment.NewLine +
@@ -207,10 +201,8 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 												"<div class=\"row\"><div class=\"col-xs-8 m-s-n5\"><small>" + dateRange + "</small></div><div class=\"col-xs-4 m-s-n5\"><small>" + deploymentLength + " Days</small></div></div>" + Environment.NewLine +
 												"</div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
-											"<div class=\"panel-footer\">" + Environment.NewLine +
-													"<div class=\"col\">" + Environment.NewLine +
+											"<div class=\"panel-footer\" style=\"text-align: center;\">" + Environment.NewLine +
 														logoDiv + Environment.NewLine +
-													"</div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
 										"</div>" + Environment.NewLine +
 									"</div>" + Environment.NewLine + Environment.NewLine;
@@ -268,18 +260,16 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 					countyTerm = "Parish";
 				}
 
-				string logoDiv = "<div class=\"m-b-sm m-l-sm\" style=\"background-color:white; display:inline-block; padding:2px; border:solid 1px #ccc;\">" +
-									"<img id=\"imgLogo\" src=\"" + logo + "\" width=\"120px\" />" +
+				string logoDiv = "<div id=\"logoFooter\" style=\"background-color:white; display:inline-block; padding:2px; border:solid 1px #ccc;\">" +
+									"<img id=\"imgLogo\" src=\"" + logo + "\" width=\"80px\" />" +
 								"</div>";
 
-				deploymentPanel += "<div class=\"grid-item m-b-sm\" onclick=\"window.location.href='/V1/NonProfit/NonProfitCampaign.aspx?organizationEventId=" + deployment.OrganizationEventId + "';\">" + Environment.NewLine + Environment.NewLine +
-										"<div class=\"panel-heading hbuilt\">" + Environment.NewLine +
-										"</div>" + Environment.NewLine +
+				deploymentPanel += "<div class=\"grid-item m-b-lg\" onclick=\"window.location.href='/V1/NonProfit/NonProfitCampaign.aspx?organizationEventId=" + deployment.OrganizationEventId + "';\">" + Environment.NewLine + Environment.NewLine +
 										"<div class=\"hpanel\">" + Environment.NewLine +
 											"<div class=\"panel-body deploymentPanel\" style=\"position: relative;\">" + Environment.NewLine +
 												"<div class=\"row\" style=\"padding:0px 10px;\">" + Environment.NewLine +
 													"<div class=\"col\">" + Environment.NewLine +
-														"<b>" + portalName + "</b>" + Environment.NewLine +
+														"<small>" + portalName + "</small>" + Environment.NewLine +
 													"</div>" + Environment.NewLine +
 													"<div class=\"col\">" + Environment.NewLine +
 														"<div><h4 class=\"font-bold\">" + deployment.DeploymentName + "</h4></div>" + Environment.NewLine +
@@ -287,10 +277,8 @@ public partial class V1_UserControls_DeploymentListCard : System.Web.UI.UserCont
 												"<div class=\"row\"><div class=\"col-xs-6\"><small>" + deployment.County + " " + countyTerm + ", " + deployment.State + "</small></div><div class=\"col-xs-6\"><small>" + dateRange + "</small></div></div>" + Environment.NewLine +
 												"</div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
-											"<div class=\"panel-footer\">" + Environment.NewLine +
-													"<div class=\"col\">" + Environment.NewLine +
+											"<div class=\"panel-footer\" style=\"text-align: center;\">" + Environment.NewLine +
 														logoDiv + Environment.NewLine +
-													"</div>" + Environment.NewLine +
 											"</div>" + Environment.NewLine +
 										"</div>" + Environment.NewLine +
 									"</div>" + Environment.NewLine + Environment.NewLine;

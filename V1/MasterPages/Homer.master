@@ -536,7 +536,8 @@
 			.liUserAction:active u {
 				color: red; /* color when clicked */
 			}
-
+			.nav-label
+			{text-transform: none; !important }
 			.skin-option 
 			{
 				position: fixed;
@@ -861,6 +862,9 @@
 							</button>
 							<div class="collapse mobile-navbar" id="mobile-collapse-profile">
 								<ul class="nav navbar-nav no-borders">
+									<li><asp:HyperLink ID="HyperLink1" runat="server" Text="Current Brief" NavigateUrl="/V1/Profile/CommunityLandingPage.aspx"></asp:HyperLink></li>
+								</ul>
+								<ul class="nav navbar-nav no-borders">
 									<li><asp:HyperLink ID="HyperLink6" runat="server" Text="Sign Out" NavigateUrl="/V1/SignOut.aspx"></asp:HyperLink></li>
 								</ul>
 							</div>
@@ -920,6 +924,7 @@
 										<i class="fa fa-chevron-down m-t-n-xs" style="color:white;"></i>
 									</a>
 									<ul class="dropdown-menu hdropdown notification animated flipInX">
+										<li><asp:HyperLink ID="HyperLink3" runat="server" Text="Current Brief" NavigateUrl="/V1/Profile/CommunityLandingPage.aspx"></asp:HyperLink></li>
 										<li><asp:HyperLink ID="hypSignOut" runat="server" Text="Sign Out" NavigateUrl="~/V1/SignOut.aspx"></asp:HyperLink></li>
 									</ul>
 								</li>
@@ -1020,13 +1025,8 @@
 										</a>
 									</li>
 									<li>
-										<a href="/V1/Administration/Item/List.aspx">	 
-											<span class="nav-label">Items</span>
-										</a>
-									</li>
-									<li>
-										<a href="/V1/Administration/Item/AddItem.aspx">	 
-											<span class="nav-label">Add Item</span>
+										<a href="/V1/NonProfit/BriefTodaysVolunteer.aspx">	 
+											<span class="nav-label">New Members Filter</span>
 										</a>
 									</li>
 									<li>
@@ -1035,23 +1035,8 @@
 										</a>
 									</li>
 									<li>
-										<a href="/V1/Administration/Disasters.aspx">	 
-											<span class="nav-label">Command Centers</span>
-										</a>
-									</li>
-									<li>
-										<a href="/V1/Administration/SurvivorsList.aspx">	 
-											<span class="nav-label">Survivors</span>
-										</a>
-									</li>
-									<li>
 										<a href="/V1/Administration/VolunteerList.aspx">	 
 											<span class="nav-label">Volunteers</span>
-										</a>
-									</li>
-									<li>
-										<a href="/V1/Administration/UsersOnline.aspx">	 
-											<span class="nav-label">Who's Online</span>
 										</a>
 									</li>
 									<li>
@@ -1065,6 +1050,36 @@
 										</a>
 									</li>
 									<li>
+										<a href="/V1/Administration/UsersOnline.aspx">	 
+											<span class="nav-label">Who's Online</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/NonProfitList.aspx">	 
+											<span class="nav-label">Organizations</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/Item/List.aspx">	 
+											<span class="nav-label">Items</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/Item/AddItem.aspx">	 
+											<span class="nav-label">Add Item</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/Disasters.aspx">	 
+											<span class="nav-label">Command Centers</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/SurvivorsList.aspx">	 
+											<span class="nav-label">Survivors</span>
+										</a>
+									</li>
+									<li>
 										<a href="/V1/Administration/Rebuilds.aspx">	 
 											<span class="nav-label">Rebuild</span>
 										</a>
@@ -1072,11 +1087,6 @@
 									<li>
 										<a href="/V1/Administration/UserList.aspx">	 
 											<span class="nav-label">User Accounts</span>
-										</a>
-									</li>
-									<li>
-										<a href="/V1/Administration/NonProfitList.aspx">	 
-											<span class="nav-label">Non Profits</span>
 										</a>
 									</li>
 									<li>
