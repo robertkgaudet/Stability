@@ -2,7 +2,7 @@
 using System.Linq;
 
 namespace Stability
-{ 
+{
 	public class UserRank
 	{
 		public Guid OrganizationUserRankingId { get; set; }
@@ -38,19 +38,23 @@ namespace Stability
 		{
 			using (var dc = new CrowdReliefDBDataContext())
 			{
-				var ranking = dc.OrganizationUserRankings
-					.Where(r => r.UserId == userId &&
-								(organizationId == null || r.OrganizationId == organizationId))
-					.OrderByDescending(r => r.CalculationDate)
-					.FirstOrDefault();
+				var ranking = (from r in dc.OrganizationUserRankings
+							   join m in dc.aspnet_Memberships on r.UserId equals m.UserId
+							   where m.IsApproved &&
+									 r.UserId == userId &&
+									 (organizationId == null || r.OrganizationId == organizationId)
+							   orderby r.CalculationDate descending
+							   select r).FirstOrDefault();
 
 				if (ranking == null) return null;
 
 				// Determine total number of ranks (i.e., highest position value)
-				var lowestRank = dc.OrganizationUserRankings
-					.Where(r => r.IsActive &&
-								(organizationId == null || r.OrganizationId == organizationId))
-					.Max(r => r.RankPosition);
+				var lowestRank = (from r in dc.OrganizationUserRankings
+								  join m in dc.aspnet_Memberships on r.UserId equals m.UserId
+								  where m.IsApproved &&
+										r.IsActive &&
+										(organizationId == null || r.OrganizationId == organizationId)
+								  select r.RankPosition).Max();
 
 				return new UserRank
 				{
@@ -152,13 +156,16 @@ namespace Stability
 			public Guid? BelowUserId { get; set; }
 			public string BelowNameWithRank { get; set; }
 		}
-
 		public NeighborRank GetNeighborRanks()
 		{
 			using (var dc = new CrowdReliefDBDataContext())
 			{
-				var totalUsers = dc.OrganizationUserRankings
-					.Count(r => r.OrganizationId == this.OrganizationId);
+				// Count only users in the org whose Membership is approved
+				var totalUsers = (from r in dc.OrganizationUserRankings
+								  join u in dc.aspnet_Memberships on r.UserId equals u.UserId
+								  where r.OrganizationId == this.OrganizationId
+										&& u.IsApproved == true
+								  select r).Count();
 
 				if (totalUsers <= 1)
 				{
@@ -176,9 +183,8 @@ namespace Stability
 					   join p in dc.Profiles on r.UserId equals p.UserId
 					   join u in dc.aspnet_Memberships on r.UserId equals u.UserId
 					   where r.OrganizationId == this.OrganizationId &&
-							 r.RankPosition == this.RankPosition - 1 
-							 //&& u.IsLockedOut == false 
-							 //&& u.IsApproved == true
+							 r.RankPosition == this.RankPosition - 1 &&
+							 u.IsApproved == true
 					   select new { r.UserId, r.RankPosition, p.Firstname, p.Lastname })
 					  .FirstOrDefault()
 					: null;
@@ -188,9 +194,8 @@ namespace Stability
 					   join p in dc.Profiles on r.UserId equals p.UserId
 					   join u in dc.aspnet_Memberships on r.UserId equals u.UserId
 					   where r.OrganizationId == this.OrganizationId &&
-							 r.RankPosition == this.RankPosition + 1 
-							 //&& u.IsLockedOut == false 
-							 //&& u.IsApproved == true
+							 r.RankPosition == this.RankPosition + 1 &&
+							 u.IsApproved == true
 					   select new { r.UserId, r.RankPosition, p.Firstname, p.Lastname })
 					  .FirstOrDefault()
 					: null;
@@ -200,20 +205,21 @@ namespace Stability
 				if (aboveUser != null)
 				{
 					neighbor.AboveUserId = aboveUser.UserId;
-					neighbor.AboveNameWithRank = aboveUser.Firstname + " " + aboveUser.Lastname + " (Rank #" + aboveUser.RankPosition + ")";
+					neighbor.AboveNameWithRank = string.Format("{0} {1} (Rank #{2})",
+						aboveUser.Firstname, aboveUser.Lastname, aboveUser.RankPosition);
 				}
 
 				if (belowUser != null)
 				{
 					neighbor.BelowUserId = belowUser.UserId;
-					neighbor.BelowNameWithRank = belowUser.Firstname + " " + belowUser.Lastname + " (Rank #" + belowUser.RankPosition + ")";
+					neighbor.BelowNameWithRank = string.Format("{0} {1} (Rank #{2})",
+						belowUser.Firstname, belowUser.Lastname, belowUser.RankPosition);
 				}
+
 
 				return neighbor;
 			}
 		}
-
-
 
 	}
 }

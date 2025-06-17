@@ -1,6 +1,23 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="MemberNavigation.ascx.cs"
     Inherits="V1_UserControls_MemberNavigation" %>
 <div class="hpanel" runat="server" id="divMemberNavigation" visible="false">
+	<script>
+	$(document).ready(function () {
+
+		$('#<%=currentBrief.ClientID%>').click(function () {
+			window.location.href = '/V1/Profile/CommunityLandingPage.aspx';
+			return
+		});
+
+    });
+	</script>
+	<style>
+		
+    .currentBrief:hover {
+        background-color: darkseagreen;
+        cursor: pointer;
+    }
+	</style>
     <div class="panel-body">
         <ul class="mailbox-list">
             <li>
@@ -10,7 +27,10 @@
             </li>
         </ul>
         <hr />
-
+		
+		<div id="currentBrief" runat="server" class="alert alert-success text-center currentBrief m-t-n-md" visible="true">
+			<h5 class="v1"><i class="fa fa-newspaper-o pe-2x"></i> <b>Current Brief</b></h5>
+		</div>
         <h5>MY ACCOUNT</h5>
         <ul class="mailbox-list">
             <li>

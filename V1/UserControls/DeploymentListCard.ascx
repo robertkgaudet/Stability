@@ -1,13 +1,27 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="DeploymentListCard.ascx.cs" Inherits="V1_UserControls_DeploymentListCard" %>
 
 	<style type="text/css">
-			.grid-item								{width:250px; }
-			.panel-body.deploymentPanel				{background-color:#f8f8f8; color:#808080; height:180px;}
-			.panel-body.deploymentPanel:hover		{cursor:pointer; background-color:#56a5d9; color:white;}
-			.panel-footer							{ background-color:#f8f8f8 !important; border-bottom-right-radius:10px; border-bottom-left-radius:10px;}
-			.hbuilt									{ background-color:#f8f8f8 !important; color:white !important; border-top-right-radius:10px !important; border-top-left-radius:10px !important;}
-			
+			.grid-item								{width:250px; margin-top: 20px;}
+			.panel-body.deploymentPanel				{background-color:#f8f8f8; color:#808080; height:180px; border-top-right-radius:10px !important; border-top-left-radius:10px !important;}
+			.panel-body.deploymentPanel:hover		{cursor:pointer; background-color:#5E2E91; color:white;}
+			.panel-footer							{ background-color:#f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px;}
+			.panel-footer:hover						{cursor:pointer; background-color:#5E2E91; color:white;}
 	</style>
+
+	<script src="/v1/Scripts/masonry.pkgd.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('.grid').each(function () {
+				// Initialize Masonry for each grid individually
+				$(this).masonry({
+					itemSelector: '.grid-item',
+					gutter: 20,
+					columnWidth: '.grid-item',
+					percentPosition: true
+				});
+			});
+		});
+	</script>
 	<div class="grid">
 		<asp:Literal ID="litDeployments" runat="server"></asp:Literal>
 	</div>
