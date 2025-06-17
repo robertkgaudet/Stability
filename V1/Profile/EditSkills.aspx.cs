@@ -15,23 +15,9 @@ public partial class V1_Profile_Skills : BaseOrganizationWebForm
         {
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-            string searchTerm = Request.QueryString["searchTerm"];
-
-            IQueryable<dynamic> skills;
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                skills = from c in dc.Skills
-                         where c.Name.Contains(searchTerm) 
+            var skills = from c in dc.Skills
                          orderby c.Name
                          select new { Name = c.Name, c.SkillId };
-            }
-            else
-            {
-                skills = from c in dc.Skills
-                         orderby c.Name
-                         select new { Name = c.Name, c.SkillId };
-            }
 
             rptSkills.DataSource = skills;
             rptSkills.DataBind();
@@ -43,7 +29,6 @@ public partial class V1_Profile_Skills : BaseOrganizationWebForm
             hfSelectedSkills.Value = string.Join(",", userSkills.Select(id => id.ToString().ToLowerInvariant()));
         }
     }
-
 
     protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
