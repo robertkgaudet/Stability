@@ -103,63 +103,93 @@
                 }
             }
 
-
-
-
-            function SetLatitudeLongitude(address) {
-                $.ajax({
-                    type: "GET",
-                    url: "/V1/Handlers/GetGoogleAddressInfo.ashx?address=" + encodeURIComponent(address),
-                    contentType: "text/plain; charset=utf-8",
-                    dataType: "html",
-                    success: function (data) {
-                        if (data != "") {
-                            var results = data.split("|").map(function (item) {
-                                return item.trim();
-                            });
-
-                            var isPartialMatch = results[0];
-                            var duplicate = results[12];
-
-                            if ((isPartialMatch.toLowerCase() === 'false') && (duplicate.toLowerCase() === 'false')) {
-                                $("#divMapMessage").addClass("alert-success").removeClass("alert-danger");
-                                $("#iFontAwesome").removeClass("fa-warning").addClass("fa-map-marker");
-                                var successMessage = "Address Lookup Successful!";
-                                $("#<%=hidAddressData.ClientID%>").val(data);
-                                $('#<%=lblAddressMessage.ClientID%>').text(successMessage);
-                                lookupComplete = true;
-                                if (IsDuplicateClear) {
-                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
-                                }
-                            } else if ((isPartialMatch.toLowerCase() === 'false') && (duplicate.toLowerCase() === 'false')) {
-                                $("#divMapMessage").removeClass("alert-success").addClass("alert-danger");
-                                $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
-                                $("#<%=hidAddressData.ClientID%>").val(data);
-                                lookupComplete = false;
-                                var errorMessage = "This address already exists (" + address + "). Press 'Next' to edit in the Stability Location Manager. Web Service Message: " + data;
-                                $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
-                                if (IsDuplicateClear) {
-                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
-                                }
-                            } else {
-                                $("#divMapMessage").removeClass("alert-success").addClass("alert-danger");
-                                $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
-                                lookupComplete = false;
-                                var errorMessage = "Please check your address. Google returned an error matching the address you provided. (" + address + ") Web Service Message: " + data;
-                                $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
-                                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
-                            }
-                        }
-                    },
-                    error: function (request, status, error) {
-                        $("#divMapMessage").removeClass("alert-success").addClass("alert-danger");
-                        $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
-                        lookupComplete = false;
-                        $('#<%=lblAddressMessage.ClientID%>').text("Error retrieving address information from Google. " + request.statusText + ' - ' + error + ' - ' + status);
-                        $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
-                    }
+   function SetLatitudeLongitude(address) {
+    $.ajax({
+        type: "GET",
+        url: "/V1/Handlers/GetGoogleAddressInfo.ashx?address=" + encodeURIComponent(address),
+        contentType: "text/plain; charset=utf-8",
+        dataType: "html",
+        success: function (data) {
+            if (data != "") {
+                var results = data.split("|").map(function (item) {
+                    return item.trim();
                 });
+
+                var isPartialMatch = results[0];
+                var duplicate = results[12];
+
+                if ((isPartialMatch == 'False' || isPartialMatch == 'false') &&
+                    (duplicate == 'False' || duplicate == 'false')) {
+
+                    var latitude = results[1];
+                    var longitude = results[2];
+                    var street_number = results[3];
+                    var street = results[4];
+                    var city = results[5];
+                    var state = results[6];
+                    var country = results[7];
+                    var postal_code = results[8];
+                    var county = results[9];
+                    var googlePlaceId = results[10];
+                    var formattedAddress = results[11];
+                    var locationType = results[13];
+                    var cityCode = results[14];
+                    var addressId = results[15];
+
+                    $("#divMapMessage").addClass("alert-success").removeClass("alert-danger");
+                    $("#iFontAwesome").removeClass("fa-warning").addClass("fa-map-marker");
+
+                    var successMessage = "✅ Address lookup successful!";
+                    $("#<%=hidAddressData.ClientID%>").val(data);
+                    $('#<%=lblAddressMessage.ClientID%>').text(successMessage);
+                    lookupComplete = true;
+
+                    if (IsDuplicateClear) {
+                        $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                    }
+
+                } else if (duplicate == 'True' || duplicate == 'true') {
+                    // Address already exists
+                    $("#divMapMessage").removeClass("alert-success").addClass("alert-danger");
+                    $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
+
+                    $("#<%=hidAddressData.ClientID%>").val(data);
+                    lookupComplete = false;
+
+                    var errorMessage = "⚠️ This address already exists (" + address + "). " +
+                        "Click 'Next' to edit it in the Stability Location Manager. Google Response: " + data;
+
+                    $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
+                    if (IsDuplicateClear) {
+                        $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                    }
+
+                } else {
+                    $("#divMapMessage").removeClass("alert-success").addClass("alert-danger");
+                    $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
+                    lookupComplete = false;
+                    var errorMessage = "❌ Address validation failed. ";
+                    errorMessage += "Please check the address: (" + address + ")";
+                    $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
+                    $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                }
             }
+        },
+        error: function (request, status, error) {
+            $("#divMapMessage").removeClass("alert-success").addClass("alert-danger");
+            $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
+            lookupComplete = false;
+
+            var errorMessage = "❌ Error retrieving address from Google. " +
+                request.statusText + " - " + error + " - " + status;
+
+            $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
+            $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+        }
+    });
+}
+
+
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">

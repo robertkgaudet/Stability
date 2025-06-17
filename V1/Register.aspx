@@ -1,4 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/1-Column-Narrow.master" EnableEventValidation="false" AutoEventWireup="true" CodeFile="Register.aspx.cs" Inherits="V1_Register" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/1-Column-Narrow.master"
+    EnableEventValidation="false" AutoEventWireup="true" CodeFile="Register.aspx.cs"
+    Inherits="V1_Register" %>
 
 <%@ MasterType VirtualPath="~/V1/MasterPages/1-Column-Narrow.master" %>
 
@@ -16,19 +18,10 @@
         var zip;
         var lookupComplete = false;
         var IsDuplicateClear = true;
-
         $(document).ready(function () {
 
             $('#divAddressMessage').hide();
             $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
-<%--		<%=preselectedDisasterJQuery%>
-
-			$("#disasterEvent.dropdown-menu li").click(function ()
-			{
-				$("#btn-dropdown.disasterEvent").html($(this).text());
-				$("#<%=hidEventId.ClientID%>").val($(this).attr('id'));
-            });--%>
-
 			<%=preselectedNonProfitJQuery%>
 
             $("#nonProfit.dropdown-menu li").click(function () {
@@ -121,96 +114,101 @@
                     }
                     break;
                 default:
-                // code block
             }
 
-            if ((address) && (city) && (state) && (zip) && (lookupComplete == false)) {
+            if ((address) || (city) || (state) || (zip) || (lookupComplete == false)) {
                 $('#divAddressMessage').show();
                 SetLatitudeLongitude(address + " " + city + ", " + state + " " + zip);
             }
         }
 
-        function SetLatitudeLongitude(address) {
-            $.ajax(
-                {
-                    type: "GET",
-                    url: "/V1/Handlers/GetGoogleAddressInfo.ashx?address=" + address,
-                    contentType: "text/plain; charset=utf-8",
-                    dataType: "html",
-                    success: function (data) {
-                        if (data != "") {
-                            var results = data.split("|").map(function (item) {
-                                return item.trim();
-                            });
-
-                            var isPartialMatch = results[0];
-                            var duplicate = results[12];
-                            if ((isPartialMatch == 'False' || isPartialMatch == 'false') && (duplicate == 'False' || duplicate == 'false')) {
-                                var latitude = results[1];
-                                var longitude = results[2];
-                                var street_number = results[3];
-                                var street = results[4];
-                                var city = results[5];
-                                var state = results[6];
-                                var country = results[7];
-                                var postal_code = results[8];
-                                var county = results[9];
-                                var googlePlaceId = results[10];
-                                var formattedAddress = results[11];
-                                var locationType = results[13];
-                                var cityCode = results[14];
-                                var addressId = results[15];
-
-                                $("#divMapMessage").addClass("alert-success");
-                                $("#divMapMessage").removeClass("alert-danger");
-                                $("#iFontAwesome").removeClass("fa-warning");
-                                $("#iFontAwesome").addClass("fa-map-marker");
-                                var successMessage = "Address Lookup Successful!";
-                                $("#<%=hidAddressData.ClientID%>").val(data);
-                                $('#<%=lblAddressMessage.ClientID%>').text(successMessage);
-                                lookupComplete = true;
-                                if (IsDuplicateClear) {
-                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
-                                }
-                            }
-                            else if (duplicate == 'True' || duplicate == 'true') {
-                                //Address already exists.
-                                $("#divMapMessage").removeClass("alert-success");
-                                $("#divMapMessage").addClass("alert-danger");
-                                $("#iFontAwesome").addClass("fa-warning");
-                                $("#iFontAwesome").removeClass("fa-map-marker");
-                                $("#<%=hidAddressData.ClientID%>").val(data);
-                                lookupComplete = false;
-                                var errorMessage = " This address already exists (" + address + "). Press 'Next' to edit in the Stability Location Manager. Web Service Message: " + data;
-                                $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
-                                if (IsDuplicateClear) {
-                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
-                                }
-                            }
-                            else {
-                                //Error getting the information
-                                $("#divMapMessage").removeClass("alert-success");
-                                $("#divMapMessage").addClass("alert-danger");
-                                $("#iFontAwesome").addClass("fa-warning");
-                                $("#iFontAwesome").removeClass("fa-map-marker");
-                                lookupComplete = false;
-                                var errorMessage = " Please check your address. Google returned an error matching the address you provided. (" + address + ") Web Service Message: " + data;
-                                $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
-                                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
-                            }
-                        }
-                    },
-                    error: function (request, status, error) {
-                        $("#divMapMessage").removeClass("alert-success");
-                        $("#divMapMessage").addClass("alert-danger");
-                        $("#iFontAwesome").addClass("fa-warning");
-                        $("#iFontAwesome").removeClass("fa-map-marker");
-                        lookupComplete = false;
-                        $('#<%=lblAddressMessage.ClientID%>').text(" Error retrieving address information from Google. " + request.statusText + ' - ' + error + ' - ' + status);
-                        $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
-                    }
+     function SetLatitudeLongitude(address) {
+    $.ajax({
+        type: "GET",
+        url: "/V1/Handlers/GetGoogleAddressInfo.ashx?address=" + encodeURIComponent(address),
+        contentType: "text/plain; charset=utf-8",
+        dataType: "html",
+        success: function (data) {
+            if (data != "") {
+                var results = data.split("|").map(function (item) {
+                    return item.trim();
                 });
+
+                var isPartialMatch = results[0];
+                var duplicate = results[12];
+
+                if ((isPartialMatch == 'False' || isPartialMatch == 'false') &&
+                    (duplicate == 'False' || duplicate == 'false')) {
+
+                    var latitude = results[1];
+                    var longitude = results[2];
+                    var street_number = results[3];
+                    var street = results[4];
+                    var city = results[5];
+                    var state = results[6];
+                    var country = results[7];
+                    var postal_code = results[8];
+                    var county = results[9];
+                    var googlePlaceId = results[10];
+                    var formattedAddress = results[11];
+                    var locationType = results[13];
+                    var cityCode = results[14];
+                    var addressId = results[15];
+
+                    $("#divMapMessage").addClass("alert-success").removeClass("alert-danger");
+                    $("#iFontAwesome").removeClass("fa-warning").addClass("fa-map-marker");
+
+                    var successMessage = "✅ Address lookup successful!";
+                    $("#<%=hidAddressData.ClientID%>").val(data);
+                    $('#<%=lblAddressMessage.ClientID%>').text(successMessage);
+                    lookupComplete = true;
+
+                    if (IsDuplicateClear) {
+                        $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                    }
+
+                } else if (duplicate == 'True' || duplicate == 'true') {
+                    // Address already exists
+                    $("#divMapMessage").removeClass("alert-success").addClass("alert-danger");
+                    $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
+
+                    $("#<%=hidAddressData.ClientID%>").val(data);
+                    lookupComplete = false;
+
+                    var errorMessage = "⚠️ This address already exists (" + address + "). " +
+                        "Click 'Next' to edit it in the Stability Location Manager. Google Response: " + data;
+
+                    $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
+                    if (IsDuplicateClear) {
+                        $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
+                    }
+
+                } else {
+                    $("#divMapMessage").removeClass("alert-success").addClass("alert-danger");
+                    $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
+                    lookupComplete = false;
+                    var errorMessage = "❌ Address validation failed. ";
+                    errorMessage += "Please check the address: (" + address + ")";
+                    $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
+                    $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
+                }
+            }
+        },
+        error: function (request, status, error) {
+            $("#divMapMessage").removeClass("alert-success").addClass("alert-danger");
+            $("#iFontAwesome").addClass("fa-warning").removeClass("fa-map-marker");
+            lookupComplete = false;
+
+            var errorMessage = "❌ Error retrieving address from Google. " +
+                request.statusText + " - " + error + " - " + status;
+
+            $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
+            $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
         }
+    });
+}
+
+
 
     </script>
     <style>
@@ -415,7 +413,7 @@
                     <div class="m-t" role="form">
                         <h3>Create an Account</h3>
                         Employees, churches or civic organizations can instantly help after a disaster.
-						<hr />
+                        <hr />
                         <div runat="server" id="divError" visible="false">
                             <div class="alert alert-danger">
                                 <a class="alert-link" href="#">REGISTRATION ERROR!!</a>
@@ -430,7 +428,10 @@
                                 <br />
                                 <small>Leave empty to create your own.</small>
                                 <div id="div2" class="dropdown m-b-md" runat="server">
-                                    <button id="btn-NonProfitDropdown" class="btn btn-outline btn-default nonProfit dropdown-toggle dropdown-volunteer" type="button" data-toggle="dropdown">Select A Team, Club or Group (Optional) <i class="fa fa-sort-down"></i></button>
+                                    <button id="btn-NonProfitDropdown" class="btn btn-outline btn-default nonProfit dropdown-toggle dropdown-volunteer"
+                                        type="button" data-toggle="dropdown">
+                                        Select A Team, Club or Group (Optional) <i class="fa fa-sort-down"></i>
+                                    </button>
                                     <ul id="nonProfit" class="dropdown-menu text-center dropdown-volunteer required">
                                         <%=nonProfitDropDown%>
                                     </ul>
@@ -438,23 +439,30 @@
                                 <input type="hidden" id="hidOrganizationId" runat="server" />
                             </div>
                             <div class="form-group col-lg-12">
-                                <label>First Name  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtFirstName" runat="server" CssClass="form-control" required="" placeholder="First Name"></asp:TextBox>
+                                <label>
+                                    First Name  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox ID="txtFirstName" runat="server" CssClass="form-control" required=""
+                                    placeholder="First Name"></asp:TextBox>
                             </div>
                             <div class="form-group col-lg-12">
-                                <label>Last Name  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtLastName" runat="server" CssClass="form-control" required="" placeholder="Last Name"></asp:TextBox>
+                                <label>
+                                    Last Name  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox ID="txtLastName" runat="server" CssClass="form-control" required=""
+                                    placeholder="Last Name"></asp:TextBox>
                             </div>
                             <div class="form-group col-lg-12">
                                 <label>Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtAddress" runat="server" onblur="CheckAddressValues('address', this)" CssClass="form-control" required="" placeholder="Address"></asp:TextBox>
+                                <asp:TextBox ID="txtAddress" runat="server" onblur="CheckAddressValues('address', this)"
+                                    CssClass="form-control" required="" placeholder="Address"></asp:TextBox>
                             </div>
                             <div class="form-group col-lg-12">
                                 <label>City  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtCity" runat="server" onblur="CheckAddressValues('city', this)" CssClass="form-control" required="" placeholder="City"></asp:TextBox>
+                                <asp:TextBox ID="txtCity" runat="server" onblur="CheckAddressValues('city', this)"
+                                    CssClass="form-control" required="" placeholder="City"></asp:TextBox>
                             </div>
                             <div class="form-group col-lg-12">
-                                <label for="ddlState">State <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <label for="ddlState">
+                                    State <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                                 <div class="dropdown-wrapper">
                                     <select id="ddlState" runat="server" class="custom-dropdown" onblur="CheckAddressValues('state', this)">
                                         <option value="">Select a state</option>
@@ -513,8 +521,10 @@
                                 </div>
                             </div>
                             <div class="form-group col-lg-12">
-                                <label>Zip Code  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtZipCode" runat="server" CssClass="form-control" onblur="CheckAddressValues('zip', this)" required="" placeholder="Zip Code"></asp:TextBox>
+                                <label>
+                                    Zip Code  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox ID="txtZipCode" runat="server" CssClass="form-control" onblur="CheckAddressValues('zip', this)"
+                                    required="" placeholder="Zip Code"></asp:TextBox>
                             </div>
 
                             <div id="divAddressMessage" class="form-group col-lg-12">
@@ -526,50 +536,63 @@
                             </div>
 
                             <div class="form-group col-lg-12">
-                                <label>Email Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox type="email" ID="txtEmail" runat="server" onblur="CheckDuplicate('Email', this)" CssClass="form-control" required="" placeholder="Email"></asp:TextBox>
-                                <span class="error-message error-message-email">This email address already exists. Do you want to <a href="/SignIn">Sign In</a>?</span>
+                                <label>
+                                    Email Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox type="email" ID="txtEmail" runat="server" onblur="CheckDuplicate('Email', this)"
+                                    CssClass="form-control" required="" placeholder="Email"></asp:TextBox>
+                                <span class="error-message error-message-email">This email address already exists. Do
+                                    you want to <a href="/SignIn">Sign In</a>?</span>
                                 <span class="response-message response-message-email">
                                     <i class="fa fa-check" aria-hidden="true"></i>
                                 </span>
                             </div>
                             <div class="form-group col-lg-12">
-                                <label>Phone Number  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtPhoneNumber" onkeypress="return isNumberKey(event)" MaxLength="10" TextMode="Phone" runat="server" CssClass="form-control" required="" placeholder="Phone Number"></asp:TextBox>
+                                <label>
+                                    Phone Number  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox ID="txtPhoneNumber" onkeypress="return isNumberKey(event)" MaxLength="10"
+                                    TextMode="Phone" runat="server" CssClass="form-control" required="" placeholder="Phone Number"></asp:TextBox>
                             </div>
                             <div class="form-group col-lg-12">
-                                <label>Username  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" onblur="CheckDuplicate('Username', this)" required="" placeholder="Username"></asp:TextBox>
+                                <label>
+                                    Username  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" onblur="CheckDuplicate('Username', this)"
+                                    required="" placeholder="Username"></asp:TextBox>
                                 <span class="error-message error-message-username">This user is already in use.</span>
                                 <span class="response-message response-message-username">
                                     <i class="fa fa-check" aria-hidden="true"></i>
                                 </span>
                             </div>
                             <div class="form-group col-lg-12">
-                                <label>Password  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox type="password" ID="txtPassword" runat="server" CssClass="form-control" required="" placeholder="Password"></asp:TextBox>
+                                <label>
+                                    Password  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                                <asp:TextBox type="password" ID="txtPassword" runat="server" CssClass="form-control"
+                                    required="" placeholder="Password"></asp:TextBox>
                             </div>
                             <div class="form-group col-lg-12" style="display: flex; align-items: center;">
-								<div class="icheckbox_square-green">
-									<asp:CheckBox CssClass="i-checks m-r-md" Checked="true" ID="chkMessageOptIn" runat="server" />
-								</div>
-								<span class="m-l-sm"> Opt to receive SMS messages for new volunteer opportunities</span>
+                                <div class="icheckbox_square-green">
+                                    <asp:CheckBox CssClass="i-checks m-r-md" Checked="true" ID="chkMessageOptIn" runat="server" />
+                                </div>
+                                <span class="m-l-sm">Opt to receive SMS messages for new volunteer opportunities</span>
                             </div>
                         </div>
                         <div class="text-center center-block justify-content-center">
                             <div class="row">
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-8">
-                                    <asp:Button CssClass="btn btn-success btn-block w-lg" runat="server" ID="btnSubmit" OnClick="btnSubmit_Click" Text="Create My Account" OnClientClick="return showSpinner();" />
+                                    <asp:Button CssClass="btn btn-success btn-block w-lg" runat="server" ID="btnSubmit"
+                                        OnClick="btnSubmit_Click" Text="Create My Account" OnClientClick="return showSpinner();" />
                                     <button
                                         id="btnLoading"
                                         type="button"
                                         class="btn btn-success btn-block m-b"
                                         disabled
                                         style="display: none;">
-                                        <img src="/V1/Images/logo-icon-70x70-white-transparent.png" alt="Loading..." style="width: 24px; height: 24px; animation: spin 1s linear infinite;" />
+                                        <img src="/V1/Images/logo-icon-70x70-white-transparent.png" alt="Loading..." style="width: 24px;
+                                            height: 24px; animation: spin 1s linear infinite;" />
                                     </button>
-                                    <div class="text-muted text-center m-t-lg"><small>Already have an account?</small></div>
+                                    <div class="text-muted text-center m-t-lg">
+                                        <small>Already have an account?</small>
+                                    </div>
                                     <a class="btn btn-sm btn-block btn-info w-lg" href="/SignIn">Sign In</a>
                                 </div>
                                 <div class="col-sm-2"></div>
