@@ -8,20 +8,16 @@
     <link rel="stylesheet" href="/Homer/vendor/select2-3.5.2/select2.css" />
     <link rel="stylesheet" href="/Homer/vendor/select2-bootstrap/select2-bootstrap.css" />
     <script src="/Homer/vendor/select2-3.5.2/select2.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <script>
-        var address;
-        var city;
-        var state;
-        var zip;
-        var lookupComplete = false;
-        var IsDuplicateClear = true;
 
         $(document).ready(function () {
 
-            $('#divAddressMessage').hide();
             $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
 			<%=preselectedNonProfitJQuery%>
+
+			$("#<%=txtPhoneNumber.ClientID %>").mask("(000) 000-0000");
 
             $("#nonProfit.dropdown-menu li").click(function () {
                 $("#btn-NonProfitDropdown.nonProfit").html($(this).text());
@@ -30,7 +26,40 @@
 
             $(".logo-name").click(function () {
                 document.location.href = "/default.aspx";
-            });
+			});
+
+			$("#<%=txtCityState.ClientID%>").select2({
+				placeholder: "Start typing a city...",
+				minimumInputLength: 2,
+				ajax: {
+					url: "/V1/Handlers/CitySearchHandler.ashx",
+					dataType: 'json',
+					data: function (term) {
+						return { q: term };
+					},
+					results: function (data) {
+						return { results: data };
+					}
+				},
+				formatResult: function (item) {
+					return item.text;
+				},
+				formatSelection: function (item) {
+					// Save city/state names to hidden fields
+					$("#<%= hfCityName.ClientID %>").val(item.city);
+					$("#<%= hfStateName.ClientID %>").val(item.state);
+
+					if (item.city && item.state) {
+						$("#<%= btnSubmit.ClientID %>").prop("disabled", false);
+					}
+
+					return item.text;
+			}
+			});
+
+			$("#txtCityState").on("select2-removed", function () {
+				$("#<%= btnSubmit.ClientID %>").prop("disabled", true);
+			});
         });
 
         function CheckDuplicate(controlName, sender) {
@@ -58,11 +87,13 @@
                                 IsDuplicateClear = true;
                                 if (controlName == "Email") {
                                     $(".error-message-email").hide();
-                                    $(".response-message-email").show();
+									$(".response-message-email").show();
+									$("#<%= btnSubmit.ClientID %>").prop("disabled", false);
                                 }
                                 else {
                                     $(".error-message-username").hide();
-                                    $(".response-message-username").show();
+									$(".response-message-username").show();
+									$("#<%= btnSubmit.ClientID %>").prop("disabled", false);
                                 }
                                 if (lookupComplete) {
                                     $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
@@ -90,118 +121,7 @@
             }
         }
 
-        function CheckAddressValues(controlName, sender) {
-            switch (controlName) {
-                case "address":
-                    if (sender.value) {
-                        address = sender.value;
-                    }
-                    break;
-                case "city":
-                    if (sender.value) {
-                        city = sender.value;
-                    }
-                    break;
-                case "state":
-                    if (sender.value) {
-                        state = sender.value;
-                    }
-                    break;
-                case "zip":
-                    if (sender.value) {
-                        zip = sender.value;
-                    }
-                    break;
-                default:
-                // code block
-            }
-
-            if ((address) && (city) && (state) && (zip) && (lookupComplete == false)) {
-                $('#divAddressMessage').show();
-                SetLatitudeLongitude(address + " " + city + ", " + state + " " + zip);
-            }
-        }
-
-        function SetLatitudeLongitude(address) {
-            $.ajax(
-                {
-                    type: "GET",
-                    url: "/V1/Handlers/GetGoogleAddressInfo.ashx?address=" + address,
-                    contentType: "text/plain; charset=utf-8",
-                    dataType: "html",
-                    success: function (data) {
-                        if (data != "") {
-                            var results = data.split("|");
-                            var isPartialMatch = results[0];
-                            var duplicate = results[12];
-                            if ((isPartialMatch == 'False' || isPartialMatch == 'false') && (duplicate == 'False' || duplicate == 'false')) {
-                                var latitude = results[1];
-                                var longitude = results[2];
-                                var street_number = results[3];
-                                var street = results[4];
-                                var city = results[5];
-                                var state = results[6];
-                                var country = results[7];
-                                var postal_code = results[8];
-                                var county = results[9];
-                                var googlePlaceId = results[10];
-                                var formattedAddress = results[11];
-                                var locationType = results[13];
-                                var cityCode = results[14];
-                                var addressId = results[15];
-
-                                $("#divMapMessage").addClass("alert-success");
-                                $("#divMapMessage").removeClass("alert-danger");
-                                $("#iFontAwesome").removeClass("fa-warning");
-                                $("#iFontAwesome").addClass("fa-map-marker");
-                                var successMessage = "Address Lookup Successful!";
-                                $("#<%=hidAddressData.ClientID%>").val(data);
-                                $('#<%=lblAddressMessage.ClientID%>').text(successMessage);
-                                lookupComplete = true;
-                                if (IsDuplicateClear) {
-                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
-                                }
-                            }
-                            else if (duplicate == 'True' || duplicate == 'true') {
-                                //Address already exists.
-                                $("#divMapMessage").removeClass("alert-success");
-                                $("#divMapMessage").addClass("alert-danger");
-                                $("#iFontAwesome").addClass("fa-warning");
-                                $("#iFontAwesome").removeClass("fa-map-marker");
-                                $("#<%=hidAddressData.ClientID%>").val(data);
-                                lookupComplete = false;
-                                var errorMessage = " This address already exists (" + address + "). Press 'Next' to edit in the Stability Location Manager. Web Service Message: " + data;
-                                $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
-                                if (IsDuplicateClear) {
-                                    $("#<%=btnSubmit.ClientID%>").attr("disabled", false);
-                                }
-                            }
-                            else {
-                                //Error getting the information
-                                $("#divMapMessage").removeClass("alert-success");
-                                $("#divMapMessage").addClass("alert-danger");
-                                $("#iFontAwesome").addClass("fa-warning");
-                                $("#iFontAwesome").removeClass("fa-map-marker");
-                                lookupComplete = false;
-                                var errorMessage = " Please check your address. Google returned an error matching the address you provided. (" + address + ") Web Service Message: " + data;
-                                $('#<%=lblAddressMessage.ClientID%>').text(errorMessage);
-                                $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
-                            }
-                        }
-                    },
-                    error: function (request, status, error) {
-                        $("#divMapMessage").removeClass("alert-success");
-                        $("#divMapMessage").addClass("alert-danger");
-                        $("#iFontAwesome").addClass("fa-warning");
-                        $("#iFontAwesome").removeClass("fa-map-marker");
-                        lookupComplete = false;
-                        $('#<%=lblAddressMessage.ClientID%>').text(" Error retrieving address information from Google. " + request.statusText + ' - ' + error + ' - ' + status);
-                        $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
-                    }
-                });
-        }
-
-    </script>
+	</script>
     <style>
         .logo-name:hover {
             cursor: pointer;
@@ -435,83 +355,11 @@
                                 <asp:TextBox ID="txtLastName" runat="server" CssClass="form-control" required="" placeholder="Last Name"></asp:TextBox>
                             </div>
                             <div class="form-group col-lg-12">
-                                <label>Address  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtAddress" runat="server" onblur="CheckAddressValues('address', this)" CssClass="form-control" required="" placeholder="Address"></asp:TextBox>
-                            </div>
-                            <div class="form-group col-lg-12">
-                                <label>City  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtCity" runat="server" onblur="CheckAddressValues('city', this)" CssClass="form-control" required="" placeholder="City"></asp:TextBox>
-                            </div>
-                            <div class="form-group col-lg-12">
-                                <label for="ddlState">State <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <div class="dropdown-wrapper">
-                                    <select id="ddlState" runat="server" class="custom-dropdown" onblur="CheckAddressValues('state', this)">
-                                        <option value="">Select a state</option>
-                                        <option value="AL">Alabama</option>
-                                        <option value="AK">Alaska</option>
-                                        <option value="AZ">Arizona</option>
-                                        <option value="AR">Arkansas</option>
-                                        <option value="CA">California</option>
-                                        <option value="CO">Colorado</option>
-                                        <option value="CT">Connecticut</option>
-                                        <option value="DC">D.C. (District of Columbia)</option>
-                                        <option value="DE">Delaware</option>
-                                        <option value="FL">Florida</option>
-                                        <option value="GA">Georgia</option>
-                                        <option value="HI">Hawaii</option>
-                                        <option value="ID">Idaho</option>
-                                        <option value="IL">Illinois</option>
-                                        <option value="IN">Indiana</option>
-                                        <option value="IA">Iowa</option>
-                                        <option value="KS">Kansas</option>
-                                        <option value="KY">Kentucky</option>
-                                        <option value="LA">Louisiana</option>
-                                        <option value="ME">Maine</option>
-                                        <option value="MD">Maryland</option>
-                                        <option value="MA">Massachusetts</option>
-                                        <option value="MI">Michigan</option>
-                                        <option value="MN">Minnesota</option>
-                                        <option value="MS">Mississippi</option>
-                                        <option value="MO">Missouri</option>
-                                        <option value="MT">Montana</option>
-                                        <option value="NE">Nebraska</option>
-                                        <option value="NV">Nevada</option>
-                                        <option value="NH">New Hampshire</option>
-                                        <option value="NJ">New Jersey</option>
-                                        <option value="NM">New Mexico</option>
-                                        <option value="NY">New York</option>
-                                        <option value="NC">North Carolina</option>
-                                        <option value="ND">North Dakota</option>
-                                        <option value="OH">Ohio</option>
-                                        <option value="OK">Oklahoma</option>
-                                        <option value="OR">Oregon</option>
-                                        <option value="PA">Pennsylvania</option>
-                                        <option value="RI">Rhode Island</option>
-                                        <option value="SC">South Carolina</option>
-                                        <option value="SD">South Dakota</option>
-                                        <option value="TN">Tennessee</option>
-                                        <option value="TX">Texas</option>
-                                        <option value="UT">Utah</option>
-                                        <option value="VT">Vermont</option>
-                                        <option value="VA">Virginia</option>
-                                        <option value="WA">Washington</option>
-                                        <option value="WV">West Virginia</option>
-                                        <option value="WI">Wisconsin</option>
-                                        <option value="WY">Wyoming</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-12">
-                                <label>Zip Code  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtZipCode" runat="server" CssClass="form-control" onblur="CheckAddressValues('zip', this)" required="" placeholder="Zip Code"></asp:TextBox>
-                            </div>
-
-                            <div id="divAddressMessage" class="form-group col-lg-12">
-                                <div id="divMapMessage" class="alert m-b-lg p-sm">
-                                    <i id="iFontAwesome" class="fa"></i>
-                                    <asp:Label runat="server" ID="lblAddressMessage"></asp:Label>
-                                    <asp:HiddenField ID="hidAddressData" runat="server"></asp:HiddenField>
-                                </div>
+								<label for="<%=txtCityState.ClientID%>">City, State <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+								<asp:TextBox runat="server" id="txtCityState" CssClass="form-control" required="" ></asp:TextBox>
+								<!-- Hidden fields to store selected IDs -->
+								<asp:HiddenField ID="hfCityName" runat="server" />
+								<asp:HiddenField ID="hfStateName" runat="server" />
                             </div>
 
                             <div class="form-group col-lg-12">
@@ -523,9 +371,11 @@
                                 </span>
                             </div>
                             <div class="form-group col-lg-12">
-                                <label>Phone Number  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                                <asp:TextBox ID="txtPhoneNumber" onkeypress="return isNumberKey(event)" MaxLength="10" TextMode="Phone" runat="server" CssClass="form-control" required="" placeholder="Phone Number"></asp:TextBox>
-                            </div>
+								<label>Phone Number  
+									<span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span>
+								</label>
+								<asp:TextBox ID="txtPhoneNumber" runat="server" CssClass="form-control" required="" placeholder="(333) 333-3333"></asp:TextBox>
+							</div>
                             <div class="form-group col-lg-12">
                                 <label>Username  <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                                 <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control" onblur="CheckDuplicate('Username', this)" required="" placeholder="Username"></asp:TextBox>

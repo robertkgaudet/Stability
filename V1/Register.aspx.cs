@@ -84,14 +84,9 @@ public partial class V1_Register : System.Web.UI.Page
 		string password = txtPassword.Text;
 		string username = txtUsername.Text;
 		string phoneNumber = txtPhoneNumber.Text;
-		string addressData = hidAddressData.Value;
 		string passwordAnswer = "12:00";
 		string email = txtEmail.Text;
 		string urlRedirect = string.Empty;
-		string address = txtAddress.Text;
-		string city = txtCity.Text;
-		string state = ddlState.Value;
-		string zipCode = txtZipCode.Text;
 		string eventName = string.Empty;
 		Boolean deploymentSMS = chkMessageOptIn.Checked;
 		//string eventId = hidEventId.Value;
@@ -166,105 +161,12 @@ public partial class V1_Register : System.Web.UI.Page
 			userProfile.Firstname = firstName;
 			userProfile.Lastname = lastName;
 			userProfile.PhoneNumber = phoneNumber;
-			userProfile.Address = address;
-			userProfile.City = city;
-			userProfile.State = state;
-			userProfile.Zip = zipCode;
+			userProfile.City = hfCityName.Value;
+			userProfile.State = hfStateName.Value;
 			userProfile.ReceiveDeploymentSMS = deploymentSMS;
 			dc.Profiles.InsertOnSubmit(userProfile);
 			dc.SubmitChanges();
 
-
-			#region save address 
-			var addressList = addressData.Split('|');
-			var duplicateAddress = dc.Addresses.FirstOrDefault(f => f.GooglePlaceId == addressList[10]);
-			var addressId = new Guid();
-			if (duplicateAddress == null)
-			{
-				var duplicateCounty = dc.Counties.FirstOrDefault(f => f.Name == addressList[9]);
-				var countyId = Guid.NewGuid();
-				if (duplicateCounty == null)
-				{
-					var states = dc.USStates.FirstOrDefault(f => f.Code == state);
-					County county = new County();
-					county.CountyId = countyId;
-					county.Name = addressList[9];
-					county.StateId = states != null ? states.StatesId : new Guid();
-					county.State = state;
-					dc.Counties.InsertOnSubmit(county);
-					dc.SubmitChanges();
-				}
-				else
-				{
-					countyId = duplicateCounty.CountyId;
-				}
-
-				var duplicateCity = dc.Cities.FirstOrDefault(f => f.City1 == city);
-				var cityId = Guid.NewGuid();
-				if (duplicateCity == null)
-				{
-					City cit = new City();
-					cit.CityId = cityId;
-					cit.City1 = city;
-					cit.Code = addressList[14];
-					dc.Cities.InsertOnSubmit(cit);
-					dc.SubmitChanges();
-				}
-				else
-				{
-					cityId = duplicateCity.CityId;
-				}
-
-				Address newAddress = new Address();
-				newAddress.AddressId = Guid.NewGuid();
-				newAddress.GooglePlaceId = addressList[10];
-				newAddress.FormattedAddress = addressList[11];
-				newAddress.StreetNumber = addressList[3];
-				newAddress.StreetName = addressList[4];
-				newAddress.Address1 = address;
-				newAddress.City = city;
-				newAddress.State = state;
-				newAddress.Zip = zipCode;
-				newAddress.Country = addressList[7];
-				newAddress.County = addressList[9];
-				newAddress.Latitude = addressList[1];
-				newAddress.Longitude = addressList[2];
-				newAddress.IsActive = true;
-				newAddress.CreatedOn = DateTime.Now;
-				newAddress.CreatedBy = userProfile.UserId;
-				newAddress.CountyId = countyId;
-				newAddress.CityId = cityId;
-				newAddress.LocationType = addressList[13];
-				dc.Addresses.InsertOnSubmit(newAddress);
-				dc.SubmitChanges();
-
-				addressId = newAddress.AddressId;
-			}
-			else
-			{
-				addressId = duplicateAddress.AddressId;
-			}
-
-			//Insert profileId and addressId into ProfileAddress table.
-			ProfileAddress newProfileAddress = new ProfileAddress();
-			newProfileAddress.ProfileAddressId = Guid.NewGuid();
-			newProfileAddress.ProfileId = userProfile.ProfileId;
-			newProfileAddress.AddressId = addressId;
-			newProfileAddress.HomeTypeId = new Guid("C478785A-014D-4DFF-86FE-3693E6F33FAC");
-			newProfileAddress.HomeRelationshipOwnRentTypeId = new Guid("58526C73-5469-4B5E-81B1-831476784C56");
-			newProfileAddress.IsPrimaryResidence = false;
-			newProfileAddress.HasFloodInsurance = false;
-			newProfileAddress.HasHomeownersInsurance = false;
-			newProfileAddress.ShowOnAgencyMap = false;
-			newProfileAddress.ShowOnCleanupMap = false;
-			newProfileAddress.IsMultistory = false;
-			newProfileAddress.HasBasement = false;
-			newProfileAddress.HasGarage = false;
-			newProfileAddress.HasCarport = false;
-			newProfileAddress.HasCrawlspace = false;
-			dc.ProfileAddresses.InsertOnSubmit(newProfileAddress);
-			dc.SubmitChanges();
-			#endregion
 
 			ListDictionary ldEmailBodyReplacements = new ListDictionary();
 			ldEmailBodyReplacements.Add("<% RecipientsName %>", firstName);

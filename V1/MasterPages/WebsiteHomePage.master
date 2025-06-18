@@ -52,13 +52,23 @@
     <link rel="stylesheet" href="/homer/styles/style.css">
 
     <style>
-		.landing-page header
-		{
-		background:url('/V1/images/headerv1.jpg') 50% 0 no-repeat !important;
-		 height:480px;
-		 padding-top:50px;
-		 margin-bottom:30px
+		.landing-page header {
+		  position: relative;
+		  background: url('/V1/images/waves.png') 50% 0 no-repeat !important;
+		  background-size: cover;
+		  height: 530px;
+		  padding-top: 50px;
+		  margin-bottom: 30px;
+		  z-index: 1;
+		}
 
+		.landing-page header::before {
+		  content: "";
+		  position: absolute;
+		  top: 0; left: 0;
+		  width: 100%; height: 100%;
+		  background: rgba(128, 0, 128, 0.6); /* purple with 40% opacity */
+		  z-index: -1; /* keep background behind content */
 		}
 		.small{color:white !important;}
 		.navbar-fixed-top
@@ -89,24 +99,6 @@
             </asp:ContentPlaceHolder>
         </div>
     </form>
-    <!-- Simple splash screen-->
-    <div class="splash">
-        <div class="color-line"></div>
-        <div class="splash-title">
-            <h1>Homer - Responsive Admin Theme</h1>
-            <p>
-                Special Admin Theme for small and medium webapp with very clean and aesthetic style
-                and feel.
-            </p>
-            <div class="spinner">
-                <div class="rect1"></div>
-                <div class="rect2"></div>
-                <div class="rect3"></div>
-                <div class="rect4"></div>
-                <div class="rect5"></div>
-            </div>
-        </div>
-    </div>
 
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -140,19 +132,19 @@
 
     <header id="page-top">
         <div class="container">
-            <div class="heading">
-                <div style="max-width: 450px; margin-top: 20px; margin-bottom: 20px; color: white; font-size:16px;">
-					<h1>Disaster-Ready Communities
+            <div class="heading" style="padding:40px 0px 60px 0px; margin-bottom:100px;">
+                <div style="margin-top: 20px; margin-bottom: 20px; color: white; font-size:16px;">
+					<h1>AI-Powered Social Relief Network for Disaster-Ready Communities
 					</h1>
                 </div>
-					<span class="font-size-medium">Turn your friend network into a proficient disaster response
-                    team, ready to meet urgent needs in your own community.</span>
-                    For Emergency Management Professionals, Stability offers simulation features that
-                    transitions from planning into a coordinated, community-empowered response during
-                    disasters.<br /><a style="text-decoration:underline; color:white;" page-scroll href="#groupResponse">Learn More</a>
-					<br />
-					<a style="font-size: 20px; font-weight: bold;" class="btn btn-success btn-md btn-w-m" role="button" href="/SignIn">Sign In</a>
-					<a style="font-size: 20px; font-weight: bold;" class="btn btn-success btn-md btn-w-m" role="button" href="/Register">Join</a>
+				<span class="font-size-medium">If people don’t see your group, they won’t join it. 
+					Stability puts your group in front of your community every day — helping you attract new members by showing what you do, who you help, and why you matter.</span>
+                    
+				<br /><br />
+				<a style="font-size: 20px; font-weight: bold;" class="btn btn-success btn-md btn-w-m" role="button" href="/SignIn">Sign In</a>
+				<a style="font-size: 20px; font-weight: bold;" class="btn btn-success btn-md btn-w-m" role="button" href="/Register">Join</a>
+				<hr /><br />For Emergency Management Professionals, Stability creates a bridge providing insights into the community-empowered response during disasters.<br /><a style="text-decoration:underline; color:white;" page-scroll href="#groupResponse">Learn More</a>
+					
             </div>
         </div>
     </header>

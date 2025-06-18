@@ -190,7 +190,6 @@
             </ul>
             <hr runat="server" id="hr1"></hr>
             <ul class="mailbox-list" runat="server" id="ulAdmin" visible="false">
-                <%--<li><b>Team Management </b></li>--%>
                 <li><b>
                     <asp:HyperLink runat="server" ID="hypTeamManagement" Visible="false"><i class="fa fa-users text-success"></i> Team Management
                     </asp:HyperLink></b>

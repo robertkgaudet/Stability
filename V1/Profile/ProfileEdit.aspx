@@ -57,9 +57,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Address <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                            <label class="col-sm-3 control-label">Address </label>
                             <div class="col-sm-9">
-                                <input type="text" required runat="server" id="txtAddress" class="form-control" placeholder="Address">
+                                <input type="text" runat="server" id="txtAddress" class="form-control" placeholder="Address">
                             </div>
                         </div>
                         <div class="form-group">
@@ -75,9 +75,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Zip <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
+                            <label class="col-sm-3 control-label">Zip </label>
                             <div class="col-sm-9">
-                                <input type="text" required runat="server" id="txtZipCode" class="form-control" placeholder="Zip Code">
+                                <input type="text" runat="server" id="txtZipCode" class="form-control" placeholder="Zip Code">
                             </div>
                         </div>
                     </div>
@@ -95,12 +95,12 @@
                             <asp:Literal runat="server" ID="lblMessage"></asp:Literal>
                         </div>
 
-                        <div class="form-group">
+						<div class="form-group">
                             <label class="col-sm-3 control-label">Phone Number <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
-                            <div class="col-sm-9">
-                                <input type="text" maxlength="10" required runat="server" id="txtPhonenumber" class="form-control" placeholder="Phone Number" name="number">
-                            </div>
-                        </div>
+							<div class="col-sm-9">
+								<asp:TextBox ID="txtPhonenumber" runat="server" CssClass="form-control" required="" placeholder="Phone Number"></asp:TextBox>
+							 </div>
+						</div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Zello Handle <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
@@ -205,9 +205,14 @@
         </div>
     </div>
     <script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <script>
-        $(document).ready(function () {
+		$(document).ready(function () {
+
+
+			$("#<%=txtPhonenumber.ClientID %>").mask("(000) 000-0000");
+
             $(function () {
 
                 $("#form").validate({
@@ -235,5 +240,5 @@
                 });
             });
         });
-    </script>
+	</script>
 </asp:Content>

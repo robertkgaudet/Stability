@@ -14,28 +14,54 @@ public partial class V1_Profile_CommunityLandingPage : BaseWebForm
 		{
 			string zip = "70503"; // Example ZIP code
 			string city = "Lafayette"; // Example city name
-			string state = "LA"; // Example city name
+			string state = "Louisiana"; // Example city name
+			string stateCode = "LA";
 			double latitude = 30.2168; // Example city name
 			double longitude = -92.0182; // Example city name
+
 			if (HttpContext.Current.User.Identity.IsAuthenticated)
 			{
 				using (var dc = new CrowdReliefDBDataContext())
 				{
 					var userInfo = (from p in dc.Profiles
-									join pa in dc.ProfileAddresses on p.ProfileId equals pa.ProfileId
-									join a in dc.Addresses on pa.AddressId equals a.AddressId
 									where p.UserId == userId
-									orderby a.CreatedOn ascending
-									select new { a.City, a.Zip, a.State, a.Latitude, a.Longitude }).Take(1).SingleOrDefault();
+									select new { p.City, p.State })
+									.Take(1)
+									.SingleOrDefault();
 
 					if (userInfo != null)
 					{
+						//Get the statecode
+
+						stateCode = (from s in dc.USStates
+										 where s.Name == userInfo.State
+										 select s.Code).Take(1).SingleOrDefault();
+
 						city = userInfo.City;
 						state = userInfo.State;
-						zip = userInfo.Zip;
-						latitude = Double.Parse(userInfo.Latitude);
-						longitude = Double.Parse(userInfo.Longitude);
+
+
+						var geo = GeoHelper.GetLatLonZipFromCityState(city, stateCode);
+						if (geo != null)
+						{
+							latitude = geo.Latitude;
+							longitude = geo.Longitude;
+							zip = geo.Zip;
+						}
+
+						litWeatherAdvisoryLocation.Text = "Statewide Weather Advisories: " + userInfo.State;
 					}
+
+					//if (userInfo != null)
+					//{
+					//	city = userInfo.City;
+					//	stateCode = userInfo.StateCode;
+					//	state = userInfo.State;
+					//	zip = userInfo.Zip;
+					//	latitude = Double.Parse(userInfo.Latitude);
+					//	longitude = Double.Parse(userInfo.Longitude);
+					//	litWeatherAdvisoryLocation.Text = "Statewide Weather Advisories: " + userInfo.State;
+					//}
 
 					var userGroups = (from g in dc.UserOrganizations
 									  join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
@@ -73,14 +99,18 @@ public partial class V1_Profile_CommunityLandingPage : BaseWebForm
 						hypTeam.NavigateUrl = teamUrl;
 						hypTeam.Visible = true;
 					}
-
-
 				}
 			}
-			await LoadCommunitySnapshotAsync(zip, city);
-
+			await LoadCommunitySnapshotAsync(zip, city, state);
+//			Response.Write(state  + " - " + zip + " - " + city);
 			var disasterAggregatorService = new DisasterAggregatorService();
-			var events = disasterAggregatorService.GetLatestDisasters(state.ToUpper());
+			var events = disasterAggregatorService.GetLatestDisasters(stateCode.ToUpper());
+
+			if(events.Count == 0)
+			{
+				litWeatherAdvisoryLocation.Text = "No weather advisories at this time: " + state;
+			}
+
 			rptDisasterEvents.DataSource = events;
 			rptDisasterEvents.DataBind();
 
@@ -129,7 +159,7 @@ public partial class V1_Profile_CommunityLandingPage : BaseWebForm
 		public string Condition { get; set; }
 	}
 
-	private async Task LoadCommunitySnapshotAsync(string zip, string city)
+	private async Task LoadCommunitySnapshotAsync(string zip, string city, string state)
 	{
 		string demonym;
 
@@ -188,7 +218,7 @@ public partial class V1_Profile_CommunityLandingPage : BaseWebForm
 			string briefWord = GetRandomBriefWord();
 
 			lblHello.Text = timeWord + " " + briefWord;
-			lblCity.Text = city + ", LA";
+			lblCity.Text = city + ", " + state;
 			lblTemp.Text = Math.Round(snapshot.Weather.Temperature).ToString();
 			lblElderlyCount.Text = demographics.ElderlyCount.ToString("N0");
 			lblTotalPop.Text = demographics.TotalPopulation.ToString("N0");
