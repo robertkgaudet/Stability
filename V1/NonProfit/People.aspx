@@ -43,7 +43,7 @@
         }
 
         .suggestion-box {
-            margin-top: 261px !important;
+            margin-top: 148px !important;
         }
 
         .alert {

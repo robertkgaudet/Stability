@@ -12,20 +12,12 @@ public partial class V1_Profile_EditDisasters : BaseOrganizationWebForm
     {
         if (!IsPostBack)
         {
-            string searchTerm = Request.QueryString["searchTerm"];
-
             CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
             var eventsQuery = from c in dc.Events
                               where c.IsDisaster == true && c.IsActive == true
                               orderby c.BeginDate descending
                               select new { name = " - " + c.Name, c.EventId };
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                eventsQuery = eventsQuery
-                    .Where(ev => ev.name.ToLower().Contains(searchTerm.ToLower()));
-            }
 
             chkBoxListDisasters.DataSource = eventsQuery;
             chkBoxListDisasters.DataBind();

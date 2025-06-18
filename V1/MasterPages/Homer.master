@@ -304,15 +304,6 @@
 <div class='suggestion-item' data-type='Deployments'>
   <i class="fa fa-street-view"></i> <strong>Deployments</strong>
 </div>
-<div class='suggestion-item' data-type='Skills'>
-  <i class="fa fa-user-md"></i> <strong>Skills</strong>
-</div>
-<div class='suggestion-item' data-type='Resources'>
-  <i class="fa fa-truck"></i> <strong>Resources</strong>
-</div>
-<div class='suggestion-item' data-type='Portals'>
-  <i class="fa fa-globe"></i> <strong>Portals</strong>
-</div>
 `).show();
                    } else {
                        $('#searchSuggestions').hide();
@@ -346,15 +337,6 @@
 </div>
 <div class='suggestion-item' data-type='Deployments'>
   <i class="fa fa-street-view"></i> <strong>Deployments</strong>
-</div>
-<div class='suggestion-item' data-type='Skills'>
-  <i class="fa fa-user-md"></i> <strong>Skills</strong>
-</div>
-<div class='suggestion-item' data-type='Resources'>
-  <i class="fa fa-truck"></i> <strong>Resources</strong>
-</div>
-<div class='suggestion-item' data-type='Portals'>
-  <i class="fa fa-globe"></i> <strong>Portals</strong>
 </div>
 `).show();
                        } else {
