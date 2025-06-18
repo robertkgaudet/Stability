@@ -5,9 +5,6 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <link rel="stylesheet" href="/Homer/vendor/sweetalert/lib/sweet-alert.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <div class="row">
@@ -101,7 +98,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Phone Number <span class="text-danger" style="font-size: 2rem; line-height: 1;">*</span></label>
                             <div class="col-sm-9">
-                                <input type="text" maxlength="10" required runat="server" id="txtPhonenumber" class="form-control" placeholder="Phone Number" name="number">
+                                <input type="text" maxlength="10" required runat="server" id="txtPhoneNumber" class="form-control" placeholder="Phone Number" name="number">
                             </div>
                         </div>
 
@@ -239,9 +236,7 @@
             });
         });
        
-    $(document).ready(function () {
-        $('#<%= txtPhonenumber.ClientID %>').mask('(000) 000-0000');
-    });
+
   
     </script>
 </asp:Content>

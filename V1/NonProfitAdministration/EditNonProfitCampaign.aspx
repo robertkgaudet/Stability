@@ -7,8 +7,7 @@
 
     <link rel="stylesheet" href="/Homer/vendor/sweetalert/lib/sweet-alert.css" />
 	<link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+	
 	
 	<script>
 
@@ -144,7 +143,7 @@
 					<%=txtFacebookGroup.UniqueID%>: {
 						url: true
 					},
-					<%=txtPhonenumber.UniqueID%>: {
+					<%=txtPhoneNumber.UniqueID%>: {
 						number: true,
 						maxlength: 12,
 						required: true
@@ -185,9 +184,7 @@
 			});
 		});
 
-        $(document).ready(function () {
-            $('#<%= txtPhoneNumber.ClientID %>').mask('(000) 000-0000');
-            });
+       
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
@@ -343,7 +340,7 @@
 
 							<div class="form-group">
 								<label class="col-sm-2 control-label">* Phone Number</label>
-								<div class="col-sm-5"><input type="text" maxlength="10" required runat="server" id="txtPhonenumber" class="form-control" placeholder="Primary Phone"></div>
+								<div class="col-sm-5"><input type="text" maxlength="10" required runat="server" id="txtPhoneNumber" class="form-control" placeholder="Primary Phone"></div>
 							</div>
 
 							<div class="form-group">

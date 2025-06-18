@@ -39,7 +39,7 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
 			txtFirstname.Value = profile.Firstname;
 			txtLastname.Value = profile.Lastname;
 			txtNumberOfDays.Value = profile.NumberOfDaysAvailable;
-			txtPhonenumber.Value = profile.PhoneNumber;
+			txtPhoneNumber.Value = profile.PhoneNumber;
 			txtVolunteerDescription.Value = profile.Description;
 			txtZello.Value = profile.ZelloName;
 			txtZipCode.Value = profile.Zip;
@@ -76,7 +76,7 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
 		profile.Firstname = txtFirstname.Value;
 		profile.Lastname = txtLastname.Value;
 		profile.NumberOfDaysAvailable = txtNumberOfDays.Value;
-		profile.PhoneNumber = txtPhonenumber.Value;
+		profile.PhoneNumber = txtPhoneNumber.Value;
 		profile.State = ddlState.SelectedValue;
 		profile.ZelloName = txtZello.Value;
 		profile.Zip = txtZipCode.Value;

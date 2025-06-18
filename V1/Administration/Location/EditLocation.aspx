@@ -5,8 +5,7 @@
     <link rel="stylesheet" href="/Homer/vendor/sweetalert/lib/sweet-alert.css" />
 	<script src="/Homer/vendor/iCheck/icheck.min.js"></script>
 	<script src="/Homer/vendor/jquery-validation/jquery.validate.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+	
 
 	<script>
 		$(function (){
@@ -86,9 +85,7 @@
 			$('#divMessage').hide();
 		});
 
-        $(document).ready(function () {
-            $('#<%= txtPhoneNumber.ClientID %>').mask('(000) 000-0000');
-            });
+        
     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">

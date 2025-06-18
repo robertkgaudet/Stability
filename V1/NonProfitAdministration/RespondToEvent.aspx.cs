@@ -71,7 +71,7 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
             {
                 txtEmailAddress.Value = profile.Email;
                 txtPOCFullname.Value = profile.fullName;
-                txtPhonenumber.Value = profile.PhoneNumber;
+                txtPhoneNumber.Value = profile.PhoneNumber;
             }
         }
     }
@@ -159,7 +159,7 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
         bool? isVoad = chkVoad.Checked;
         string volunteerInstructions = Server.HtmlEncode(txtVolunteerInstructions.Text);
         string POCName = txtPOCFullname.Value;
-        string phoneNumber = txtPhonenumber.Value;
+        string phoneNumber = txtPhoneNumber.Value;
         string emailAddress = txtEmailAddress.Value;
 
         OrganizationEvent organizationEvent = new OrganizationEvent();

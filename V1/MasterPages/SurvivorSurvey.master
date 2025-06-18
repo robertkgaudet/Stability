@@ -40,6 +40,7 @@
 
 		<!-- Vendor scripts -->
 		<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
 		<script type="text/javascript">
 
@@ -54,7 +55,10 @@
 					return false;
 				});
 			});
-		</script>
+            $(document).ready(function () {
+                $("input[id$='txtPhoneNumber']").mask("(000) 000-0000");
+            });
+        </script>
 
 		<style>
 			.bodyBGColor

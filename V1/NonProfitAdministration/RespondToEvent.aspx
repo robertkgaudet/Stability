@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
     <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote.css" />
     <link rel="stylesheet" href="/Homer/vendor/summernote/dist/summernote-bs3.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+   
 
     <script>
 
@@ -140,7 +139,7 @@
                     required: true,
                     maxlength: 100
                 },
-					<%=txtPhonenumber.UniqueID%>: {
+					<%=txtPhoneNumber.UniqueID%>: {
                     number: true,
                     maxlength: 12
                 },
@@ -540,7 +539,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Phone Number *</label>
                             <div class="col-sm-5">
-                                <input type="text" maxlength="10" required runat="server" id="txtPhonenumber" class="form-control" placeholder="Primary Phone"></div>
+                                <input type="text" maxlength="10" required runat="server" id="txtPhoneNumber" class="form-control" placeholder="Primary Phone"></div>
                         </div>
 
                         <div class="form-group">
@@ -584,8 +583,6 @@
             checkUniqueName(filteredText);
         });
 
-        $(document).ready(function () {
-            $('#<%= txtPhonenumber.ClientID %>').mask('(000) 000-0000');
-            });
+      
     </script>
 </asp:Content>

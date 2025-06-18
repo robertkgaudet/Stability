@@ -215,5 +215,7 @@ $.fn['animatePanel'] = function() {
         $('.stagger').css('animation', '');
         $('.stagger').removeClass(effect).removeClass('animated-panel').removeClass('stagger');
     }, animateTime)
-
+    $(document).ready(function () {
+        $("input[id$='txtPhoneNumber']").mask("(000) 000-0000");
+    });
 };

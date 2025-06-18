@@ -94,7 +94,7 @@ public partial class V1_NonProfitAdministration_EditNonProfitCampaign : BaseOrga
 		
 		txtZipCode.Value = organizationEvent.oe.StagingZipCode;
 		txtPOCFullname.Value = organizationEvent.oe.PointOfContactName;
-		txtPhonenumber.Value = organizationEvent.oe.PhoneNumber;
+		txtPhoneNumber.Value = organizationEvent.oe.PhoneNumber;
 		txtZelloChannel.Value = organizationEvent.oe.ZelloChannel;
 		txtEmailAddress.Value = organizationEvent.oe.Email;
 		txtDonationLink.Value = organizationEvent.oe.DonationURL;
@@ -147,7 +147,7 @@ public partial class V1_NonProfitAdministration_EditNonProfitCampaign : BaseOrga
 		string stateId = ddlState.SelectedValue;
 		string zip = txtZipCode.Value;
 		string POCName = txtPOCFullname.Value;
-		string phoneNumber = txtPhonenumber.Value;
+		string phoneNumber = txtPhoneNumber.Value;
 		string zelloChannel = txtZelloChannel.Value;
 		string emailAddress = txtEmailAddress.Value;
 		string donationLink = txtDonationLink.Value;
