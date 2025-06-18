@@ -11,6 +11,7 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
     public string searchTerm = String.Empty;
     protected void Page_Load(object sender, EventArgs e)
     {
+        string register = Request.QueryString["register"];
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
         Guid prioritizedId = new Guid("79305f85-3816-46a8-911f-0d7e3e227c32");
@@ -37,10 +38,15 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
             //Show a alert to pick a team.
             divJoinTeamMessage.Visible = true;
         }
+        if(register !=null)
+        {
+            skipstep.Visible = true;
+        }
     }
 
     protected void rptTeams_ItemDataBound(object sender, RepeaterItemEventArgs e)
     {
+        string register = Request.QueryString["register"];
         string teamParam = Request.QueryString["team"];
         if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
         {
@@ -73,6 +79,9 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
             {
                 hypTeamName.NavigateUrl = "/V1/Profile/EditSkills.aspx?skill=false";
 
+            }
+            else if(register!=null){
+                hypTeamName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId.ToString() + "&register=true";
             }
             else
             {

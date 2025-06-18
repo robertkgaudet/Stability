@@ -35,6 +35,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
     public string DefaultCampaignId = string.Empty;
     protected void Page_Load(object sender, EventArgs e)
     {
+
         ucTeamFooter.PageName = "teamPage";
         ucTeamHeader.PageName = "Team Page";
 
@@ -562,6 +563,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
     }
     protected void jointheteam_Click(object sender, EventArgs e)
     {
+        string register = Request.QueryString["register"];
         if (!User.Identity.IsAuthenticated)
         {
 
@@ -574,7 +576,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
             string organizationId = Request.QueryString["organizationId"];
             urlFriendlyName = Request.QueryString["urlFriendlyName"];
 
-            if (!string.IsNullOrEmpty(organizationId) || urlFriendlyName!=null)
+            if (!string.IsNullOrEmpty(organizationId) || urlFriendlyName != null)
             {
                 Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
                 UserOrganizationHistory userHistory = null;
@@ -651,7 +653,14 @@ public partial class V1_NonProfit_Default : BaseWebForm
                 }
             }
         }
-        Response.Redirect(Request.RawUrl);
+        if (register != null)
+        {
+            Response.Redirect("/V1/Profile/EditSkills.aspx?register=true");
+        }
+        else
+        {
+            Response.Redirect(Request.RawUrl);
+        }
     }
 
     protected void AddNotificationsAndSendEmail(object sender, EventArgs e)
