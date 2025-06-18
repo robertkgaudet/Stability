@@ -40,7 +40,7 @@ public class GetGoogleAddressInfo : IHttpHandler, IReadOnlySessionState
             results = isPartialMatch + "|" + latitude + "|" + longitude + "|" + street_number + "|" + street + "|" + city + "|" + state + "|" + country + "|" + postal_code + "|" + county + "|" + googlePlaceId + "|" + formattedAddress + "|" + duplicate + "|" + addressId;
         }
         else
-        {
+        {   
             results = " Error retrieving Google Maps API information from " + address + " Error:" + message;
         }
         context.Response.ContentType = "text/plain";
@@ -118,7 +118,7 @@ public class GetGoogleAddressInfo : IHttpHandler, IReadOnlySessionState
             address_type = "postal_code";
             postal_code = locationInfo.results[0]
                                 .address_components
-                                .FirstOrDefault(o => o.types.Contains(address_type))
+                                .FirstOrDefault(o =>  o.types.Contains(address_type))
                                 .long_name;
 
             foreach (var location in locationInfo.results)

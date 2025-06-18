@@ -97,9 +97,14 @@
                 state = $("#<%=ddlState.ClientID%>").val();
                 zip = $("#<%=txtZipCode.ClientID%>").val();
 
-                if (address || city || state || zip || !lookupComplete) {
+                if ((address) || (city) || (state) || (zip) || (lookupComplete == false)) {
+                    var cleanAddress = $.trim(address);
+                    var cleanCity = $.trim(city);
+                    var cleanState = $.trim(state);
+                    var cleanZip = $.trim(zip);
                     $('#divAddressMessage').show();
-                    SetLatitudeLongitude(address + " " + city + ", " + state + " " + zip);
+                    SetLatitudeLongitude(cleanAddress + " " + cleanCity + ", " + cleanState + " " + cleanZip);
+
                 }
             }
 
@@ -119,7 +124,8 @@
                 var duplicate = results[12];
 
                 if ((isPartialMatch == 'False' || isPartialMatch == 'false') &&
-                    (duplicate == 'False' || duplicate == 'false')) {
+                    (duplicate == 'False' || duplicate == 'false') &&
+                    $('#<%= txtZipCode.ClientID %>').val().trim() == results[8]) {
 
                     var latitude = results[1];
                     var longitude = results[2];

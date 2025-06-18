@@ -117,8 +117,13 @@
             }
 
             if ((address) || (city) || (state) || (zip) || (lookupComplete == false)) {
+                var cleanAddress = $.trim(address);
+                var cleanCity = $.trim(city);
+                var cleanState = $.trim(state);
+                var cleanZip = $.trim(zip);
                 $('#divAddressMessage').show();
-                SetLatitudeLongitude(address + " " + city + ", " + state + " " + zip);
+                SetLatitudeLongitude(cleanAddress + " " + cleanCity + ", " + cleanState + " " + cleanZip);
+
             }
         }
 
@@ -129,6 +134,7 @@
         contentType: "text/plain; charset=utf-8",
         dataType: "html",
         success: function (data) {
+            debugger
             if (data != "") {
                 var results = data.split("|").map(function (item) {
                     return item.trim();
@@ -136,9 +142,9 @@
 
                 var isPartialMatch = results[0];
                 var duplicate = results[12];
-
                 if ((isPartialMatch == 'False' || isPartialMatch == 'false') &&
-                    (duplicate == 'False' || duplicate == 'false')) {
+                    (duplicate == 'False' || duplicate == 'false') &&
+                    $('#<%= txtZipCode.ClientID %>').val().trim() == results[8]) {
 
                     var latitude = results[1];
                     var longitude = results[2];
