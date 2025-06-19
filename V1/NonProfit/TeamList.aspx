@@ -20,8 +20,6 @@
                     <a href="/V1/Administration/TeamName.aspx?userActionModal=false" runat="server"
                         id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right">Create
                         A Team</a>
-                    <a href="/V1/Profile/EditSkills.aspx?register=true" runat="server"
-                        id="skipstep" visible="false" class="btn btn-info btn-large pull-right" style=" margin-right: 15px;">Skip for now</a>
                     <h4>
                         <asp:Literal ID="litPageName" runat="server"></asp:Literal>
                     </h4>

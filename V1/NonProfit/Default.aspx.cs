@@ -563,7 +563,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
     }
     protected void jointheteam_Click(object sender, EventArgs e)
     {
-        string register = Request.QueryString["register"];
         if (!User.Identity.IsAuthenticated)
         {
 
@@ -652,14 +651,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     AddNotificationsAndSendEmail(null, EventArgs.Empty);
                 }
             }
-        }
-        if (register != null)
-        {
-            Response.Redirect("/V1/Profile/EditSkills.aspx?register=true");
-        }
-        else
-        {
-            Response.Redirect(Request.RawUrl);
         }
     }
 
