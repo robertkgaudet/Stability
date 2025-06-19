@@ -1,5 +1,6 @@
 ﻿using CrowdRelief;
 using System;
+using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -186,17 +187,32 @@ public partial class V1_Member_Default : BaseWebForm
                                o.OrganizationId,
                                o.Name,
                                o.LogoSquare,
-                               uo.ShowTeamLogo  // Include the ShowTeamLogo field
+                               uo.ShowTeamLogo 
                            }).Take(1).SingleOrDefault();
-
-            if (orgUser != null)
+            var orgUserPrimary = (from o in dc.Organizations
+                           join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+                           where uo.UserId == new Guid(pageUserId) && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending) && uo.IsPrimary==true
+                           orderby o.CreatedOn descending
+                           select new
+                           {
+                               o.OrganizationId,
+                               o.Name,
+                               o.LogoSquare,
+                               uo.ShowTeamLogo 
+                           }).Take(1).SingleOrDefault();
+            if (orgUserPrimary != null)
             {
-                //ucMemberNavigation.OrganizationId = orgUser.OrganizationId.ToString();
-                ucMemberHeader.TeamId = orgUser.OrganizationId.ToString();
-                ucMemberHeader.TeamName = orgUser.Name;
-                ucMemberHeader.TeamLogo = orgUser.LogoSquare;
-                
+                ucMemberHeader.TeamId = orgUserPrimary.OrganizationId.ToString();
+                ucMemberHeader.TeamName = orgUserPrimary.Name;
+                ucMemberHeader.TeamLogo = orgUserPrimary.LogoSquare;
+
             }
+			else
+			{
+				ucMemberHeader.TeamId = orgUser.OrganizationId.ToString();
+				ucMemberHeader.TeamName = orgUser.Name;
+				ucMemberHeader.TeamLogo = orgUser.LogoSquare;
+			}
 
 
             //Count deployments
