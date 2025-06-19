@@ -152,7 +152,7 @@ public partial class V1_Login : System.Web.UI.Page
                     dc.SubmitChanges();
                     FormsAuthentication.SetAuthCookie(username, true);
                     SendSignInEmail(username, userId.ToString());
-                    Response.Redirect("/V1/Profile/EditSkills.aspx?register=true");
+                    Response.Redirect("/V1/ExternalLoginTeamSelector.aspx?register=true");
                 }
                 else
                 {

@@ -18,8 +18,8 @@
             <div class="hpanel">
                 <div class="panel-body">
                     <a href="/V1/Administration/TeamName.aspx?userActionModal=false" runat="server"
-                        id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right">Create A Team</a>
-
+                        id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right">Create
+                        A Team</a>
                     <h4>
                         <asp:Literal ID="litPageName" runat="server"></asp:Literal>
                     </h4>
@@ -67,74 +67,74 @@
         <div class="col-sm-4 col-lg-3"></div>
     </div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchValue = urlParams.get('searchTerm');
+    <script type="text/javascript">
+        $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchValue = urlParams.get('searchTerm');
 
-        function updateVisibleRowCount() {
-            const visibleCount = $("#tblTeams tbody tr:visible").length;
-            $("#rowCountWrapper").text(visibleCount + " Teams");
-        }
+            function updateVisibleRowCount() {
+                const visibleCount = $("#tblTeams tbody tr:visible").length;
+                $("#rowCountWrapper").text(visibleCount + " Teams");
+            }
 
-        function removeHighlights($element) {
-            $element.each(function () {
-                const originalText = $(this).text();
-                $(this).html(originalText); // reset to plain text
-            });
-        }
+            function removeHighlights($element) {
+                $element.each(function () {
+                    const originalText = $(this).text();
+                    $(this).html(originalText); // reset to plain text
+                });
+            }
 
-        function highlightElementText($element, keyword) {
-            if (!keyword) return;
-            const regex = new RegExp("(" + keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
+            function highlightElementText($element, keyword) {
+                if (!keyword) return;
+                const regex = new RegExp("(" + keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
 
-            $element.each(function () {
-                const html = $(this).text().replace(regex, "<span class='highlight'>$1</span>");
-                $(this).html(html);
-            });
-        }
+                $element.each(function () {
+                    const html = $(this).text().replace(regex, "<span class='highlight'>$1</span>");
+                    $(this).html(html);
+                });
+            }
 
-        function applyFilterAndHighlight(keyword) {
-            const lowerKeyword = keyword.toLowerCase();
+            function applyFilterAndHighlight(keyword) {
+                const lowerKeyword = keyword.toLowerCase();
 
-            $("#tblTeams tbody tr").each(function () {
-                const $row = $(this);
-                const $name = $row.find(".hypTeamName");
-                const $desc = $row.find(".lblDescription");
+                $("#tblTeams tbody tr").each(function () {
+                    const $row = $(this);
+                    const $name = $row.find(".hypTeamName");
+                    const $desc = $row.find(".lblDescription");
 
-                const nameText = $name.text().toLowerCase();
-                const descText = $desc.text().toLowerCase();
-                const combinedText = nameText + " " + descText;
+                    const nameText = $name.text().toLowerCase();
+                    const descText = $desc.text().toLowerCase();
+                    const combinedText = nameText + " " + descText;
 
-                // Remove old highlights
-                removeHighlights($name);
-                removeHighlights($desc);
+                    // Remove old highlights
+                    removeHighlights($name);
+                    removeHighlights($desc);
 
-                if (combinedText.includes(lowerKeyword)) {
-                    $row.show();
-                    highlightElementText($name, keyword);
-                    highlightElementText($desc, keyword);
-                } else {
-                    $row.hide();
-                }
+                    if (combinedText.includes(lowerKeyword)) {
+                        $row.show();
+                        highlightElementText($name, keyword);
+                        highlightElementText($desc, keyword);
+                    } else {
+                        $row.hide();
+                    }
+                });
+
+                updateVisibleRowCount();
+            }
+
+            if (searchValue) {
+                $("#filter").val(searchValue);
+                applyFilterAndHighlight(searchValue);
+            }
+
+            $("#filter").on("keyup", function () {
+                const keyword = $(this).val().trim();
+                applyFilterAndHighlight(keyword);
             });
 
             updateVisibleRowCount();
-        }
-
-        if (searchValue) {
-            $("#filter").val(searchValue);
-            applyFilterAndHighlight(searchValue);
-        }
-
-        $("#filter").on("keyup", function () {
-            const keyword = $(this).val().trim();
-            applyFilterAndHighlight(keyword);
         });
-
-        updateVisibleRowCount();
-    });
-</script>
+    </script>
 
     <script src="/Homer/vendor/fooTable/dist/footable.all.min.js"></script>
 </asp:Content>
