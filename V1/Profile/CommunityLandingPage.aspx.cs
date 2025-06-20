@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 public partial class V1_Profile_CommunityLandingPage : BaseWebForm
 {
+	public static string zip = "70503"; // Example ZIP code
 	protected async void Page_Load(object sender, EventArgs e)
 	{
 		if (!IsPostBack)
 		{
-			string zip = "70503"; // Example ZIP code
 			string city = "Lafayette"; // Example city name
 			string state = "Louisiana"; // Example city name
 			string stateCode = "LA";
@@ -52,16 +52,6 @@ public partial class V1_Profile_CommunityLandingPage : BaseWebForm
 						litWeatherAdvisoryLocation.Text = "Statewide Weather Advisories: " + userInfo.State;
 					}
 
-					//if (userInfo != null)
-					//{
-					//	city = userInfo.City;
-					//	stateCode = userInfo.StateCode;
-					//	state = userInfo.State;
-					//	zip = userInfo.Zip;
-					//	latitude = Double.Parse(userInfo.Latitude);
-					//	longitude = Double.Parse(userInfo.Longitude);
-					//	litWeatherAdvisoryLocation.Text = "Statewide Weather Advisories: " + userInfo.State;
-					//}
 
 					var userGroups = (from g in dc.UserOrganizations
 									  join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
@@ -102,7 +92,7 @@ public partial class V1_Profile_CommunityLandingPage : BaseWebForm
 				}
 			}
 			await LoadCommunitySnapshotAsync(zip, city, state);
-//			Response.Write(state  + " - " + zip + " - " + city);
+
 			var disasterAggregatorService = new DisasterAggregatorService();
 			var events = disasterAggregatorService.GetLatestDisasters(stateCode.ToUpper());
 
@@ -213,7 +203,6 @@ public partial class V1_Profile_CommunityLandingPage : BaseWebForm
 			string narrative = await CivicNarrator.GenerateWeatherAndDemographicsNarrativeAsync(weatherForNarrator, demographicsForNarrator, forecastForNarrator, demonym);
 			txtNarrative.Text = narrative;
 
-
 			string timeWord = GetTimeOfDayLabel(DateTime.Now);
 			string briefWord = GetRandomBriefWord();
 
@@ -223,7 +212,11 @@ public partial class V1_Profile_CommunityLandingPage : BaseWebForm
 			lblElderlyCount.Text = demographics.ElderlyCount.ToString("N0");
 			lblTotalPop.Text = demographics.TotalPopulation.ToString("N0");
 			lblElderlyPct.Text = demographics.ElderlyPercentage.ToString("0.0") + "%";
+			litPercentOfElderly.Text = demographics.ElderlyCount.ToString("N0");
+			litTotalCitizens.Text = demographics.TotalPopulation.ToString("N0") + " Total Population";
 			lblZip.Text = "For Zip " + zip;
+			string elderlyRatioText = GetElderlyRatioText(demographics.ElderlyCount, demographics.TotalPopulation);
+			litElderlyRatio.Text = "Elderly Ratio: " + elderlyRatioText;
 		}
 		catch (Exception ex)
 		{
@@ -231,6 +224,16 @@ public partial class V1_Profile_CommunityLandingPage : BaseWebForm
 		}
 
 		await Task.CompletedTask;
+	}
+	public static string GetElderlyRatioText(int elderlyCount, int totalPopulation)
+	{
+		if (elderlyCount <= 0 || totalPopulation <= 0 || elderlyCount > totalPopulation)
+			return "N/A";
+
+		double ratio = (double)totalPopulation / elderlyCount;
+		int roundedRatio = (int)Math.Round(ratio);
+
+		return "1 in " + roundedRatio.ToString();
 	}
 
 	private string GetRandomBriefWord()

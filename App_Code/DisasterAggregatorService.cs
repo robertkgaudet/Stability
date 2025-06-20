@@ -30,32 +30,6 @@ public class DisasterAggregatorService
 		try { events.AddRange(GetNwsAlerts(stateCode)); } 
 		catch { }
 
-
-		//// Optional: include global alerts
-		//try
-		//{
-		//	var gdacs = GetGdacsEvents();
-		//	foreach (var e in gdacs)
-		//	{
-		//		e.Location += " (Global)";
-		//		events.Add(e);
-		//	}
-		//}
-		//catch { }
-
-
-		//// Optional: include NASA EONET global events
-		//try
-		//{
-		//	var eonet = GetNasaEonetEvents();
-		//	foreach (var e in eonet)
-		//	{
-		//		e.Location += " (Satellite-tracked)";
-		//		events.Add(e);
-		//	}
-		//}
-		//catch { }
-
 		return events;
 	}
 

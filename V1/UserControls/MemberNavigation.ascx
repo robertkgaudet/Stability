@@ -31,6 +31,32 @@
 		<div id="currentBrief" runat="server" class="alert alert-success text-center currentBrief m-t-n-md" visible="true">
 			<h5 class="v1"><i class="fa fa-newspaper-o pe-2x"></i> <b>Current Brief</b></h5>
 		</div>
+
+        <!-- TAKE ACTION Section -->
+        <h5>TAKE ACTION</h5>
+        <ul class="mailbox-list">
+            <li>
+                <asp:HyperLink ID="hypPositions" runat="server" NavigateUrl="/V1/Member/Positions.aspx">
+                    <i class="fa fa-calendar"></i> My Volunteer Schedule
+                </asp:HyperLink>
+            </li>
+            <li>
+                <asp:HyperLink ID="hypDeployments" CssClass="font-weight-bold" runat="server">
+                    <i class="fa fa-life-ring"></i> Volunteer Opportunities
+                </asp:HyperLink>
+            </li>
+            <li>
+                <asp:HyperLink ID="hypDeployment" runat="server" NavigateUrl="/V1/Deployments.aspx">
+                    <i class="fa fa-street-view"></i> Disaster Responses
+                </asp:HyperLink>
+            </li>
+            <li>
+                <asp:HyperLink ID="hypConnections" CssClass="font-weight-bold" runat="server" NavigateUrl="/V1/Member/PeopleSearch.aspx">
+               <i class="fa fa-search"></i> Find Connections
+                </asp:HyperLink>
+            </li>
+        </ul>
+        <hr runat="server" id="hr1"></hr>
         <h5>MY ACCOUNT</h5>
         <ul class="mailbox-list">
             <li>
@@ -60,43 +86,12 @@
             </li>
             <li>
                 <asp:HyperLink ID="hypResources" runat="server" NavigateUrl="/V1/Profile/EditResources.aspx">
-        <i class="fa fa-truck"></i> Equipment
+				<i class="fa fa-truck"></i> Equipment
                 </asp:HyperLink>
             </li>
             <li>
                 <asp:HyperLink ID="hypIDCard" runat="server" NavigateUrl="/IDCard">
                     <i class="fa fa-id-card"></i> ID Card
-                </asp:HyperLink>
-            </li>
-        </ul>
-        <hr runat="server" id="hr1"></hr>
-
-        <!-- TAKE ACTION Section -->
-        <h5>TAKE ACTION</h5>
-        <ul class="mailbox-list">
-            <li>
-                <asp:HyperLink ID="hypDeployments" CssClass="font-weight-bold" runat="server">
-                    <i class="fa fa-life-ring"></i> Volunteer Opportunities
-                </asp:HyperLink>
-            </li>
-            <li>
-                <asp:HyperLink ID="hypConnections" CssClass="font-weight-bold" runat="server" NavigateUrl="/V1/Member/PeopleSearch.aspx">
-               <i class="fa fa-search"></i> Find Connections
-                </asp:HyperLink>
-            </li>
-            <li>
-                <asp:HyperLink ID="hypPositions" runat="server" NavigateUrl="/V1/Member/Positions.aspx">
-                    <i class="fa fa-calendar"></i> My Volunteer Schedule
-                </asp:HyperLink>
-            </li>
-            <li>
-                <asp:HyperLink ID="hypDeployment" runat="server" NavigateUrl="/V1/Deployments.aspx">
-                    <i class="fa fa-street-view"></i> Deployments
-                </asp:HyperLink>
-            </li>
-            <li>
-                <asp:HyperLink ID="hypPortals" runat="server" NavigateUrl="/V1/Profile/EditDisasters.aspx">
-                    <i class="fa fa-globe"></i> Portals
                 </asp:HyperLink>
             </li>
         </ul>

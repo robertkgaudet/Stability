@@ -255,6 +255,18 @@
 						</ItemTemplate>
 					</asp:Repeater>
 				</div>
+				<div class="alert alert-success" style="margin:30px -22px 20px -22px;">
+					👵👴 Number of Elderly in Your Zip Code (<%=zip%>)
+				
+					<h1>
+						<asp:Label ID="litPercentOfElderly" CssClass="weather-temp" runat="server"></asp:Label>
+					</h1>
+					<small>
+					<i><asp:Literal ID="litTotalCitizens" runat="server"></asp:Literal></i>
+					<br />
+					<asp:Literal ID="litElderlyRatio" runat="server"></asp:Literal>
+					</small>
+				</div>
 			</div>
 
 			<div class="card">
@@ -338,7 +350,7 @@
 
 
 			<div class="card demographics-card">
-				<H5>Local Senior Snapshot: <asp:Literal ID="lblZip" runat="server"></asp:Literal> </H5>
+				<H1>Local Senior Snapshot: <asp:Literal ID="lblZip" runat="server"></asp:Literal> </H1>
 				<div class="label-title-demographics">Residents 60+</div>
 				<asp:Label ID="lblElderlyCount" CssClass="label-value-demographics" runat="server" />
 

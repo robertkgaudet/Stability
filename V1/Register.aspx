@@ -17,8 +17,6 @@
             $("#<%=btnSubmit.ClientID%>").attr("disabled", true);
 			<%=preselectedNonProfitJQuery%>
 
-			$("#<%=txtPhoneNumber.ClientID %>").mask("(000) 000-0000");
-
             $("#nonProfit.dropdown-menu li").click(function () {
                 $("#btn-NonProfitDropdown.nonProfit").html($(this).text());
                 $("#<%=hidOrganizationId.ClientID%>").val($(this).attr('id'));
@@ -60,6 +58,8 @@
 			$("#txtCityState").on("select2-removed", function () {
 				$("#<%= btnSubmit.ClientID %>").prop("disabled", true);
 			});
+
+			$("#<%=txtPhoneNumber.ClientID %>").mask("(000) 000-0000");
         });
 
         function CheckDuplicate(controlName, sender) {

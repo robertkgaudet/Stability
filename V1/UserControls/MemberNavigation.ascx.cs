@@ -13,9 +13,6 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
         hypDeployment.Attributes["data-toggle"] = "tooltip";
         hypDeployment.Attributes["title"] = "Choose a team deployment to join";
 
-        hypPortals.Attributes["data-toggle"] = "tooltip";
-        hypPortals.Attributes["title"] = "Select a community portal";
-
         hypTimeSheet.Attributes["data-toggle"] = "tooltip";
         hypTimeSheet.Attributes["title"] = "View my time sheet";
         hypMyProfile.Attributes["data-toggle"] = "tooltip";
@@ -23,7 +20,6 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
 
         hypMyTeam.Attributes["data-toggle"] = "tooltip";
         hypMyTeam.Attributes["title"] = "Go to your team's page";
-
 
         hypMyConnections.Attributes["data-toggle"] = "tooltip";
         hypMyConnections.Attributes["title"] = "Go to My Connections";
@@ -53,11 +49,10 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
 		hypSignOut.Attributes["data-toggle"] = "tooltip";
 		hypSignOut.Attributes["title"] = "Click here to sign out of your account";
 
-		hypMyTeam.Visible = false;
-		hypDeployments.Visible = false;
-		hypMyProfile.Visible = false;
-		hypPositions.Visible = false;
-		divMemberNavigation.Visible = false;
+		//hypMyTeam.Visible = false;
+		hypDeployments.Visible = true;
+		//hypMyProfile.Visible = false;
+		//divMemberNavigation.Visible = false;
 		if (!String.IsNullOrEmpty(_userId))
 		{
             string path = Request.Url.AbsolutePath.ToLower();
@@ -71,7 +66,6 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
 			if (orgUser != null)
 			{
 				//Is in a team or not.
-				hypPositions.Visible = true;
 				hypDeployments.Visible = true;
 				hypDeployments.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + orgUser.OrganizationId.ToString();
 

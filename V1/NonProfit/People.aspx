@@ -449,29 +449,29 @@
 
                         $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
                         $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
-                        $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
-                        $('#<%= chkManageShowDonateButton.ClientID %>').prop('checked', response.showTeamLogo);
+                        $('#<%= cbStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
+						$('#<%= cbTeamVerified.ClientID %>').prop('checked', response.showTeamLogo); /*Should say showTeamVerified*/
                         $('#<%= chkManageTeamAdministrator.ClientID %>').prop('checked', response.makeTeamAdministrator);
-                        $('#<%= btnremoveteam.ClientID %>').show();
+                        $('#<%= btnRemoveTeamMember.ClientID %>').show();
                         $('#<%= btnteamOwner.ClientID %>').show();
-                        $('#<%= btnremoveteam.ClientID %>')
+                        $('#<%= btnRemoveTeamMember.ClientID %>')
                             .removeClass().addClass("btn btn-danger").removeAttr("style").removeAttr("disabled title data-toggle");
 
                         if (response.isTeamowner === true) {
-                            $('#<%= btnremoveteam.ClientID %>').hide();
+                            $('#<%= btnRemoveTeamMember.ClientID %>').hide();
                             $('#<%= btnteamOwner.ClientID %>').hide();
                         }
                         if (response.isShow === true) {
-                            $('#<%= btnremoveteam.ClientID %>').hide();
+                            $('#<%= btnRemoveTeamMember.ClientID %>').hide();
                             $('#<%= btnteamOwner.ClientID %>').hide();
                         }
                         if (response.iteamadmin === true) {
-                            $('#<%= btnremoveteam.ClientID %>').hide();
+                            $('#<%= btnRemoveTeamMember.ClientID %>').hide();
                             $('#<%= btnteamOwner.ClientID %>').hide();
                         }
                         if (response.isteamadminowner === true) {
                             if (response.isteamadminowner === true) {
-                                $('#<%= btnremoveteam.ClientID %>').hide();
+                                $('#<%= btnRemoveTeamMember.ClientID %>').hide();
                                 $('#<%= btnteamOwner.ClientID %>').hide();
                             }
                         }
@@ -482,8 +482,8 @@
                         }
                         if (response.isUserhead === true) {
                             $('#<%= btnteamOwner.ClientID %>').hide();
-                            $('#<%= btnremoveteam.ClientID %>').show();
-                            $('#<%= btnremoveteam.ClientID %>')
+                            $('#<%= btnRemoveTeamMember.ClientID %>').show();
+                            $('#<%= btnRemoveTeamMember.ClientID %>')
                                 .removeClass()
                                 .addClass('btn btn-secondary disabled')
                                 .attr({
@@ -494,7 +494,7 @@
                                 .css('border', '2px solid black');
                         }
                     <%--    if (response.isShow === true || response.isTeamowner === true) {
-                            $('#<%= btnremoveteam.ClientID %>').hide();
+                            $('#<%= btnRemoveTeamMember.ClientID %>').hide();
                             $('#<%= btnteamOwner.ClientID %>').hide();
                         }
                         if (response.teamadmin === true)
@@ -503,7 +503,7 @@
                         }
                         if (response.isUserInThatRole === true) {
                             $('#<%= btnteamOwner.ClientID %>').hide();
-                            $('#<%= btnremoveteam.ClientID %>')
+                            $('#<%= btnRemoveTeamMember.ClientID %>')
                                 .removeClass()
                                 .addClass('btn btn-secondary disabled')
                                 .attr({
@@ -595,18 +595,18 @@
             }
             var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
             var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
-            var showTeamLogo = false;
-            var showTeamLogoVisible = document.getElementById('<%= hiddenShowTeamLogo.ClientID %>').value === "1";
-            if (showTeamLogoVisible) {
-                showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
+            var showTeamVerified = false;
+            var showTeamVerifiedVisible = document.getElementById('<%= hiddenShowTeamVerified.ClientID %>').value === "1";
+            if (showTeamVerifiedVisible) {
+                showTeamVerified = document.getElementById('<%= cbTeamVerified.ClientID %>').checked;
             } else {
-                showTeamLogo = false;
+                showTeamVerified = false;
             }
             var stabilityVerified = false;
             var makeTeamAdministrator = false;
             var isAdmin = document.getElementById('<%= hiddenAdminRole.ClientID %>').value === "1";
             //if (isAdmin) {
-            stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
+            stabilityVerified = document.getElementById('<%= cbStabilityVerified.ClientID %>').checked;
             makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
             //}
 
@@ -620,7 +620,7 @@
             var $stabilityLink = $panel.find("a[id*='hypStabilityLogo']");
             var $teamLogoImg = $panel.find("img[id*='imgTeamLogo']");
             var $teamLogoLink = $panel.find("a[id*='hypTeamLogo']");
-            if (showTeamLogo) {
+            if (showTeamVerified) {
                 $teamLogoImg.show();
                 $teamLogoLink.show();
             }
@@ -637,16 +637,16 @@
                 $stabilityLink.hide();
             }
 
-            updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
+            updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamVerified, makeTeamAdministrator);
         }
-        function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator) {
+        function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamVerified, makeTeamAdministrator) {
             var data = {
                 action: "update",
                 userId: userId,
                 vettingStatus: vettingStatus,
                 vettingNotes: vettingNotes,
                 stabilityVerified: stabilityVerified,
-                showTeamLogo: showTeamLogo,
+				showTeamLogo: showTeamVerified,
                 makeTeamAdministrator: makeTeamAdministrator,
                 organizationId: '<%= Request.QueryString["organizationId"] %>'
 
@@ -731,7 +731,7 @@
                     }
                 );
         }
-    </script>
+	</script>
     <script type="text/javascript">
         var currentPagination = '';
         var scroll = false;
@@ -1212,11 +1212,10 @@
     </div>
 
     <div class="panel-heading">
-        <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members"
-            CssClass="btn btn-sm btn-info"></asp:HyperLink>
-        <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank"
-            Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
+        <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
+        <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank" Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
     </div>
+
     <asp:ScriptManager runat="server" ID="ScriptManager1" />
     <div class="panel-body" style="margin-bottom: -27px; padding: 0px;">
         <div class="col-lg-12">
@@ -1231,12 +1230,10 @@
                     <h4 style="margin-left: 18px;">Search</h4>
                     <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-                            <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center"
-                                style="margin-bottom: 20px;" visible="false">
+                            <div id="divTeamListMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
                                 <asp:Literal ID="litMessage" runat="server"></asp:Literal>
                             </div>
-                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;"
-                                visible="false">
+                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;" visible="false">
                                 <asp:Literal ID="litFilterMessage" runat="server"></asp:Literal>
                             </div>
                         </ContentTemplate>
@@ -1245,7 +1242,7 @@
                         </Triggers>
                     </asp:UpdatePanel>
 
-                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers"
+                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelSearchMembers"
                         visible="false">
                         <%--<div class="hpanel" runat="server" id="hpanelJoin" visible="true">
                             <a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
@@ -1359,8 +1356,7 @@
 
                                 <div class="row mt-4" style="margin-right: 6px; margin-bottom: 8px;">
                                     <div class="col-md-12 text-right ">
-                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2"
-                                            Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
+                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
                                         <button type="button" class="btn btn-danger btn-sm" onclick="resetSearch()">Clear</button>
                                     </div>
                                 </div>
@@ -1493,16 +1489,14 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnSend" onclick="return sendClick(this);">
-                        Send</button>
+                    <button type="button" class="btn btn-primary" id="btnSend" onclick="return sendClick(this);">Send</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
     <asp:HiddenField ID="hiddenAdminRole" runat="server" />
-    <asp:HiddenField ID="hiddenShowTeamLogo" runat="server" />
+    <asp:HiddenField ID="hiddenShowTeamVerified" runat="server" />
 
     <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
@@ -1524,15 +1518,15 @@
                 <div class="modal-body">
                     <asp:PlaceHolder ID="phAdminControls" runat="server" Visible="false">
                         <div class="form-group form-check">
-                            <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
-                            <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
+                            <asp:CheckBox ID="cbTeamVerified" runat="server" class="form-check-input" />
+                            <label class="form-check-label" runat="server" id="lblTeamVerified" for="<%= chkTeamVerified.ClientID %>">
                                 Team Verified
                             </label>
                         </div>
                         <div id="divShowTeamVerifiedFeatures" runat="server">
                             <div class="form-group form-check">
-                                <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
-                                <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
+                                <asp:CheckBox ID="cbStabilityVerified" runat="server" class="form-check-input" />
+                                <label class="form-check-label" for="<%= cbStabilityVerified.ClientID %>">
                                     Stability Verified
                                 </label>
                             </div>
@@ -1567,7 +1561,7 @@
 							<button type="button" class="btn btn-success" runat="server" id="btnteamOwner" visible="false" onclick="btnMakeTeamOwner();">
 								Make Team Owner
 							</button>
-							<button type="button" class="btn btn-danger" runat="server" id="btnremoveteam" visible="false" onclick="btnMakeTeamRemove();">
+							<button type="button" class="btn btn-danger" runat="server" id="btnRemoveTeamMember" visible="false" onclick="btnMakeTeamRemove();">
 								Remove Team Member
 							</button>
 						</div>
