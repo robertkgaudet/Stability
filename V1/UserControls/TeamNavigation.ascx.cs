@@ -71,15 +71,18 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 
 		hypSupport.Attributes["data-toggle"] = "tooltip";
 		hypSupport.Attributes["title"] = "Having problems? Request help here.";
-		
+
+		hypTeamWebsite.Attributes["data-toggle"] = "tooltip";
+		hypTeamWebsite.Attributes["title"] = "Visit the team website.";
+
 
 		//organizationId = Request.QueryString["organizationId"];
 		hypStream.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + organizationId;
-        hypTeamRoles.NavigateUrl = "/V1/NonProfit/TeamRoles.aspx?organizationId=" + organizationId;
+		hypTeamWebsite.NavigateUrl = "/Impactoid/CommunityPage.aspx?organizationId=" + organizationId;
+		hypTeamRoles.NavigateUrl = "/V1/NonProfit/TeamRoles.aspx?organizationId=" + organizationId;
         hypPrograms.NavigateUrl = "/V1/NonProfit/Programs.aspx?organizationId=" + organizationId;
         hypDeployments.NavigateUrl = "/V1/NonProfit/Deployments.aspx?organizationId=" + organizationId;
         hypTeamName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
-        hypActivity.NavigateUrl = "/V1/NonProfit/ActivityDashboard.aspx?organizationId=" + organizationId;
         hypTeamCalendar.NavigateUrl = "/V1/NonProfit/TeamAvailabilityCalendar.aspx?organizationId=" + organizationId;
         hypPeople.NavigateUrl = "/V1/NonProfit/People.aspx?organizationId=" + organizationId;
         hypSupport.NavigateUrl = "/V1/NonProfit/Support.aspx?organizationId=" + organizationId;
@@ -94,7 +97,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
             case "teamRolesPage":
                 _teamRolesActive = "class=\"active\"";
                 break;
-            case "streamPage":
+			case "streamPage":
                 _streamActive = "class=\"active\"";
                 break;
             case "deploymentTeamPage":
@@ -149,6 +152,9 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
         var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId)
                             select o).SingleOrDefault();
+
+
+		hypActivity.NavigateUrl = "/Team/" + organization.URLFriendlyName;
 
 		//Set the teams donation link.
 		if (!String.IsNullOrEmpty(organization.DonationURL))
@@ -271,7 +277,6 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
                 if (HttpContext.Current.User.IsInRole("Administrator") || isOwner || HttpContext.Current.User.IsInRole("Team Administrator"))
                 {                
                     ulAdmin.Visible = true;
-                    hrAdmin.Visible = true;
                     divDeployment.Visible = true;
                 }
             }

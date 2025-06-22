@@ -37,6 +37,11 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <style>
+		.panel-footer
+		{
+			background-color:#f9f5ff !important;
+		}
+
         #messageModelTitle {
             width: 94%;
             margin-left: 19px;
@@ -1418,10 +1423,9 @@
                                                 <asp:Literal ID="litSkills" runat="server"></asp:Literal>
                                                 <asp:Literal ID="litResources" runat="server"></asp:Literal>
                                             </div>
-                                            <div class="panel-footer d-flex justify-content-between align-items-center" id="divFooter"
-                                                runat="server" visible="false">
+                                            <div class="panel-footer d-flex justify-content-between align-items-center" id="divFooter" runat="server" visible="false">
                                                 <div class="pull-right">
-                                                    <asp:Button ID="btnManage" runat="server" Text="Manage" CssClass="btn btn-primary manageButton float-end"
+                                                    <asp:Button ID="btnManage" runat="server" Text="Edit User Verification Status" CssClass="btn btn-primary manageButton float-end"
                                                         data-toggle="modal" data-target="#manageMemberModal"
                                                         data-userid='<%# Eval("UserID") %>'
                                                         OnClientClick="setUserId(this); fetchUserData(); return false;"></asp:Button>
@@ -1429,6 +1433,7 @@
 
                                                 <div class="text-muted small" style="width: 100%;">
                                                     <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
+													<i class="fa fa-lock pull-right" style="color:#5E2E91;"> </i><span style="color:#5E2E91;" class="pull-right">Team Administrators Only</span>
                                                 </div>
                                             </div>
                                         </div>

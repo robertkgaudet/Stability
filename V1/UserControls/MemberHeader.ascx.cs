@@ -37,9 +37,9 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		//string causePhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		string profilePhotoFolder		= System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
 		string coverPhotoFolder			= System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
-        string teamLogo = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
-        _coverImage = coverPhotoFolder + "Stability_Cover_V3.jpg";
-		//litMemberName.Text = _memberFullname;
+        string teamLogo					= System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
+
+        _coverImage						= coverPhotoFolder + "Stability_Cover_V3.jpg";
 		imgMemberProfilePhoto.ImageUrl	= profilePhotoFolder + _memberProfileImageFilename;
 		litMemberDescription.Text		= _memberDescription;
 		litTitle.Text					= !String.IsNullOrEmpty(_memberTitle) ? _memberTitle + "<br />" : string.Empty;
@@ -48,6 +48,7 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 		hypConnections.Text				= _connectionCount.ToString();
 		hypConnections.NavigateUrl		= "/V1/Member/Connections.aspx?userId=" + UserId;
         linkCamera.NavigateUrl= "/V1/Profile/ProfilePhotoUpload.aspx?userId=" + UserId;
+
         if (_badgeVettingStatus == "fa-approved-color")
 		{
 			faIdBadgeClick = "faIdBadgeClick";
@@ -61,20 +62,68 @@ public partial class V1_UserControls_MemberHeader : System.Web.UI.UserControl
 				ucTeamLogo.LoadNameWithBadges();
 			}
 		}
-        if (!String.IsNullOrEmpty(_teamId))
+
+		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+
+		//IF the user is a team owner, choose it first, other wise choose their primary team
+
+		var userId = new Guid(_userId);
+
+		var orgUser = (from o in dc.Organizations
+							   join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId into orgUsers
+							   from uo in orgUsers.Where(x => x.UserId == userId).DefaultIfEmpty()
+							   where o.OwnerId == userId || (uo != null && uo.UserId == userId)
+							   let isOwner = o.OwnerId == userId
+							   let isPrimary = (uo != null && (uo.IsPrimary ?? false))
+							   let showLogo = (uo != null && (uo.ShowTeamLogo ?? false))
+							   let priority = isOwner ? 0 : (isPrimary ? 1 : 2)
+							   select new
+							   {
+								   o.OrganizationId,
+								   o.URLFriendlyName,
+								   o.Name,
+								   o.LogoSquare,
+								   ShowTeamLogo = showLogo ? 1 : 0,
+								   Priority = priority,
+								   Created = o.CreatedOn
+							   })
+							   .OrderBy(x => x.Priority)
+							   .ThenBy(x => x.Created)
+							   .Take(1)
+							   .SingleOrDefault();
+
+		if (orgUser != null)
 		{
-			litTeamBreak.Text =         "<br />";
+			hypTeam.Text = orgUser.Name;
+			if (!String.IsNullOrEmpty(orgUser.URLFriendlyName))
+			{
+				hypTeam.NavigateUrl			= "/Team/" + orgUser.URLFriendlyName;
+				hypMyTeam.NavigateUrl		= "/Team/" + orgUser.URLFriendlyName;
+			}
+			else
+			{
+				hypTeam.NavigateUrl			= "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId;
+				hypMyTeam.NavigateUrl		= "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId;
+			}
+
+			litTeamBreak.Text = "<br />";
 			hypTeam.Visible				= true;
-			hypTeam.Text				= _teamName;
-			hypTeam.NavigateUrl			= "/V1/NonProfit/Default.aspx?organizationId=" + _teamId;
-			hypMyTeam.NavigateUrl		= "/V1/NonProfit/Default.aspx?organizationId=" + _teamId;
+		}
+		else
+		{
+			hypTeam.Text = "Join a Team";
+			hypTeam.NavigateUrl = "/V1/NonProfit/TeamList.aspx";
+
+			hypMyTeam.Text = "Join a Team";
+			hypMyTeam.NavigateUrl = "/V1/NonProfit/TeamList.aspx";
 		}
 
 		if (HttpContext.Current.User.Identity.IsAuthenticated)
 		{
 			UpdateAddConnectionButton(_friendStatus, IsSignedInUser);
 
-			if(IsSignedInUser)
+			if (IsSignedInUser)
 			{
 				linkCamera.Visible = true;
 				hypProfileEdit.Visible = true;

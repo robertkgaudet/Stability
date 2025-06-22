@@ -114,19 +114,19 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 }
             }
 
-            Master.PageTitle = organization.Name + " Team Members on Stability";
-            Master.PageDescription = organization.Description;
-            Master.FbDescription = organization.Description;
-            Master.FbImage = _coverImage;
-            Master.FbSite_name = organization.Name + " Team Members on Stability";
-            ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
-
-			ucTeamFooter.TeamName			= organization.Name;
-			ucTeamFooter.OrganizationId		= organizationId;
-			ucTeamHeader.OrganizationId		= organizationId;
-			ucTeamHeader.TeamLogo			= squareLogo;
+            Master.PageTitle				= organization.Name + " Team Members on Stability";
+            Master.PageDescription			= organization.Description;
+            Master.FbDescription			= organization.Description;
+            Master.FbImage					= _coverImage;
+            Master.FbSite_name				= organization.Name + " Team Members on Stability";
 			Master.FbImageType				= "image/jpg";
 			Master.FbURL					= Request.Url.AbsoluteUri;
+
+            ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
+			ucTeamHeader.OrganizationId		= organizationId;
+			ucTeamHeader.TeamLogo			= squareLogo;
+			ucTeamFooter.TeamName			= organization.Name;
+			ucTeamFooter.OrganizationId		= organizationId;
 			teamName						= organization.Name;
 
 			//ucTeamHeader.Logo = logo;
@@ -939,9 +939,28 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 dc.CommandTimeout = 300;
                 //var result = dc.ExecuteQuery<PeopleList>(
                 //   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified,
+				
 
-                var result = dc.ExecuteQuery<PeopleList>(
-                   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14},{15},{16},{17}", organizationId, startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), selectedSkillsParam, selectedResourcesParam, nameSearchTermParam, selectedTraining, eventLatitude, eventLongitude, selectedRadius, emailConnected, isVetted, optedSMS, teamVerified, stabilityVerified, teamAdministrator, currentPageValue.Value, pageSize).ToList();
+				var result = dc.ExecuteQuery<PeopleList>(
+                   "EXEC GetPeopleList {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14},{15},{16},{17}", 
+				   organizationId, 
+				   startDate == null ? "" : startDate.Value.ToString("yyyy-MM-dd"), 
+				   endDate == null ? "" : endDate.Value.ToString("yyyy-MM-dd"), 
+				   selectedSkillsParam, 
+				   selectedResourcesParam, 
+				   nameSearchTermParam, 
+				   selectedTraining, 
+				   eventLatitude, 
+				   eventLongitude, 
+				   selectedRadius, 
+				   emailConnected, 
+				   isVetted, 
+				   optedSMS, 
+				   teamVerified, 
+				   stabilityVerified, 
+				   teamAdministrator, 
+				   currentPageValue.Value, 
+				   pageSize).Distinct().ToList();
 
                 var totalCount = result.Any() ? result.First().TotalCount : 0;
 
@@ -949,10 +968,10 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 divFilterMessage.Visible = selectedSkills.Any() || selectedResources.Any() || emailConnected || isVetted || optedSMS || teamVerified || stabilityVerified || teamAdministrator;
                 litFilterMessage.Text = divFilterMessage.Visible ? "<i class='fa fa-2x fa-filter'></i><hr>Filtered by selected options." : "";
 
-                if (isTeamMember && !User.IsInRole("Administrator") && !isTeamOwner)
-                {
-                    result = result.Where(x => x.IsApproved == true && x.PassedVetting == true).ToList();
-                }
+                //if (isTeamMember && !User.IsInRole("Administrator") && !isTeamOwner)
+                //{
+                //    result = result.Where(x => x.IsApproved == true).ToList();
+                //}
 
                 // Bind Data.
                 //var pNumber = Convert.ToInt32(currentPageValue.Value);

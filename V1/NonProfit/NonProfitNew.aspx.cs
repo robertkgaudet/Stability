@@ -292,7 +292,7 @@ public partial class V1_Administration_NonProfitNew : BaseOrganizationWebForm
 			userOrganization.IsTeamAdministrator = false;
 			userOrganization.IsPreviousOwner = false;
 			userOrganization.TeamVerifiedDate = DateTime.Now;
-            userOrganization.Status = (int)RequestStatus.Pending;
+            userOrganization.Status = (int)RequestStatus.Approved;
             userOrganization.UserId = userId;
 
 			//FALSE FOR NOW,

@@ -53,7 +53,8 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
             RepeaterItem dataItem = (RepeaterItem)e.Item;
             //Total count of items and total cost.
             string teamName = (string)DataBinder.Eval(dataItem.DataItem, "Name");
-            string description = (string)DataBinder.Eval(dataItem.DataItem, "Description");
+			string URLFriendlyName = (string)DataBinder.Eval(dataItem.DataItem, "URLFriendlyName");
+			string description = (string)DataBinder.Eval(dataItem.DataItem, "Description");
             string logoSquare = (string)DataBinder.Eval(dataItem.DataItem, "LogoSquare");
             Guid organizationId = (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
 
@@ -76,7 +77,7 @@ public partial class V1_NonProfit_TeamList : BaseWebForm
             }
             else
             {
-                hypTeamName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId.ToString();
+                hypTeamName.NavigateUrl = "/Team/" + URLFriendlyName;
             }
         }
     }

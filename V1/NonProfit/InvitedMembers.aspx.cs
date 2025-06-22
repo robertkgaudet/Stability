@@ -21,33 +21,26 @@ public partial class V1_NonProfit_InvitedMembers : BaseOrganizationWebForm
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!IsPostBack)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-            }
-        }
-        else
-        {
-         }
-        LoadInvitedMemberList();
+		string organizationId = Request.QueryString["organizationId"];
+        LoadInvitedMemberList(organizationId);
     }
 
-    private void LoadInvitedMemberList()
+    private void LoadInvitedMemberList(string organizationId)
     {
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
-            var invitedMembers = (from i in dc.UserOrganizationInvites
-                                  where   i.InvitationCancelled==false
-                                  orderby i.CreatedOn descending
+            var invitedMembers = (from uoi in dc.UserOrganizationInvites
+                                  where uoi.InvitationCancelled==false
+								  && uoi.OrganizationId == new Guid(organizationId)
+								  orderby uoi.CreatedOn descending
                                   select new
                                   {
-                                      i.EmailAddress,
-                                      i.CreatedOn,
-                                      i.UserOrganizationInviteId,
-                                      i.InvitationCancelled,
-                                      i.HasAccepted,
-                                      Status = i.HasAccepted == true ? "Member" : "Not a Member"
+									  uoi.EmailAddress,
+									  uoi.CreatedOn,
+									  uoi.UserOrganizationInviteId,
+									  uoi.InvitationCancelled,
+									  uoi.HasAccepted,
+                                      Status = uoi.HasAccepted == true ? "Member" : "Not a Member"
                                   });
             rptInvitedMembers.DataSource = invitedMembers;
             rptInvitedMembers.DataBind();
@@ -81,7 +74,7 @@ public partial class V1_NonProfit_InvitedMembers : BaseOrganizationWebForm
             {
                 var organizationInfo = (from p in dc.Profiles
                                         join o in dc.UserOrganizations on p.UserId equals o.UserId
-                                        where o.OrganizationId == inviteMember.OrganizationId && o.Status== (int)RequestStatus.Approved
+                                        where o.OrganizationId == inviteMember.OrganizationId
                                         select new { organizationName = o.Organization.Name, p.Firstname, senderName = p.Firstname + " " + p.Lastname }).FirstOrDefault();
 
                 string senderName = organizationInfo.senderName;
@@ -95,17 +88,18 @@ public partial class V1_NonProfit_InvitedMembers : BaseOrganizationWebForm
                 string emailFromDisplayName = ConfigurationManager.AppSettings["emailFromDisplayName"].ToString();
                 string emailError = string.Empty;
 
-                Tools.SendEmail(
-                    string.Empty,
-                    senderName + " Has Invited You To Join His Impactoid Disaster Relief Team",
-                    ldEmailBodyReplacements,
-                    inviteMember.EmailAddress,
-                    firstName,
-                    senderName,
-                    emailFrom,
-                    "~\\EmailTemplates\\MemberInvitation.html",
-                    out emailError 
-                    );
+				Tools.SendEmail(
+					string.Empty,
+					senderName + " Has Invited You To Join " + organizationName,
+
+					ldEmailBodyReplacements,
+					inviteMember.EmailAddress,
+					firstName,
+					senderName,
+					emailFrom,
+					"~\\EmailTemplates\\MemberInvitation.html",
+					out emailError
+					);
                 inviteMember.EmailSent = true;
                 inviteMember.CreatedOn = DateTime.Now;
                 dc.SubmitChanges();

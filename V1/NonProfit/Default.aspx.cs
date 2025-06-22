@@ -64,8 +64,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
 			}
 		}
 
-
-
 		ucTeamHeader.OrganizationId = organizationId;
 
 		if (String.IsNullOrEmpty(organizationId))
@@ -141,12 +139,14 @@ public partial class V1_NonProfit_Default : BaseWebForm
                                 o.ParentOrganizationId
                             }).SingleOrDefault();
 
-        BindChapterOrganizations(organizationId);
 
         string squareLogo = "/V1/Images/Logo-Placeholder.png";
         if (organization != null)
         {
-            if (!string.IsNullOrEmpty(organization.CoverImage))
+			BindChapterOrganizations(organizationId);
+
+
+			if (!string.IsNullOrEmpty(organization.CoverImage))
             {
 				//Let's the user change the cover image.
                 _coverImage = causePhotoFolder + organization.CoverImage;
@@ -183,30 +183,11 @@ public partial class V1_NonProfit_Default : BaseWebForm
         Master.FbImageType = "image/jpg";
         Master.FbURL = Request.Url.AbsoluteUri;
 
-        bool isOwner = false;
-        if (User.Identity.IsAuthenticated == true)
-        {
-            var userOrganizationOwners = (from uo in dc.UserOrganizations
-                                          join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                          where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
-										  && uo.OrganizationId == new Guid(organizationId)
-                                          select o).Take(1).SingleOrDefault();
-
-            if (userOrganizationOwners != null)
-            {
-
-                if ((userOrganizationOwners.OwnerId == userId))
-                {
-                    isOwner = true;
-                }
-            }
-        }
-
-        if (isOwner || User.IsInRole("Team Administrator"))
+		TeamRoles teamRoles = TeamRoleService.GetTeamRoles(userId, new Guid(organizationId), User.IsInRole("Administrator"));
+		if (teamRoles.IsTeamOwner || teamRoles.IsTeamAdministrator || teamRoles.IsSiteAdministrator)
         {
             lbCreateChapter.Visible = true;
             createChapterLink = "/V1/NonProfit/NonProfitNew.aspx?parentOrganizationId=" + organizationId;
-
         }
 
         ////////////////////////
@@ -231,7 +212,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
         if (User.Identity.IsAuthenticated)
         {
 
-            //If the user is logged in and not in a nonprofit already then send to choose a nonprofit.
             var userOrganization = from uo in dc.UserOrganizations
                                    where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
                                    && uo.OrganizationId == new Guid(organizationId)&& (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
@@ -240,19 +220,15 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
             UserOrganization request = dc.UserOrganizations.FirstOrDefault(rr => rr.UserId == userId && rr.OrganizationId == new Guid(organizationId));
 
-            int? status = null;
+            int? userStatus = null;
 
             if (request != null)
             {
-                status = request.Status;
+				userStatus = request.Status;
             }
-            var userOrganizationOwner = (from uo in dc.UserOrganizations
-                                         join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                         where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
-                                         && uo.OrganizationId == new Guid(organizationId)
-                                         select o).Take(1).SingleOrDefault();
-            var userOrg = dc.UserOrganizations
-                                 .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
+
+            var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
+
             UserOrganizationHistory userHistory = null;
 
             if (userOrg != null)
@@ -261,9 +237,9 @@ public partial class V1_NonProfit_Default : BaseWebForm
                                 .FirstOrDefault(uh => uh.UserOrganizationId == userOrg.UserOrganizationId);
             }
             DateTime currentRequestTime = DateTime.Now;
-            if (status != null)
+            if (userStatus != null)
             {
-                if (status == (int)RequestStatus.Pending)
+                if (userStatus == (int)RequestStatus.Pending)
                 {
                     btnActiveVolunteer.Text = "Request Pending";
                     btnActiveVolunteer.Attributes["data-toggle"] = "tooltip";
@@ -274,7 +250,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     btnActiveVolunteer.Style.Add("color", "black");
                     lbVolunteer.Visible = false;
                 }
-                else if (status == (int)RequestStatus.Denied && userHistory.DateToReApply >= currentRequestTime)
+                else if (userStatus == (int)RequestStatus.Denied && userHistory.DateToReApply >= currentRequestTime)
                 {
                     btnActiveVolunteer.Text = "Request Denied";
                     btnActiveVolunteer.Attributes["data-toggle"] = "tooltip";
@@ -286,7 +262,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     lbVolunteer.Visible = false;
                 }
 
-                else if (status == (int)RequestStatus.Blocked)
+                else if (userStatus == (int)RequestStatus.Blocked)
                 {
                     btnActiveVolunteer.Text = "Blocked";
                     btnActiveVolunteer.Attributes["data-toggle"] = "tooltip";
@@ -297,17 +273,17 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     btnActiveVolunteer.Style.Add("color", "black");
                     lbVolunteer.Visible = false;
                 }
-                else if(status== (int)RequestStatus.RemovedByUser)
+                else if(userStatus== (int)RequestStatus.RemovedByUser)
                 {
                     lbVolunteer.Visible=true;
                 }
-                else if (userOrg.IsPrimary == true && (status == (int)RequestStatus.Approved || status == (int)RequestStatus.Pending))
+                else if (userOrg.IsPrimary == true && (userStatus == (int)RequestStatus.Approved || userStatus == (int)RequestStatus.Pending))
                 {
                     lbleave.Visible = true;
                     lbVolunteer.Visible = false;
                     lbprimary.Visible = false;
                 }
-                else if (status == (int)RequestStatus.Approved)
+                else if (userStatus == (int)RequestStatus.Approved)
                 {
                     lbVolunteer.Visible = false;
                     lbleave.Visible = true;
@@ -332,7 +308,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     lbprimary.Visible = true;
                 }
             }
-            if (userOrganizationOwner != null && userOrg != null)
+
+			if (teamRoles.IsTeamOwner)
             {
                 lbleave.Visible = true;
                 lbleave.CssClass = "btn btn-secondary  btn-large pull-right m-l-md disabled";
@@ -484,10 +461,9 @@ public partial class V1_NonProfit_Default : BaseWebForm
                         organizationId = organizationIdCheck.OrganizationId.ToString();
                     }
                 }
-                var userOrg = dc.UserOrganizations
-                                .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
-                var userHistory = dc.UserOrganizationHistories
-                  .FirstOrDefault(uh => uh.UserOrganizationId == userOrg.UserOrganizationId);
+                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
+
+                var userHistory = dc.UserOrganizationHistories.FirstOrDefault(uh => uh.UserOrganizationId == userOrg.UserOrganizationId);
 
                 if (userOrg != null)
                 {

@@ -17,8 +17,7 @@
         <div class="col-xs-12">
             <div class="hpanel">
                 <div class="panel-body">
-                    <a href="/V1/Administration/TeamName.aspx?userActionModal=false" runat="server"
-                        id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right">Create A Team</a>
+                    <a href="/V1/NonProfit/NonProfitNew.aspx?userActionModal=false" runat="server" id="hrefCreateTeam" visible="false" class="btn btn-info btn-large pull-right">Create A Team</a>
 
                     <h4>
                         <asp:Literal ID="litPageName" runat="server"></asp:Literal>

@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IdentityModel.Metadata;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Security.Cryptography;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -23,10 +28,13 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 	public string availableDates = string.Empty;
 	public string teamCounts = string.Empty;
 	public string urlFriendlyName = string.Empty;
+	public string startDate = string.Empty;
+	protected string AvailabilityByDateJson = "{}";
+
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		ucTeamFooter.PageName = "activityPage";
-		ucTeamHeader.PageName = "Activity Dashboard";
+		ucTeamHeader.PageName = "Team Impact Dashboard";
 
 		#region HEADER PROPERTIES
 		////////////////////////
@@ -44,7 +52,7 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 			//Get and set the org id.
 			var organizationIdCheck = (from o in dc.Organizations
 									   where o.URLFriendlyName == urlFriendlyName
-									   select new { o.OrganizationId }).SingleOrDefault();
+									   select new { o.OrganizationId }).Take(1).SingleOrDefault();
 
 			if (organizationIdCheck.OrganizationId != Guid.Empty)
 			{
@@ -128,6 +136,22 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 
 
 
+		//Guid userId = GetCurrentUserId();
+
+		var result = GetAvailabilityCountsByDate(new Guid(organizationId));
+
+		var serializer = new JavaScriptSerializer();
+		AvailabilityByDateJson = serializer.Serialize(result);
+
+
+
+
+
+
+
+
+
+
 		var organizationEvents = from oe in dc.OrganizationEvents
 								 where oe.OrganizationId == new Guid(organizationId)
 								 select new { oe.VolunteerHourlyRate, oe.OrganizationEventId };
@@ -153,10 +177,13 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 		lblHours.Text = string.Format(culture, "{0:N0}", totalVolunteerHours);
 
 		var totalVolunteers = (from org in dc.UserOrganizations
-							   where org.OrganizationId == new Guid(organizationId) && org.Status== (int)RequestStatus.Approved
-                               select org).Distinct().Count();
+							   where org.OrganizationId == new Guid(organizationId)
+							   && (org.Status == (int)RequestStatus.Approved
+							   || org.Status == (int)RequestStatus.Pending)
+							   select org).Distinct().Count();
 
 		lblTeamCount.Text = totalVolunteers.ToString();
+
 		var deployments = from org in dc.Organizations
 						  join oe in dc.OrganizationEvents on org.OrganizationId equals oe.OrganizationId
 						  where oe.OrganizationId == new Guid(organizationId)
@@ -179,6 +206,29 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 		litStatesCounties.Text = CrowdRelief.Tools.GetImpactedStateCountyStringByTeam(new Guid(organizationId));
 
 		LoadTeamCountGraph(organizationId);
+	}
+
+	private Dictionary<string, int> GetAvailabilityCountsByDate(Guid organizationId)
+	{
+		using (var dc = new CrowdReliefDBDataContext())
+		{
+			var availability = (from ua in dc.UserAvailableDates
+								join uo in dc.UserOrganizations
+								on ua.UserId equals uo.UserId
+								where uo.OrganizationId == organizationId
+								group ua by ua.DateAvailable into g
+								select new
+								{
+									Date = g.Key,
+									Count = g.Count()
+								})
+								.ToList();
+
+			return availability.ToDictionary(
+				x => x.Date.ToString("yyyy-MM-dd"),
+				x => x.Count
+			);
+		}
 	}
 
 	public void LoadTeamCountGraph(string organizationId)

@@ -1006,17 +1006,22 @@
 									</li>
 									<li>
 										<a href="/V1/Administration/VolunteerList.aspx">	 
-											<span class="nav-label">Volunteers</span>
+											<span class="nav-label">Members</span>
 										</a>
 									</li>
 									<li>
 										<a href="/V1/Administration/VolunteerIDList.aspx">	 
-											<span class="nav-label">Volunteer Quick Search</span>
+											<span class="nav-label">Member Quick Search</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/VolunteerByVettingStatus.aspx">	 
+											<span class="nav-label">Last 1000 Members</span>
 										</a>
 									</li>
 									<li>
 										<a href="/V1/Administration/VolunteerByRole.aspx">	 
-											<span class="nav-label">Volunteer Search by Role</span>
+											<span class="nav-label">Member Search by Role</span>
 										</a>
 									</li>
 									<li>

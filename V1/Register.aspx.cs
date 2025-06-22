@@ -125,7 +125,7 @@ public partial class V1_Register : System.Web.UI.Page
 			}
 			else
 			{
-                urlRedirect = "/V1/NonProfit/TeamList.aspx?team=false"; 
+				urlRedirect = "/V1/Profile/EditSkills.aspx?register=true";
 			}
 			if (Request.QueryString["transactionId"] != null)
 			{
@@ -154,13 +154,18 @@ public partial class V1_Register : System.Web.UI.Page
 				Roles.AddUserToRole(username, "Member");
 			}
 
+			Guid newUserId = Guid.NewGuid();
 			//Create a profile for this user.
 			Profile userProfile = new Profile();
 			userProfile.UserId = new Guid(newUser.ProviderUserKey.ToString());
-			userProfile.ProfileId = Guid.NewGuid();
+			userProfile.ProfileId = newUserId;
 			userProfile.Firstname = firstName;
 			userProfile.Lastname = lastName;
 			userProfile.PhoneNumber = phoneNumber;
+			userProfile.VettingActive = false;
+			userProfile.VettingComplete = true;
+			userProfile.PassedVetting = true;
+			userProfile.DateVettingCompleted = DateTime.Now;
 			userProfile.City = hfCityName.Value;
 			userProfile.State = hfStateName.Value;
 			userProfile.ReceiveDeploymentSMS = deploymentSMS;

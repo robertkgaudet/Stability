@@ -184,7 +184,8 @@
         });
 
         $("body").tooltip({ selector: '[data-toggle=tooltip]' });
-    });
+	});
+
     $(document).ready(function () {
         var totalAdmins = parseInt($('#<%= hfTeamAdminCount.ClientID %>').val()) || 0;
         if (totalAdmins === 0) {
@@ -220,6 +221,13 @@
    });
 
 
+	$(".toggle-admin-btn").click(function () {
+		var icon = $(this).find("i");
+		var adminPanel = $("#adminPanels");
+		icon.toggleClass("fa-chevron-down fa-chevron-up");
+		adminPanel.collapse("toggle");
+	});
+
 </script>
 <asp:HiddenField ID="hfTeamAdminCount" runat="server" />
 <div class="container" style="padding-bottom: 100px !important;">
@@ -252,9 +260,20 @@
                                 <p style="font-size: 16px;">
                                     <asp:Literal ID="litMemberDescription" runat="server"></asp:Literal>
                                 </p>
-                                <h4 id="teamAdminTitle" class="m-t-xl">Team Administrators</h4>
-
-                                <asp:Literal ID="ltTeamAdministrators" runat="server"></asp:Literal>
+								<div> 
+									<button 
+										class="btn toggle-admin-btn" 
+										type="button" 
+										data-toggle="collapse" 
+										data-target="#adminPanels" 
+										aria-expanded="false" 
+										aria-controls="adminPanels">
+										<i class="fa fa-chevron-down"></i> View Team Administrators
+									</button>
+								</div>
+								<div id="adminPanels" class="collapse m-t-lg">
+									<asp:Literal ID="ltTeamAdministrators" runat="server"></asp:Literal>
+								</div>
                             </div>
                             <div class="col-xs-12 col-lg-4 project-info">
                                 <asp:Literal ID="litChapterLabel" Text="Chapter of " runat="server" Visible="false"></asp:Literal>

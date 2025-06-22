@@ -35,8 +35,9 @@ public partial class V1_Member_Default : BaseWebForm
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 		if (User.Identity.IsAuthenticated)
-		{	//User is signed in
-			if(string.IsNullOrEmpty(pageUserId))
+		{
+			//User is signed in
+			if (string.IsNullOrEmpty(pageUserId))
 			{
 				//SIGNED IN USER
 				pageUserId = userId.ToString();
@@ -73,9 +74,11 @@ public partial class V1_Member_Default : BaseWebForm
 		{
 			ucMemberHeader.UserId = pageUserId;
 			ucDeploymentListCard.UserId = new Guid(pageUserId);
+			ucMemberHeader.UserId = pageUserId;
+
 			DeploymentListCard1.UserId = new Guid(pageUserId);
 			userId = new Guid(pageUserId);
-			ucMemberHeader.UserId = pageUserId;
+
 			//Load profile information.
 			var profile = (from p in dc.Profiles
 						   join a in dc.aspnet_Users on p.UserId equals a.UserId
@@ -87,7 +90,6 @@ public partial class V1_Member_Default : BaseWebForm
 			{
 				if (Roles.IsUserInRole(profile.a.UserName, "Administrator"))
 				{
-                    
                     ucMemberHeader.BadgeVettingStatus = "fa-approved-color";
 					ucMemberHeader.BadgeCertificationStatus = "fa-approved-color";
 					ucMemberHeader.BadgeDeployedStatus = "fa-approved-color";
@@ -95,13 +97,20 @@ public partial class V1_Member_Default : BaseWebForm
 					ucMemberHeader.BadgeTOPStatus = "fa-approved-color";
 				}
 
-
 				ucMemberHeader.MemberFullname = profile.p.Firstname + " " + profile.p.Lastname;
-             
-
                 ucMemberHeader.MemberDescription = profile.p.Description;
 				ucMemberHeader.MemberLocation = profile.p.City + ", " + profile.p.State;
 				ucMemberHeader.MemberTitle = profile.p.Title;
+
+
+				Master.PageTitle = profile.p.Firstname + " " + profile.p.Lastname + " on Stability.org";
+				Master.PageDescription = profile.p.Firstname + " " + profile.p.Lastname + " Profile on Stability.org";
+				Master.FbDescription = profile.p.Firstname + " " + profile.p.Lastname + " Profile on Stability.org";
+				Master.FbImage = "";
+				Master.FbImageType = "image/jpg";
+				Master.FbSite_name = profile.p.Firstname + " " + profile.p.Lastname + " Profile on Stability.org";
+				Master.FbURL = Request.Url.AbsoluteUri;
+
 				bool passedVetting = Convert.ToBoolean(profile.p.PassedVetting != null ? profile.p.PassedVetting : false);
 				if (passedVetting)
 				{
@@ -176,27 +185,6 @@ public partial class V1_Member_Default : BaseWebForm
 			//Response.Write(pageUserId);
 			//Response.End();
 
-            //Get team information
-            var orgUser = (from o in dc.Organizations
-                           join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                           where uo.UserId == new Guid(pageUserId) && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
-                           orderby o.CreatedOn descending
-                           select new
-                           {
-                               o.OrganizationId,
-                               o.Name,
-                               o.LogoSquare,
-                               uo.ShowTeamLogo  // Include the ShowTeamLogo field
-                           }).Take(1).SingleOrDefault();
-
-            if (orgUser != null)
-            {
-                //ucMemberNavigation.OrganizationId = orgUser.OrganizationId.ToString();
-                ucMemberHeader.TeamId = orgUser.OrganizationId.ToString();
-                ucMemberHeader.TeamName = orgUser.Name;
-                ucMemberHeader.TeamLogo = orgUser.LogoSquare;
-                
-            }
 
 
             //Count deployments
