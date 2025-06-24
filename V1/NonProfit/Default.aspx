@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="V1_NonProfit_Default" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"
+    CodeFile="Default.aspx.cs" Inherits="V1_NonProfit_Default" %>
 
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
@@ -114,8 +115,8 @@
             }).then((result) => {
                 if (result) {
                     __doPostBack('<%= lbleave.UniqueID %>', '');
-        }
-    });
+                }
+            });
 
             return false;
         }
@@ -140,6 +141,39 @@
             $('[data-bs-toggle="tooltip"]').tooltip();
         });
 
+        $(document).ready(function () {
+            var modalFlag = $('#hiddenShowModal').val();
+            if (modalFlag === 'true') {
+                $('#waiverModal').modal('show');
+            }
+            else {
+                $('#waiverModal').modal('hide');
+            }
+        });
+
+
+        $(document).ready(function () {
+            $('#<%= btnContinue.ClientID %>').click(function (e) {
+                var isValid = true;
+
+                var isChecked = $('#<%= chkAgree.ClientID %>').is(':checked');
+                var fullName = $('#<%= txtFullName.ClientID %>').val().trim();
+
+                $('#nameError').hide().text("");
+
+                if (!isChecked) {
+                    isValid = false;
+                    $('#termError').text("Please agree to the terms to continue.").show();
+                } else if (fullName === "") {
+                    isValid = false;
+                    $('#nameError').text("Please enter your full legal name.").show();
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                }
+            });
+        });
     </script>
     <style>
         .modal-dialog {
@@ -159,21 +193,31 @@
             color: white;
             pointer-events: all;
         }
+        .modal-header .close {
+            margin-top: -40px;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server" />
 
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
     <div class="row">
         <div class="col-xs-12">
-            <asp:LinkButton ID="lbCreateChapter" runat="server" CssClass="btn btn-success btn-large createChapterButton pull-right m-l-md" Text="Create Chapter" Visible="false"></asp:LinkButton>
-            <asp:LinkButton ID="lbVolunteer" runat="server" OnClick="jointheteam_Click" CssClass="btn btn-success btn-large volunteerButton pull-right m-l-md" Text="Join This Team" Visible="false"></asp:LinkButton>
-            <asp:Button ID="btnActiveVolunteer" runat="server" CssClass="btn btn-light btn-large pull-right m-l-md" Visible="false" />
+            <asp:LinkButton ID="lbCreateChapter" runat="server" CssClass="btn btn-success btn-large createChapterButton pull-right m-l-md"
+                Text="Create Chapter" Visible="false"></asp:LinkButton>
+            <asp:LinkButton ID="lbVolunteer" runat="server" OnClick="jointheteam_Click" CssClass="btn btn-success btn-large volunteerButton pull-right m-l-md"
+                Text="Join This Team" Visible="false"></asp:LinkButton>
+            <asp:Button ID="btnActiveVolunteer" runat="server" CssClass="btn btn-light btn-large pull-right m-l-md"
+                Visible="false" />
             <asp:LinkButton ID="lbleave" runat="server" Text="Leave This Team" CssClass="btn btn-danger btn-large pull-right m-l-md"
-                OnClick="lbleave_Click" OnClientClick="return confirmLeave();" CausesValidation="false" Visible="true"></asp:LinkButton>
+                OnClick="lbleave_Click" OnClientClick="return confirmLeave();" CausesValidation="false"
+                Visible="true"></asp:LinkButton>
             <asp:LinkButton ID="lbprimary" runat="server" Text="Set Primary Team" CssClass="btn btn-success btn-large pull-right m-l-md"
-                OnClick="lbprimary_Click" OnClientClick="return setprimary();" CausesValidation="false" Visible="true"></asp:LinkButton>
-            <asp:LinkButton ID="lbDonate" runat="server" CssClass="btn btn-success pull-right donateButton" Text="Donate" Visible="false"></asp:LinkButton>
+                OnClick="lbprimary_Click" OnClientClick="return setprimary();" CausesValidation="false"
+                Visible="true"></asp:LinkButton>
+            <asp:LinkButton ID="lbDonate" runat="server" CssClass="btn btn-success pull-right donateButton"
+                Text="Donate" Visible="false"></asp:LinkButton>
         </div>
     </div>
 
@@ -331,4 +375,43 @@
         </ul>
     </div>
     <uc1:TeamFooter runat="server" ID="ucTeamFooter" />
+    <asp:HiddenField ID="hiddenShowModal" runat="server" ClientIDMode="Static" />
+    <div class="modal fade" id="waiverModal" tabindex="-1" role="dialog" aria-labelledby="waiverModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="waiverModalLabel">Legal Agreement Required</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <h5><strong>Please read and sign the waiver below to join our team:</strong></h5>
+
+                    <div>
+                        <asp:Literal ID="litWaiverText" runat="server"></asp:Literal>
+                    </div>
+
+                    <div class="checkbox mt-3">
+                        <label>
+                            <asp:CheckBox ID="chkAgree" runat="server" />
+                            I have read and agree to the terms above
+                        </label>
+                    </div>
+                    <span id="termError" style="color: red; display: none;"></span>
+                    <div class="form-group mt-3">
+                        <label for="txtFullName">Your Full Name:</label>
+                        <asp:TextBox ID="txtFullName" runat="server" CssClass="form-control" Placeholder="Type your full legal name"></asp:TextBox>
+                    </div>
+                    <span id="nameError" style="color: red; display: none;"></span>
+
+                </div>
+
+                <div class="modal-footer">
+                    <asp:Button ID="btnContinue" runat="server" Text="Continue" CssClass="btn btn-success"
+                        OnClick="btnContinue_Click" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>

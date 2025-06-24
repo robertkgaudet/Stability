@@ -449,13 +449,19 @@ public partial class CrowdReliefDBDataContext : System.Data.Linq.DataContext
   partial void InsertOrganizationRankingConfig(OrganizationRankingConfig instance);
   partial void UpdateOrganizationRankingConfig(OrganizationRankingConfig instance);
   partial void DeleteOrganizationRankingConfig(OrganizationRankingConfig instance);
-	#endregion
+  partial void InsertOrganizationWaiver(OrganizationWaiver instance);
+  partial void UpdateOrganizationWaiver(OrganizationWaiver instance);
+  partial void DeleteOrganizationWaiver(OrganizationWaiver instance);
+  partial void InsertWaiverSignature(WaiverSignature instance);
+  partial void UpdateWaiverSignature(WaiverSignature instance);
+  partial void DeleteWaiverSignature(WaiverSignature instance);
+  #endregion
 	public CrowdReliefDBDataContext() :
 base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_8013_stabilityConnectionString"].ConnectionString, mappingSource)
 	{
 		OnCreated();
 	}
-
+	
 	public CrowdReliefDBDataContext(string connection) : 
 			base(connection, mappingSource)
 	{
@@ -1597,6 +1603,22 @@ base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DB_801
 		get
 		{
 			return this.GetTable<OrganizationRankingConfig>();
+		}
+	}
+	
+	public System.Data.Linq.Table<OrganizationWaiver> OrganizationWaivers
+	{
+		get
+		{
+			return this.GetTable<OrganizationWaiver>();
+		}
+	}
+	
+	public System.Data.Linq.Table<WaiverSignature> WaiverSignatures
+	{
+		get
+		{
+			return this.GetTable<WaiverSignature>();
 		}
 	}
 	
@@ -2817,6 +2839,10 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private EntitySet<OrganizationUserRanking> _OrganizationUserRankings;
 	
+	private EntitySet<OrganizationWaiver> _OrganizationWaivers;
+	
+	private EntitySet<WaiverSignature> _WaiverSignatures;
+	
 	private EntityRef<StreamDonation> _Donation;
 	
 	private EntityRef<UserDonation> _UserDonation;
@@ -2908,6 +2934,8 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		this._UserOrganizationHistories = new EntitySet<UserOrganizationHistory>(new Action<UserOrganizationHistory>(this.attach_UserOrganizationHistories), new Action<UserOrganizationHistory>(this.detach_UserOrganizationHistories));
 		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
 		this._OrganizationUserRankings = new EntitySet<OrganizationUserRanking>(new Action<OrganizationUserRanking>(this.attach_OrganizationUserRankings), new Action<OrganizationUserRanking>(this.detach_OrganizationUserRankings));
+		this._OrganizationWaivers = new EntitySet<OrganizationWaiver>(new Action<OrganizationWaiver>(this.attach_OrganizationWaivers), new Action<OrganizationWaiver>(this.detach_OrganizationWaivers));
+		this._WaiverSignatures = new EntitySet<WaiverSignature>(new Action<WaiverSignature>(this.attach_WaiverSignatures), new Action<WaiverSignature>(this.detach_WaiverSignatures));
 		this._Donation = default(EntityRef<StreamDonation>);
 		this._UserDonation = default(EntityRef<UserDonation>);
 		this._UserDonation1 = default(EntityRef<UserDonation>);
@@ -3894,6 +3922,32 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_OrganizationWaiver", Storage="_OrganizationWaivers", ThisKey="UserId", OtherKey="UpdatedBy")]
+	public EntitySet<OrganizationWaiver> OrganizationWaivers
+	{
+		get
+		{
+			return this._OrganizationWaivers;
+		}
+		set
+		{
+			this._OrganizationWaivers.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_WaiverSignature", Storage="_WaiverSignatures", ThisKey="UserId", OtherKey="UserId")]
+	public EntitySet<WaiverSignature> WaiverSignatures
+	{
+		get
+		{
+			return this._WaiverSignatures;
+		}
+		set
+		{
+			this._WaiverSignatures.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="StreamDonation_aspnet_User", Storage="_Donation", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
 	public StreamDonation StreamDonation
 	{
@@ -4755,6 +4809,30 @@ public partial class aspnet_User : INotifyPropertyChanging, INotifyPropertyChang
 	}
 	
 	private void detach_OrganizationUserRankings(OrganizationUserRanking entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_OrganizationWaivers(OrganizationWaiver entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_OrganizationWaivers(OrganizationWaiver entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = null;
+	}
+	
+	private void attach_WaiverSignatures(WaiverSignature entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_User = this;
+	}
+	
+	private void detach_WaiverSignatures(WaiverSignature entity)
 	{
 		this.SendPropertyChanging();
 		entity.aspnet_User = null;
@@ -44836,6 +44914,10 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 	
 	private EntitySet<OrganizationRankingConfig> _OrganizationRankingConfigs;
 	
+	private EntityRef<OrganizationWaiver> _OrganizationWaiver;
+	
+	private EntitySet<WaiverSignature> _WaiverSignatures;
+	
 	private EntityRef<aspnet_User> _aspnet_User;
 	
 	private EntityRef<aspnet_User> _aspnet_User1;
@@ -44958,6 +45040,8 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		this._UserOrganizations = new EntitySet<UserOrganization>(new Action<UserOrganization>(this.attach_UserOrganizations), new Action<UserOrganization>(this.detach_UserOrganizations));
 		this._OrganizationUserRankings = new EntitySet<OrganizationUserRanking>(new Action<OrganizationUserRanking>(this.attach_OrganizationUserRankings), new Action<OrganizationUserRanking>(this.detach_OrganizationUserRankings));
 		this._OrganizationRankingConfigs = new EntitySet<OrganizationRankingConfig>(new Action<OrganizationRankingConfig>(this.attach_OrganizationRankingConfigs), new Action<OrganizationRankingConfig>(this.detach_OrganizationRankingConfigs));
+		this._OrganizationWaiver = default(EntityRef<OrganizationWaiver>);
+		this._WaiverSignatures = new EntitySet<WaiverSignature>(new Action<WaiverSignature>(this.attach_WaiverSignatures), new Action<WaiverSignature>(this.detach_WaiverSignatures));
 		this._aspnet_User = default(EntityRef<aspnet_User>);
 		this._aspnet_User1 = default(EntityRef<aspnet_User>);
 		OnCreated();
@@ -46101,6 +46185,48 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationWaiver", Storage="_OrganizationWaiver", ThisKey="OrganizationId", OtherKey="OrganizationId", IsUnique=true, IsForeignKey=false)]
+	public OrganizationWaiver OrganizationWaiver
+	{
+		get
+		{
+			return this._OrganizationWaiver.Entity;
+		}
+		set
+		{
+			OrganizationWaiver previousValue = this._OrganizationWaiver.Entity;
+			if (((previousValue != value) 
+						|| (this._OrganizationWaiver.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._OrganizationWaiver.Entity = null;
+					previousValue.Organization = null;
+				}
+				this._OrganizationWaiver.Entity = value;
+				if ((value != null))
+				{
+					value.Organization = this;
+				}
+				this.SendPropertyChanged("OrganizationWaiver");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_WaiverSignature", Storage="_WaiverSignatures", ThisKey="OrganizationId", OtherKey="OrganizationId")]
+	public EntitySet<WaiverSignature> WaiverSignatures
+	{
+		get
+		{
+			return this._WaiverSignatures;
+		}
+		set
+		{
+			this._WaiverSignatures.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_Organization", Storage="_aspnet_User", ThisKey="CreatedBy", OtherKey="UserId", IsForeignKey=true)]
 	public aspnet_User aspnet_User
 	{
@@ -46304,6 +46430,18 @@ public partial class Organization : INotifyPropertyChanging, INotifyPropertyChan
 	}
 	
 	private void detach_OrganizationRankingConfigs(OrganizationRankingConfig entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = null;
+	}
+	
+	private void attach_WaiverSignatures(WaiverSignature entity)
+	{
+		this.SendPropertyChanging();
+		entity.Organization = this;
+	}
+	
+	private void detach_WaiverSignatures(WaiverSignature entity)
 	{
 		this.SendPropertyChanging();
 		entity.Organization = null;
@@ -51332,6 +51470,486 @@ public partial class OrganizationRankingConfig : INotifyPropertyChanging, INotif
 					this._OrganizationId = default(System.Guid);
 				}
 				this.SendPropertyChanged("Organization");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.OrganizationWaiver")]
+public partial class OrganizationWaiver : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _OrganizationId;
+	
+	private string _WaiverText;
+	
+	private bool _IsRequired;
+	
+	private System.DateTime _UpdatedOn;
+	
+	private System.Guid _UpdatedBy;
+	
+	private EntityRef<Organization> _Organization;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnOrganizationIdChanging(System.Guid value);
+    partial void OnOrganizationIdChanged();
+    partial void OnWaiverTextChanging(string value);
+    partial void OnWaiverTextChanged();
+    partial void OnIsRequiredChanging(bool value);
+    partial void OnIsRequiredChanged();
+    partial void OnUpdatedOnChanging(System.DateTime value);
+    partial void OnUpdatedOnChanged();
+    partial void OnUpdatedByChanging(System.Guid value);
+    partial void OnUpdatedByChanged();
+    #endregion
+	
+	public OrganizationWaiver()
+	{
+		this._Organization = default(EntityRef<Organization>);
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				if (this._Organization.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WaiverText", DbType="VarChar(MAX)")]
+	public string WaiverText
+	{
+		get
+		{
+			return this._WaiverText;
+		}
+		set
+		{
+			if ((this._WaiverText != value))
+			{
+				this.OnWaiverTextChanging(value);
+				this.SendPropertyChanging();
+				this._WaiverText = value;
+				this.SendPropertyChanged("WaiverText");
+				this.OnWaiverTextChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsRequired", DbType="Bit NOT NULL")]
+	public bool IsRequired
+	{
+		get
+		{
+			return this._IsRequired;
+		}
+		set
+		{
+			if ((this._IsRequired != value))
+			{
+				this.OnIsRequiredChanging(value);
+				this.SendPropertyChanging();
+				this._IsRequired = value;
+				this.SendPropertyChanged("IsRequired");
+				this.OnIsRequiredChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime UpdatedOn
+	{
+		get
+		{
+			return this._UpdatedOn;
+		}
+		set
+		{
+			if ((this._UpdatedOn != value))
+			{
+				this.OnUpdatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedOn = value;
+				this.SendPropertyChanged("UpdatedOn");
+				this.OnUpdatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedBy", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid UpdatedBy
+	{
+		get
+		{
+			return this._UpdatedBy;
+		}
+		set
+		{
+			if ((this._UpdatedBy != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUpdatedByChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedBy = value;
+				this.SendPropertyChanged("UpdatedBy");
+				this.OnUpdatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_OrganizationWaiver", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
+	public Organization Organization
+	{
+		get
+		{
+			return this._Organization.Entity;
+		}
+		set
+		{
+			Organization previousValue = this._Organization.Entity;
+			if (((previousValue != value) 
+						|| (this._Organization.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Organization.Entity = null;
+					previousValue.OrganizationWaiver = null;
+				}
+				this._Organization.Entity = value;
+				if ((value != null))
+				{
+					value.OrganizationWaiver = this;
+					this._OrganizationId = value.OrganizationId;
+				}
+				else
+				{
+					this._OrganizationId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Organization");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_OrganizationWaiver", Storage="_aspnet_User", ThisKey="UpdatedBy", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.OrganizationWaivers.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.OrganizationWaivers.Add(this);
+					this._UpdatedBy = value.UserId;
+				}
+				else
+				{
+					this._UpdatedBy = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.WaiverSignature")]
+public partial class WaiverSignature : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private System.Guid _SignatureId;
+	
+	private System.Guid _OrganizationId;
+	
+	private System.Guid _UserId;
+	
+	private string _SignatureName;
+	
+	private System.DateTime _SignedOn;
+	
+	private EntityRef<Organization> _Organization;
+	
+	private EntityRef<aspnet_User> _aspnet_User;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnSignatureIdChanging(System.Guid value);
+    partial void OnSignatureIdChanged();
+    partial void OnOrganizationIdChanging(System.Guid value);
+    partial void OnOrganizationIdChanged();
+    partial void OnUserIdChanging(System.Guid value);
+    partial void OnUserIdChanged();
+    partial void OnSignatureNameChanging(string value);
+    partial void OnSignatureNameChanged();
+    partial void OnSignedOnChanging(System.DateTime value);
+    partial void OnSignedOnChanged();
+    #endregion
+	
+	public WaiverSignature()
+	{
+		this._Organization = default(EntityRef<Organization>);
+		this._aspnet_User = default(EntityRef<aspnet_User>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SignatureId", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	public System.Guid SignatureId
+	{
+		get
+		{
+			return this._SignatureId;
+		}
+		set
+		{
+			if ((this._SignatureId != value))
+			{
+				this.OnSignatureIdChanging(value);
+				this.SendPropertyChanging();
+				this._SignatureId = value;
+				this.SendPropertyChanged("SignatureId");
+				this.OnSignatureIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OrganizationId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid OrganizationId
+	{
+		get
+		{
+			return this._OrganizationId;
+		}
+		set
+		{
+			if ((this._OrganizationId != value))
+			{
+				if (this._Organization.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnOrganizationIdChanging(value);
+				this.SendPropertyChanging();
+				this._OrganizationId = value;
+				this.SendPropertyChanged("OrganizationId");
+				this.OnOrganizationIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier NOT NULL")]
+	public System.Guid UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				if (this._aspnet_User.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SignatureName", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+	public string SignatureName
+	{
+		get
+		{
+			return this._SignatureName;
+		}
+		set
+		{
+			if ((this._SignatureName != value))
+			{
+				this.OnSignatureNameChanging(value);
+				this.SendPropertyChanging();
+				this._SignatureName = value;
+				this.SendPropertyChanged("SignatureName");
+				this.OnSignatureNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SignedOn", DbType="DateTime NOT NULL")]
+	public System.DateTime SignedOn
+	{
+		get
+		{
+			return this._SignedOn;
+		}
+		set
+		{
+			if ((this._SignedOn != value))
+			{
+				this.OnSignedOnChanging(value);
+				this.SendPropertyChanging();
+				this._SignedOn = value;
+				this.SendPropertyChanged("SignedOn");
+				this.OnSignedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Organization_WaiverSignature", Storage="_Organization", ThisKey="OrganizationId", OtherKey="OrganizationId", IsForeignKey=true)]
+	public Organization Organization
+	{
+		get
+		{
+			return this._Organization.Entity;
+		}
+		set
+		{
+			Organization previousValue = this._Organization.Entity;
+			if (((previousValue != value) 
+						|| (this._Organization.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Organization.Entity = null;
+					previousValue.WaiverSignatures.Remove(this);
+				}
+				this._Organization.Entity = value;
+				if ((value != null))
+				{
+					value.WaiverSignatures.Add(this);
+					this._OrganizationId = value.OrganizationId;
+				}
+				else
+				{
+					this._OrganizationId = default(System.Guid);
+				}
+				this.SendPropertyChanged("Organization");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_User_WaiverSignature", Storage="_aspnet_User", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_User aspnet_User
+	{
+		get
+		{
+			return this._aspnet_User.Entity;
+		}
+		set
+		{
+			aspnet_User previousValue = this._aspnet_User.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_User.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_User.Entity = null;
+					previousValue.WaiverSignatures.Remove(this);
+				}
+				this._aspnet_User.Entity = value;
+				if ((value != null))
+				{
+					value.WaiverSignatures.Add(this);
+					this._UserId = value.UserId;
+				}
+				else
+				{
+					this._UserId = default(System.Guid);
+				}
+				this.SendPropertyChanged("aspnet_User");
 			}
 		}
 	}

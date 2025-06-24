@@ -124,6 +124,9 @@ public partial class V1_NonProfit_TeamRoles : BaseWebForm
         hypRequest.Attributes["data-toggle"] = "tooltip";
         hypRequest.Attributes["title"] = "View this team's Request";
 
+        hypCreateWaiver.NavigateUrl = "/V1/NonProfit/CreateWaiverStepUp.aspx?organizationId=" + organizationId;
+        hypCreateWaiver.Attributes["data-toggle"] = "tooltip";
+        hypCreateWaiver.Attributes["title"] = "Click here to create or update your waiver agreement.";
 
         hypSquareLogoUpload.NavigateUrl = "/V1/NonProfit/SquareLogoUpload.aspx?organizationId=" + organizationId;
         hypSquareLogoUpload.Attributes["data-toggle"] = "tooltip";
