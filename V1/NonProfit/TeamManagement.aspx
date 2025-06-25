@@ -45,31 +45,31 @@
     <script type="text/javascript">
         function confirmDeactivation() {
             var btn = document.getElementById('<%= btnDeactivatePage.ClientID %>');
-        var text = btn.innerText.trim().toLowerCase();
-        var isReactivation = text.includes("re-activate");
-        var action = isReactivation ? "reactivate" : "deactivate";
-        var confirmText = isReactivation ? "Yes, reactivate it!" : "Yes, deactivate it!";
-        var messageText = "You are about to " + action + " this team.";
-        swal({
-            title: "Are you sure?",
-            text: messageText,
-            icon: "warning",
-            buttons: {
-                cancel: "Cancel",
-                confirm: {
-                    text: confirmText,
-                    value: true,
-                    visible: true,
-                    className: "",
-                    closeModal: true
-                }
-            },
-        }).then((willChange) => {
-            if (willChange) {
-                __doPostBack('<%= btnDeactivatePage.UniqueID %>', '');
+            var text = btn.innerText.trim().toLowerCase();
+            var isReactivation = text.includes("re-activate");
+            var action = isReactivation ? "reactivate" : "deactivate";
+            var confirmText = isReactivation ? "Yes, reactivate it!" : "Yes, deactivate it!";
+            var messageText = "You are about to " + action + " this team.";
+            swal({
+                title: "Are you sure?",
+                text: messageText,
+                icon: "warning",
+                buttons: {
+                    cancel: "Cancel",
+                    confirm: {
+                        text: confirmText,
+                        value: true,
+                        visible: true,
+                        className: "",
+                        closeModal: true
+                    }
+                },
+            }).then((willChange) => {
+                if (willChange) {
+                    __doPostBack('<%= btnDeactivatePage.UniqueID %>', '');
 
-            }
-        });
+                }
+            });
 
             return false;
         }
@@ -109,11 +109,8 @@
                     </div>
                     <div class="col-md-4 d-flex align-items-start gap-2" runat="server" id="divCreateWaiver">
                         <i class="fa fa-file-text text-warning"></i>
-                        <asp:HyperLink runat="server" ID="hypCreateWaiver" CssClass="btn btn-link p-0 text-decoration-none">
-                         Step up a waiver screen
-                        </asp:HyperLink>
+                        <asp:HyperLink runat="server" ID="hypCreateWaiver" Visible="true">Set up a waiver screen</asp:HyperLink>
                     </div>
-
                 </div>
             </div>
 
