@@ -66,6 +66,10 @@
                     OnClick="btnSaveWaiver_Click" />
             </div>
         </div>
+        <div class="col-sm-12">
+            <h3 class="font-light m-b-xs" style="margin-bottom: 15px; margin-left: -15px;">Waiver
+                Signatures</h3>
+        </div>
         <asp:GridView ID="gvSignatures" runat="server" AutoGenerateColumns="False"
             CssClass="table table-bordered table-striped">
             <Columns>

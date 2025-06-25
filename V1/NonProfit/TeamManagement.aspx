@@ -109,7 +109,7 @@
                     </div>
                     <div class="col-md-4 d-flex align-items-start gap-2" runat="server" id="divCreateWaiver">
                         <i class="fa fa-file-text text-warning"></i>
-                        <asp:HyperLink runat="server" ID="hypCreateWaiver" Visible="true">Set up a waiver screen</asp:HyperLink>
+                        <asp:HyperLink runat="server" ID="hypCreateWaiver" Visible="true">Waiver screen</asp:HyperLink>
                     </div>
                 </div>
             </div>
