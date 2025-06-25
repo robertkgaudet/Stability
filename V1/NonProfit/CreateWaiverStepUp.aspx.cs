@@ -84,21 +84,22 @@ public partial class V1_NonProfit_CreateWaiverStepUp : System.Web.UI.Page
 
         using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
         {
-            var allUsers = from uo in dc.UserOrganizations
-                           where uo.OrganizationId == orgId
-                           join p in dc.Profiles on uo.UserId equals p.UserId
-                           join m in dc.aspnet_Memberships on uo.UserId equals m.UserId
-                           join wa in dc.WaiverSignatures.Where(w => w.OrganizationId == orgId)
-                            on uo.UserId equals wa.UserId into waiverJoin
-                           from waiver in waiverJoin.DefaultIfEmpty()
+            var allUsers = from wa in dc.WaiverSignatures
+                           where wa.OrganizationId == orgId
+                           join uo in dc.UserOrganizations
+                               on new { wa.UserId, wa.OrganizationId } equals new { uo.UserId, uo.OrganizationId }
+                           join p in dc.Profiles on wa.UserId equals p.UserId
+                           join m in dc.aspnet_Memberships on wa.UserId equals m.UserId
                            select new
                            {
                                Name = p.Firstname + " " + p.Lastname,
                                Email = m.Email,
                                JoinDate = uo.TeamVerifiedDate,
-                               IsSigned = waiver != null,
-                               SignedDate = waiver != null ? waiver.SignedOn : (DateTime?)null
+                               IsSigned = true,
+                               SignedDate = wa.SignedOn
                            };
+
+
 
             gvSignatures.DataSource = allUsers.ToList();
             gvSignatures.DataBind();
