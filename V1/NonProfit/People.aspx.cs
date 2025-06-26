@@ -1,24 +1,15 @@
 ﻿using CrowdRelief;
-using GoogleMapsAPI.Places;
-using Microsoft.IdentityModel.Tokens;
-using Stripe;
-using Stripe.Climate;
 using System;
-using System.Activities;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Globalization;
-using System.IdentityModel.Metadata;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Web;
 using System.Web.Security;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-using Twilio.TwiML.Voice;
 public partial class V1_NonProfit_People : BaseOrganizationWebForm
 {
     public string _logo;

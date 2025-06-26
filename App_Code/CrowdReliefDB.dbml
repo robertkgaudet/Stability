@@ -118,6 +118,8 @@
       <Association Name="aspnet_User_UserOrganizationHistory" Member="UserOrganizationHistories" ThisKey="UserId" OtherKey="UserId" Type="UserOrganizationHistory" />
       <Association Name="aspnet_User_UserOrganization" Member="UserOrganizations" ThisKey="UserId" OtherKey="UserId" Type="UserOrganization" />
       <Association Name="aspnet_User_OrganizationUserRanking" Member="OrganizationUserRankings" ThisKey="UserId" OtherKey="UserId" Type="OrganizationUserRanking" />
+      <Association Name="aspnet_User_OrganizationWaiver" Member="OrganizationWaivers" ThisKey="UserId" OtherKey="UpdatedBy" Type="OrganizationWaiver" />
+      <Association Name="aspnet_User_WaiverSignature" Member="WaiverSignatures" ThisKey="UserId" OtherKey="UserId" Type="WaiverSignature" />
       <Association Name="StreamDonation_aspnet_User" Member="StreamDonation" Storage="_Donation" ThisKey="UserId" OtherKey="UserId" Type="StreamDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User" Member="UserDonation" ThisKey="UserId" OtherKey="DonorId" Type="UserDonation" IsForeignKey="true" />
       <Association Name="UserDonation_aspnet_User1" Member="UserDonation1" ThisKey="UserId" OtherKey="RecipientId" Type="UserDonation" IsForeignKey="true" />
@@ -1976,6 +1978,8 @@
       <Association Name="Organization_UserOrganization" Member="UserOrganizations" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="UserOrganization" />
       <Association Name="Organization_OrganizationUserRanking" Member="OrganizationUserRankings" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationUserRanking" />
       <Association Name="Organization_OrganizationRankingConfig" Member="OrganizationRankingConfigs" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationRankingConfig" />
+      <Association Name="Organization_OrganizationWaiver" Member="OrganizationWaiver" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="OrganizationWaiver" Cardinality="One" />
+      <Association Name="Organization_WaiverSignature" Member="WaiverSignatures" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="WaiverSignature" />
       <Association Name="aspnet_User_Organization" Member="aspnet_User" ThisKey="CreatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
       <Association Name="aspnet_User_Organization1" Member="aspnet_User1" ThisKey="OwnerId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
@@ -2204,6 +2208,28 @@
       <Column Name="ModifiedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="ModifiedBy" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Association Name="Organization_OrganizationRankingConfig" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.OrganizationWaiver" Member="OrganizationWaivers">
+    <Type Name="OrganizationWaiver">
+      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="WaiverText" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsRequired" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="UpdatedBy" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Association Name="Organization_OrganizationWaiver" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
+      <Association Name="aspnet_User_OrganizationWaiver" Member="aspnet_User" ThisKey="UpdatedBy" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.WaiverSignature" Member="WaiverSignatures">
+    <Type Name="WaiverSignature">
+      <Column Name="SignatureId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="OrganizationId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="SignatureName" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="SignedOn" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="Organization_WaiverSignature" Member="Organization" ThisKey="OrganizationId" OtherKey="OrganizationId" Type="Organization" IsForeignKey="true" />
+      <Association Name="aspnet_User_WaiverSignature" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.GetGeoJsonByDisasterForCleanupMap" Method="GetGeoJsonByDisasterForCleanupMap">

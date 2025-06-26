@@ -24,8 +24,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
     public string _nonProfitDropDown;
     public string _coverImage;
     public string urlFriendlyName = string.Empty;
-	public string organizationId = string.Empty;
-	public string volunteerLink = string.Empty;
+    public string organizationId = string.Empty;
+    public string volunteerLink = string.Empty;
     public string donateLink = string.Empty;
     public string impactoidLink = string.Empty;
     public string activityPageLink = string.Empty;
@@ -38,71 +38,71 @@ public partial class V1_NonProfit_Default : BaseWebForm
         ucTeamFooter.PageName = "teamPage";
         ucTeamHeader.PageName = "Team Page";
 
-		#region HEADER PROPERTIES
-		////////////////////////
-		//BEGIN HEADER PROPERTIES
-		////////////////////////
+        #region HEADER PROPERTIES
+        ////////////////////////
+        //BEGIN HEADER PROPERTIES
+        ////////////////////////
 
-		urlFriendlyName = Request.QueryString["urlFriendlyName"];
-		organizationId = Request.QueryString["organizationId"];
+        urlFriendlyName = Request.QueryString["urlFriendlyName"];
+        organizationId = Request.QueryString["organizationId"];
 
         string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
         _coverImage = causePhotoFolder + "businesscoverimage.png";
 
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-		if(!String.IsNullOrEmpty(urlFriendlyName))
-		{
-			//Get and set the org id.
-			var organizationIdCheck = (from o in dc.Organizations
-								where o.URLFriendlyName == urlFriendlyName
-								select new { o.OrganizationId }).SingleOrDefault();
+        if (!String.IsNullOrEmpty(urlFriendlyName))
+        {
+            //Get and set the org id.
+            var organizationIdCheck = (from o in dc.Organizations
+                                       where o.URLFriendlyName == urlFriendlyName
+                                       select new { o.OrganizationId }).SingleOrDefault();
 
-			if (organizationIdCheck.OrganizationId != Guid.Empty)
-			{
-				organizationId = organizationIdCheck.OrganizationId.ToString();
-			}
-		}
+            if (organizationIdCheck.OrganizationId != Guid.Empty)
+            {
+                organizationId = organizationIdCheck.OrganizationId.ToString();
+            }
+        }
 
-		ucTeamHeader.OrganizationId = organizationId;
+        ucTeamHeader.OrganizationId = organizationId;
 
-		if (String.IsNullOrEmpty(organizationId))
-		{
-			if (!User.Identity.IsAuthenticated)
-			{
-				//Have the user signin
-				Response.Redirect("/SignIn");
-			}
-			else
-			{
-				//Get this users team, no team? Send them to pick a team.
-				var userPrimaryOrganization = (from uo in dc.UserOrganizations
-										where uo.UserId == userId && uo.IsPrimary == true
-										select new { uo.OrganizationId }).Take(1).SingleOrDefault();
+        if (String.IsNullOrEmpty(organizationId))
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                //Have the user signin
+                Response.Redirect("/SignIn");
+            }
+            else
+            {
+                //Get this users team, no team? Send them to pick a team.
+                var userPrimaryOrganization = (from uo in dc.UserOrganizations
+                                               where uo.UserId == userId && uo.IsPrimary == true
+                                               select new { uo.OrganizationId }).Take(1).SingleOrDefault();
 
-				if (userPrimaryOrganization == null)
-				{
-					var userOrganization = (from uo in dc.UserOrganizations
-											where uo.UserId == userId
-											select new { uo.OrganizationId }).Take(1).SingleOrDefault();
+                if (userPrimaryOrganization == null)
+                {
+                    var userOrganization = (from uo in dc.UserOrganizations
+                                            where uo.UserId == userId
+                                            select new { uo.OrganizationId }).Take(1).SingleOrDefault();
 
-					if(userOrganization == null)
-					{
-						Response.Redirect("/V1/NonProfit/TeamList.aspx?team=false");
-					}
-					else
-					{
-						organizationId = userOrganization.OrganizationId.ToString();
-					}
-				}
-				else
-				{
-					organizationId = userPrimaryOrganization.OrganizationId.ToString();
-				}
-			}
-		}
+                    if (userOrganization == null)
+                    {
+                        Response.Redirect("/V1/NonProfit/TeamList.aspx?team=false");
+                    }
+                    else
+                    {
+                        organizationId = userOrganization.OrganizationId.ToString();
+                    }
+                }
+                else
+                {
+                    organizationId = userPrimaryOrganization.OrganizationId.ToString();
+                }
+            }
+        }
 
-		var organization = (from o in dc.Organizations
+        var organization = (from o in dc.Organizations
                             where o.OrganizationId == new Guid(organizationId) && o.IsActive == true
                             select new
                             {
@@ -141,14 +141,22 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
 
         string squareLogo = "/V1/Images/Logo-Placeholder.png";
+       var waiver = dc.OrganizationWaivers
+                  .FirstOrDefault(w => w.OrganizationId == new Guid(organizationId) && w.IsRequired == true);
+        if (Session["ShowModal"] != null && (bool)Session["ShowModal"] == true)
+        {
+            litWaiverText.Text = waiver.WaiverText.Replace("\n", "<br />");
+            hiddenShowModal.Value = "true";
+            Session["ShowModal"] = null;
+        }
         if (organization != null)
         {
-			BindChapterOrganizations(organizationId);
+            BindChapterOrganizations(organizationId);
 
 
-			if (!string.IsNullOrEmpty(organization.CoverImage))
+            if (!string.IsNullOrEmpty(organization.CoverImage))
             {
-				//Let's the user change the cover image.
+                //Let's the user change the cover image.
                 _coverImage = causePhotoFolder + organization.CoverImage;
             }
 
@@ -166,7 +174,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     squareLogo = virtualPath_square;
                 }
             }
-        
+
 
             Master.PageTitle = organization.Name + " Programs on Stability";
             Master.PageDescription = organization.Description;
@@ -183,8 +191,8 @@ public partial class V1_NonProfit_Default : BaseWebForm
         Master.FbImageType = "image/jpg";
         Master.FbURL = Request.Url.AbsoluteUri;
 
-		TeamRoles teamRoles = TeamRoleService.GetTeamRoles(userId, new Guid(organizationId), User.IsInRole("Administrator"));
-		if (teamRoles.IsTeamOwner || teamRoles.IsTeamAdministrator || teamRoles.IsSiteAdministrator)
+        TeamRoles teamRoles = TeamRoleService.GetTeamRoles(userId, new Guid(organizationId), User.IsInRole("Administrator"));
+        if (teamRoles.IsTeamOwner || teamRoles.IsTeamAdministrator || teamRoles.IsSiteAdministrator)
         {
             lbCreateChapter.Visible = true;
             createChapterLink = "/V1/NonProfit/NonProfitNew.aspx?parentOrganizationId=" + organizationId;
@@ -214,7 +222,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
             var userOrganization = from uo in dc.UserOrganizations
                                    where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-                                   && uo.OrganizationId == new Guid(organizationId)&& (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                                   && uo.OrganizationId == new Guid(organizationId) && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                    select uo;
 
 
@@ -224,7 +232,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
             if (request != null)
             {
-				userStatus = request.Status;
+                userStatus = request.Status;
             }
 
             var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
@@ -273,9 +281,9 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     btnActiveVolunteer.Style.Add("color", "black");
                     lbVolunteer.Visible = false;
                 }
-                else if(userStatus== (int)RequestStatus.RemovedByUser)
+                else if (userStatus == (int)RequestStatus.RemovedByUser)
                 {
-                    lbVolunteer.Visible=true;
+                    lbVolunteer.Visible = true;
                 }
                 else if (userOrg.IsPrimary == true && (userStatus == (int)RequestStatus.Approved || userStatus == (int)RequestStatus.Pending))
                 {
@@ -289,7 +297,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     lbleave.Visible = true;
                     lbprimary.Visible = true;
                 }
-                
+
             }
             else if (userOrg != null)
             {
@@ -309,7 +317,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                 }
             }
 
-			if (teamRoles.IsTeamOwner)
+            if (teamRoles.IsTeamOwner)
             {
                 lbleave.Visible = true;
                 lbleave.CssClass = "btn btn-secondary  btn-large pull-right m-l-md disabled";
@@ -450,7 +458,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
-                if (!String.IsNullOrEmpty(urlFriendlyName) && organizationId==null)
+                if (!String.IsNullOrEmpty(urlFriendlyName) && organizationId == null)
                 {
                     var organizationIdCheck = (from o in dc.Organizations
                                                where o.URLFriendlyName == urlFriendlyName
@@ -467,14 +475,14 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
                 if (userOrg != null)
                 {
-                     int previousStatus = userOrg.Status;
-                    
-                        if (userHistory != null)
-                        {
-                            userHistory.PreviousStatus = previousStatus;
-                            userHistory.StatusChangedOn = DateTime.Now;
-                        }
-                    
+                    int previousStatus = userOrg.Status;
+
+                    if (userHistory != null)
+                    {
+                        userHistory.PreviousStatus = previousStatus;
+                        userHistory.StatusChangedOn = DateTime.Now;
+                    }
+
                     else
                     {
                         UserOrganizationHistory history = new UserOrganizationHistory
@@ -490,7 +498,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     userOrg.Status = (int)RequestStatus.RemovedByUser;
                     dc.SubmitChanges();
 
-                    }
+                }
             }
 
         }
@@ -507,7 +515,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
-                if (!String.IsNullOrEmpty(urlFriendlyName) && organizationId==null)
+                if (!String.IsNullOrEmpty(urlFriendlyName) && organizationId == null)
                 {
                     var organizationIdCheck = (from o in dc.Organizations
                                                where o.URLFriendlyName == urlFriendlyName
@@ -519,7 +527,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     }
                 }
                 var currentPrimary = dc.UserOrganizations
-                                       .FirstOrDefault(uo => uo.UserId == userId && uo.IsPrimary == true && (uo.Status== (int)RequestStatus.Approved || uo.Status== (int)RequestStatus.Pending));
+                                       .FirstOrDefault(uo => uo.UserId == userId && uo.IsPrimary == true && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending));
                 if (currentPrimary != null)
                 {
                     currentPrimary.IsPrimary = false;
@@ -540,7 +548,6 @@ public partial class V1_NonProfit_Default : BaseWebForm
     {
         if (!User.Identity.IsAuthenticated)
         {
-
             string returnUrl = Server.UrlEncode(Request.RawUrl);
             Response.Redirect("~/SignIn.aspx?ReturnUrl=" + returnUrl);
             return;
@@ -549,16 +556,20 @@ public partial class V1_NonProfit_Default : BaseWebForm
         {
             string organizationId = Request.QueryString["organizationId"];
             urlFriendlyName = Request.QueryString["urlFriendlyName"];
-
-            if (!string.IsNullOrEmpty(organizationId) || urlFriendlyName!=null)
+            OrganizationWaiver waiver = null;
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
-                Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
-                UserOrganizationHistory userHistory = null;
-
-
-                using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+                if (organizationId != null)
                 {
+                    waiver = dc.OrganizationWaivers
+                    .FirstOrDefault(w => w.OrganizationId == new Guid(organizationId) && w.IsRequired == true);
+                }
 
+
+                if (!string.IsNullOrEmpty(organizationId) || urlFriendlyName != null)
+                {
+                    Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
+                    UserOrganizationHistory userHistory = null;
                     if (!String.IsNullOrEmpty(urlFriendlyName) && organizationId == null)
                     {
                         var organizationIdCheck = (from o in dc.Organizations
@@ -568,67 +579,172 @@ public partial class V1_NonProfit_Default : BaseWebForm
                         if (organizationIdCheck.OrganizationId != Guid.Empty)
                         {
                             organizationId = organizationIdCheck.OrganizationId.ToString();
+                            waiver = dc.OrganizationWaivers
+               .FirstOrDefault(w => w.OrganizationId == new Guid(organizationId) && w.IsRequired == true);
                         }
                     }
-                    var userOrg = dc.UserOrganizations
-                                .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
-                    int? previousStatus = null;
-
-                    if (userOrg == null)
+                    if (waiver == null)
                     {
-                        userOrg = new UserOrganization
-                        {
-                            UserOrganizationId = Guid.NewGuid(),
-                            UserId = userId,
-                            OrganizationId = new Guid(organizationId),
-                            ShowTeamLogo = false,
-                            TeamVerifiedDate = DateTime.Now,
-                            IsPrimary = false,
-                            IsPreviousOwner = false,
-                            IsTeamAdministrator = false,
-                            IsOwner = false,
-                            Status = (int)RequestStatus.Pending
-                        };
+                        var userOrg = dc.UserOrganizations
+                                    .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
+                        int? previousStatus = null;
 
-                        dc.UserOrganizations.InsertOnSubmit(userOrg);
+                        if (userOrg == null)
+                        {
+                            userOrg = new UserOrganization
+                            {
+                                UserOrganizationId = Guid.NewGuid(),
+                                UserId = userId,
+                                OrganizationId = new Guid(organizationId),
+                                ShowTeamLogo = false,
+                                TeamVerifiedDate = DateTime.Now,
+                                IsPrimary = false,
+                                IsPreviousOwner = false,
+                                IsTeamAdministrator = false,
+                                IsOwner = false,
+                                Status = (int)RequestStatus.Pending
+                            };
+
+                            dc.UserOrganizations.InsertOnSubmit(userOrg);
+                        }
+                        else
+                        {
+                            previousStatus = userOrg.Status;
+                            userOrg.Status = (int)RequestStatus.Pending;
+                            userHistory = dc.UserOrganizationHistories
+                                      .FirstOrDefault(uh => uh.UserOrganizationId == userOrg.UserOrganizationId);
+                        }
+
+
+                        if (userHistory == null)
+                        {
+                            UserOrganizationHistory history = new UserOrganizationHistory
+                            {
+                                UserOrganizationHistoryId = Guid.NewGuid(),
+                                UserOrganizationId = userOrg.UserOrganizationId,
+                                UserId = userId,
+                                PreviousStatus = (int)RequestStatus.Pending,
+                                StatusChangedOn = DateTime.Now,
+                                DateToReApply = null
+                            };
+
+                            dc.UserOrganizationHistories.InsertOnSubmit(history);
+                        }
+                        else
+                        {
+                            userHistory.PreviousStatus = previousStatus ?? 0;
+                            userHistory.StatusChangedOn = DateTime.Now;
+
+                        }
+                        dc.SubmitChanges();
+
+                        AddNotificationsAndSendEmail(null, EventArgs.Empty);
+
                     }
                     else
                     {
-                        previousStatus = userOrg.Status;
-                        userOrg.Status = (int)RequestStatus.Pending;
-                        userHistory = dc.UserOrganizationHistories
-                                  .FirstOrDefault(uh => uh.UserOrganizationId == userOrg.UserOrganizationId);
+                        litWaiverText.Text = waiver.WaiverText.Replace("\n", "<br />");
+                        Session["ShowModal"] = true;
                     }
 
-
-                    if (userHistory == null)
-                    {
-                        UserOrganizationHistory history = new UserOrganizationHistory
-                        {
-                            UserOrganizationHistoryId = Guid.NewGuid(),
-                            UserOrganizationId = userOrg.UserOrganizationId,
-                            UserId = userId,
-                            PreviousStatus = (int)RequestStatus.Pending,
-                            StatusChangedOn = DateTime.Now,
-                            DateToReApply = null
-                        };
-
-                        dc.UserOrganizationHistories.InsertOnSubmit(history);
-                    }
-                    else
-                    {
-                        userHistory.PreviousStatus = previousStatus ?? 0;
-                        userHistory.StatusChangedOn = DateTime.Now;
-
-                    }
-                    dc.SubmitChanges();
-
-                    AddNotificationsAndSendEmail(null, EventArgs.Empty);
                 }
+
             }
         }
         Response.Redirect(Request.RawUrl);
     }
+
+    protected void btnContinue_Click(object sender, EventArgs e)
+    {
+        string organizationId = Request.QueryString["organizationId"];
+        urlFriendlyName = Request.QueryString["urlFriendlyName"];
+        if (!string.IsNullOrEmpty(organizationId) || urlFriendlyName != null)
+        {
+            using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
+            {
+                Guid userId = (Guid)Membership.GetUser().ProviderUserKey;
+                UserOrganizationHistory userHistory = null;
+                if (!String.IsNullOrEmpty(urlFriendlyName) && organizationId == null)
+                {
+                    var organizationIdCheck = (from o in dc.Organizations
+                                               where o.URLFriendlyName == urlFriendlyName
+                                               select new { o.OrganizationId }).SingleOrDefault();
+
+                    if (organizationIdCheck.OrganizationId != Guid.Empty)
+                    {
+                        organizationId = organizationIdCheck.OrganizationId.ToString();
+                    }
+                }
+                var userOrg = dc.UserOrganizations
+                            .FirstOrDefault(uo => uo.UserId == userId && uo.OrganizationId == new Guid(organizationId));
+                int? previousStatus = null;
+                WaiverSignature signature = new WaiverSignature
+                {
+                    SignatureId = Guid.NewGuid(),
+                    OrganizationId = new Guid(organizationId),
+                    UserId = userId,
+                    SignatureName = txtFullName.Text,
+                    SignedOn = DateTime.Now
+                };
+
+                dc.WaiverSignatures.InsertOnSubmit(signature);
+                dc.SubmitChanges();
+                if (userOrg == null)
+                {
+                    userOrg = new UserOrganization
+                    {
+                        UserOrganizationId = Guid.NewGuid(),
+                        UserId = userId,
+                        OrganizationId = new Guid(organizationId),
+                        ShowTeamLogo = false,
+                        TeamVerifiedDate = DateTime.Now,
+                        IsPrimary = false,
+                        IsPreviousOwner = false,
+                        IsTeamAdministrator = false,
+                        IsOwner = false,
+                        Status = (int)RequestStatus.Pending
+                    };
+
+                    dc.UserOrganizations.InsertOnSubmit(userOrg);
+                }
+                else
+                {
+                    previousStatus = userOrg.Status;
+                    userOrg.Status = (int)RequestStatus.Pending;
+                    userHistory = dc.UserOrganizationHistories
+                              .FirstOrDefault(uh => uh.UserOrganizationId == userOrg.UserOrganizationId);
+                }
+
+
+                if (userHistory == null)
+                {
+                    UserOrganizationHistory history = new UserOrganizationHistory
+                    {
+                        UserOrganizationHistoryId = Guid.NewGuid(),
+                        UserOrganizationId = userOrg.UserOrganizationId,
+                        UserId = userId,
+                        PreviousStatus = (int)RequestStatus.Pending,
+                        StatusChangedOn = DateTime.Now,
+                        DateToReApply = null
+                    };
+
+                    dc.UserOrganizationHistories.InsertOnSubmit(history);
+                }
+                else
+                {
+                    userHistory.PreviousStatus = previousStatus ?? 0;
+                    userHistory.StatusChangedOn = DateTime.Now;
+
+                }
+                dc.SubmitChanges();
+            
+                AddNotificationsAndSendEmail(null, EventArgs.Empty);
+            }
+                
+        }
+        Response.Redirect(Request.RawUrl);
+    }
+
 
     protected void AddNotificationsAndSendEmail(object sender, EventArgs e)
     {
@@ -654,7 +770,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
                 var adminOwners = dc.UserOrganizations
                .Where(uo =>
                 uo.OrganizationId == new Guid(organizationId) &&
-               (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending) &&
+               (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending) &&
             (uo.IsTeamAdministrator == true || uo.IsOwner == true)
             )
           .Select(uo => uo.UserId)
@@ -689,18 +805,18 @@ public partial class V1_NonProfit_Default : BaseWebForm
                     { "##UserName##", userName },
                     { "##OrganizationName##", orgName },
                     { "##OrganizationId##", organizationId.ToString() },
-             
+
                   };
                     string error = string.Empty;
                     Tools.SendEmail(
-                        userEmail,                                    
-                        "New Team Join Request",                      
-                        ldEmailBodyReplacements,                      
-                        userEmail,                     
-                        "Stability Team Alert",                        
-                        string.Empty,                                  
-                        string.Empty,                                 
-                        "~/EmailTemplates/TeamJoinRequest.html",       
+                        userEmail,
+                        "New Team Join Request",
+                        ldEmailBodyReplacements,
+                        userEmail,
+                        "Stability Team Alert",
+                        string.Empty,
+                        string.Empty,
+                        "~/EmailTemplates/TeamJoinRequest.html",
                         out error
                     );
 
