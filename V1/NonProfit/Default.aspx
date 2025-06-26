@@ -385,7 +385,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <h5><strong>Please read and sign the waiver below to join our team:</strong></h5>
+                    <h4><strong>Please read and sign the waiver below to join our team:</strong></h4>
 
                     <div>
                         <asp:Literal ID="litWaiverText" runat="server"></asp:Literal>
