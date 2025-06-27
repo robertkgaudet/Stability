@@ -41,7 +41,7 @@ public partial class V1_Login : System.Web.UI.Page
                 // GOOGLE
                 string clientId = ConfigurationManager.AppSettings["GoogleClientId"];
                 string clientSecret = ConfigurationManager.AppSettings["GoogleClientSecret"];
-                string redirectUri = "http://localhost:64915/V1/ExternalLoginCallBack.aspx?provider=google";
+                string redirectUri = ConfigurationManager.AppSettings["GoogleRedirectUri"];
 
                 var values = new NameValueCollection();
                 values.Add("code", code);
