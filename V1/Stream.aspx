@@ -297,6 +297,13 @@
             }
 
             function updateStreamPost(pageNumber) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const searchTerm = urlParams.get('searchTerm');
+
+                if (searchTerm && searchTerm.trim() !== "") {
+                    // Stop execution if searchTerm is present
+                    return;
+                }
                 //sending commentId will cause a delete.
                 $.ajax(
                     {
@@ -1565,7 +1572,7 @@
 
                         var truncatedDescription = truncateText(data.description, 28);
 
-                        postHtml += '<div class="text-container"><small class="text-muted">' + url + '</small></br>';
+                        postHtml += '<div class="text-container"><small class="text-muted"><a href="' + url + '" target="_blank">' + url + '</a></small><br>';
                         postHtml += '<b>' + data.title + '</b>';
                         postHtml += '<p>' + truncatedDescription + '</p></div>';
 

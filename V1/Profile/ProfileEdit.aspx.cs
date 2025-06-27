@@ -33,16 +33,21 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
 						  where p.UserId == userId
 						  select p).SingleOrDefault();
 
-			txtAddress.Value = profile.Address;
+			if (!String.IsNullOrEmpty(profile.Address))
+				txtAddress.Value = profile.Address;
+
 			txtCity.Value = profile.City;
 			txtDatesAvailable.Value = profile.DatesAvailable;
 			txtFirstname.Value = profile.Firstname;
 			txtLastname.Value = profile.Lastname;
 			txtNumberOfDays.Value = profile.NumberOfDaysAvailable;
-			txtPhonenumber.Value = profile.PhoneNumber;
+			txtPhonenumber.Text = profile.PhoneNumber;
 			txtVolunteerDescription.Value = profile.Description;
 			txtZello.Value = profile.ZelloName;
-			txtZipCode.Value = profile.Zip;
+
+			if (!String.IsNullOrEmpty(profile.Zip))
+				txtZipCode.Value = profile.Zip;
+
 			txtTitle.Value = profile.Title;
 			receiveSMS.Checked = profile.ReceiveSMSNotifications;
 			receiveEmail.Checked = profile.ReceiveEmailNotifications;
@@ -69,17 +74,22 @@ public partial class V1_ProfileEdit : BaseOrganizationWebForm
 						where p.UserId == userId
 						select p).SingleOrDefault();
 
-		profile.Address = txtAddress.Value;
+		if (!String.IsNullOrEmpty(txtAddress.Value))
+			profile.Address = txtAddress.Value;
+
 		profile.City = txtCity.Value;
 		profile.DatesAvailable = txtDatesAvailable.Value;
 		profile.Description = txtVolunteerDescription.Value;
 		profile.Firstname = txtFirstname.Value;
 		profile.Lastname = txtLastname.Value;
 		profile.NumberOfDaysAvailable = txtNumberOfDays.Value;
-		profile.PhoneNumber = txtPhonenumber.Value;
+		profile.PhoneNumber = txtPhonenumber.Text;
 		profile.State = ddlState.SelectedValue;
 		profile.ZelloName = txtZello.Value;
-		profile.Zip = txtZipCode.Value;
+
+		if (!String.IsNullOrEmpty(txtZipCode.Value))
+			profile.Zip = txtZipCode.Value;
+
 		profile.Title = txtTitle.Value;
 		profile.ReceiveSMSNotifications = receiveSMS.Checked;
 		profile.ReceiveEmailNotifications = receiveEmail.Checked;

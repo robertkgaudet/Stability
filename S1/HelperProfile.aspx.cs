@@ -169,7 +169,7 @@ public partial class S1_HelperProfile : BaseOrganizationWebForm
 
 
 
-		if(profile.VolunteerApplicationDate != null)
+		if(!string.IsNullOrEmpty(profile.VolunteerApplicationDate .ToString()))
 		{
 			litVolunteerApplicationCompletedOn.Text = "Volunteer application completed " + GetElapsedTime(Convert.ToDateTime(profile.VolunteerApplicationDate)) + "</p>";
 		}
@@ -209,11 +209,11 @@ public partial class S1_HelperProfile : BaseOrganizationWebForm
 			Profile vettingUsersProfile = GetUserProfileByUserId(vettingProfileUserId);
 
 			DateTime vettingUpdatedOn = new DateTime();
-			if(profile.DateVettingCompleted != null)
+			if(!string.IsNullOrEmpty(profile.DateVettingCompleted.ToString()))
 			{
 				vettingUpdatedOn = (DateTime)profile.DateVettingCompleted;
 			}
-			else if(profile.DateVettingStarted != null)
+			else if(!string.IsNullOrEmpty(profile.DateVettingStarted.ToString()))
 			{
 				vettingUpdatedOn = (DateTime)profile.DateVettingStarted;
 			}
@@ -319,10 +319,10 @@ public partial class S1_HelperProfile : BaseOrganizationWebForm
 		
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
-		var nonProfits = from us in dc.UserOrganizations
-					 join s in dc.Organizations on us.OrganizationId equals s.OrganizationId
-					 where us.UserId == userId
-					 orderby s.Name
+		var nonProfits = from uo in dc.UserOrganizations
+					 join s in dc.Organizations on uo.OrganizationId equals s.OrganizationId
+					 where uo.UserId == userId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                         orderby s.Name
 					 select s;
 
 		foreach(var nonProfit in nonProfits)

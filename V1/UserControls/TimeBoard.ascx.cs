@@ -26,8 +26,8 @@ public partial class V1_UserControls_TimeBoard : System.Web.UI.UserControl
 		var peopleList = from uo in dc.UserOrganizations
 						 join p in dc.Profiles on uo.UserId equals p.UserId
 						 join oe in dc.OrganizationEvents on uo.OrganizationId equals oe.OrganizationId
-						 where oe.OrganizationEventId == _organizationEventId
-						 orderby p.Title descending
+						 where oe.OrganizationEventId == _organizationEventId && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                         orderby p.Title descending
 						 select p;
 
 		rpNonProfitPeople.DataSource = peopleList;

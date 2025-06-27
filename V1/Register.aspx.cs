@@ -7,6 +7,7 @@ using System.IdentityModel.Metadata;
 using System.Collections.Specialized;
 using System.Web.Routing;
 using Twilio.TwiML.Voice;
+using System.Web.Services;
 
 public partial class V1_Register : System.Web.UI.Page
 {
@@ -21,7 +22,7 @@ public partial class V1_Register : System.Web.UI.Page
 	{
 		if (User.Identity.IsAuthenticated)
 		{
-			Response.Redirect("/V1/Member/Default.aspx");
+			Response.Redirect("/V1/Profile/CommunityLandingPage.aspx");
 		}
 
 		eventId = Request.QueryString["eventId"];
@@ -53,7 +54,7 @@ public partial class V1_Register : System.Web.UI.Page
 
 	protected void Redirect()
 	{
-		string urlRedirect = "/Survivor";
+		string urlRedirect = "/V1/Profile/CommunityLandingPage.aspx";
 		if (Roles.IsUserInRole("survivor"))
 		{
 			urlRedirect = "/V1/DisasterList.aspx?userType=survivor";
@@ -83,14 +84,9 @@ public partial class V1_Register : System.Web.UI.Page
 		string password = txtPassword.Text;
 		string username = txtUsername.Text;
 		string phoneNumber = txtPhoneNumber.Text;
-		string addressData = hidAddressData.Value;
 		string passwordAnswer = "12:00";
 		string email = txtEmail.Text;
 		string urlRedirect = string.Empty;
-		string address = txtAddress.Text;
-		string city = txtCity.Text;
-		string state = ddlState.Value;
-		string zipCode = txtZipCode.Text;
 		string eventName = string.Empty;
 		Boolean deploymentSMS = chkMessageOptIn.Checked;
 		//string eventId = hidEventId.Value;
@@ -114,16 +110,22 @@ public partial class V1_Register : System.Web.UI.Page
 				//user is already associated with a team, go ahead and send them to that team.
 				UserOrganization userOrganization = new UserOrganization();
 				userOrganization.UserOrganizationId = Guid.NewGuid();
-				userOrganization.OrganizationId = new Guid(organizationId);
 				userOrganization.UserId = new Guid(newUser.ProviderUserKey.ToString());
-				dc.UserOrganizations.InsertOnSubmit(userOrganization);
+				userOrganization.OrganizationId = new Guid(organizationId);
+				userOrganization.ShowTeamLogo = false;
+				userOrganization.TeamVerifiedDate = null;
+				userOrganization.IsPrimary = true;
+				userOrganization.IsPreviousOwner = false;
+				userOrganization.IsTeamAdministrator = false;
+				userOrganization.IsOwner = false;
+                userOrganization.Status = (int)RequestStatus.Pending;
+                dc.UserOrganizations.InsertOnSubmit(userOrganization);
 				dc.SubmitChanges();
-				urlRedirect = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId;
+				urlRedirect = "/V1/Profile/EditSkills.aspx?register=true";
 			}
 			else
 			{
-				//Send to the team list page and ask that they choose a team.
-				urlRedirect = "/V1/NonProfit/TeamList.aspx?team=false";
+				urlRedirect = "/V1/Profile/EditSkills.aspx?register=true";
 			}
 			if (Request.QueryString["transactionId"] != null)
 			{
@@ -152,105 +154,25 @@ public partial class V1_Register : System.Web.UI.Page
 				Roles.AddUserToRole(username, "Member");
 			}
 
+			Guid newUserId = Guid.NewGuid();
 			//Create a profile for this user.
 			Profile userProfile = new Profile();
 			userProfile.UserId = new Guid(newUser.ProviderUserKey.ToString());
-			userProfile.ProfileId = Guid.NewGuid();
+			userProfile.ProfileId = newUserId;
 			userProfile.Firstname = firstName;
 			userProfile.Lastname = lastName;
 			userProfile.PhoneNumber = phoneNumber;
-			userProfile.Address = address;
-			userProfile.City = city;
-			userProfile.State = state;
-			userProfile.Zip = zipCode;
+			userProfile.VettingActive = false;
+			userProfile.VettingComplete = true;
+			userProfile.PassedVetting = true;
+			userProfile.DateVettingCompleted = DateTime.Now;
+			userProfile.City = hfCityName.Value;
+			userProfile.State = hfStateName.Value;
 			userProfile.ReceiveDeploymentSMS = deploymentSMS;
 			dc.Profiles.InsertOnSubmit(userProfile);
 			dc.SubmitChanges();
 
 
-			#region save address 
-			var addressList = addressData.Split('|');
-			var duplicateAddress = dc.Addresses.FirstOrDefault(f => f.GooglePlaceId == addressList[10]);
-			if (duplicateAddress == null)
-			{
-				var duplicateCounty = dc.Counties.FirstOrDefault(f => f.Name == addressList[9]); 
-				var countyId = Guid.NewGuid();
-				if (duplicateCounty == null)
-				{
-					var states = dc.USStates.FirstOrDefault(f => f.Code == state);
-					County county = new County();
-					county.CountyId = countyId;
-					county.Name = addressList[9];
-					county.StateId = states != null ? states.StatesId : new Guid();
-					county.State = state;
-					dc.Counties.InsertOnSubmit(county);
-					dc.SubmitChanges();
-				}
-				else
-				{
-					countyId = duplicateCounty.CountyId;
-				}
-
-				var duplicateCity = dc.Cities.FirstOrDefault(f => f.City1 == city);
-				var cityId = Guid.NewGuid();
-				if (duplicateCity == null)
-				{
-					City cit = new City();
-					cit.CityId = cityId;
-					cit.City1 = city;
-					cit.Code = addressList[14];
-					dc.Cities.InsertOnSubmit(cit);
-					dc.SubmitChanges();
-				}
-				else
-				{
-					cityId = duplicateCity.CityId;
-				}
-
-				Address adres = new Address();
-				adres.AddressId = Guid.NewGuid();
-				adres.GooglePlaceId = addressList[10];
-				adres.FormattedAddress = addressList[11];
-				adres.StreetNumber = addressList[3];
-				adres.StreetName = addressList[4];
-				adres.Address1 = address;
-				adres.City = city;
-				adres.State = state;
-				adres.Zip = zipCode;
-				adres.Country = addressList[7];
-				adres.County = addressList[9];
-				adres.Latitude = addressList[1];
-				adres.Longitude = addressList[2];
-				adres.IsActive = true;
-				adres.CreatedOn = DateTime.Now;
-				adres.CreatedBy = userProfile.UserId;
-				adres.CountyId = countyId;
-				adres.CityId = cityId;
-				adres.LocationType = addressList[13];
-				dc.Addresses.InsertOnSubmit(adres);
-				dc.SubmitChanges();
-
-				ProfileAddress proadres = new ProfileAddress();
-				proadres.ProfileAddressId = Guid.NewGuid();
-				proadres.ProfileId = userProfile.ProfileId;
-				proadres.AddressId = adres.AddressId;
-				proadres.HomeTypeId = new Guid("C478785A-014D-4DFF-86FE-3693E6F33FAC");
-				proadres.HomeRelationshipOwnRentTypeId = new Guid("58526C73-5469-4B5E-81B1-831476784C56");
-				proadres.IsPrimaryResidence = false;
-				proadres.HasFloodInsurance = false;
-				proadres.HasHomeownersInsurance = false;
-				proadres.ShowOnAgencyMap = false;
-				proadres.ShowOnCleanupMap = false;
-				proadres.IsMultistory = false;
-				proadres.HasBasement = false;
-				proadres.HasGarage = false;
-				proadres.HasCarport = false;
-				proadres.HasCrawlspace = false;
-				dc.ProfileAddresses.InsertOnSubmit(proadres);
-				dc.SubmitChanges();
-			}
-
-			#endregion
 			ListDictionary ldEmailBodyReplacements = new ListDictionary();
 			ldEmailBodyReplacements.Add("<% RecipientsName %>", firstName);
 
@@ -304,6 +226,7 @@ public partial class V1_Register : System.Web.UI.Page
 								 orderby o.Name
 								 select new { o, oe };
 
+				nonProfitDropDown = nonProfitDropDown + "<li><a href=\"#\">------ None ------</a></li>" + Environment.NewLine;
 				foreach (var nonProfit in nonProfits)
 				{
 					nonProfitDropDown = nonProfitDropDown + "<li id=\"" + nonProfit.o.OrganizationId + "\"><a href=\"#\">" + nonProfit.o.Name + "</a></li>" + Environment.NewLine;
@@ -319,6 +242,7 @@ public partial class V1_Register : System.Web.UI.Page
 								 select new { o };
 
 
+				nonProfitDropDown = nonProfitDropDown + "<li><a href=\"#\">------ None ------</a></li>" + Environment.NewLine;
 				foreach (var nonProfit in nonProfits)
 				{
 					nonProfitDropDown = nonProfitDropDown + "<li id=\"" + nonProfit.o.OrganizationId + "\"><a href=\"#\">" + nonProfit.o.Name + "</a></li>" + Environment.NewLine;
@@ -333,34 +257,6 @@ public partial class V1_Register : System.Web.UI.Page
 		}
 	}
 
-	//public void LoadDisasters()
-	//{
-	//	CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-	//	var disasters = from d in dc.Events
-	//					orderby d.BeginDate descending
-	//					where d.IsActive == true
-	//					select new {d };
-
-	//	int idNumber = 0;
-	//	foreach(var disaster in disasters)
-	//	{
-	//		string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
-	//		disasterDropDown = disasterDropDown + "<li id=\"" + disaster.d.EventId + "\"><a href=\"#\">" + disaster.d.Name + " - " + disasterDate +  " Community Portal</a></li>" + Environment.NewLine;
-	//		idNumber = idNumber + 1;
-	//	}
-	//	if(!String.IsNullOrEmpty(eventId))
-	//	{
-	//		//Hide the Dropdown and show the selected disaster
-	//		var disaster = (from d in dc.Events
-	//						where d.EventId == new Guid(eventId)
-	//						orderby d.BeginDate descending
-	//						select new {d}).SingleOrDefault();
-
-	//		string disasterDate = String.Format("{0:Y}", disaster.d.BeginDate);
-	//		preselectedDisasterJQuery = "$(\"#btn-dropdown.disasterEvent\").html('" + disaster.d.Name + " - " + disasterDate + "');";
-	//		hidEventId.Value = eventId;
-	//	}
-	//}
 	public string GetErrorMessage(MembershipCreateStatus status)
 	{
 		switch (status)

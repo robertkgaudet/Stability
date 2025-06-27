@@ -57,6 +57,7 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 					{
 						//User exists and was invited by the same previous organization again.
 						//If so, just send a new email.
+						emailAddressOrganization.InvitationCancelled = false;
 						emailAddressOrganization.DateInvitationResentOn = DateTime.Now;
 						emailAddressOrganization.CreatedBy = userId;
 						emailAddressOrganization.OrganizationId = new Guid(organizationId);
@@ -90,8 +91,8 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 				string firstName				= organizationInfo.Firstname;
 
 				ListDictionary ldEmailBodyReplacements = new ListDictionary();
-				ldEmailBodyReplacements.Add("<% SenderName %>", senderName);
-				ldEmailBodyReplacements.Add("<% TeamName %>", organizationName);
+				//ldEmailBodyReplacements.Add("<% SenderName %>", senderName);
+				//ldEmailBodyReplacements.Add("<% TeamName %>", organizationName);
 				ldEmailBodyReplacements.Add("<% FirstName %>", firstName);
 				ldEmailBodyReplacements.Add("<% UserOrganizationInviteId %>", UserOrganizationInviteId.ToString());
 				string emailFrom = ConfigurationManager.AppSettings["emailFrom"].ToString();
@@ -99,7 +100,7 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 				string emailError = string.Empty;
 				Tools.SendEmail(
 					string.Empty,
-					senderName + " Has Invited You To Join His Impactoid Disaster Relief Team",
+					senderName + " Has Invited You To Join " + organizationName,
 					ldEmailBodyReplacements,
 					email,
 					firstName,
@@ -113,7 +114,18 @@ public partial class V1_NonProfitAdministration_InviteTeam : BaseWebForm
 
 			}
 			//Redirect to setup their website.
-			Response.Redirect("/V1/NonProfit/Default.aspx?OrganizationId=" + organizationId);
+			dc.SubmitChanges();
+
+			TeamRoles teamRoles = TeamRoleService.GetTeamRoles(userId, new Guid(organizationId), User.IsInRole("Administrator"));
+			if(teamRoles.IsTeamOwner || teamRoles.IsTeamAdministrator || teamRoles.IsSiteAdministrator)
+			{
+				Response.Redirect("/V1/NonProfit/InvitedMembers.aspx?OrganizationId=" + organizationId);
+			}
+			else
+			{
+				Response.Redirect("/V1/NonProfit/People.aspx?OrganizationId=" + organizationId);
+			}
+			//Send to their list of invited members
 		}
 	}
 

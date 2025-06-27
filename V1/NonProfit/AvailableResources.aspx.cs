@@ -37,12 +37,12 @@ public partial class V1_NonProfit_AvailableResources : BaseWebForm
 							where o.OrganizationId == new Guid(organizationId)
 							select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
 
-		string squareLogo = string.Empty;
-		if (organization != null)
+        string squareLogo = "/V1/Images/Logo-Placeholder.png";
+        if (organization != null)
 		{
-			if (organization.CoverImage != null)
+			if (!string.IsNullOrEmpty(organization.CoverImage ))
 			{
-			//	_coverImage = causePhotoFolder + organization.CoverImage;
+				_coverImage = causePhotoFolder + organization.CoverImage;
 			}
 
 			ucTeamHeader.CoverImage = _coverImage;
@@ -50,16 +50,18 @@ public partial class V1_NonProfit_AvailableResources : BaseWebForm
 			ucTeamHeader._teamTitle = organization.Name;
 			ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
 
-			if (!String.IsNullOrEmpty(organization.LogoSquare))
-			{
-				squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-			}
-			else
-			{
-				squareLogo = "/V1/Images/Logo-Placeholder.png";
-			}
+            if (!string.IsNullOrEmpty(organization.LogoSquare))
+            {
+                string virtualPath_square = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+                string physicalPath_square = Server.MapPath(virtualPath_square);
 
-			Master.PageTitle = organization.Name + " Programs on Stability";
+                if (System.IO.File.Exists(physicalPath_square))
+                {
+                    squareLogo = virtualPath_square;
+                }
+            }
+
+            Master.PageTitle = organization.Name + " Programs on Stability";
 			Master.PageDescription = organization.Description;
 			Master.FbDescription = organization.Description;
 			Master.FbImage = _coverImage;
@@ -86,8 +88,8 @@ public partial class V1_NonProfit_AvailableResources : BaseWebForm
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
 										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-										 && uo.OrganizationId == new Guid(organizationId)
-										 select o).Take(1).SingleOrDefault();
+										 && uo.OrganizationId == new Guid(organizationId) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                                         select o).Take(1).SingleOrDefault();
 
 			if (userOrganizationOwner != null)
 			{
@@ -114,8 +116,8 @@ public partial class V1_NonProfit_AvailableResources : BaseWebForm
 		var resources = (from us in dc.UserResources
 						 join s in dc.Resources on us.ResourceId equals s.ResourceId
 						 join uo in dc.UserOrganizations on us.UserId equals uo.UserId
-						 where uo.OrganizationId == new Guid(organizationId)
-						 orderby s.Type, s.Name
+						 where uo.OrganizationId == new Guid(organizationId) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                         orderby s.Type, s.Name
 						 group s by s.Name + "|" + s.ResourceId + "| (" + s.Type + ")" into resourceGroup
 						 select new { Name = resourceGroup.Key, ResourceCount = resourceGroup.Count() }).Distinct();
 

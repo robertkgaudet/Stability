@@ -17,7 +17,7 @@
 
 		<asp:ContentPlaceHolder id="head" runat="server">
 		</asp:ContentPlaceHolder>
-		<title>Impactoid - Disaster Relief Websites</title>
+		<title>Stability.org - Disaster Relief Websites</title>
 
 		<link href="/inspinia_v2.7.1/Static_Full_Version/css/bootstrap.min.css" rel="stylesheet">
 		<link href="/inspinia_v2.7.1/Static_Full_Version/font-awesome/css/font-awesome.css" rel="stylesheet">
@@ -26,7 +26,7 @@
 		<link href="/inspinia_v2.7.1/Static_Full_Version/css/style.css" rel="stylesheet">
 
 		<meta property="og:image" id="fbImage" content="/Impactoid/Images/TTF.jpg"/>
-		<meta property="og:title" id="fbTitle" content="Impactoid - Community Based Disaster Websites"/>
+		<meta property="og:title" id="fbTitle" content="Stability.org - Community Based Disaster Websites"/>
 		<meta property="og:url"	id="fbURL"  content="http://www.Impactoid.com/"/>
 		<meta property="og:site_name" id="fbSite_name" content="Impactoid"/>
 		<meta property="og:description" id="fbDescription" content="Everything you need to create a website to organize your community."/>

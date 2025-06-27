@@ -1,13 +1,27 @@
-﻿using System.Linq;
-using System;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
+using System.Web.UI;
+using Twilio.Types;
 public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
 {
     public Guid UserId { get; set; }
     public string UserName { get; set; }
+    public string PhoneNumber { get; set; }
+    public string Email { get; set; }
+    public bool ShowPhoneNumber { get; set; }
+    public bool ShowEmail { get; set; }
+    public string organizationId = string.Empty;
+    public string SearchKeyword { get; set; }
+
+
+
     string teamLogo = System.Configuration.ConfigurationManager.AppSettings["logoFolder"].ToString();
     protected void Page_Load(object sender, EventArgs e)
     {
+        organizationId = Request.QueryString["organizationId"];
         if (!IsPostBack)
         {
             LoadNameWithBadges();
@@ -20,88 +34,166 @@ public partial class V1_UserControls_TeamLogo : System.Web.UI.UserControl
             using (CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext())
             {
                 var profile = dc.Profiles.FirstOrDefault(p => p.UserId == UserId);
-                if (profile != null)
+                var userEmail = dc.aspnet_Memberships.FirstOrDefault(p => p.UserId == UserId);
                 {
                     UserName = profile.Firstname + " " + profile.Lastname;
-                    //var userRoles = from ur in dc.aspnet_UsersInRoles
-                    //                join r in dc.aspnet_Roles on ur.RoleId equals r.RoleId
-                    //                where ur.UserId == UserId
-                    //                select r.RoleName; 
-                    //if (userRoles.Contains("Team Administrator"))
-                    //{
-                    //    UserName += " (Team Administrator)";
-                    //}
-                    //else if (userRoles.Contains("Administrator"))
-                    //{
-                    //    UserName += " (Team Owner)";
-                    //}
+                    UserName = profile.Firstname + " " + profile.Lastname;
+
+                    if (!string.IsNullOrEmpty(SearchKeyword))
+                    {
+                        UserName = HighlightKeyword(UserName, SearchKeyword);
+                    }
                     lblprofileusername.Text = UserName;
                     lblprofileusername.Visible = true;
+
+                    Email = userEmail.Email;
+                    PhoneNumber = profile.PhoneNumber;
+                    lblemail.Text = Email;
+                    lblemail.Visible = ShowEmail;
+                    lblphoneNumber.Text = PhoneNumber;
+                    lblphoneNumber.Visible = ShowPhoneNumber;
+                 
                     string currentPageUrl = HttpContext.Current.Request.Url.AbsolutePath;
                     if (!currentPageUrl.Equals("/V1/Member/Default.aspx", StringComparison.OrdinalIgnoreCase))
                     {
                         hypName.Visible = true;
+                        phoneNumber.Visible = ShowPhoneNumber;
+                        email.Visible = ShowEmail;
                         hypName.NavigateUrl = "/V1/Member/Default.aspx?userId=" + UserId;
-						hypStabilityLogo.NavigateUrl = "/V1/Member/Default.aspx?userId=" + UserId;
-					}
+                        hypStabilityLogo.NavigateUrl = "/V1/Member/Default.aspx?userId=" + UserId;
+                    }
                     else
                     {
                         hypName.Visible = true;
+                        phoneNumber.Visible = ShowPhoneNumber;
+                        email.Visible = ShowEmail;
                         hypName.NavigateUrl = string.Empty;
                         hypName.Attributes.Remove("href");
 
-						hypStabilityLogo.NavigateUrl = string.Empty;
-						hypStabilityLogo.Attributes.Remove("href");
-					}
-                    var orgUser = (from o in dc.Organizations
-                                   join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                                   where uo.UserId == UserId
-                                   orderby o.CreatedOn descending
-                                   select new
-                                   {
-                                       o.LogoSquare,
-                                       o.OrganizationId,
-                                       o.Name,
-                                       o.EnableTeamMemberVerification,
-                                       uo.ShowTeamLogo,
-                                   }).Take(1).SingleOrDefault();
-
-                    if (orgUser != null)
-                    {
-                        if (orgUser.EnableTeamMemberVerification == true && orgUser.ShowTeamLogo == true)
-                        {
-                          
-                            imgTeamLogo.ImageUrl = !string.IsNullOrEmpty(orgUser.LogoSquare)
-                                ? teamLogo + orgUser.LogoSquare
-                                : "/V1/Images/DefaultLogo.png";
-
-                         
-                            imgTeamLogo.Visible = true;
-                            imgTeamLogo.Attributes["title"] = orgUser.Name + " Verified";
-                            hypTeamLogo.Visible = true;
-                        }
-                        else
-                        {
-                            // Hide the team logo if conditions are not met
-                            hypTeamLogo.Visible = false;
-                        }
+                        hypStabilityLogo.NavigateUrl = string.Empty;
+                        hypStabilityLogo.Attributes.Remove("href");
                     }
-                    if (profile.IsDisasterReadyCertified)
-					{
-						//Stability Verified, show purple logo.
-						hypStabilityLogo.Visible = true;
-						hypStabilityLogo.NavigateUrl = "/V1/Member/Default.aspx?userId=" + UserId;
+                    dynamic orgUser = null;
+                    dynamic orgUserr = null;
+                    var isprimaryorg = (from o in dc.Organizations
+                                        join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+                                        where uo.UserId == UserId && uo.IsPrimary == true && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                                        select new
+                                        {
+                                            o.LogoSquare,
+                                            o.OrganizationId,
+                                            o.Name,
+                                            uo.ShowTeamLogo,
+                                        }).FirstOrDefault();
+                      Guid orgId;
+                     if (Guid.TryParse(organizationId, out orgId))
+                    {
+                        var userOrg = dc.UserOrganizations
+                            .FirstOrDefault(uo => uo.UserId == UserId && uo.OrganizationId == orgId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending));
 
-						imgStabilityBadge.ImageUrl = teamLogo + "purplebadge.png";
-                        imgStabilityBadge.Visible = true;
+                        if (userOrg != null)
+                        {
+                            orgUser = dc.Organizations
+                                .Where(o => o.OrganizationId == orgId)
+                                .Select(o => new
+                                {
+                                    o.LogoSquare,
+                                    o.OrganizationId,
+                                    o.Name,
+                                    userOrg.ShowTeamLogo
+                                })
+                                .FirstOrDefault();
+                        }
                     }
                     else
                     {
-						hypStabilityLogo.Visible = false;
-						imgStabilityBadge.Visible = false;
+                        orgUserr = (from o in dc.Organizations
+                                    join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+                                    where uo.UserId == UserId && uo.ShowTeamLogo == true && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                                    orderby o.CreatedOn descending
+                                    select new
+                                    {
+                                        o.LogoSquare,
+                                        o.OrganizationId,
+                                        o.Name,
+                                        uo.ShowTeamLogo,
+                                    }).FirstOrDefault();
+                    }
+
+                    if (orgUser != null || isprimaryorg != null || orgUserr != null)
+                    {
+                        // Determine which source to use
+                        dynamic source = isprimaryorg ?? orgUser ?? orgUserr;
+
+                        // Determine virtual and physical paths for logo
+                        string logoFile = source.LogoSquare;
+                        string virtualPath = !string.IsNullOrEmpty(logoFile) ? teamLogo + logoFile : null;
+                        string physicalPath = !string.IsNullOrEmpty(virtualPath) ? Server.MapPath(virtualPath) : null;
+
+                        // Apply file-exists check like profile photo logic
+                        if (!string.IsNullOrEmpty(physicalPath) && File.Exists(physicalPath))
+                        {
+                            imgTeamLogo.ImageUrl = virtualPath;
+                        }
+                        else
+                        {
+                            imgTeamLogo.ImageUrl = "/V1/Images/Logo-Placeholder.png";
+                        }
+
+                        // Set hyperlink and title
+                        string url = "/V1/NonProfit/Default.aspx?organizationId=";
+                        hypTeamLogo.NavigateUrl = url + source.OrganizationId;
+                        imgTeamLogo.Attributes["title"] = source.Name + " Verified";
+
+                        // Determine whether to show/hide team logo
+                        bool showLogo = false;
+
+                        if (orgUser != null)
+                        {
+                            showLogo = orgUser.ShowTeamLogo == true;
+                        }
+                        else if (isprimaryorg != null && orgUserr != null)
+                        {
+                            showLogo = true;
+                        }
+                        else if (orgUserr != null)
+                        {
+                            showLogo = true;
+                        }
+
+                        if (showLogo)
+                        {
+                            imgTeamLogo.Style.Add(HtmlTextWriterStyle.Display, "inline-flex");
+                            hypTeamLogo.Style.Add(HtmlTextWriterStyle.Display, "inline-flex");
+                        }
+                        else
+                        {
+                            imgTeamLogo.Style.Add(HtmlTextWriterStyle.Display, "none");
+                            hypTeamLogo.Style.Add(HtmlTextWriterStyle.Display, "none");
+                        }
+                    }
+
+                    hypStabilityLogo.NavigateUrl = "/V1/Member/Default.aspx?userId=" + UserId;
+                    imgStabilityBadge.ImageUrl = teamLogo + "purplebadge.png";
+                    if (profile.IsDisasterReadyCertified)
+                    {
+                        imgStabilityBadge.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "inline-flex");
+                        hypStabilityLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "inline-flex");
+                    }
+                    else
+                    {
+                        imgStabilityBadge.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "none");
+                        hypStabilityLogo.Style.Add(System.Web.UI.HtmlTextWriterStyle.Display, "none");
                     }
                 }
             }
         }
+    }
+    private string HighlightKeyword(string input, string keyword)
+    {
+        if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(keyword))
+            return input;
+
+        return Regex.Replace(input, Regex.Escape(keyword), "<span style='background-color:yellow '><b>$0</b></span>", RegexOptions.IgnoreCase);
     }
 }

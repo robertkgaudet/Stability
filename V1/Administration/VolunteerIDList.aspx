@@ -44,6 +44,7 @@
                                         <th data-toggle="true">Created</th>
                                         <th data-toggle="true">last Login</th>
                                         <th data-toggle="true">Email</th>
+                                        <th data-toggle="true">Team</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -52,6 +53,7 @@
 											<tr>
 												<td id="tdDelete" runat="server" visible="false"><asp:HyperLink ID="hypDelete" Text="Delete" runat="server"></asp:HyperLink></td>
 												<td><asp:HyperLink ID="hypID" runat="server"></asp:HyperLink></td>
+                                                <td><asp:Literal ID="litTeam" runat="server"></asp:Literal></td>
                                                 <td><asp:Literal ID="litCreateDate" runat="server"></asp:Literal></td>
                                                 <td><asp:Literal ID="litLastLoginDate" runat="server"></asp:Literal></td>
                                                 <td><asp:Literal ID="litEmail" runat="server"></asp:Literal></td>

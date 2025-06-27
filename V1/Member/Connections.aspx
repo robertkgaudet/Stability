@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="Connections.aspx.cs" Inherits="V1_Member_Connections" %>
 <%@ Register Src="~/V1/UserControls/MemberNavigation.ascx" TagPrefix="uc1" TagName="MemberNavigation" %>
+<%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
@@ -32,7 +33,9 @@
             padding: 0;
             list-style: none;
         }
-        
+        .user-name {
+    color: #337ab7 !important;
+}
         .friendItem {
             padding: 10px;
             border: 1px solid #ccc;
@@ -48,6 +51,10 @@
 		p
 		{
 			margin:0px !important;
+		}
+		.link-group {
+			    margin-left: 80px;
+               margin-top: -40px;
 		}
 	</style>
 	<script>
@@ -87,30 +94,30 @@
 		}
 	</script>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
 	<div class="container" style="padding-bottom:100px !important;">
+
 		<div class="row justify-content-center" style="margin-top:40px;">
 			<div class="col-sm-8 col-lg-9">
 				<div class="hpanel">
 					<div class="panel-body member-panel-body">
-						<h4>
-							<asp:Literal ID="litPageName" runat="server"></asp:Literal>
-						</h4>
+						<h4><asp:Literal ID="litPageName" runat="server"></asp:Literal></h4>
 						<asp:Literal ID="litConnectionCount" runat="server"></asp:Literal><br />
-						<a style="font-weight:bold;" href="/V1/Member/Connections.aspx?status=Connected&userId=<%=userId%>">Connections</a>
+						<a href="/V1/Member/Connections.aspx?status=Connected&userId=<%=userId%>">Connections</a>
 						<%=divider%>
-						<asp:HyperLink Font-Bold="true" id="linkConnectionsReceived" runat="server">Pending</asp:HyperLink> 
+						<asp:HyperLink ID="linkConnectionsReceived" runat="server">Pending</asp:HyperLink>
 						<%=divider%>
-						<asp:HyperLink Font-Bold="true" id="linkConnectionsSent" runat="server"> Sent</asp:HyperLink>
+						<asp:HyperLink ID="linkConnectionsSent" runat="server">Sent</asp:HyperLink>
 						<hr />
-						<asp:Repeater ID="ConnectionsDataList" runat="server">
+
+						<asp:Repeater ID="ConnectionsDataList" runat="server" OnItemDataBound="ConnectionsDataList_ItemDataBound">
 							<ItemTemplate>
 								<div class="col-xs-12 col-sm-6">
 									<div class="hpanel">
 										<div class="panel-body member-panel-body">
 											<p style="font-size:16px;">
-												<img class="img-circle img-small" src="<%=profilePhotoFolder%><%# string.IsNullOrEmpty(Eval("ProfileImage") as string) ? "profilepicture.png" : Eval("ProfileImage")%>" />
-												<strong><a href="/V1/Member/Default.aspx?userid=<%# Eval("UserId") %>"><%# Eval("Fullname") %></a></strong>
+												<img class="img-circle img-small" src="<%=profilePhotoFolder%><%# string.IsNullOrEmpty(Eval("ProfileImage") as string) ? "icons8-customer-64.png" : Eval("ProfileImage")%>" />
+													<uc1:TeamLogo runat="server" ID="ucTeamLogo" />
 												<div <%=hideFriendControls%> class="block">
 													<button data-id="<%#Eval("UserId")%>" data-action="remove" onclick="UpdateConnection(this); return false;" class="btn btn-default pull-right remove-button" <%=hideDeleteButton%>>Remove</button>
 													<button data-id="<%#Eval("UserId")%>" data-action="confirm" onclick="UpdateConnection(this); return false;" class="btn btn-primary pull-right confirm-button" <%=hideConfirmButton%>>Confirm</button>
@@ -124,8 +131,8 @@
 					</div>
 				</div>
 			</div>
-			
-			<!--NAVIGATION-->
+
+			<!-- NAVIGATION -->
 			<div class="col-sm-4 col-lg-3">
 				<uc1:MemberNavigation runat="server" ID="ucMemberNavigation" />
 			</div>

@@ -10,24 +10,62 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
 	public string _userId = string.Empty;
 	protected void Page_Load(object sender, EventArgs e)
 	{
-		hypMyTeam.Visible = false;
-		hypDeployments.Visible = false;
-		hypMyProfile.Visible = false;
-		hypPositions.Visible = false;
-		divMemberNavigation.Visible = false;
+        hypDeployment.Attributes["data-toggle"] = "tooltip";
+        hypDeployment.Attributes["title"] = "Choose a team deployment to join";
+
+        hypTimeSheet.Attributes["data-toggle"] = "tooltip";
+        hypTimeSheet.Attributes["title"] = "View my time sheet";
+        hypMyProfile.Attributes["data-toggle"] = "tooltip";
+        hypMyProfile.Attributes["title"] = "Go to your profile page";
+
+        hypMyTeam.Attributes["data-toggle"] = "tooltip";
+        hypMyTeam.Attributes["title"] = "Go to your team's page";
+
+        hypMyConnections.Attributes["data-toggle"] = "tooltip";
+        hypMyConnections.Attributes["title"] = "Go to My Connections";
+
+
+        hypCalendar.Attributes["data-toggle"] = "tooltip";
+        hypCalendar.Attributes["title"] = "Select the dates you are available to volunteer";
+
+        hypSkills.Attributes["data-toggle"] = "tooltip";
+        hypSkills.Attributes["title"] = "Choose your skills";
+
+        hypResources.Attributes["data-toggle"] = "tooltip";
+        hypResources.Attributes["title"] = "Choose the types of resources you can contribute";
+
+		hypDeployments.Attributes["data-toggle"] = "tooltip";
+		hypDeployments.Attributes["title"] = "Find volunteer opportunities";
+
+		hypConnections.Attributes["data-toggle"] = "tooltip";
+		hypConnections.Attributes["title"] = "Connect with other users";
+
+		hypPositions.Attributes["data-toggle"] = "tooltip";
+		hypPositions.Attributes["title"] = "View my volunteer schedule";
+
+		hypIDCard.Attributes["data-toggle"] = "tooltip";
+		hypIDCard.Attributes["title"] = "Get your printable ID card";
+
+		hypSignOut.Attributes["data-toggle"] = "tooltip";
+		hypSignOut.Attributes["title"] = "Click here to sign out of your account";
+
+		//hypMyTeam.Visible = false;
+		hypDeployments.Visible = true;
+		//hypMyProfile.Visible = false;
+		//divMemberNavigation.Visible = false;
 		if (!String.IsNullOrEmpty(_userId))
 		{
-			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+            string path = Request.Url.AbsolutePath.ToLower();
+            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 			var orgUser = (from o in dc.Organizations
 						   join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-						   where uo.UserId == new Guid(_userId)
-						   orderby o.CreatedOn descending
+						   where uo.UserId == new Guid(_userId) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                           orderby o.CreatedOn descending
 						   select o).Take(1).SingleOrDefault();
 
 			if (orgUser != null)
 			{
 				//Is in a team or not.
-				hypPositions.Visible = true;
 				hypDeployments.Visible = true;
 				hypDeployments.NavigateUrl = "/V1/NonProfit/DeploymentTeams.aspx?organizationId=" + orgUser.OrganizationId.ToString();
 
@@ -35,8 +73,17 @@ public partial class V1_UserControls_MemberNavigation : System.Web.UI.UserContro
 				hypMyTeam.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId.ToString();
 			}
 			divMemberNavigation.Visible = true;
-			hypMyProfile.Visible = true;
-		}
+            if (!path.Contains("/v1/member/default.aspx"))
+            {
+                hypMyProfile.Visible = true;
+
+            }
+            else
+            {
+                hypMyProfile.Visible = false;
+
+            }
+        }
 	}
 
 	public string UserId

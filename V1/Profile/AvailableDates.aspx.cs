@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Metadata;
@@ -28,12 +29,6 @@ public partial class V1_Profile_AvailableDates : BaseWebForm
 		Master.FbImage = "/V1/Images/AvailableTime.png";
 		Master.FbImageType = "image/png";
 		Master.FbURL = Request.Url.AbsoluteUri;
-
-
-
-
-
-
 
 		calendarUserId = Request.QueryString["userId"];
 
@@ -69,35 +64,12 @@ public partial class V1_Profile_AvailableDates : BaseWebForm
 				hiddenAvailableDates.Value = datesAvailableJSON;
 			}
 		}
-
-		var userOrganization = (from uo in dc.UserOrganizations
-								join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-								join p in dc.Profiles on uo.UserId equals p.UserId
-								where uo.UserId == new Guid(calendarUserId)
-								select new { TeamName = o.Name, o.OrganizationId, fullName = p.Firstname + " " + p.Lastname }).Take(1).SingleOrDefault(); ;
-
-		if (userOrganization == null)
-		{
-			hypBreadcrumbTeamName.Text = "Find A Team";
-			hypBreadcrumbTeamName.NavigateUrl = "/V1/Profile/EditNonProfits.aspx";
-
-		}
-		else
-		{
-			hypBreadcrumbTeamName.Text = userOrganization.TeamName;
-			hypBreadcrumbTeamName.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + userOrganization.OrganizationId;
-
-			hypBreadcrumbTeamCalendar.Text			= "Team Calendar";
-			hypBreadcrumbTeamCalendar.NavigateUrl	= "/V1/NonProfit/TeamAvailabilityCalendar.aspx?organizationId=" + userOrganization.OrganizationId;
-
-			litTeamMemberName.Text = userOrganization.fullName + "'s Calendar";
-		}
 	}
+
 	protected void btnSubmit_Cancel(object sender, EventArgs e)
 	{
 		Response.Redirect("/V1/Member/");
 	}
-
 
 	protected void btnSubmit_Click(object sender, EventArgs e)
 	{
@@ -171,7 +143,19 @@ public partial class V1_Profile_AvailableDates : BaseWebForm
 
 		string datesAvailableJSON = JsonConvert.SerializeObject(datesAvailable);
 		hiddenAvailableDates.Value = datesAvailableJSON;
-
-		Response.Redirect("/V1/Member/");
+        var profilePhoto = (from ph in dc.Photos
+                            join pr in dc.ProfilePhotos on ph.PhotoId equals pr.PhotoId
+                            where pr.UserId == userId
+                            orderby ph.CreatedOn descending
+                            select new { ph.FilenameCropped }).Take(1).SingleOrDefault();
+        string register = Request.QueryString["register"];
+		if (!String.IsNullOrEmpty(register)&& profilePhoto==null)
+		{
+			Response.Redirect("/V1/Profile/ProfilePhotoUpload.aspx?userId=" + userId + "&register=true");
+		}
+		else
+		{
+			Response.Redirect("/V1/Member/Default.aspx");
+		}
 	}
 }

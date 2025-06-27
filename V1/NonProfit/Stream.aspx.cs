@@ -41,28 +41,29 @@ public partial class V1_NonProfit_Stream : BaseWebForm
 							where o.OrganizationId == new Guid(organizationId)
 							select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
 
-		string squareLogo = string.Empty;
-		if (organization != null)
+        string squareLogo = "/V1/Images/Logo-Placeholder.png";
+        if (organization != null)
 		{
-			if (organization.CoverImage != null)
+			if (!string.IsNullOrEmpty(organization.CoverImage))
 			{
-				//	_coverImage = causePhotoFolder + organization.CoverImage;
+				_coverImage = causePhotoFolder + organization.CoverImage;
 			}
 
 			ucTeamHeader.CoverImage = _coverImage;
 			ucTeamHeader.TeamDescription = organization.Description;
 			ucTeamHeader._teamTitle = organization.Name;
+            if (!string.IsNullOrEmpty(organization.LogoSquare))
+            {
+                string virtualPath_square = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+                string physicalPath_square = Server.MapPath(virtualPath_square);
 
-			if (!String.IsNullOrEmpty(organization.LogoSquare))
-			{
-				squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-			}
-			else
-			{
-				squareLogo = "/V1/Images/Logo-Placeholder.png";
-			}
+                if (System.IO.File.Exists(physicalPath_square))
+                {
+                    squareLogo = virtualPath_square;
+                }
+            }
 
-			Master.PageTitle = organization.Name + " Programs on Stability";
+            Master.PageTitle = organization.Name + " Programs on Stability";
 			Master.PageDescription = organization.Description;
 			Master.FbDescription = organization.Description;
 			Master.FbImage = _coverImage;
@@ -89,8 +90,8 @@ public partial class V1_NonProfit_Stream : BaseWebForm
 		{
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-										 && uo.OrganizationId == new Guid(organizationId)
+										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                                         && uo.OrganizationId == new Guid(organizationId)
 										 select o).Take(1).SingleOrDefault();
 
 			if (userOrganizationOwner != null)

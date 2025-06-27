@@ -47,7 +47,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 		ucTeamNavigation.TeamName = organization.Name;
 
 		string logo = string.Empty;
-		string squareLogo = string.Empty;
+        string squareLogo = "/V1/Images/Logo-Placeholder.png";
 		if (!String.IsNullOrEmpty(organization.Logo))
 		{
 			logo = "/Impactoid/Images/Logos/" + organization.Logo;
@@ -57,10 +57,16 @@ public partial class V1_NonProfit_Default : BaseWebForm
 			//Use placeholder image.imgLogo.Visible = true;
 			logo = "/V1/Images/Logo-Placeholder.png";
 		}
-		if (!String.IsNullOrEmpty(organization.LogoSquare))
-		{
-			squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-		}
+		 if (!string.IsNullOrEmpty(organization.LogoSquare))
+    {
+        string virtualPath_square = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+        string physicalPath_square = Server.MapPath(virtualPath_square);
+
+        if (System.IO.File.Exists(physicalPath_square))
+        {
+            squareLogo = virtualPath_square;
+        }
+    }
 
 		ucTeamNavigation.TeamName = organization.Name;
 		ucTeamHeader.Logo = logo;
@@ -87,7 +93,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 		{
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
 										 && uo.OrganizationId == new Guid(organizationId)
 										 select o).Take(1).SingleOrDefault();
 
@@ -101,7 +107,7 @@ public partial class V1_NonProfit_Default : BaseWebForm
 
 			//If the user is logged in and not in a nonprofit already then send to choose a nonprofit.
 			var userOrganization = from uo in dc.UserOrganizations
-								   where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
+								   where uo.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
 								   && uo.OrganizationId == new Guid(organizationId)
 								   select uo;
 

@@ -68,7 +68,7 @@ public partial class Impactoid_Version_2_MasterPage : System.Web.UI.MasterPage
         //}
         if (String.IsNullOrEmpty(organizationId) && String.IsNullOrEmpty(organizationName))
         {
-            Response.Write("No Organization Id Was Provided. Contact site administrators at help@impactoid.com.");
+            Response.Write("No Organization Id Was Provided. Contact site administrators at help@stability.org.");
             Response.End();
         }
 

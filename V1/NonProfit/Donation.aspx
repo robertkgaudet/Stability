@@ -36,9 +36,8 @@
         <h3 class="addressHeader">SEND A CHECK TO THIS ADDRESS</h3>
         <div class="divider"></div>
     </div>
+
     <div class="container">
-
-
         <%=DefaultCampaign.Address%>
     </div>
 
@@ -122,18 +121,18 @@
                     {
                         Response.Redirect("/V1/NonProfit/Donation.aspx");
                     }
-        %>
-        <h3>
-            <a href="<%= ShowDonationButton ? "DonationDetails.aspx?organizationId=" + orgId + "&donationCampaignId=" + campaign.DonationCampaignId : "javascript:void(0);" %>">
-                <%= campaign.CampaignName %>
-            </a>
-        </h3>
-        <% 
+				%>
+				<h3>
+					<a href="<%= ShowDonationButton ? "DonationDetails.aspx?organizationId=" + orgId + "&donationCampaignId=" + campaign.DonationCampaignId : "javascript:void(0);" %>">
+						<%= campaign.CampaignName %>
+					</a>
+				</h3>
+				<% 
                 }
             }
             else
             {
-                Response.Redirect("/V1/NonProfit/Default.aspx");
+                //Response.Redirect("/V1/NonProfit/Default.aspx");
             }
         %>
     </div>

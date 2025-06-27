@@ -231,17 +231,17 @@
 									<span class="nav-label text-black rebuildHomeNav small"><i class="fa fa-book"></i> Stability Stories</span>
 								</a>
 							</li>
-							<li runat="server" id="liNewPost" style="background-color:#E3E3E3;" visible="false">
+							<li runat="server" id="liNewPost" style="background-color:#E3E3E3;">
 								<asp:HyperLink NavigateUrl="/S1/Profile/NewBlogPost.aspx" runat="server" id="hrefAddStory">
 									<span class="nav-label text-black rebuildHomeNav"><i class="fa fa-edit"></i> Add A Story</span>
 								</asp:HyperLink>
 							</li>
-							<li runat="server" id="litMySuvivors" style="background-color:#E3E3E3;" visible="false">
+							<li runat="server" id="litMySuvivors" style="background-color:#E3E3E3;">
 								<a href="/S1/Profile/MySurvivors.aspx">
 									<span class="nav-label text-black rebuildHomeNav"><i class="fa fa-user-circle"></i> My Survivors</span>
 								</a>
 							</li>
-							<li runat="server" id="litNewSurvivor" style="background-color:#E3E3E3;" visible="false">
+							<li runat="server" id="litNewSurvivor" style="background-color:#E3E3E3;">
 								<a href="/S1/Profile/AddNewSurvivor.aspx">
 									<span class="nav-label text-black rebuildHomeNav"><i class="fa fa-user-o"></i> Add A Survivor</span>
 								</a>

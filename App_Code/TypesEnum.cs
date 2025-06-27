@@ -24,12 +24,17 @@ public enum FeatureTypeEnum
     StatesAndCounties,
     CommunityLinks,
     CaseManagement,
-    Administration
+    Administration,
+    TeamRequest
 }
 
 public enum NotificationType
 {
     Like,
     Comment,
-    Share
+    Share,
+    TeamIsCreated,
+    DeploymentIsCreated,
+    UserJoins,
+    VOCreated   //Volunteer Opportunities are created
 }

@@ -168,8 +168,8 @@ public partial class V1_Profile_Volunteer : BaseOrganizationWebForm
 					if (item.Selected)
 					{
 						var userCheck = from p in dc.UserOrganizations
-										where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-										&& p.OrganizationId == new Guid(item.Value)
+										where p.UserId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && p.Status== (int)RequestStatus.Approved
+                                        && p.OrganizationId == new Guid(item.Value)
 										select p;
 
 						if (userCheck.Count() == 0)
@@ -179,7 +179,9 @@ public partial class V1_Profile_Volunteer : BaseOrganizationWebForm
 							userOrganization.UserId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
 							userOrganization.UserOrganizationId = Guid.NewGuid();
 							dc.UserOrganizations.InsertOnSubmit(userOrganization);
-							dc.SubmitChanges();
+                            userOrganization.Status = (int)RequestStatus.Pending;
+
+                            dc.SubmitChanges();
 						}
 					}
 				}

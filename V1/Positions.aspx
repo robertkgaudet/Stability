@@ -40,7 +40,11 @@
             padding: 10px;
 			background-color:red !important;
         }
-		
+			@media (min-width: 1200px) {
+    .col-lg-9 {
+        width: 100%;
+    }
+}
 .map
 {
 	height:600px;
@@ -48,6 +52,12 @@
 #divMap
 {
 	height:600px;
+}
+.panel-body.member-panel-body {
+    display: none;
+}
+i{
+	color:#fff !important
 }
 	</style>
 	<script>
@@ -390,7 +400,7 @@
 </script>
 </asp:Content>
 
-<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" Runat="Server">
+<%--<asp:Content ID="Content3" ContentPlaceHolderID="ContentPlaceHolder2" Runat="Server">
 	<div class="text-center" style="margin-bottom:10px;">
 		<asp:HyperLink ID="hypBack" runat="server" text="Back to Deployment"></asp:HyperLink>
 	</div>
@@ -398,4 +408,4 @@
 	<div id="divAddHome" class="alert alert-success text-center" style="margin-bottom:10px;">
 		<asp:HyperLink ID="litLink" runat="server"></asp:HyperLink>
 	</div>
-</asp:Content>
+</asp:Content>--%>

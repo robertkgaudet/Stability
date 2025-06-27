@@ -21,44 +21,60 @@ public partial class V1_Member_Connections : BaseWebForm
 	public string hideDeleteButton = String.Empty;
 	public string hideConfirmButton = String.Empty;
 	public string hideFriendControls = String.Empty;
-	protected void Page_Load(object sender, EventArgs e)
-	{
-		if (!IsPostBack)
-		{
-			if(User.Identity.IsAuthenticated)
-			{
-				string received = Request.QueryString["received"];
-				String _userId = String.IsNullOrEmpty(Request.QueryString["userId"]) ? userId.ToString() : Request.QueryString["userId"];
-				String status = String.IsNullOrEmpty(Request.QueryString["status"]) ? "Connected" : Request.QueryString["status"];
-				litPageName.Text = status;
-				
-				BindFriendsDataList(_userId, status, received);
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                ConnectionsDataList.ItemDataBound += ConnectionsDataList_ItemDataBound;
 
-				//Only show connections sent or receieved links if the user is on their own page.
-				linkConnectionsReceived.Visible = false;
-				linkConnectionsSent.Visible = false;
-				hideFriendControls = "style='display:none;'";
-				if (userId == new Guid(_userId))
-				{
-					//Signed in user.
-					//Only show connections sent or receieved links if the user is on their own page.
-					hideFriendControls = "";
-					divider = "|";
-					linkConnectionsReceived.Visible = true;
-					linkConnectionsSent.Visible = true;
-					linkConnectionsReceived.NavigateUrl = "/V1/Member/Connections.aspx?received=true&status=Pending&userId=" + userId;
-					linkConnectionsSent.NavigateUrl = "/V1/Member/Connections.aspx?status=Sent&userId=" + userId;
-				}
-				ucMemberNavigation.UserId = userId.ToString();
-			}
-			else
-			{
-				Response.Redirect("/Signin");
-			}
-		}
-	}
+                string received = Request.QueryString["received"];
+                String _userId = String.IsNullOrEmpty(Request.QueryString["userId"]) ? userId.ToString() : Request.QueryString["userId"];
+                String status = String.IsNullOrEmpty(Request.QueryString["status"]) ? "Connected" : Request.QueryString["status"];
+                litPageName.Text = status;
 
-	[WebMethod]
+                BindFriendsDataList(_userId, status, received);
+
+                // Visibility setup
+                linkConnectionsReceived.Visible = false;
+                linkConnectionsSent.Visible = false;
+                hideFriendControls = "style='display:none;'";
+                if (userId == new Guid(_userId))
+                {
+                    hideFriendControls = "";
+                    divider = "|";
+                    linkConnectionsReceived.Visible = true;
+                    linkConnectionsSent.Visible = true;
+                    linkConnectionsReceived.NavigateUrl = "/V1/Member/Connections.aspx?received=true&status=Pending&userId=" + userId;
+                    linkConnectionsSent.NavigateUrl = "/V1/Member/Connections.aspx?status=Sent&userId=" + userId;
+                }
+
+                ucMemberNavigation.UserId = userId.ToString();
+            }
+            else
+            {
+                Response.Redirect("/Signin");
+            }
+        }
+    }
+
+    protected void ConnectionsDataList_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        {
+            var dataItem = e.Item.DataItem as Tools.FriendInfo;
+
+            var ucTeamLogo = e.Item.FindControl("ucTeamLogo") as V1_UserControls_TeamLogo;
+            if (ucTeamLogo != null && dataItem != null)
+            {
+                ucTeamLogo.UserId = dataItem.UserId;
+                ucTeamLogo.LoadNameWithBadges();
+            }
+        }
+    }
+
+    [WebMethod]
 	public static string UpdateConnection(string userId, string friendId, string action)
 	{
 		string result = "success";
@@ -120,7 +136,8 @@ public partial class V1_Member_Connections : BaseWebForm
 			ConnectionsDataList.DataSource = MyConnections;
 			ConnectionsDataList.DataBind();
 			litConnectionCount.Text = MyConnections.Count.ToString() + " Connections";
-		}
+      
+        }
 		else if (!String.IsNullOrEmpty(requestsIReceived))
 		{
 			//CONNECT REQUESTS I RECEIVED

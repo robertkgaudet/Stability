@@ -57,9 +57,9 @@ public partial class V1_MasterPages_SurvivorSurvey : System.Web.UI.MasterPage
 		fbSite_name.Attributes.Add("content", FbSite_name);
 		fbDescription.Attributes.Add("content", FbDescription);
 
-		if(HttpContext.Current.User.Identity.IsAuthenticated)
+		if (HttpContext.Current.User.Identity.IsAuthenticated)
 		{
-			string profilePhotoFolder	= System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
+			string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
 			divSettings.Visible = true;
 			divLogin.Visible = false;
 
@@ -68,64 +68,64 @@ public partial class V1_MasterPages_SurvivorSurvey : System.Web.UI.MasterPage
 			Guid userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
 
 			var profile = (from p in dc.Profiles
-						  where p.UserId == userId
-						  select new {p }).SingleOrDefault();
+						   where p.UserId == userId
+						   select new { p }).SingleOrDefault();
 
-            string roleType = string.Empty;
-            if (profile != null && profile.p.DefaultEventId != null)
-            {
-                //Get the disaster
-                var disasterEvent = (from d in dc.Events
-                                     where d.EventId == profile.p.DefaultEventId
-                                     select new { d.Name, d.URLFriendlyName }).SingleOrDefault();
+			string roleType = string.Empty;
+			if (profile != null && !string.IsNullOrEmpty(profile.p.DefaultEventId.ToString()))
+			{
+				//Get the disaster
+				var disasterEvent = (from d in dc.Events
+									 where d.EventId == profile.p.DefaultEventId
+									 select new { d.Name, d.URLFriendlyName }).SingleOrDefault();
 
-                if (Roles.IsUserInRole("survivor"))
-                {
-                    //We know their disaster, send them there.
-                    roleType = "Survivor";
-                }
-                if (Roles.IsUserInRole("nonprofitadministrator"))
-                {
-                    roleType = "Nonprofit";
-                }
-                if (Roles.IsUserInRole("business") || Roles.IsUserInRole("contractor"))
-                {
-                    roleType = "Business";
-                }
-                if (Roles.IsUserInRole("helper") || Roles.IsUserInRole("volunteer"))
-                {
-                    roleType = "Helper";
-                }
+				if (Roles.IsUserInRole("survivor"))
+				{
+					//We know their disaster, send them there.
+					roleType = "Survivor";
+				}
+				if (Roles.IsUserInRole("nonprofitadministrator"))
+				{
+					roleType = "Nonprofit";
+				}
+				if (Roles.IsUserInRole("business") || Roles.IsUserInRole("contractor"))
+				{
+					roleType = "Business";
+				}
+				if (Roles.IsUserInRole("helper") || Roles.IsUserInRole("volunteer"))
+				{
+					roleType = "Helper";
+				}
 
-                hypDefaultDisaster.Text = "<b>" + disasterEvent.Name + "</b>";
-                hypDefaultDisaster.NavigateUrl = "/Disaster/" + disasterEvent.URLFriendlyName + "/" + roleType;
+				hypDefaultDisaster.Text = "<b>" + disasterEvent.Name + "</b>";
+				hypDefaultDisaster.NavigateUrl = "/Disaster/" + disasterEvent.URLFriendlyName + "/" + roleType;
 
-                litDefaultDisaster.Text = "<li style=\"background-color:#FFD86E;\"><a href='/Disaster/" + disasterEvent.URLFriendlyName + "'>" + disasterEvent.Name + "</a></li>";
-            }
-            
-            //If the user started a non-profit or created a response to one, then show it. If they are affiliated with more than one, then show the list.
-            lblNonProfitDescription.Text = "Stability is the Official Disaster Recovery Platform of the ";
-            hypNonProfit.NavigateUrl = "http://www.CajunRelief.org";
-            hypNonProfit.Text = "<img class=\"right\" src=\"/S1/Images/CajunNavySmallLogo.png\" /> Cajun Navy";
+				litDefaultDisaster.Text = "<li style=\"background-color:#FFD86E;\"><a href='/Disaster/" + disasterEvent.URLFriendlyName + "'>" + disasterEvent.Name + "</a></li>";
+			}
 
-            var orgUser = (from o in dc.Organizations
-                              where o.OwnerId == userId
-                              orderby o.CreatedOn descending
-                              select o).SingleOrDefault();
+			//If the user started a non-profit or created a response to one, then show it. If they are affiliated with more than one, then show the list.
+			lblNonProfitDescription.Text = "Stability is the Official Disaster Recovery Platform of the ";
+			hypNonProfit.NavigateUrl = "http://www.CajunRelief.org";
+			hypNonProfit.Text = "<img class=\"right\" src=\"/S1/Images/CajunNavySmallLogo.png\" /> Cajun Navy";
 
-            //Need to be able to assign someone as the nonprofit owner.
-            if (orgUser != null)
+			var orgUser = (from o in dc.Organizations
+						   where o.OwnerId == userId
+						   orderby o.CreatedOn descending
+						   select o).SingleOrDefault();
+
+			//Need to be able to assign someone as the nonprofit owner.
+			if (orgUser != null)
 			{
 				//Person is owner of a non-profit.
 				lblNonProfitDescription.Visible = false;
-                hypNonProfit.Text = orgUser.Name;
-                hypNonProfit.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId;
-				
+				hypNonProfit.Text = orgUser.Name;
+				hypNonProfit.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId;
+
 				var myDisasterCampaigns = from oe in dc.OrganizationEvents
 										  join ev in dc.Events on oe.EventId equals ev.EventId
 										  where oe.OrganizationId == orgUser.OrganizationId
 										  select new { ev, oe };
-				
+
 				liMyCampaigns.Visible = true;
 				string myDisasterCampaignList = string.Empty;
 				foreach (var myDisasterCampaign in myDisasterCampaigns)
@@ -136,30 +136,30 @@ public partial class V1_MasterPages_SurvivorSurvey : System.Web.UI.MasterPage
 				litMyDisasterCampaigns.Text = myDisasterCampaignList;
 			}
 			else
-            {
-                hypNonProfit.Target = "_blank";
-            }
+			{
+				hypNonProfit.Target = "_blank";
+			}
 
-            var orgOrgUsers = from oe in dc.OrganizationEvents
-                              where oe.PointOfContactUserId == userId
-                              orderby oe.CreatedOn descending
-                              select oe;
+			var orgOrgUsers = from oe in dc.OrganizationEvents
+							  where oe.PointOfContactUserId == userId
+							  orderby oe.CreatedOn descending
+							  select oe;
 
-            //Need to be able to assign someone as the nonprofit owner.
-            if (orgOrgUsers.Count() > 0)
-            {
-                liDisasterCampaigns.Visible = true;
-                string myDisasterList = string.Empty;
-                foreach(var orgOrgUser in orgOrgUsers)
-                {
-                    myDisasterList += "<li><a href=\"/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId + "\">" + orgUser.Name + "</a></li>";
-                }
-                litMyCampaigns.Text = myDisasterList;
-            }
-            
-            var userOrganizations = from uo in dc.UserOrganizations
-                                    join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                    where uo.UserId == userId
+			//Need to be able to assign someone as the nonprofit owner.
+			if (orgOrgUsers.Count() > 0)
+			{
+				liDisasterCampaigns.Visible = true;
+				string myDisasterList = string.Empty;
+				foreach (var orgOrgUser in orgOrgUsers)
+				{
+					myDisasterList += "<li><a href=\"/V1/NonProfit/Default.aspx?organizationId=" + orgUser.OrganizationId + "\">" + orgUser.Name + "</a></li>";
+				}
+				litMyCampaigns.Text = myDisasterList;
+			}
+
+			var userOrganizations = from uo in dc.UserOrganizations
+									join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
+									where uo.UserId == userId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                     select new { o.Name, o.OrganizationId };
             
             if (userOrganizations.Count() > 0)

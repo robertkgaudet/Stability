@@ -1,13 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.Security;
+﻿using Microsoft.SqlServer.Server;
+using System;
 using System.Activities.Expressions;
-using System.Web.Caching;
-using System.Web.Services;
-using System.Text;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Web;
+using System.Web.Caching;
+using System.Web.Security;
+using System.Web.Services;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class MasterPages_Homer : System.Web.UI.MasterPage
@@ -44,6 +45,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
     public string calendarUpdated = "grey";
     public string _masterCoverImage = "";
     public string FeatureTypeCounterTitle = string.Empty;
+	public string adminHeaderStyle = "{background-color:#5e2e91;height:58px;}";
     public string TimeAgo { get; set; }
     public string notificationCounting { get; set; }
     public class FeatureTypeCounter
@@ -58,9 +60,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         divLogin.Visible = true;
         divSettings.Visible = false;
         litVolunteerPending.Text = " Volunteer";
-        litVolunteerIcon.Text = "<i class=\"fa fa-heart\"></i>";
-
-
+        litVolunteerIcon.Text = "<i class=\"fa fa-heart\"></i>";		
         PlaceHolder PlaceHolderContent = (PlaceHolder)FindControl("PlaceHolderContent");
 
         if (PlaceHolderContent != null)
@@ -96,9 +96,13 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         }
         if (_hideHeader)
         {
-            fixedHeader = string.Empty;
+			divSearch.Visible = false;
+			divMessages.Visible = false;
+			fixedHeader = string.Empty;
             header.Visible = false;
-        }
+			mobileMenu.Visible = false;
+
+		}
         if (_hideFooter)
         {
             fixedFooter = string.Empty;
@@ -124,30 +128,62 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         //Calculating the notificationCount
         using (var dc = new CrowdReliefDBDataContext())
         {
-            int unreadCount = dc.Notifications.Count(n => !n.IsRead);
-            notificationCounting = unreadCount.ToString();
-            notificationCounts.Text = unreadCount > 0 ? unreadCount.ToString() : string.Empty;
+            MembershipUser user = Membership.GetUser();
+
+            if (user != null && user.ProviderUserKey != null)
+            {
+                Guid currentUserId = new Guid(user.ProviderUserKey.ToString());
+                int unreadCount = dc.Notifications
+                    .Count(n => !n.IsRead && n.RecipientUserId == currentUserId);
+                notificationCounting = unreadCount.ToString();
+                notificationCounts.Text = unreadCount > 0 ? unreadCount.ToString() : string.Empty;
+            }
+            else
+            {
+                int unreadCount = 0;
+            }
         }
 
+		divFeed.Visible = false;
+		divProfile.Visible = false;
+		divTeam.Visible = false;
+		divSearch.Visible = false;
+		divMessages.Visible = false;
 
 
-        if (HttpContext.Current.User.Identity.IsAuthenticated)
+		if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
             bool hasTeam = false;
             bool hasDeployment = false;
             bool hasPortal = false;
-            userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
+
+
+			divFeed.Visible = true;
+			divProfile.Visible = true;
+			divTeam.Visible = true;
+			if(!_hideHeader)
+			divSearch.Visible =  true;
+			if(!_hideHeader)
+			divMessages.Visible = true;
+
+			userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
             string profilePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["profilePhotoFolder"].ToString();
             divSettings.Visible = true;
             divLogin.Visible = false;
 
-            //Get the users information.
-            CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			//Load users groups.
+
+			BindUserGroups();
+
+			//Get the users information.
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
             if (HttpContext.Current.User.IsInRole("Administrator"))
             {
-                adminFeatureSection.Visible = true;
+                //menu.Style["margin-top"] = "60px";
+                adminFeatureSection.Visible = false;
+				//adminHeaderStyle = "{position: fixed; top: 65px; left: 0;width: 100%;z-index: 9999; background-color: #5e2e91; height: 58px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}";
 
-                string FeatureTypeRedirectUrl = HttpContext.Current.Request.Url.AbsolutePath;
+				string FeatureTypeRedirectUrl = HttpContext.Current.Request.Url.AbsolutePath;
 
                 if (!string.IsNullOrEmpty(FeatureTypeRedirectUrl))
                 {
@@ -203,53 +239,32 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                            select new { p }).SingleOrDefault();
 
             string roleType = string.Empty;
-            bool hasDefaultDisaster = false;
-            if (profile != null && profile.p.DefaultEventId != null)
-            {
-                //Get the default disaster
-                var disasterEvent = (from d in dc.Events
-                                     where d.EventId == profile.p.DefaultEventId
-                                     select new { d.Name, d.URLFriendlyName }).SingleOrDefault();
 
-                if (disasterEvent != null)
-                {
-                    hasDefaultDisaster = true;
-                    communityUpdated = "yellowgreen";
-                    //Put the default disaster at the top.
-                    //hypMDefaultDisaster.Text = "<b>" + disasterEvent.Name + "</b>";
-                    //hypMDefaultDisaster.NavigateUrl = "/Disaster/" + disasterEvent.URLFriendlyName;
-                    //hypDefaultDisaster.Text = "<b>" + disasterEvent.Name + "</b>";
-                    //hypDefaultDisaster.NavigateUrl = "/Disaster/" + disasterEvent.URLFriendlyName;
-                    litDefaultDisaster.Text = "<li><strong><a href='/Disaster/" + disasterEvent.URLFriendlyName + "'>" + disasterEvent.Name + "</a> (Default Portal)</strong></li>";
-                }
-            }
+			var orgUser = (from o in dc.Organizations
+						  join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
+						  where uo.UserId == userId && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                          orderby uo.IsPrimary, o.CreatedOn descending
+                          select new { o.Name, o.OrganizationId }).Take(1).SingleOrDefault();
 
-            var orgUser = from o in dc.Organizations
-                          join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                          where uo.UserId == userId
-                          orderby o.CreatedOn descending
-                          select o;
-
-            if (orgUser.Count() > 0)
+            if (orgUser != null)
             {
                 hasTeam = true;
-                _organizationId = orgUser.Take(1).SingleOrDefault().OrganizationId.ToString();
+                _organizationId = orgUser.OrganizationId.ToString();
                 linkDeployment.HRef = "/V1/NonProfit/Deployments.aspx?organizationId=" + _organizationId;
                 teamUpdated = "yellowgreen";
-                hypActionPage.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
+                hypActionPage.NavigateUrl = "/V1/NonProfit/ActivityDashboard.aspx?organizationId=" + _organizationId;
+
                 //Person is owner of a non-profit.
                 litNonProfitName.Visible = true;
-                hypNonProfit.Text = orgUser.Take(1).SingleOrDefault().Name;
-                hypNonProfit.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
-                //hypMyTeam.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
-                //hypMMyTeam.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
-                liDeployment.Attributes.Add("data-url", "/V1/NonProfitAdministration/RespondToEvent.aspx?userActionModal=false&organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId);
+                hypNonProfit.Text = orgUser.Name;
+                hypNonProfit.NavigateUrl = "/V1/NonProfit/Stream.aspx?organizationId=" + _organizationId;
 
-                hypInviteTeamMembers.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId;
+
+				hypInviteTeamMembers.NavigateUrl = "/V1/NonProfitAdministration/InviteTeam.aspx?organizationId=" + _organizationId;
 
                 var myDisasterCampaigns = from uoe in dc.UserOrganizationEvents
                                           join oe in dc.OrganizationEvents on uoe.OrganizationEventId equals oe.OrganizationEventId
-                                          where oe.OrganizationId == orgUser.Take(1).SingleOrDefault().OrganizationId && uoe.UserId == userId
+                                          where oe.OrganizationId == orgUser.OrganizationId && uoe.UserId == userId
                                           select new { oe };
 
                 liMyCampaigns.Visible = false;
@@ -280,14 +295,14 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                 string myDisasterList = string.Empty;
                 foreach (var orgOrgUser in orgOrgUsers)
                 {
-                    myDisasterList += "<li><a href=\"/V1/NonProfit/Default.aspx?organizationId=" + orgUser.Take(1).SingleOrDefault().OrganizationId + "\">" + orgUser.Take(1).SingleOrDefault().Name + "</a></li>";
+                    myDisasterList += "<li><a href=\"/V1/NonProfit/Default.aspx?organizationId=" + _organizationId + "\">" + orgUser.Name + "</a></li>";
                 }
                 litMyCampaigns.Text = myDisasterList;
             }
 
             var userOrganizations = from uo in dc.UserOrganizations
                                     join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-                                    where uo.UserId == userId
+                                    where uo.UserId == userId && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
                                     select new { o.Name, o.OrganizationId };
 
             if (userOrganizations.Count() > 0)
@@ -340,8 +355,6 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                 _noCause = "true";
                 divNoDeploymentGuidance.Visible = true;
                 litMyCausesslabel.Visible = false;
-
-
             }
             else
             {
@@ -386,36 +399,7 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                 }
             }
 
-            var disasters = from ev in dc.Events
-                            join ue in dc.UserEvents on ev.EventId equals ue.EventId
-                            where ue.UserId == userId
-                            orderby ev.BeginDate
-                            select new { ev.EventId, ev.Name, ev.URLFriendlyName, ev.BeginDate };
-
-            if (disasters.Count() > 0)
-            {
-                hasPortal = true;
-                string myDisasterList = string.Empty;
-                foreach (var disaster in disasters.Distinct().OrderByDescending(d => d.BeginDate))
-                {
-                    myDisasterList += "<li><a href=\"/Disaster/" + disaster.URLFriendlyName + "\">" + disaster.Name + "</a></li>";
-                }
-                communityUpdated = "yellowgreen";
-                litMyDisasters.Text = myDisasterList;
-                if (!hasDefaultDisaster)
-                {
-                    //hypMDefaultDisaster.Text = "<b>" + disasters.Take(1).SingleOrDefault().Name + "</b>";
-                    //hypMDefaultDisaster.NavigateUrl = "/Disaster/" + disasters.Take(1).SingleOrDefault().URLFriendlyName;
-                    //hypDefaultDisaster.Text = "<b>" + disasters.Take(1).SingleOrDefault().Name + "</b>";
-                    //hypDefaultDisaster.NavigateUrl = "/Disaster/" + disasters.Take(1).SingleOrDefault().URLFriendlyName;
-                    litDefaultDisaster.Text = "<li><strong><a href='/Disaster/" + disasters.Take(1).SingleOrDefault().URLFriendlyName + "'>" + disasters.Take(1).SingleOrDefault().Name + "</a> (Default Portal)</strong></li>";
-                }
-            }
-            else
-            {
-                litDiasterLabel.Visible = false;
-                divNoPortalGuidance.Visible = true;
-            }
+            string virtualPath;
             //List nonprofits a user volunteers for.
             var profileImage = (from ph in dc.ProfilePhotos
                                 join p in dc.Photos on ph.PhotoId equals p.PhotoId
@@ -425,9 +409,19 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
 
             if (profileImage != null)
             {
-                //Get the users profile image
-                imgProfile.Src = profilePhotoFolder + profileImage.FilenameCropped;
+                virtualPath = profilePhotoFolder + profileImage.FilenameCropped;
+                string physicalPath = Server.MapPath(virtualPath);
+
+                if (!File.Exists(physicalPath))
+                {
+                    virtualPath = "~/V1/Images/icons8-customer-64.png";
+                }
             }
+            else
+            {
+                virtualPath = "~/V1/Images/icons8-customer-64.png";
+            }
+            imgProfile.Src = virtualPath;
 
             //         string[] userRoles = Roles.GetRolesForUser(HttpContext.Current.User.Identity.Name);
 
@@ -570,12 +564,12 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
                     // On subsequent loads, set the session value to false
                     Session["FirstLoad"] = false;
                 }
-
-
-
-
-            }
-            if (CheckSkills(userId))
+			}
+			
+				// Uncomment to force showing the user action modal.
+			 //_showUserActionModal = "$(\"#divUserActionModal\").modal('show')";
+            
+			if (CheckSkills(userId))
             {
                 skillsUpdated = "yellowgreen";
             }
@@ -606,179 +600,283 @@ public partial class MasterPages_Homer : System.Web.UI.MasterPage
         }
     }
 
+	protected void rptUserGroups_ItemDataBound(object sender, RepeaterItemEventArgs e)
+	{
+		if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+		{
+			RepeaterItem dataItem = (RepeaterItem)e.Item;
+
+            string UrlFriendlyTeamName = (string)DataBinder.Eval(dataItem.DataItem, "UrlFriendlyTeamName");
+            int TeamStatus = (int)DataBinder.Eval(dataItem.DataItem, "TeamStatus");
+			string organizationUrl = !String.IsNullOrEmpty(UrlFriendlyTeamName) ? "/Team/" + UrlFriendlyTeamName : "/V1/NonProfit/Default.aspx?organizationId=" + (Guid)DataBinder.Eval(dataItem.DataItem, "OrganizationId");
+
+			string organizationName = (string)DataBinder.Eval(dataItem.DataItem, "OrganizationName");
+			string organizationTeamLogo = (string)DataBinder.Eval(dataItem.DataItem, "imgTeam");
+
+			string imgTeamPath = "/V1/Images/Logo-Placeholder.png";  
+
+			if (!string.IsNullOrEmpty(organizationTeamLogo))
+			{
+				string virtualPath = "/Impactoid/Images/Logos/" + organizationTeamLogo;
+				string physicalPath = Server.MapPath(virtualPath);
+
+				if (System.IO.File.Exists(physicalPath))
+				{
+					imgTeamPath = virtualPath; 
+				}
+			}
+
+			string teamLabel = " <span class='badge badge-primary' style='margin-left: 55px; margin-top:-20px;'>Primary Team</span>";
+			if(TeamStatus == (int)RequestStatus.Pending)
+			{
+				teamLabel = " <span class='badge badge-default' style='margin-left: 55px; margin-top:-20px;'>Pending Approval</span>";
+			}
+
+			bool isPrimary = Convert.ToBoolean(DataBinder.Eval(dataItem.DataItem, "IsPrimary") ?? false);
+			Literal litPrimaryBadge = (Literal)e.Item.FindControl("litPrimaryBadge");
+			litPrimaryBadge.Text = isPrimary ? teamLabel : "";
+			Literal lit = (Literal)e.Item.FindControl("litGroupLink");
+			lit.Text = "<a href=\"" + organizationUrl + "\">" + organizationName + "</a>";
+			Image imgTeam = (Image)e.Item.FindControl("imgTeam");
+			imgTeam.ImageUrl = imgTeamPath;
+		}
+	}
 
 
-    private bool CheckResources(Guid userId)
+		private void BindUserGroups()
+		{
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+			var userGroups = (from g in dc.UserOrganizations
+							  join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
+							  where g.UserId == userId && (g.Status == (int)RequestStatus.Approved || g.Status == (int)RequestStatus.Pending)
+							  orderby g.IsPrimary descending, o.Name
+							  select new
+							  {
+								  OrganizationName = o.Name,
+								  UrlFriendlyTeamName = o.URLFriendlyName,
+								  OrganizationId = o.OrganizationId,
+								  imgTeam = o.LogoSquare,
+								  OwnerId = o.OwnerId,
+								  IsPrimary = g.IsPrimary,
+								  TeamStatus = g.Status
+							  }).Distinct().ToList();
+
+			rptUserGroups.DataSource = userGroups;
+			rptUserGroups.DataBind();
+		}
+
+		private bool CheckResources(Guid userId)
+		{
+			bool hasResources = false;
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+			var resourcesCheck = (from us in dc.UserResources
+								  where us.UserId == userId
+								  select us).Count();
+
+			if (resourcesCheck > 0)
+			{
+				hasResources = true;
+			}
+
+			return hasResources;
+		}
+		private bool CheckSkills(Guid userId)
+		{
+			bool hasSkills = false;
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+			var skillCheck = (from us in dc.UserSkills
+							  where us.UserId == userId
+							  select us).Count();
+
+			if (skillCheck > 0)
+			{
+				hasSkills = true;
+			}
+
+			return hasSkills;
+		}
+
+
+    protected void imgLogo_Click(object sender, ImageClickEventArgs e)
     {
-        bool hasResources = false;
         CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-
-        var resourcesCheck = (from us in dc.UserResources
-                              where us.UserId == userId
-                              select us).Count();
-
-        if (resourcesCheck > 0)
+        var userGroups = (from g in dc.UserOrganizations
+                          join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
+                          where g.UserId == userId && (g.Status == (int)RequestStatus.Approved || g.Status == (int)RequestStatus.Pending)
+                          orderby g.IsPrimary descending, o.Name
+                          select new
+                          {
+                              OrganizationId = o.OrganizationId,
+                              IsPrimary = g.IsPrimary,
+                              TeamStatus = g.Status
+                          }).Distinct().ToList();
+        if (userGroups.Count()==0)
         {
-            hasResources = true;
+            Response.Redirect("/V1/Login.aspx");
         }
-
-        return hasResources;
-    }
-    private bool CheckSkills(Guid userId)
-    {
-        bool hasSkills = false;
-        CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
-
-        var skillCheck = (from us in dc.UserSkills
-                          where us.UserId == userId
-                          select us).Count();
-
-        if (skillCheck > 0)
+        var primaryGroup = userGroups.FirstOrDefault(x => x.IsPrimary==true);
+        if (primaryGroup == null)
         {
-            hasSkills = true;
+            primaryGroup = userGroups.FirstOrDefault();
+            Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=" + primaryGroup.OrganizationId);
+
         }
-
-        return hasSkills;
+        Response.Redirect("/V1/NonProfit/Default.aspx?organizationId="+ primaryGroup.OrganizationId);
+        
     }
-
     public bool HideMasterCover
-    {
-        get
-        {
-            return _hideMasterCover;
-        }
-        set
-        {
-            _hideMasterCover = value;
-        }
-    }
-    public bool HideMenu
-    {
-        get
-        {
-            return _hideMenu;
-        }
-        set
-        {
-            _hideMenu = value;
-        }
-    }
-    public bool HideFooter
-    {
-        get
-        {
-            return _hideFooter;
-        }
-        set
-        {
-            _hideFooter = value;
-        }
-    }
-    public bool HideHeader
-    {
-        get
-        {
-            return _hideHeader;
-        }
-        set
-        {
-            _hideHeader = value;
-        }
-    }
+		{
+			get
+			{
+				return _hideMasterCover;
+			}
+			set
+			{
+				_hideMasterCover = value;
+			}
+		}
+		public bool HideMenu
+		{
+			get
+			{
+				return _hideMenu;
+			}
+			set
+			{
+				_hideMenu = value;
+			}
+		}
+		public bool HideFooter
+		{
+			get
+			{
+				return _hideFooter;
+			}
+			set
+			{
+				_hideFooter = value;
+			}
+		}
+		public bool HideHeader
+		{
+			get
+			{
+				return _hideHeader;
+			}
+			set
+			{
+				_hideHeader = value;
+			}
+		}
 
-    public string PageTitle
-    {
-        get
-        {
-            return _pageTitle;
-        }
-        set
-        {
-            _pageTitle = value;
-        }
-    }
-    public string PageDescription
-    {
-        get
-        {
-            return _pageDescription;
-        }
-        set
-        {
-            _pageDescription = value;
-        }
-    }
-    public string FbImage
-    {
-        get
-        {
-            return _fbImage;
-        }
-        set
-        {
-            _fbImage = value;
-        }
-    }
-    public string FbURL
-    {
-        get
-        {
-            return _fbURL;
-        }
-        set
-        {
-            _fbURL = value;
-        }
-    }
-    public string FbImageType
-    {
-        get
-        {
-            return _fbImageType;
-        }
-        set
-        {
-            _fbImageType = value;
-        }
-    }
-    public string FbSite_name
-    {
-        get
-        {
-            return _fbSite_name;
-        }
-        set
-        {
-            _fbSite_name = value;
-        }
-    }
-    public string showUserActionModal
-    {
-        get
-        {
-            return _showUserActionModal;
-        }
-        set
-        {
-            _showUserActionModal = value;
-        }
-    }
-    public string FbDescription
-    {
-        get
-        {
-            return _fbDescription;
-        }
-        set
-        {
-            _fbDescription = value;
-        }
-    }
+		public string PageTitle
+		{
+			get
+			{
+				return _pageTitle;
+			}
+			set
+			{
+				_pageTitle = value;
+			}
+		}
+		public string PageDescription
+		{
+			get
+			{
+				return _pageDescription;
+			}
+			set
+			{
+				_pageDescription = value;
+			}
+		}
+		public string FbImage
+		{
+			get
+			{
+				return _fbImage;
+			}
+			set
+			{
+				_fbImage = value;
+			}
+		}
+		public string FbURL
+		{
+			get
+			{
+				return _fbURL;
+			}
+			set
+			{
+				_fbURL = value;
+			}
+		}
+		public string FbImageType
+		{
+			get
+			{
+				return _fbImageType;
+			}
+			set
+			{
+				_fbImageType = value;
+			}
+		}
+		public string FbSite_name
+		{
+			get
+			{
+				return _fbSite_name;
+			}
+			set
+			{
+				_fbSite_name = value;
+			}
+		}
+		public string showUserActionModal
+		{
+			get
+			{
+				return _showUserActionModal;
+			}
+			set
+			{
+				_showUserActionModal = value;
+			}
+		}
+		public string FbDescription
+		{
+			get
+			{
+				return _fbDescription;
+			}
+			set
+			{
+				_fbDescription = value;
+			}
+		}
 
     protected void btnSearchMobile_Click(object sender, EventArgs e)
     {
+        string searchType = String.IsNullOrEmpty(txtSearchMobile.Text) ? hdnSearchType.Value : hymoblie.Value;
         string searchTerm = String.IsNullOrEmpty(txtSearchMobile.Text) ? txtSearchHeader.Text : txtSearchMobile.Text;
-        Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm);
+        if (searchType == "Teams")
+        {
+            Response.Redirect("/V1/NonProfit/TeamList.aspx?searchTerm=" + searchTerm);
+
+        }
+        else if (searchType == "Deployments")
+        {
+            Response.Redirect("/V1/Deployments.aspx?searchTerm=" + searchTerm);
+        }
+        else
+        {
+            Response.Redirect("/V1/Member/PeopleSearch.aspx?searchTerm=" + searchTerm);
+        }
     }
 
 }

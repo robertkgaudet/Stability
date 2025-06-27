@@ -69,6 +69,7 @@ public partial class V1_Administration_VolunteerIDList : System.Web.UI.Page
 			Literal litCreateDate = (Literal)e.Item.FindControl("litCreateDate");
 			Literal litLastLoginDate = (Literal)e.Item.FindControl("litLastLoginDate");
 			Literal litEmail = (Literal)e.Item.FindControl("litEmail");
+			Literal litTeam = (Literal)e.Item.FindControl("litTeam");
 			System.Web.UI.HtmlControls.HtmlTableCell tdDelete = (System.Web.UI.HtmlControls.HtmlTableCell)e.Item.FindControl("tdDelete");
 
 			//Total count of items and total cost.
@@ -79,6 +80,18 @@ public partial class V1_Administration_VolunteerIDList : System.Web.UI.Page
 			DateTime createDate		= (DateTime)DataBinder.Eval(dataItem.DataItem, "createDate");
 			DateTime lastLoginDate	= (DateTime)DataBinder.Eval(dataItem.DataItem, "lastLoginDate");
 			string email			= (string)DataBinder.Eval(dataItem.DataItem, "LoweredEmail");
+
+			CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+
+			var userOrganization = (from uo in dc.UserOrganizations
+									join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
+									where uo.UserId == userId
+									select new { o.Name }).Take(1).SingleOrDefault();
+
+			if (userOrganization != null)
+			{
+				litTeam.Text = userOrganization.Name;
+			}
 
 			if (!User.IsInRole("DeleteAdministrator"))
 			{

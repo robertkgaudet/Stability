@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CrowdRelief;
+using System;
+using System.IdentityModel.Metadata;
 using System.Linq;
 using System.Web.Services;
 using System.Web.UI.WebControls;
@@ -204,6 +206,37 @@ public partial class V1_NonProfitAdministration_RespondToEvent : BaseOrganizatio
             dc.UserEvents.InsertOnSubmit(userEvent);
             dc.SubmitChanges();
         }
+
+        if (chkNotification.Checked)
+        {
+            string accountSid = System.Configuration.ConfigurationManager.AppSettings["twilioAccountSID"].ToString();
+            string authToken = System.Configuration.ConfigurationManager.AppSettings["twilioAuthToken"].ToString(); ;
+            string fromNumber = System.Configuration.ConfigurationManager.AppSettings["twilioPhoneNumber"].ToString();
+
+            var teamMembers = (from a in dc.UserOrganizations
+                               join b in dc.aspnet_Users
+                               on a.UserId equals b.UserId
+                               join c in dc.Profiles
+                               on a.UserId equals c.UserId
+                               where a.OrganizationId == new Guid(organizationId) && c.ReceiveSMSNotifications == true && a.Status== (int)RequestStatus.Approved
+                               select c.PhoneNumber).ToArray();
+
+            string messageBody = "Dear Member, We are excited to inform you that a new deployment named " + campaignName + " has been created into your organization.";
+
+            // Create an instance of Tools and send the SMS
+            var tools = new Tools(accountSid, authToken, fromNumber);
+            tools.SendSms(messageBody, teamMembers);
+        }
+        BaseWebForm.AddNotifications(
+   NotificationType.DeploymentIsCreated,
+   FeatureTypeEnum.Deployments,
+   "deployment created msg ",
+   "Deployment has been successfully created for the organization.",
+      userId,
+   true,
+   organizationEvent.OrganizationId.ToString(),Guid.Empty
+
+);
         Response.Redirect("/V1/NonProfitAdministration/PositionsNeeded.aspx?organizationEventId=" + organizationEventId);
     }
     protected void btnSubmit_Cancel(object sender, EventArgs e)

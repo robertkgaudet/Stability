@@ -1,4 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs"Inherits="V1_NonProfit_People" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true"
+    EnableEventValidation="false" ValidateRequest="false" CodeFile="People.aspx.cs"
+    Inherits="V1_NonProfit_People" %>
+
 <%@ Register Src="~/V1/UserControls/TeamHeader2.ascx" TagPrefix="uc1" TagName="TeamHeader" %>
 <%@ Register Src="~/V1/UserControls/TeamFooter2.ascx" TagPrefix="uc1" TagName="TeamFooter" %>
 <%@ Register Src="~/V1/UserControls/TeamLogo.ascx" TagPrefix="uc1" TagName="TeamLogo" %>
@@ -31,8 +34,35 @@
     <script src="../../Homer/vendor/ladda/dist/spin.min.js"></script>
     <script src="../../Homer/vendor/ladda/dist/ladda.min.js"></script>
     <script src="../../Homer/vendor/ladda/dist/ladda.jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <style>
+		.panel-footer
+		{
+			background-color:#f9f5ff !important;
+		}
+
+        #messageModelTitle {
+            width: 94%;
+            margin-left: 19px;
+        }
+
+        .suggestion-box {
+            margin-top: 148px !important;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px !important;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        #ContentPlaceHolder1_txtMessage {
+            width: 94% !important;
+            margin-left: 19px;
+        }
+
         .website {
             background-color: #5E2E91;
             padding: 17px;
@@ -102,7 +132,8 @@
         }
 
         .form-check label {
-            margin-left: 3px;
+            margin-left: 8px;
+            font-weight: normal !important;
         }
 
         .margin {
@@ -111,7 +142,7 @@
         }
 
         .justify-content-center {
-          /*  display: flex !important;*/
+            /*  display: flex !important;*/
             justify-content: center !important;
         }
 
@@ -119,6 +150,12 @@
             margin-bottom: 160px;
             margin-left: 110px;
             width: 123px;
+        }
+
+        .form-group {
+            margin-bottom: 15px !important;
+            margin-left: 28px !important;
+            margin: -6px;
         }
 
         .note-editor.note-frame.panel.panel-default {
@@ -130,15 +167,19 @@
             margin-bottom: 155px;
         }
 
-      /*  label {
+        /*  label {
             margin: 16px 0px 10px 10px;
             font-size: 17px;
         }
 */
-          #manageMemberModal .modal-body label,
-          #manageMemberModal .form-check-label {
-       font-weight: normal !important;
-       }
+
+        .modal-body {
+            position: relative;
+            padding: 15px;
+            margin-left: -14px;
+            margin-bottom: -13px;
+        }
+
         #txtEmail {
             margin-right: 0px !important;
         }
@@ -147,10 +188,105 @@
             margin-left: -1px; /* Removes unwanted space */
         }
 
-        button.btn.btn-primary {
-            margin-left: 10px;
-            margin-bottom: 90px;
+
+
+        .custom-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ccc;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            margin-top: 106px;
         }
+
+        #ContentPlaceHolder1_txtManageVettingNotes {
+            margin-left: -9px;
+        }
+
+        .custom-flex-end {
+            display: flex;
+            justify-content: flex-end;
+            padding: 0 15px 15px 0;
+        }
+
+        .custom-footer {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 13px;
+            margin-top: 13px;
+            margin-right: 4px;
+        }
+
+            .btn-row .btn {
+                min-width: 170px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 500;
+                margin-right: 9px;
+            }
+
+        .fotter .btn {
+            min-width: 167px;
+            height: 45px;
+        }
+
+        .btn-row.modal-footer.custom-footer.btn-group-responsive {
+            margin-right: 0px;
+        }
+
+        .modal-footer .btn {
+            margin-left: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .btn-row.modal-footer.custom-footer.btn-group-responsive {
+            padding-bottom: 10px;
+        }
+
+        .fotter {
+            justify-content: right;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .fotter {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 20px;
+                padding: 10px;
+                margin-left: 0;
+            }
+        }
+       .badge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+     background-color: #337ab7; 
+    border-radius: 10px;
+    margin-left: auto;
+}
     </style>
     <script>
         var recipientsName;
@@ -276,38 +412,116 @@
                 allSelectedText: 'All Selected',
                 numberDisplayed: 2
             });
+            // PageRequestManager reference
+            var prm = Sys.WebForms.PageRequestManager.getInstance();
 
+            prm.add_beginRequest(function () {
+                document.getElementById("loader").style.display = "block";
+                document.getElementById("tblVolunteers").style.display = "none";
+            });
+            prm.add_endRequest(function () {
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("tblVolunteers").style.display = "table";
+
+                window.scrollTo({ top: 300, behavior: "instant" });
+            });
+        });
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
         });
         var currentUserId = null;
         function setUserId(button) {
+            ;
             currentUserId = button.getAttribute('data-userid');
-            if (document.getElementById('<%= hiddenManageShowDonateButtonn.ClientID %>').value == "0") {
-                $('.donateDiv').hide();
-            } else {
-                $('.donateDiv').show();
-            }
-            return false;
         }
         function fetchUserData() {
+            ;
             if (!currentUserId) {
                 alert("User ID not set.");
                 return;
             }
+            $('#loader').show();
             $.ajax({
                 type: "GET",
                 url: "/V1/Handlers/UpdateMemberInfo.ashx",
-                data: { action: "fetch", userId: currentUserId },
+                data: {
+                    action: "fetch", userId: currentUserId, organizationId: '<%= Request.QueryString["organizationId"] %>'
+                },
                 dataType: "json",
                 success: function (response) {
                     if (response.success) {
+                        $('#loader').hide();
 
                         $("[name*='rblManageUserStatus'][value='" + response.vettingStatus + "']").prop("checked", true);
                         $('#<%= txtManageVettingNotes.ClientID %>').val(response.vettingNotes);
-                        $('#<%= chkManageStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
-                        $('#<%= chkManageShowDonateButton.ClientID %>').prop('checked', response.showTeamLogo);
+                        $('#<%= cbStabilityVerified.ClientID %>').prop('checked', response.stabilityVerified);
+						$('#<%= cbTeamVerified.ClientID %>').prop('checked', response.showTeamLogo); /*Should say showTeamVerified*/
                         $('#<%= chkManageTeamAdministrator.ClientID %>').prop('checked', response.makeTeamAdministrator);
+                        $('#<%= btnRemoveTeamMember.ClientID %>').show();
+                        $('#<%= btnteamOwner.ClientID %>').show();
+                        $('#<%= btnRemoveTeamMember.ClientID %>')
+                            .removeClass().addClass("btn btn-danger").removeAttr("style").removeAttr("disabled title data-toggle");
+
+                        if (response.isTeamowner === true) {
+                            $('#<%= btnRemoveTeamMember.ClientID %>').hide();
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                        }
+                        if (response.isShow === true) {
+                            $('#<%= btnRemoveTeamMember.ClientID %>').hide();
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                        }
+                        if (response.iteamadmin === true) {
+                            $('#<%= btnRemoveTeamMember.ClientID %>').hide();
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                        }
+                        if (response.isteamadminowner === true) {
+                            if (response.isteamadminowner === true) {
+                                $('#<%= btnRemoveTeamMember.ClientID %>').hide();
+                                $('#<%= btnteamOwner.ClientID %>').hide();
+                            }
+                        }
+                        else {
+                            if (response.iteamadminone === true) {
+                                $('#<%= btnteamOwner.ClientID %>').hide();
+                            }
+                        }
+                        if (response.isUserhead === true) {
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                            $('#<%= btnRemoveTeamMember.ClientID %>').show();
+                            $('#<%= btnRemoveTeamMember.ClientID %>')
+                                .removeClass()
+                                .addClass('btn btn-secondary disabled')
+                                .attr({
+                                    'data-toggle': 'tooltip',
+                                    'title': 'You made a new team owner. You can remove this person later, or they are the current team owner.',
+                                    'disabled': true
+                                })
+                                .css('border', '2px solid black');
+                        }
+                    <%--    if (response.isShow === true || response.isTeamowner === true) {
+                            $('#<%= btnRemoveTeamMember.ClientID %>').hide();
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                        }
+                        if (response.teamadmin === true)
+                        {
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                        }
+                        if (response.isUserInThatRole === true) {
+                            $('#<%= btnteamOwner.ClientID %>').hide();
+                            $('#<%= btnRemoveTeamMember.ClientID %>')
+                                .removeClass()
+                                .addClass('btn btn-secondary disabled')
+                                .attr({
+                                    'data-toggle': 'tooltip',
+                                    'title': 'You made a new team owner. You can remove this person later, or they are the current team owner.',
+                                    'disabled': true
+                                })
+                                .css('border', '2px solid black');  
+                        }--%>
+
                         console.log("User data fetched successfully:", response);
                     } else {
+                        $('#loader').hide();
                         alert("Failed to fetch user data.");
                     }
                 },
@@ -317,41 +531,130 @@
                 }
             });
         }
-        function saveChanges() {
+        function btnMakeTeamOwner() {
+            event.preventDefault();
+            swal({
+                title: 'Are you sure?',
+                text: "Do you want to make this user the team owner?",
+                icon: "success",
+                buttons: ["No", "Yes, make owner!"],
+            }).then(function (willSet) {
+                if (willSet) {
+                    var selectedUser = currentUserId;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "People.aspx/MakeTeamOwner",
+                        data: JSON.stringify({ selectedUser: selectedUser }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            swal("Success", response.d, "success");
+                            $('#manageMemberModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error:", error);
+                            swal("Error", "An error occurred while making the user a team owner.", "error");
+                        }
+                    });
+                }
+            });
+        }
+        function btnMakeTeamRemove() {
+            event.preventDefault();
+            swal({
+                title: 'Are you sure?',
+                text: "Are you sure you want to remove this team member?",
+                icon: "warning",
+                buttons: ["No", "Yes, Remove from team!"],
+                dangerMode: true
+            }).then(function (willSet) {
+                if (willSet) {
+                    var selectedUser = currentUserId;
+
+                    $.ajax({
+                        type: "POST",
+                        url: "People.aspx/RemoveTeamMember",
+                        data: JSON.stringify({ selectedUser: selectedUser }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (response) {
+                            debugger;
+                            $("a.Userlink[href*='" + selectedUser + "']").parents('tr').remove();
+                            swal("Success", response.d, "success");
+                            $('#manageMemberModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error:", error);
+                            swal("Error", "An error occurred while making the user a team owner.", "error");
+                        }
+                    });
+                }
+            });
+        }
+        function btnManageSaveChanges() {
+
             if (!currentUserId) {
                 alert("No user selected.");
                 return;
             }
             var vettingStatus = $("[name*='rblManageUserStatus']:checked").val();
             var vettingNotes = document.getElementById('<%= txtManageVettingNotes.ClientID %>').value;
-            var showTeamLogo = false;
-            // Check if the checkbox is visible using the JavaScript style display property
-           <% if (chkManageShowDonateButton.Visible)
-        { %>
-            showTeamLogo = document.getElementById('<%= chkManageShowDonateButton.ClientID %>').checked;
-              <% }
-        else
-        { %>
-            showTeamLogo = false;
-           <% } %>
+            var showTeamVerified = false;
+            var showTeamVerifiedVisible = document.getElementById('<%= hiddenShowTeamVerified.ClientID %>').value === "1";
+            if (showTeamVerifiedVisible) {
+                showTeamVerified = document.getElementById('<%= cbTeamVerified.ClientID %>').checked;
+            } else {
+                showTeamVerified = false;
+            }
             var stabilityVerified = false;
             var makeTeamAdministrator = false;
-             <% if (User.IsInRole("Administrator"))
-        { %>
-            stabilityVerified = document.getElementById('<%= chkManageStabilityVerified.ClientID %>').checked;
+            var isAdmin = document.getElementById('<%= hiddenAdminRole.ClientID %>').value === "1";
+            //if (isAdmin) {
+            stabilityVerified = document.getElementById('<%= cbStabilityVerified.ClientID %>').checked;
             makeTeamAdministrator = document.getElementById('<%= chkManageTeamAdministrator.ClientID %>').checked;
-    <% } %>
-            updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator);
+            //}
+
+            var $input = $("input[data-userid='" + currentUserId + "']");
+
+            // Traverse up to the panel container
+            var $panel = $input.closest('.hpanel');
+
+            // Find the image tags inside the panel
+            var $stabilityImg = $panel.find("img[id*='imgStabilityBadge']");
+            var $stabilityLink = $panel.find("a[id*='hypStabilityLogo']");
+            var $teamLogoImg = $panel.find("img[id*='imgTeamLogo']");
+            var $teamLogoLink = $panel.find("a[id*='hypTeamLogo']");
+            if (showTeamVerified) {
+                $teamLogoImg.show();
+                $teamLogoLink.show();
+            }
+            else {
+                $teamLogoImg.hide();
+                $teamLogoLink.hide();
+            }
+            if (stabilityVerified) {
+                $stabilityImg.show();
+                $stabilityLink.show();
+            }
+            else {
+                $stabilityImg.hide();
+                $stabilityLink.hide();
+            }
+
+            updateMemberInfo(currentUserId, vettingStatus, vettingNotes, stabilityVerified, showTeamVerified, makeTeamAdministrator);
         }
-        function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamLogo, makeTeamAdministrator) {
+        function updateMemberInfo(userId, vettingStatus, vettingNotes, stabilityVerified, showTeamVerified, makeTeamAdministrator) {
             var data = {
                 action: "update",
                 userId: userId,
                 vettingStatus: vettingStatus,
                 vettingNotes: vettingNotes,
                 stabilityVerified: stabilityVerified,
-                showTeamLogo: showTeamLogo,
-                makeTeamAdministrator: makeTeamAdministrator
+				showTeamLogo: showTeamVerified,
+                makeTeamAdministrator: makeTeamAdministrator,
+                organizationId: '<%= Request.QueryString["organizationId"] %>'
+
             };
             $.ajax({
                 type: "POST",
@@ -362,7 +665,6 @@
                 success: function (response) {
                     if (response.Success) {
                         $('#manageMemberModal').modal('hide');
-                        resetSearch();
                     } else {
                         alert("Error: " + response.Message);
                     }
@@ -434,97 +736,117 @@
                     }
                 );
         }
-    </script>
+	</script>
     <script type="text/javascript">
         var currentPagination = '';
+        var scroll = false;
         $(document).ready(function () {
-            // Function to handle the "Next" button click
             $(document).on("click", "#nextBtn", function () {
                 if (!$('#nextBtn').hasClass('disabled')) {
                     var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
-                    var currentPage = Math.max(...$(".pagination .page-link").map(function () {
-                        return parseInt($(this).attr("tabindex")) || 0;
-                    }).get());
+                    var currentPage = parseInt($('.pagination .active .page-link').text());
 
-                    // Increment the current page number
-                    if (currentPage <= totalPages) {
+                    var newPage = currentPage + 1;
+                    if (newPage <= totalPages) {
+                        if (newPage > 3) {
+                            $(".page-item").not("#previousBtn, #nextBtn").remove();
+                            var newPageItem = '';
+                            for (var i = 0; i < Math.min(3, totalPages); i++) {
 
-                        // Update tabindex for each page link
-                        $('.page-item a').each(function (index) {
-                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
-                                $(this).attr('tabindex', index + currentPage - 2);
-                                $(this).text(index + currentPage - 2);
-                                $(this).attr("onclick", `triggerSearch(${(index + currentPage - 2)}); return false;`);
+                                newPageItem += '<li class="page-item' + (i == 1 ? " active" : "") + (i == 2 ? " firstpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + newPage - 2) + '); return false;" tabindex="' + (i + newPage - 2) + '" href="javascript:void(0)">' + (i + newPage - 2) + '</a></li>';
                             }
-                        });
-
-                        // Enable Previous button if not on the first page
-                        if (currentPage > 2) {
-                            $('#previousBtn').removeClass('disabled');
+                            if (totalPages > 3 && newPage < Math.max(totalPages - 3, 3)) {
+                                newPageItem += '<li class="page-item disabled dotpage"><a class="page-link">...</a></li>';
+                            }
+                            for (var i = Math.max(totalPages - 3, 3), j = 0; i < totalPages; i++, j++) {
+                                newPageItem += '<li class="page-item' + (i == (newPage - 1) ? " " : "") + (j == 0 ? " lastpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                            }
+                            if (newPageItem != '') $('#previousBtn').after(newPageItem);
+                            if (totalPages <= newPage + 3) {
+                                $('#nextBtn').addClass('disabled');
+                            } else {
+                                $('#nextBtn').removeClass('disabled');
+                            }
                         }
+                        triggerSearch(newPage);
                     }
 
-                    // Disable Next button if on the last page
-                    if (currentPage == totalPages) {
+                }
+            });
+        });
+
+        $(document).on("click", "#previousBtn", function () {
+            if (!$('#previousBtn').hasClass('disabled')) {
+
+                var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
+                var currentPage = parseInt($('.pagination .active .page-link').text());
+                var newPage = currentPage - 1;
+
+                if (newPage >= 1) {
+
+                    $(".page-item").not("#previousBtn, #nextBtn").remove();
+                    var newPageItem = '';
+
+                    // Displaying the first 3 pages
+                    for (var i = 0; i < Math.min(3, totalPages); i++) {
+                        newPageItem += '<li class="page-item' + (i == (newPage - 1) ? " active" : "") + (i == 2 ? " firstpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                    }
+
+                    // Show "..." if more than 3 pages
+                    if (totalPages > 3) {
+                        newPageItem += '<li class="page-item disabled dotpage"><a class="page-link">...</a></li>';
+                    }
+
+                    // Displaying the last 3 pages
+                    for (var i = Math.max(totalPages - 3, 3), j = 0; i < totalPages; i++, j++) {
+                        newPageItem += '<li class="page-item' + (i == (newPage - 1) ? " active" : "") + (j == 0 ? " lastpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                    }
+
+                    // Insert new page items after the previous button
+                    if (newPageItem != '') $('#previousBtn').after(newPageItem);
+
+                    // Disable Next button if on last page
+                    if (totalPages <= newPage) {
                         $('#nextBtn').addClass('disabled');
                     } else {
                         $('#nextBtn').removeClass('disabled');
                     }
+
+                    // Trigger the search for the previous page
+                    triggerSearch(newPage);
                 }
-            });
-
-            // Function to handle the "Previous" button click
-            $(document).on("click", "#previousBtn", function () {
-                if (!$('#previousBtn').hasClass('disabled')) {
-                    var totalPages = document.getElementById('<%= totalPageValue.ClientID %>').value;
-                    var currentPage = Math.max(...$(".pagination .page-link").map(function () {
-                        return parseInt($(this).attr("tabindex")) || 0;
-                    }).get());
-                    // Decrease the current page number
-                    var firstPage = 1 + currentPage - 4;
-                    if (firstPage >= 1) {
-
-
-                        // Update tabindex for each page link
-                        $('.page-item a').each(function (index) {
-                            if ($(this).attr('tabindex') != "-1" && $(this).attr('tabindex') != "0") {
-                                $(this).attr('tabindex', index + currentPage - 4);
-                                $(this).text(index + currentPage - 4);
-                                $(this).attr("onclick", `triggerSearch(${(index + currentPage - 4)}); return false;`);
-                            }
-                        });
-
-                        // Enable Next button if not on the last page
-                        if (firstPage + 2 < totalPages) {
-                            $('#nextBtn').removeClass('disabled');
-                        }
-
-                        // Disable Previous button if on the first page                    
-                    }
-                    if (firstPage == 1) {
-                        $('#previousBtn').addClass('disabled');
-                    } else {
-                        $('#previousBtn').removeClass('disabled');
-                    }
-                }
-
-            });
+            }
         });
 
 
-        function triggerSearch(pn) {
-            // Set a value to the hidden field            
-            document.getElementById('<%= currentPageValue.ClientID %>').value = pn; // Set custom value here
-            // Remove "active" class from all <li> elements
-            $(".pagination .page-item").removeClass("active");
 
-            // Find the <a> tag with matching tabindex and add "active" to its parent <li>
+
+        function triggerSearch(pn) {
+            document.getElementById('<%= currentPageValue.ClientID %>').value = pn;
+            $(".pagination .page-item").removeClass("active");
             $(".pagination .page-link[tabindex='" + pn + "']").closest(".page-item").addClass("active");
+
+            var totalPages = parseInt(document.getElementById('<%= totalPageValue.ClientID %>').value);
+
+            if (pn <= 1) {
+                $('#previousBtn').addClass('disabled');
+            } else {
+                $('#previousBtn').removeClass('disabled');
+            }
+
+            if (pn + 3 >= totalPages) {
+                $('#nextBtn').addClass('disabled');
+            } else {
+                $('#nextBtn').removeClass('disabled');
+            }
+
             currentPagination = $('.navClass').html();
-            // Trigger the search button click event
+
             __doPostBack('<%= SearchButton.UniqueID %>', '');
         }
+
         function searchButton() {
+            ;
             // Set a value to the hidden field
             document.getElementById('<%= currentPageValue.ClientID %>').value = 1; // Set custom value here    
         }
@@ -536,7 +858,9 @@
             document.getElementById('<%= txtIsVetted.ClientID %>').checked = false;// Set custom value here                        
             document.getElementById('<%= txtOptedSMS.ClientID %>').checked = false; // Set custom value here                        
             document.getElementById('<%= txtEmailconnect.ClientID %>').checked = false; // Set custom value here                        
-            document.getElementById('<%= txtIsVerified.ClientID %>').checked = false; // Set custom value here
+            document.getElementById('<%= txtTeamVerified.ClientID %>').checked = false; // Set custom value here
+            document.getElementById('<%= txtStabilityVerified.ClientID %>').checked = false; // Set custom value here
+            document.getElementById('<%= txtTeamAdministrator.ClientID %>').checked = false; // Set custom value here
             document.getElementById('<%= ddlEvent.ClientID %>').value = ''; // Set custom value here
             $('#hiddenEvent').val('');
             document.getElementById('<%= ddlTraining.ClientID %>').value = ''; // Set custom value here
@@ -578,17 +902,27 @@
                 $(".page-item").not("#previousBtn, #nextBtn").remove();
                 var newPageItem = ''
                 for (var i = 0; i < parseFloat(totalPage); i++) {
-                    if (i == 3) break;
-                    newPageItem += '<li class="page-item' + (i == 0 ? " active" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                    if (i < 3) {
+                        newPageItem += '<li class="page-item' + (i == 0 ? " active" : "") + (i == 2 ? " firstpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
+                    }
+                    else if (i > 3 && i <= 4) {
+                        newPageItem += '<li class="page-item disabled dotpage"><a class="page-link">...</a></li>';
+                    }
+
+                }
+                for (var i = Math.max(parseFloat(totalPage) - 3, 3), j = 0; i < parseFloat(totalPage); i++, j++) {
+
+                    newPageItem += '<li class="page-item' + (j == 0 ? " lastpn" : "") + '" id="page' + (i + 1) + '"><a class="page-link" onclick="triggerSearch(' + (i + 1) + '); return false;" tabindex="' + (i + 1) + '" href="javascript:void(0)">' + (i + 1) + '</a></li>';
                 }
                 if (newPageItem != '') $('#previousBtn').after(newPageItem);
-                if (totalPage <= 3) $('#nextBtn').addClass('disabled');
+                if (totalPage <= currentPage) $('#nextBtn').addClass('disabled');
                 else $('#nextBtn').removeClass('disabled');
             }
             else {
                 $('.navClass').html(currentPagination);
             }
             updateCheckboxSelection();
+            checkSkillResourceFilter();
         }
         function updateSelectedUsers() {
             var selectedUserIds = [];
@@ -599,7 +933,7 @@
                 if (checkbox.checked) {
                     selectedUserIds.push(checkbox.getAttribute("data-userid"));
                 }
-            });
+            }); n
 
             hiddenField.value = selectedUserIds.join(",");
         }
@@ -712,20 +1046,25 @@
                 }
             });
         }
-
+        $(document).on("click", ".pagination .page-link", function () {
+            scroll = true;
+        });
 
         function updateCheckboxSelection() {
+            ;
             var selectAllCheckbox = document.getElementById("chkSelectAll");
             var userCheckboxes = document.querySelectorAll(".select-user");
             var hiddenField = document.getElementById("<%= hdnSelectedUsers.ClientID %>");
 
-            selectAllCheckbox.addEventListener("change", function () {
-                var isChecked = this.checked;
-                userCheckboxes.forEach(function (checkbox) {
-                    checkbox.checked = isChecked;
+            if (selectAllCheckbox != null) {
+                selectAllCheckbox.addEventListener("change", function () {
+                    var isChecked = this.checked;
+                    userCheckboxes.forEach(function (checkbox) {
+                        checkbox.checked = isChecked;
+                    });
+                    updateSelectedUsers();
                 });
-                updateSelectedUsers();
-            });
+            }
 
             userCheckboxes.forEach(function (checkbox) {
                 checkbox.addEventListener("change", function () {
@@ -734,10 +1073,125 @@
                     updateSelectedUsers();
                 });
             });
-
         }
-    </script>
 
+
+        $(document).on("click", ".pagination .page-link", function () {
+            window.scrollTo({
+                top: 300,
+                behavior: 'instant'
+            });
+        });
+
+
+
+    </script>
+    <script type="text/javascript">
+        function onSkillClick(skillId) {
+            var listBox = document.getElementById('<%= ddlSkills.ClientID %>');
+            var options = listBox && listBox.options;
+
+            if (!options) return;
+
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].value === skillId) {
+                    options[i].selected = true;
+                    var listItem = document.querySelector(`li input[type="checkbox"][value="${skillId}"]`);
+                    if (listItem) {
+                        listItem.checked = true;
+                        var parentLi = listItem.closest('li');
+                        if (parentLi) {
+                            parentLi.classList.add('active');
+                        }
+                    }
+                    break;
+                }
+            }
+            document.getElementById('<%= currentPageValue.ClientID %>').value = 1;
+            __doPostBack('<%= SearchButton.UniqueID %>', '');
+        }
+        function onResourceClick(resourceId) {
+            var listBox = document.getElementById('<%= ddlResources.ClientID %>');
+            var options = listBox && listBox.options;
+            if (!options) return;
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].value === resourceId) {
+                    options[i].selected = true;
+                    break;
+                }
+            }
+            var listItem = document.querySelector(`li input[type="checkbox"][value="${resourceId}"]`);
+            if (listItem) {
+                listItem.checked = true;
+                var parentLi = listItem.closest('li');
+                if (parentLi) {
+                    parentLi.classList.add('active');
+                }
+            }
+            document.getElementById('<%= currentPageValue.ClientID %>').value = 1;
+            __doPostBack('<%= SearchButton.UniqueID %>', '');
+        }
+        function clearSkillResource() {
+            var anySkill = false;
+            var anyResource = false;
+            var listBoxS = document.getElementById('<%= ddlSkills.ClientID %>');
+            var optionsS = listBoxS && listBoxS.options;
+            anySkill = Array.from(listBoxS.options).filter(option => option.selected).length > 0;
+            if (optionsS && anySkill) {
+                for (var i = 0; i < optionsS.length; i++) {
+                    optionsS[i].selected = false;
+                    var listItem = document.querySelector(`li input[type="checkbox"][value="${optionsS[i].value}"]`);
+                    if (listItem) {
+                        listItem.checked = false;
+                        var parentLi = listItem.closest('li');
+                        if (parentLi) {
+                            parentLi.classList.remove('active');
+                        }
+                    }
+                }
+            }
+
+            var listBoxR = document.getElementById('<%= ddlResources.ClientID %>');
+            var optionsR = listBoxR && listBoxR.options;
+            anyResource = Array.from(listBoxR.options).filter(option => option.selected).length > 0;
+            if (optionsR && anyResource) {
+                for (var i = 0; i < optionsR.length; i++) {
+                    optionsR[i].selected = false;
+                    var listItem = document.querySelector(`li input[type="checkbox"][value="${optionsR[i].value}"]`);
+                    if (listItem) {
+                        listItem.checked = false;
+                        var parentLi = listItem.closest('li');
+                        if (parentLi) {
+                            parentLi.classList.remove('active');
+                        }
+                    }
+
+                }
+
+            }
+            if (anySkill || anyResource) {
+                document.getElementById('<%= currentPageValue.ClientID %>').value = 1;
+                __doPostBack('<%= SearchButton.UniqueID %>', '');
+            }
+        }
+        function checkSkillResourceFilter() {
+            var anySkill = false;
+            var anyResource = false;
+            var listBoxS = document.getElementById('<%= ddlSkills.ClientID %>');
+            anySkill = Array.from(listBoxS.options).filter(option => option.selected).length > 0;
+
+            var listBoxR = document.getElementById('<%= ddlResources.ClientID %>');
+            anyResource = Array.from(listBoxR.options).filter(option => option.selected).length > 0;
+
+            if (anySkill || anyResource) {
+                $("#clearSkillResourceId").show();
+            } else {
+                $("#clearSkillResourceId").hide();
+            }
+        }
+
+
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
     <uc1:TeamHeader runat="server" ID="ucTeamHeader" />
@@ -748,31 +1202,32 @@
             ClientIDMode="Static" TextMode="MultiLine" ValidateRequestMode="Disabled" Rows="3"></asp:TextBox>
         <div class="input-group-append">
             <button type="button" class="ladda-button ladda-button-demo ladda-button-email btn btn-primary b2"
-                data-style="slide-right" onclick="sendEmail()">Send Email</button>
+                data-style="slide-right" onclick="sendEmail()">
+                Send Email</button>
         </div>
     </div>
     <div id="divSms" runat="server" class="input-group">
-        <textarea id="txtsms" runat="server" cssclass="form-control" placeholder="Enter SMS Text"
+        <textarea id="txtsms" runat="server" cssclass="form-control" placeholder="Enter SMS Text (Max 450 characters)"
             rows="6" cols="95"></textarea>
         <div class="input-group-append">
             <button type="button" class="ladda-button ladda-button-demo ladda-button-sms btn btn-primary "
-                data-style="slide-right" onclick="sendSms()">Send SMS</button>
+                data-style="slide-right" onclick="sendSms()">
+                Send SMS</button>
         </div>
     </div>
 
     <div class="panel-heading">
-        <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members"
-            CssClass="btn btn-sm btn-info"></asp:HyperLink>
-        <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank"
-            Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
+        <asp:HyperLink ID="hypInviteTeamMembers" runat="server" Visible="false" Text="Invite Team Members" CssClass="btn btn-sm btn-info"></asp:HyperLink>
+        <asp:HyperLink ID="hypPrintableTeamList" runat="server" Visible="false" Target="_blank" Text="Printable List" CssClass="btn btn-sm btn-info"></asp:HyperLink>
     </div>
+
     <asp:ScriptManager runat="server" ID="ScriptManager1" />
     <div class="panel-body" style="margin-bottom: -27px; padding: 0px;">
         <div class="col-lg-12">
             <div class="row">
                 <div class="hpanel hblue">
                     <div class="panel-tools">
-                        <button class="btn btn-link toggle-search-btn" type="button" data-toggle="collapse"
+                        <button class="btn btn-link toggle-search-btn" id="search" type="button" data-toggle="collapse"
                             data-target="#searchFilters" aria-expanded="false" aria-controls="searchFilters">
                             <i class="fa fa-chevron-down"></i>
                         </button>
@@ -780,12 +1235,10 @@
                     <h4 style="margin-left: 18px;">Search</h4>
                     <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
-                            <div id="divUpdateMessage" runat="server" class="alert alert-warning text-center"
-                                style="margin-bottom: 20px;" visible="false">
+                            <div id="divTeamListMessage" runat="server" class="alert alert-warning text-center" style="margin-bottom: 20px;" visible="false">
                                 <asp:Literal ID="litMessage" runat="server"></asp:Literal>
                             </div>
-                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;"
-                                visible="false">
+                            <div id="divFilterMessage" runat="server" class="alert alert-info text-center" style="margin-bottom: 20px;" visible="false">
                                 <asp:Literal ID="litFilterMessage" runat="server"></asp:Literal>
                             </div>
                         </ContentTemplate>
@@ -794,11 +1247,11 @@
                         </Triggers>
                     </asp:UpdatePanel>
 
-                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelMembers"
+                    <div class="" data-child="hpanel" data-effect="fadeInDown" runat="server" id="hpanelSearchMembers"
                         visible="false">
-                        <div class="hpanel" runat="server" id="hpanelJoin" visible="true">
+                        <%--<div class="hpanel" runat="server" id="hpanelJoin" visible="true">
                             <a href="/V1/Profile/EditNonProfits.aspx">Join This Team</a>
-                        </div>
+                        </div>--%>
                         <div class="container-search">
                             <!-- Collapsible Search Filters -->
                             <div class="collapse col-sm-12" id="searchFilters">
@@ -851,9 +1304,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-6 mb-3" style="margin-left: -13px;">
                                     <div class="form-group margin ">
-                                        <b class="text-line">Location :</b>
+                                        <b class="text-line">Portal:</b>
                                         <asp:DropDownList ID="ddlEvent" runat="server" CssClass="form-control"></asp:DropDownList>
                                     </div>
                                 </div>
@@ -868,46 +1321,61 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-12" style="margin-left: 30px;">
                                         <div class="row">
-                                            <div class="col-sm-3 mb-2">
-                                                <div class="form-check fix">
+                                            <!-- Column 1: First 3 Checkboxes -->
+                                            <div class="col-sm-6">
+                                                <div class="form-check mb-2">
                                                     <asp:CheckBox ID="txtIsVetted" runat="server" CssClass="form-check-input" />
                                                     <label class="form-check-label" for="<%=txtIsVetted.ClientID%>">Is Vetted</label>
                                                 </div>
+                                                <div class="form-check mb-2">
+                                                    <asp:CheckBox ID="txtTeamVerified" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtTeamVerified.ClientID%>">Team Verified</label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <asp:CheckBox ID="txtStabilityVerified" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtStabilityVerified.ClientID%>">Stability Verified</label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <asp:CheckBox ID="txtTeamAdministrator" runat="server" CssClass="form-check-input" />
+                                                    <label class="form-check-label" for="<%=txtTeamAdministrator.ClientID%>">Team Administrator</label>
+                                                </div>
                                             </div>
-                                            <div class="col-sm-3 mb-2">
-                                                <div class="form-check">
+
+                                            <!-- Column 2: Last 2 Checkboxes -->
+                                            <div class="col-sm-6">
+                                                <div class="form-check mb-2">
                                                     <asp:CheckBox ID="txtOptedSMS" runat="server" CssClass="form-check-input" />
-                                                    <label class="form-check-label" for="<%=txtOptedSMS.ClientID%>">Opted SMS</label>
+                                                    <label class="form-check-label" for="<%=txtOptedSMS.ClientID%>">Accepts SMS Messages</label>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-3 mb-2">
-                                                <div class="form-check">
+                                                <div class="form-check mb-2">
                                                     <asp:CheckBox ID="txtEmailconnect" runat="server" CssClass="form-check-input" />
-                                                    <label class="form-check-label" for="<%=txtEmailconnect.ClientID%>">Email Connected</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-3 mb-2">
-                                                <div class="form-check">
-                                                    <asp:CheckBox ID="txtIsVerified" runat="server" CssClass="form-check-input" />
-                                                    <label class="form-check-label" for="<%=txtIsVerified.ClientID%>">Is Verified</label>
+                                                    <label class="form-check-label" for="<%=txtEmailconnect.ClientID%>">Accepts Email Messages</label>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
 
                                 <div class="row mt-4" style="margin-right: 6px; margin-bottom: 8px;">
                                     <div class="col-md-12 text-right ">
-                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2"
-                                            Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
+                                        <asp:Button ID="SearchButton" runat="server" CssClass="btn btn-info btn-sm me-2" Text="Search" OnClientClick="searchButton();" OnClick="SearchButton_Click" />
                                         <button type="button" class="btn btn-danger btn-sm" onclick="resetSearch()">Clear</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="custom-flex-end">
+                    <button type="button" style="display: none" id="clearSkillResourceId" onclick="clearSkillResource()"
+                        class="btn btn-sm btn-info">
+                        Clear Skills/Resources</button>
                 </div>
             </div>
         </div>
@@ -916,6 +1384,13 @@
         ClientIDMode="Static" />
     <asp:UpdatePanel runat="server" ID="updatePeopleList" UpdateMode="Conditional">
         <ContentTemplate>
+            <%--   <div id="loader" style="text-align: center; padding: 20px;">
+        <img src="/path-to-your-loader.gif" alt="Loading..." />
+    </div>--%>
+            <%--  <div  id="loader"  class="spinner-border" role="status">
+  <span class="sr-only">Loading...</span>
+</div>--%>
+            <div id="loader" class="custom-spinner"></div>
             <asp:Panel runat="server" ID="pnlTable">
                 <asp:HiddenField ID="currentPageValue" runat="server" />
                 <asp:HiddenField ID="totalPageValue" runat="server" />
@@ -927,19 +1402,16 @@
                                     <td style="background-color: white;">
                                         <div class="hpanel">
                                             <div class="panel-body">
-
-
                                                 <h5 class="m-b-xs" id="h5Container" runat="server" style="align-items: center; justify-content: normal;">
-
                                                     <input type="checkbox" runat="server" class="select-user" style="margin-top: -2px;"
                                                         data-userid='<%# Eval("UserID") %>' visible='<%# (Request.QueryString["type"] == "email" || Request.QueryString["type"] == "sms") %>' />
 
                                                     &nbsp;&nbsp;                              
 
                                                 <uc1:TeamLogo runat="server" ID="ucUserNameWithBadges" />
-
-
+                                                     <span class="badge ms-2" id="rankBadge" runat="server" visible="false"></span>
                                                 </h5>
+
                                                 <p>
                                                     <asp:Literal ID="litMemberInfo" runat="server"></asp:Literal>
                                                     <asp:Literal ID="litDescription" runat="server"></asp:Literal>
@@ -951,10 +1423,9 @@
                                                 <asp:Literal ID="litSkills" runat="server"></asp:Literal>
                                                 <asp:Literal ID="litResources" runat="server"></asp:Literal>
                                             </div>
-                                            <div class="panel-footer d-flex justify-content-between align-items-center" id="divFooter"
-                                                runat="server" visible="false">
+                                            <div class="panel-footer d-flex justify-content-between align-items-center" id="divFooter" runat="server" visible="false">
                                                 <div class="pull-right">
-                                                    <asp:Button ID="btnManage" runat="server" Text="Manage" CssClass="btn btn-primary manageButton float-end"
+                                                    <asp:Button ID="btnManage" runat="server" Text="Edit User Verification Status" CssClass="btn btn-primary manageButton float-end"
                                                         data-toggle="modal" data-target="#manageMemberModal"
                                                         data-userid='<%# Eval("UserID") %>'
                                                         OnClientClick="setUserId(this); fetchUserData(); return false;"></asp:Button>
@@ -962,6 +1433,7 @@
 
                                                 <div class="text-muted small" style="width: 100%;">
                                                     <asp:Literal ID="litVettingInfo" runat="server"></asp:Literal>
+													<i class="fa fa-lock pull-right" style="color:#5E2E91;"> </i><span style="color:#5E2E91;" class="pull-right">Team Administrators Only</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1022,30 +1494,57 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btnSend" onclick="return sendClick(this);">
-                        Send</button>
+                    <button type="button" class="btn btn-primary" id="btnSend" onclick="return sendClick(this);">Send</button>
                 </div>
             </div>
         </div>
     </div>
-    <asp:HiddenField ID="hiddenManageShowDonateButtonn" runat="server" />
-   <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="color-line"></div>
-            <div class="modal-header text-center">
-                <h5 class="modal-title">Update Member Status</h5>
-            </div>
-            <!-- Success and Error Messages -->
-            <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
-                <i class="fa fa-check-circle"></i>Changes saved successfully.
-            </div>
-            <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
-                <i class="fa fa-exclamation-triangle"></i>
-                <div id="divManageErrorMessage"></div>
-            </div>
-            <!-- Modal body -->
-            <div class="modal-body">
+
+    <asp:HiddenField ID="hiddenAdminRole" runat="server" />
+    <asp:HiddenField ID="hiddenShowTeamVerified" runat="server" />
+
+    <div class="modal fade" id="manageMemberModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="color-line"></div>
+                <div class="modal-header text-center">
+                    <h5 class="modal-title">Update Member Status</h5>
+
+                </div>
+                <!-- Success and Error Messages -->
+                <div id="divManageSuccess" class="alert alert-success text-uppercase" style="display: none;">
+                    <i class="fa fa-check-circle"></i>Changes saved successfully.
+                </div>
+                <div id="divManageError" class="alert alert-warning text-uppercase" style="display: none;">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <div id="divManageErrorMessage"></div>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <asp:PlaceHolder ID="phAdminControls" runat="server" Visible="false">
+                        <div class="form-group form-check">
+                            <asp:CheckBox ID="cbTeamVerified" runat="server" class="form-check-input" />
+                            <label class="form-check-label" runat="server" id="lblTeamVerified" for="<%= chkTeamVerified.ClientID %>">
+                                Team Verified
+                            </label>
+                        </div>
+                        <div id="divShowTeamVerifiedFeatures" runat="server">
+                            <div class="form-group form-check">
+                                <asp:CheckBox ID="cbStabilityVerified" runat="server" class="form-check-input" />
+                                <label class="form-check-label" for="<%= cbStabilityVerified.ClientID %>">
+                                    Stability Verified
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
+                                <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
+                                    Make Team Administrator
+                                </label>
+                            </div>
+
+                        </div>
+                    </asp:PlaceHolder>
+                </div>
                 <div class="form-group">
                     <label for="rblManageUserStatus">Update Member Vetting Status:</label>
                     <asp:RadioButtonList ID="rblManageUserStatus" runat="server" CssClass="form-check">
@@ -1058,37 +1557,31 @@
                 <!-- Vetting Notes Textarea -->
                 <div class="form-group">
                     <label for="txtManageVettingNotes">Vetting Notes:</label>
-                    <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control"
-                        placeholder="Enter Vetting Notes"></asp:TextBox>
+                    <asp:TextBox ID="txtManageVettingNotes" TextMode="MultiLine" runat="server" class="form-control" placeholder="Enter Vetting Notes"></asp:TextBox>
+
                 </div>
-                <div class="form-group form-check donateDiv">
-                    <asp:CheckBox ID="chkManageShowDonateButton" runat="server" class="form-check-input" />
-                    <label class="form-check-label" runat="server" id="chkManageShowDonatelabel" for="<%= chkManageShowDonateButton.ClientID %>">
-                        Enable Team Logo
-                    </label>
+                <div class="modal-footer">
+					<div class="row">
+						<div class="col-sm-8">
+							<button type="button" class="btn btn-success" runat="server" id="btnteamOwner" visible="false" onclick="btnMakeTeamOwner();">
+								Make Team Owner
+							</button>
+							<button type="button" class="btn btn-danger" runat="server" id="btnRemoveTeamMember" visible="false" onclick="btnMakeTeamRemove();">
+								Remove Team Member
+							</button>
+						</div>
+						<div class="col-sm-4">
+							<button type="button" class="btn btn-primary" id="btnManage" onclick="btnManageSaveChanges();">
+								Save Changes
+							</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal">
+								Close
+							</button>
+						</div>
+					</div>
                 </div>
-                <% if (User.IsInRole("Administrator") || isOwner) { %>
-                <div class="form-group form-check">
-                    <asp:CheckBox ID="chkManageStabilityVerified" runat="server" class="form-check-input" />
-                    <label class="form-check-label" for="<%= chkManageStabilityVerified.ClientID %>">
-                        Stability Verified
-                    </label>
-                </div>
-                <div class="form-group form-check">
-                    <asp:CheckBox ID="chkManageTeamAdministrator" runat="server" class="form-check-input" />
-                    <label class="form-check-label" for="<%= chkManageTeamAdministrator.ClientID %>">
-                        Make Team Administrator
-                    </label>
-                </div>
-                <% } %>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnManage" onclick="saveChanges();">
-                    Save Changes</button>
             </div>
         </div>
     </div>
-</div>
     <uc1:TeamFooter runat="server" ID="ucTeamFooter" />
 </asp:Content>

@@ -53,7 +53,7 @@
 										<thead>
 											<tr>
 												<th data-toggle="true">Name</th>
-												<%--<th data-toggle="true">Impactoid Website</th>--%>
+												<%--<th data-toggle="true">Stability.org Website</th>--%>
 												<th data-toggle="true" data-hide="phone,tablet">Point of Contact</th>
 												<th data-toggle="true" data-hide="phone,tablet">Phone</th>
 												<th data-toggle="true" data-hide="phone">City, State</th>

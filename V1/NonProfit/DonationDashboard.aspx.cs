@@ -59,8 +59,6 @@ public partial class V1_NonProfit_DonationDashboard : System.Web.UI.Page
                                                .Select(x => x.Amount).ToList();
                 thisWeekCount = thisWeekAmount.Sum();
 
-
-
                 var thisMonthAmount = dc.Donations.Where(d => d.CreatedAt.Date >= startOfMonth && d.TransactionId != null && d.TransactionId != "" && d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded))
                                                .Select(x => x.Amount).ToList();
                 thisMonthCount = thisMonthAmount.Sum();

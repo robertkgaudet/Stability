@@ -70,7 +70,7 @@
                 });
             });
 
-			$(document).ready(function () {
+            $(document).ready(function () {
                 $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 
 				<%=_showUserActionModal%>
@@ -132,28 +132,27 @@
                     checkTaskType = false;
                 }
 
-				$('#<%=imgLogo.ClientID%>').click(function () {
-                  window.location.href = '/V1/NonProfit/Default.aspx';
-					return false;
-				});
+            <%-- $('#<%=imgLogo.ClientID%>').click(function () {
+                    window.location.href = '/V1/NonProfit/Default.aspx';
+                    return false;
+                });--%>
 
-				$('#<%=imgProfile.ClientID%>').click(function () {
-					window.location.href = <%=profileURL%>;
-					return false;
+                $('#<%=imgProfile.ClientID%>').click(function () {
+                    window.location.href = <%=profileURL%>;
+                    return false;
                 });
 
-				toastr.options = {
-					"debug": false,
-					"newestOnTop": true,
-					"positionClass": "toast-top-center",
-					"closeButton": true,
-					"showDuration": "600",
-					"toastClass": "animated fadeInDown",
-				};
-			});
+                toastr.options = {
+                    "debug": false,
+                    "newestOnTop": true,
+                    "positionClass": "toast-top-center",
+                    "closeButton": true,
+                    "showDuration": "600",
+                    "toastClass": "animated fadeInDown",
+                };
+            });
 
-            function chooseCause()
-            {
+            function chooseCause() {
                 //Now that we have a cause we can activate these items.
 
                 divTimesheet.hidden = false;
@@ -161,7 +160,7 @@
                 //Remove the cause Divs
                 divChooseCause.hidden = true;
                 $("#btn-causeDropdownB.dropdown-chooseCauseB").html("<i class='fa fa-globe'></i> " + causeName);
-			}
+            }
 
 
             function checkSignOutStatus() {
@@ -172,33 +171,32 @@
                     dataType: "json",
                     success: function (response) {
                         if (response && response.shouldSignOut) {
-                         
+
                             document.getElementById('<%= btnSignOut.ClientID %>').click();
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Error checking sign-out status: " + error);
-            }
-        });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error checking sign-out status: " + error);
+                    }
+                });
             }
 
-           
+
             setInterval(checkSignOutStatus, 30000);
 
-          
+
             $(document).ready(function () {
                 checkSignOutStatus();
             });
 
-            function updateTime(isUserActive)
-			{
-				
+            function updateTime(isUserActive) {
+
                 workDescription = document.getElementById('<%=txtWorkDescription.ClientID%>').value;
                 workCompleteDescription = document.getElementById('<%=txtWorkCompleteDescription.ClientID%>').value;
                 taskTypeId = document.getElementById('<%=hidTaskTypeId.ClientID%>').value;
                 activeStatusButtonId = document.getElementById('<%=activeStatusButton.ClientID%>');
                 causeCountyMessage = document.getElementById('causeCountyMessage');
-                btnSubmitTime = document.getElementById('<%=btnSubmitTime.ClientID%>'); 
+                btnSubmitTime = document.getElementById('<%=btnSubmitTime.ClientID%>');
                 timeEntryDiv = document.getElementById('timeEntry');
                 timeEntryAlertDiv = document.getElementById('timeEntryAlert');
                 activeTrackingButton = document.getElementById('<%=activeTrackingButton.ClientID%>');
@@ -207,36 +205,34 @@
                     workDescription = workCompleteDescription;
                 }
 
-               
+
                 if (isUserActive && taskTypeId == "" && checkTaskType) {
                     toastr.error('Error - Please choose a Volunteer Role.');
                     return;
                 }
-                else
-                {
-				    $.ajax(
-					{
-						type: "GET",
+                else {
+                    $.ajax(
+                        {
+                            type: "GET",
                             url: "/V1/Handlers/UpdateTimesheet.ashx?noCause=<%=_noCause%>&taskTypeId=" + taskTypeId + "&organizationEventId=" + organizationEventId + "&userOrganizationEventId=" + userOrganizationEventId + "&workDescription=" + workDescription + "&userId=<%=userId%>&isUserActive=" + isUserActive,
-							data: "",
-							contentType: "text/plain; charset=utf-8",
-							dataType: "html",
-							success: function (data) {
-								if (data != "") {
-									$('#console-event').html(data);
+                            data: "",
+                            contentType: "text/plain; charset=utf-8",
+                            dataType: "html",
+                            success: function (data) {
+                                if (data != "") {
+                                    $('#console-event').html(data);
                                 }
                                 if (isUserActive) {
                                     //User signed in.
                                     timeEntryDiv.style.visibility = 'hidden';
-                                    causeCountyMessage.style.visibility = 'hidden'; 
+                                    causeCountyMessage.style.visibility = 'hidden';
                                     btnSubmitTime.style.visibility = 'hidden';
                                     activeStatusButtonId.style.visibility = 'hidden';
                                     activeTrackingButton.style.visibility = 'visible';
                                     timeEntryAlertDiv.hidden = false;
                                     checkTaskType = false;
                                 }
-                                else
-                                {
+                                else {
                                     //User signed out.
                                     timeEntryDiv.style.visibility = 'visible';
                                     causeCountyMessage.style.visibility = 'visible';
@@ -246,18 +242,19 @@
                                     timeEntryAlertDiv.hidden = true;
                                     checkTaskType = true;
                                 }
-							},
-							error: function (request, status, error) {
-								request.statusText + ' - ' + error + ' - ' + status;
-							}
-				    });
-                 }
-             }
+                            },
+                            error: function (request, status, error) {
+                                request.statusText + ' - ' + error + ' - ' + status;
+                            }
+                        });
+                }
+			}
+		
         </script>
 		<script type="text/javascript">
             var baseUrl = '<%= ResolveUrl("~/") %>';
             console.log("Base URL:", baseUrl);
-		</script>
+        </script>
 		
 
 		<script>
@@ -291,8 +288,112 @@
                 });
             });
         </script>
+		<script>
+            $(document).ready(function () {
+                $('#<%= txtSearchHeader.ClientID %>').on('input', function () {
+                   let query = $(this).val().trim();
+                   if (query.length > 1) {
+                       $('#searchSuggestions').html(`
+
+<div class='suggestion-item' data-type='TeamMembers'>
+  <i class="fa fa-user"></i> <strong>People</strong>
+</div>
+<div class='suggestion-item' data-type='Teams'>
+  <i class="fa fa-users"></i> <strong>Teams</strong>
+</div>
+<div class='suggestion-item' data-type='Deployments'>
+  <i class="fa fa-street-view"></i> <strong>Deployments</strong>
+</div>
+`).show();
+                   } else {
+                       $('#searchSuggestions').hide();
+                   }
+               });
+
+               $(document).on('click', '.suggestion-item', function () {
+                   let searchType = $(this).data('type'); 
+                   $('#<%= hdnSearchType.ClientID %>').val(searchType); 
+              $('#<%= btnSearchHeader.ClientID %>').click(); 
+               });
+               $(document).click(function (e) {
+                   if (!$(e.target).closest('.input-group').length) {
+                       $('#searchSuggestions').hide();
+                   }
+               });
+           });
+
+
+            $(document).ready(function () {
+                $('#<%= txtSearchMobile.ClientID %>').on('input', function () {
+                       let query = $(this).val().trim();
+                       if (query.length > 1) {
+                           $('#searchSuggestionss').html(`
+	
+<div class='suggestion-item' data-type='TeamMembers'>
+  <i class="fa fa-user"></i> <strong>People</strong>
+</div>
+<div class='suggestion-item' data-type='Teams'>
+  <i class="fa fa-users"></i> <strong>Teams</strong>
+</div>
+<div class='suggestion-item' data-type='Deployments'>
+  <i class="fa fa-street-view"></i> <strong>Deployments</strong>
+</div>
+`).show();
+                       } else {
+                           $('#searchSuggestionss').hide();
+                       }
+                   });
+
+                   $(document).on('click', '.suggestion-item', function () {
+                       let searchType = $(this).data('type');
+                       $('#<%= hymoblie.ClientID %>').val(searchType); 
+						$('#<%= btnSearchMobile.ClientID %>').click();
+					});
+
+                   $(document).click(function (e) {
+                       if (!$(e.target).closest('.input-group').length) {
+                           $('#searchSuggestionss').hide();
+                       }
+                   });
+               });
+
+        </script>
 
 		<style>
+			.header-link .dropdown-menu {
+				display: none;
+			}
+			.header-link .dropdown-menu.show {
+				display: block;
+			}
+			</style>
+
+
+		<style>
+.input-group {
+    position: relative;
+}
+.suggestion-box {
+    position: absolute;
+    background: white;
+    z-index: 1000;
+    width: 100%;
+    max-width:280px; 
+     margin-top: 35px;
+}
+
+.suggestion-item {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .suggestion-item:hover {
+    background-color: #f5f5f5;
+  }
+
 			#featureTypeCounter{
 				    margin-right: 17px;
 					margin-top: 20px;
@@ -334,11 +435,11 @@
 				background-color:#F1F3F6 !important;
 				color:#6A6C6F;
 			}
+
 			#header
-			{
-				background-color:#5e2e91;
-				height:58px;
-			}
+			<%=adminHeaderStyle%>
+			
+
 			#logo:hover	{cursor:pointer; }
 			.header-link
 			{
@@ -390,21 +491,37 @@
 			.link-margin{
 				margin-top:10px;
 			}
-		</style>
-        <style>
-			.skin-option {
-					position: fixed;
-					text-align: center;
-					right: -1px;
-					padding: 10px;
-					font-size:12px;
-					top: 5px;
-					text-transform: uppercase;	
-					background-color: #ffffff;
-					box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.05), 10px 5px 7px 3px rgba(0, 0, 0, .1);
-					border-radius: 4px 0 0 4px;
-					z-index: 100000;
-				}
+
+			.liUserAction u {
+				color: black; /* default color */
+				cursor: pointer;
+				text-decoration: underline;
+				transition: color 0.2s ease;
+			}
+
+			.liUserAction:hover u {
+				color: darkorange; /* color on hover */
+			}
+
+			.liUserAction:active u {
+				color: red; /* color when clicked */
+			}
+			.nav-label
+			{text-transform: none; !important }
+			.skin-option 
+			{
+				position: fixed;
+				text-align: center;
+				right: -1px;
+				padding: 10px;
+				font-size:12px;
+				top: 5px;
+				text-transform: uppercase;	
+				background-color: #ffffff;
+				box-shadow: 0 1px 3px 0px rgba(0, 0, 0, 0.05), 10px 5px 7px 3px rgba(0, 0, 0, .1);
+				border-radius: 4px 0 0 4px;
+				z-index: 100000;
+			}
 			.pe-7s-mail, .pe-7s-config, .pe-7s-keypad
 			{
 				color:white;
@@ -418,7 +535,8 @@
 			.text-success{color:#63CB31;}
 			.text-website{color:#5E2E91;}
 
-			.divMasterCover {
+			.divMasterCover 
+			{
 				width: 100%;
 				height: 100vh; /* Full viewport height */
 				background-image: url('<%=_masterCoverImage%>'); /* Path to your image */
@@ -432,7 +550,8 @@
 				background-color:#ccc;
 			}
 
-			.mobileFooter {
+			.mobileFooter 
+			{
 			  position: fixed;
 			  bottom: -20px;
 			  width: 100%;
@@ -443,8 +562,10 @@
 			  /* Additional styling for the footer */
 			}
 
-			@media only screen and (min-width: 768px) {
-			  .mobileFooter {
+			@media only screen and (min-width: 768px) 
+			{
+			  .mobileFooter 
+			  {
 				display: none;
 			  }
 			}
@@ -478,85 +599,242 @@
 				padding:9px 0px !important;
 				margin:8px 8px 8px 0px !important;
 			}
-           .desktop-logo {
+           .desktop-logo 
+		   {
                 display: inline-block;
             }
-           .mobile-logo {
+           .mobile-logo 
+		   {
                 display: none;
             }
-           @media (max-width: 767px) {
-                  .desktop-logo {
-                 display: none;
-              }
-	    	.mobile-logo {
-            display: inline-block;
-            }
-           }
+           @media (max-width: 767px) 
+		   {
+				.desktop-logo 
+				{
+					display: none;
+				}
+				.mobile-logo 
+				{
+					display: inline-block;
+				}
+			}
+
+		   .header-link.dropdown .dropdown-menu 
+		   {
+				background-color: #fff;
+				color: #333;
+				min-width: 180px;
+			}
+
+			.header-link.dropdown .dropdown-menu li a 
+			{
+				padding: 10px 15px;
+				display: block;
+				color: #333;
+			}
+
+			.header-link.dropdown .dropdown-menu li a:hover
+			{
+				background-color: #f5f5f5;
+			}
+
+			.narrow-mobile-dropdown 
+			{
+				width: 90vw;
+				max-width: 325px; /* typical max mobile viewport width */
+				min-width: 275px;
+				margin-left: -120px;
+				left: 0 !important;
+				padding: 10px;
+				box-sizing: border-box;
+				border-radius: 6px;
+			}
+
+			.narrow-mobile-dropdown .scrollable-menu 
+			{
+				max-height: 200px;
+				overflow-y: auto;
+			}
+
+			.narrow-mobile-dropdown li a 
+			{
+				display: block;
+				text-align: left;
+				padding: 10px;
+				color: #333;
+				white-space: normal;
+			}
+			.close-sidebar-btn 
+			{
+				position: absolute;
+				top: -15px;
+				right: 0px;
+				cursor: pointer;
+				border: none;
+				background: none;
+				font-size: 40px;
+			}
+			.tooltip{
+				background: none !important;
+			}
+			.team-header 
+			{
+				display: flex;
+				justify-content: space-between;
+				align-items:center;
+			}
+			.narrow-mobile-dropdown li a:hover 
+			{
+				background-color: #f5f5f5;
+			}
+			#hlMyTeams
+			{
+				color:#337ab7;
+			}
+			@media (max-width: 768px) 
+			{
+				.narrow-mobile-dropdown 
+				{
+					width: 90vw;
+					max-width: 325px; /* typical max mobile viewport width */
+					min-width: 275px;
+				}
+			}
+			div#adminFeatureSection 
+			{
+				margin-bottom: 30px;
+			}
+			div#adminFeatureSection div 
+			{
+				background-color: lightgray;
+				height:65px;
+				padding:10px;
+				text-align: left;
+				color: dimgray;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				z-index: 1000;
+			}
+			input#btnSearchHeader
+			{
+				display:none;
+			}
+			input#btnSearchMobile
+			{
+				display:none;
+			}
+			/* Change tooltip text and background color */
+			.tooltip .tooltip-inner {
+			  background-color: #5E2E91; /* background */
+			  color: #fff;               /* text color */
+			  font-size: 15px;           /* text size */
+			  padding: 8px 12px;         /* spacing */
+			  border-radius: 10px;        /* optional rounded corners */
+			}
+
+			/* Change the arrow color (caret/pointer) */
+			.tooltip.bs-tooltip-top .arrow::before,
+			.tooltip.bs-tooltip-bottom .arrow::before,
+			.tooltip.bs-tooltip-left .arrow::before,
+			.tooltip.bs-tooltip-right .arrow::before {
+			  border-color: #5E2E91 !important;
+			  background-color: #5E2E91; /* background */
+			}
+
+			/* Optional: adjust arrow size */
+			.tooltip .arrow::before {
+			  width: 1rem;
+			  height: 1rem;
+			}
+
 		</style>
 
-	<asp:ContentPlaceHolder id="head" runat="server">
+		<asp:ContentPlaceHolder id="head" runat="server">
 		</asp:ContentPlaceHolder>
 	</head>
 	<%=bodyTag%>
     <body class="sidebar-scroll hide-sidebar fixed-navbar <%=fixedFooter%> <%=fixedHeader%> bodyBGColor">		
 		<asp:Panel ID="adminFeatureSection" runat="server" Visible="false">
-			<div style="background-color: lightgray;
-						height:65px;
-						padding:4px 10px 0px 0px;
-						text-align: right;
-						color: dimgray;
-						position: relative;
-						top: 0;
-						left: 0;
-						width: 100%;
-						z-index: 1000;">
-				
+			<div>
 				<h5>Site Admin Panel</h5>
 				<%=FeatureTypeCounterTitle %>  
 				<asp:Label ID="FeatureTypeCounterNumber" runat="server"></asp:Label>
 			</div>
+			<asp:Literal ID="bodyStyle" runat="server" Visible="false">
+				<style>
+        			body 
+					{
+        				padding-top: 0px;
+        			}
+				</style>
+			</asp:Literal>
 		</asp:Panel>
-				<div class="navbar-right"></div>
- <!-- Add a Literal control to dynamically include the style block -->
-    <asp:Literal ID="bodyStyle" runat="server" Visible="false">
-        <style>
-            body {
-                padding-top: 30px; 
-            }
-        </style>
-    </asp:Literal>
+		<div class="navbar-right"></div>
+		<!-- Add a Literal control to dynamically include the style block -->
 		<form id="form1" runat="server" role="form">
-			<div style="margin-bottom:500px;">
+			<div>
 				<div id="header" runat="server">
 					<nav role="navigation">
-						<asp:Image ID="imgLogo" CssClass="pull-left desktop-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png" />
+						<asp:ImageButton  ID="imgLogo" CssClass="pull-left desktop-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/logo-cs.png"   OnClick="imgLogo_Click"/>
                         <asp:Image ID="imgresponsive" CssClass="pull-left mobile-logo" style="padding-right:20px;" runat="server" Height="50" ImageUrl="~/V1/Images/mobile-logo.png" />
-	                    <div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs"></i></div>					
-                        <div class="header-link text-white" onclick="window.location.href='/feed';">
-                        <i class="fa fa-home fa-2x m-t-xs"></i>
-                  </div>
-						<div class="header-link load-map text-white" onclick="window.location.href='/V1/Member/Default.aspx';"><i class="fa fa-user fa-2x m-t-xs"></i></div>
-						<div class="header-link load-map text-white" onclick="window.location.href='/V1/NonProfit/Default.aspx';"><i class="fa fa-users fa-2x m-t-xs"></i></div>
-						<div class="header-link load-map text-white" onclick="window.location.href='/MapZone';"><i class="fa fa-map fa-2x m-t-xs"></i></div>
+	                    <div class="header-link hide-menu text-white"><i class="fa fa-bars fa-2x m-t-xs text-white"></i></div>					
+                        <div class="header-link text-white" runat="server" id="divFeed" data-toggle="tooltip" title="Civic Feed" onclick="window.location.href='/feed';"><i class="fa fa-home fa-2x m-t-xs text-white"></i></div>
+						<div class="header-link load-map text-white" runat="server" id="divProfile" data-toggle="tooltip" title="My Profile" onclick="window.location.href='/V1/Member/Default.aspx';"><i class="fa fa-user fa-2x m-t-xs text-white"></i></div>
+						<div class="header-link dropdown text-white" runat="server" id="divTeam" data-toggle="tooltip" title="My Team">
+							<a class="dropdown-toggle text-white" href="#" data-toggle="dropdown" aria-expanded="false">
+								<i class="fa fa-users fa-2x m-t-xs text-white"></i>
+							</a>
+							<ul class="dropdown-menu hdropdown animated flipInX narrow-mobile-dropdown">
+								<div style="max-height: 400px; overflow-y: auto;">
+									<li>
+										<div class="team-header">
+											<h4>My Teams</h4>
+											<asp:HyperLink ID="hlMyTeams" runat="server" NavigateUrl="~/V1/NonProfit/TeamList.aspx">
+												<h5>View All Teams</h5>
+											</asp:HyperLink>
+										</div>
+									</li>					
+									<asp:Repeater ID="rptUserGroups" runat="server" OnItemDataBound="rptUserGroups_ItemDataBound">
+										<ItemTemplate>
+											<li>
+												<div style="display: inline-block; vertical-align: middle;">
+													<asp:Image CssClass="img-circle img-small pull-left" Width="40" Height="40" ID="imgTeam" runat="server" />
+												</div>
+												<div style="display: inline-block; vertical-align: middle;">
+													<asp:Literal ID="litGroupLink" runat="server"></asp:Literal>
+												</div>
+												<asp:Literal ID="litPrimaryBadge" runat="server"></asp:Literal>
+											</li>
+										</ItemTemplate>
+									</asp:Repeater>
+								</div>
+							</ul>
+						</div>
 
-						<div role="search" class="navbar-form-custom">
+						<div class="header-link load-map text-white" data-toggle="tooltip"title="Portal map" onclick="window.location.href='/MapZone';"><i class="fa fa-map fa-2x m-t-xs text-white"></i></div>
+
+						<div role="search" class="navbar-form-custom" runat="server" id="divSearch">
 							<div class="input-group">
 								<span class="input-group-btn">
 									<asp:Button runat="server" ID="btnSearchHeader" CssClass="btn btn-primary2" Text="Find" OnClick="btnSearchMobile_Click" />
 								</span>
-								<asp:TextBox runat="server" ID="txtSearchHeader" placeholder="Find Connections or Teams" CssClass="form-control search-input" name="search"></asp:TextBox>
+								<asp:TextBox runat="server" ID="txtSearchHeader" placeholder="Find Connections or Teams" CssClass="form-control search-input" name="search" autocomplete="off"></asp:TextBox>
+								 <div id="searchSuggestions" class="suggestion-box"></div>
+								<asp:HiddenField ID="hdnSearchType" runat="server" />
 							</div>
 						</div>
 						
-						<div class="mobile-menu">
+						<div class="mobile-menu" runat="server" id="mobileMenu">
 							<button type="button" class="navbar-toggle mobile-menu-toggle" data-toggle="collapse" data-target="#mobile-collapse-profile">
 								<i class="fa fa-chevron-down fa-2x m-t-n-xs" style="color:white;"></i>
 							</button>
 							<div class="collapse mobile-navbar" id="mobile-collapse-profile">
 								<ul class="nav navbar-nav no-borders">
-									<li><asp:HyperLink ID="HyperLink4" runat="server" Text="Create A Team" NavigateUrl="/V1/NonProfit/NonProfitNew.aspx"></asp:HyperLink></li>
-									<li><asp:HyperLink ID="HyperLink1" runat="server" Text="Search People" NavigateUrl="/V1/Member/PeopleSearch.aspx"></asp:HyperLink></li>
-									<li><asp:HyperLink ID="HyperLink3" runat="server" Text="My Profile" NavigateUrl="/V1/Member/Default.aspx"></asp:HyperLink></li>
+									<li><asp:HyperLink ID="HyperLink1" runat="server" Text="Current Brief" NavigateUrl="/V1/Profile/CommunityLandingPage.aspx"></asp:HyperLink></li>
+								</ul>
+								<ul class="nav navbar-nav no-borders">
 									<li><asp:HyperLink ID="HyperLink6" runat="server" Text="Sign Out" NavigateUrl="/V1/SignOut.aspx"></asp:HyperLink></li>
 								</ul>
 							</div>
@@ -568,22 +846,16 @@
 									<span class="input-group-btn">
 										<asp:Button runat="server" ID="btnSearchMobile" CssClass="btn btn-primary2" Text="Find" OnClick="btnSearchMobile_Click" />
 									</span>
-									<asp:TextBox runat="server" ID="txtSearchMobile" placeholder="Find Connections or Teams" CssClass="form-control search-input" name="search"></asp:TextBox>
+
+									<asp:TextBox runat="server" ID="txtSearchMobile" placeholder="Find Connections or Teams" CssClass="form-control search-input" name="search" autocomplete="off"></asp:TextBox>
+									 <div id="searchSuggestionss" class="suggestion-box"></div>
+								  <asp:HiddenField ID="hymoblie" runat="server" />
 								</div>
 							</div>
 						</div>
 
-						<div class="navbar-right">
-							<%--<ul class="nav navbar-nav no-borders removeStyle">
-								<li id="featureTypeCounter">
-								<%=FeatureTypeCounterTitle %> <asp:label ID="FeatureTypeCounterNumber" runat="server" ></asp:label>
-
-								</li>
-								
-							</ul>--%>
+						<div class="navbar-right" runat="server" id="divMessages">
 							<ul class="nav navbar-nav no-borders removeStyle">
-								
-
 								<li class="dropdown" id="notificationDropdown">
 									<a class="dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="false">
 										<i class="fa fa-bell"></i>
@@ -622,9 +894,7 @@
 										<i class="fa fa-chevron-down m-t-n-xs" style="color:white;"></i>
 									</a>
 									<ul class="dropdown-menu hdropdown notification animated flipInX">
-										<li><asp:HyperLink ID="HyperLink5" runat="server" Text="Create A Team" NavigateUrl="/V1/NonProfit/NonProfitNew.aspx"></asp:HyperLink></li>
-										<li><asp:HyperLink ID="HyperLink2" runat="server" Text="Search People" NavigateUrl="~/V1/Member/PeopleSearch.aspx"></asp:HyperLink></li>
-										<li><asp:HyperLink ID="hypProfile" runat="server" Text="My Profile" NavigateUrl="~/V1/Member/Default.aspx"></asp:HyperLink></li>
+										<li><asp:HyperLink ID="HyperLink3" runat="server" Text="Current Brief" NavigateUrl="/V1/Profile/CommunityLandingPage.aspx"></asp:HyperLink></li>
 										<li><asp:HyperLink ID="hypSignOut" runat="server" Text="Sign Out" NavigateUrl="~/V1/SignOut.aspx"></asp:HyperLink></li>
 									</ul>
 								</li>
@@ -635,6 +905,7 @@
 				<!-- Navigation 1-->
 				<aside id="menu" runat="server" style="z-index:1001;">
 					<div id="navigation">
+					<button id="btnCloseSidebar" class="close-sidebar-btn" type="button">&times;</button>
 						<ul class="nav m-b" id="side-menu">
 							<div class="profile-picture m-b-xs">
 								<img class="m-b img-rounded" width="10" src="../Images/icons8-customer-64.png" runat="server" id="imgProfile" />
@@ -724,6 +995,46 @@
 										</a>
 									</li>
 									<li>
+										<a href="/V1/NonProfit/BriefTodaysVolunteer.aspx">	 
+											<span class="nav-label">New Members Filter</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/Location/LocationList.aspx">	 
+											<span class="nav-label">Locations</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/VolunteerList.aspx">	 
+											<span class="nav-label">Members</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/VolunteerIDList.aspx">	 
+											<span class="nav-label">Member Quick Search</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/VolunteerByVettingStatus.aspx">	 
+											<span class="nav-label">Last 1000 Members</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/VolunteerByRole.aspx">	 
+											<span class="nav-label">Member Search by Role</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/UsersOnline.aspx">	 
+											<span class="nav-label">Who's Online</span>
+										</a>
+									</li>
+									<li>
+										<a href="/V1/Administration/NonProfitList.aspx">	 
+											<span class="nav-label">Organizations</span>
+										</a>
+									</li>
+									<li>
 										<a href="/V1/Administration/Item/List.aspx">	 
 											<span class="nav-label">Items</span>
 										</a>
@@ -731,11 +1042,6 @@
 									<li>
 										<a href="/V1/Administration/Item/AddItem.aspx">	 
 											<span class="nav-label">Add Item</span>
-										</a>
-									</li>
-									<li>
-										<a href="/V1/Administration/Location/LocationList.aspx">	 
-											<span class="nav-label">Locations</span>
 										</a>
 									</li>
 									<li>
@@ -749,26 +1055,6 @@
 										</a>
 									</li>
 									<li>
-										<a href="/V1/Administration/VolunteerList.aspx">	 
-											<span class="nav-label">Volunteers</span>
-										</a>
-									</li>
-									<li>
-										<a href="/V1/Administration/UsersOnline.aspx">	 
-											<span class="nav-label">Who's Online</span>
-										</a>
-									</li>
-									<li>
-										<a href="/V1/Administration/VolunteerIDList.aspx">	 
-											<span class="nav-label">Volunteer Quick Search</span>
-										</a>
-									</li>
-									<li>
-										<a href="/V1/Administration/VolunteerByRole.aspx">	 
-											<span class="nav-label">Volunteer Search by Role</span>
-										</a>
-									</li>
-									<li>
 										<a href="/V1/Administration/Rebuilds.aspx">	 
 											<span class="nav-label">Rebuild</span>
 										</a>
@@ -776,11 +1062,6 @@
 									<li>
 										<a href="/V1/Administration/UserList.aspx">	 
 											<span class="nav-label">User Accounts</span>
-										</a>
-									</li>
-									<li>
-										<a href="/V1/Administration/NonProfitList.aspx">	 
-											<span class="nav-label">Non Profits</span>
 										</a>
 									</li>
 									<li>
@@ -983,7 +1264,7 @@
             <div class="color-line"></div>
             <div class="modal-header text-center">
                 <h4 class="modal-title">My Assistant</h4>
-                <small class="font-bold">Select a Community Portal from your <a href="/V1/Profile/EditDisasters.aspx">profile settings</a>.</small>
+                <small class="font-bold">Update your profile information here <a href="/V1/Profile/ProfileEdit.aspx">profile settings</a>.</small>
             </div>
             <div class="modal-body">
                 <!-- Team Guidance -->
@@ -1012,19 +1293,6 @@
                     </div>
                 </div>
 
-                <!-- Portal Guidance -->
-                <div id="divNoPortalGuidance" visible="false" runat="server" class="alert alert-warning m-b-md">
-                    <h5><i class="fa fa-map-marker"></i> Connect to a Portal</h5>
-                    <p>Track local recovery efforts in your community:</p>
-                    <div class="text-center link-margin">
-                        <asp:LinkButton ID="btnBrowsePortals" 
-                            PostBackUrl="/V1/ChooseEvent.aspx" 
-                            runat="server" 
-                            CssClass="btn btn-primary" 
-                            Text="<i class='fa fa-search'></i> Browse Portals" />
-                    </div>
-                </div>
-
                 <!-- Existing Connections -->
                 <div id="divTeamInfo" visible="false">
                     <asp:HyperLink ID="hypActionPage" runat="server" CssClass="btn btn-ls btn-success" Text="Team Activity Page"></asp:HyperLink>
@@ -1038,14 +1306,6 @@
                 <div class="m-t-md" id="divDeploymentInfo" visible="false">
                     <strong><span class="nav-label"  id="litMyCausesslabel" runat="server">My Deployments:</span></strong>
                     <ul><asp:Literal ID="litMyCauses" runat="server"></asp:Literal></ul>
-                </div>
-
-                <div class="m-t-md" id="divPortalInfo" visible="false">
-                    <strong><span class="nav-label" id="litDiasterLabel" runat="server">My Community Portals:</span></strong>
-                    <ul>
-                        <asp:Literal ID="litDefaultDisaster"  runat="server"></asp:Literal>
-                        <asp:Literal ID="litMyDisasters" runat="server"></asp:Literal>
-                    </ul>
                 </div>
             </div>
             <div class="modal-footer">
@@ -1065,17 +1325,13 @@
                         <div class="modal-body">
                             <p>
 								<strong>Follow These Steps (Takes About 2 Minutes)</strong>
-								By completing this information you're contributing to the overall knowledge of the community in ways that can help everyone collaborate even more effectively.
+								This will allow us to learn about you and better match you to volunteers opportunities you might want to consider taking part in.
 								<ul class="fa-ul" id="userActionList">
-									<li data-url="/V1/Profile/AvailableDates.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=calendarUpdated%>;"></i> <u>Update My Available Deployment Dates</u></li>
-									<li data-url="/V1/Profile/EditNonProfits.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=teamUpdated%>;"></i> <u>Choose or Create Your Team</u></li>
+									<li data-url="/V1/Profile/AvailableDates.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=calendarUpdated%>;"></i> <u>Update Available Volunteer Dates</u></li>
 									<li data-url="/V1/Profile/EditSkills.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=skillsUpdated%>;"></i> <u>Update Your Skills</u></li>
-									<li data-url="/V1/Profile/EditResources.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=resourcesUpdated%>;"></i> <u>Update Your Resources</u></li>
-									<li runat="server" id="liDeployment" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=deploymentUpdated%>;"></i> <u>Find or Create a Deployment</u></li>
-									<li data-url="/V1/Profile/EditDisasters.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=communityUpdated%>;"></i> <u>Choose Your Community Portal</u></li>
+									<li data-url="/V1/Profile/EditResources.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=resourcesUpdated%>;"></i> <u>Update Your Available Equipment</u></li>
+									<li data-url="/V1/Profile/EditNonProfits.aspx?userActionModal=false" class="liUserAction"> <i class="fa-li fa fa-check-square" style="color:<%=teamUpdated%>;"></i> <u>Choose or Create A Team</u></li>
 								</ul>
-								Communities are no longer just waiting for help after natural disasters—we ARE the help. The skills, strength, and stability needed for recovery already exist within our own neighborhoods.
-								By empowering citizens to take action, we turn survivors into responders and rebuild stronger together.
                             </p>
                         </div>
                         <div class="modal-footer">
@@ -1100,7 +1356,30 @@
 		<script src="/Homer/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 		<script src="/Homer/vendor/metisMenu/dist/metisMenu.min.js"></script>
 		<script src="/Homer/vendor/bootstrap-toggle-master/js/bootstrap-toggle.js"></script>
+		<script>
+			$(document).ready(function () {
+				// Toggle Team dropdown on click
+				$('#divTeam > a.dropdown-toggle').on('click', function (e) {
+					e.preventDefault();
+					var $menu = $(this).siblings('.dropdown-menu');
+					$('.header-link .dropdown-menu').not($menu).removeClass('show');
+					$menu.toggleClass('show');
+					return false;
+				});
 
+				// Close Team dropdown when clicking outside
+				$(document).on('click', function (e) {
+					if (!$(e.target).closest('#divTeam').length) {
+						$('#divTeam .dropdown-menu').removeClass('show');
+					}
+				});
+
+				// Prevent dropdown from closing on scroll (mobile)
+				$('.narrow-mobile-dropdown').on('touchmove mousewheel', function (e) {
+					e.stopPropagation();
+				});
+			});
+		</script>
 		<br />
 		<br />
 		<br />
@@ -1113,3 +1392,8 @@
 
 	</body>
 </html>
+<script>
+    $('#btnCloseSidebar').click(function () {
+        $("body").toggleClass("hide-sidebar");
+	});
+</script>

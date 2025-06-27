@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.PeerToPeer;
 using System.Runtime.Remoting.Contexts;
 using System.ServiceModel.Activities;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Security;
@@ -34,8 +35,9 @@ public partial class V1_Member_Default : BaseWebForm
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
 
 		if (User.Identity.IsAuthenticated)
-		{	//User is signed in
-			if(string.IsNullOrEmpty(pageUserId))
+		{
+			//User is signed in
+			if (string.IsNullOrEmpty(pageUserId))
 			{
 				//SIGNED IN USER
 				pageUserId = userId.ToString();
@@ -72,9 +74,11 @@ public partial class V1_Member_Default : BaseWebForm
 		{
 			ucMemberHeader.UserId = pageUserId;
 			ucDeploymentListCard.UserId = new Guid(pageUserId);
+			ucMemberHeader.UserId = pageUserId;
+
 			DeploymentListCard1.UserId = new Guid(pageUserId);
 			userId = new Guid(pageUserId);
-			ucMemberHeader.UserId = pageUserId;
+
 			//Load profile information.
 			var profile = (from p in dc.Profiles
 						   join a in dc.aspnet_Users on p.UserId equals a.UserId
@@ -86,20 +90,27 @@ public partial class V1_Member_Default : BaseWebForm
 			{
 				if (Roles.IsUserInRole(profile.a.UserName, "Administrator"))
 				{
-					ucMemberHeader.BadgeVettingStatus = "fa-approved-color";
+                    ucMemberHeader.BadgeVettingStatus = "fa-approved-color";
 					ucMemberHeader.BadgeCertificationStatus = "fa-approved-color";
 					ucMemberHeader.BadgeDeployedStatus = "fa-approved-color";
 					ucMemberHeader.BadgeHoursRecordedStatus = "fa-approved-color";
 					ucMemberHeader.BadgeTOPStatus = "fa-approved-color";
 				}
 
-
 				ucMemberHeader.MemberFullname = profile.p.Firstname + " " + profile.p.Lastname;
-             
-
                 ucMemberHeader.MemberDescription = profile.p.Description;
 				ucMemberHeader.MemberLocation = profile.p.City + ", " + profile.p.State;
 				ucMemberHeader.MemberTitle = profile.p.Title;
+
+
+				Master.PageTitle = profile.p.Firstname + " " + profile.p.Lastname + " on Stability.org";
+				Master.PageDescription = profile.p.Firstname + " " + profile.p.Lastname + " Profile on Stability.org";
+				Master.FbDescription = profile.p.Firstname + " " + profile.p.Lastname + " Profile on Stability.org";
+				Master.FbImage = "";
+				Master.FbImageType = "image/jpg";
+				Master.FbSite_name = profile.p.Firstname + " " + profile.p.Lastname + " Profile on Stability.org";
+				Master.FbURL = Request.Url.AbsoluteUri;
+
 				bool passedVetting = Convert.ToBoolean(profile.p.PassedVetting != null ? profile.p.PassedVetting : false);
 				if (passedVetting)
 				{
@@ -150,7 +161,10 @@ public partial class V1_Member_Default : BaseWebForm
 				if(UserUser != null)
 				{
 					if (UserUser.Status == "Connected")
-					{ ucMemberHeader.FriendStatus = Tools.FriendStatus.Connected; }
+					{
+						ucMemberHeader.FriendStatus = Tools.FriendStatus.Connected;
+					
+					}
 					else if (UserUser.Status == "Pending")
 					{ ucMemberHeader.FriendStatus = Tools.FriendStatus.Pending; }
 					else if (UserUser.Status == "Delete")
@@ -168,26 +182,9 @@ public partial class V1_Member_Default : BaseWebForm
 			//Count number of connections.
 			ucMemberHeader.ConnectionCount = Tools.MyConnections(new Guid(pageUserId), 0).Count();
 
-            //Get team information
-            var orgUser = (from o in dc.Organizations
-                           join uo in dc.UserOrganizations on o.OrganizationId equals uo.OrganizationId
-                           where uo.UserId == new Guid(pageUserId)
-                           orderby o.CreatedOn descending
-                           select new
-                           {
-                               o.OrganizationId,
-                               o.Name,
-                               o.LogoSquare,
-                               uo.ShowTeamLogo  // Include the ShowTeamLogo field
-                           }).Take(1).SingleOrDefault();
-            if (orgUser != null)
-            {
-                //ucMemberNavigation.OrganizationId = orgUser.OrganizationId.ToString();
-                ucMemberHeader.TeamId = orgUser.OrganizationId.ToString();
-                ucMemberHeader.TeamName = orgUser.Name;
-                ucMemberHeader.TeamLogo = orgUser.LogoSquare;
-                
-            }
+			//Response.Write(pageUserId);
+			//Response.End();
+
 
 
             //Count deployments
@@ -216,9 +213,18 @@ public partial class V1_Member_Default : BaseWebForm
 							 where us.UserId == new Guid(pageUserId)
 							 select s.Name;  // Assuming you want to select the 'SkillName' field
 
-			// Create a single comma-separated list of the skill names
-			litSkills.Text = "<b>Skills: </b>" + string.Join(" • ", userSkills.ToList());
 
+			var pillHtml = new StringBuilder();
+
+			foreach (var skill in userSkills)
+			{
+				pillHtml.AppendFormat(
+					"<span class='skill-pill'>{0}</span> ",
+					System.Web.HttpUtility.HtmlEncode(skill)
+				);
+			}
+
+			litSkills.Text = pillHtml.ToString();
 
 			//SKILLS AND RESOURCES CODE
 			var userResources = from ur in dc.UserResources
@@ -227,10 +233,15 @@ public partial class V1_Member_Default : BaseWebForm
 							 where ur.UserId == new Guid(pageUserId)
 								select r.Name;  // Assuming you want to select the 'SkillName' field
 
-			// Create a single comma-separated list of the skill names
-			litResources.Text = "<b>Resources: </b>" + string.Join(" • ", userResources.ToList());
-
-
+			pillHtml.Clear();
+			foreach (var equipmentItem in userResources)
+			{
+				pillHtml.AppendFormat(
+					"<span class='skill-pill'>{0}</span> ",
+					System.Web.HttpUtility.HtmlEncode(equipmentItem)
+				);
+			}
+			litResources.Text = pillHtml.ToString();
 
 
 
@@ -243,7 +254,7 @@ public partial class V1_Member_Default : BaseWebForm
 			var userAvailability = dc.UserAvailableDates
 				.Where(uad => uad.DateAvailable >= today && uad.DateAvailable <= twoWeeksFromNow && uad.UserId == new Guid(pageUserId))
 				.OrderBy(uad => uad.DateAvailable)
-				.Take(9)
+				.Take(7)
 				.Select(uad => new
 				{
 					uad.UserAvailableDateId,
@@ -257,7 +268,8 @@ public partial class V1_Member_Default : BaseWebForm
 				})
 				.ToList();
 
-			litDatesAvailable.Text = "Member has no dates available.";
+			litDatesAvailable.Text = string.Empty;
+
 			string datesAvailable = string.Empty;
 			bool availableTodayCheck = false;
 			availabilityStyle = "alert-warning";
@@ -267,25 +279,40 @@ public partial class V1_Member_Default : BaseWebForm
 				string availableToday = string.Empty;
 				if(DateTime.Today == availability.DateAvailable && !availableTodayCheck)
 				{
-					availableToday = "<div class=\"col-xs-4 col-lg-2 text-center\"><button class=\"btn btn-success font-small\" type=\"button\"><i class=\"fa fa-calendar\"></i> </br>TODAY</button></div>";
+					availableToday = "<div class=\"col-xs-4 col-lg-2 text-center\"><button class=\"btn btn-success font-small\" type=\"button\"><i class=\"fa fa-calendar\"></i> </br>AVAILABLE<br/>TODAY</button></div>";
 				}
 				else if(!availableTodayCheck)
 				{
 					availableToday = "<div class=\"col-xs-5 col-lg-3 text-center\"><button class=\"btn btn-warning2 font-small\" type=\"button\"><i class=\"fa fa-ban\"></i> </br>NOT TODAY</button></div>";
 				}
-				datesAvailable += availableToday + "<div class=\"col-xs-2 col-lg-1 text-center calendar\"><div class=\"calendar-month-day\">" + availability.DayOfWeek + " " + availability.MonthAbbreviation + "</br><span class=\"calendar-date-of-month\">" + availability.DayOfMonth + "</span></div><div class=\"calendar-year\">" + availability.Year +  "</div></div>";
+				datesAvailable += availableToday + "<div class=\"col-xs-2 col-lg-1 text-center calendar\"><div class=\"calendar-month-day\">" + availability.DayOfWeek + "</br><span class=\"calendar-date-of-month\">" + availability.MonthAbbreviation  + " " + availability.DayOfMonth + "</span></div><div class=\"calendar-year\">" + availability.Year +  "</div></div>";
 				availableTodayCheck = true;
 				availableToday = string.Empty;
 			}
 
 			if(isSignedInUser)
-			{ 
+			{
+				btnUpdateCal.Visible = true;
 				btnUpdateCalendar.Visible = true;
+				btnUpdateSkills.Visible = true;
+				btnUpdateEquipment.Visible = true;
 			}
 			if(!String.IsNullOrEmpty(datesAvailable))
 			{
 				availabilityStyle = "alert-success";
 				litDatesAvailable.Text = "<div class=\"row no-gutter\">" + datesAvailable + "</div>";
+			}
+			else
+			{
+				//No dates...
+				btnUpdateCalendar.Visible = false;
+				divNoDates.Visible = true;
+			}
+			if(!isSignedInUser)
+			{
+				//Hide update buttons from non-signed in users
+				btnUpdateCalendar.Visible = false;
+				btnUpdateCal.Visible = false;
 			}
 			//CALENDAR CODE
 		}
@@ -363,7 +390,7 @@ public partial class V1_Member_Default : BaseWebForm
 			result = "error";
 		}
 
-		return result;
+			return result;
 	}
 
 	public static void SendConnectionEmail(string SenderName, string receiverUserId, string recipientsEmail, string recipientsName)

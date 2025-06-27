@@ -6,12 +6,6 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
-     <div class="text-center m-b-md" id="wizardControl">
-        <a class="btn btn-default">Step 1 - Create Team</a>
-        <a class="btn btn-purple activeTab">Step 2 - Invite Members</a>
-        <a class="btn btn-default">Step 3 - Add Deployment</a>
-        <a class="btn btn-default">Step 3 - Launch Website</a>
-    </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="hpanel">

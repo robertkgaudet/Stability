@@ -15,8 +15,6 @@ public partial class V1_NonProfit_Donation : System.Web.UI.Page
     public Boolean ShowDonationButton { get; set; }
     public List<DonationCampaignVM> DonationCampaigns { get; set; }
     public DonationCampaignVM DefaultCampaign = new DonationCampaignVM();
-
-
     protected void Page_Load(object sender, EventArgs e)
     {
         if (String.IsNullOrEmpty(Request.QueryString["organizationId"]))

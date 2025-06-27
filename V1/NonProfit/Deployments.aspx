@@ -9,17 +9,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 	
 				<uc1:TeamHeader runat="server" ID="ucTeamHeader" />
-                    <div class="panel-heading">
-						<div id="hbreadcrumb" class="pull-left">
-							<ol class="hbreadcrumb breadcrumb">
-								<li>
-									<asp:HyperLink ID="hypCreateCause" runat="server" Visible="false" Text="Create A New Deployment" CssClass="font-normal btn btn-sm btn-info"></asp:HyperLink>
-								</li>
-							</ol>
-						</div>
-					</div>
-					<br /><br />
 					<div class="m-t-md">
+						<div class="m-b-md">
+							<asp:HyperLink ID="hypSearchDeployments" runat="server" NavigateUrl="/V1/Deployments.aspx" Text="Search Other Teams Deployments" CssClass="font-normal btn btn-sm btn-info"></asp:HyperLink>
+							<asp:HyperLink ID="hypCreateCause" runat="server" Visible="false" Text="Create A New Deployment" CssClass="font-normal btn btn-sm btn-info pull-right"></asp:HyperLink>
+						</div>
 						<uc1:DeploymentListCard runat="server" ID="ucDeploymentListCard" />
 						<div runat="server" id="divNoCause" visible="false">
 							<div runat="server" id="divShowInviteAlert" visible="false" class="alert alert-success text-uppercase">
@@ -28,19 +22,4 @@
 						</div>
 					</div>
 				<uc1:TeamFooter runat="server" ID="ucTeamFooter" />
-
-				<script src="/v1/Scripts/masonry.pkgd.min.js"></script>
-				<script type="text/javascript">
-					$(document).ready(function () {
-						$('.grid').each(function () {
-							// Initialize Masonry for each grid individually
-							$(this).masonry({
-								itemSelector: '.grid-item',
-								gutter: 20,
-								columnWidth: '.grid-item',
-								percentPosition: true
-							});
-						});
-					});
-				</script>
 </asp:Content>

@@ -39,8 +39,8 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 			//Is logged in user on this team?
 
 			var userCheck = (from uo in dc.UserOrganizations
-							 where uo.UserId == userId
-							 && uo.OrganizationId == new Guid(organizationId)
+							 where uo.UserId == userId && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                             && uo.OrganizationId == new Guid(organizationId)
 							 select uo).Take(1).SingleOrDefault();
 
 			Profile profile = GetUserProfileByUserId(userId);
@@ -93,7 +93,7 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 			{
 				Response.Redirect("/V1/NonProfit/Default.aspx?organizationId=79305f85-3816-46a8-911f-0d7e3e227c32");
 			}
-			organizationOwnerId = organization.OwnerId != null ? (Guid)organization.OwnerId : Guid.Empty;
+			organizationOwnerId = !string.IsNullOrEmpty(organization.OwnerId.ToString() ) ? (Guid)organization.OwnerId : Guid.Empty;
 			userIsOwner = organization.OwnerId == userId ? true : false;
 			string contactInfo = string.Empty;
 			if(User.IsInRole("Administrator") || organization.OwnerId == userId)
@@ -160,8 +160,8 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 		//decimal volunteerRate = organizationEvent.oe.VolunteerHourlyRate != null ? Convert.ToDecimal(organizationEvent.oe.VolunteerHourlyRate) : 0;
 
 		var totalVolunteers = (from org in dc.UserOrganizations
-							   where org.OrganizationId == new Guid(organizationId)
-							   select org).Distinct().Count();
+							   where org.OrganizationId == new Guid(organizationId) && org.Status== (int)RequestStatus.Approved
+                               select org).Distinct().Count();
 
 		lblTeamCount.Text = totalVolunteers.ToString();
 		lblEvents.Text = "N/A";
@@ -172,8 +172,8 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 							 join p in dc.Profiles on uo.UserId equals p.UserId
 							 join net in dc.aspnet_Memberships on p.UserId equals net.UserId
 							 join u in dc.aspnet_Users on p.UserId equals u.UserId
-							 where uo.OrganizationId == new Guid(organizationId)
-							 && net.IsApproved == true && p.PassedVetting == true
+							 where uo.OrganizationId == new Guid(organizationId) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                             && net.IsApproved == true && p.PassedVetting == true
 							 orderby net.LastLoginDate descending
 							 select new { p.Firstname, net.CreateDate, p.Description, net.LoweredEmail, p.Lastname, p.UserId, p.DateVettingCompleted, p.DateVettingStarted, p.VettingNotes, p.VettingActive, p.VettingComplete, p.PassedVetting, p.Title, p.ZelloName, LastLoginDate = u.LastActivityDate };
 
@@ -188,8 +188,8 @@ public partial class V1_NonProfit_TakeAction : BaseOrganizationWebForm
 							 join p in dc.Profiles on uo.UserId equals p.UserId
 							 join net in dc.aspnet_Memberships on p.UserId equals net.UserId
 							 join u in dc.aspnet_Users on p.UserId equals u.UserId
-							 where uo.OrganizationId == new Guid(organizationId)
-							 orderby net.LastLoginDate descending
+							 where uo.OrganizationId == new Guid(organizationId) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                             orderby net.LastLoginDate descending
 							 select new { p.Firstname, net.CreateDate, p.Description, net.LoweredEmail, p.Lastname, p.UserId, p.DateVettingCompleted, p.DateVettingStarted, p.VettingNotes, p.VettingActive, p.VettingComplete, p.PassedVetting, p.Title, p.ZelloName, LastLoginDate = u.LastActivityDate, net.IsLockedOut };
 
 			rptVolunteers.DataSource = peopleList;

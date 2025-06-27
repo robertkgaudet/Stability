@@ -51,10 +51,10 @@ public partial class CaseManagement_EditHome : BaseOrganizationWebForm
 					//Load the info.
 					chkIsOnMap.Checked = profileAddress.ShowOnAgencyMap;
 					chkIsOnCleanupMap.Checked = profileAddress.ShowOnCleanupMap;
-					if (profileAddress.HomeRelationshipOwnRentTypeId != null)
+					if (!string.IsNullOrEmpty(profileAddress.HomeRelationshipOwnRentTypeId.ToString()))
 					{ rblOwnRent.SelectedValue = profileAddress.HomeRelationshipOwnRentTypeId.ToString(); }
 
-					if (profileAddress.HomeTypeId != null)
+					if (!string.IsNullOrEmpty(profileAddress.HomeTypeId.ToString()))
 					{ rblHomeType.SelectedValue = profileAddress.HomeTypeId.ToString(); }
 
 					cbMultistory.Checked = profileAddress.IsMultistory;

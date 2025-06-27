@@ -51,7 +51,7 @@ public partial class Administration_DonationsList : System.Web.UI.Page
         bool isAmountSearch = decimal.TryParse(amountSearchQuery, out parsedAmount);
 
         //var donationsQuery = dc.Donations.Where(d => d.IsTest == false && d.TransactionId != null && d.TransactionId != "");
-        var donationsQuery = dc.Donations.Where(d => d.TransactionId != null && d.TransactionId != "" && d.DonationStatus != null && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded));
+        var donationsQuery = dc.Donations.Where(d => !string.IsNullOrEmpty(d.TransactionId.ToString()) && !string.IsNullOrEmpty(d.TransactionId ) && !string.IsNullOrEmpty(d.DonationStatus.ToString()) && d.DonationStatus.Equals(CrowdRelief.Tools.TransactionStatus.Succeeded));
 
         if (!string.IsNullOrEmpty(nameSearchQuery))
         {

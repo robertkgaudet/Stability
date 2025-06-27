@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Activities.Expressions;
 using System.Collections.Generic;
 using System.IdentityModel.Metadata;
 using System.Linq;
@@ -42,32 +43,34 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 							where o.OrganizationId == new Guid(organizationId)
 							select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
 
-		string squareLogo = string.Empty;
+        string squareLogo = "/V1/Images/Logo-Placeholder.png";
 		if (organization != null)
 		{
-			if (organization.CoverImage != null)
+			if (!string.IsNullOrEmpty(organization.CoverImage ))
 			{
-				//	_coverImage = causePhotoFolder + organization.CoverImage;
+				_coverImage = causePhotoFolder + organization.CoverImage;
 			}
 
 			ucTeamHeader.CoverImage = _coverImage;
 			ucTeamHeader.TeamDescription = organization.Description;
 			ucTeamHeader._teamTitle = organization.Name;
 
-			if (!String.IsNullOrEmpty(organization.LogoSquare))
-			{
-				squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-			}
-			else
-			{
-				squareLogo = "/V1/Images/Logo-Placeholder.png";
-			}
+            if (!string.IsNullOrEmpty(organization.LogoSquare))
+            {
+                string virtualPath_square = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+                string physicalPath_square = Server.MapPath(virtualPath_square);
 
-			Master.PageTitle = organization.Name + " Programs on Stability";
+                if (System.IO.File.Exists(physicalPath_square))
+                {
+                    squareLogo = virtualPath_square;
+                }
+            }
+
+            Master.PageTitle = organization.Name + " Team Calendar on Stability";
 			Master.PageDescription = organization.Description;
 			Master.FbDescription = organization.Description;
 			Master.FbImage = _coverImage;
-			Master.FbSite_name = organization.Name + " Programs on Stability";
+			Master.FbSite_name = organization.Name + " Team Calendar on Stability";
 			ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
 		}
 
@@ -90,8 +93,8 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 		{
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-										 && uo.OrganizationId == new Guid(organizationId)
+										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                                         && uo.OrganizationId == new Guid(organizationId)
 										 select o).Take(1).SingleOrDefault();
 
 			if (userOrganizationOwner != null)
@@ -121,8 +124,8 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 			var query = from ur in dc.UserAvailableDates
 						join uo in dc.UserOrganizations on ur.UserId equals uo.UserId
 						where ur.DateAvailable >= startOfCurrentWeek && ur.DateAvailable <= eightWeeksLater
-						&& uo.OrganizationId == new Guid(organizationId)
-						group ur by new
+						&& uo.OrganizationId == new Guid(organizationId) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                        group ur by new
 						{
 							WeekStart = ur.DateAvailable.AddDays(-(int)ur.DateAvailable.DayOfWeek)
 						} into g
@@ -165,7 +168,10 @@ public partial class V1_NonProfit_TeamAvailabilityCalendar : BaseWebForm
 		var events = (from uad in dc.UserAvailableDates
 					  join uo in dc.UserOrganizations on uad.UserId equals uo.UserId
 					  join p in dc.Profiles on uo.UserId equals p.UserId
-					  where uo.OrganizationId == new Guid(organizationId)
+					  where uo.OrganizationId == new Guid(organizationId) 
+					  && (uo.Status == (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+					  && uad.DateAvailable.Date >= DateTime.Today.Date
+					  orderby uad.DateAvailable ascending
 					  select new { uad, p }).ToList();
 
 		var eventAvail = events.Select(e => new { title = e.p.Firstname + " " + e.p.Lastname, start = e.uad.DateAvailable.ToString("yyyy-MM-ddTHH:mm:ss"), allDay = "true", url = "/V1/Profile/AvailableDates.aspx?userId=" + e.p.UserId }).ToList();

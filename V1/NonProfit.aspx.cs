@@ -120,8 +120,8 @@ public partial class V1_NonProfit : BaseOrganizationWebForm
 
 			var volunteers = from uo in dc.UserOrganizations
 							 join p in dc.Profiles on uo.UserId equals p.UserId
-							 where uo.OrganizationId == nonProfitCampaign.o.OrganizationId
-							 orderby p.Title descending
+							 where uo.OrganizationId == nonProfitCampaign.o.OrganizationId && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                             orderby p.Title descending
 							 select new { p.Firstname, p.Lastname, p.UserId, p.Title, p.ZelloName };
 
 			if (volunteers.Count() > 0)
@@ -171,16 +171,16 @@ public partial class V1_NonProfit : BaseOrganizationWebForm
 
 			var rebuildCount = (from or in dc.OrganizationRebuilds
 								join r in dc.Rebuilds on or.RebuildId equals r.RebuildId
-								where or.OrganizationId == nonProfitCampaign.o.OrganizationId
-								&& r.EventId == eventId
+								where or.OrganizationId == nonProfitCampaign.o.OrganizationId 
+                                && r.EventId == eventId
 								select or).Count();
 
 			var volunteerCount = (from ue in dc.UserEvents
 						  join ur in dc.aspnet_UsersInRoles on ue.UserId equals ur.UserId
 						  join r in dc.aspnet_Roles on ur.RoleId equals r.RoleId
 						  join uo in dc.UserOrganizations on ue.UserId equals uo.UserId
-						  where r.LoweredRoleName == "helper"
-						&& ue.EventId == eventId
+						  where r.LoweredRoleName == "helper" && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                        && ue.EventId == eventId
 						&& uo.OrganizationId == nonProfitCampaign.o.OrganizationId
 						select ue).Count();
 
@@ -201,8 +201,8 @@ public partial class V1_NonProfit : BaseOrganizationWebForm
 								  join r in dc.aspnet_Roles on ur.RoleId equals r.RoleId
 								  join uo in dc.UserOrganizations on p.UserId equals uo.UserId
 								  join ue in dc.UserEvents on p.UserId equals ue.UserId
-								  where r.LoweredRoleName == "survivor"
-								  && ue.EventId == eventId
+								  where r.LoweredRoleName == "survivor" && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                                  && ue.EventId == eventId
 								  && uo.OrganizationId == nonProfitCampaign.o.OrganizationId
 								  select p).Count();
 

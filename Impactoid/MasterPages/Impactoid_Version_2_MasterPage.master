@@ -22,17 +22,22 @@
         gtag('config', 'UA-96039646-1');
 
     </script>
+	<style>
+		.organizationlogo{
+			margin-top:-10px;
+		}
+	</style>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title runat="server" id="title">Impactoid - After a disaster get your own website for organizing a disaster relief team.</title>
+    <title runat="server" id="title">Stability.org - After a disaster get your own website for organizing a disaster relief team.</title>
     <meta name="description" id="description" runat="server" content="Everything you need to create a website to organize your community." />
-    <meta property="og:title" id="fbTitle" runat="server" content="Impactoid - Community Based Disaster Relief Teams" />
-    <meta property="og:site_name" id="fbSite_name" runat="server" content="Impactoid" />
+    <meta property="og:title" id="fbTitle" runat="server" content="Stability.org - Community Based Disaster Relief Teams" />
+    <meta property="og:site_name" id="fbSite_name" runat="server" content="Stability.org" />
     <meta property="og:description" id="fbDescription" runat="server" content="Create a website that organizes your own disaster relief team." />
     <meta property="og:image:type" id="fbImageType" runat="server" />
     <meta property="og:image" id="fbImage" runat="server" content="/Impactoid/Images/TTF.jpg" />
-    <meta property="og:url" id="fbURL" runat="server" content="http://www.Impactoid.com/" />
+    <meta property="og:url" id="fbURL" runat="server" content="http://www.Stability.org/" />
 
     <!-- Responsive viewport 
         ==================================================-->
@@ -132,7 +137,7 @@
                                                     <span class="icon-bar"></span>
                                                 </button>
                                                 <a class="navbar-brand" href="CommunityPage.aspx?organizationId=<%=organizationId%>">
-                                                    <asp:Image ID="imgLogo" runat="server" />
+                                                    <asp:Image ID="imgLogo" CssClass="organizationlogo" runat="server" />
                                                     <h3>
                                                         <asp:Literal ID="litLogo" runat="server"></asp:Literal></h3>
                                                 </a>
@@ -557,7 +562,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© Aid. | All rights reserved | Designed by Impactoid</p>
+                <p>© Aid. | All rights reserved | Designed by Stability.org</p>
             </div>
         </footer>
         <!--  FOOTER AREA END -->

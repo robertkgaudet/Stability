@@ -56,7 +56,7 @@ public partial class V1_NonProfit_SquareLogoUpload : BaseOrganizationWebForm
                             dc.SubmitChanges();
 
                             ResizeAndSaveImage(filePathnameOriginal, filePathNameResized, logoImageWidth, logoImageHeight);
-                            Response.Redirect("~/V1/NonProfit/SquareLogoPhotoCrop.aspx?imageNameResized=" + imageNameResized + "&imageType=squarelogo");
+                            Response.Redirect("~/V1/NonProfit/SquareLogoPhotoCrop.aspx?organizationId=" + organizationId + "&imageNameResized=" + imageNameResized + "&imageType=squarelogo");
 
 
                         }

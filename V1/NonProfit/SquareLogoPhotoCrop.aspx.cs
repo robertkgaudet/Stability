@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Web.UI.WebControls;
-using System.IO;
-using System.Web.Security;
 using System.Drawing;
-using System.Drawing.Imaging;
-using SD = System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IdentityModel.Metadata;
+using System.IO;
 using System.Linq;
+using System.Web.Security;
+using System.Web.UI.WebControls;
 using System.Xml;
+using SD = System.Drawing;
 
 public partial class V1_SquareLogo_SquareLogoPhotoCrop : BaseOrganizationWebForm
 {
@@ -65,23 +66,23 @@ public partial class V1_SquareLogo_SquareLogoPhotoCrop : BaseOrganizationWebForm
                 }
             }
 
-            // Save the cropped square logo to the database
-            using (var dc = new CrowdReliefDBDataContext())
+			string organizationId = Request.QueryString["organizationId"];
+			// Save the cropped square logo to the database
+			using (var dc = new CrowdReliefDBDataContext())
             {
-                var userOrg = dc.UserOrganizations.FirstOrDefault(uo => uo.UserId == userId);
-                if (userOrg != null)
+				var organization = (from o in dc.Organizations
+							   where o.OrganizationId == new Guid(organizationId)
+							   select o).SingleOrDefault();
+
+                if (organization != null)
                 {
-                    var organization = dc.Organizations.FirstOrDefault(o => o.OrganizationId == userOrg.OrganizationId);
-                    if (organization != null)
-                    {
-                        organization.LogoSquare = imageNameCropped;
-                        dc.SubmitChanges();
-                    }
+                    organization.LogoSquare = imageNameCropped;
+                    dc.SubmitChanges();
                 }
             }
 
             // Redirect after successful save
-            Response.Redirect("/V1/NonProfit/Default.aspx", false);
+            Response.Redirect("/V1/NonProfit/ActivityDashboard.aspx?organizationId=" +  organizationId, false);
             Context.ApplicationInstance.CompleteRequest();
         }
         catch (Exception ex)

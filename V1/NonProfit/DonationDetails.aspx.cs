@@ -148,7 +148,7 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
                     string orgId = Request.QueryString["organizationId"].ToString();
                     string donationCampaignId = Request.QueryString["donationCampaignId"].ToString();
                     var organizationEventId = dbContext.DonationCampaigns.Where(x => x.DonationCampaignId == new Guid(donationCampaignId)).Select(x => x.OrganizationEventId).FirstOrDefault();
-                    if (organizationEventId != null)
+                    if (!string.IsNullOrEmpty(organizationEventId.ToString()))
                     {
                         var Campaign = dbContext.OrganizationEvents.Where(x => x.OrganizationEventId == new Guid(organizationEventId.ToString())).Select(x => x.CampaignName).FirstOrDefault();
                         CampaignName = ", " + Campaign;
@@ -230,7 +230,8 @@ public partial class V1_NonProfit_DonationDetails : System.Web.UI.Page
             PaymentProvider = (int)Tools.TransactionType.CreditCard,
             DonationStatus = (int)Tools.TransactionStatus.Started,
             DonationCampaignId = donationCampaignId,
-            IsTest = Convert.ToBoolean(ConfigurationManager.AppSettings["isTestPayment"])
+            IsTest = Convert.ToBoolean(ConfigurationManager.AppSettings["isTestPayment"]),
+            UserId = organization.OwnerId.Value
         };
 
         dc.Donations.InsertOnSubmit(donation);

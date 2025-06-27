@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IdentityModel.Metadata;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
+using System.Security.Cryptography;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -22,31 +27,49 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 	public string organizationId = string.Empty;
 	public string availableDates = string.Empty;
 	public string teamCounts = string.Empty;
+	public string urlFriendlyName = string.Empty;
+	public string startDate = string.Empty;
+	protected string AvailabilityByDateJson = "{}";
+
 	protected void Page_Load(object sender, EventArgs e)
 	{
 		ucTeamFooter.PageName = "activityPage";
-		ucTeamHeader.PageName = "Impact Dashboard";
+		ucTeamHeader.PageName = "Team Impact Dashboard";
 
 		#region HEADER PROPERTIES
 		////////////////////////
 		//BEGIN HEADER PROPERTIES
 		////////////////////////
 
+		urlFriendlyName = Request.QueryString["urlFriendlyName"];
 		organizationId = Request.QueryString["organizationId"];
 		string causePhotoFolder = System.Configuration.ConfigurationManager.AppSettings["causePhotoFolder"].ToString();
 		_coverImage = causePhotoFolder + "businesscoverimage.png";
 
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
+		if (!String.IsNullOrEmpty(urlFriendlyName))
+		{
+			//Get and set the org id.
+			var organizationIdCheck = (from o in dc.Organizations
+									   where o.URLFriendlyName == urlFriendlyName
+									   select new { o.OrganizationId }).Take(1).SingleOrDefault();
+
+			if (organizationIdCheck.OrganizationId != Guid.Empty)
+			{
+				organizationId = organizationIdCheck.OrganizationId.ToString();
+				// You can now use organizationId safely
+			}
+		}
 		var organization = (from o in dc.Organizations
 							where o.OrganizationId == new Guid(organizationId)
 							select new { o.Name, o.LogoSquare, o.Description, o.Logo, o.CoverImage, o.URLFriendlyName }).SingleOrDefault();
 
-		string squareLogo = string.Empty;
-		if (organization != null)
+        string squareLogo = "/V1/Images/Logo-Placeholder.png";
+        if (organization != null)
 		{
 			if (organization.CoverImage != null)
 			{
-			//	_coverImage = causePhotoFolder + organization.CoverImage;
+				_coverImage = causePhotoFolder + organization.CoverImage;
 			}
 
 			ucTeamHeader.CoverImage = _coverImage;
@@ -54,16 +77,18 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 			ucTeamHeader._teamTitle = organization.Name;
 			ucTeamHeader.URLFriendlyPageName = organization.URLFriendlyName;
 
-			if (!String.IsNullOrEmpty(organization.LogoSquare))
-			{
-				squareLogo = "/Impactoid/Images/Logos/" + organization.LogoSquare;
-			}
-			else
-			{
-				squareLogo = "/V1/Images/Logo-Placeholder.png";
-			}
+            if (!string.IsNullOrEmpty(organization.LogoSquare))
+            {
+                string virtualPath_square = "/Impactoid/Images/Logos/" + organization.LogoSquare;
+                string physicalPath_square = Server.MapPath(virtualPath_square);
 
-			Master.PageTitle = organization.Name + " Programs on Stability";
+                if (System.IO.File.Exists(physicalPath_square))
+                {
+                    squareLogo = virtualPath_square;
+                }
+            }
+
+            Master.PageTitle = organization.Name + " Programs on Stability";
 			Master.PageDescription = organization.Description;
 			Master.FbDescription = organization.Description;
 			Master.FbImage = _coverImage;
@@ -89,8 +114,8 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 		{
 			var userOrganizationOwner = (from uo in dc.UserOrganizations
 										 join o in dc.Organizations on uo.OrganizationId equals o.OrganizationId
-										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString())
-										 && uo.OrganizationId == new Guid(organizationId)
+										 where o.OwnerId == new Guid(Membership.GetUser().ProviderUserKey.ToString()) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                                         && uo.OrganizationId == new Guid(organizationId)
 										 select o).Take(1).SingleOrDefault();
 
 			if (userOrganizationOwner != null)
@@ -106,6 +131,22 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 		//END HEADER PROPERTIES
 		////////////////////////
 		#endregion
+
+
+
+
+
+		//Guid userId = GetCurrentUserId();
+
+		var result = GetAvailabilityCountsByDate(new Guid(organizationId));
+
+		var serializer = new JavaScriptSerializer();
+		AvailabilityByDateJson = serializer.Serialize(result);
+
+
+
+
+
 
 
 
@@ -137,9 +178,12 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 
 		var totalVolunteers = (from org in dc.UserOrganizations
 							   where org.OrganizationId == new Guid(organizationId)
+							   && (org.Status == (int)RequestStatus.Approved
+							   || org.Status == (int)RequestStatus.Pending)
 							   select org).Distinct().Count();
 
 		lblTeamCount.Text = totalVolunteers.ToString();
+
 		var deployments = from org in dc.Organizations
 						  join oe in dc.OrganizationEvents on org.OrganizationId equals oe.OrganizationId
 						  where oe.OrganizationId == new Guid(organizationId)
@@ -164,6 +208,29 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 		LoadTeamCountGraph(organizationId);
 	}
 
+	private Dictionary<string, int> GetAvailabilityCountsByDate(Guid organizationId)
+	{
+		using (var dc = new CrowdReliefDBDataContext())
+		{
+			var availability = (from ua in dc.UserAvailableDates
+								join uo in dc.UserOrganizations
+								on ua.UserId equals uo.UserId
+								where uo.OrganizationId == organizationId
+								group ua by ua.DateAvailable into g
+								select new
+								{
+									Date = g.Key,
+									Count = g.Count()
+								})
+								.ToList();
+
+			return availability.ToDictionary(
+				x => x.Date.ToString("yyyy-MM-dd"),
+				x => x.Count
+			);
+		}
+	}
+
 	public void LoadTeamCountGraph(string organizationId)
 	{
 		CrowdReliefDBDataContext dc = new CrowdReliefDBDataContext();
@@ -174,8 +241,8 @@ public partial class V1_NonProfit_ActivityDashboard : BaseWebForm
 		var query = from ur in dc.UserAvailableDates
 					join uo in dc.UserOrganizations on ur.UserId equals uo.UserId
 					where ur.DateAvailable >= startOfCurrentWeek && ur.DateAvailable <= eightWeeksLater
-					&& uo.OrganizationId == new Guid(organizationId)
-					group ur by new
+					&& uo.OrganizationId == new Guid(organizationId) && (uo.Status== (int)RequestStatus.Approved || uo.Status == (int)RequestStatus.Pending)
+                    group ur by new
 					{
 						WeekStart = ur.DateAvailable.AddDays(-(int)ur.DateAvailable.DayOfWeek)
 					} into g

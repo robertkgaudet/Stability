@@ -72,7 +72,7 @@ public partial class V1_NonProfitAdministration_EditNonProfitCampaign : BaseOrga
 			//Show delete button instead of the add button.
 		}
 
-		if (organizationEvent.oe.StagingStateId != null)
+		if (!string.IsNullOrEmpty(organizationEvent.oe.StagingStateId.ToString() ))
 		{
 			//Load the county dropdownlist and select the right value.
 

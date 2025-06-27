@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/V1/MasterPages/Homer.master" AutoEventWireup="true" CodeFile="AvailableDates.aspx.cs" Inherits="V1_Profile_AvailableDates" %>
 <%@ MasterType VirtualPath="~/V1/MasterPages/Homer.master"%>
 
+<%@ Register Src="~/V1/UserControls/SpinningLogo.ascx" TagPrefix="uc1" TagName="SpinningLogo" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
 
 	<link rel="stylesheet" href="/Homer/vendor/bootstrap-datepicker-master/dist/css/bootstrap-datepicker3.min.css" />
@@ -179,25 +180,13 @@
 				<div class="normalheader animate-panel" data-child="hpanel" data-effect="fadeInDown">
 					<div class="hpanel">
 						<div class="panel-body">
-							<div id="hbreadcrumb" class="pull-right">
-								<ol class="hbreadcrumb breadcrumb">
-									<li>
-										<asp:HyperLink ID="hypBreadcrumbTeamName" runat="server"></asp:HyperLink>
-									</li>
-									<li>
-										<asp:HyperLink ID="hypBreadcrumbTeamCalendar" runat="server"></asp:HyperLink>
-									</li>
-									<li class="active">
-										<span>
-											<asp:Literal ID="litTeamMemberName" runat="server"></asp:Literal>
-										</span>
-									</li>
-								</ol>
-							</div>
 							<h2 class="font-light m-b-xs">
-								Choose Dates to Volunteer
+								<uc1:SpinningLogo ID="ucTeamHeader" runat="server" LogoSizeCssClass="logo-30" />
+								Let Us Know When You’re Able to Help
 							</h2>
-                            <small>Choose as many dates as you would like.</small>
+                            <small>
+									These are the dates this user has marked as available to serve. A team members availability is more than a calendar entry — it’s a signal to your community that you’re ready to step in when it matters most.
+							</small>
 						</div>
 					</div>
 				</div>

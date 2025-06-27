@@ -59,6 +59,7 @@
 								</div>
 								<div class="m-b-md">
 									<asp:LinkButton ID="btnUpdate" runat="server" CssClass="btn btn-success pull-left" Text="Upload Profile Photo" CausesValidation="false" OnClick="btnUpdate_Click" />
+									<asp:HyperLink ID="hypSkipProfilePhoto" NavigateUrl="/V1/Profile/CommunityLandingPage.aspx" runat="server" Text="Skip For Now" Visible="false"></asp:HyperLink>
 								</div>
 							</div>
 						</div>

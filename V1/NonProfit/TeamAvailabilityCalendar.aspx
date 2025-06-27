@@ -88,7 +88,6 @@
 									data: JSON.stringify({ organizationId: organizationId }),
 									success: function (response) {
 										var events = JSON.parse(response.d);
-
 										$('#calendar').fullCalendar('destroy'); // Destroy the existing calendar
 										$('#calendar').fullCalendar({
 											header: {
