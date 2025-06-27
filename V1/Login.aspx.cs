@@ -135,7 +135,7 @@ public partial class V1_Login : System.Web.UI.Page
     protected void btnGoogle_Click(object sender, EventArgs e)
     {
         string clientId = ConfigurationManager.AppSettings["GoogleClientId"];
-        string redirectUri = "http://localhost:64915/V1/ExternalLoginCallBack.aspx?provider=google";
+        string redirectUri = ConfigurationManager.AppSettings["GoogleRedirectUri"];
         string googleUrl = "https://accounts.google.com/o/oauth2/v2/auth" +
             "?response_type=code" +
             "&scope=email%20profile" +
