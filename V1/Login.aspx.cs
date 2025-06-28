@@ -110,7 +110,7 @@ public partial class V1_Login : System.Web.UI.Page
 
             if (user != null)
             {
-                urlRedirect = "/V1/Profile/CommunityLandingPage.aspx";
+                 urlRedirect = "/V1/Profile/CommunityLandingPage.aspx?login=true";
 
                 //Does the user belong to a team yet?
                 //If not, send to the team page.                
