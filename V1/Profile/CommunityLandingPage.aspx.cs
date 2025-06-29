@@ -5,118 +5,185 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using System.Web.Security;
+using System.Text;
+using System.IdentityModel.Metadata;
 
 public partial class V1_Profile_CommunityLandingPage : BaseWebForm
 {
-	public static string zip = "70503"; // Example ZIP code
-	protected async void Page_Load(object sender, EventArgs e)
-	{
-		if (!IsPostBack)
-		{
-			string city = "Lafayette"; // Example city name
-			string state = "Louisiana"; // Example city name
-			string stateCode = "LA";
-			double latitude = 30.2168; // Example city name
-			double longitude = -92.0182; // Example city name
+	public static string zip = "70503";
+    protected async void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            string loginValue = Request.QueryString["login"];
+            string city = "Lafayette";
+            string state = "Louisiana";
+            string stateCode = "LA";
+            double latitude = 30.2168;
+            double longitude = -92.0182;
 
-			if (HttpContext.Current.User.Identity.IsAuthenticated)
-			{
-				using (var dc = new CrowdReliefDBDataContext())
-				{
-					var userInfo = (from p in dc.Profiles
-									where p.UserId == userId
-									select new { p.City, p.State })
-									.Take(1)
-									.SingleOrDefault();
+            if (HttpContext.Current.User.Identity.IsAuthenticated)
+            {
+                using (var dc = new CrowdReliefDBDataContext())
+                {
+                    var userInfo = (from p in dc.Profiles
+                                    where p.UserId == userId
+                                    select new { p.City, p.State }).Take(1).SingleOrDefault();
 
-					if (userInfo != null)
-					{
-						//Get the statecode
+                    if (!string.IsNullOrEmpty(loginValue))
+                    {
+                        var unsignedUserOrgs = (from uo in dc.UserOrganizations
+                                                where uo.UserId == userId
+                                                && !(from ws in dc.WaiverSignatures
+                                                     where ws.UserId == userId
+                                                     select ws.OrganizationId).Contains(uo.OrganizationId)
+                                                select new { uo.OrganizationId }).ToList();
 
-						stateCode = (from s in dc.USStates
-										 where s.Name == userInfo.State
-										 select s.Code).Take(1).SingleOrDefault();
+                        List<WaiverModel> waiverQueue = new List<WaiverModel>();
 
-						city = userInfo.City;
-						state = userInfo.State;
+                        foreach (var org in unsignedUserOrgs)
+                        {
+                            var waiver = dc.OrganizationWaivers
+                                .FirstOrDefault(w => w.OrganizationId == org.OrganizationId && w.IsRequired == true);
 
+                            if (waiver != null)
+                            {
+                                waiverQueue.Add(new WaiverModel
+                                {
+                                    OrganizationId = org.OrganizationId,
+                                    WaiverText = waiver.WaiverText.Replace("\n", "<br />")
+                                });
+                            }
+                        }
 
-						var geo = GeoHelper.GetLatLonZipFromCityState(city, stateCode);
-						if (geo != null)
-						{
-							latitude = geo.Latitude;
-							longitude = geo.Longitude;
-							zip = geo.Zip;
-						}
+                        if (waiverQueue.Any())
+                        {
+                            Session["WaiverQueue"] = waiverQueue;
+                            litWaiverText.Text = waiverQueue[0].WaiverText;
+                            hdnCurrentOrgId.Value = waiverQueue[0].OrganizationId.ToString();
+                            hiddenShowModal.Value = "true";
+                        }
+                    }
 
-						litWeatherAdvisoryLocation.Text = "Statewide Weather Advisories: " + userInfo.State;
-					}
+                    if (userInfo != null)
+                    {
+                        stateCode = (from s in dc.USStates
+                                     where s.Name == userInfo.State
+                                     select s.Code).Take(1).SingleOrDefault();
 
+                        city = userInfo.City;
+                        state = userInfo.State;
 
-					var userGroups = (from g in dc.UserOrganizations
-									  join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
-									  where g.UserId == userId && (g.Status == (int)RequestStatus.Approved || g.Status == (int)RequestStatus.Pending)
-									  orderby g.IsPrimary descending, o.Name
-									  select new
-									  {
-										  OrganizationName = o.Name,
-										  UrlFriendlyTeamName = o.URLFriendlyName,
-										  o.OrganizationId
-									  }).Take(1).SingleOrDefault();
+                        var geo = GeoHelper.GetLatLonZipFromCityState(city, stateCode);
+                        if (geo != null)
+                        {
+                            latitude = geo.Latitude;
+                            longitude = geo.Longitude;
+                            zip = geo.Zip;
+                        }
 
-					// Check if userGroups is null
-					if (userGroups == null)
-					{
-						// Hide the team button
-						hypTeam.Visible = false;
-					}
-					else
-					{
-						// Construct the URL
-						string teamUrl;
-						if (string.IsNullOrEmpty(userGroups.UrlFriendlyTeamName))
-						{
-							// Use OrganizationId as a parameter if UrlFriendlyTeamName is missing
-							teamUrl = "/V1/NonProfit/Default.aspx?organizationId=" + userGroups.OrganizationId;
-						}
-						else
-						{
-							// Use UrlFriendlyTeamName in the URL
-							teamUrl = "/Team/" + userGroups.UrlFriendlyTeamName;
-						}
+                        litWeatherAdvisoryLocation.Text = "Statewide Weather Advisories: " + userInfo.State;
+                    }
 
-						// Set the button's URL and make it visible
-						hypTeam.NavigateUrl = teamUrl;
-						hypTeam.Visible = true;
-					}
-				}
-			}
-			await LoadCommunitySnapshotAsync(zip, city, state);
+                    var userGroups = (from g in dc.UserOrganizations
+                                      join o in dc.Organizations on g.OrganizationId equals o.OrganizationId
+                                      where g.UserId == userId &&
+                                          (g.Status == (int)RequestStatus.Approved || g.Status == (int)RequestStatus.Pending)
+                                      orderby g.IsPrimary descending, o.Name
+                                      select new
+                                      {
+                                          OrganizationName = o.Name,
+                                          UrlFriendlyTeamName = o.URLFriendlyName,
+                                          o.OrganizationId
+                                      }).Take(1).SingleOrDefault();
 
-			var disasterAggregatorService = new DisasterAggregatorService();
-			var events = disasterAggregatorService.GetLatestDisasters(stateCode.ToUpper());
+                    if (userGroups == null)
+                    {
+                        hypTeam.Visible = false;
+                    }
+                    else
+                    {
+                        string teamUrl = string.IsNullOrEmpty(userGroups.UrlFriendlyTeamName)
+                            ? "/V1/NonProfit/Default.aspx?organizationId=" + userGroups.OrganizationId
+                            : "/Team/" + userGroups.UrlFriendlyTeamName;
 
-			if(events.Count == 0)
-			{
-				litWeatherAdvisoryLocation.Text = "No weather advisories at this time: " + state;
-			}
+                        hypTeam.NavigateUrl = teamUrl;
+                        hypTeam.Visible = true;
+                    }
+                }
+            }
 
-			rptDisasterEvents.DataSource = events;
-			rptDisasterEvents.DataBind();
+            await LoadCommunitySnapshotAsync(zip, city, state);
 
-			var service = new DisasterAlertService();
-			//var cards = service.GetDisasterCardsWithGuidance(state);
-			var cards = service.GetDisasterCardsWithGuidance(latitude, longitude);
-			if(cards.Count > 0)
-			{ 
-				rptDisasterCards.DataSource = cards;
-				rptDisasterCards.DataBind();
-			}
+            var disasterAggregatorService = new DisasterAggregatorService();
+            var events = disasterAggregatorService.GetLatestDisasters(stateCode.ToUpper());
 
-		}
-	}
+            if (events.Count == 0)
+            {
+                litWeatherAdvisoryLocation.Text = "No weather advisories at this time: " + state;
+            }
 
-	public string GetCardCssClass(string severity, string urgency)
+            rptDisasterEvents.DataSource = events;
+            rptDisasterEvents.DataBind();
+
+            var service = new DisasterAlertService();
+            var cards = service.GetDisasterCardsWithGuidance(latitude, longitude);
+            if (cards.Count > 0)
+            {
+                rptDisasterCards.DataSource = cards;
+                rptDisasterCards.DataBind();
+            }
+        }
+    }
+    protected void btnContinue_Click(object sender, EventArgs e)
+    {
+        Guid currentOrgId = Guid.Parse(hdnCurrentOrgId.Value);
+
+        using (var dc = new CrowdReliefDBDataContext())
+        {
+            WaiverSignature signature = new WaiverSignature
+            {
+                SignatureId = Guid.NewGuid(),
+                OrganizationId = currentOrgId,
+                UserId = userId,
+                SignatureName = txtFullName.Text,
+                SignedOn = DateTime.Now
+            };
+            dc.WaiverSignatures.InsertOnSubmit(signature);
+            dc.SubmitChanges();
+        }
+
+        var waiverQueue = Session["WaiverQueue"] as List<WaiverModel>;
+        if (waiverQueue != null && waiverQueue.Count > 0)
+        {
+            waiverQueue.RemoveAt(0);
+
+            if (waiverQueue.Count > 0)
+            {
+                litWaiverText.Text = waiverQueue[0].WaiverText;
+                hdnCurrentOrgId.Value = waiverQueue[0].OrganizationId.ToString();
+                txtFullName.Text = ""; 
+                chkAgree.Checked = false;
+                hiddenShowModal.Value = "true";
+            }
+            else
+            {
+                Session["WaiverQueue"] = null;
+                hiddenShowModal.Value = "false";
+            }
+        }
+    }
+    protected void btnSkip_Click(object sender, EventArgs e)
+    {
+        Session["WaiversSkipped"] = true;
+        Session["WaiverQueue"] = null;
+        hiddenShowModal.Value = "false";
+        litWaiverText.Text = "";
+        hdnCurrentOrgId.Value = "";
+    }
+    public string GetCardCssClass(string severity, string urgency)
 	{
 		severity = severity.ToLower();
 		urgency = urgency.ToLower();
@@ -332,4 +399,9 @@ public partial class V1_Profile_CommunityLandingPage : BaseWebForm
 
 
 
+}
+public class WaiverModel
+{
+    public Guid OrganizationId { get; set; }
+    public string WaiverText { get; set; }
 }

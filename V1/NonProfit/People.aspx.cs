@@ -549,7 +549,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 userId = (Guid)DataBinder.Eval(dataItem.DataItem, "UserId");
             }
             String firstname = (String)DataBinder.Eval(dataItem.DataItem, "Firstname");
-            String lastname = (String)DataBinder.Eval(dataItem.DataItem, "Lastname");
+            String lastname = (String)DataBinder.Eval(dataItem.DataItem, "Lastname");   
             String zelloName = (String)DataBinder.Eval(dataItem.DataItem, "ZelloName");
             String title = (String)DataBinder.Eval(dataItem.DataItem, "Title");
             String loweredEmail = (String)DataBinder.Eval(dataItem.DataItem, "LoweredEmail");
@@ -558,12 +558,18 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
             V1_UserControls_TeamLogo ucTeamLogo = (V1_UserControls_TeamLogo)e.Item.FindControl("ucUserNameWithBadges");
             bool receiveSMSNotifications = DataBinder.Eval(dataItem.DataItem, "ReceiveSMSNotifications") != DBNull.Value &&
                                     (bool)DataBinder.Eval(dataItem.DataItem, "ReceiveSMSNotifications");
-
+            String signatureName =(String)DataBinder.Eval(dataItem.DataItem, "SignatureName");
             object rankObj = DataBinder.Eval(dataItem.DataItem, "RankPosition");
             if (ucTeamLogo != null)
             {
                 ucTeamLogo.UserId = userId;
                 ucTeamLogo.LoadNameWithBadges();
+            }
+            string signedDateFormatted = "Waiver not signed";
+
+            if (!string.IsNullOrEmpty(signatureName))
+            {
+                signedDateFormatted =  signatureName;
             }
 
             MembershipUser profileUser = Membership.GetUser(userId);
@@ -636,7 +642,7 @@ public partial class V1_NonProfit_People : BaseOrganizationWebForm
                 String dateVettingStarts = dateVettingStartedString == DateTime.MinValue ? "Not Started" : dateVettingStartedString.ToLongDateString();
                 String lastActivitysDate = lastActivityDateString == DateTime.MinValue ? "Not Started" : lastActivityDateString.ToShortDateString() + " " + lastActivityDateString.ToLongDateString() + " at " + lastActivityDateString.ToLongTimeString();
                 string vettingCompleted = (bool)vettingComplete ? "VETTING COMPLETE: " + ((bool)passedVetting ? "<span style='color:yellowgreen'>PASSED</span>" : "<span style='color:orange'>FAILED</span>") : (bool)vettingActive ? "VETTING: PENDING" : "VETTING: NO ACTION TAKEN";
-                vettingCompleted += ((bool)isLockedOut ? "<br><span style='color:orange'>LOCKED OUT</span>" : "<br><span style='color:yellowgreen'>HAS ACCESS</span>") + ("<br>Notes:" + vettingNotes + "<br>Date Started: " + dateVettingStarts + "<br>Date Completed: " + dateVettingComplete + "<br>Last Activity Date: " + lastActivitysDate + "<br>Phone Number: " + phoneNUmber + "<br>Email: " + loweredEmail);
+                vettingCompleted += ((bool)isLockedOut ? "<br><span style='color:orange'>LOCKED OUT</span>" : "<br><span style='color:yellowgreen'>HAS ACCESS</span>") + ("<br>Notes:" + vettingNotes + "<br>Date Started: " + dateVettingStarts + "<br>Date Completed: " + dateVettingComplete + "<br>Last Activity Date: " + lastActivitysDate + "<br>Phone Number: " + phoneNUmber + "<br>Email: " + loweredEmail + "<br>Signature: " + signedDateFormatted);
                 litVettingInfo.Text = vettingCompleted;
                 // Set up the radio button list for vetting status
                 if (rblManageUserStatus != null)
@@ -1021,7 +1027,9 @@ internal class PeopleList
     public bool? ReceiveSMSNotifications { get; set; }
     public int TotalCount { get; set; }
     public int? RankPosition { get; set; }
-    public PeopleList(string firstname, DateTime createDate, string description, string loweredEmail, string phoneNumber, string lastname, Guid userId, DateTime? dateVettingCompleted, DateTime? dateVettingStarted, string vettingNotes, bool? vettingActive, bool? vettingComplete, bool? passedVetting, string title, string zelloName, DateTime lastLoginDate, DateTime lastActivityDate, bool? isApproved, bool? receiveSMSNotifications, int? rankPosition)
+    public string SignatureName { get; set; }
+
+    public PeopleList(string firstname, DateTime createDate, string description, string loweredEmail, string phoneNumber, string lastname, Guid userId, DateTime? dateVettingCompleted, DateTime? dateVettingStarted, string vettingNotes, bool? vettingActive, bool? vettingComplete, bool? passedVetting, string title, string zelloName, DateTime lastLoginDate, DateTime lastActivityDate, bool? isApproved, bool? receiveSMSNotifications, int? rankPosition,string signatureName)
     {
         Firstname = firstname;
         CreateDate = createDate;
@@ -1043,6 +1051,7 @@ internal class PeopleList
         IsApproved = isApproved;
         ReceiveSMSNotifications = receiveSMSNotifications;
         RankPosition = rankPosition;
+        SignatureName=signatureName;
     }
 
     public PeopleList()
@@ -1072,7 +1081,8 @@ internal class PeopleList
                 IsApproved == other.IsApproved &&
                 // Compare new fields
                 ReceiveSMSNotifications == other.ReceiveSMSNotifications &&
-                RankPosition == other.RankPosition;
+                RankPosition == other.RankPosition
+                && SignatureName==other.SignatureName;
     }
 
 
@@ -1098,6 +1108,7 @@ internal class PeopleList
         hashCode = hashCode * -1521134295 + IsApproved.GetHashCode();
         hashCode = hashCode * -1521134295 + ReceiveSMSNotifications.GetHashCode();
         hashCode = hashCode * -1521134295 + RankPosition.GetHashCode();
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(SignatureName);
         return hashCode;
     }
 }

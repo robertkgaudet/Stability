@@ -197,7 +197,7 @@ public partial class V1_UserControls_TeamNavigation : System.Web.UI.UserControl
 
         if (HttpContext.Current.User.Identity.IsAuthenticated)
         {
-            hypJoinTeam.NavigateUrl = "/V1/Profile/EditNonProfits.aspx?organizationId=" + organizationId;
+            hypJoinTeam.NavigateUrl = "/V1/NonProfit/Default.aspx?organizationId=" + organizationId + "&action=join";
 
             Guid userId = new Guid(Membership.GetUser().ProviderUserKey.ToString());
             Guid teamAdministratorRoleId = new Guid("E48E49D7-392B-4C3B-A53A-62B7B2537BBF");
