@@ -123,7 +123,7 @@ public partial class V1_Login : System.Web.UI.Page
                 FormsAuthentication.SetAuthCookie(existingUserName, true);
                 var userId = (from u in dc.aspnet_Users where u.UserName == existingUserName select u.UserId).SingleOrDefault();
                 SendSignInEmail(existingUserName, userId.ToString());
-                Response.Redirect("/feed");
+                Response.Redirect("/V1/Profile/CommunityLandingPage.aspx?login=true");
             }
             else
             {
