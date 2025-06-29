@@ -155,7 +155,7 @@ public partial class V1_Profile_AvailableDates : BaseWebForm
 		}
 		else
 		{
-			Response.Redirect("/V1/Member/Default.aspx");
+			Response.Redirect("/V1/Profile/CommunityLandingPage.aspx?login=true");
 		}
 	}
 }
