@@ -218,7 +218,7 @@
         }
 
         .modal-header .close {
-            margin-top: -40px;
+            margin-top: -21px;
         }
     </style>
     <script type="text/javascript">
