@@ -456,8 +456,7 @@
                 <div class="modal-footer">
                     <asp:Button ID="btnContinue" runat="server" Text="Continue" CssClass="btn btn-success"
                         OnClick="btnContinue_Click" />
-                    <asp:Button ID="btnskip" runat="server" Text="Skip for now" CssClass="btn btn-secondary"
-                        OnClick="btnSkip_Click" />
+                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Skip for now</button>
                 </div>
             </div>
         </div>

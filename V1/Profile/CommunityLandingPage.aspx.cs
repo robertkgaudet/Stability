@@ -175,14 +175,6 @@ public partial class V1_Profile_CommunityLandingPage : BaseWebForm
             }
         }
     }
-    protected void btnSkip_Click(object sender, EventArgs e)
-    {
-        Session["WaiversSkipped"] = true;
-        Session["WaiverQueue"] = null;
-        hiddenShowModal.Value = "false";
-        litWaiverText.Text = "";
-        hdnCurrentOrgId.Value = "";
-    }
     public string GetCardCssClass(string severity, string urgency)
 	{
 		severity = severity.ToLower();
