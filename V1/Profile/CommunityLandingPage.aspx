@@ -431,7 +431,10 @@
                     <h4><strong>Please read and sign the waiver below to join our team:</strong></h4>
 
                     <div>
+                          <div style="max-height: 300px; overflow-y: auto;">
                         <asp:Literal ID="litWaiverText" runat="server"></asp:Literal>
+                    </div>
+
                          <asp:HiddenField ID="hdnCurrentOrgId" runat="server" />
                     </div>
 
